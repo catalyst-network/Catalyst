@@ -112,7 +112,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
             transactionBroadcastDao.ConfidentialEntries = ConfidentialEntryHelper.GetConfidentialEntriesDao(10);
 
-            transactionBroadcastDao.Signature = new SignatureDao() {RawBytes = "mplwifwfjfw", SigningContext = signingContextDao};
+            transactionBroadcastDao.Signature = new SignatureDao {RawBytes = "mplwifwfjfw", SigningContext = signingContextDao};
 
             transactBroadcastRepo.Add(transactionBroadcastDao);
 
