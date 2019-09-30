@@ -59,7 +59,6 @@ namespace Catalyst.Core.Lib.IO.Events
         public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
         {
             var transaction = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
-            _logger.Error(Convert.ToBase64String(transaction.Signature.RawBytes.ToByteArray()));
             var transactionValid = _validator.ValidateTransaction(transaction, _peerSettings.NetworkType);
             if (!transactionValid)
             {
