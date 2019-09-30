@@ -31,6 +31,7 @@ using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Serilog;
+using System;
 
 namespace Catalyst.Core.Lib.IO.Events
 {
@@ -58,6 +59,7 @@ namespace Catalyst.Core.Lib.IO.Events
         public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
         {
             var transaction = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
+            _logger.Error(Convert.ToBase64String(transaction.Signature.RawBytes.ToByteArray()));
             var transactionValid = _validator.ValidateTransaction(transaction, _peerSettings.NetworkType);
             if (!transactionValid)
             {
@@ -68,7 +70,7 @@ namespace Catalyst.Core.Lib.IO.Events
             _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
 
             // https://github.com/catalyst-network/Catalyst.Node/issues/910 - should we fail or succeed if we already have the transaction in the ledger?
-            if (_mempool.Repository.TryReadItem(transactionSignature.RawBytes))
+            if (_mempool.Repository.Exists(x => x.Transaction.Signature.RawBytes.Equals(transactionSignature.RawBytes)))
             {
                 _logger.Information("Transaction {signature} already exists in mempool", transactionSignature);
                 return ResponseCode.Error;
