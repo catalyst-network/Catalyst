@@ -30,24 +30,6 @@ using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class ValueCommitmentDao
-    {
-        public string Id { get; set; }
-        public string Value { get; set; }
-    }
-
-    public class AggregatedVectorPolynomialLDao
-    {
-        public string Id { get; set; }
-        public string Value { get; set; }
-    }
-
-    public class AggregatedVectorPolynomialRDao
-    {
-        public string Id { get; set; }
-        public string Value { get; set; }
-    }
-
     public class RangeProofDao : DaoBase<RangeProof, RangeProofDao>
     {
         public IEnumerable<ValueCommitmentDao> ValueCommitment { get; set; }
@@ -65,17 +47,23 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<RangeProof, RangeProofDao>() 
-               .ForMember(e => e.ValueCommitment, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, ValueCommitmentDao, ByteStringToValueCommitmentBase64Converter>, RepeatedField<ByteString>>())
-               .ForMember(e => e.AggregatedVectorPolynomialL, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, AggregatedVectorPolynomialLDao, ByteStringToAggregatedVectorPolynomialLBase64Converter>, RepeatedField<ByteString>>())
-               .ForMember(e => e.AggregatedVectorPolynomialR, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, AggregatedVectorPolynomialRDao, ByteStringToAggregatedVectorPolynomialRBase64Converter>, RepeatedField<ByteString>>())
+            cfg.CreateMap<RangeProof, RangeProofDao>()
+               .ForMember(e => e.ValueCommitment, 
+                    opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, ValueCommitmentDao, ByteStringToValueCommitmentBase64Converter>, RepeatedField<ByteString>>())
+               .ForMember(e => e.AggregatedVectorPolynomialL, 
+                    opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, AggregatedVectorPolynomialLDao, ByteStringToAggregatedVectorPolynomialLBase64Converter>, RepeatedField<ByteString>>())
+               .ForMember(e => e.AggregatedVectorPolynomialR, 
+                    opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, AggregatedVectorPolynomialRDao, ByteStringToAggregatedVectorPolynomialRBase64Converter>, RepeatedField<ByteString>>())
                .ForMember(e => e.Id, opt => opt.Ignore())
                .ForAllOtherMembers(opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
             cfg.CreateMap<RangeProofDao, RangeProof>()
-               .ForMember(e => e.ValueCommitment, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<ValueCommitmentDao, ByteString, ValueCommitmentDaoToByteStringConverter>, List<ValueCommitmentDao>>())
-               .ForMember(e => e.AggregatedVectorPolynomialL, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<AggregatedVectorPolynomialLDao, ByteString, AggregatedVectorPolynomialLDaoToByteStringConverter>, List<AggregatedVectorPolynomialLDao>>())
-               .ForMember(e => e.AggregatedVectorPolynomialR, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<AggregatedVectorPolynomialRDao, ByteString, AggregatedVectorPolynomialRDaoToByteStringConverter>, List<AggregatedVectorPolynomialRDao>>())
+               .ForMember(e => e.ValueCommitment, 
+                    opt => opt.ConvertUsing<ListToRepeatedFieldConverter<ValueCommitmentDao, ByteString, ValueCommitmentDaoToByteStringConverter>, List<ValueCommitmentDao>>())
+               .ForMember(e => e.AggregatedVectorPolynomialL, 
+                    opt => opt.ConvertUsing<ListToRepeatedFieldConverter<AggregatedVectorPolynomialLDao, ByteString, AggregatedVectorPolynomialLDaoToByteStringConverter>, List<AggregatedVectorPolynomialLDao>>())
+               .ForMember(e => e.AggregatedVectorPolynomialR, 
+                    opt => opt.ConvertUsing<ListToRepeatedFieldConverter<AggregatedVectorPolynomialRDao, ByteString, AggregatedVectorPolynomialRDaoToByteStringConverter>, List<AggregatedVectorPolynomialRDao>>())
                .ForAllOtherMembers(opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
 
             cfg.AllowNullCollections = true;
