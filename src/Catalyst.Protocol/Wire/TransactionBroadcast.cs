@@ -50,7 +50,11 @@ namespace Catalyst.Protocol.Wire
         public bool HasValidEntries()
         {
             var hasSingleType = IsContractDeployment ^ IsContractCall ^ IsPublicTransaction ^ IsConfidentialTransaction;
-            if (hasSingleType) {return true;}
+            if (hasSingleType)
+            {
+                return true;
+            }
+
             Logger.Debug("{instance} can only be of a single type", nameof(TransactionBroadcast));
             return false;
         }

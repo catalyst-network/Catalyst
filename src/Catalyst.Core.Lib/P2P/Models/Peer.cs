@@ -29,8 +29,6 @@ using Catalyst.Core.Lib.Repository.Attributes;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
-using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.P2P.Models
@@ -39,8 +37,6 @@ namespace Catalyst.Core.Lib.P2P.Models
     public sealed class Peer : IPeer
     {
         [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("id")]
-        [BsonId]
         public string DocumentId => PeerId?.ToByteString().ToBase64();
         
         /// <inheritdoc />
