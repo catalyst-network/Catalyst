@@ -21,27 +21,32 @@
 
 #endregion
 
-using Autofac;
+using System;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Transaction;
+using Nethermind.Core.Extensions;
 
-namespace Catalyst.TestUtils.Repository
+namespace Catalyst.TestUtils.ProtocolHelpers
 {
-    public sealed class EfCoreDbTestModule<TProto, TDao> : Module
-        where TDao : DaoBase<TProto, TDao>, new()
-
+    public static class BaseEntryHelper
     {
-        private readonly string _connectionString;
-        public EfCoreDbTestModule(string connectionString) { _connectionString = connectionString; }
-
-        protected override void Load(ContainerBuilder builder)
+        public static BaseEntry GetBaseEntry()
         {
-            builder.Register(c => new EfCoreContext(_connectionString)).AsImplementedInterfaces().AsSelf()
-               .InstancePerLifetimeScope();
+            var fees = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
 
-            builder.RegisterType<PeerEfCoreRepository>().As<IRepository<PeerDao, string>>().SingleInstance();
-            builder.RegisterType<MempoolEfCoreRepository>().As<IRepository<TransactionBroadcastDao, string>>().SingleInstance();
+            return new BaseEntry
+            {
+                TransactionFees = fees.ToByteString(),
+                ReceiverPublicKey = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                SenderPublicKey = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+            };
+        }
+
+        public static BaseEntryDao GetBaseEntryDao()
+        {
+            return new BaseEntryDao().ToDao(GetBaseEntry());
         }
     }
 }

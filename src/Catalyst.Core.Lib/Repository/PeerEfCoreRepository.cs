@@ -21,21 +21,16 @@
 
 #endregion
 
-using AutoMapper;
-using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Network;
+using Catalyst.Core.Lib.DAO;
+using SharpRepository.EfCoreRepository;
+using SharpRepository.Repository.Caching;
 
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Core.Lib.Repository
 {
-    public class SigningContextDao : DaoBase<SigningContext, SigningContextDao>
+    public class PeerEfCoreRepository : EfCoreRepository<PeerDao, string>
     {
-        public NetworkType NetworkType { get; set; }
-        public SignatureType SignatureType { get; set; }
-        private SignatureDao SignatureDao { get; set; }
-
-        public override void InitMappers(IMapperConfigurationExpression cfg)
-        {
-            cfg.CreateMap<SigningContext, SigningContextDao>().ReverseMap();
-        }
+        public PeerEfCoreRepository(IDbContext dbContext, ICachingStrategy<PeerDao, string> cachingStrategy = null) :
+            base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy) { }
     }
 }
+

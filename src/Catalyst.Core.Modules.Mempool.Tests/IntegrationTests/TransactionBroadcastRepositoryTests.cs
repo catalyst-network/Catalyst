@@ -32,7 +32,10 @@ using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
+using Catalyst.TestUtils.ProtocolHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Catalyst.TestUtils.Repository;
@@ -75,19 +78,19 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var transactBroadcastRepoRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId, out var contractEntryDaoList, out var publicEntryDaoList);
+                var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId, out var contractEntryDaoList, out var publicEntryDaoList);
 
-                transactBroadcastRepoRepo.Get(criteriaId).Id.Should().Be(criteriaId);
+                transactBroadcastRepo.Get(criteriaId).Id.Should().Be(criteriaId);
 
-                transactBroadcastRepoRepo.Get(criteriaId).ContractEntries.FirstOrDefault().Data
+                transactBroadcastRepo.Get(criteriaId).ContractEntries.FirstOrDefault().Data
                    .Should().Be(contractEntryDaoList.FirstOrDefault().Data);
 
-                transactBroadcastRepoRepo.Get(criteriaId).PublicEntries.FirstOrDefault().Amount
+                transactBroadcastRepo.Get(criteriaId).PublicEntries.FirstOrDefault().Amount
                    .Should().Be(publicEntryDaoList.FirstOrDefault().Amount);
             }
         }
 
-        private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope, out string Id, out IList<ContractEntryDao> contractEntryDaoList, out IList<PublicEntryDao> publicEntryDaoList)
+        private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope, out string Id, out IEnumerable<ContractEntryDao> contractEntryDaoList, out IEnumerable<PublicEntryDao> publicEntryDaoList)
         {
             var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
 
@@ -95,49 +98,57 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             transactionBroadcastDao.Id = Guid.NewGuid().ToString();
             Id = transactionBroadcastDao.Id;
 
-            //Data creation put into a helper function
-            //Todo - create helpers and more data for rangeproof, signaturedao
-            //ensure signaturedao is update and has daotest to match
-            //put efcore files into seperate files
-            var contractList = new List<ContractEntryDao>();
-            Enumerable.Range(0, 5).ToList().ForEach(i =>
-            {
-                contractList.Add(new ContractEntryDao() {Amount = "1585.2" + i, Data = "data gre" + Guid.NewGuid()});
-            });
-            transactionBroadcastDao.ContractEntries = contractList;
-            contractEntryDaoList = contractList;
+            transactionBroadcastDao.ContractEntries = ContractEntryHelper.GetContractEntriesDao(10);
+            contractEntryDaoList = transactionBroadcastDao.ContractEntries;
 
-            var publicList = new List<PublicEntryDao>();
-            Enumerable.Range(0, 5).ToList().ForEach(i =>
-            {
-                publicList.Add(new PublicEntryDao() {Amount = new Random().Next(2597563).ToString()});
-            });
-            transactionBroadcastDao.PublicEntries = publicList;
-            publicEntryDaoList = publicList;
+            transactionBroadcastDao.PublicEntries = PublicEntryHelper.GetPublicEntriesDao(10);
+            publicEntryDaoList = transactionBroadcastDao.PublicEntries;
 
-            var confidentialEntryDaoList = new List<ConfidentialEntryDao>();
-            Enumerable.Range(0, 5).ToList().ForEach(i =>
+            var signingContextDao = new SigningContextDao
             {
-                confidentialEntryDaoList.Add(new ConfidentialEntryDao() {PedersenCommitment = "Pedersent" + i, RangeProof = new RangeProofDao()});
-            });
-            transactionBroadcastDao.ConfidentialEntries = confidentialEntryDaoList;
+                NetworkType = NetworkType.Devnet,
+                SignatureType = SignatureType.TransactionPublic
+            };
 
-            transactionBroadcastDao.Signature = new SignatureDao() {RawBytes = "mplwifwfjfw", SigningContext = new SigningContextDao()};
-            //---------------------------------//
+            transactionBroadcastDao.ConfidentialEntries = ConfidentialEntryHelper.GetConfidentialEntriesDao(10);
+
+            transactionBroadcastDao.Signature = new SignatureDao() {RawBytes = "mplwifwfjfw", SigningContext = signingContextDao};
+
             transactBroadcastRepo.Add(transactionBroadcastDao);
 
             return transactBroadcastRepo;
         }
 
-        [Theory(Skip = "Setup to run in pipeline only")]
+        private void TransactionBroadcast_Update_And_Retrieve()
+        {
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+            {
+                var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId, out var contractEntryDaoList, out var publicEntryDaoList);
+
+                var retievedTransactionDao = transactBroadcastRepo.Get(criteriaId);
+                retievedTransactionDao.TimeStamp = new DateTime(1999, 2, 2);
+                transactBroadcastRepo.Update(retievedTransactionDao);
+
+                var retievedTranscantionDaoModified = transactBroadcastRepo.Get(criteriaId);
+
+                var dateComparer = retievedTranscantionDaoModified.TimeStamp.Date.ToString("MM/dd/yyyy");
+                dateComparer.Should().Equals("02/02/1999");
+            }
+        }
+
+       // [Theory(Skip = "Setup to run in pipeline only")]
+        [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
+
+            TransactionBroadcast_Update_And_Retrieve();
         }
 
-        [Theory(Skip = "Setup to run in pipeline only")]
+        //[Theory(Skip = "Setup to run in pipeline only")]
+        [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
@@ -147,7 +158,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             TransactionBroadcastRepo_Can_Save_And_Retrieve();
         }
 
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
+       // [Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void TransactionBroadcastRepo_EfCore_Dbs_Update_And_Retrieve()
         {
@@ -157,6 +169,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             RegisterModules(new EfCoreDbTestModule<TransactionBroadcast, TransactionBroadcastDao>(connectionStr));
 
             CheckForDatabaseCreation();
+
+            TransactionBroadcast_Update_And_Retrieve();
         }
 
         //[Fact(Skip = "Microsoft DBs yet to be completed")]
@@ -176,18 +190,11 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
         private void CheckForDatabaseCreation()
         {
-            try
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var contextDb = scope.Resolve<IDbContext>();
+                var contextDb = scope.Resolve<IDbContext>();
 
-                    ((DbContext) contextDb).Database.EnsureCreated();
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.ToString();
+                ((DbContext) contextDb).Database.EnsureCreated();
             }
         }
 

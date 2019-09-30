@@ -23,27 +23,11 @@
 
 using System;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.P2P.Models;
 using Microsoft.EntityFrameworkCore;
-using SharpRepository.EfCoreRepository;
-using SharpRepository.Repository.Caching;
 using DbContext = Microsoft.EntityFrameworkCore.DbContext;
 
 namespace Catalyst.Core.Lib.Repository
 {
-    public class PeerEfCoreRepository : EfCoreRepository<PeerDao, string>
-    {
-        public PeerEfCoreRepository(IDbContext dbContext, ICachingStrategy<PeerDao, string> cachingStrategy = null) :
-            base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy) { }
-    }
-
-    public class MempoolEfCoreRepository : EfCoreRepository<TransactionBroadcastDao, string>
-    {
-        public MempoolEfCoreRepository(IDbContext dbContext,
-            ICachingStrategy<TransactionBroadcastDao, string> cachingStrategy = null) :
-            base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy) { }
-    }
-
     public interface IDbContext : IDisposable
     {
         Microsoft.EntityFrameworkCore.DbSet<TEntity> Set<TEntity>() where TEntity : class;
@@ -64,6 +48,7 @@ namespace Catalyst.Core.Lib.Repository
         public Microsoft.EntityFrameworkCore.DbSet<ContractEntryDao> ContractEntryDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<BaseEntryDao> BaseEntryDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<SignatureDao> SignatureDaoStore { get; set; }
+        public Microsoft.EntityFrameworkCore.DbSet<SigningContextDao> SigningContextDaoStore { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
