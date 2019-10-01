@@ -28,6 +28,6 @@ namespace Catalyst.Abstractions.Mempool.Documents
 {
     public interface IMempoolDocument : IMempoolItem, IDocument
     {
-        string DocumentId { get; }
+        new string DocumentId { get; }
     }
 }

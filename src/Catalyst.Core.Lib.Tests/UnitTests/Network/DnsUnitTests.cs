@@ -26,9 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Network;
-using Catalyst.Core.Lib.Cryptography;
-using Catalyst.Core.Lib.P2P;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.TestUtils;
 using DnsClient;
 using DnsClient.Protocol;
@@ -44,8 +41,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Network
         public DnsUnitTests()
         {
             _lookupClient = Substitute.For<ILookupClient>();
-            _dns = new Lib.Network.DnsClient(_lookupClient, 
-                new PeerIdValidator(new CryptoContext(new CryptoWrapper())));
+            _dns = new Lib.Network.DnsClient(_lookupClient);
         }
 
         private readonly IDns _dns;

@@ -319,7 +319,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
         /// <summary>
         ///     OnNext method for _evictionSubscription
         ///     handles the discovery messages to see if there of interest to us.
-        /// </summary
+        /// </summary>
         /// <param name="requestCorrelationId">Correlation Id for the request getting evicted.</param>
         protected void EvictionCallback(ICorrelationId requestCorrelationId)
         {

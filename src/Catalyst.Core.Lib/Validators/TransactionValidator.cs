@@ -32,7 +32,7 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.Validators
 {
-    public class TransactionValidator : ITransactionValidator
+    public sealed class TransactionValidator : ITransactionValidator
     {
         private readonly ILogger _logger;
         private readonly IWrapper _cryptoContext;
@@ -55,11 +55,13 @@ namespace Catalyst.Core.Lib.Validators
 
         private bool CheckContractInputFields(TransactionBroadcast transactionBroadcast)
         {
+            // @TODO DO SOMETHING
             return true;
         }
 
         private bool ValidateTransactionFields(TransactionBroadcast transactionBroadcast)
         {
+            // @TODO DO SOMETHING
             return true;
         }
 
@@ -78,22 +80,24 @@ namespace Catalyst.Core.Lib.Validators
 
             if (!_cryptoContext.StdVerify(transactionSignature, transactionWithoutSig.ToByteArray(), transactionBroadcast.Signature.SigningContext.ToByteArray()))
             {
-                _logger.Information(
-                    "Transaction Signature {signature} invalid.",
-                    transactionSignature);
-                return false;
+                return true;
             }
-
-            return true;
+            
+            _logger.Information(
+                "Transaction Signature {signature} invalid.",
+                transactionSignature);
+            return false;
         }
 
         private bool CheckCfEntries(TransactionBroadcast transactionBroadcast)
         {
+            // @TODO DO SOMETHING
             return true;
         }
 
         private bool CheckStEntries(TransactionBroadcast transactionBroadcast)
         {
+            // @TODO DO SOMETHING
             return true;
         }
 

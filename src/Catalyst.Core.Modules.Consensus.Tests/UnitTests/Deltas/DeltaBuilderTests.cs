@@ -111,8 +111,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void BuildDeltaInvalidTransactionsBasedOnLockTime()
         {
-            var random = new Random(12);
-
             var invalidTransactionList = Enumerable.Range(0, 20).Select(i =>
             {
                 var transaction = TransactionHelper.GetPublicTransaction(

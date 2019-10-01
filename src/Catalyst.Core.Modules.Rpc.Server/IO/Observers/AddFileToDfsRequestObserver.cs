@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestObserver"/> class.</summary>
         /// <param name="dfs">The DFS.</param>
-        /// <param name="peerId">The peer identifier.</param>
+        /// <param name="peerSettings"></param>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestObserver(IDfs dfs,

@@ -33,7 +33,11 @@ namespace Catalyst.Protocol.Transaction
 
         public bool IsValid()
         {
-            if (!Equals(None)) {return true;}
+            if (!Equals(None))
+            {
+                return true;
+            }
+            
             Logger.Debug("{instance} cannot have default value", nameof(RangeProof));
             return false;
         }

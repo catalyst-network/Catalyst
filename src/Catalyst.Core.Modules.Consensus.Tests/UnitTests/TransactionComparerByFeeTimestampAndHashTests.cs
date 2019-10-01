@@ -103,7 +103,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                .ToArray();
 
             ordered.Select(s =>
-                    s.SummedEntryFees().ToString() + "|" + s.Timestamp.ToString() + "|" +
+                    s.SummedEntryFees() + "|" + s.Timestamp + "|" +
                     s.Signature.RawBytes.ToBase64())
                .ToList().ForEach(x => _output.WriteLine(x));
 
@@ -125,7 +125,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             });
             
             ordered.Select(s => 
-                    s.SummedEntryFees().ToString() + "|" + s.Timestamp.ToString() + "|" +
+                    s.SummedEntryFees() + "|" + s.Timestamp + "|" +
                     s.Signature.RawBytes.ToBase64())
                .ToList().ForEach(x => _output.WriteLine(x));
 

@@ -24,12 +24,10 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.P2P;
 using Catalyst.TestUtils;
 using DnsClient;
 using DnsClient.Protocol;
 using FluentAssertions;
-using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
@@ -41,7 +39,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
         public async Task GetTxtRecords_should_return_seeds()
         {
             var trueClient = new LookupClient(new IPEndPoint(IPAddress.Parse("9.9.9.9"), 53));
-            var dns = new Lib.Network.DnsClient(trueClient, Substitute.For<IPeerIdValidator>());
+            var dns = new Lib.Network.DnsClient(trueClient);
             var dnsQueryResponse =
                 await dns.GetTxtRecordsAsync("seed1.network.atlascity.io");
             var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();

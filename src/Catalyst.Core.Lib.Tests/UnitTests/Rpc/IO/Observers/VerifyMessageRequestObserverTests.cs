@@ -33,7 +33,6 @@ using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using System.Linq;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Cryptography;

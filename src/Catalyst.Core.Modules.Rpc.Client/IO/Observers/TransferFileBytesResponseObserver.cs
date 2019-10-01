@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
             PeerId senderPeerIdentifier, 
             ICorrelationId correlationId)
         {
-            _ = _fileTransferFactory.DownloadChunk(message);
+            _fileTransferFactory.DownloadChunk(message);
         }
     }
 }

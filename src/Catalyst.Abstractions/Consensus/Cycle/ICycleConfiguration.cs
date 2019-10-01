@@ -34,16 +34,28 @@ namespace Catalyst.Abstractions.Consensus.Cycle
     /// </summary>
     public interface ICycleConfiguration
     {
-        /// <inheritdoc cref="PhaseName.Construction"/>>
+        /// <inheritdoc>
+        ///     <cref>PhaseName.Construction</cref>
+        /// </inheritdoc>
+        /// >
         IPhaseTimings Construction { get; }
 
-        /// <inheritdoc cref="PhaseName.Campaigning"/>>
+        /// <inheritdoc>
+        ///     <cref>PhaseName.Campaigning</cref>
+        /// </inheritdoc>
+        /// >
         IPhaseTimings Campaigning { get; }
 
-        /// <inheritdoc cref="PhaseName.Voting"/>>
+        /// <inheritdoc>
+        ///     <cref>PhaseName.Voting</cref>
+        /// </inheritdoc>
+        /// >
         IPhaseTimings Voting { get; }
 
-        /// <inheritdoc cref="PhaseName.Synchronisation"/>>
+        /// <inheritdoc>
+        ///     <cref>PhaseName.Synchronisation</cref>
+        /// </inheritdoc>
+        /// >
         IPhaseTimings Synchronisation { get; }
 
         /// <summary>
@@ -53,8 +65,13 @@ namespace Catalyst.Abstractions.Consensus.Cycle
         TimeSpan CycleDuration { get; }
 
         /// <summary>
-        /// This dictionary can be used to retrieve the <see cref="PhaseTimings"/> for a
-        /// give <see cref="PhaseName"/>
+        /// This dictionary can be used to retrieve the <see>
+        ///     <cref>PhaseTimings</cref>
+        /// </see>
+        /// for a
+        /// give <see>
+        ///     <cref>PhaseName</cref>
+        /// </see>
         /// </summary>
         IReadOnlyDictionary<IPhaseName, IPhaseTimings> TimingsByName { get; }
     }

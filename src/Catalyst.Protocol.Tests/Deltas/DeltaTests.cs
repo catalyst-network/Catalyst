@@ -83,7 +83,7 @@ namespace Catalyst.Protocol.Tests.Deltas
                     Nanos = 21, Seconds = 30
                 }
             };
-            AssertionExtensions.Should((bool) delta.IsValid()).BeTrue();
+            AssertionExtensions.Should(delta.IsValid()).BeTrue();
         }
     }
 }

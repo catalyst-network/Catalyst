@@ -44,7 +44,7 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
         public static ProtocolMessage Sign(this ProtocolMessage protocolMessage,
             IKeySigner keySigner,
             SigningContext signingContext)
-         {
+        {
             if ((protocolMessage.Signature?.RawBytes.Length ?? 0) == keySigner.CryptoContext.SignatureLength)
             {
                 Logger.Debug("The protocol message was already signed, returning a clone.");

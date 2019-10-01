@@ -134,7 +134,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
             if (_fileTransferFactory.GetFileTransferInformation(correlationId) != null)
             {
-                _ = _fileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None).ConfigureAwait(false);
+                _fileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None).ConfigureAwait(false);
             }
         }
 
