@@ -42,7 +42,7 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
               + transaction.ConfidentialEntries.Sum(e => e.Base.TransactionFees.ToUInt256());
             return sum;
         }
-        
+
         public static TransactionBroadcast Sign(this TransactionBroadcast transaction,
             IWrapper cryptoWrapper,
             IPrivateKey privateKey,
@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
         {
             var clone = transaction.Clone();
 
-            if (transaction.Signature.RawBytes.Length == cryptoWrapper.SignatureLength)
+            if (transaction.Signature?.RawBytes.Length == cryptoWrapper.SignatureLength)
             {
                 Logger.Debug("The transaction was already signed, returning a clone.");
                 return clone;
