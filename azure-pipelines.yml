@@ -10,5 +10,5 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
-- script: choco install sql-server-express
+- script: choco install sql-server-express -d -v -y
   displayName: 'install mssql-express'
