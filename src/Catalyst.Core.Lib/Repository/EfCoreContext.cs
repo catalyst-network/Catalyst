@@ -57,6 +57,16 @@ namespace Catalyst.Core.Lib.Repository
         {
             // Required code stub
         }
+
+        public new void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            base.Dispose();
+        }
     }
 }
 
