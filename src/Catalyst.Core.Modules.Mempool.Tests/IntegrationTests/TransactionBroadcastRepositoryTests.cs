@@ -140,7 +140,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         }
 
         [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2E)]
+        [Trait(Traits.TestType, Traits.E2E_MongoDB)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
@@ -150,7 +150,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         }
 
         [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2E)]
+        [Trait(Traits.TestType, Traits.E2E_MongoDB)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
@@ -160,7 +160,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         }
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.E2E)]
+        [Trait(Traits.TestType, Traits.E2E_MSSQL)]
         public void TransactionBroadcastRepo_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
@@ -174,7 +174,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         }
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.E2E)]
+        [Trait(Traits.TestType, Traits.E2E_MSSQL)]
         public void TransactionBroadcastRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot

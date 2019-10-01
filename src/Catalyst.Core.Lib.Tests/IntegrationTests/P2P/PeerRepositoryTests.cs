@@ -111,7 +111,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
         
         [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2E)]
+        [Trait(Traits.TestType, Traits.E2E_MongoDB)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
@@ -121,7 +121,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
 
         [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2E)]
+        [Trait(Traits.TestType, Traits.E2E_MongoDB)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
@@ -131,7 +131,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Trait(Traits.TestType, Traits.E2E_MSSQL)]
         public void PeerRepo_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
@@ -144,8 +144,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             PeerRepo_Can_Update_And_Retrieve();
         }
 
-        [Fact /*(Skip = "Microsoft DBs yet to be completed")*/]
-        [Trait(Traits.TestType, Traits.E2E)]
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Trait(Traits.TestType, Traits.E2E_MSSQL)]
         public void PeerRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
