@@ -51,7 +51,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>
         ///     Initializes a new instance of the <see cref="PeerListRequestObserver"/> class.
         /// </summary>
-        /// <param name="peerId">The peer identifier.</param>
+        /// <param name="peerSettings"></param>
         /// <param name="logger">The logger.</param>
         /// <param name="peerRepository"></param>
         public PeerListRequestObserver(IPeerSettings peerSettings,

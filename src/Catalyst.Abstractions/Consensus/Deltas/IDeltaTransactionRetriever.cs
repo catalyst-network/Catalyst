@@ -30,7 +30,7 @@ namespace Catalyst.Abstractions.Consensus.Deltas
     /// The service in charge of finding the transactions that should be included in a ledger update (aka Delta)
     /// for a given cycle.
     /// </summary>
-    public interface IDeltaTransactionRetriever
+    public interface IDeltaTransactionRetriever<T>
     {
         /// <summary>
         /// A comparer used to order transactions, notably in the mempool, by descending order
@@ -38,7 +38,7 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// transactions that should be included in the next ledger update. This interface should
         /// be used to order transactions and decide whether they should be included or not.
         /// </summary>
-        ITransactionComparer TransactionComparer { get; }
+        ITransactionComparer<T> TransactionComparer { get; }
 
         /// <summary>
         /// Use this method to retrieve the top <see cref="maxCount"/> transactions in order of
@@ -47,6 +47,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// </summary>
         /// <param name="maxCount">The maximum number of transactions to be returned by the method.</param>
         /// <returns>The top <see cref="maxCount"/> transactions in order of </returns>
-        IList<TransactionBroadcast> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue);
+        IList<T> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue);
     }
 }

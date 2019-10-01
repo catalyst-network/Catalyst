@@ -35,7 +35,7 @@ using SharpRepository.Repository.Transactions;
 
 namespace Catalyst.Core.Lib.Repository
 {
-    public class RepositoryWrapper<T> : IRepositoryWrapper<T> where T : class, IDocument
+    public class RepositoryWrapper<T> : IRepositoryWrapper<T> where T : class
     {
         public RepositoryWrapper(IRepository<T, string> repository)
         {

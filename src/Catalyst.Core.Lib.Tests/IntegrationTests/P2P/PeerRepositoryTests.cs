@@ -30,8 +30,10 @@ using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.Repository;
 using SharpRepository.Repository;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Catalyst.TestUtils.Repository;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
@@ -63,9 +65,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             {
                 var peerRepo = PopulatePeerRepo(scope, out var peerDao);
 
-                peerRepo.Get(peerDao.DocumentId).DocumentId.Should().Be(peerDao.DocumentId);
-                peerRepo.Get(peerDao.DocumentId).PeerIdentifier.PublicKey.Should().Be(peerDao.PeerIdentifier.PublicKey);
-                peerRepo.Get(peerDao.DocumentId).PeerIdentifier.Ip.Should().Be(peerDao.PeerIdentifier.Ip);
+                peerRepo.Get(peerDao.Id).Id.Should().Be(peerDao.Id);
+                peerRepo.Get(peerDao.Id).PeerIdentifier.PublicKey.Should().Be(peerDao.PeerIdentifier.PublicKey);
+                peerRepo.Get(peerDao.Id).PeerIdentifier.Ip.Should().Be(peerDao.PeerIdentifier.Ip);
             }
         }
 
@@ -75,11 +77,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             {
                 var peerRepo = PopulatePeerRepo(scope, out var peerDao);
 
-                var retrievedPeer = peerRepo.Get(peerDao.DocumentId);
+                var retrievedPeer = peerRepo.Get(peerDao.Id);
                 retrievedPeer.Touch();
                 peerRepo.Update(retrievedPeer);
 
-                var retrievedPeerModified = peerRepo.Get(peerDao.DocumentId);
+                var retrievedPeerModified = peerRepo.Get(peerDao.Id);
                 var now = DateTime.UtcNow.Date;
 
                 if (retrievedPeerModified.Modified == null)
@@ -97,10 +99,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
 
             var peerDao = new PeerDao().ToDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString())});
-            peerDao.DocumentId = Guid.NewGuid().ToString();
+            peerDao.Id = Guid.NewGuid().ToString();
 
             peerDao.PeerIdentifier = new PeerIdDao().ToDao(PeerIdHelper.GetPeerId(new Random().Next().ToString()));
-            peerDao.PeerIdentifier.DocumentId = Guid.NewGuid().ToString();
+            peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
 
             peerRepo.Add(peerDao);
             peerDaoOutput = peerDao;
@@ -126,6 +128,44 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             RegisterModules(dbModule);
 
             PeerRepo_Can_Save_And_Retrieve();
+        }
+
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void PeerRepo_EfCore_Dbs_Update_And_Retrieve()
+        {
+            var connectionStr = ContainerProvider.ConfigurationRoot
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+
+            RegisterModules(new EfCoreDbTestModule<Peer, PeerDao>(connectionStr));
+
+            CheckForDatabaseCreation();
+
+            PeerRepo_Can_Update_And_Retrieve();
+        }
+
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void PeerRepo_EfCore_Dbs_Can_Save_And_Retrieve()
+        {
+            var connectionStr = ContainerProvider.ConfigurationRoot
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+
+            RegisterModules(new EfCoreDbTestModule<Peer, PeerDao>(connectionStr));
+
+            CheckForDatabaseCreation();
+
+            PeerRepo_Can_Save_And_Retrieve();
+        }
+
+        private void CheckForDatabaseCreation()
+        {
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+            {
+                var contextDb = scope.Resolve<IDbContext>();
+
+                ((DbContext) contextDb).Database.EnsureCreated();
+            }
         }
 
         private void RegisterModules(Module module)

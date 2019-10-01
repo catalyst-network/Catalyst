@@ -29,7 +29,7 @@ namespace Catalyst.Core.Lib.DAO
 {
     public class SignatureDao : DaoBase<Signature, SignatureDao>
     {
-        public SigningContext SigningContext { get; set; }
+        public SigningContextDao SigningContext { get; set; }
         public string RawBytes { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)

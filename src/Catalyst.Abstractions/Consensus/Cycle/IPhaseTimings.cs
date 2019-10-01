@@ -33,17 +33,25 @@ namespace Catalyst.Abstractions.Consensus.Cycle
         TimeSpan Offset { get; }
 
         /// <summary>
-        /// Time during which a phase is in the <see cref="PhaseStatus.Producing"/> status.
+        /// Time during which a phase is in the <see>
+        ///     <cref>PhaseStatus.Producing</cref>
+        /// </see>
+        /// status.
         /// </summary>
         TimeSpan ProductionTime { get; }
 
         /// <summary>
-        /// Time during which a phase is in the <see cref="PhaseStatus.Collecting"/> status.
+        /// Time during which a phase is in the <see>
+        ///     <cref>PhaseStatus.Collecting</cref>
+        /// </see>
+        /// status.
         /// </summary>
         TimeSpan CollectionTime { get; }
 
         /// <summary>
-        /// The total duration of the phase, after which it will go <see cref="PhaseStatus.Idle"/>
+        /// The total duration of the phase, after which it will go <see>
+        ///     <cref>PhaseStatus.Idle</cref>
+        /// </see>
         /// until the next cycle.
         /// </summary>
         TimeSpan TotalTime { get; }

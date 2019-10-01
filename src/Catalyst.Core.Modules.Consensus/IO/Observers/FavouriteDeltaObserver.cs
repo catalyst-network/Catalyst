@@ -48,8 +48,8 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
-                _ = deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
-                _ = deserialised.Candidate.Hash.ToByteArray().AsMultihash();
+                deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
+                deserialised.Candidate.Hash.ToByteArray().AsMultihash();
                 deserialised.IsValid();
                 
                 _deltaElector.OnNext(deserialised);

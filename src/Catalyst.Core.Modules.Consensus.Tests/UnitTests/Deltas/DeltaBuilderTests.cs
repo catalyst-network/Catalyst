@@ -30,6 +30,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
@@ -95,9 +96,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void BuildDeltaEmptyPoolContent()
         {
-            var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
+            var transactionRetriever = Substitute.For<IDeltaTransactionRetriever<TransactionBroadcastDao>>();
             transactionRetriever.GetMempoolTransactionsByPriority()
-               .Returns(new List<TransactionBroadcast>());
+               .Returns(new List<TransactionBroadcastDao>());
             
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _peerSettings, _cache, _dateTimeProvider, _logger);
 
@@ -111,8 +112,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void BuildDeltaInvalidTransactionsBasedOnLockTime()
         {
-            var random = new Random(12);
-
             var invalidTransactionList = Enumerable.Range(0, 20).Select(i =>
             {
                 var transaction = TransactionHelper.GetPublicTransaction(
@@ -126,10 +125,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                         ReceiverPublicKey = "this entry makes the transaction invalid".ToUtf8ByteString()
                     }
                 });
-                return transaction;
+                return new TransactionBroadcastDao().ToDao(transaction);
             }).ToList();
 
-            var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
+            var transactionRetriever = Substitute.For<IDeltaTransactionRetriever<TransactionBroadcastDao>>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(invalidTransactionList);
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _peerSettings, _cache, _dateTimeProvider, _logger);
@@ -151,13 +150,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
-                return transaction;
+                return new TransactionBroadcastDao().ToDao(transaction);
             }).ToList();
 
-            var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
+            var transactionRetriever = Substitute.For<IDeltaTransactionRetriever<TransactionBroadcastDao>>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(transactions);
 
-            var selectedTransactions = transactions.Where(t => t.IsPublicTransaction && t.HasValidEntries()).ToArray();
+            var selectedTransactions = transactions.Where(t => t.PublicEntries.Any()).ToArray();
 
             var expectedCoinBase = new CoinbaseEntry
             {
@@ -181,7 +180,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .ToArray();
 
             var signaturesInOrder = selectedTransactions
-               .Select(p => p.Signature.ToByteArray())
+               .Select(p => p.Signature.RawBytes.KeyToBytes())
                .OrderBy(s => s, ByteUtil.ByteListComparer.Default)
                .SelectMany(b => b)
                .ToArray();

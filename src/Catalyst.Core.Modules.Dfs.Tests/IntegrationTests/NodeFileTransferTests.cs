@@ -28,7 +28,6 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;

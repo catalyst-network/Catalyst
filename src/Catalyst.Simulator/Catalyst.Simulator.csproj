@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RootNamespace>Catalyst.Simulator</RootNamespace>
@@ -14,14 +14,14 @@
         <PackageReference Include="NSubstitute" Version="4.2.0" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
+      <ProjectReference Include="..\Catalyst.Core.Modules.KeySigner\Catalyst.Core.Modules.KeySigner.csproj" />
+      <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
+      <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj" />
+    </ItemGroup>
+    <ItemGroup>
         <None Update="Config\simulation.nodes.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
-        <ProjectReference Include="..\Catalyst.Core.Modules.KeySigner\Catalyst.Core.Modules.KeySigner.csproj" />
-        <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
-        <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj" />
     </ItemGroup>
 </Project>

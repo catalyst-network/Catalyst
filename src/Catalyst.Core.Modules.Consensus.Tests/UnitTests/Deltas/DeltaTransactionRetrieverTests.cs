@@ -26,10 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Consensus.Deltas;
-using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -47,10 +44,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var random = new Random();
 
             var mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
-            _transactions = Enumerable.Range(0, 20).Select(i => new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction(
-                transactionFees: (ulong) random.Next(),
-                timestamp: random.Next(),
-                signature: i.ToString())
+            _transactions = Enumerable.Range(0, 20).Select(i => new TransactionBroadcastDao().ToDao(
+                TransactionHelper.GetPublicTransaction(
+                    transactionFees: (ulong) random.Next(),
+                    timestamp: random.Next(),
+                    signature: i.ToString())
             )).ToList();
 
             mempool.Repository.GetAll().Returns(_transactions);
@@ -89,7 +87,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void GetMempoolTransactionsByPriority_should_return_transactions_in_decreasing_priority_order()
         {
             var maxCount = _transactions.Count / 2;
-            var expectedTransactions = _transactions.OrderByDescending(t => t, _transactionRetriever.TransactionComparer)
+            var expectedTransactions = _transactions
+               .OrderByDescending(t => t, _transactionRetriever.TransactionComparer)
                .Take(maxCount).ToList();
 
             var retrievedTransactions = _transactionRetriever
@@ -106,7 +105,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             for (var i = 0; i < maxCount; i++)
             {
-                retrievedTransactions[i].IsPublicTransaction.Should().Be(expectedTransactions[i].IsPublicTransaction);
+                retrievedTransactions[i].PublicEntries.Any().Should().Be(expectedTransactions[i].PublicEntries.Any());
                 if (i == 0)
                 {
                     continue;

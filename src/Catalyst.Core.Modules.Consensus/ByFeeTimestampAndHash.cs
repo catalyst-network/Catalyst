@@ -22,17 +22,15 @@
 #endregion
 
 using Catalyst.Abstractions.Consensus;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Wire;
-using Google.Protobuf;
 
 namespace Catalyst.Core.Modules.Consensus
 {
     /// <inheritdoc />
-    public class TransactionComparerByFeeTimestampAndHash : ITransactionComparer
+    public class TransactionComparerByFeeTimestampAndHash : ITransactionComparer<TransactionBroadcastDao>
     {
-        public int Compare(TransactionBroadcast x, TransactionBroadcast y)
+        public int Compare(TransactionBroadcastDao x, TransactionBroadcastDao y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -55,15 +53,15 @@ namespace Catalyst.Core.Modules.Consensus
                 return feeComparison;
             }
 
-            var timeStampComparison = y.Timestamp.CompareTo(x.Timestamp);
+            var timeStampComparison = y.TimeStamp.CompareTo(x.TimeStamp);
             if (timeStampComparison != 0)
             {
                 return timeStampComparison;
             }
 
-            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.Signature.ToByteArray(), y.Signature.ToByteArray());
+            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.Signature.RawBytes.KeyToBytes(), y.Signature.RawBytes.KeyToBytes());
         }
 
-        public static ITransactionComparer Default { get; } = new TransactionComparerByFeeTimestampAndHash();
+        public static ITransactionComparer<TransactionBroadcastDao> Default { get; } = new TransactionComparerByFeeTimestampAndHash();
     }
 }

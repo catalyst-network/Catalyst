@@ -24,7 +24,6 @@
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
-using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
@@ -32,7 +31,7 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.Validators
 {
-    public class TransactionValidator : ITransactionValidator
+    public sealed class TransactionValidator : ITransactionValidator
     {
         private readonly ILogger _logger;
         private readonly IWrapper _cryptoContext;
@@ -55,17 +54,18 @@ namespace Catalyst.Core.Lib.Validators
 
         private bool CheckContractInputFields(TransactionBroadcast transactionBroadcast)
         {
+            // @TODO DO SOMETHING
             return true;
         }
 
         private bool ValidateTransactionFields(TransactionBroadcast transactionBroadcast)
         {
+            // @TODO DO SOMETHING
             return true;
         }
 
         private bool ValidateTransactionSignature(TransactionBroadcast transactionBroadcast, NetworkType networkType)
         {
-            return true;
             if (transactionBroadcast.Signature.RawBytes == ByteString.Empty)
             {
                 _logger.Error("Transaction signature is null");
@@ -76,32 +76,27 @@ namespace Catalyst.Core.Lib.Validators
                 transactionBroadcast.PublicEntries.First().Base.SenderPublicKey.ToByteArray());
             var transactionWithoutSig = transactionBroadcast.Clone();
             transactionWithoutSig.Signature = null;
-            //var signingContext = new SigningContext
-            //{
-            //    SignatureType = transactionBroadcast.ConfidentialEntries.Any()
-            //        ? SignatureType.TransactionConfidential 
-            //        : SignatureType.TransactionPublic,
-            //    NetworkType = networkType
-            //};
 
             if (!_cryptoContext.StdVerify(transactionSignature, transactionWithoutSig.ToByteArray(), transactionBroadcast.Signature.SigningContext.ToByteArray()))
             {
-                _logger.Information(
-                    "Transaction Signature {signature} invalid.",
-                    transactionSignature);
-                return false;
+                return true;
             }
-
-            return true;
+            
+            _logger.Information(
+                "Transaction Signature {signature} invalid.",
+                transactionSignature);
+            return false;
         }
 
         private bool CheckCfEntries(TransactionBroadcast transactionBroadcast)
         {
+            // @TODO DO SOMETHING
             return true;
         }
 
         private bool CheckStEntries(TransactionBroadcast transactionBroadcast)
         {
+            // @TODO DO SOMETHING
             return true;
         }
 

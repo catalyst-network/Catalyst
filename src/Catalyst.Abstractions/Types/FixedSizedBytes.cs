@@ -42,17 +42,17 @@ namespace Catalyst.Abstractions.Types
                 }
                 else
                 {
-                    throw new ArgumentException($"The array should have length {Size}");
+                    throw new ArgumentException($"The array should have length {Size.ToString()}");
                 }
             }
         }
 
-        private static readonly Random _random = new Random();
+        private static readonly Random Random = new Random();
 
-        public static T Random()
+        public static T RandomBytes()
         {
             var newBytes = new T();
-            _random.NextBytes(newBytes.RawBytes);
+            Random.NextBytes(newBytes.RawBytes);
             return newBytes;
         }
     }   

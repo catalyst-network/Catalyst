@@ -44,7 +44,6 @@ namespace Catalyst.Core.Lib.FileTransfer
         /// <param name="recipientId">The recipient identifier.</param>
         /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="correlationGuid">The correlation unique identifier.</param>
-        /// <param name="uploadDtoFactory">The upload message factory.</param>
         public UploadFileTransferInformation(Stream stream,
             PeerId peerId,
             PeerId recipientId,

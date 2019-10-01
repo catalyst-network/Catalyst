@@ -75,7 +75,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             IRepository<TransactionBroadcastDao, string> inMemoryRepository = new InMemoryRepository<TransactionBroadcastDao, string>();
             var mempoolDocumentRepository = new MempoolDocumentRepository(inMemoryRepository);
 
-            _memPool = new Mempool(mempoolDocumentRepository, logger);
+            _memPool = new Mempool(mempoolDocumentRepository);
 
             _transactionBroadcast = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
         }

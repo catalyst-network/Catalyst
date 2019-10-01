@@ -25,31 +25,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Lib.Repository;
-using Catalyst.Protocol.Wire;
-using Google.Protobuf;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Repositories
 {
-    public class MempoolDocumentRepository : RepositoryWrapper<TransactionBroadcastDao>, IMempoolRepository<TransactionBroadcastDao>
+    public class MempoolDocumentRepository : RepositoryWrapper<TransactionBroadcastDao>,
+        IMempoolRepository<TransactionBroadcastDao>
     {
         public MempoolDocumentRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository) { }
 
         /// <inheritdoc />
-        public bool TryReadItem(string signature)
-        {
-            return Repository.TryGet(signature, out _);
-        }
-        
-        public TransactionBroadcastDao ReadItem(string signature)
-        {
-            return Repository.Get(signature);
-        }
+        public bool TryReadItem(string signature) { return Repository.TryGet(signature, out _); }
+
+        public TransactionBroadcastDao ReadItem(string signature) { return Repository.Get(signature); }
 
         /// <inheritdoc />
         public bool DeleteItem(params string[] transactionSignatures)
@@ -64,17 +55,17 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
                     transactionSignatures);
                 return false;
             }
-            
+
             return true;
         }
-        
+
         public bool CreateItem(TransactionBroadcastDao transactionBroadcastDao)
-        {      
+        {
             if (string.IsNullOrEmpty(transactionBroadcastDao.Signature.RawBytes))
             {
                 throw new ArgumentNullException(nameof(transactionBroadcastDao));
             }
-            
+
             try
             {
                 Repository.Add(transactionBroadcastDao);
@@ -88,9 +79,6 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
             return true;
         }
 
-        public new IEnumerable<TransactionBroadcastDao> GetAll()
-        {
-            return Repository.GetAll().ToList();
-        }
+        public new IEnumerable<TransactionBroadcastDao> GetAll() { return Repository.GetAll().ToList(); }
     }
 }

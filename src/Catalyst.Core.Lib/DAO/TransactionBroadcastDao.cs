@@ -24,13 +24,11 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using Catalyst.Abstractions.Repository;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
-using Ipfs;
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
-using SharpRepository.Repository;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO
 {
@@ -56,6 +54,13 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
         }
+
+        public UInt256 SummedEntryFees()
+        {
+            var sum = ContractEntries.Sum(e => UInt256.Parse(e.Base.TransactionFees))
+              + PublicEntries.Sum(e => UInt256.Parse(e.Base.TransactionFees))
+              + ConfidentialEntries.Sum(e => UInt256.Parse(e.Base.TransactionFees));
+            return sum;
+        }
     }
 }
-

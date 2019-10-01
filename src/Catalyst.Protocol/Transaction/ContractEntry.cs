@@ -32,7 +32,11 @@ namespace Catalyst.Protocol.Transaction
 
         public bool IsValid()
         {
-            if (!Data.IsEmpty) {return true;}
+            if (!Data.IsEmpty)
+            {
+                return true;
+            }
+            
             Logger.Debug("{field} cannot be Empty", nameof(Data));
             return false;
         }

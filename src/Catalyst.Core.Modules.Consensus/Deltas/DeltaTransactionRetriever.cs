@@ -27,40 +27,35 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Mempool.Documents;
-using Catalyst.Protocol.Wire;
 using Dawn;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
     /// <inheritdoc />
-    public class DeltaTransactionRetriever : IDeltaTransactionRetriever
+    public class DeltaTransactionRetriever : IDeltaTransactionRetriever<TransactionBroadcastDao>
     {
         private readonly IMempool<TransactionBroadcastDao> _mempool;
-        
+
         /// <inheritdoc />
-        public ITransactionComparer TransactionComparer { get; }
+        public ITransactionComparer<TransactionBroadcastDao> TransactionComparer { get; }
 
         public DeltaTransactionRetriever(IMempool<TransactionBroadcastDao> mempool,
-            ITransactionComparer transactionComparer)
+            ITransactionComparer<TransactionBroadcastDao> transactionComparer)
         {
             _mempool = mempool;
             TransactionComparer = transactionComparer;
         }
 
-
-        //todo
         /// <inheritdoc />
-        public IList<TransactionBroadcast> GetMempoolTransactionsByPriority(int maxCount = 2147483647)
+        public IList<TransactionBroadcastDao> GetMempoolTransactionsByPriority(int maxCount = 2147483647)
         {
-            return new List<TransactionBroadcast>();
-            //Guard.Argument(maxCount, nameof(maxCount)).NotNegative().NotZero();
+            Guard.Argument(maxCount, nameof(maxCount)).NotNegative().NotZero();
 
-            //var allTransactions = _mempool.Repository.GetAll();
-            //var mempoolPrioritised = allTransactions.OrderByDescending(t => t, TransactionComparer)
-            //   .Take(maxCount).Select(t => t).ToList();
+            var allTransactions = _mempool.Repository.GetAll();
+            var mempoolPrioritised = allTransactions.OrderByDescending(t => t, TransactionComparer)
+               .Take(maxCount).Select(t => t).ToList();
 
-            //return mempoolPrioritised;
+            return mempoolPrioritised;
         }
     }
 }

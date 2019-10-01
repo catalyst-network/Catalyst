@@ -24,7 +24,6 @@
 using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;

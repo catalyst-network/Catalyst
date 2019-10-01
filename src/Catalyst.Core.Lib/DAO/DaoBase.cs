@@ -21,41 +21,27 @@
 
 #endregion
 
-using SharpRepository.Repository;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Abstractions.Repository;
-using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
+using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public abstract class DaoBase<TProto, TDao> : IMapperInitializer, 
-        IValueConverter<TProto, TDao>, IDocument
+    public abstract class DaoBase<TProto, TDao> : IMapperInitializer,
+        IValueConverter<TProto, TDao>
     {
-        [Key]
-        [JsonIgnore]
         [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("_id")]
-        public string DocumentId { get; set; }
+        [Key]
+        public string Id { get; set; }
 
-        public TProto ToProtoBuff()
-        {
-            return MapperProvider.MasterMapper.Map<TProto>(this);
-        }
+        public TProto ToProtoBuff() { return MapperProvider.MasterMapper.Map<TProto>(this); }
 
-        public TDao ToDao(TProto protoBuff)
-        {
-            return MapperProvider.MasterMapper.Map<TDao>(protoBuff);
-        }
+        public TDao ToDao(TProto protoBuff) { return MapperProvider.MasterMapper.Map<TDao>(protoBuff); }
 
         public abstract void InitMappers(IMapperConfigurationExpression cfg);
 
-        public TDao Convert(TProto sourceMember, ResolutionContext context)
-        {
-            return ToDao(sourceMember);
-        }
+        public TDao Convert(TProto sourceMember, ResolutionContext context) { return ToDao(sourceMember); }
 
         public TProto Convert(TDao sourceMember, ResolutionContext context)
         {

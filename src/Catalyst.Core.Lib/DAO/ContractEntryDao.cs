@@ -21,11 +21,11 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
-using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO
 {
@@ -34,6 +34,9 @@ namespace Catalyst.Core.Lib.DAO
         public BaseEntryDao Base { get; set; }
         public string Data { get; set; }
         public string Amount { get; set; }
+
+        [Column]
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {

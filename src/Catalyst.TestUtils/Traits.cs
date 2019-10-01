@@ -28,5 +28,6 @@ namespace Catalyst.TestUtils
         public const string TestType = "TestType";
         public const string IntegrationTest = "IntegrationTest";
         public const string EmbeddedChannelTest = "EmbeddedChannelTest";
+        public const string E2ETest = "EndToEndTest";
     }
 }

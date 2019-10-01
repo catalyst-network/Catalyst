@@ -35,6 +35,7 @@ namespace Catalyst.Abstractions.Config
         /// <param name="networkType">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
+        /// <param name="overrideNetworkFile"></param>
         void RunConfigStartUp(string dataDir, 
             NetworkType networkType = NetworkType.Devnet, 
             string sourceFolder = null, 

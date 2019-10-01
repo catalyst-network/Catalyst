@@ -53,7 +53,6 @@ using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using IRpcClient = Catalyst.Abstractions.Rpc.IRpcClient;
@@ -88,7 +87,6 @@ namespace Catalyst.Simulator.RpcClients
 
             var keyServiceStore = new KeyStoreServiceWrapped(cryptoContext);
 
-            var multiHashAlgorithm = new BLAKE2B_256();
             var addressHelper = new AddressHelper(signingContextProvider.NetworkType);
             var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, keyServiceStore, fileSystem,
                 _logger, addressHelper);
@@ -163,7 +161,7 @@ namespace Catalyst.Simulator.RpcClients
                 PublicKey = _recipientPeerId.PublicKey.KeyToString()
             };
 
-            _logger.Information($"Connecting to {_recipientPeerId.Ip}:{_recipientPeerId.Port}");
+            _logger.Information($"Connecting to {peerRpcConfig.HostAddress}:{peerRpcConfig.Port}");
 
             try
             {

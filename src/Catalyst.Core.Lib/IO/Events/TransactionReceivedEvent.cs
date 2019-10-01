@@ -32,6 +32,7 @@ using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Serilog;
+using System;
 
 namespace Catalyst.Core.Lib.IO.Events
 {
