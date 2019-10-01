@@ -33,7 +33,7 @@ namespace Catalyst.Core.Lib.Repository
         Microsoft.EntityFrameworkCore.DbSet<TEntity> Set<TEntity>() where TEntity : class;
     }
 
-    public class EfCoreContext : DbContext, IDbContext
+    public sealed class EfCoreContext : DbContext, IDbContext
     {
         public EfCoreContext(string connectionString)
             : base(new DbContextOptionsBuilder<EfCoreContext>()
@@ -56,16 +56,6 @@ namespace Catalyst.Core.Lib.Repository
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Required code stub
-        }
-
-        public new void Dispose()
-        {
-            this.Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            base.Dispose();
         }
     }
 }
