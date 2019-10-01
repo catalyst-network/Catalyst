@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 
             var retrievedPassword = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(registryType);
 
-            _passwordReader.Received(1).ReadSecurePassword(Arg.Is<string>(s => s.Contains(registryType.Name.ToString())));
+            _passwordReader.Received(1).ReadSecurePassword(Arg.Is<string>(s => s.Contains(registryType.Name)));
             _passwordRegistry.Received(1).AddItemToRegistry(registryType, _secureString);
 
             retrievedPassword.Should().Be(_secureString);
@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 
             var retrievedPassword = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(registryType);
 
-            _passwordReader.Received(1).ReadSecurePassword(Arg.Is<string>(s => s.Contains(registryType.Name.ToString())));
+            _passwordReader.Received(1).ReadSecurePassword(Arg.Is<string>(s => s.Contains(registryType.Name)));
             _passwordRegistry.DidNotReceiveWithAnyArgs().AddItemToRegistry(default, default);
 
             retrievedPassword.Should().BeNull();
@@ -119,7 +119,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 
             var retrievedPassword = _passwordManager.RetrieveOrPromptPassword(registryType);
 
-            _passwordReader.Received(1).ReadSecurePassword(Arg.Is<string>(s => s.Contains(registryType.Name.ToString())));
+            _passwordReader.Received(1).ReadSecurePassword(Arg.Is<string>(s => s.Contains(registryType.Name)));
             retrievedPassword.Should().Be(_secureString);
         }
 

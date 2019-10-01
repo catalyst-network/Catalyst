@@ -64,15 +64,15 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
         [Fact]
         public void TestLengthByte32Random()
         {
-            Byte32 bytes = Byte32.Random();
+            Byte32 bytes = Byte32.RandomBytes();
             bytes.RawBytes.Length.Should().Be(32);
         }
 
         [Fact]
         public void TestByte32Random()
         {
-            Byte32 bytes1 = Byte32.Random();
-            Byte32 bytes2 = Byte32.Random();
+            Byte32 bytes1 = Byte32.RandomBytes();
+            Byte32 bytes2 = Byte32.RandomBytes();
             bytes1.RawBytes.Should().NotEqual(bytes2.RawBytes);
         }
 
@@ -110,15 +110,15 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
         [Fact]
         public void TestLengthByte64Random()
         {
-            Byte64 bytes = Byte64.Random();
+            Byte64 bytes = Byte64.RandomBytes();
             bytes.RawBytes.Length.Should().Be(64);
         }
 
         [Fact]
         public void TestByte64Random()
         {
-            Byte64 bytes1 = Byte64.Random();
-            Byte64 bytes2 = Byte64.Random();
+            Byte64 bytes1 = Byte64.RandomBytes();
+            Byte64 bytes2 = Byte64.RandomBytes();
             bytes1.RawBytes.Should().NotEqual(bytes2.RawBytes);
         }
     }

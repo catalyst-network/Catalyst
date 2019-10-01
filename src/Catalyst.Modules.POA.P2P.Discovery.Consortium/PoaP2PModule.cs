@@ -34,9 +34,9 @@ namespace Catalyst.Modules.POA.P2P
             builder.RegisterType<PoaPeer>();
             builder.RegisterType<PoaDiscovery>().As<IPeerDiscovery>().SingleInstance();
             builder.RegisterType<PeerHeartbeatChecker>().As<IHealthChecker>()
-                .WithParameter("checkHeartbeatIntervalSeconds", 10)
-                .WithParameter("maxNonResponsiveCounter", 5)
-                .SingleInstance();
+               .WithParameter("checkHeartbeatIntervalSeconds", 10)
+               .WithParameter("maxNonResponsiveCounter", 5)
+               .SingleInstance();
         }
     }
 }

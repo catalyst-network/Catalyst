@@ -48,8 +48,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
         public MempoolTests()
         {
-            var logger = Substitute.For<ILogger>();
-            _memPool = new Mempool(Substitute.For<IMempoolRepository<MempoolDocument>>(), logger);
+            _memPool = new Mempool(Substitute.For<IMempoolRepository<MempoolDocument>>());
 
             _transactionBroadcast = TransactionHelper.GetPublicTransaction();
         }

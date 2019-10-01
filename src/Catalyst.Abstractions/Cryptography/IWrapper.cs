@@ -106,6 +106,7 @@ namespace Catalyst.Abstractions.Cryptography
         /// </summary>
         /// <param name="signature"></param>
         /// <param name="message"></param>
+        /// <param name="context"></param>
         /// <returns></returns>
         bool StdVerify(ISignature signature, byte[] message, byte[] context);
 
