@@ -22,19 +22,16 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Repository;
-using Catalyst.Protocol.Wire;
-using Google.Protobuf;
 
 namespace Catalyst.Abstractions.Mempool.Repositories
 {
     public interface IMempoolRepository<T> : IRepositoryWrapper<T> where T : class
     {
-        bool TryReadItem(ByteString signature);
+        bool TryReadItem(string signature);
 
-        T ReadItem(ByteString signature);
-        
+        T ReadItem(string signature);
+
         bool DeleteItem(params string[] transactionSignatures);
 
         bool CreateItem(T transactionBroadcast);

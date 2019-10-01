@@ -75,7 +75,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 var criteriaId = string.Empty;
                 var transactBroadcastRepoRepo = PopulateTransactBroadcastRepo(scope, out criteriaId);
 
-                transactBroadcastRepoRepo.Get(criteriaId).Id.Should().Be(criteriaId);
+                transactBroadcastRepoRepo.Get(criteriaId).DocumentId.Should().Be(criteriaId);
             }
         }
 
@@ -84,8 +84,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
 
             var transactionBroadcastDao = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
-            transactionBroadcastDao.Id = Guid.NewGuid().ToString();
-            Id = transactionBroadcastDao.Id;
+            transactionBroadcastDao.DocumentId = Guid.NewGuid().ToString();
+            Id = transactionBroadcastDao.DocumentId;
 
             transactBroadcastRepo.Add(transactionBroadcastDao);
 

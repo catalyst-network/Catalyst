@@ -41,14 +41,14 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
         public MempoolDocumentRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository) { }
 
         /// <inheritdoc />
-        public bool TryReadItem(ByteString signature)
+        public bool TryReadItem(string signature)
         {
-            return Repository.TryGet(signature.ToBase64(), out _);
+            return Repository.TryGet(signature, out _);
         }
         
-        public TransactionBroadcastDao ReadItem(ByteString signature)
+        public TransactionBroadcastDao ReadItem(string signature)
         {
-            return Repository.Get(signature.ToBase64());
+            return Repository.Get(signature);
         }
 
         /// <inheritdoc />
@@ -70,7 +70,7 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
         
         public bool CreateItem(TransactionBroadcastDao transactionBroadcastDao)
         {      
-            if (transactionBroadcastDao.Signature.Equals(null) || transactionBroadcastDao.Signature.Equals(ByteString.Empty))
+            if (string.IsNullOrEmpty(transactionBroadcastDao.Signature.RawBytes))
             {
                 throw new ArgumentNullException(nameof(transactionBroadcastDao));
             }

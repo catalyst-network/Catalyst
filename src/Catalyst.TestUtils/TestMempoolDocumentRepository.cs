@@ -39,12 +39,12 @@ namespace Catalyst.TestUtils
         {
         }
 
-        public bool TryReadItem(ByteString key)
+        public bool TryReadItem(string key)
         {
             throw new NotImplementedException();
         }
 
-        public TransactionBroadcastDao ReadItem(ByteString key)
+        public TransactionBroadcastDao ReadItem(string key)
         {
             throw new NotImplementedException();
         }

@@ -63,9 +63,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             {
                 var peerRepo = PopulatePeerRepo(scope, out var peerDao);
 
-                peerRepo.Get(peerDao.Id).Id.Should().Be(peerDao.Id);
-                peerRepo.Get(peerDao.Id).PeerIdentifier.PublicKey.Should().Be(peerDao.PeerIdentifier.PublicKey);
-                peerRepo.Get(peerDao.Id).PeerIdentifier.Ip.Should().Be(peerDao.PeerIdentifier.Ip);
+                peerRepo.Get(peerDao.DocumentId).DocumentId.Should().Be(peerDao.DocumentId);
+                peerRepo.Get(peerDao.DocumentId).PeerIdentifier.PublicKey.Should().Be(peerDao.PeerIdentifier.PublicKey);
+                peerRepo.Get(peerDao.DocumentId).PeerIdentifier.Ip.Should().Be(peerDao.PeerIdentifier.Ip);
             }
         }
 
@@ -75,11 +75,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             {
                 var peerRepo = PopulatePeerRepo(scope, out var peerDao);
 
-                var retrievedPeer = peerRepo.Get(peerDao.Id);
+                var retrievedPeer = peerRepo.Get(peerDao.DocumentId);
                 retrievedPeer.Touch();
                 peerRepo.Update(retrievedPeer);
 
-                var retrievedPeerModified = peerRepo.Get(peerDao.Id);
+                var retrievedPeerModified = peerRepo.Get(peerDao.DocumentId);
                 var now = DateTime.UtcNow.Date;
 
                 if (retrievedPeerModified.Modified == null)
@@ -97,10 +97,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
 
             var peerDao = new PeerDao().ToDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString())});
-            peerDao.Id = Guid.NewGuid().ToString();
+            peerDao.DocumentId = Guid.NewGuid().ToString();
 
             peerDao.PeerIdentifier = new PeerIdDao().ToDao(PeerIdHelper.GetPeerId(new Random().Next().ToString()));
-            peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
+            peerDao.PeerIdentifier.DocumentId = Guid.NewGuid().ToString();
 
             peerRepo.Add(peerDao);
             peerDaoOutput = peerDao;
