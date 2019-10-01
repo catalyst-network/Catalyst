@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Peer;
@@ -30,8 +31,11 @@ namespace Catalyst.Abstractions.P2P
     /// <summary>
     /// This class is used to validate peers by carrying out a peer challenge response
     /// </summary>
-    public interface IPeerQueryTip
+    public interface IPeerQueryTip : IDisposable
     {
+        bool Disposing { get; }
+        IPeerClient PeerClient { get; }
+        
         /// <summary>
         /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 
         /// </summary>

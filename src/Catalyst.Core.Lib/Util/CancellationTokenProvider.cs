@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.Util
             CancellationTokenSource = new CancellationTokenSource();
         }
         
-        public CancellationTokenProvider(int timeToLiveInMs)
+        public CancellationTokenProvider(TimeSpan timeToLiveInMs)
         {
             CancellationTokenSource = new CancellationTokenSource(timeToLiveInMs);
         }

@@ -27,12 +27,12 @@ using Multiformats.Hash;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    internal sealed class PeerQueryTipResponse : IPeerQueryTipResponse
+    public sealed class PeerQueryTipResponse : IPeerQueryTipResponse
     {
         public PeerId PeerId { get; }
         public Multihash DeltaHash { get; }
 
-        internal PeerQueryTipResponse(PeerId peerId, Multihash deltaHash)
+        public PeerQueryTipResponse(PeerId peerId, Multihash deltaHash)
         {
             PeerId = peerId;
             DeltaHash = deltaHash;

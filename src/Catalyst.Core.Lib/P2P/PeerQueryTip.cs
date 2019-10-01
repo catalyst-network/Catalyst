@@ -36,16 +36,18 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using Dawn;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public sealed class PeerQueryTip : IPeerQueryTip, IDisposable
+    public sealed class PeerQueryTip : IPeerQueryTip
     {
         private readonly ILogger _logger;
         private readonly PeerId _senderIdentifier;
-        private readonly IPeerClient _peerClient;
+        public IPeerClient PeerClient { get; }
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
+        public bool Disposing { get; private set; }
 
         public ReplaySubject<IPeerQueryTipResponse> QueryTipResponseMessageStreamer { get; }
 
@@ -59,12 +61,14 @@ namespace Catalyst.Core.Lib.P2P
             QueryTipResponseMessageStreamer = new ReplaySubject<IPeerQueryTipResponse>(1, observableScheduler);
             _senderIdentifier = peerSettings.PeerId;
             _logger = logger;
-            _peerClient = peerClient;
+            PeerClient = peerClient;
             _cancellationTokenProvider = cancellationTokenProvider;
         }
 
         public async Task<bool> QueryPeerTipAsync(PeerId recipientPeerId)
         {
+            Guard.Argument(_senderIdentifier, nameof(_senderIdentifier)).NotNull();
+            
             try
             {
                 var messageDto = new MessageDto(
@@ -72,9 +76,9 @@ namespace Catalyst.Core.Lib.P2P
                     recipientPeerId
                 );
                 
-                _logger.Verbose($"Query Peer Chain tip to: {recipientPeerId}");
+                PeerClient.SendMessage(messageDto);
 
-                _peerClient.SendMessage(messageDto);
+                _logger.Verbose($"Query Peer Chain tip to: {recipientPeerId}");
                 
                 using (_cancellationTokenProvider.CancellationTokenSource)
                 {
@@ -99,8 +103,16 @@ namespace Catalyst.Core.Lib.P2P
             return true;
         }
 
-        public void Dispose()
+        public void Dispose() { Dispose(true); }
+
+        private void Dispose(bool disposing)
         {
+            Disposing = disposing;
+            if (!Disposing)
+            {
+                return;
+            }
+
             QueryTipResponseMessageStreamer?.Dispose();
         }
     }
