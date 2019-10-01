@@ -34,38 +34,42 @@ using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
+using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
-    public sealed class PingResponseObserver
-        : ResponseObserverBase<PingResponse>,
+    public sealed class DeltaHeightResponseObserver
+        : ResponseObserverBase<DeltaHeightResponse>,
             IP2PMessageObserver, IPeerClientObservable
     {
-        private readonly IPeerChallenger _peerChallenger;
+        private readonly IPeerQueryTip _peerQueryTip;
         public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
-        
+
         /// <param name="logger"></param>
-        /// <param name="peerChallenger"></param>
-        public PingResponseObserver(ILogger logger, IPeerChallenger peerChallenger)
+        /// <param name="peerQueryTip"></param>
+        public DeltaHeightResponseObserver(ILogger logger, IPeerQueryTip peerQueryTip)
             : base(logger)
         {
-            _peerChallenger = peerChallenger;
+            _peerQueryTip = peerQueryTip;
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
-        /// <param name="pingResponse"></param>
+        /// <param name="deltaHeightResponse"></param>
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
-        protected override void HandleResponse(PingResponse pingResponse,
+        protected override void HandleResponse(DeltaHeightResponse deltaHeightResponse,
             IChannelHandlerContext channelHandlerContext,
             PeerId senderPeerId,
             ICorrelationId correlationId)
         {
-            ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, senderPeerId, correlationId));
-            _peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(senderPeerId));
+            ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, senderPeerId, correlationId));
+            
+            _peerQueryTip.QueryTipResponseMessageStreamer.OnNext(
+                new PeerQueryTipResponse(senderPeerId, Multihash.Parse(deltaHeightResponse.DeltaHash.ToString()))
+            );
         }
     }
 }

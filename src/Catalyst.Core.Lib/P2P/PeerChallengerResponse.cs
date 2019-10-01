@@ -26,7 +26,7 @@ using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public class PeerChallengerResponse : IPeerChallengeResponse
+    public sealed class PeerChallengerResponse : IPeerChallengeResponse
     {
         public PeerId PeerId { get; }
 
