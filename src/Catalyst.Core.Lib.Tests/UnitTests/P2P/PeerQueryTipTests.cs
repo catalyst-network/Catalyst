@@ -44,7 +44,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
     {
         private readonly IPeerQueryTip _peerQueryTip;
         private readonly IPeerSettings _testSettings;
-        private CancellationTokenProvider _cancellationProvider;
+        private readonly CancellationTokenProvider _cancellationProvider;
 
         public PeerQueryTipTests(ITestOutputHelper output) : base(output)
         {

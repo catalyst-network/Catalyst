@@ -49,9 +49,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override DeltaHeightResponse HandleRequest(DeltaHeightRequest pingRequest, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)
+        protected override DeltaHeightResponse HandleRequest(DeltaHeightRequest deltaHeightRequest, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)
         {
-            Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
+            Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             
