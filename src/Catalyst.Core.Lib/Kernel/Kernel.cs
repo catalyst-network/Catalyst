@@ -106,8 +106,6 @@ namespace Catalyst.Core.Lib.Kernel
                 var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection(_withPersistence));
                 ContainerBuilder.RegisterSharpRepository(repoFactory);
             }
-            
-            ContainerBuilder.RegisterModule(configurationModule);
 
             Logger = new LoggerConfiguration()
                .ReadFrom

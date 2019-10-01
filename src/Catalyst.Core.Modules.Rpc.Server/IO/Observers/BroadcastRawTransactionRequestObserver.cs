@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             PeerId senderPeerId,
             ICorrelationId correlationId)
         {
-            var responseCode = _transactionReceivedEvent.OnTransactionReceived(messageDto.ToProtocolMessage(senderPeerId, correlationId));
+            var responseCode = _transactionReceivedEvent.OnTransactionReceived(messageDto.Transaction.ToProtocolMessage(senderPeerId, correlationId));
 
             return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
         }
