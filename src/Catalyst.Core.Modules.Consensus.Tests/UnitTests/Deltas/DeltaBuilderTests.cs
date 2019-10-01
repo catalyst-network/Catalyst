@@ -168,10 +168,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 _randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash).NextInt());
 
             var rawAndSaltedEntriesBySignature = selectedTransactions.SelectMany(
-                t => t.PublicEntries.Select(e => new
+                t => t.PublicEntries.Select(e =>
                 {
-                    RawEntry = e,
-                    SaltedAndHashedEntry = e.ToByteArray().Concat(salt).ComputeRawHash(_hashAlgorithm)
+                    var publicEntriesProtoBuff = e.ToProtoBuff();
+                    return new
+                    {
+                        RawEntry = publicEntriesProtoBuff,
+                        SaltedAndHashedEntry = publicEntriesProtoBuff.ToByteArray().Concat(salt).ComputeRawHash(_hashAlgorithm)
+                    };
                 }));
 
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
