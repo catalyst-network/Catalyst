@@ -20,9 +20,9 @@ steps:
 
 - task: PowerShell@2
   inputs: 
-    targetType: 'inline'
-    script: 'Write-Host Hello World Testing Powershell script section'
-
+    targetType: 'filePath'
+    filePath:'sql_powershell.ps1'
+    
 - bash: |
     git submodule update --init --force --recursive
   displayName: 'Clone submodules'
