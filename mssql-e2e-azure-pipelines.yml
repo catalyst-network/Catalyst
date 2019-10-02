@@ -35,6 +35,13 @@ steps:
   displayName: Windows install rust
 
 - task: DotNetCoreCLI@2
+  displayName: 'Build solution'
+  inputs:
+    projects: 'src/**/*.csproj'
+    arguments: '--configuration $(BuildConfiguration)'
+  failOnStandardError: 'true'
+
+- task: DotNetCoreCLI@2
   displayName: 'Run unit tests'
   inputs:
     command: test
