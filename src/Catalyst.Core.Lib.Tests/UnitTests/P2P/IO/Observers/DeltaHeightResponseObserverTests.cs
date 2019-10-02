@@ -45,11 +45,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         public DeltaHeightResponseObserverTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _observer = new DeltaHeightResponseObserver(Substitute.For<ILogger>(), Substitute.For<IDeltaQu>());
+            _observer = new DeltaHeightResponseObserver(Substitute.For<ILogger>(), Substitute.For<IPeerQueryTip>());
         }
 
         [Fact]
-        public void Observer_Can_Process_PingResponse_Correctly()
+        public void Observer_Can_Process_DeltaHeightResponse_Correctly()
         {
             var testScheduler = new TestScheduler();
 
