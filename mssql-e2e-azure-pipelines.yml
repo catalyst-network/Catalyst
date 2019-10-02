@@ -18,6 +18,10 @@ steps:
   inputs:
     version: 2.2.104
 
+- task: PowerShell@2
+    inputs: 
+       script: 'Write-Host Hello World Testing Powershell script section'
+
 - bash: |
     git submodule update --init --force --recursive
   displayName: 'Clone submodules'
