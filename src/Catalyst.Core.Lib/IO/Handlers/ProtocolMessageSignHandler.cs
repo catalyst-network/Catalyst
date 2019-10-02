@@ -32,7 +32,6 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Serilog;
-using SimpleBase;
 
 namespace Catalyst.Core.Lib.IO.Handlers
 {
@@ -58,19 +57,8 @@ namespace Catalyst.Core.Lib.IO.Handlers
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             Logger.Verbose("Signing message {message}", message);
-
             var protocolMessageSigned = message.Content.Sign(_keySigner, _signingContext);
-
             var signedDto = new SignedMessageDto(protocolMessageSigned, message.RecipientPeerIdentifier);
-
-            var pub = protocolMessageSigned.PeerId.PublicKey;
-            var base32 = Base32.Crockford.Encode(Convert.FromBase64String(pub.ToBase64()), false).ToLower();
-
-            if (!protocolMessageSigned.TypeUrl.Contains("Ping"))
-            {
-                var a = 0;
-            }
-
             return context.WriteAsync(signedDto);
         }
     }
