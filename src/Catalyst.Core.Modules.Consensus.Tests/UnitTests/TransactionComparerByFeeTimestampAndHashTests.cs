@@ -42,25 +42,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 
         public TransactionComparerByFeeTimestampAndHashTests(ITestOutputHelper output)
         {
-            var mappers = new IMapperInitializer[]
-            {
-                new ProtocolMessageDao(),
-                new ConfidentialEntryDao(),
-                new ProtocolErrorMessageSignedDao(),
-                new PeerIdDao(),
-                new SigningContextDao(),
-                new CoinbaseEntryDao(),
-                new PublicEntryDao(),
-                new ConfidentialEntryDao(),
-                new TransactionBroadcastDao(),
-                new RangeProofDao(),
-                new ContractEntryDao(),
-                new SignatureDao(),
-                new BaseEntryDao(),
-            };
-
-            var map = new MapperProvider(mappers);
-            map.Start();
+            TestMappers.Start();
 
             _output = output;
             _random = new Random();
