@@ -22,14 +22,15 @@ steps:
   inputs: 
     targetType: 'filePath'
     filePath:'sql_powershell.ps1'
-    
+    script: 'Write-Host Hello World Testing Powershell script section'
+
 - bash: |
     git submodule update --init --force --recursive
   displayName: 'Clone submodules'
 
 - script: |
     curl -sSf -o rustup-init.exe https://win.rustup.rs
-    rustup-init.exe -y --default-toolchain stable
+    rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
     echo "##vso[task.setvariable variable=PATH;]%PATH%;%USERPROFILE%\.cargo\bin"
   displayName: Windows install rust
 
