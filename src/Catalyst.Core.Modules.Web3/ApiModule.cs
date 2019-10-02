@@ -114,19 +114,11 @@ namespace Catalyst.Core.Modules.Web3
 
         public void Configure(IApplicationBuilder app)
         {
-            var executingAssembly = Assembly.GetExecutingAssembly().Location;
-            var buildPath = Path.GetDirectoryName(executingAssembly);
-            var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
-
             app.ApplicationServices = new AutofacServiceProvider(_container);
             app.UseDeveloperExceptionPage();
             app.UseCors("AllowOrigin");
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(webDirectory.FullName)
-            //});
             app.UseMvc(routes => { routes.MapRoute("CatalystApi", "api/{controller}/{action}/{id}"); });
 
             if (_addSwagger)

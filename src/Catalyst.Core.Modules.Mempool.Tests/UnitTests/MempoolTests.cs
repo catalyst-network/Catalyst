@@ -125,18 +125,18 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             _memPool.Repository.Count().Should().Be(0);
         }
 
-        [Fact(Skip = "don't like testing we hit a logger")]
-        public void Delete_should_log_deletion_errors()
-        {
-            var keys = Enumerable.Range(0, 3).Select(i => i.ToString()).ToArray();
-            var connectTimeoutException = new TimeoutException("that mempool connection was too slow");
-            _memPool.Repository.WhenForAnyArgs(t => t.DeleteItem(keys))
-               .Throw(connectTimeoutException);
+        //[Fact(Skip = "don't like testing we hit a logger")]
+        //public void Delete_should_log_deletion_errors()
+        //{
+        //    var keys = Enumerable.Range(0, 3).Select(i => i.ToString()).ToArray();
+        //    var connectTimeoutException = new TimeoutException("that mempool connection was too slow");
+        //    _memPool.Repository.WhenForAnyArgs(t => t.DeleteItem(keys))
+        //       .Throw(connectTimeoutException);
 
-            var result = _memPool.Repository.DeleteItem(keys);
+        //    var result = _memPool.Repository.DeleteItem(keys);
 
-            result.Should().BeFalse();
-        }
+        //    result.Should().BeFalse();
+        //}
 
         [Fact]
         public void Get_When_Key_Not_In_Store_Should_Throw()

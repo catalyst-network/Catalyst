@@ -62,5 +62,18 @@ namespace Catalyst.Core.Lib.DAO
               + ConfidentialEntries.Sum(e => UInt256.Parse(e.Base.TransactionFees));
             return sum;
         }
+
+        public bool IsContractDeployment() { return ToProtoBuff().IsContractDeployment; }
+
+        public bool IsContractCall() { return ToProtoBuff().IsContractCall; }
+
+        public bool IsPublicTransaction() { return ToProtoBuff().IsPublicTransaction; }
+
+        public bool IsConfidentialTransaction() { return ToProtoBuff().IsConfidentialTransaction; }
+
+        public bool HasValidEntries()
+        {
+            return ToProtoBuff().HasValidEntries();
+        }
     }
 }
