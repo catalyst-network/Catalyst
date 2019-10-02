@@ -43,11 +43,8 @@ namespace Catalyst.Core.Lib.IO.Handlers
             _keySigner = keySigner;
         }
 
-        //todo
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage signedMessage)
         {
-            var pub = signedMessage.PeerId.PublicKey;
-            var base32 = Base32.Crockford.Encode(Convert.FromBase64String(pub.ToBase64()), false).ToLower();
             Logger.Verbose("Received {msg}", signedMessage);
             if (!Verify(signedMessage))
             {

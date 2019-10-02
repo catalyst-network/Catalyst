@@ -24,18 +24,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
-using Nethermind.Dirichlet.Numerics;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 using Xunit;
@@ -50,25 +42,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
         public MempoolTests()
         {
-            var mappers = new IMapperInitializer[]
-            {
-                new ProtocolMessageDao(),
-                new ConfidentialEntryDao(),
-                new ProtocolErrorMessageSignedDao(),
-                new PeerIdDao(),
-                new SigningContextDao(),
-                new CoinbaseEntryDao(),
-                new PublicEntryDao(),
-                new ConfidentialEntryDao(),
-                new TransactionBroadcastDao(),
-                new RangeProofDao(),
-                new ContractEntryDao(),
-                new SignatureDao(),
-                new BaseEntryDao()
-            };
-
-            var map = new MapperProvider(mappers);
-            map.Start();
+            TestMappers.Start();
 
             IRepository<TransactionBroadcastDao, string> inMemoryRepository =
                 new InMemoryRepository<TransactionBroadcastDao, string>();
@@ -123,16 +97,16 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         //    result.Should().BeFalse();
         //}
 
-        [Fact]
-        public void Get_When_Key_Not_In_Store_Should_Throw()
-        {
-            var a = _memPool.Repository.ReadItem("Signature that doesn't exist");
-            var b = 0;
+        //[Fact]
+        //public void Get_When_Key_Not_In_Store_Should_Throw()
+        //{
+        //    var a = _memPool.Repository.ReadItem("Signature that doesn't exist");
+        //    var b = 0;
 
-            //_memPool.Repository.ReadItem(Arg.Any<string>()).ThrowsForAnyArgs(new KeyNotFoundException());
-            //new Action(() => _memPool.Repository.ReadItem("Signature that doesn't exist"))
-            //   .Should().Throw<KeyNotFoundException>();
-        }
+        //    //_memPool.Repository.ReadItem(Arg.Any<string>()).ThrowsForAnyArgs(new KeyNotFoundException());
+        //    //new Action(() => _memPool.Repository.ReadItem("Signature that doesn't exist"))
+        //    //   .Should().Throw<KeyNotFoundException>();
+        //}
 
         //[Fact]
         //public void SaveMempoolDocument_Should_Not_Override_Existing_Record()

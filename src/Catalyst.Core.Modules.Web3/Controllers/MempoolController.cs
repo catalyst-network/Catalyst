@@ -46,16 +46,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         [HttpGet]
         public JsonResult GetMempool()
         {
-            var mempool = _mempoolRepository.GetAll().ToList();
-            mempool.ForEach(x =>
-            {
-                x.Signature.RawBytes = x.Signature.RawBytes;
-                x.PublicEntries.First().Base.SenderPublicKey =
-                    x.PublicEntries.First().Base.SenderPublicKey;
-                x.ContractEntries.First().Base.SenderPublicKey =
-                    x.ContractEntries.First().Base.SenderPublicKey;
-            });
-            return Json(mempool, new JsonSerializerSettings
+            return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
             {
                 Converters = JsonConverterProviders.Converters.ToList()
             });
