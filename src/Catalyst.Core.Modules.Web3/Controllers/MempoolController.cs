@@ -22,16 +22,12 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Mempool.Repositories;
-using Google.Protobuf;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using SimpleBase;
 using BaseController = Microsoft.AspNetCore.Mvc.Controller;
 
 namespace Catalyst.Core.Modules.Web3.Controllers
@@ -53,26 +49,16 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             var mempool = _mempoolRepository.GetAll().ToList();
             mempool.ForEach(x =>
             {
-                x.Signature.RawBytes = Base58.Bitcoin.Encode(Base32.Crockford.Decode(x.Signature.RawBytes));
+                x.Signature.RawBytes = x.Signature.RawBytes;
                 x.PublicEntries.First().Base.SenderPublicKey =
-                    Base58.Bitcoin.Encode(Base32.Crockford.Decode(x.PublicEntries.First().Base.SenderPublicKey));
+                    x.PublicEntries.First().Base.SenderPublicKey;
                 x.ContractEntries.First().Base.SenderPublicKey =
-                    Base58.Bitcoin.Encode(Base32.Crockford.Decode(x.ContractEntries.First().Base.SenderPublicKey));
+                    x.ContractEntries.First().Base.SenderPublicKey;
             });
             return Json(mempool, new JsonSerializerSettings
             {
                 Converters = JsonConverterProviders.Converters.ToList()
             });
         }
-
-        //[HttpGet]
-        //public JsonResult GetMempool()
-        //{
-        //    return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
-        //    {
-        //        Converters = JsonConverterProviders.Converters.ToList()
-        //    });
-        //}
-
     }
 }

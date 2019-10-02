@@ -22,6 +22,7 @@
 #endregion
 
 using System.Linq;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
@@ -52,6 +53,26 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 
         public TransactionReceivedEventTests()
         {
+            var mappers = new IMapperInitializer[]
+            {
+                new ProtocolMessageDao(),
+                new ConfidentialEntryDao(),
+                new ProtocolErrorMessageSignedDao(),
+                new PeerIdDao(),
+                new SigningContextDao(),
+                new CoinbaseEntryDao(),
+                new PublicEntryDao(),
+                new ConfidentialEntryDao(),
+                new TransactionBroadcastDao(),
+                new RangeProofDao(),
+                new ContractEntryDao(),
+                new SignatureDao(),
+                new BaseEntryDao(),
+            };
+
+            var map = new MapperProvider(mappers);
+            map.Start();
+
             _peerSettings = Substitute.For<IPeerSettings>();
             _peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
@@ -85,6 +106,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
                .Returns(true);
+
             _mempool.Repository.TryReadItem(sig).Returns(true);
 
             _transactionReceivedEvent
@@ -107,8 +129,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Successful);
 
-            _mempool.Repository.Received(1).CreateItem(Arg.Is<TransactionBroadcastDao>(
-                savedDoc => savedDoc.Equals(transaction)));
+            _mempool.Repository.Received(1).Add(Arg.Any<TransactionBroadcastDao>());
             _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
                 broadcastedMessage => broadcastedMessage.Value.ToByteArray().SequenceEqual(transaction.ToByteArray())));
         }

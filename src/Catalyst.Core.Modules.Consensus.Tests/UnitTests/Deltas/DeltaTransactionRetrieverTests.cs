@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Modules.Consensus.Deltas;
@@ -41,6 +42,26 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaTransactionRetrieverTests()
         {
+            var mappers = new IMapperInitializer[]
+            {
+                new ProtocolMessageDao(),
+                new ConfidentialEntryDao(),
+                new ProtocolErrorMessageSignedDao(),
+                new PeerIdDao(),
+                new SigningContextDao(),
+                new CoinbaseEntryDao(),
+                new PublicEntryDao(),
+                new ConfidentialEntryDao(),
+                new TransactionBroadcastDao(),
+                new RangeProofDao(),
+                new ContractEntryDao(),
+                new SignatureDao(),
+                new BaseEntryDao()
+            };
+
+            var map = new MapperProvider(mappers);
+            map.Start();
+
             var random = new Random();
 
             var mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();

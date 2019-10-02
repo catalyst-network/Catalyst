@@ -28,6 +28,7 @@ using System.Text;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.DAO;
@@ -67,6 +68,27 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaBuilderTests()
         {
+            var mappers = new IMapperInitializer[]
+            {
+                new ProtocolMessageDao(),
+                new ConfidentialEntryDao(),
+                new ProtocolErrorMessageSignedDao(),
+                new PeerIdDao(),
+                new SigningContextDao(),
+                new CoinbaseEntryDao(),
+                new PublicEntryDao(),
+                new ConfidentialEntryDao(),
+                new TransactionBroadcastDao(),
+                new RangeProofDao(),
+                new ContractEntryDao(),
+                new SignatureDao(),
+                new BaseEntryDao(),
+            };
+
+            var map = new MapperProvider(mappers);
+            map.Start();
+
+
             _random = new Random();
 
             _hashAlgorithm = Substitute.For<IMultihashAlgorithm>();
@@ -184,7 +206,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .ToArray();
 
             var signaturesInOrder = selectedTransactions
-               .Select(p => p.Signature.RawBytes.KeyToBytes())
+               .Select(p => p.Signature.ToProtoBuff().ToByteArray())
                .OrderBy(s => s, ByteUtil.ByteListComparer.Default)
                .SelectMany(b => b)
                .ToArray();
