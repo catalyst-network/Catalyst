@@ -39,7 +39,7 @@ steps:
   inputs:
     projects: 'src/**/*.csproj'
     arguments: '--configuration $(BuildConfiguration)'
-  failOnStandardError: 'true'
+    failOnStandardError: 'true'
 
 - task: DotNetCoreCLI@2
   displayName: 'Run unit tests'
