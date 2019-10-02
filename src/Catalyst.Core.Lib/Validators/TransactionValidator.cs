@@ -73,20 +73,12 @@ namespace Catalyst.Core.Lib.Validators
                 return false;
             }
 
-            var transactionSignature = _cryptoContext.SignatureFromBytes(transactionBroadcast.Signature.ToByteArray(),
+            var transactionSignature = _cryptoContext.SignatureFromBytes(transactionBroadcast.Signature.RawBytes.ToByteArray(),
                 transactionBroadcast.PublicEntries.First().Base.SenderPublicKey.ToByteArray());
             var transactionWithoutSig = transactionBroadcast.Clone();
+            transactionWithoutSig.Signature = null;
 
-            var signingContext = new SigningContext
-            {
-                SignatureType = transactionBroadcast.ConfidentialEntries.Any()
-                    ? SignatureType.TransactionConfidential 
-                    : SignatureType.TransactionPublic,
-                NetworkType = networkType
-            };
-
-            if (_cryptoContext.StdVerify(transactionSignature, transactionWithoutSig.ToByteArray(),
-                signingContext.ToByteArray()))
+            if (!_cryptoContext.StdVerify(transactionSignature, transactionWithoutSig.ToByteArray(), transactionBroadcast.Signature.SigningContext.ToByteArray()))
             {
                 return true;
             }
