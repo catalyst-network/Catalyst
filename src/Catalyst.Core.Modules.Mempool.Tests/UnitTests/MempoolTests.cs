@@ -86,31 +86,16 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
             var mempoolDocument =
                 _memPool.Repository.Find(x => x.Signature.RawBytes == _transactionBroadcast.Signature.RawBytes);
-            var expectedTransaction = _transactionBroadcast.ToProtoBuff();
-            var transactionFromMemPool = mempoolDocument.ToProtoBuff();
+            var expectedTransaction = _transactionBroadcast;
+            var transactionFromMemPool = mempoolDocument;
 
-            transactionFromMemPool.PublicEntries.Single().Amount.ToUInt256().Should()
-               .Be(expectedTransaction.PublicEntries.Single().Amount.ToUInt256());
+            transactionFromMemPool.PublicEntries.Single().Amount.Should()
+               .Be(expectedTransaction.PublicEntries.Single().Amount);
             transactionFromMemPool.Signature.RawBytes.SequenceEqual(expectedTransaction.Signature.RawBytes).Should()
                .BeTrue();
-            transactionFromMemPool.Timestamp.Should().Be(expectedTransaction.Timestamp);
+            transactionFromMemPool.TimeStamp.Should().Be(expectedTransaction.TimeStamp);
             transactionFromMemPool.SummedEntryFees().Should().Be(expectedTransaction.SummedEntryFees());
         }
-
-        //[Fact]
-        //public void Get_should_retrieve_saved_transaction_matching_their_keys()
-        //{
-        //    const int numTx = 10;
-        //    var documents = GetTestingMempoolDocuments(numTx);
-        //    _memPool.Repository.Add(documents);
-
-        //    for (var i = 0; i < numTx; i++)
-        //    {
-        //        var signature = $"key{i}".KeyToBytes().ToByteString();
-        //        var mempoolDocument = _memPool.Repository.Find(x => x.Signature.RawBytes == signature).ToProtoBuff();
-        //        mempoolDocument.PublicEntries.Single().Amount.ToUInt256().Should().Be((UInt256) i);
-        //    }
-        //}
 
         [Fact]
         public void Delete_should_delete_all_transactions()
@@ -219,8 +204,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             var content = _memPool.Repository.GetAll().ToList();
 
             content.Count.Should().Be(documentCount);
-            content.Select(d => d.ToProtoBuff().ToByteString()).Should()
-               .BeEquivalentTo(mempoolDocs.Select(d => d.ToProtoBuff().ToByteString()));
+            content.Should().BeEquivalentTo(mempoolDocs);
         }
 
         private static List<TransactionBroadcastDao> GetTestingMempoolDocuments(int documentCount)
@@ -228,20 +212,6 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             return Enumerable.Range(0, documentCount).Select(i => new TransactionBroadcastDao().ToDao(
                     TransactionHelper.GetPublicTransaction((uint) i, signature: $"key{i}")))
                .ToList();
-        }
-
-        [Fact]
-        public void GetMempoolContentEncoded_should_return_an_array_of_bytes_of_strings_of_all_transactions()
-        {
-            var documentCount = 7;
-            var mempoolDocs = GetTestingMempoolDocuments(documentCount);
-            _memPool.Repository.Add(mempoolDocs);
-
-            var content = _memPool.Repository.GetAll().ToList();
-
-            content.Count.Should().Be(documentCount);
-            content.Select(d => d.ToProtoBuff().ToByteString()).Should()
-               .BeEquivalentTo(mempoolDocs.Select(d => d.ToProtoBuff().ToByteString()));
         }
 
         [Fact]
