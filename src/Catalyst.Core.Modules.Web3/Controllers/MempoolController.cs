@@ -36,11 +36,11 @@ namespace Catalyst.Core.Modules.Web3.Controllers
     [Route("api/[controller]/[action]")]
     public sealed class MempoolController : BaseController
     {
-        private readonly MempoolDocumentRepository _mempoolRepository;
+        private readonly MempoolRepository _mempoolRepository;
 
         public MempoolController(IMempoolRepository<TransactionBroadcastDao> mempoolRepository)
         {
-            _mempoolRepository = (MempoolDocumentRepository) mempoolRepository;
+            _mempoolRepository = (MempoolRepository) mempoolRepository;
         }
 
         [HttpGet]

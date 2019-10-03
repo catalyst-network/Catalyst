@@ -32,10 +32,10 @@ using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
 {
-    public sealed class TestMempoolDocumentRepository : RepositoryWrapper<TransactionBroadcastDao>,
+    public sealed class TestMempoolRepository : RepositoryWrapper<TransactionBroadcastDao>,
         IMempoolRepository<TransactionBroadcastDao>
     {
-        public TestMempoolDocumentRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository)
+        public TestMempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository)
         {
         }
 

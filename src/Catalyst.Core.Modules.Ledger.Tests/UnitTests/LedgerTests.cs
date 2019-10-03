@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
@@ -98,7 +99,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
             _testScheduler.Start();
 
-            _mempool.Repository.ReceivedWithAnyArgs(updates.Length).DeleteItem(default);
+            _mempool.Repository.ReceivedWithAnyArgs(updates.Length).Delete(Arg.Any<IEnumerable<TransactionBroadcastDao>>());
         }
 
         public void Dispose()

@@ -21,34 +21,16 @@
 
 #endregion
 
-using Catalyst.Abstractions.DAO;
+using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Repository;
+using SharpRepository.Repository;
 
-namespace Catalyst.TestUtils
+namespace Catalyst.Core.Modules.Mempool.Repositories
 {
-    public static class TestMappers
+    public class MempoolRepository : RepositoryWrapper<TransactionBroadcastDao>,
+        IMempoolRepository<TransactionBroadcastDao>
     {
-        public static void Start()
-        {
-            var mappers = new IMapperInitializer[]
-            {
-                new ProtocolMessageDao(),
-                new ConfidentialEntryDao(),
-                new ProtocolErrorMessageSignedDao(),
-                new PeerIdDao(),
-                new SigningContextDao(),
-                new CoinbaseEntryDao(),
-                new PublicEntryDao(),
-                new ConfidentialEntryDao(),
-                new TransactionBroadcastDao(),
-                new RangeProofDao(),
-                new ContractEntryDao(),
-                new SignatureDao(),
-                new BaseEntryDao()
-            };
-
-            var map = new MapperProvider(mappers);
-            map.Start();
-        }
+        public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository) { }
     }
 }

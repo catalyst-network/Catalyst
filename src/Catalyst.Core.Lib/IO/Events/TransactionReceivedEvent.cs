@@ -28,11 +28,9 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Serilog;
-using System;
 
 namespace Catalyst.Core.Lib.IO.Events
 {
@@ -71,7 +69,7 @@ namespace Catalyst.Core.Lib.IO.Events
             _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
 
             // https://github.com/catalyst-network/Catalyst.Node/issues/910 - should we fail or succeed if we already have the transaction in the ledger?
-            if (_mempool.Repository.TryReadItem(transactionSignature.RawBytes))
+            if (_mempool.Repository.Exists(x => x.Signature.RawBytes == transactionSignature.RawBytes))
             {
                 _logger.Information("Transaction {signature} already exists in mempool", transactionSignature);
                 return ResponseCode.Error;

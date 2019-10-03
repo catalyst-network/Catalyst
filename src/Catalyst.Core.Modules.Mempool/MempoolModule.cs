@@ -38,7 +38,7 @@ namespace Catalyst.Core.Modules.Mempool
             builder.Register(c => new InMemoryRepository<TransactionBroadcastDao, string>())
                .As<IRepository<TransactionBroadcastDao, string>>()
                .SingleInstance();
-            builder.RegisterType<MempoolDocumentRepository>().As<IMempoolRepository<TransactionBroadcastDao>>()
+            builder.RegisterType<MempoolRepository>().As<IMempoolRepository<TransactionBroadcastDao>>()
                .SingleInstance();
             builder.RegisterType<Mempool>().As<IMempool<TransactionBroadcastDao>>().SingleInstance();
         }
