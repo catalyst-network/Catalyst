@@ -33,12 +33,12 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             var logger = Substitute.For<ILogger>();
             _testScheduler = new TestScheduler();
             _rpcServerSettings = Substitute.For<IRpcServerSettings>();
-            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(nameof(RpcServerTests));
+            _peerId = PeerIdHelper.GetPeerId(nameof(RpcServerTests));
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
 
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
         private readonly TestScheduler _testScheduler;
-        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly PeerId _peerId;
         private readonly RpcServer _rpcServer;
         private readonly IRpcServerSettings _rpcServerSettings;
         private readonly IChannelHandlerContext _channelHandlerContext;
@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             var targetVersionRequest = new VersionRequest {Query = true};
 
             var protocolMessage =
-                targetVersionRequest.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+                targetVersionRequest.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
 
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 

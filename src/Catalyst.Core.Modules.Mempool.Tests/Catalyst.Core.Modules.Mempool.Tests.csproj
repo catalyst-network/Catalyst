@@ -11,6 +11,8 @@
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
+      <ProjectReference Include="..\Catalyst.Modules.Repository.CosmosDb\Catalyst.Modules.Repository.CosmosDb.csproj" />
+      <ProjectReference Include="..\Catalyst.Modules.Repository.MongoDb\Catalyst.Modules.Repository.MongoDb.csproj" />
       <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
 

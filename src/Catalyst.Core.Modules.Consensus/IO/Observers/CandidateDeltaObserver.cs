@@ -28,8 +28,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
@@ -51,11 +50,16 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             try
             {
                 Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(), 
-                    BitConverter.ToInt16(messageDto.Payload.PeerId.Port.ToByteArray()));
+                    messageDto.Payload.PeerId.Port);
                 var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
 
+<<<<<<< HEAD
                 _hashProvider.IsValidHash(deserialised.PreviousDeltaDfsHash.ToByteArray());
                 _hashProvider.IsValidHash(deserialised.Hash.ToByteArray());
+=======
+                deserialised.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
+                deserialised.Hash.ToByteArray().AsMultihash();
+>>>>>>> develop
                 deserialised.IsValid();
                 
                 _deltaVoter.OnNext(deserialised);

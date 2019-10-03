@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
 namespace Catalyst.Abstractions.P2P.IO.Messaging.Dto
@@ -29,11 +30,10 @@ namespace Catalyst.Abstractions.P2P.IO.Messaging.Dto
     /// <summary>
     ///     Dto to be used to push IPPN protocol messages to an observable stream.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public interface IPeerClientMessageDto
     {
         ICorrelationId CorrelationId { get; set; }
-        IPeerIdentifier Sender { get; set; }
+        PeerId Sender { get; set; }
         IMessage Message { get; set; }
     }
 }

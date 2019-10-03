@@ -26,7 +26,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 
@@ -35,11 +38,10 @@ namespace Catalyst.Core.Lib.P2P
     /// <summary>
     ///     Peer settings class.
     /// </summary>
-    public sealed class PeerSettings
-        : IPeerSettings
+    public sealed class PeerSettings : IPeerSettings
     {
-        private readonly Protocol.Common.Network _network;
-        public Protocol.Common.Network Network => _network;
+        private readonly NetworkType _networkType;
+        public NetworkType NetworkType => _networkType;
         public string PublicKey { get; }
         public int Port { get; }
         public string PayoutAddress { get; }
@@ -47,6 +49,7 @@ namespace Catalyst.Core.Lib.P2P
         public IList<string> SeedServers { get; }
         public IPAddress PublicIpAddress { get; }
         public IPEndPoint[] DnsServers { get; }
+        public PeerId PeerId { get; }
 
         /// <summary>
         ///     Set attributes
@@ -57,7 +60,7 @@ namespace Catalyst.Core.Lib.P2P
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
 
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
-            Enum.TryParse(section.GetSection("Network").Value, out _network);
+            Enum.TryParse(section.GetSection("Network").Value, out _networkType);
             PublicKey = section.GetSection("PublicKey").Value;
             Port = int.Parse(section.GetSection("Port").Value);
             PayoutAddress = section.GetSection("PayoutAddress").Value;
@@ -67,6 +70,7 @@ namespace Catalyst.Core.Lib.P2P
             DnsServers = section.GetSection("DnsServers")
                .GetChildren()
                .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray();
+            PeerId = PublicKey.BuildPeerIdFromBase32CrockfordKey(PublicIpAddress, Port);
         }
     }
 }

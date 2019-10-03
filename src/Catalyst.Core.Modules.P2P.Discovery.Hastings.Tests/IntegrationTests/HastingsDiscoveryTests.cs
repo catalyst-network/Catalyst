@@ -37,8 +37,9 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
         {
             _testScheduler = new TestScheduler();
             _settings = PeerSettingsHelper.TestPeerSettings();
-            _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
+            _ownNode = PeerIdHelper.GetPeerId("ownNode");
 
             ContainerProvider.ConfigureContainerBuilder(true, true);
             _logger = ContainerProvider.Container.Resolve<ILogger>();
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
         private readonly TestScheduler _testScheduler;
         private readonly IPeerSettings _settings;
-        private readonly IPeerIdentifier _ownNode;
+        private readonly PeerId _ownNode;
         private readonly ILogger _logger;
 
         [Fact]
@@ -95,12 +96,12 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
             var peerMessageCorrelationManager =
                 DiscoveryHelper.MockCorrelationManager(_testScheduler, default, memoryCache, logger: _logger);
 
-            _logger.Debug("Seed StepProposal has peerId {peerIdentifier}", _ownNode);
-            _logger.Debug("StepProposal has peerId {peerIdentifier}", stateCandidate.Peer);
+            _logger.Debug("Seed StepProposal has peerId {peerId}", _ownNode);
+            _logger.Debug("StepProposal has peerId {peerId}", stateCandidate.Peer);
 
             stateCandidate.Neighbours.ToList().ForEach(n =>
             {
-                _logger.Debug("Setting up neighbour {neighbour}", n.PeerIdentifier);
+                _logger.Debug("Setting up neighbour {neighbour}", n.PeerId);
                 _logger.Debug("Adding eviction callbacks expectation for correlationId {correlationId}",
                     n.DiscoveryPingCorrelationId);
 
@@ -114,8 +115,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                 var msg = new CorrelatableMessage<ProtocolMessage>
 
                 {
-                    Content = new PingRequest().ToProtocolMessage(_ownNode.PeerId, n.DiscoveryPingCorrelationId),
-                    Recipient = n.PeerIdentifier
+                    Content = new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
+                    Recipient = n.PeerId
                 };
 
                 correlatableMessages.Add(msg);
@@ -146,9 +147,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                        .PostEvictionCallbacks[0]
                        .EvictionCallback
                        .Invoke(
-                            n.PeerIdentifier,
+                            n.PeerId,
                             correlatableMessages.Single(i =>
-                                i.Recipient.PeerId.Equals(n.PeerIdentifier.PeerId)),
+                                i.Recipient.Equals(n.PeerId)),
                             EvictionReason.Expired,
                             new object()
                         );
@@ -216,7 +217,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                 stateCandidate.Neighbours.ToList().ForEach(i =>
                 {
                     var dto = new PeerClientMessageDto(new PingResponse(),
-                        stateCandidate.Neighbours.FirstOrDefault()?.PeerIdentifier,
+                        stateCandidate.Neighbours.FirstOrDefault()?.PeerId,
                         stateCandidate.Neighbours.FirstOrDefault()?.DiscoveryPingCorrelationId
                     );
 
@@ -232,11 +233,11 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                 {
                     walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
-                       .Select(i => i.PeerIdentifier.PeerId)
+                       .Select(i => i.PeerId)
                        .Should()
                        .BeSubsetOf(
                             stateCandidate.Neighbours
-                               .Select(i => i.PeerIdentifier.PeerId)
+                               .Select(i => i.PeerId)
                         );
                 }
             }
@@ -281,7 +282,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                 using (walker.DiscoveryStream.Subscribe(streamObserver.OnNext))
                 {
                     var pingDto = new PeerClientMessageDto(new PingResponse(),
-                        stateCandidate.Neighbours.FirstOrDefault()?.PeerIdentifier,
+                        stateCandidate.Neighbours.FirstOrDefault()?.PeerId,
                         stateCandidate.Neighbours.FirstOrDefault()?.DiscoveryPingCorrelationId
                     );
 
@@ -295,7 +296,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
                     walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
-                       .Select(n => n.PeerIdentifier)
+                       .Select(n => n.PeerId)
                        .Contains(pingDto.Sender);
                 }
             }

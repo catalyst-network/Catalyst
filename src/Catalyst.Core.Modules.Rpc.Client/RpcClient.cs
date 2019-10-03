@@ -35,9 +35,8 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Transport;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Rpc.IO.Exceptions;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Serilog;
 
@@ -94,7 +93,7 @@ namespace Catalyst.Core.Modules.Rpc.Client
             }
 
             var handler = _handlers[observer.Payload.TypeUrl];
-            handler.HandleResponseObserver(message, observer.Context, new PeerIdentifier(observer.Payload.PeerId),
+            handler.HandleResponseObserver(message, observer.Context, observer.Payload.PeerId,
                 observer.Payload.CorrelationId.ToCorrelationId());
 
             return message;

@@ -27,6 +27,6 @@ namespace Catalyst.Abstractions.IO.Observers
 {
     public interface IRequestMessageObserver : IMessageObserver
     {
-        IPeerIdentifier PeerIdentifier { get; }
+        IPeerSettings PeerSettings { get; }
     }
 }

@@ -29,7 +29,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         {
             _testScheduler = new TestScheduler();
             _config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile))
                .Build();
             
             _logger = Substitute.For<ILogger>();
@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var protocolMessage = new GetInfoRequest
             {
                 Query = true
-            }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+            }.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
 
             var expectedResponseContent = JsonConvert
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
@@ -80,9 +80,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
                 protocolMessage
             );
-            
+
+            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             var handler = new GetInfoRequestObserver(
-                PeerIdentifierHelper.GetPeerIdentifier("sender"), _config, _logger);
+                peerSettings, _config, _logger);
 
             handler.StartObserving(messageStream);
 

@@ -22,19 +22,22 @@
 #endregion
 
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P.Discovery
 {
     /// <summary>
     /// A memento object used to store and restore the valid states of the Hastings walk.
-    /// More information on <seealso cref="https://en.wikipedia.org/wiki/Memento_pattern"/>
+    /// More information on <seealso>
+    ///     <cref>https://en.wikipedia.org/wiki/Memento_pattern</cref>
+    /// </seealso>
     /// </summary>
     public interface IHastingsMemento
     {
         /// <summary>
         /// The peer identifier of the node used to discover new nodes.
         /// </summary>
-        IPeerIdentifier Peer { get; }
+        PeerId Peer { get; }
 
         /// <summary>
         /// A list of neighbours, provided by <see cref="Peer"/> through a <see cref="PeerNeighborsResponse"/>

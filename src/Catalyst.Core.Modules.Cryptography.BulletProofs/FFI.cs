@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 {
-    public static class FFI
+    public static class Ffi
     {
         private const string Library = "catalystffi";
 
@@ -45,7 +45,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         }
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int std_sign(byte[] signature, byte[] private_key, byte[] message, int message_length, byte[] context, int context_length);
+        private static extern int std_sign(byte[] signature, byte[] privateKey, byte[] message, int messageLength, byte[] context, int contextLength);
 
         internal static byte[] StdSign(byte[] privateKey, byte[] message, byte[] context)
         {
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         }
         
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int std_verify(byte[] signature, byte[] public_key, byte[] message, int message_length, byte[] context, int context_length, byte[] b);
+        private static extern int std_verify(byte[] signature, byte[] publicKey, byte[] message, int messageLength, byte[] context, int contextLength, byte[] b);
 
         internal static bool StdVerify(byte[] signature, byte[] publicKey, byte[] message, byte[] context)
         {
@@ -111,7 +111,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         }
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void publickey_from_private(byte[] public_key, byte[] private_key);
+        private static extern void publickey_from_private(byte[] publicKey, byte[] privateKey);
 
         internal static byte[] GetPublicKeyFromPrivate(byte[] privateKey)
         {
@@ -138,7 +138,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         private static extern int last_error_length();
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int last_error_message(byte[] error_buffer, int message_length);
+        private static extern int last_error_message(byte[] errorBuffer, int messageLength);
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int get_private_key_length();

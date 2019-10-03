@@ -49,8 +49,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             {
                 var uploadFileInformation = new UploadFileTransferInformation(
                     ms,
-                    PeerIdentifierHelper.GetPeerIdentifier("test1"),
-                    PeerIdentifierHelper.GetPeerIdentifier("test2"),
+                    PeerIdHelper.GetPeerId("test1"),
+                    PeerIdHelper.GetPeerId("test2"),
                     null,
                     CorrelationId.GenerateCorrelationId());
 
@@ -74,8 +74,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             {
                 var uploadFileInformation = new UploadFileTransferInformation(
                     memoryStream,
-                    PeerIdentifierHelper.GetPeerIdentifier("test1"),
-                    PeerIdentifierHelper.GetPeerIdentifier("test2"),
+                    PeerIdHelper.GetPeerId("test1"),
+                    PeerIdHelper.GetPeerId("test2"),
                     null,
                     CorrelationId.GenerateCorrelationId());
                 uploadFileInformation.RetryCount += Constants.FileTransferMaxChunkRetryCount + 1;

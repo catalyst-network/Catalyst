@@ -24,7 +24,18 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Numerics;
+using Catalyst.Core.Lib.Network;
+using Catalyst.Protocol.Peer;
+using Dawn;
 using Google.Protobuf;
+<<<<<<< HEAD
+=======
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
+using Nethermind.Dirichlet.Numerics;
+>>>>>>> develop
 
 namespace Catalyst.Core.Lib.Extensions
 {
@@ -43,5 +54,63 @@ namespace Catalyst.Core.Lib.Extensions
             var enumerable = bytes as byte[] ?? bytes.ToArray();
             return ByteString.CopyFrom(enumerable);
         }
+<<<<<<< HEAD
+=======
+
+        public static Multihash AsMultihash(this IEnumerable<byte> bytes)
+        {
+            var array = bytes as byte[] ?? bytes.ToArray();
+            return Multihash.Decode(array);
+        }
+
+        public static string AsBase32Address(this IEnumerable<byte> bytes)
+        {
+            var hash = AsMultihash(bytes);
+            var trimmedString = hash.AsBase32Address();
+            return trimmedString;
+        }
+
+        public static UInt256 ToUInt256(this ByteString byteString)
+        {
+            var bytes = byteString.ToArray();
+            return new UInt256(new BigInteger(bytes));
+        }
+
+        public static ByteString ToUint256ByteString(this UInt256 uInt256)
+        {
+            return ((BigInteger) uInt256).ToByteArray().ToByteString();
+        }
+
+        public static ByteString ToUint256ByteString(this ulong uLong)
+        {
+            return ((BigInteger) uLong).ToByteArray().ToByteString();
+        }
+
+        public static ByteString ToUint256ByteString(this uint uInt)
+        {
+            return ((BigInteger) uInt).ToByteArray().ToByteString();
+        }
+
+        public static ByteString ToUint256ByteString(this int @int)
+        {
+            return ((BigInteger) @int).ToByteArray().ToByteString();
+        }
+
+        public static PeerId BuildPeerIdFromPublicKey(this byte[] publicKey, IPEndPoint ipEndPoint)
+        {
+            return BuildPeerIdFromPublicKey(publicKey, ipEndPoint.Address, ipEndPoint.Port);
+        }
+
+        public static PeerId BuildPeerIdFromPublicKey(this byte[] publicKey, IPAddress ipAddress, int port)
+        {
+            Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty();
+            return new PeerId
+            {
+                PublicKey = publicKey.ToByteString(),
+                Ip = ipAddress.To16Bytes().ToByteString(),
+                Port = (uint) port
+            };
+        }
+>>>>>>> develop
     }
 }

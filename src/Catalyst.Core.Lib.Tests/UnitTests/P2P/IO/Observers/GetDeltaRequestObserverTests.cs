@@ -29,7 +29,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -53,9 +53,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             _testScheduler = new TestScheduler();
             var logger = Substitute.For<ILogger>();
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("responder");
+            var peerIdentifier = PeerIdHelper.GetPeerId("responder");
+            var peerSettings = peerIdentifier.ToSubstitutedPeerSettings();
             _deltaCache = Substitute.For<IDeltaCache>();
-            _observer = new GetDeltaRequestObserver(_deltaCache, peerIdentifier, logger);
+            _observer = new GetDeltaRequestObserver(_deltaCache, peerSettings, logger);
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 

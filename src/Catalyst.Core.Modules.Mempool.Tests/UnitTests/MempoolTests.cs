@@ -26,11 +26,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Mempool.Documents;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
@@ -46,10 +48,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
         public MempoolTests()
         {
-            var logger = Substitute.For<ILogger>();
-            _memPool = new Mempool(Substitute.For<IMempoolRepository<MempoolDocument>>(), logger);
+            _memPool = new Mempool(Substitute.For<IMempoolRepository<MempoolDocument>>());
 
-            _transactionBroadcast = TransactionHelper.GetTransaction();
+            _transactionBroadcast = TransactionHelper.GetPublicTransaction();
         }
 
         private void AddKeyValueStoreEntryExpectation(TransactionBroadcast transaction)
@@ -59,10 +60,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
                 Transaction = transaction
             };
             
-            _memPool.Repository.ReadItem(Arg.Is<ByteString>(k => k.SequenceEqual(transaction.Signature)))
+            _memPool.Repository.ReadItem(Arg.Is<ByteString>(k => k.SequenceEqual(transaction.Signature.RawBytes)))
                .Returns(mempoolDoc);
             
-            _memPool.Repository.TryReadItem(Arg.Is<ByteString>(k => k.SequenceEqual(transaction.Signature)))
+            _memPool.Repository.TryReadItem(Arg.Is<ByteString>(k => k.SequenceEqual(transaction.Signature.RawBytes)))
                .Returns(true);
         }
 
@@ -72,17 +73,14 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             _memPool.Repository.CreateItem(_transactionBroadcast);
             AddKeyValueStoreEntryExpectation(_transactionBroadcast);
 
-            var mempoolDocument = _memPool.Repository.ReadItem(_transactionBroadcast.Signature);
+            var mempoolDocument = _memPool.Repository.ReadItem(_transactionBroadcast.Signature.RawBytes);
             var expectedTransaction = _transactionBroadcast;
             var transactionFromMemPool = mempoolDocument.Transaction;
 
-            transactionFromMemPool.STEntries.Single().Amount.Should().Be(expectedTransaction.STEntries.Single().Amount);
-            transactionFromMemPool.CFEntries.Single().PedersenCommit.Should().BeEquivalentTo(expectedTransaction.CFEntries.Single().PedersenCommit);
-            transactionFromMemPool.Signature.SequenceEqual(expectedTransaction.Signature).Should().BeTrue();
-            transactionFromMemPool.TransactionType.Should().Be(expectedTransaction.TransactionType);
-            transactionFromMemPool.LockTime.Should().Be(expectedTransaction.LockTime);
-            transactionFromMemPool.TimeStamp.Should().Be(expectedTransaction.TimeStamp);
-            transactionFromMemPool.TransactionFees.Should().Be(expectedTransaction.TransactionFees);
+            transactionFromMemPool.PublicEntries.Single().Amount.ToUInt256().Should().Be(expectedTransaction.PublicEntries.Single().Amount.ToUInt256());
+            transactionFromMemPool.Signature.RawBytes.SequenceEqual(expectedTransaction.Signature.RawBytes).Should().BeTrue();
+            transactionFromMemPool.Timestamp.Should().Be(expectedTransaction.Timestamp);
+            transactionFromMemPool.SummedEntryFees().Should().Be(expectedTransaction.SummedEntryFees());
         }
 
         [Fact]
@@ -96,7 +94,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             {
                 var signature = $"key{i}".ToUtf8ByteString();
                 var mempoolDocument = _memPool.Repository.ReadItem(signature);
-                mempoolDocument.Transaction.STEntries.Single().Amount.Should().Be((uint) i);
+                mempoolDocument.Transaction.PublicEntries.Single().Amount.ToUInt256().Should().Be((UInt256) i);
             }
         }
 
@@ -134,7 +132,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         {
             // this test seems pointless like this
             
-            var expectedAmount = _transactionBroadcast.STEntries.Single().Amount;
+            var expectedAmount = _transactionBroadcast.PublicEntries.Single().Amount;
 
             _memPool.Repository.CreateItem(Arg.Is(_transactionBroadcast))
                .Returns(true);
@@ -143,7 +141,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             saved.Should().BeTrue();
             
             var overridingTransaction = _transactionBroadcast.Clone();
-            overridingTransaction.STEntries.Single().Amount = expectedAmount + 100;
+            overridingTransaction.PublicEntries.Single().Amount = (expectedAmount.ToUInt256() + (UInt256) 100).ToUint256ByteString();
             
             _memPool.Repository.CreateItem(Arg.Is(overridingTransaction))
                .Returns(false);
@@ -151,10 +149,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
             overriden.Should().BeFalse();
 
-            _memPool.Repository.TryReadItem(Arg.Is(_transactionBroadcast.Signature))
+            _memPool.Repository.TryReadItem(Arg.Is(_transactionBroadcast.Signature.RawBytes))
                .Returns(true);
             
-            var retrievedTransaction = _memPool.Repository.TryReadItem(_transactionBroadcast.Signature);
+            var retrievedTransaction = _memPool.Repository.TryReadItem(_transactionBroadcast.Signature.RawBytes);
             retrievedTransaction.Should().BeTrue();
         }
 
@@ -173,7 +171,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         [Fact]
         public void SaveMempoolDocument_Should_Throw_On_Document_With_Null_Transaction()
         {
-            _transactionBroadcast.Signature = ByteString.Empty;
+            _transactionBroadcast.Signature.RawBytes = ByteString.Empty;
             
             _memPool.Repository.CreateItem(_transactionBroadcast).Throws<ArgumentNullException>();
             
@@ -212,7 +210,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         private static List<TransactionBroadcast> GetTestingMempoolDocuments(int documentCount)
         {
             return Enumerable.Range(0, documentCount).Select(i =>
-                    TransactionHelper.GetTransaction((uint) i, signature: $"key{i}"))
+                    TransactionHelper.GetPublicTransaction((uint) i, signature: $"key{i}"))
                .ToList();
         }
 
@@ -237,7 +235,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         public void ContainsDocument_Should_Return_True_On_Known_DocumentId()
         {
             AddKeyValueStoreEntryExpectation(_transactionBroadcast);
-            _memPool.Repository.TryReadItem(_transactionBroadcast.Signature).Should().BeTrue();
+            _memPool.Repository.TryReadItem(_transactionBroadcast.Signature.RawBytes).Should().BeTrue();
         }
 
         [Fact]

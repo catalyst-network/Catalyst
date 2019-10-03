@@ -30,7 +30,7 @@ using System.Text.RegularExpressions;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.FileSystem;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Network;
 using Dawn;
 using FluentAssertions;
 using NSubstitute;
@@ -54,7 +54,9 @@ namespace Catalyst.TestUtils
         protected List<string> ConfigFilesUsed { get; }
         protected readonly ContainerProvider ContainerProvider;
 
-        protected FileSystemBasedTest(ITestOutputHelper output, IEnumerable<string> configFilesUsed = default, Network network = default)
+        protected FileSystemBasedTest(ITestOutputHelper output, 
+            IEnumerable<string> configFilesUsed = default,
+            NetworkType network = default)
         {
             Guard.Argument(output, nameof(output)).NotNull();
             Output = output;
@@ -69,12 +71,12 @@ namespace Catalyst.TestUtils
 
             CurrentTestName = currentTest.TestCase.TestMethod.Method.Name;
 
-            GenerateConfigFilesDirectory();
+            CreateUniqueTestDirectory();
             
             ConfigFilesUsed = new List<string>
             {
                 Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(network == default ? Network.Devnet : network))
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(network == default ? NetworkType.Devnet : network))
             };
 
             configFilesUsed?.ToList().ForEach(config =>
@@ -88,7 +90,7 @@ namespace Catalyst.TestUtils
             Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
         }
 
-        protected void GenerateConfigFilesDirectory()
+        protected void CreateUniqueTestDirectory()
         {
             var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
@@ -118,7 +120,7 @@ namespace Catalyst.TestUtils
                 return;
             }
 
-            var regex = new Regex(CurrentTestName + @"_(?<timestamp>[\d]{14})");
+            var regex = new Regex(CurrentTestName + @"_(?<timestamp>[\d]{16})");
 
             var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
                .Where(d => regex.IsMatch(d.Name)

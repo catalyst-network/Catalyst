@@ -22,13 +22,14 @@
 #endregion
 
 using AutoMapper;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 
 namespace Catalyst.Core.Lib.DAO
 {
     public class SigningContextDao : DaoBase<SigningContext, SigningContextDao>
     {
-        public Protocol.Common.Network Network { get; set; }
+        public NetworkType NetworkType { get; set; }
         public SignatureType SignatureType { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)

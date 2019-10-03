@@ -26,7 +26,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
@@ -44,9 +44,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             _transactionReceivedEvent = Substitute.For<ITransactionReceivedEvent>();
 
+            var peerSettings = PeerIdHelper.GetPeerId("Test").ToSubstitutedPeerSettings();
+
             _broadcastRawTransactionRequestObserver = new BroadcastRawTransactionRequestObserver(
                 Substitute.For<ILogger>(),
-                PeerIdentifierHelper.GetPeerIdentifier("Test"),
+                peerSettings,
                 _transactionReceivedEvent);
         }
 
@@ -62,11 +64,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var channel = Substitute.For<IChannel>();
             channelContext.Channel.Returns(channel);
 
-            _transactionReceivedEvent.OnTransactionReceived(Arg.Any<TransactionBroadcast>())
+            _transactionReceivedEvent.OnTransactionReceived(Arg.Any<ProtocolMessage>())
                .Returns(expectedResponse);
             _broadcastRawTransactionRequestObserver
                .OnNext(new ObserverDto(channelContext,
-                    new TransactionBroadcast().ToProtocolMessage(PeerIdHelper.GetPeerId("FakeSender"))));
+                    new BroadcastRawTransactionRequest {Transaction = new TransactionBroadcast()}.ToProtocolMessage(
+                        PeerIdHelper.GetPeerId("FakeSender"))));
             channelContext.Channel.Received(1).WriteAndFlushAsync(
                 Arg.Is<object>(transactionObj =>
                     ((MessageDto) transactionObj)

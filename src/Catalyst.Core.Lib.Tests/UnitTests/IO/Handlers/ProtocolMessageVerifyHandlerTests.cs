@@ -23,13 +23,14 @@
 
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Xunit;
@@ -39,30 +40,23 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
     public sealed class ProtocolMessageVerifyHandlerTests
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly ProtocolMessageSigned _protocolMessageSigned;
+        private readonly ProtocolMessage _protocolMessageSigned;
         private readonly IKeySigner _keySigner;
-        private readonly ISigningContextProvider _signingContextProvider;
+        private readonly SigningContext _signingContext;
 
         public ProtocolMessageVerifyHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
-            _signingContextProvider = Substitute.For<ISigningContextProvider>();
+            _signingContext = DevNetPeerSigningContext.Instance;
 
-            var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
-            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength);
+            var signatureBytes = ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength);
+            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength);
+            var peerId = PeerIdHelper.GetPeerId(publicKeyBytes);
 
-            _protocolMessageSigned = new ProtocolMessageSigned
-            {
-                Signature = signatureBytes.ToByteString(),
-                Message = new ProtocolMessage
-                {
-                    PeerId = PeerIdentifierHelper.GetPeerIdentifier(publicKeyBytes.ToString()).PeerId
-                }
-            };
-
-            _signingContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
-            _signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
+            _protocolMessageSigned = new PingRequest()
+               .ToSignedProtocolMessage(peerId, signatureBytes, _signingContext)
+               .ToSignedProtocolMessage(peerId, signatureBytes, _signingContext);
         }
 
         [Fact]
@@ -71,7 +65,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(true);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
@@ -84,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(false);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
             

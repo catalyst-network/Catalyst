@@ -22,13 +22,10 @@
 #endregion
 
 using System.Net;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
@@ -43,9 +40,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
     public sealed class DatagramPacketEncoderTests
     {
         private readonly EmbeddedChannel _channel;
-        private readonly IPeerIdentifier _recipientPid;
+        private readonly PeerId _recipientPid;
         private readonly DatagramPacket _datagramPacket;
-        private readonly ProtocolMessageSigned _protocolMessageSigned;
+        private readonly ProtocolMessage _protocolMessageSigned;
         
         public DatagramPacketEncoderTests()
         {
@@ -53,21 +50,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
                 new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
             );
 
-            var senderPid = PeerIdentifierHelper.GetPeerIdentifier("sender",
+            var senderPid = PeerIdHelper.GetPeerId("sender",
                 IPAddress.Loopback,
                 10000
             );
             
-            _recipientPid = PeerIdentifierHelper.GetPeerIdentifier("sender",
+            _recipientPid = PeerIdHelper.GetPeerId("sender",
                 IPAddress.Loopback,
                 20000
             );
 
-            _protocolMessageSigned = new ProtocolMessageSigned
-            {
-                Message = new PingRequest().ToProtocolMessage(senderPid.PeerId, CorrelationId.GenerateCorrelationId()),
-                Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()
-            };
+            _protocolMessageSigned = new PingRequest().ToSignedProtocolMessage(senderPid, (byte[]) default);
             
             _datagramPacket = new DatagramPacket(
                 Unpooled.WrappedBuffer(_protocolMessageSigned.ToByteArray()),
@@ -96,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
         {
             Assert.True(_channel.WriteOutbound(_protocolMessageSigned));
         
-            var protocolMessageSigned = _channel.ReadOutbound<ProtocolMessageSigned>();
+            var protocolMessageSigned = _channel.ReadOutbound<ProtocolMessage>();
             Assert.NotNull(protocolMessageSigned);
             Assert.Same(_protocolMessageSigned, protocolMessageSigned);
             Assert.False(_channel.Finish());

@@ -22,8 +22,8 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -38,7 +38,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         /// </summary>
         /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
         /// <returns>The list of peers which are eligible for the production of the delta following <see cref="previousDeltaHash"/></returns>
+<<<<<<< HEAD
         IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(string previousDeltaHash);
+=======
+        IList<PeerId> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash);
+>>>>>>> develop
 
         /// <summary>
         /// A peer repository containing peers eligible for the production of the next delta.

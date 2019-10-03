@@ -25,7 +25,6 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Dawn;
-using Serilog;
 
 namespace Catalyst.Core.Modules.Mempool
 {
@@ -34,15 +33,13 @@ namespace Catalyst.Core.Modules.Mempool
     /// </summary>
     public sealed class Mempool : IMempool<MempoolDocument>
     {
-        private readonly ILogger _logger;
         public IMempoolRepository<MempoolDocument> Repository { get; }
 
         /// <inheritdoc />
-        public Mempool(IMempoolRepository<MempoolDocument> transactionStore, ILogger logger)
+        public Mempool(IMempoolRepository<MempoolDocument> transactionStore)
         {
             Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
             Repository = transactionStore;
-            _logger = logger;
         }
     }
 }

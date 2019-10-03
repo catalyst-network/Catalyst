@@ -22,8 +22,8 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Rpc.IO;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -39,8 +39,9 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         : RpcResponseObserver<GetMempoolResponse>
     {
         /// <summary>
-        ///     <param name="output">
+        ///     <param>
         ///         A service used to output the result of the messages handling to the user.
+        ///         <name>output</name>
         ///     </param>
         ///     <param name="logger">
         ///         Logger to log debug related information.
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// <param name="correlationId"></param>
         protected override void HandleResponse(GetMempoolResponse getMempoolResponse,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerIdentifier,
             ICorrelationId correlationId)
         {
             Guard.Argument(getMempoolResponse, nameof(getMempoolResponse))

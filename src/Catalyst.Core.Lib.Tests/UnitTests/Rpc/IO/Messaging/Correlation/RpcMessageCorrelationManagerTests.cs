@@ -26,7 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
 
                 observer.Received(1).OnNext(Arg.Is<ICacheEvictionEvent<ProtocolMessage>>(p =>
                     p.EvictedContent.CorrelationId == firstCorrelationId
-                 && p.PeerIdentifier.PeerId.Equals(PendingRequests[0].Content.PeerId)));
+                 && p.PeerId.Equals(PendingRequests[0].Content.PeerId)));
             }
         }
     }

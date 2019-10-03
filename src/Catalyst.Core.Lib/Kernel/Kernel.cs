@@ -28,14 +28,13 @@ using System.Security;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
-using Catalyst.Abstractions;
-using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Network;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
@@ -94,22 +93,19 @@ namespace Catalyst.Core.Lib.Kernel
         public Kernel BuildKernel(bool overwrite = false, string overrideNetworkFile = null)
         {
             _overwrite = overwrite;
-            _configCopier.RunConfigStartUp(_targetConfigFolder, Protocol.Common.Network.Devnet, null, _overwrite, overrideNetworkFile);
+            _configCopier.RunConfigStartUp(_targetConfigFolder, NetworkType.Devnet, null, _overwrite, overrideNetworkFile);
             
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
 
             ContainerBuilder.RegisterInstance(config);
+            ContainerBuilder.RegisterModule(configurationModule);
             
             if (!string.IsNullOrEmpty(_withPersistence))
             {
                 var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection(_withPersistence));
                 ContainerBuilder.RegisterSharpRepository(repoFactory);
             }
-            
-            ContainerBuilder.RegisterModule(configurationModule);
-
-            //ContainerBuilder.RegisterModule(new P2PModule());
 
             Logger = new LoggerConfiguration()
                .ReadFrom
@@ -132,9 +128,9 @@ namespace Catalyst.Core.Lib.Kernel
             return this;
         }
         
-        public Kernel WithNetworksConfigFile(Protocol.Common.Network network = Protocol.Common.Network.Devnet, string overrideNetworkFile = null)
+        public Kernel WithNetworksConfigFile(NetworkType networkType = NetworkType.Devnet, string overrideNetworkFile = null)
         {
-            var fileName = Constants.NetworkConfigFile(network, overrideNetworkFile);
+            var fileName = Constants.NetworkConfigFile(networkType, overrideNetworkFile);
 
             _configurationBuilder
                .AddJsonFile(
@@ -164,9 +160,9 @@ namespace Catalyst.Core.Lib.Kernel
             return this;
         }
 
-        public Kernel WithConfigCopier(IConfigCopier configCopier = default)
+        public Kernel WithConfigCopier(IConfigCopier configCopier)
         {
-            _configCopier = configCopier ?? new ConfigCopier();
+            _configCopier = configCopier;
             return this;
         }
 
@@ -186,45 +182,11 @@ namespace Catalyst.Core.Lib.Kernel
             customBootLogic.Invoke(this);
         }
 
-        /// <summary>
-        ///     Default container resolution for Catalyst.Node
-        /// </summary>
-        public Kernel StartNode()
-        {
-            StartContainer();
-
-            // BsonSerializationProviders.Init();
-            Instance.Resolve<ICatalystNode>()
-               .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
-               .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
-            return this;
-        }
-
         public void Dispose()
         {
             Instance?.Dispose();
         }
-
-        /// <summary>
-        ///     Default container resolution for advanced CLI.
-        /// </summary>
-        public void StartCli()
-        {
-            const int bufferSize = 1024 * 67 + 128;
-
-            Console.SetIn(
-                new StreamReader(
-                    Console.OpenStandardInput(bufferSize),
-                    Console.InputEncoding, false, bufferSize
-                )
-            );
-
-            StartContainer();
-
-            Instance.Resolve<ICatalystCli>()
-               .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
-        }
-        
+                
         public Kernel WithPassword(PasswordRegistryTypes types, string password)
         {
             if (password == null)

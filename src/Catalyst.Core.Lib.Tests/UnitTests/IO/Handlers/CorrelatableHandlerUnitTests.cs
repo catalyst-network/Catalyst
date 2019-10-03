@@ -28,7 +28,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -53,8 +53,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         public async Task Does_Process_IMessageDto_Types()
         {
             var protocolMessage =
-                new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
-            var messageDto = new MessageDto(protocolMessage, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
+                new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+            var messageDto = new MessageDto(protocolMessage, PeerIdHelper.GetPeerId("recipient"));
 
             var correlatableHandler = new CorrelatableHandler<IMessageCorrelationManager>(_fakeMessageCorrelationManager);
 

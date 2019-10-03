@@ -30,13 +30,13 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Nethereum.Hex.HexConvertors.Extensions;
-using Newtonsoft.Json;
 using Serilog;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray())
-                   .Any(p => p.PeerId.Equals(candidate.VoterId)))
+                   .Any(p => p.Equals(candidate.VoterId)))
                 {
                     //https://github.com/catalyst-network/Catalyst.Node/issues/827
                     _logger.Debug("Voter {voter} is not a producer for this cycle succeeding {deltaHash} and its vote has been discarded.",
@@ -109,7 +109,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to process favourite delta {0}", JsonConvert.SerializeObject(candidate));
+                _logger.Error(e, "Failed to process favourite delta {0}", candidate);
             }
         }
 

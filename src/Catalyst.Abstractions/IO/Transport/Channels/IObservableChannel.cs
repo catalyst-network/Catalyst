@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Abstractions.IO.Transport.Channels

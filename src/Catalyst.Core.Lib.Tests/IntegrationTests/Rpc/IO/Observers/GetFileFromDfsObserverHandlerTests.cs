@@ -26,11 +26,11 @@ using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
@@ -75,8 +75,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             {
                 var nodePeerId = PeerIdHelper.GetPeerId("sender");
                 var rpcPeerId = PeerIdHelper.GetPeerId("recipient");
-                var nodePeer = new PeerIdentifier(nodePeerId);
-                var rpcPeer = new PeerIdentifier(rpcPeerId);
+                var peerSettings = Substitute.For<IPeerSettings>();
+                peerSettings.PeerId.Returns(rpcPeerId);
+                var nodePeer = nodePeerId;
+                var rpcPeer = rpcPeerId;
                 var correlationId = CorrelationId.GenerateCorrelationId();
                 var fakeFileOutputPath = Path.GetTempFileName();
                 IDownloadFileInformation fileDownloadInformation = new DownloadFileTransferInformation(rpcPeer,
@@ -85,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger);
+                    new TransferFileBytesRequestObserver(_fileDownloadFactory, peerSettings, _logger);
 
                 _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
 
@@ -93,7 +95,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 {
                     FileSize = (ulong) byteSize,
                     ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodeTypes.Successful.Id)
-                }.ToProtocolMessage(nodePeer.PeerId, correlationId);
+                }.ToProtocolMessage(nodePeer, correlationId);
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 

@@ -25,8 +25,10 @@ using System.Collections.Generic;
 using System.Net;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Common;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Network;
 using NSubstitute;
 
 namespace Catalyst.TestUtils
@@ -35,10 +37,10 @@ namespace Catalyst.TestUtils
     {
         public static IPeerSettings TestPeerSettings(byte[] publicKey = default, int port = 42069)
         {
+            var finalPublicKey = publicKey ?? ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength);
             var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.Network.Returns(Network.Devnet);
-            peerSettings.PublicKey.Returns(
-                publicKey?.KeyToString() ?? TestKeyRegistry.TestPublicKey);
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
+            peerSettings.PublicKey.Returns(finalPublicKey.KeyToString());
             peerSettings.Port.Returns(port);
             peerSettings.PayoutAddress.Returns("my_pay_out_address");
             peerSettings.BindAddress.Returns(IPAddress.Loopback);
@@ -51,6 +53,7 @@ namespace Catalyst.TestUtils
                 "seed4.catalystnetwork.io",
                 "seed5.catalystnetwork.io"
             });
+            peerSettings.PeerId.Returns(finalPublicKey.BuildPeerIdFromPublicKey(IPAddress.Loopback, port));
             return peerSettings;
         }
     }

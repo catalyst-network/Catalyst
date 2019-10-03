@@ -34,7 +34,9 @@ namespace Catalyst.Abstractions.Cryptography
         /// for instance which password is being requested.</param>
         /// <returns>The password read and stored as a <c>SecureString</c></returns>
         /// <remarks>Once the password has been use, it is recommended to dispose of it.
-        /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/api/system.security.securestring?view=netcore-2.2"/>
+        /// <seealso>
+        ///     <cref>https://docs.microsoft.com/en-us/dotnet/api/system.security.securestring?view=netcore-2.2</cref>
+        /// </seealso>
         /// </remarks>
         SecureString ReadSecurePassword(string prompt = "Please enter your password");
     }

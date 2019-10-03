@@ -21,14 +21,16 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
+using NSubstitute;
 
 namespace Catalyst.TestUtils
 {
@@ -41,8 +43,8 @@ namespace Catalyst.TestUtils
             var peerIdentifier = new PeerId
             {
                 PublicKey = (publicKey ?? new byte[32]).ToByteString(),
-                Ip = (ipAddress ?? IPAddress.Parse("127.0.0.1")).To16Bytes().ToByteString(),
-                Port = BitConverter.GetBytes((ushort) port).ToByteString()
+                Ip = (ipAddress ?? IPAddress.Loopback).To16Bytes().ToByteString(),
+                Port = (ushort) port
             };
             return peerIdentifier;
         }
@@ -52,14 +54,24 @@ namespace Catalyst.TestUtils
             int port = 12345)
         {
             var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
-               .Concat(Enumerable.Repeat(default(byte), FFI.PublicKeyLength))
-               .Take(FFI.PublicKeyLength).ToArray();
+               .Concat(Enumerable.Repeat(default(byte), Ffi.PublicKeyLength))
+               .Take(Ffi.PublicKeyLength).ToArray();
             return GetPeerId(publicKeyBytes, ipAddress, port);
         }
 
         public static PeerId GetPeerId(string publicKey, string ipAddress, int port)
         {
             return GetPeerId(publicKey, IPAddress.Parse(ipAddress), port);
+        }
+
+        public static IPeerSettings ToSubstitutedPeerSettings(this PeerId peerId)
+        {
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.PeerId.Returns(peerId);
+            peerSettings.PublicIpAddress.Returns(peerId.IpAddress);
+            peerSettings.Port.Returns((int) peerId.Port);
+            peerSettings.PublicKey.Returns(peerId.PublicKey.KeyToString());
+            return peerSettings;
         }
     }
 }

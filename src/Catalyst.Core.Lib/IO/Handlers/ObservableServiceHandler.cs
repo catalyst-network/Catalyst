@@ -29,7 +29,7 @@ using System.Reflection;
 using Catalyst.Abstractions.IO.Handlers;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Serilog;
 

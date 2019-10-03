@@ -22,8 +22,9 @@
 #endregion
 
 using Catalyst.Abstractions.Consensus;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Modules.Consensus
@@ -48,19 +49,19 @@ namespace Catalyst.Core.Modules.Consensus
                 return -1;
             }
 
-            var feeComparison = x.TransactionFees.CompareTo(y.TransactionFees);
+            var feeComparison = x.SummedEntryFees().CompareTo(y.SummedEntryFees());
             if (feeComparison != 0)
             {
                 return feeComparison;
             }
 
-            var timeStampComparison = y.TimeStamp.CompareTo(x.TimeStamp);
+            var timeStampComparison = y.Timestamp.CompareTo(x.Timestamp);
             if (timeStampComparison != 0)
             {
                 return timeStampComparison;
             }
 
-            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.ToByteArray(), y.ToByteArray());
+            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.Signature.ToByteArray(), y.Signature.ToByteArray());
         }
 
         public static ITransactionComparer Default { get; } = new TransactionComparerByFeeTimestampAndHash();

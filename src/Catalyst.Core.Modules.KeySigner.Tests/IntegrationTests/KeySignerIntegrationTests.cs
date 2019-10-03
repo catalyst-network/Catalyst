@@ -31,10 +31,10 @@ using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Keystore;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -46,9 +46,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
     {
         public KeySignerIntegrationTests(ITestOutputHelper output) : base(output)
         {
-            var multiAlgo = Substitute.For<IMultihashAlgorithm>();
-            multiAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
-            var addressHelper = new AddressHelper(multiAlgo);
+            var addressHelper = new AddressHelper(NetworkType.Devnet);
 
             var logger = Substitute.For<ILogger>();
 
@@ -110,7 +108,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
             var signature = _keySigner.Sign(toSign, new SigningContext());
             var signingContext = new SigningContext
             {
-                Network = Network.Mainnet,
+                NetworkType = NetworkType.Mainnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
 
@@ -125,7 +123,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 
             var signingContext = new SigningContext
             {
-                Network = Network.Mainnet,
+                NetworkType = NetworkType.Mainnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
             var signature = _keySigner.Sign(toSign, signingContext);

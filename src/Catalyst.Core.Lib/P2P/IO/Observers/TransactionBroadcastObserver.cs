@@ -26,8 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
@@ -49,7 +48,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             Logger.Debug("received broadcast");
 
             var deserialised = messageDto.Payload.FromProtocolMessage<TransactionBroadcast>();
-            _transactionReceivedEvent.OnTransactionReceived(deserialised);
+            _transactionReceivedEvent.OnTransactionReceived(messageDto.Payload);
 
             Logger.Debug("transaction signature is {0}", deserialised.Signature);
         }

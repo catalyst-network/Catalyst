@@ -29,9 +29,8 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -67,8 +66,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var txLst = new List<TransactionBroadcast>
             {
-                TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
-                TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
+                TransactionHelper.GetPublicTransaction(234, "standardPubKey", "sign1"),
+                TransactionHelper.GetPublicTransaction(567, "standardPubKey", "sign2")
             };
 
             return txLst;
@@ -82,11 +81,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var mempool = Substitute.For<IMempool<MempoolDocument>>();
             mempool.Repository.GetAll().Returns(mempoolTransactions);
 
-            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId);
+            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender_key"));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var handler = new GetMempoolRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, _logger);
+            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var handler = new GetMempoolRequestObserver(peerSettings, mempool, _logger);
             
             handler.StartObserving(messageStream);
 

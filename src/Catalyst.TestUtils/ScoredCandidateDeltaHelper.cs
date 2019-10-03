@@ -23,8 +23,14 @@
 
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Consensus.Deltas;
+<<<<<<< HEAD
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
+=======
+using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Peer;
+using Multiformats.Hash.Algorithms;
+>>>>>>> develop
 
 namespace Catalyst.TestUtils
 {

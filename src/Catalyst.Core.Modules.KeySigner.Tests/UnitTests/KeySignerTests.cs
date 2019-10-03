@@ -26,7 +26,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cryptography;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;

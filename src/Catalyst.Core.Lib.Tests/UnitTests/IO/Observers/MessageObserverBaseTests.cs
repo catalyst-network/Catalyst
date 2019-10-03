@@ -29,7 +29,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             {
                 var message = new GetInfoResponse {Query = i.ToString()};
                 return message.ToProtocolMessage(
-                    PeerIdentifierHelper.GetPeerIdentifier(i.ToString()).PeerId,
+                    PeerIdHelper.GetPeerId(i.ToString()),
                     CorrelationId.GenerateCorrelationId());
             }).ToArray();
         }

@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -22,12 +22,13 @@
 #endregion
 
 using Catalyst.Abstractions.Config;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P.ReputationSystem
 {
     public interface IPeerReputationChange
     {
-        IPeerIdentifier PeerIdentifier { get; }
+        PeerId PeerId { get; }
         IReputationEvents ReputationEvent { get; }
     }
 }

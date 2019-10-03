@@ -21,33 +21,64 @@
 
 #endregion
 
-using System.Linq;
 using Catalyst.Abstractions.Cryptography;
+<<<<<<< HEAD
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Util;
 using Nethereum.Hex.HexConvertors.Extensions;
+=======
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Util;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Account;
+using Catalyst.Protocol.Network;
+using Multiformats.Hash.Algorithms;
+>>>>>>> develop
 
 namespace Catalyst.Core.Lib.Util
 {
     public sealed class AddressHelper : IAddressHelper
     {
+<<<<<<< HEAD
         private readonly IHashProvider _hashAlgorithm;
 
         public AddressHelper(IHashProvider hashAlgorithm)
+=======
+        /// <summary>
+        /// Using <see cref="BLAKE2B_152"/> for the default implementation; the intent is to get a
+        /// 19 byte long hash, then is prefixed by one byte used to identify
+        /// the <see cref="AccountType"/>|<see cref="NetworkType"/> for which this 
+        /// address is valid, and get EVM compatible 20 bytes addresses as a result. 
+        /// </summary>
+        public static readonly IMultihashAlgorithm HashAlgorithm = new BLAKE2B_152();
+
+        private readonly NetworkType _networkType;
+
+        public AddressHelper(IPeerSettings peerSettings) : this(peerSettings.NetworkType) { }
+
+        public AddressHelper(NetworkType networkType)
+>>>>>>> develop
         {
-            _hashAlgorithm = hashAlgorithm;
+            _networkType = networkType;
         }
 
-        /// <summary>
-        ///     Generates an address from the 20 last bytes of the hashed public key.
-        /// </summary>
-        /// <param name="publicKey">The public key from which the address is derived.</param>
-        /// <returns>The Hex encoded bytes corresponding to the address.</returns>
-        public string GenerateAddress(IPublicKey publicKey)
+        /// <inheritdoc />
+        public Address GenerateAddress(IPublicKey publicKey, AccountType accountType)
         {
+<<<<<<< HEAD
             var addressHashBytes = _hashAlgorithm.ComputeRawHash(publicKey.Bytes);
             var lastTwentyBytes = addressHashBytes.TakeLast(20).ToArray();
             return lastTwentyBytes.ToHex();
+=======
+            var publicKeyHash = publicKey.Bytes.ComputeMultihash(HashAlgorithm).Digest.ToByteString();
+            var address = new Address
+            {
+                PublicKeyHash = publicKeyHash,
+                AccountType = accountType,
+                NetworkType = _networkType
+            };
+            return address;
+>>>>>>> develop
         }
     }
 }

@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
 namespace Catalyst.Abstractions.IO.Messaging.Correlation
@@ -29,6 +29,6 @@ namespace Catalyst.Abstractions.IO.Messaging.Correlation
     public interface ICacheEvictionEvent<out T> where T : IMessage
     {
         T EvictedContent { get; }
-        IPeerIdentifier PeerIdentifier { get; }
+        PeerId PeerId { get; }
     }
 }

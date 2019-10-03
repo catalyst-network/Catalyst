@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -41,10 +42,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IHashProvider _hashProvider;
         private readonly IDeltaCache _deltaCache;
 
+<<<<<<< HEAD
         public GetDeltaRequestObserver(IHashProvider hashProvider, 
             IDeltaCache deltaCache,
             IPeerIdentifier peerIdentifier,
             ILogger logger) : base(logger, peerIdentifier)
+=======
+        public GetDeltaRequestObserver(IDeltaCache deltaCache,
+            IPeerSettings peerSettings,
+            ILogger logger) : base(logger, peerSettings)
+>>>>>>> develop
         {
             _hashProvider = hashProvider;
             _deltaCache = deltaCache;
@@ -52,12 +59,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         protected override GetDeltaResponse HandleRequest(GetDeltaRequest getDeltaRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getDeltaRequest, nameof(getDeltaRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 

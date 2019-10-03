@@ -26,29 +26,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Network;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Peer;
 using Dawn;
 using DnsClient;
 using DnsClient.Protocol;
-using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Core.Lib.Network
 {
     public sealed class DnsClient : IDns
     {
         private readonly ILookupClient _client;
-        private readonly IPeerIdValidator _peerIdValidator;
 
         /// <summary>
         /// </summary>
         /// <param name="client"></param>
-        /// <param name="peerIdValidator"></param>
-        public DnsClient(ILookupClient client, IPeerIdValidator peerIdValidator)
+        public DnsClient(ILookupClient client)
         {
             Guard.Argument(client, nameof(client)).NotNull();
             _client = client;
-            _peerIdValidator = peerIdValidator;
         }
 
         public async Task<IList<IDnsQueryResponse>> GetTxtRecordsAsync(IList<string> hostnames)
@@ -78,23 +74,17 @@ namespace Catalyst.Core.Lib.Network
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
-        public IEnumerable<IPeerIdentifier> GetSeedNodesFromDns(IEnumerable<string> seedServers)
+        public IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> seedServers)
         {
-            var peers = new List<IPeerIdentifier>();
+            var peers = new List<PeerId>();
             seedServers.ToList().ForEach(async seedServer =>
             {
                 var dnsQueryAnswer = await GetTxtRecordsAsync(seedServer).ConfigureAwait(false);
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
         
-                Guard.Argument(answerSection.EscapedText).NotNull().Count(1);        
-                answerSection.EscapedText.ToList().ForEach(hexPid =>
-                {
-                    var peerChunks = hexPid.HexToUTF8String().Split(PeerIdentifier.PidDelimiter);
-                    _peerIdValidator.ValidateRawPidChunks(peerChunks);
-
-                    var peerIdentifier = PeerIdentifier.ParseHexPeerIdentifier(peerChunks);
-                    peers.Add(peerIdentifier);
-                });
+                Guard.Argument(answerSection.EscapedText).NotNull().Count(1);
+                answerSection.EscapedText.ToList()
+                   .ForEach(stringPid => peers.Add(stringPid.ParseHexStringTo<PeerId>()));
         
                 Guard.Argument(peers).MinCount(1);
             });

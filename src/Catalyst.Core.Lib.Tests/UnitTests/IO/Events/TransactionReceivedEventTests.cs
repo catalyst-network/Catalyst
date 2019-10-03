@@ -28,10 +28,11 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Events;
+using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Mempool.Documents;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -52,15 +53,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         public TransactionReceivedEventTests()
         {
             _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
+            _peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
             _mempool = Substitute.For<IMempool<MempoolDocument>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
             _broadcastManager = Substitute.For<IBroadcastManager>();
-            _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator, 
-                _mempool, 
-                _broadcastManager, 
-                PeerIdentifierHelper.GetPeerIdentifier("Test"), 
+            _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator,
+                _mempool,
+                _broadcastManager,
                 _peerSettings,
                 Substitute.For<ILogger>());
         }
@@ -68,8 +68,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         [Fact]
         public void Can_Send_Error_To_Invalid_Transaction()
         {
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.Network).Returns(false);
-            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()).Should()
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
+               .Returns(false);
+            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()
+                   .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
                .Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
         }
@@ -77,16 +79,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         [Fact]
         public void Can_Send_Error_If_Mempool_Contains_Transaction()
         {
-            var sig = new byte[64].ToByteString();
-            var transaction = new TransactionBroadcast
-            {
-                Signature = sig
-            };
+            var transaction = TransactionHelper.GetPublicTransaction();
+            var sig = transaction.Signature.RawBytes;
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.Network).Returns(true);
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
+               .Returns(true);
             _mempool.Repository.TryReadItem(sig).Returns(true);
 
-            _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Error);
+            _transactionReceivedEvent
+               .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                    CorrelationId.GenerateCorrelationId()))
+               .Should().Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
             _mempool.Repository.DidNotReceiveWithAnyArgs().CreateItem(default);
         }
@@ -94,14 +97,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         [Fact]
         public void Can_Broadcast_And_Save_Valid_Transaction()
         {
-            var sig = new byte[64].ToByteString();
-            var transaction = new TransactionBroadcast
-            {
-                Signature = sig
-            };
+            var transaction = TransactionHelper.GetPublicTransaction();
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.Network).Returns(true);
-            _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Successful);
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
+               .Returns(true);
+            _transactionReceivedEvent
+               .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                    CorrelationId.GenerateCorrelationId()))
+               .Should().Be(ResponseCode.Successful);
 
             _mempool.Repository.Received(1).CreateItem(Arg.Is<TransactionBroadcast>(
                 savedDoc => savedDoc.Equals(transaction)));

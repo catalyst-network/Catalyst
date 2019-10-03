@@ -25,12 +25,13 @@ using System;
 using System.Collections.Generic;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.ReputationSystem;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P.IO.Messaging.Correlation
 {
     public interface IPeerMessageCorrelationManager : IMessageCorrelationManager
     {
         IObservable<IPeerReputationChange> ReputationEventStream { get; }
-        IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream { get; }
+        IObservable<KeyValuePair<ICorrelationId, PeerId>> EvictionEventStream { get; }
     }
 }

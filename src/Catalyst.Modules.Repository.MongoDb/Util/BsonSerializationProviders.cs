@@ -21,8 +21,8 @@
 
 #endregion
 
-using Catalyst.Core.Lib.P2P;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using MongoDB.Bson.Serialization;
@@ -33,13 +33,12 @@ namespace Catalyst.Modules.Repository.MongoDb.Util
     {
         public static void Init()
         {
-            BsonClassMap.RegisterClassMap<PeerIdentifier>();
-            
             AddSerializer<TransactionBroadcast>();
             AddSerializer<PeerId>();
-            AddSerializer<STTransactionEntry>();
-            AddSerializer<CFTransactionEntry>();
-            AddSerializer<EntryRangeProof>();
+            AddSerializer<PublicEntry>();
+            AddSerializer<ConfidentialEntry>();
+            AddSerializer<ContractEntry>();
+            AddSerializer<RangeProof>();
         }
         
         static void AddSerializer<TType>() where TType : IMessage, new()

@@ -22,12 +22,12 @@
 #endregion
 
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.IO.Events
 {
     public interface ITransactionReceivedEvent
     {
-        ResponseCode OnTransactionReceived(TransactionBroadcast broadcast);
+        ResponseCode OnTransactionReceived(ProtocolMessage broadcast);
     }
 }

@@ -22,51 +22,46 @@
 #endregion
 
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.TestUtils
 {
     public static class TransactionHelper
     {
-        public static TransactionBroadcast GetTransaction(uint standardAmount = 123,
-            string standardPubKey = "standardPubKey",
+        public static TransactionBroadcast GetPublicTransaction(uint amount = 123,
+            string senderPublicKey = "sender",
+            string receiverPublicKey = "receiver",
             string signature = "signature",
-            string confidentialCommitment = "confidentialCommitment",
-            string confidentialPubKey = "confidentialPubKey",
-            TransactionType transactionType = TransactionType.Normal,
-            long timeStamp = 12345,
+            long timestamp = 12345,
             ulong transactionFees = 2,
-            ulong lockTime = 9876)
+            NetworkType networkType = NetworkType.Devnet)
         {
             var transaction = new TransactionBroadcast
             {
-                STEntries =
+                PublicEntries =
                 {
-                    new STTransactionEntry
+                    new PublicEntry
                     {
-                        Amount = standardAmount,
-                        PubKey = standardPubKey.ToUtf8ByteString()
+                        Amount = ((UInt256) amount).ToUint256ByteString(),
+                        Base = new BaseEntry
+                        {
+                            ReceiverPublicKey = receiverPublicKey.ToUtf8ByteString(),
+                            SenderPublicKey = senderPublicKey.ToUtf8ByteString(),
+                            TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
+                        }
                     }
                 },
-                CFEntries =
+                Timestamp = new Timestamp {Seconds = timestamp},
+                Signature = new Signature
                 {
-                    new CFTransactionEntry
-                    {
-                        PedersenCommit = confidentialCommitment.ToUtf8ByteString(),
-                        PubKey = confidentialPubKey.ToUtf8ByteString()
-                    }
-                },
-                Signature = signature.ToUtf8ByteString(),
-                TransactionType = transactionType,
-
-                TimeStamp = new Timestamp
-                {
-                    Seconds = timeStamp
-                },
-              
-                TransactionFees = transactionFees,
-                LockTime = lockTime
+                    SigningContext = new SigningContext {NetworkType = networkType, SignatureType = SignatureType.TransactionPublic},
+                    RawBytes = signature.ToUtf8ByteString()
+                }
             };
             return transaction;
         }

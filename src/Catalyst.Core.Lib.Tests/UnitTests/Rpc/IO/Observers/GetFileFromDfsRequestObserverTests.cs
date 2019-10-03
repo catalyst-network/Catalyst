@@ -33,7 +33,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -53,8 +53,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfs = Substitute.For<IDfs>();
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("test");
-            _observer = new GetFileFromDfsRequestObserver(_dfs, peerIdentifier, _fileTransferFactory, Substitute.For<ILogger>());
+            var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
+            _observer = new GetFileFromDfsRequestObserver(_dfs, peerSettings, _fileTransferFactory, Substitute.For<ILogger>());
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fileTransferFactory.RegisterTransfer(Arg.Any<IUploadFileInformation>()).Returns(fakeResponse);
             return fakeStream;
         }
-
+        
         private IObserverDto<ProtocolMessage> GetFileFromDfsRequestMessage()
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest

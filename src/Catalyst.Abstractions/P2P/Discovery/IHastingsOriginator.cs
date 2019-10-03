@@ -24,12 +24,13 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P.Discovery
 {
     public interface IHastingsOriginator
     {
-        IPeerIdentifier Peer { get; }
+        PeerId Peer { get; }
 
         /// <summary>
         /// Every time you the walk moves forward with a new Peer, it will ask that peer for
@@ -59,7 +60,13 @@ namespace Catalyst.Abstractions.P2P.Discovery
         /// <summary>
         /// Find out if the current state has any neighbour in a <see cref="NeighbourStateTypes.Responsive"/>
         /// </summary>
-        /// <returns><see cref="true"/> if <see cref="Neighbours"/> contains a <see cref="NeighbourStateTypes.Responsive"/> neighbour, <see cref="false"/> otherwise.</returns>
+        /// <returns><see>
+        ///         <cref>true</cref>
+        ///     </see>
+        ///     if <see cref="Neighbours"/> contains a <see cref="NeighbourStateTypes.Responsive"/> neighbour, <see>
+        ///         <cref>false</cref>
+        ///     </see>
+        ///     otherwise.</returns>
         bool HasValidCandidate();
     }
 }

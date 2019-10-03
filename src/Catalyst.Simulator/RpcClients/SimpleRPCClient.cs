@@ -29,7 +29,6 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cli;
@@ -49,10 +48,12 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Client;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
-using Multiformats.Hash.Algorithms;
+using NSubstitute;
 using Serilog;
 using IRpcClient = Catalyst.Abstractions.Rpc.IRpcClient;
 
@@ -61,8 +62,8 @@ namespace Catalyst.Simulator.RpcClients
     public class SimpleRpcClient : Interfaces.IRpcClient
     {
         private readonly ILogger _logger;
-        private readonly IPeerIdentifier _senderPeerIdentifier;
-        private IPeerIdentifier _recipientPeerIdentifier;
+        private readonly PeerId _senderPeerId;
+        private PeerId _recipientPeerId;
         private IRpcClient _rpcClient;
         private readonly X509Certificate2 _certificate;
         private readonly RpcClientFactory _rpcClientFactory;
@@ -71,7 +72,7 @@ namespace Catalyst.Simulator.RpcClients
             IPasswordRegistry passwordRegistry,
             X509Certificate2 certificate,
             ILogger logger,
-            ISigningContextProvider signingContextProvider)
+            SigningContext signingContextProvider)
         {
             _logger = logger;
             _certificate = certificate;
@@ -86,8 +87,7 @@ namespace Catalyst.Simulator.RpcClients
 
             var keyServiceStore = new KeyStoreServiceWrapped(cryptoContext);
 
-            var multiHashAlgorithm = new BLAKE2B_256();
-            var addressHelper = new AddressHelper(multiHashAlgorithm);
+            var addressHelper = new AddressHelper(signingContextProvider.NetworkType);
             var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, keyServiceStore, fileSystem,
                 _logger, addressHelper);
 
@@ -99,8 +99,12 @@ namespace Catalyst.Simulator.RpcClients
             var changeTokenProvider = new TtlChangeTokenProvider(10000);
             var messageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, _logger, changeTokenProvider);
             var peerIdValidator = new PeerIdValidator(cryptoContext);
+
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(signingContextProvider.NetworkType);
+
             var nodeRpcClientChannelFactory =
-                new RpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, signingContextProvider);
+                new RpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, peerSettings);
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {
@@ -118,13 +122,12 @@ namespace Catalyst.Simulator.RpcClients
             _rpcClientFactory =
                 new RpcClientFactory(nodeRpcClientChannelFactory, tcpClientEventLoopGroupFactory, handlers);
 
-            //PeerIdentifier for RPC/TCP is currently redundant.
-            _senderPeerIdentifier =
-                new PeerIdentifier(keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).GetPublicKey().Bytes,
-                    IPAddress.Any, 1026);
+            //PeerId for RPC/TCP is currently redundant.
+            var publicKey = keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).GetPublicKey().Bytes;
+            _senderPeerId = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
         }
 
-        public async Task<bool> ConnectRetryAsync(IPeerIdentifier peerIdentifier, int retryAttempts = 5)
+        public async Task<bool> ConnectRetryAsync(PeerId peerIdentifier, int retryAttempts = 5)
         {
             var retryCountDown = retryAttempts;
             while (retryCountDown > 0)
@@ -147,18 +150,18 @@ namespace Catalyst.Simulator.RpcClients
             return false;
         }
 
-        public async Task<bool> ConnectAsync(IPeerIdentifier peerIdentifier)
+        public async Task<bool> ConnectAsync(PeerId peerIdentifier)
         {
-            _recipientPeerIdentifier = peerIdentifier;
+            _recipientPeerId = peerIdentifier;
 
             var peerRpcConfig = new RpcClientSettings
             {
-                HostAddress = _recipientPeerIdentifier.Ip,
-                Port = _recipientPeerIdentifier.Port,
-                PublicKey = _recipientPeerIdentifier.PublicKey.KeyToString()
+                HostAddress = _recipientPeerId.IpAddress,
+                Port = (int) _recipientPeerId.Port,
+                PublicKey = _recipientPeerId.PublicKey.KeyToString()
             };
 
-            _logger.Information($"Connecting to {_recipientPeerIdentifier.Ip}:{_recipientPeerIdentifier.Port}");
+            _logger.Information($"Connecting to {peerRpcConfig.HostAddress}:{peerRpcConfig.Port}");
 
             try
             {
@@ -183,10 +186,10 @@ namespace Catalyst.Simulator.RpcClients
         public void SendMessage<T>(T message) where T : IMessage
         {
             var protocolMessage =
-                message.ToProtocolMessage(_senderPeerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+                message.ToProtocolMessage(_senderPeerId, CorrelationId.GenerateCorrelationId());
             var messageDto = new MessageDto(
                 protocolMessage,
-                _recipientPeerIdentifier);
+                _recipientPeerId);
 
             _rpcClient.SendMessage(messageDto);
         }
