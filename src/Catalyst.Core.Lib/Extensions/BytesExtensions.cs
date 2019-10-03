@@ -47,10 +47,10 @@ namespace Catalyst.Core.Lib.Extensions
         }
 
         /// <summary>
-        /// Takes some bytes, and use the <see cref="algorithm"/> to compute the hash
-        /// for this content. The hash is returned as a multihash, which means it is wrapped with a var-int that
-        /// describes its length, and a code that describes the hashing mechanism used,
-        /// <see cref="ComputeRawHash"/> to get only the raw bytes.
+        ///     Takes some bytes, and use the <see cref="algorithm" /> to compute the hash
+        ///     for this content. The hash is returned as a multihash, which means it is wrapped with a var-int that
+        ///     describes its length, and a code that describes the hashing mechanism used,
+        ///     <see cref="ComputeRawHash" /> to get only the raw bytes.
         /// </summary>
         /// <param name="bytes">The content for which the hash will be calculated.</param>
         /// <param name="algorithm">The hashing algorithm used.</param>
@@ -62,9 +62,9 @@ namespace Catalyst.Core.Lib.Extensions
         }
 
         /// <summary>
-        /// Simply takes some bytes, and use the <see cref="algorithm"/> to compute the hash
-        /// for this content. The hash is returned raw, <see cref="ComputeMultihash"/> to get the bytes
-        /// wrapped in a Multihash envelope.
+        ///     Simply takes some bytes, and use the <see cref="algorithm" /> to compute the hash
+        ///     for this content. The hash is returned raw, <see cref="ComputeMultihash" /> to get the bytes
+        ///     wrapped in a Multihash envelope.
         /// </summary>
         /// <param name="bytes">The content for which the hash will be calculated.</param>
         /// <param name="algorithm">The hashing algorithm used.</param>
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Lib.Extensions
             var array = bytes as byte[] ?? bytes.ToArray();
             return algorithm.ComputeHash(array);
         }
-        
+
         public static ByteString ToByteString(this IEnumerable<byte> bytes)
         {
             var enumerable = bytes as byte[] ?? bytes.ToArray();
