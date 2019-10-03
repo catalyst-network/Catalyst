@@ -108,7 +108,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             for (var i = 0; i < maxCount; i++)
             {
-                retrievedTransactions[i].PublicEntries.Any().Should().Be(expectedTransactions[i].PublicEntries.Any());
+                retrievedTransactions[i].IsPublicTransaction.Should().Be(expectedTransactions[i].IsPublicTransaction);
                 if (i == 0)
                 {
                     continue;
