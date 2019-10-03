@@ -25,9 +25,9 @@ namespace Catalyst.TestUtils
 {
     public static class Traits
     {
-        public const string TestType = "TestType";
-        public const string IntegrationTest = "IntegrationTest";
-        public const string EmbeddedChannelTest = "EmbeddedChannelTest";
-        public const string E2ETest = "EndToEndTest";
+        public static readonly string TestType = "TestType";
+        public static readonly string IntegrationTest = "IntegrationTest";
+        public static readonly string EmbeddedChannelTest = "EmbeddedChannelTest";
+        public static readonly string E2ETest = "EndToEndTest";
     }
 }

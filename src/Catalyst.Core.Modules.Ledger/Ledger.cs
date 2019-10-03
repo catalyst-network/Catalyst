@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void FlushTransactionsFromDelta()
         {
-            var transactionsToFlush = _mempool.Repository.GetAll(); //@TODO no get alls
+            var transactionsToFlush = _mempool.Repository.GetAll(); //TOD0 no get alls
             _mempool.Repository.Delete(transactionsToFlush);
         }
 
