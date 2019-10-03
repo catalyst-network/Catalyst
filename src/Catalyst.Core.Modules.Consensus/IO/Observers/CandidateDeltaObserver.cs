@@ -53,13 +53,9 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     messageDto.Payload.PeerId.Port);
                 var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
 
-<<<<<<< HEAD
                 _hashProvider.IsValidHash(deserialised.PreviousDeltaDfsHash.ToByteArray());
                 _hashProvider.IsValidHash(deserialised.Hash.ToByteArray());
-=======
-                deserialised.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
-                deserialised.Hash.ToByteArray().AsMultihash();
->>>>>>> develop
+
                 deserialised.IsValid();
                 
                 _deltaVoter.OnNext(deserialised);

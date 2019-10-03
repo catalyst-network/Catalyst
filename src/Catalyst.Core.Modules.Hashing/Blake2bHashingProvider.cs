@@ -1,17 +1,14 @@
 #region LICENSE
 
-
-
 #endregion
 
-using Catalyst.Abstractions.Hashing;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
-using SimpleBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Abstractions.Hashing;
 using Multiformats.Base;
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -50,7 +47,7 @@ namespace Catalyst.Core.Modules.Hashing
             var result = multiHash.ToString(MultibaseEncoding.Base32Lower);
             return result;
         }
-        
+
         public byte[] ComputeRawHash(IEnumerable<byte> content)
         {
             return Multihash.Sum(_multihashAlgorithm.Code, content.ToArray()).ToBytes();
@@ -65,7 +62,7 @@ namespace Catalyst.Core.Modules.Hashing
         {
             try
             {
-                _ = AsMultihash(content);
+                AsMultihash(content);
             }
             catch (Exception)
             {
@@ -76,9 +73,9 @@ namespace Catalyst.Core.Modules.Hashing
         }
 
         /// <summary>
-        /// Simply takes some bytes, and use the <see cref="_multihashAlgorithm"/> to compute the hash
-        /// for this content. The hash is returned raw, <see cref="ComputeRawHash"/> to get the bytes
-        /// wrapped in a Multihash envelope.
+        ///     Simply takes some bytes, and use the <see cref="_multihashAlgorithm" /> to compute the hash
+        ///     for this content. The hash is returned raw, <see cref="ComputeRawHash" /> to get the bytes
+        ///     wrapped in a Multihash envelope.
         /// </summary>
         /// <param name="bytes">The content for which the hash will be calculated.</param>
         /// <returns>The raw result of the hashing operation, as a byte array.</returns>

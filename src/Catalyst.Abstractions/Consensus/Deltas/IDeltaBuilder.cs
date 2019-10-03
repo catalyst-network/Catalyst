@@ -39,6 +39,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
         /// <returns>Returns a candidate delta object that contains the hash for the update,
         /// the hash for the previous delta and the producer's PeerId</returns>
-        CandidateDeltaBroadcast BuildCandidateDelta(string previousDeltaHash);
+        CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash);
     }
 }

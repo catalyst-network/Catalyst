@@ -29,12 +29,6 @@ using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf.WellKnownTypes;
-<<<<<<< HEAD
-=======
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
->>>>>>> develop
 
 namespace Catalyst.TestUtils
 {

@@ -30,12 +30,7 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
-<<<<<<< HEAD
-=======
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 using Nethermind.Dirichlet.Numerics;
->>>>>>> develop
 
 namespace Catalyst.Core.Lib.Extensions
 {
@@ -53,21 +48,6 @@ namespace Catalyst.Core.Lib.Extensions
         {
             var enumerable = bytes as byte[] ?? bytes.ToArray();
             return ByteString.CopyFrom(enumerable);
-        }
-<<<<<<< HEAD
-=======
-
-        public static Multihash AsMultihash(this IEnumerable<byte> bytes)
-        {
-            var array = bytes as byte[] ?? bytes.ToArray();
-            return Multihash.Decode(array);
-        }
-
-        public static string AsBase32Address(this IEnumerable<byte> bytes)
-        {
-            var hash = AsMultihash(bytes);
-            var trimmedString = hash.AsBase32Address();
-            return trimmedString;
         }
 
         public static UInt256 ToUInt256(this ByteString byteString)
@@ -111,6 +91,5 @@ namespace Catalyst.Core.Lib.Extensions
                 Port = (uint) port
             };
         }
->>>>>>> develop
     }
 }

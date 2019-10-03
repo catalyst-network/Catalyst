@@ -26,7 +26,6 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
@@ -42,16 +41,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IHashProvider _hashProvider;
         private readonly IDeltaCache _deltaCache;
 
-<<<<<<< HEAD
-        public GetDeltaRequestObserver(IHashProvider hashProvider, 
+        public GetDeltaRequestObserver(IHashProvider hashProvider,
             IDeltaCache deltaCache,
-            IPeerIdentifier peerIdentifier,
-            ILogger logger) : base(logger, peerIdentifier)
-=======
-        public GetDeltaRequestObserver(IDeltaCache deltaCache,
             IPeerSettings peerSettings,
             ILogger logger) : base(logger, peerSettings)
->>>>>>> develop
         {
             _hashProvider = hashProvider;
             _deltaCache = deltaCache;
