@@ -31,11 +31,11 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
 {
-    public class CryptoWrapperTests
+    public sealed class CryptoWrapperTests
     {
-        public CryptoWrapperTests() { _wrapper = new CryptoWrapper(); }
+        public CryptoWrapperTests() { _wrapper = new FfiWrapper(); }
 
-        private readonly IWrapper _wrapper;
+        private readonly ICryptoContext _wrapper;
         private static readonly Random Random = new Random();
 
         [Fact]
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
         public void TestGetPublicKeyFromPrivate()
         {
             IPrivateKey privateKey = _wrapper.GeneratePrivateKey();
-            IPublicKey publicKey = _wrapper.GetPublicKeyFromPrivate(privateKey);
+            IPublicKey publicKey = _wrapper.GetPublicKeyFromPrivateKey(privateKey);
             publicKey.Bytes.Length.Should().Be(_wrapper.PublicKeyLength);
         }
 
@@ -67,8 +67,8 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             IPrivateKey privateKey = _wrapper.GeneratePrivateKey();
             byte[] message = Encoding.UTF8.GetBytes("fa la la la");
             byte[] context = Encoding.UTF8.GetBytes("context");
-            ISignature signature = _wrapper.StdSign(privateKey, message, context);
-            bool isVerified = _wrapper.StdVerify(signature, message, context);
+            ISignature signature = _wrapper.Sign(privateKey, message, context);
+            bool isVerified = _wrapper.Verify(signature, message, context);
             isVerified.Should().BeTrue();
         }
 
@@ -79,8 +79,8 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             byte[] message1 = Encoding.UTF8.GetBytes("fa la la la");
             byte[] message2 = Encoding.UTF8.GetBytes("fa la la lahhhhhhh");
             byte[] context = Encoding.UTF8.GetBytes("any old context");
-            ISignature signature = _wrapper.StdSign(privateKey, message1, context);
-            bool isVerified = _wrapper.StdVerify(signature, message2, context);
+            ISignature signature = _wrapper.Sign(privateKey, message1, context);
+            bool isVerified = _wrapper.Verify(signature, message2, context);
             isVerified.Should().BeFalse();
         }
 
@@ -99,22 +99,26 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             byte[] messageBytes = message.HexToByteArray();
             byte[] contextBytes = context.HexToByteArray();
             
-            var sig = _wrapper.SignatureFromBytes(signatureBytes, publicKeyBytes);
+            var sig = _wrapper.GetSignatureFromBytes(signatureBytes, publicKeyBytes);
             
-            var isVerified = _wrapper.StdVerify(sig, messageBytes, contextBytes);
+            var isVerified = _wrapper.Verify(sig, messageBytes, contextBytes);
             isVerified.Should().Be(expectedResult);
         }
 
-        [Fact]
-        public void TestFailureInvalidSignatureFormat()
+        [Theory]
+        [InlineData("mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIA==", "fa la la la")]
+        public void TestFailureInvalidSignatureFormat(string sig, string msg)
         {
-            IPrivateKey privateKey = _wrapper.GeneratePrivateKey();
-            byte[] publicKeyBytes = _wrapper.GetPublicKeyFromPrivate(privateKey).Bytes;
-            string invalidSignature = "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIA==";
-            byte[] signatureBytes = Convert.FromBase64String(invalidSignature);
-            ISignature invalidSig = _wrapper.SignatureFromBytes(signatureBytes, publicKeyBytes);
-            byte[] message = Encoding.UTF8.GetBytes("fa la la la");
-            Action action = () => { _wrapper.StdVerify(invalidSig, message, "".HexToByteArray()); };
+            var privateKey = _wrapper.GeneratePrivateKey();
+            var publicKeyBytes = _wrapper.GetPublicKeyFromPrivateKey(privateKey).Bytes;
+            var signatureBytes = Convert.FromBase64String(sig);
+            var invalidSig = _wrapper.GetSignatureFromBytes(signatureBytes, publicKeyBytes);
+            
+            Action action = () =>
+            {
+                _wrapper.Verify(invalidSig, Encoding.UTF8.GetBytes(msg), "".HexToByteArray());
+            };
+            
             action.Should().Throw<SignatureException>();
         }
 
@@ -147,7 +151,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
         {
             const string publicKeyHex = "fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025";
             byte[] publicKeyBytes = publicKeyHex.HexToByteArray();
-            IPublicKey publicKey = _wrapper.PublicKeyFromBytes(publicKeyBytes);
+            IPublicKey publicKey = _wrapper.GetPublicKeyFromBytes(publicKeyBytes);
             publicKey.Should().NotBe(null);
         }
 
@@ -158,7 +162,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             byte[] publicKeyBytes = publicKeyHex.HexToByteArray();
             Action action = () =>
             {
-                _wrapper.PublicKeyFromBytes(publicKeyBytes);
+                _wrapper.GetPublicKeyFromBytes(publicKeyBytes);
             };
             action.Should().Throw<SignatureException>();
         }
@@ -169,7 +173,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             var publicKeyBytes = GenerateRandomByteArray(_wrapper.PublicKeyLength - 1);
             Action action = () =>
             {
-                _wrapper.PublicKeyFromBytes(publicKeyBytes);
+                _wrapper.GetPublicKeyFromBytes(publicKeyBytes);
             };
             action.Should().Throw<ArgumentException>();
         }
@@ -178,7 +182,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
         public void PrivateKey_Can_Be_Created_With_Valid_Input()
         {          
             var privateKeyBytes = GenerateRandomByteArray(_wrapper.PrivateKeyLength);
-            IPrivateKey privateKey = _wrapper.PrivateKeyFromBytes(privateKeyBytes);
+            IPrivateKey privateKey = _wrapper.GetPrivateKeyFromBytes(privateKeyBytes);
             privateKey.Should().NotBe(null);
         }
 
@@ -188,7 +192,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             var privateKeyBytes = GenerateRandomByteArray(_wrapper.PrivateKeyLength + 1);
             Action action = () =>
             {
-                _wrapper.PrivateKeyFromBytes(privateKeyBytes);
+                _wrapper.GetPrivateKeyFromBytes(privateKeyBytes);
             };
             action.Should().Throw<ArgumentException>();
         }
@@ -201,7 +205,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             
             Action action = () =>
             {
-                _wrapper.SignatureFromBytes(signatureBytes, publicKeyBytes);
+                _wrapper.GetSignatureFromBytes(signatureBytes, publicKeyBytes);
             };
 
             action.Should().Throw<ArgumentException>();
@@ -213,11 +217,11 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             var signatureBytes = GenerateRandomByteArray(_wrapper.SignatureLength - 1);
 
             var privateKey = _wrapper.GeneratePrivateKey();
-            var publicKey = _wrapper.GetPublicKeyFromPrivate(privateKey);
+            var publicKey = _wrapper.GetPublicKeyFromPrivateKey(privateKey);
             
             Action action = () =>
             {
-                _wrapper.SignatureFromBytes(signatureBytes, publicKey.Bytes);
+                _wrapper.GetSignatureFromBytes(signatureBytes, publicKey.Bytes);
             };
 
             action.Should().Throw<ArgumentException>();
@@ -229,9 +233,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             var signatureBytes = GenerateRandomByteArray(_wrapper.SignatureLength);
 
             var privateKey = _wrapper.GeneratePrivateKey();
-            var publicKey = _wrapper.GetPublicKeyFromPrivate(privateKey);
+            var publicKey = _wrapper.GetPublicKeyFromPrivateKey(privateKey);
 
-            _wrapper.SignatureFromBytes(signatureBytes, publicKey.Bytes).Should().NotBe(null);
+            _wrapper.GetSignatureFromBytes(signatureBytes, publicKey.Bytes).Should().NotBe(null);
         }
 
         private static byte[] GenerateRandomByteArray(int length)

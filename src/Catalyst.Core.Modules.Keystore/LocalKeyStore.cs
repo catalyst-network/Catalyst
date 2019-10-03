@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Keystore
             IPrivateKey privateKey = null;
             try
             {
-                privateKey = _cryptoContext.PrivateKeyFromBytes(keyBytes);
+                privateKey = _cryptoContext.GetPrivateKeyFromBytes(keyBytes);
             }
             catch (ArgumentException)
             {

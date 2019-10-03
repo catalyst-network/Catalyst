@@ -26,7 +26,6 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
-using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -52,7 +51,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 
             var passwordManager = Substitute.For<IPasswordManager>(); 
 
-            var cryptoContext = new CryptoContext(new CryptoWrapper());
+            var cryptoContext = new FfiWrapper();
 
             var keyStoreService = new KeyStoreServiceWrapped(cryptoContext);
 

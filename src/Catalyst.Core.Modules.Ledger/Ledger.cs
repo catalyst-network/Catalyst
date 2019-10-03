@@ -25,8 +25,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly IDisposable _deltaUpdatesSubscription;
 
         private readonly object _synchronisationLock = new object();
-        private readonly CryptoContext _cryptoContext;
+        private readonly ICryptoContext _cryptoContext;
 
         public Ledger(IAccountRepository accounts, 
             IDeltaHashProvider deltaHashProvider,
@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Ledger
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
             LatestKnownDelta = _synchroniser.DeltaCache.GenesisAddress;
-            _cryptoContext = new CryptoContext(new CryptoWrapper());
+            _cryptoContext = new FfiWrapper();
         }
 
         private void FlushTransactionsFromDelta()
@@ -147,7 +147,7 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void UpdateLedgerAccountFromEntry(PublicEntry entry)
         {
-            var pubKey = _cryptoContext.PublicKeyFromBytes(entry.Base.ReceiverPublicKey.ToByteArray());
+            var pubKey = _cryptoContext.GetPublicKeyFromBytes(entry.Base.ReceiverPublicKey.ToByteArray());
 
             //todo: get an address from the key using the Account class from Common lib
             var account = Accounts.Get(pubKey.Bytes.AsBase32Address());

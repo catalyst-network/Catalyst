@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests
             var senderId = PeerIdHelper.GetPeerId("Test");
             _signedMessage = new GetPeerListRequest()
                .ToProtocolMessage(senderId)
-               .ToSignedProtocolMessage(senderId, new byte[Ffi.SignatureLength]);
+               .ToSignedProtocolMessage(senderId, new byte[new FfiWrapper().SignatureLength]);
         }
 
         [Fact]

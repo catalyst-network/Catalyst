@@ -82,8 +82,7 @@ namespace Catalyst.Simulator.RpcClients
             var consolePasswordReader = new ConsolePasswordReader(userOutput, new ConsoleUserInput());
             var passwordManager = new PasswordManager(consolePasswordReader, passwordRegistry);
 
-            var wrapper = new CryptoWrapper();
-            var cryptoContext = new CryptoContext(wrapper);
+            var cryptoContext = new FfiWrapper();
 
             var keyServiceStore = new KeyStoreServiceWrapped(cryptoContext);
 
