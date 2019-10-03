@@ -21,24 +21,20 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Util;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Cryptography;
+using System.Net;
+using Catalyst.Abstractions.Rpc;
+using NSubstitute;
 
-namespace Catalyst.TestUtils.Protocol
+namespace Catalyst.TestUtils
 {
-    internal static class SignatureHelper
+    public class RpcSettingsHelper
     {
-        internal static Signature GetSignature(IEnumerable<byte> signature = default, SigningContext signingContext = default)
+        public static IRpcServerSettings GetRpcServerSettings(int port = 42051)
         {
-            var defaultedSignature = new Signature
-            {
-                RawBytes = signature?.ToByteString() ?? ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength).ToByteString(),
-                SigningContext = signingContext ?? DevNetPeerSigningContext.Instance
-            };
-            return defaultedSignature;
+            var settings = Substitute.For<IRpcServerSettings>();
+            settings.Port.Returns(port);
+            settings.BindAddress.Returns(IPAddress.Loopback);
+            return settings;
         }
     }
 }

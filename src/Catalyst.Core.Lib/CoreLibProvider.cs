@@ -117,7 +117,6 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<PasswordRegistry>().As<IPasswordRegistry>().SingleInstance();
             
             // Register Cryptography
-            builder.RegisterType<CryptoContext>().As<ICryptoContext>();
             builder.RegisterType<IsaacRandom>().As<IDeterministicRandom>();
             builder.RegisterType<ConsolePasswordReader>().As<IPasswordReader>().SingleInstance();
             builder.RegisterType<CertificateStore>().As<ICertificateStore>().SingleInstance();

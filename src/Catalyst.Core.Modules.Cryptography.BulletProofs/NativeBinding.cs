@@ -25,7 +25,7 @@ using System.Runtime.InteropServices;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 {
-    public static class Ffi
+    public static class NativeBinding
     {
         private const string Library = "catalystffi";
 

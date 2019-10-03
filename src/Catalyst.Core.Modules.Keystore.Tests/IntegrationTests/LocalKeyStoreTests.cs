@@ -29,7 +29,6 @@ using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Network;
@@ -52,7 +51,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
         {
             _fileSystem = Substitute.For<IFileSystem>();
-            _context = new CryptoContext(new CryptoWrapper());
+            _context = new FfiWrapper();
 
             var logger = Substitute.For<ILogger>();
             _passwordManager = Substitute.For<IPasswordManager>();

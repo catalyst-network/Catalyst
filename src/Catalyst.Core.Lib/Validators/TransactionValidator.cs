@@ -24,7 +24,6 @@
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
-using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
@@ -35,10 +34,10 @@ namespace Catalyst.Core.Lib.Validators
     public sealed class TransactionValidator : ITransactionValidator
     {
         private readonly ILogger _logger;
-        private readonly IWrapper _cryptoContext;
+        private readonly ICryptoContext _cryptoContext;
 
         public TransactionValidator(ILogger logger,
-            IWrapper cryptoContext)
+            ICryptoContext cryptoContext)
         {
             _cryptoContext = cryptoContext;
             _logger = logger;
@@ -73,12 +72,12 @@ namespace Catalyst.Core.Lib.Validators
                 return false;
             }
 
-            var transactionSignature = _cryptoContext.SignatureFromBytes(transactionBroadcast.Signature.RawBytes.ToByteArray(),
+            var transactionSignature = _cryptoContext.GetSignatureFromBytes(transactionBroadcast.Signature.RawBytes.ToByteArray(),
                 transactionBroadcast.PublicEntries.First().Base.SenderPublicKey.ToByteArray());
             var transactionWithoutSig = transactionBroadcast.Clone();
             transactionWithoutSig.Signature = null;
 
-            if (!_cryptoContext.StdVerify(transactionSignature, transactionWithoutSig.ToByteArray(), transactionBroadcast.Signature.SigningContext.ToByteArray()))
+            if (!_cryptoContext.Verify(transactionSignature, transactionWithoutSig.ToByteArray(), transactionBroadcast.Signature.SigningContext.ToByteArray()))
             {
                 return true;
             }

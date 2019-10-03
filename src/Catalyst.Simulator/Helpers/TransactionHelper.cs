@@ -46,7 +46,7 @@ namespace Catalyst.Simulator.Helpers
 
         public static BroadcastRawTransactionRequest GenerateTransaction(uint amount, int fee)
         {
-            var cryptoWrapper = new CryptoWrapper();
+            var cryptoWrapper = new FfiWrapper();
             var privateKey = cryptoWrapper.GeneratePrivateKey();
             var publicKey = ByteString.CopyFrom(privateKey.GetPublicKey().Bytes);
             
