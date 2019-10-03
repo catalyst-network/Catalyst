@@ -84,7 +84,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         public void Can_Send_Error_If_Mempool_Contains_Transaction()
         {
             var transaction = TransactionHelper.GetPublicTransaction();
-            var transactionDao = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
 
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
                .Returns(true);
