@@ -130,7 +130,7 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void UpdateLedgerFromDelta(Multihash deltaHash)
         {
-            if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var nextDeltaInChain))
+            if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash.AsBase32Address(), out var nextDeltaInChain))
             {
                 _logger.Warning(
                     "Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.", deltaHash);
