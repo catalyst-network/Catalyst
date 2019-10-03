@@ -21,7 +21,9 @@
 
 #endregion
 
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
@@ -83,12 +85,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         {
             var transaction = TransactionHelper.GetPublicTransaction();
             var transactionDao = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
-            var sig = transactionDao.Signature.RawBytes;
 
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
                .Returns(true);
 
-            _mempool.Repository.Exists(x => x.Signature.RawBytes == sig).Returns(true);
+            _mempool.Repository.Exists(Arg.Any<Expression<Func<TransactionBroadcastDao, bool>>>()).Returns(true);
 
             _transactionReceivedEvent
                .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),

@@ -103,7 +103,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var responseContent = sentResponseDto.Content.FromProtocolMessage<GetMempoolResponse>();
 
-            responseContent.Transactions.Should().BeEquivalentTo(mempoolTransactions);
+            responseContent.Transactions.Select(x => new TransactionBroadcastDao().ToDao(x)).Should()
+               .BeEquivalentTo(mempoolTransactions);
         }
     }
 }

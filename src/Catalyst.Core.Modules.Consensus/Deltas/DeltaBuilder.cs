@@ -175,7 +175,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             //we assume all transactions are of type non-confidential for now
 
             var validTransactionsForDelta =
-                allTransactions.Where(m => m.IsPublicTransaction() && m.HasValidEntries()).ToList();
+                allTransactions.Where(m => m.IsPublicTransaction && m.HasValidEntries()).ToList();
             var rejectedTransactions = allTransactions.Except(validTransactionsForDelta);
             _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}",
                 rejectedTransactions);

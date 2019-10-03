@@ -41,6 +41,11 @@ namespace Catalyst.Core.Lib.DAO
         public IEnumerable<ConfidentialEntryDao> ConfidentialEntries { get; set; }
         public IEnumerable<ContractEntryDao> ContractEntries { get; set; }
 
+        public bool IsContractDeployment { get; set; }
+        public bool IsContractCall { get; set; }
+        public bool IsPublicTransaction { get; set; }
+        public bool IsConfidentialTransaction { get; set; }
+
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>();
@@ -63,17 +68,9 @@ namespace Catalyst.Core.Lib.DAO
             return sum;
         }
 
-        public bool IsContractDeployment() { return ToProtoBuff().IsContractDeployment; }
-
-        public bool IsContractCall() { return ToProtoBuff().IsContractCall; }
-
-        public bool IsPublicTransaction() { return ToProtoBuff().IsPublicTransaction; }
-
-        public bool IsConfidentialTransaction() { return ToProtoBuff().IsConfidentialTransaction; }
-
         public bool HasValidEntries()
         {
-            return ToProtoBuff().HasValidEntries();
+            return IsContractDeployment ^ IsContractCall ^ IsPublicTransaction ^ IsConfidentialTransaction;
         }
     }
 }
