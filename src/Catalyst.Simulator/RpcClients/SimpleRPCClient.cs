@@ -82,11 +82,9 @@ namespace Catalyst.Simulator.RpcClients
             var passwordManager = new PasswordManager(consolePasswordReader, passwordRegistry);
 
             var cryptoContext = new FfiWrapper();
-
-            var keyServiceStore = new KeyStoreServiceWrapped(cryptoContext);
-
+            
             var addressHelper = new AddressHelper(signingContextProvider.NetworkType);
-            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, keyServiceStore, fileSystem,
+            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, fileSystem,
                 _logger, addressHelper);
 
             var keyRegistry = new KeyRegistry();
