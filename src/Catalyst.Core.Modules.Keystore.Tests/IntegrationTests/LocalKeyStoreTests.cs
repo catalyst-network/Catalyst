@@ -65,7 +65,6 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 
             _keystore = new LocalKeyStore(_passwordManager,
                 _context,
-                new KeyStoreServiceWrapped(_context),
                 _fileSystem,
                 logger,
                 addressHelper);
