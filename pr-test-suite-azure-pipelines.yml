@@ -62,8 +62,6 @@ steps:
   - bash: |
       git submodule update --init --force --recursive
     displayName: 'Clone submodules'
-    inputs:
-      failOnStandardError: 'true'
 
   - script: |
       curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain $RUSTUP_TOOLCHAIN
