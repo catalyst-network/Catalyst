@@ -35,7 +35,7 @@ namespace Catalyst.Abstractions.Consensus.Cycle
         /// Address on the DFS of the delta elected on the previous cycle, here used as
         /// a unique identifier for this phase.
         /// </summary>
-        string PreviousDeltaDfsHash { get; }
+        byte[] PreviousDeltaDfsHash { get; }
 
         /// <summary>
         /// The name of the phase represented by this instance.

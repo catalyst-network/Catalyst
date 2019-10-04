@@ -35,6 +35,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
     /// <remarks>A producer will call that method at the start of the Campaigning phase.</remarks>
     public interface IDeltaVoter : IObserver<CandidateDeltaBroadcast>
     {
-        bool TryGetFavouriteDelta(string previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite);
+        bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite);
     }
 }

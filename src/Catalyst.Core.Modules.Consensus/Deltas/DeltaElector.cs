@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate) =>
             nameof(DeltaElector) + "-" + _hashProvider.ComputeBase32(candidate.Candidate.PreviousDeltaDfsHash);
 
-        public string GetCandidateListCacheKey(string previousDeltaHash) =>
+        public string GetCandidateListCacheKey(byte[] previousDeltaHash) =>
             nameof(DeltaElector) + "-" + previousDeltaHash;
         
         public DeltaElector(IMemoryCache candidatesCache, 
@@ -114,7 +114,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public CandidateDeltaBroadcast GetMostPopularCandidateDelta(string previousDeltaDfsHash)
+        public CandidateDeltaBroadcast GetMostPopularCandidateDelta(byte[] previousDeltaDfsHash)
         {
             var candidateListCacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
             if (!_candidatesCache.TryGetValue(candidateListCacheKey,

@@ -42,11 +42,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
 
-        private readonly ReplaySubject<string> _deltaHashUpdatesSubject;
+        private readonly ReplaySubject<byte[]> _deltaHashUpdatesSubject;
         private readonly SortedList<Timestamp, string> _hashesByTimeDescending;
         private readonly int _capacity;
 
-        public IObservable<string> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
+        public IObservable<byte[]> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
 
         public DeltaHashProvider(IDeltaCache deltaCache, 
             IHashProvider hashProvider,
@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _deltaCache = deltaCache;
             _hashProvider = hashProvider;
             _logger = logger;
-            _deltaHashUpdatesSubject = new ReplaySubject<string>(0);
+            _deltaHashUpdatesSubject = new ReplaySubject<byte[]>(0);
             var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, @descending: true);
             _capacity = capacity;
             _hashesByTimeDescending = new SortedList<Timestamp, string>(comparer)
