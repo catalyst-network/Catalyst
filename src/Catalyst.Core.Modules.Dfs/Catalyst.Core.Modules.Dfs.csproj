@@ -17,6 +17,9 @@
 
     <ItemGroup>
       <PackageReference Include="Common.Logging.Serilog" Version="4.3.6" />
+      <PackageReference Include="Ipfs.Core" Version="0.55.0" />
+      <PackageReference Include="Ipfs.Engine" Version="0.13.0" />
+      <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
         <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
