@@ -86,8 +86,6 @@ steps:
   - script: 'dotnet tool install --global dotnet-reportgenerator-globaltool'
     displayName: 'Install coverage tools'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
-    inputs:
-      failOnStandardError: 'true'
 
   - task: DotNetCoreCLI@2
     displayName: 'Run unit tests'
