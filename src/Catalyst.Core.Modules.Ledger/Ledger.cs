@@ -26,17 +26,25 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Ledger.Models;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Transaction;
 using Dawn;
+using Google.Protobuf;
 using LibP2P;
+using Nethermind.Core;
+using Nethermind.Core.Specs;
+using Nethermind.Evm;
+using Nethermind.Evm.Tracing;
+using Nethermind.Store;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiBase;
+using Account = Catalyst.Core.Modules.Ledger.Models.Account;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -48,6 +56,9 @@ namespace Catalyst.Core.Modules.Ledger
     public class Ledger : ILedger, IDisposable
     {
         public IAccountRepository Accounts { get; }
+        private readonly IKvm _kvm;
+        private readonly IStateProvider _stateProvider;
+        private readonly ISpecProvider _specProvider;
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly ILogger _logger;
@@ -59,13 +70,19 @@ namespace Catalyst.Core.Modules.Ledger
         public Cid LatestKnownDelta { get; private set; }
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
-        public Ledger(IAccountRepository accounts,
+        public Ledger(IKvm kvm,
+            IStateProvider stateProvider,
+            ISpecProvider specProvider,
+            IAccountRepository accounts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
             IMempool<TransactionBroadcastDao> mempool,
             ILogger logger)
         {
             Accounts = accounts;
+            _kvm = kvm;
+            _stateProvider = stateProvider;
+            _specProvider = specProvider;
             _synchroniser = synchroniser;
             _mempool = mempool;
             _logger = logger;
@@ -136,30 +153,95 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void UpdateLedgerFromDelta(Cid deltaHash)
         {
-            if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var nextDeltaInChain))
+            int snapshot = -1;
+            try
             {
-                _logger.Warning(
-                    "Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.", deltaHash);
-                return;
-            }
+                snapshot = _stateProvider.TakeSnapshot();
+                if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash,
+                    out var nextDeltaInChain))
+                {
+                    _logger.Warning(
+                        "Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.",
+                        deltaHash);
+                    return;
+                }
 
-            foreach (var entry in nextDeltaInChain.PublicEntries)
+                foreach (var entry in nextDeltaInChain.PublicEntries)
+                {
+                    UpdateLedgerAccountFromEntry(entry);
+                }
+
+                foreach (var entry in nextDeltaInChain.ContractEntries)
+                {
+                    UpdateLedgerAccountFromEntry(entry);
+                }
+
+                LatestKnownDelta = deltaHash;
+
+                _stateProvider.Commit(_specProvider.GenesisSpec);
+            }
+            catch
             {
-                UpdateLedgerAccountFromEntry(entry);
+                if (snapshot != -1)
+                {
+                    _stateProvider.Restore(snapshot);
+                }
             }
-
-            LatestKnownDelta = deltaHash;
         }
 
-        private void UpdateLedgerAccountFromEntry(PublicEntry entry)
+        private void UpdateLedgerAccountFromEntry(ContractEntry entry)
         {
-            var pubKey = _cryptoContext.GetPublicKeyFromBytes(entry.Base.ReceiverPublicKey.ToByteArray());
+            var executionType = entry.IsValidDeploymentEntry ? ExecutionType.Create : ExecutionType.Call;
+            UpdateLedgerAccountFromEntry(entry.Base, entry.Amount, executionType, entry.Data.ToByteArray());
+        }
 
-            //todo: get an address from the key using the Account class from Common lib
-            var account = Accounts.Get(pubKey.Bytes.ToBase32());
+        private void UpdateLedgerAccountFromEntry(PublicEntry entry) { UpdateLedgerAccountFromEntry(entry.Base, entry.Amount, ExecutionType.Transaction, Array.Empty<byte>()); }
 
-            //todo: a different logic for to and from entries
-            account.Balance += entry.Amount.ToUInt256();
+        // <<<<<<< HEAD
+        //             //todo: get an address from the key using the Account class from Common lib
+        //             var account = Accounts.Get(pubKey.Bytes.ToBase32());
+        // =======
+        private void UpdateLedgerAccountFromEntry(BaseEntry entry, ByteString entryAmount, ExecutionType executionType, byte[] data)
+        {
+            Address GetAccountAddress(ByteString publicKey)
+            {
+                var pubKey = _cryptoContext.GetPublicKeyFromBytes(publicKey.ToByteArray());
+
+                // todo: might need to trim or hash
+                return pubKey.ToKvmAddress();
+            }
+
+            var receiver = GetAccountAddress(entry.ReceiverPublicKey);
+            var sender = GetAccountAddress(entry.SenderPublicKey);
+            var value = entryAmount.ToUInt256();
+            var gasLimit = 1_000_000L;
+
+            // these values will be set by the tx processor within the state update logic
+            ExecutionEnvironment env = new ExecutionEnvironment
+            {
+                Originator = sender,
+                Sender = sender,
+                CodeSource = receiver,
+                ExecutingAccount = receiver,
+                Value = value,
+                TransferValue = value,
+                GasPrice = 0,
+                InputData = data,
+                CallDepth = 0,
+                CurrentBlock = new StateUpdate
+                {
+                    Difficulty = 1,
+                    Number = 1,
+                    Timestamp = 1,
+                    GasLimit = gasLimit,
+                    GasBeneficiary = Address.Zero,
+                    GasUsed = 0L
+                },
+                CodeInfo = _kvm.GetCachedCodeInfo(receiver)
+            };
+
+            VmState state = new VmState(gasLimit, env, executionType, false, true, false);
+            _kvm.Run(state, NullTxTracer.Instance);
         }
 
         protected virtual void Dispose(bool disposing)
