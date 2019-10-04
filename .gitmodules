@@ -9,4 +9,4 @@
 	url = https://github.com/catalyst-network/Cryptography.FFI.Rust.git
 [submodule "submodules/net-ipfs-core"]
 	path = submodules/net-ipfs-core
-	url = git@github.com:catalyst-network/net-ipfs-core.git
+	url = https://github.com/catalyst-network/net-ipfs-core.git
