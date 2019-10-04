@@ -31,7 +31,7 @@ namespace Catalyst.Core.Lib.Util
     {
         public override bool CanConvert(Type objectType)
         {
-            return (objectType == typeof(IPAddress));
+            return (objectType == typeof(IPAddress) || objectType.BaseType == typeof(IPAddress));
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
