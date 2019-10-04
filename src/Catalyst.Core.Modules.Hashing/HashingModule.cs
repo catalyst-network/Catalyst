@@ -1,6 +1,6 @@
 using Autofac;
 using Catalyst.Abstractions.Hashing;
-using Multiformats.Hash.Algorithms;
+using Ipfs.Registry;
 
 namespace Catalyst.Core.Modules.Hashing
 {
@@ -8,8 +8,9 @@ namespace Catalyst.Core.Modules.Hashing
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<BLAKE2B_256>().As<IMultihashAlgorithm>();
-            builder.RegisterType<Blake2bHashingProvider>().As<IHashProvider>();
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            builder.RegisterInstance(hashingAlgorithm).SingleInstance();
+            builder.RegisterType<HashingProvider>().As<IHashProvider>().SingleInstance();
         }
     }
 }

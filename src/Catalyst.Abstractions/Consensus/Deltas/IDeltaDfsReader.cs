@@ -23,6 +23,7 @@
 
 using System.Threading;
 using Catalyst.Protocol.Deltas;
+using Ipfs;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
@@ -44,6 +45,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         ///         <cref>false</cref>
         ///     </see>
         ///     otherwise.</returns>
-        bool TryReadDeltaFromDfs(string hash, out Delta delta, CancellationToken cancellationToken = default);
+        bool TryReadDeltaFromDfs(MultiHash hash, out Delta delta, CancellationToken cancellationToken = default);
     }
 }

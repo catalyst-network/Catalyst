@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Dfs;
+using Ipfs;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
@@ -46,18 +47,18 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         ///         <cref>false</cref>
         ///     </see>
         ///     otherwise.</returns>
-        bool TryUpdateLatestHash(byte[] previousHash, byte[] newHash);
+        bool TryUpdateLatestHash(MultiHash previousHash, MultiHash newHash);
 
         /// <summary>
         /// Retrieve the latest ledger update, as seen from an optional point in time in the past.
         /// </summary>
         /// <param name="asOf">An optional point in time in the past, if not provided, it will use <see cref="IDateTimeProvider.UtcNow"/></param>
         /// <returns>The hash, or address on the DFS, of the latest ledger state update as a string, as returned in <seealso cref="IDfs.AddAsync"/></returns>
-        byte[] GetLatestDeltaHash(DateTime? asOf = null);
+        MultiHash GetLatestDeltaHash(DateTime? asOf = null);
 
         /// <summary>
         /// Subscribe to these updates to get live notifications for the hashes of new deltas as they get published on the Dfs.
         /// </summary>
-        IObservable<byte[]> DeltaHashUpdates { get; }
+        IObservable<MultiHash> DeltaHashUpdates { get; }
     }
 }

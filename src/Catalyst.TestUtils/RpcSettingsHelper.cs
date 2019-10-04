@@ -21,25 +21,20 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.Registry;
-using Catalyst.Abstractions.Types;
+using System.Net;
+using Catalyst.Abstractions.Rpc;
+using NSubstitute;
 
-namespace Catalyst.Core.Lib.Registry
+namespace Catalyst.TestUtils
 {
-    public sealed class KeyRegistry : RegistryBase<KeyRegistryTypes, IPrivateKey>, IKeyRegistry
+    public class RpcSettingsHelper
     {
-        public KeyRegistry()
+        public static IRpcServerSettings GetRpcServerSettings(int port = 42051)
         {
-            Registry = new Dictionary<KeyRegistryTypes, IPrivateKey>();
-        }
-        
-        public bool Contains(byte[] publicKeyBytes)
-        {
-            return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
+            var settings = Substitute.For<IRpcServerSettings>();
+            settings.Port.Returns(port);
+            settings.BindAddress.Returns(IPAddress.Loopback);
+            return settings;
         }
     }
 }

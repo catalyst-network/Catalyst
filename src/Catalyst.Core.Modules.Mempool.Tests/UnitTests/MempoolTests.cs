@@ -35,7 +35,6 @@ using Google.Protobuf;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Serilog;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests

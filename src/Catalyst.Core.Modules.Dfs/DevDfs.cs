@@ -32,7 +32,6 @@ using Catalyst.Core.Lib.Config;
 using Dawn;
 using Ipfs;
 using Ipfs.Registry;
-using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -77,7 +76,7 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<string> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
+        public async Task<MultiHash> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {
             var bytes = Encoding.UTF8.GetBytes(utf8Content);
             var contentHash = MultiHash.ComputeHash(bytes, _hashingAlgorithm.Name).ToBase32();
@@ -91,14 +90,14 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<string> ReadTextAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<string> ReadTextAsync(MultiHash hash, CancellationToken cancellationToken = default)
         {
-            return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, id), Encoding.UTF8,
+            return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, hash.ToBase32()), Encoding.UTF8,
                 cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<string> AddAsync(Stream content,
+        public async Task<MultiHash> AddAsync(Stream content,
             string name = "",
             CancellationToken cancellationToken = default)
         {
@@ -115,9 +114,9 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<Stream> ReadAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<Stream> ReadAsync(MultiHash hash, CancellationToken cancellationToken = default)
         {
-            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, id)))
+            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, hash.ToBase32())))
                .ConfigureAwait(false);
         }
     }

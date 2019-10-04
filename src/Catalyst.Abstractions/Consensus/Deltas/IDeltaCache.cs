@@ -24,6 +24,7 @@
 using System.Threading;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
+using Ipfs;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
@@ -42,7 +43,7 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// <param name="delta">The delta retrieved on the Dfs.</param>
         /// <param name="cancellationToken">A token allowing to cancel the task before it ends.</param>
         /// <returns><c>true</c> if the retrieval was successful, <c>false</c> otherwise.</returns>
-        bool TryGetOrAddConfirmedDelta(string hash,
+        bool TryGetOrAddConfirmedDelta(MultiHash hash,
             out Delta delta, 
             CancellationToken cancellationToken = default);
 

@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         private static string ErrorFromErrorNameAdditionalInfo(string name)
         {
             string error = ErrorFromErrorName(name);
-            string additionalInfo = Ffi.GetLastError();
+            string additionalInfo = NativeBinding.GetLastError();
             return error + " - " + additionalInfo + ".";
         }
 

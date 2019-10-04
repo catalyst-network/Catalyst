@@ -41,6 +41,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Ipfs;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -130,14 +131,14 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             try
             {
-                string fileHash;
+                MultiHash fileHash;
 
                 using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     fileHash = await _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
                 }
 
-                fileTransferInformation.DfsHash = fileHash;
+                fileTransferInformation.DfsHash = fileHash.ToBase32();
 
                 Logger.Information($"Added File Name {fileTransferInformation.FileOutputPath} to DFS, Hash: {fileHash}");
             }

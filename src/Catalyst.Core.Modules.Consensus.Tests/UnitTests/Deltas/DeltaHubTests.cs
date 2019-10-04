@@ -25,7 +25,6 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;

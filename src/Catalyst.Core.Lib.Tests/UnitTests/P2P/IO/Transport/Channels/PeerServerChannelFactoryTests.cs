@@ -102,7 +102,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _testScheduler);
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
-            _signature = ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength);
+            _signature = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(true);
         }

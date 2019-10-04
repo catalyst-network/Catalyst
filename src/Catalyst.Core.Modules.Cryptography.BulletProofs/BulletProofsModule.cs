@@ -26,12 +26,12 @@ using Catalyst.Abstractions.Cryptography;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 {
-    public class BulletProofsModule : Module
+    public sealed class BulletProofsModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
             // Register Native cryptography wrapper
-            builder.RegisterType<CryptoWrapper>().As<IWrapper>();
+            builder.RegisterType<FfiWrapper>().As<ICryptoContext>();
         }
     }
 }

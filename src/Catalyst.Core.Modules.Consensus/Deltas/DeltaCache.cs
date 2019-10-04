@@ -25,18 +25,18 @@ using System;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Ipfs;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
-    /// <inheritdoc cref="IDeltaCache"/>
-    /// <inheritdoc cref="IDisposable"/>
+    /// <inheritdoc cref="IDeltaCache" />
+    /// <inheritdoc cref="IDisposable" />
     public class DeltaCache : IDeltaCache, IDisposable
     {
         private readonly IHashProvider _hashProvider;
@@ -44,12 +44,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IDeltaDfsReader _dfsReader;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
-        public string GenesisHash { get; set; }
+        public MultiHash GenesisHash { get; set; }
+        public string GenesisAddress { get; }
 
-        public string GenesisAddress { get; set; }
-
-        public string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
-            nameof(DeltaCache) + "-LocalDelta-" + _hashProvider.ComputeBase32(candidate.Hash);
+        public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate)
+        {
+            return nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash;
+        }
 
         public DeltaCache(IHashProvider hashProvider,
             IMemoryCache memoryCache,
@@ -58,12 +59,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             ILogger logger)
         {
             GenesisHash = _hashProvider.ComputeBase32(new Delta().ToByteArray());
-            GenesisAddress = GenesisHash;
+            GenesisAddress = GenesisHash.ToBase32();
 
             var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
             _hashProvider = hashProvider;
             _memoryCache = memoryCache;
-            _memoryCache.Set(GenesisHash, genesisDelta);
+            _memoryCache.Set(GenesisAddress, genesisDelta);
 
             _dfsReader = dfsReader;
             _logger = logger;
@@ -78,7 +79,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public bool TryGetOrAddConfirmedDelta(string hash, out Delta delta, CancellationToken cancellationToken = default)
+        public bool TryGetOrAddConfirmedDelta(MultiHash hash,
+            out Delta delta,
+            CancellationToken cancellationToken = default)
         {
             //this calls for a TryGetOrCreate IMemoryCache extension function
             if (_memoryCache.TryGetValue(hash, out delta))

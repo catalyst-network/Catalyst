@@ -1,5 +1,16 @@
 #region LICENSE
 
+#endregion
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Catalyst.Abstractions.Hashing;
+using Ipfs;
+using Ipfs.Registry;
+using Multiformats.Hash;
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -18,19 +29,25 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
-
-#endregion
-
-using System.Collections.Generic;
-using System.Security;
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Registry;
-using Catalyst.Abstractions.Types;
-
-namespace Catalyst.Core.Lib.Registry
+namespace Catalyst.Core.Modules.Hashing
 {
-    public sealed class PasswordRegistry : RegistryBase<PasswordRegistryTypes, SecureString>, IPasswordRegistry
+    public class HashingProvider : IHashProvider
     {
-        public PasswordRegistry() { Registry = new Dictionary<PasswordRegistryTypes, SecureString>(); }
+        public HashingAlgorithm HashingAlgorithm { set; get; }
+
+        public HashingProvider(HashingAlgorithm hashingAlgorithm)
+        {
+            HashingAlgorithm = hashingAlgorithm;
+        }
+
+        public MultiHash ComputeMultiHash(IEnumerable<byte> data)
+        {
+            return MultiHash.ComputeHash(data.ToArray());
+        }
+
+        public MultiHash ComputeMultiHash(Stream data)
+        {
+            return MultiHash.ComputeHash(data);
+        }
     }
 }

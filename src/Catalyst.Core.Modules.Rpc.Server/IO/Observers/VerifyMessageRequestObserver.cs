@@ -87,7 +87,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             ISignature signature = null;
             try
             {
-                signature = _keySigner.CryptoContext.SignatureFromBytes(decodedSignature, decodedPublicKey);
+                signature = _keySigner.CryptoContext.GetSignatureFromBytes(decodedSignature, decodedPublicKey);
             }
             catch (Exception e)
             {

@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Core.Lib.Extensions;
+using Ipfs;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Ledger
@@ -47,8 +47,8 @@ namespace Catalyst.Core.Modules.Ledger
         public IDeltaCache DeltaCache { get; }
 
         /// <inheritdoc />
-        public IEnumerable<string> CacheDeltasBetween(string latestKnownDeltaHash,
-            string targetDeltaHash,
+        public IEnumerable<MultiHash> CacheDeltasBetween(MultiHash latestKnownDeltaHash,
+            MultiHash targetDeltaHash,
             CancellationToken cancellationToken)
         {
             var thisHash = targetDeltaHash;

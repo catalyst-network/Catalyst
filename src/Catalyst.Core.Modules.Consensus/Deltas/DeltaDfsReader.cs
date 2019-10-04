@@ -26,6 +26,7 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Protocol.Deltas;
+using Ipfs;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
@@ -43,7 +44,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public bool TryReadDeltaFromDfs(string hash,
+        public bool TryReadDeltaFromDfs(MultiHash hash,
             out Delta delta,
             CancellationToken cancellationToken)
         {

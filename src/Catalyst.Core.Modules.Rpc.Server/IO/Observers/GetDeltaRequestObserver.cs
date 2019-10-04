@@ -31,6 +31,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Ipfs;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -61,9 +62,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 
-            var multiHash = _hashProvider.ComputeBase32(getDeltaRequest.DeltaDfsHash);
+            var hashAsBase32 = getDeltaRequest.DeltaDfsHash.ToByteArray().ToBase32();
+            _deltaCache.TryGetOrAddConfirmedDelta(hashAsBase32, out var delta);
 
-            _deltaCache.TryGetOrAddConfirmedDelta(multiHash, out var delta);
             return new GetDeltaResponse {Delta = delta};
         }
     }

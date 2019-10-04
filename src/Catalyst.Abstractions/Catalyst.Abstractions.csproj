@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>Catalyst.Abstractions</RootNamespace>
@@ -16,6 +16,7 @@
     <PackageReference Include="DnsClient" Version="1.2.0" />
     <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
     <PackageReference Include="Google.Protobuf" Version="3.9.1" />
+    <PackageReference Include="Ipfs.Core" Version="0.55.0" />
     <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
     <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />

@@ -33,6 +33,7 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
+using Ipfs;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
@@ -43,12 +44,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     public class DeltaVoter : IDeltaVoter
     {
         public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate) => 
-            nameof(DeltaVoter) + "-" + candidate.Hash.AsBase32Address();
+            nameof(DeltaVoter) + "-" + candidate.Hash.ToByteArray().ToBase32();
 
         public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate) => 
-            nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.AsBase32Address();
+            nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32();
 
-        public static string GetCandidateListCacheKey(string previousDeltaHash) => 
+        public static string GetCandidateListCacheKey(MultiHash previousDeltaHash) => 
             nameof(DeltaVoter) + "-" + previousDeltaHash;
 
         /// <summary>
@@ -115,8 +116,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var scoredDelta = new ScoredCandidateDelta(candidate, 100 * rankingFactor + 1);
             _candidatesCache.Set(candidateCacheKey, scoredDelta, _cacheEntryOptions());
             _logger.Verbose("Candidate {hash} with previous hash {previousHash} has score {scored}", 
-                candidate.Hash.AsBase32Address(), 
-                candidate.PreviousDeltaDfsHash.AsBase32Address(),
+                candidate.Hash.ToByteArray().ToBase32(), 
+                candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32(),
                 scoredDelta.Score);
         }
 
@@ -131,12 +132,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     });
             candidatesForPreviousHash.Add(candidateCacheKey);
             _logger.Verbose("Candidates for previous hash {previousHash} are {candidates}",
-                candidate.PreviousDeltaDfsHash.AsBase32Address(), candidatesForPreviousHash);
+                candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32(), candidatesForPreviousHash);
         }
 
-        public bool TryGetFavouriteDelta(string previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
+        public bool TryGetFavouriteDelta(MultiHash previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
         {
-            Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull().NotEmpty();
+            Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull();
             _logger.Debug("Retrieving favourite candidate delta for the successor of delta {0}", 
                 previousDeltaDfsHash);
 
@@ -144,7 +145,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             if (!_candidatesCache.TryGetValue(cacheKey, out ConcurrentBag<string> candidates))
             {
                 _logger.Debug("Failed to retrieve any scored candidate with previous delta {0}",
-                    previousDeltaDfsHash.AsBase32Address());
+                    previousDeltaDfsHash.ToBase32());
                 favourite = default;
                 return false;
             }
@@ -162,8 +163,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             };
 
             _logger.Debug("Retrieved favourite candidate delta {candidate} for the successor of delta {previousDelta}",
-                bestCandidate.Hash.AsBase32Address(),
-                previousDeltaDfsHash.AsBase32Address());
+                bestCandidate.Hash.ToByteArray().ToBase32(),
+                previousDeltaDfsHash.ToBase32());
 
             return true;
         }
@@ -171,7 +172,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private int GetProducerRankFactor(CandidateDeltaBroadcast candidate)
         {
             var preferredProducers = _deltaProducersProvider
-               .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray());
+               .GetDeltaProducersFromPreviousDelta(new MultiHash(candidate.PreviousDeltaDfsHash.ToByteArray()));
             var ranking = preferredProducers.ToList()
                .FindIndex(p => p.Equals(candidate.ProducerId));
 
@@ -184,7 +185,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 throw new KeyNotFoundException(
                     $"Producer {candidate.ProducerId} " +
                     $"should not be sending candidate deltas with previous hash " +
-                    $"{candidate.PreviousDeltaDfsHash.AsBase32Address()}");
+                    $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32()}");
             }
 
             return preferredProducers.Count - ranking;

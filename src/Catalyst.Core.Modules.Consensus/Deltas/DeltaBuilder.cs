@@ -39,6 +39,7 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Ipfs;
 using Serilog;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
@@ -73,7 +74,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         ///<inheritdoc />
-        public CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash)
+        public CandidateDeltaBroadcast BuildCandidateDelta(MultiHash previousDeltaHash)
         {
             _logger.Debug("Building candidate delta locally");
 
@@ -123,14 +124,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
                 // Idj
                 ProducerId = _producerUniqueId,
-                PreviousDeltaDfsHash = previousDeltaHash.ToByteString()
+                PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString()
             };
 
             _logger.Debug("Building full delta locally");
 
             var producedDelta = new Delta
             {
-                PreviousDeltaDfsHash = previousDeltaHash.ToByteString(),
+                PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
                 CoinbaseEntries = {coinbaseEntry},
                 PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries)},
@@ -144,9 +145,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             return candidate;
         }
 
-        private IEnumerable<byte> GetSaltFromPreviousDelta(byte[] previousDeltaHash)
+        private IEnumerable<byte> GetSaltFromPreviousDelta(MultiHash previousDeltaHash)
         {
-            var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash);
+            var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash.ToArray());
             return BitConverter.GetBytes(isaac.NextInt());
         }
 

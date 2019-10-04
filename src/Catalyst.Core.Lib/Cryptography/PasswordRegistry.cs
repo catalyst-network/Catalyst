@@ -22,23 +22,15 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Util;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Cryptography;
+using System.Security;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Registry;
+using Catalyst.Abstractions.Types;
 
-namespace Catalyst.TestUtils.Protocol
+namespace Catalyst.Core.Lib.Cryptography
 {
-    internal static class SignatureHelper
+    public sealed class PasswordRegistry : RegistryBase<PasswordRegistryTypes, SecureString>, IPasswordRegistry
     {
-        internal static Signature GetSignature(IEnumerable<byte> signature = default, SigningContext signingContext = default)
-        {
-            var defaultedSignature = new Signature
-            {
-                RawBytes = signature?.ToByteString() ?? ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength).ToByteString(),
-                SigningContext = signingContext ?? DevNetPeerSigningContext.Instance
-            };
-            return defaultedSignature;
-        }
+        public PasswordRegistry() { Registry = new Dictionary<PasswordRegistryTypes, SecureString>(); }
     }
 }

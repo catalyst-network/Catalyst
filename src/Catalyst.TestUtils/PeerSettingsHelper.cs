@@ -37,7 +37,7 @@ namespace Catalyst.TestUtils
     {
         public static IPeerSettings TestPeerSettings(byte[] publicKey = default, int port = 42069)
         {
-            var finalPublicKey = publicKey ?? ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength);
+            var finalPublicKey = publicKey ?? ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
             peerSettings.PublicKey.Returns(finalPublicKey.KeyToString());
@@ -55,17 +55,6 @@ namespace Catalyst.TestUtils
             });
             peerSettings.PeerId.Returns(finalPublicKey.BuildPeerIdFromPublicKey(IPAddress.Loopback, port));
             return peerSettings;
-        }
-    }
-
-    public static class RpcServerSettingsHelper
-    {
-        public static IRpcServerSettings GetRpcServerSettings(int port = 42051)
-        {
-            var settings = Substitute.For<IRpcServerSettings>();
-            settings.Port.Returns(port);
-            settings.BindAddress.Returns(IPAddress.Loopback);
-            return settings;
         }
     }
 }

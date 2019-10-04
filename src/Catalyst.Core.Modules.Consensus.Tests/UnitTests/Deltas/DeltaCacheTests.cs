@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
@@ -56,9 +57,15 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         }
 
         [Fact]
+        public void Genesis_Hash_Should_Be_Always_Present()
+        {
+            _memoryCache.Received().CreateEntry(_deltaCache.GenesisAddress);
+        }
+        
+        [Fact]
         public void TryGetDelta_Should_Not_Hit_The_Dfs_Or_Store_Delta_When_Delta_Is_In_Cache()
         {
-            _memoryCache.ClearReceivedCalls();
+            _memoryCache.ClearReceivedCalls(); // needed because of the CreateEntry call from the DeltaCache .ctor
             var deltaFromCache = DeltaHelper.GetDelta();
             var deltaHash = "abc";
 
