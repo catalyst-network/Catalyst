@@ -14,7 +14,7 @@ stages:
           - task: DotNetCoreInstaller@0
             displayName: 'Install .NetCore SDK'
             inputs:
-              version: 3.0.0
+              version: 3.0.100
               failOnStandardError: 'true'
             timeoutInMinutes: 10
           - bash: |
