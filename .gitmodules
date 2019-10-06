@@ -12,7 +12,7 @@
 	url = https://github.com/catalyst-network/net-ipfs-core.git
 [submodule "submodules/net-ipfs-http-gateway"]
 	path = submodules/net-ipfs-http-gateway
-	url = git@github.com:catalyst-network/net-ipfs-http-gateway.git
+	url = https://github.com/catalyst-network/net-ipfs-http-gateway.git
 [submodule "submodules/net-ipfs-engine"]
 	path = submodules/net-ipfs-engine
-	url = git@github.com:catalyst-network/net-ipfs-engine.git
+	url = https://github.com/catalyst-network/net-ipfs-engine.git
