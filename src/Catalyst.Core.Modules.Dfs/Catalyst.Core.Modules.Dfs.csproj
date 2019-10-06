@@ -11,19 +11,19 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
+        <ProjectReference Include="..\..\submodules\net-ipfs-core\src\IpfsCore.csproj" />
+        <ProjectReference Include="..\..\submodules\net-ipfs-engine\src\IpfsEngine.csproj" />
+        <ProjectReference Include="..\..\submodules\net-ipfs-http-gateway\src\HttpGateway.csproj" />
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Common.Logging.Serilog" Version="4.3.6" />
-      <PackageReference Include="Ipfs.Core" Version="0.55.0" />
-      <PackageReference Include="Ipfs.Engine" Version="0.13.0" />
-      <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
+        <PackageReference Include="Common.Logging.Serilog" Version="4.3.6" />
         <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" />
     </ItemGroup>
 
 </Project>
