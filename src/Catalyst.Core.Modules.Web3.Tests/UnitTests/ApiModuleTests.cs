@@ -27,7 +27,7 @@ using System.Linq;
 using Autofac;
 using FluentAssertions;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using Xunit;
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
                 typeof(ICorsService),
                 
                 // typeof(IViewCompilerProvider),
-                typeof(MvcRouteHandler)
+                // typeof(RouteHandler)
             };
 
             Can_Add_Swagger();
