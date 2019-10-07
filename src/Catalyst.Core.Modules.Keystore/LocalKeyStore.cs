@@ -45,7 +45,6 @@ namespace Catalyst.Core.Modules.Keystore
     public sealed class LocalKeyStore : KeyStoreService, IKeyStore
     {
         private readonly ILogger _logger;
-        private readonly IAddressHelper _addressHelper;
         private readonly IFileSystem _fileSystem;
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordManager _passwordManager;
@@ -56,14 +55,12 @@ namespace Catalyst.Core.Modules.Keystore
         public LocalKeyStore(IPasswordManager passwordManager,
             ICryptoContext cryptoContext,
             IFileSystem fileSystem,
-            ILogger logger,
-            IAddressHelper addressHelper)
+            ILogger logger)
         {
             _passwordManager = passwordManager;
             _cryptoContext = cryptoContext;
             _fileSystem = fileSystem;
             _logger = logger;
-            _addressHelper = addressHelper;            
         }
 
         public IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier)
@@ -133,19 +130,27 @@ namespace Catalyst.Core.Modules.Keystore
         {
             try
             {
-                var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey(), AccountType.PublicAccount);        
+                //var publicKeyHash = _hashAlgorithm.ComputeRawHash(privateKey.GetPublicKey().Bytes).ToByteString();
+                //var address = new Address
+                //{
+                //    PublicKeyHash = publicKeyHash,
+                //    AccountType = AccountType.PublicAccount,
+                //    NetworkType = _cryptoContext.
+                //};
+                //            return address;
+                //_addressHelper.GenerateAddress(privateKey.GetPublicKey(), AccountType.PublicAccount);        
                 var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword, "Please create a password for this node");
     
                 var password = StringFromSecureString(securePassword);
     
-                var json = EncryptAndGenerateDefaultKeyStoreAsJson(
-                    password, 
-                    _cryptoContext.ExportPrivateKey(privateKey),
-                    address.RawBytes.ToBase32());
+                //var json = EncryptAndGenerateDefaultKeyStoreAsJson(
+                //    password, 
+                //    _cryptoContext.ExportPrivateKey(privateKey),
+                //    address.RawBytes.ToBase32());
 
                 _passwordManager.AddPasswordToRegistry(_defaultNodePassword, securePassword);
 
-                await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
+                //await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
             }
             catch (Exception e)
             {

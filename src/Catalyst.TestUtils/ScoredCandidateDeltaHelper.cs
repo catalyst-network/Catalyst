@@ -23,14 +23,9 @@
 
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Consensus.Deltas;
-<<<<<<< HEAD
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
-=======
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Peer;
-using Multiformats.Hash.Algorithms;
->>>>>>> develop
+using Catalyst.Protocol.Wire;
+using Ipfs;
 
 namespace Catalyst.TestUtils
 {
@@ -45,12 +40,13 @@ namespace Catalyst.TestUtils
         }
 
         public static ScoredCandidateDelta GetScoredCandidateDelta(IHashProvider hashProvider,
-            byte[] previousDeltaHash = null,
-            byte[] hash = null,
+            MultiHash previousDeltaHash = null,
+            MultiHash hash = null,
             PeerId producerId = null,
             int score = 0)
         {
-            var candidateDelta = DeltaHelper.GetCandidateDelta(hashProvider, hash: hash, producerId: producerId, previousDeltaHash: previousDeltaHash);
+            var candidateDelta = DeltaHelper.GetCandidateDelta(hashProvider, hash: hash, producerId: producerId,
+                previousDeltaHash: previousDeltaHash);
             return new ScoredCandidateDelta(candidateDelta, score);
         }
     }

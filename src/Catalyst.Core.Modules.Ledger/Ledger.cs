@@ -154,7 +154,7 @@ namespace Catalyst.Core.Modules.Ledger
             var pubKey = _cryptoContext.GetPublicKeyFromBytes(entry.Base.ReceiverPublicKey.ToByteArray());
 
             //todo: get an address from the key using the Account class from Common lib
-            var account = Accounts.Get(_hashProvider.ComputeBase32(pubKey.Bytes));
+            var account = Accounts.Get(pubKey.Bytes.ToBase32());
 
             //todo: a different logic for to and from entries
             account.Balance += entry.Amount.ToUInt256();

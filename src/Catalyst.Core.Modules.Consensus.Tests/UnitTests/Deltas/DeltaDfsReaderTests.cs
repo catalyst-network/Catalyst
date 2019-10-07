@@ -25,11 +25,14 @@ using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using Ipfs.Registry;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
@@ -39,12 +42,15 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public class DeltaDfsReaderTests
     {
+        private readonly IHashProvider _hashProvider;
         private readonly IDfs _dfs;
         private readonly ILogger _logger;
         private readonly DeltaDfsReader _dfsReader;
 
         public DeltaDfsReaderTests()
         {
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            _hashProvider = new HashProvider(hashingAlgorithm);
             _dfs = Substitute.For<IDfs>();
             _logger = Substitute.For<ILogger>();
 
@@ -69,7 +75,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void TryReadDeltaFromDfs_Should_Return_True_When_Hash_Found_On_Dfs_And_Delta_Is_Valid()
         {
             var goodHash = "good hash";
-            var matchingDelta = DeltaHelper.GetDelta();
+            var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
 
             _dfs.ReadAsync(goodHash, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());
@@ -84,7 +90,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void TryReadDeltaFromDfs_Should_Return_False_When_Hash_Found_On_Dfs_And_Delta_Is_Not_Valid()
         {
             var goodHash = "good hash";
-            var matchingDelta = DeltaHelper.GetDelta();
+            var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
             matchingDelta.PreviousDeltaDfsHash = ByteString.Empty;
 
             new Action(() => matchingDelta.IsValid()).Should()
@@ -105,7 +111,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var goodHash = "good hash";
             var cancellationToken = new CancellationToken();
 
-            var matchingDelta = DeltaHelper.GetDelta();
+            var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
             _dfs.ReadAsync(goodHash, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());
 

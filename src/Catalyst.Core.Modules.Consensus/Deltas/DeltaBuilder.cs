@@ -120,7 +120,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var candidate = new CandidateDeltaBroadcast
             {
                 // h∆j
-                Hash = _hashProvider.ComputeRawHash(globalLedgerStateUpdate).ToByteString(),
+                Hash = _hashProvider.ComputeMultiHash(globalLedgerStateUpdate).ToArray().ToByteString(),
 
                 // Idj
                 ProducerId = _producerUniqueId,
@@ -159,7 +159,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry, IEnumerable<byte> salt, IHashProvider hashProvider)
             {
                 RawEntry = rawEntry;
-                SaltedAndHashedEntry = hashProvider.ComputeRawHash(rawEntry.ToByteArray().Concat(salt));
+                SaltedAndHashedEntry = hashProvider.ComputeMultiHash(rawEntry.ToByteArray().Concat(salt)).ToArray();
             }
         }
 

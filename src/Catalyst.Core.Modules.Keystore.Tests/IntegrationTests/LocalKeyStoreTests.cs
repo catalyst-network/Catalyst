@@ -61,13 +61,12 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var addressHelper = new AddressHelper(peerSettings);
+            //var addressHelper = new AddressHelper(peerSettings);
 
             _keystore = new LocalKeyStore(_passwordManager,
                 _context,
                 _fileSystem,
-                logger,
-                addressHelper);
+                logger);
         }
 
         [Fact]

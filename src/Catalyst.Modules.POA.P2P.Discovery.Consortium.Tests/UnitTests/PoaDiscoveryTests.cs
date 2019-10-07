@@ -22,11 +22,13 @@
 #endregion
 
 using System.Threading.Tasks;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
+using Ipfs.Registry;
 using Multiformats.Base;
 using Multiformats.Hash.Algorithms;
 using Newtonsoft.Json;
@@ -39,13 +41,22 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {
     public sealed class PoaDiscoveryTests : FileSystemBasedTest
     {
-        public PoaDiscoveryTests(ITestOutputHelper output) : base(output) { }
+        private readonly IHashProvider _hashProvider;
+
+        public PoaDiscoveryTests(ITestOutputHelper output) : base(output)
+        {
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            _hashProvider = new HashProvider(hashingAlgorithm);
+        }
 
         [Fact]
         public async Task Can_Populate_Peers_Correctly()
         {
+            //_hashProvider.ComputeUtf8MultiHash("hello")
             var peerRepository = Substitute.For<IPeerRepository>();
-            var pubkey = "hello".ComputeUtf8Multihash(new ID()).ToString(MultibaseEncoding.Base58Btc);
+            //var pubkey = "hello".ComputeUtf8Multihash(new ID())
+            //   .ToString(MultibaseEncoding.Base58Btc);
+            var pubkey = _hashProvider.ComputeUtf8MultiHash("hello").ToBase32();
 
             var peers = new[]
             {

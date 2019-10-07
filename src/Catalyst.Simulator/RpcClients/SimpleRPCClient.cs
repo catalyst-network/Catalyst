@@ -83,9 +83,9 @@ namespace Catalyst.Simulator.RpcClients
 
             var cryptoContext = new FfiWrapper();
             
-            var addressHelper = new AddressHelper(signingContextProvider.NetworkType);
+            //var addressHelper = new AddressHelper(signingContextProvider.NetworkType);
             var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, fileSystem,
-                _logger, addressHelper);
+                _logger);
 
             var keyRegistry = new KeyRegistry();
             var keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);

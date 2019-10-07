@@ -1,16 +1,5 @@
 #region LICENSE
 
-#endregion
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Catalyst.Abstractions.Hashing;
-using Ipfs;
-using Ipfs.Registry;
-using Multiformats.Hash;
-
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -29,25 +18,33 @@ using Multiformats.Hash;
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
+#endregion
+
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using Catalyst.Abstractions.Hashing;
+using Ipfs;
+using Ipfs.Registry;
+
 namespace Catalyst.Core.Modules.Hashing
 {
-    public class HashingProvider : IHashProvider
+    public class HashProvider : IHashProvider
     {
         public HashingAlgorithm HashingAlgorithm { set; get; }
 
-        public HashingProvider(HashingAlgorithm hashingAlgorithm)
-        {
-            HashingAlgorithm = hashingAlgorithm;
-        }
+        public HashProvider(HashingAlgorithm hashingAlgorithm) { HashingAlgorithm = hashingAlgorithm; }
 
-        public MultiHash ComputeMultiHash(IEnumerable<byte> data)
-        {
-            return MultiHash.ComputeHash(data.ToArray());
-        }
+        public MultiHash Cast(byte[] data) { return new MultiHash(HashingAlgorithm.Name, data); }
 
-        public MultiHash ComputeMultiHash(Stream data)
-        {
-            return MultiHash.ComputeHash(data);
-        }
+        public MultiHash ComputeUtf8MultiHash(string data) { return ComputeMultiHash(Encoding.UTF8.GetBytes(data)); }
+
+        public MultiHash ComputeMultiHash(IEnumerable<byte> data) { return ComputeMultiHash(data.ToArray()); }
+
+        public MultiHash ComputeMultiHash(byte[] data) { return MultiHash.ComputeHash(data); }
+
+        public MultiHash ComputeMultiHash(Stream data) { return MultiHash.ComputeHash(data); }
     }
 }

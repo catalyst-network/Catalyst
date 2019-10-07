@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         public string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate)
         {
-            return nameof(DeltaElector) + "-" + _hashProvider.ComputeBase32(candidate.Candidate.PreviousDeltaDfsHash);
+            return nameof(DeltaElector) + "-" + _hashProvider.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
         }
 
         public string GetCandidateListCacheKey(MultiHash previousDeltaHash)

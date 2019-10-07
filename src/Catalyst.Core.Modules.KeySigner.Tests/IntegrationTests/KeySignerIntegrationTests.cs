@@ -45,7 +45,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
     {
         public KeySignerIntegrationTests(ITestOutputHelper output) : base(output)
         {
-            var addressHelper = new AddressHelper(NetworkType.Devnet);
+            //var addressHelper = new AddressHelper(NetworkType.Devnet);
 
             var logger = Substitute.For<ILogger>();
 
@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 
             var cryptoContext = new FfiWrapper();
             
-            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, logger, addressHelper);
+            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, logger);
 
             var keyRegistry = new KeyRegistry();
 

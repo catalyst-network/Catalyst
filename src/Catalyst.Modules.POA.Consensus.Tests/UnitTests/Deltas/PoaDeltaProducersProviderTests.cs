@@ -24,20 +24,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Modules.POA.Consensus.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using Ipfs;
+using Ipfs.Registry;
 using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
 namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
@@ -46,12 +50,15 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         private readonly List<Peer> _peers;
         private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
         private readonly IMultihashAlgorithm _hashAlgorithm;
-        private readonly byte[] _previousDeltaHash;
+        private readonly MultiHash _previousDeltaHash;
         private readonly IMemoryCache _producersByPreviousDelta;
         private readonly string _previousDeltaHashString;
+        private readonly IHashProvider _hashProvider;
 
         public PoaDeltaProducersProviderTests()
         {
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            _hashProvider = new HashProvider(hashingAlgorithm);
             var rand = new Random();
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>
@@ -68,8 +75,8 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             var peerRepository = Substitute.For<IPeerRepository>();
             peerRepository.GetAll().Returns(_ => _peers);
 
-            _previousDeltaHash = ByteUtil.GenerateRandomByteArray(32).ComputeMultihash(new BLAKE2B_256());
-            _previousDeltaHashString = _previousDeltaHash.AsBase32Address();
+            _previousDeltaHash = _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
+            _previousDeltaHashString = _previousDeltaHash.ToBase32();
 
             _hashAlgorithm = Substitute.For<IMultihashAlgorithm>();
             _hashAlgorithm.ComputeHash(Arg.Any<byte[]>()).Returns(ci => (byte[]) ci[0]);
@@ -79,7 +86,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository, 
                 PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings(), 
                 _producersByPreviousDelta, 
-                _hashAlgorithm, 
+                _hashProvider, 
                 logger);
         }
 
@@ -91,7 +98,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             var expectedProducers = _peers.Select(p =>
                 {
                     var bytesToHash = p.PeerId.ToByteArray()
-                       .Concat(_previousDeltaHash).ToArray();
+                       .Concat(_previousDeltaHash.ToArray()).ToArray();
                     var ranking = bytesToHash;
                     return new
                     {

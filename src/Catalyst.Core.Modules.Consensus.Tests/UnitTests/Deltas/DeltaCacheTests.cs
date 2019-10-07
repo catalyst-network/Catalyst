@@ -23,12 +23,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Ipfs.Registry;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using NSubstitute;
@@ -39,6 +41,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public class DeltaCacheTests
     {
+        private readonly IHashProvider _hashProvider;
         private readonly IMemoryCache _memoryCache;
         private readonly IDeltaDfsReader _dfsReader;
         private readonly DeltaCache _deltaCache;
@@ -46,6 +49,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaCacheTests()
         {
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            _hashProvider = new HashProvider(hashingAlgorithm);
             _memoryCache = Substitute.For<IMemoryCache>();
             _dfsReader = Substitute.For<IDeltaDfsReader>();
             _logger = Substitute.For<ILogger>();
@@ -53,7 +58,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var tokenProvider = Substitute.For<IDeltaCacheChangeTokenProvider>();
             tokenProvider.GetChangeToken().Returns(Substitute.For<IChangeToken>());
 
-            _deltaCache = new DeltaCache(_memoryCache, _dfsReader, tokenProvider, _logger);
+            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, _logger);
         }
 
         [Fact]
@@ -61,12 +66,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             _memoryCache.Received().CreateEntry(_deltaCache.GenesisAddress);
         }
-        
+
         [Fact]
         public void TryGetDelta_Should_Not_Hit_The_Dfs_Or_Store_Delta_When_Delta_Is_In_Cache()
         {
             _memoryCache.ClearReceivedCalls(); // needed because of the CreateEntry call from the DeltaCache .ctor
-            var deltaFromCache = DeltaHelper.GetDelta();
+            var deltaFromCache = DeltaHelper.GetDelta(_hashProvider);
             var deltaHash = "abc";
 
             _memoryCache.TryGetValue(Arg.Is(deltaHash), out Arg.Any<Delta>())
@@ -88,7 +93,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void TryGetDelta_Should_Hit_The_Dfs_When_Delta_Is_Not_In_Cache()
         {
-            var deltaFromDfs = DeltaHelper.GetDelta();
+            var deltaFromDfs = DeltaHelper.GetDelta(_hashProvider);
 
             var hash = "def";
             ExpectDeltaFromDfsAndNotFromCache(hash, deltaFromDfs);
@@ -108,7 +113,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void TryGetDelta_Should_Cache_Delta_With_Expiry_Options_When_Delta_Is_Not_In_Cache()
         {
-            var deltaFromDfs = DeltaHelper.GetDelta();
+            var deltaFromDfs = DeltaHelper.GetDelta(_hashProvider);
             var hash = "ijk";
             ExpectDeltaFromDfsAndNotFromCache(hash, deltaFromDfs);
 
@@ -129,7 +134,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             cacheEntry.PostEvictionCallbacks.Count.Should().Be(1);
 
             _logger.ClearReceivedCalls();
-            cacheEntry.PostEvictionCallbacks.Single().EvictionCallback.Invoke("key", "value", EvictionReason.Expired, "state");
+            cacheEntry.PostEvictionCallbacks.Single().EvictionCallback
+               .Invoke("key", "value", EvictionReason.Expired, "state");
             _logger.Received(1).Debug(Arg.Any<string>(), Arg.Any<object>());
         }
 

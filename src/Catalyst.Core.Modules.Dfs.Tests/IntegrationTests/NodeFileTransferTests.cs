@@ -28,15 +28,18 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Ipfs.Registry;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -50,9 +53,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly IDfs _dfs;
+        private readonly IHashProvider _hashProvider;
 
         public NodeFileTransferTests(ITestOutputHelper testOutput) : base(testOutput)
         {
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            _hashProvider = new HashProvider(hashingAlgorithm);
+
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory(_logger);
@@ -65,7 +72,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var ipfsEngine = new IpfsAdapter(passwordManager, FileSystem, _logger);
 
             _logger = Substitute.For<ILogger>();
-            _dfs = new Dfs(ipfsEngine, _logger);
+            _dfs = new Dfs(ipfsEngine, _hashProvider, _logger);
         }
 
         [Fact]

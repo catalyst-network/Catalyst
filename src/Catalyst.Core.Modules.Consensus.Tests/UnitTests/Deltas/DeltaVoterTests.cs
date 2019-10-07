@@ -32,15 +32,13 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
-<<<<<<< HEAD
 using Catalyst.Core.Modules.Hashing;
-using Catalyst.Protocol.Deltas;
-=======
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
->>>>>>> develop
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Ipfs;
+using Ipfs.Registry;
 using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
@@ -57,7 +55,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private readonly IMemoryCache _cache;
         private readonly IDeltaProducersProvider _producersProvider;
         private DeltaVoter _voter;
-        private readonly byte[] _previousDeltaHash;
+        private readonly MultiHash _previousDeltaHash;
         private readonly IList<PeerId> _producerIds;
         private readonly PeerId _localIdentifier;
         private readonly ILogger _logger;
@@ -98,16 +96,18 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaVoterTests()
         {
-            _hashProvider = new Blake2bHashingProvider(new BLAKE2B_256());
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            _hashProvider = new HashProvider(hashingAlgorithm);
+
             _cache = Substitute.For<IMemoryCache>();
 
-            _previousDeltaHash = _hashProvider.GetBase32EncodedBytes(_hashProvider.ComputeBase32(ByteUtil.GenerateRandomByteArray(32)));
+            _previousDeltaHash = _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
 
             _producerIds = "1234"
                .Select((c, i) => PeerIdHelper.GetPeerId(c.ToString()))
                .Shuffle();
             _producersProvider = Substitute.For<IDeltaProducersProvider>();
-            _producersProvider.GetDeltaProducersFromPreviousDelta(Arg.Any<byte[]>())
+            _producersProvider.GetDeltaProducersFromPreviousDelta(Arg.Any<MultiHash>())
                .Returns(_producerIds);
 
             _localIdentifier = PeerIdHelper.GetPeerId("myself, a producer");
@@ -152,7 +152,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 _previousDeltaHash,
                 producerId: _producerIds.First());
 
-            var candidateHashAsString = _hashProvider.ComputeBase32(candidate.Hash);
+            var candidateHashAsString = _hashProvider.ComputeMultiHash(candidate.Hash).ToBase32();
 
             var addedEntry = Substitute.For<ICacheEntry>();
             _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)))
@@ -177,17 +177,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
 
             var initialScore = 10;
-<<<<<<< HEAD
-            var cacheCandidate = ScoredCandidateDeltaHelper.GetScoredCandidateDelta(_hashProvider,
-                producerId: _producerIds.First().PeerId,
-=======
             var cacheCandidate = ScoredCandidateDeltaHelper.GetScoredCandidateDelta(
+                _hashProvider,
                 producerId: _producerIds.First(),
->>>>>>> develop
                 previousDeltaHash: _previousDeltaHash,
                 score: initialScore);
 
-            var candidateHashAsString = _hashProvider.ComputeBase32(cacheCandidate.Candidate.Hash);
+            var candidateHashAsString = _hashProvider.ComputeMultiHash(cacheCandidate.Candidate.Hash).ToBase32();
 
             _cache.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(ci =>
             {
@@ -224,19 +220,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             int secondVotesCount,
             MemoryCache realCache)
         {
-<<<<<<< HEAD
             var firstCandidate = DeltaHelper.GetCandidateDelta(_hashProvider, _previousDeltaHash,
-                producerId: _producerIds.First().PeerId);
-
-            var secondCandidate = DeltaHelper.GetCandidateDelta(_hashProvider, _previousDeltaHash,
-                producerId: _producerIds.Skip(1).First().PeerId);
-=======
-            var firstCandidate = DeltaHelper.GetCandidateDelta(_previousDeltaHash,
                 producerId: _producerIds.First());
 
-            var secondCandidate = DeltaHelper.GetCandidateDelta(_previousDeltaHash,
+            var secondCandidate = DeltaHelper.GetCandidateDelta(_hashProvider, _previousDeltaHash,
                 producerId: _producerIds.Skip(1).First());
->>>>>>> develop
 
             var candidateStream = Enumerable.Repeat(firstCandidate, firstVotesCount)
                .Concat(Enumerable.Repeat(secondCandidate, secondVotesCount))
@@ -311,13 +299,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 scoredCandidates[1].Score.Should().BeGreaterThan(scoredCandidates[0].Score);
 
-                var previousDeltaHash = scoredCandidates[0].Candidate.PreviousDeltaDfsHash.ToByteArray();
+                var previousDeltaHash = _hashProvider.Cast(scoredCandidates[0].Candidate.PreviousDeltaDfsHash.ToByteArray());
 
                 var found = _voter.TryGetFavouriteDelta(previousDeltaHash, out var favouriteCandidate);
 
                 found.Should().BeTrue();
 
-                favouriteCandidate.Candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(previousDeltaHash).Should().BeTrue();
+                favouriteCandidate.Candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(previousDeltaHash.ToArray()).Should().BeTrue();
                 favouriteCandidate.Candidate.Hash.ToByteArray().SequenceEqual(scoredCandidates[1].Candidate.Hash.ToByteArray()).Should().BeTrue();
                 favouriteCandidate.Candidate.ProducerId.Should().Be(scoredCandidates[1].Candidate.ProducerId);
             }
@@ -332,7 +320,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 AddCandidatesToCacheAndVote(10, 500, realCache);
 
-                var found = _voter.TryGetFavouriteDelta(_hashProvider.GetBase32EncodedBytes(_hashProvider.ComputeBase32(ByteUtil.GenerateRandomByteArray(32))), out var favouriteCandidate);
+                var found = _voter.TryGetFavouriteDelta(_hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)), out var favouriteCandidate);
 
                 found.Should().BeFalse();
                 favouriteCandidate.Should().BeNull();
@@ -352,7 +340,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 scoredCandidates.Select(c => c.Candidate.Hash).Distinct().Count().Should().Be(2);
                 scoredCandidates.Select(c => c.Candidate.PreviousDeltaDfsHash).Distinct().Count().Should().Be(1);
 
-                var found = _voter.TryGetFavouriteDelta(scoredCandidates.First().Candidate.PreviousDeltaDfsHash.ToByteArray(), out var favouriteCandidate);
+                var found = _voter.TryGetFavouriteDelta(_hashProvider.Cast(scoredCandidates.First().Candidate.PreviousDeltaDfsHash.ToByteArray()), out var favouriteCandidate);
 
                 found.Should().BeTrue();
                 var expectedFavourite = scoredCandidates

@@ -69,6 +69,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// <summary>
         /// Dfs address of the content for the very first delta.
         /// </summary>
-        string GenesisAddress { get; }
+        MultiHash GenesisAddress { get; }
     }
 }

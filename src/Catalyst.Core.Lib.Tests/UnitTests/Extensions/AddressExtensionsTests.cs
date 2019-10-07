@@ -33,31 +33,31 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
 {
     public class AddressExtensionsTests
     {
-        [Theory]
-        [InlineData("this string in bytes is way longer than 20 bytes so that makes for a good check", NetworkType.Mainnet, AccountType.PublicAccount)]
-        [InlineData("short", NetworkType.Devnet, AccountType.ConfidentialAccount)]
-        [InlineData("and another las one", NetworkType.Testnet, AccountType.SmartContractAccount)]
-        public void Address_RawBytes_should_be_20_bytes_long_with_correct_network_and_account_types(string publicKeySeed, NetworkType networkType, AccountType accountType)
-        {
-            var address = publicKeySeed.ToUtf8Bytes()
-               .ToAddress(networkType, accountType);
+        //[Theory]
+        //[InlineData("this string in bytes is way longer than 20 bytes so that makes for a good check", NetworkType.Mainnet, AccountType.PublicAccount)]
+        //[InlineData("short", NetworkType.Devnet, AccountType.ConfidentialAccount)]
+        //[InlineData("and another las one", NetworkType.Testnet, AccountType.SmartContractAccount)]
+        //public void Address_RawBytes_should_be_20_bytes_long_with_correct_network_and_account_types(string publicKeySeed, NetworkType networkType, AccountType accountType)
+        //{
+        //    var address = publicKeySeed.ToUtf8Bytes()
+        //       .ToAddress(networkType, accountType);
 
-            address.RawBytes.Length.Should().Be(20);
-            address.NetworkType.Should().Be(networkType);
-            address.AccountType.Should().Be(accountType);
-        }
+        //    address.RawBytes.Length.Should().Be(20);
+        //    address.NetworkType.Should().Be(networkType);
+        //    address.AccountType.Should().Be(accountType);
+        //}
 
-        [Fact]
-        public void AsBase32Crockford_should_produce_distinct_strings_for_all_account_types()
-        {
-            var allAccountTypes = TestUtils.Protocol.AddressHelper.GetAllNetworksAndAccountTypesCombinations();
+        //[Fact]
+        //public void AsBase32Crockford_should_produce_distinct_strings_for_all_account_types()
+        //{
+        //    var allAccountTypes = TestUtils.Protocol.AddressHelper.GetAllNetworksAndAccountTypesCombinations();
             
-            var base32Addresses = allAccountTypes.Select(a =>
-                TestUtils.Protocol.AddressHelper.GetAddress("publicKey", a.NetworkType, a.AccountType)
-                   .AsBase32Crockford());
+        //    var base32Addresses = allAccountTypes.Select(a =>
+        //        TestUtils.Protocol.AddressHelper.GetAddress("publicKey", a.NetworkType, a.AccountType)
+        //           .AsBase32Crockford());
 
-            base32Addresses.Should().OnlyHaveUniqueItems();
-        }
+        //    base32Addresses.Should().OnlyHaveUniqueItems();
+        //}
     }
 }
 

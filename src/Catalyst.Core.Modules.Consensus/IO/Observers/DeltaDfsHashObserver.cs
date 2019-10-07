@@ -38,7 +38,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IHashProvider _hashProvider;
 
-        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, IHashProvider hashProvider, ILogger logger) 
+        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, IHashProvider hashProvider, ILogger logger)
             : base(logger)
         {
             _deltaHashProvider = deltaHashProvider;
@@ -50,8 +50,8 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
-                var previousHash = _hashProvider.ComputeBase32(deserialised.PreviousDeltaDfsHash.ToByteArray());
-                var newHash = _hashProvider.ComputeBase32(deserialised.DeltaDfsHash.ToByteArray());
+                var previousHash = _hashProvider.Cast(deserialised.PreviousDeltaDfsHash.ToByteArray());
+                var newHash = _hashProvider.Cast(deserialised.DeltaDfsHash.ToByteArray());
                 _deltaHashProvider.TryUpdateLatestHash(previousHash, newHash);
             }
             catch (Exception exception)

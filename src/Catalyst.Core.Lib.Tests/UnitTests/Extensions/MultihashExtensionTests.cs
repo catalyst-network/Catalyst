@@ -31,30 +31,31 @@ using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
 {
-    public class MultihashExtensionTests
-    {
-        [Fact]
-        public void AsBase32Address_Should_Produce_Parsable_Addresses()
-        {
-            var random = new Random();
+    //public class MultihashExtensionTests
+    //{
+    //    [Fact]
+    //    public void AsBase32Address_Should_Produce_Parsable_Addresses()
+    //    {
+    //        var random = new Random();
             
-            for (var i = 0; i <= 50; i++)
-            {
-                EnsureBytesRandomBytesCanBeHashedAndReadBack(random.Next(10, 2000));
-            }
-        }
+    //        for (var i = 0; i <= 50; i++)
+    //        {
+    //            EnsureBytesRandomBytesCanBeHashedAndReadBack(random.Next(10, 2000));
+    //        }
+    //    }
 
-        private static void EnsureBytesRandomBytesCanBeHashedAndReadBack(int length)
-        {
-            var bytes = ByteUtil.GenerateRandomByteArray(length);
-            var hash = Multihash.Sum(HashType.BLAKE2B_256, bytes);
-            var address = hash.AsBase32Address();
 
-            Multihash.TryParse(address, MultibaseEncoding.Base32Lower, out var parsedHash)
-               .Should().BeTrue();
+    //    private static void EnsureBytesRandomBytesCanBeHashedAndReadBack(int length)
+    //    {
+    //        var bytes = ByteUtil.GenerateRandomByteArray(length);
+    //        var hash = Multihash.Sum(HashType.BLAKE2B_256, bytes);
+    //        var address = hash.AsBase32Address();
 
-            parsedHash.Verify(bytes).Should().BeTrue();
-        }
-    }
+    //        Multihash.TryParse(address, MultibaseEncoding.Base32Lower, out var parsedHash)
+    //           .Should().BeTrue();
+
+    //        parsedHash.Verify(bytes).Should().BeTrue();
+    //    }
+    //}
 }
 

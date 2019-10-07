@@ -25,9 +25,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Hashing;
 using Ipfs;
 using Ipfs.CoreApi;
-using Ipfs.Registry;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs
@@ -35,13 +35,13 @@ namespace Catalyst.Core.Modules.Dfs
     public sealed class Dfs : IDfs
     {
         private readonly ICoreApi _ipfs;
-        private readonly HashingAlgorithm _hashingAlgorithm;
+        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
 
-        public Dfs(ICoreApi ipfsAdapter, HashingAlgorithm hashingAlgorithm, ILogger logger)
+        public Dfs(ICoreApi ipfsAdapter, IHashProvider hashProvider, ILogger logger)
         {
             _ipfs = ipfsAdapter;
-            _hashingAlgorithm = hashingAlgorithm;
+            _hashProvider = hashProvider;
             _logger = logger;
         }
 
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Dfs
         {
             return new AddFileOptions
             {
-                Hash = _hashingAlgorithm.Name,
+                Hash = _hashProvider.HashingAlgorithm.Name,
                 RawLeaves = true
             };
         }
@@ -59,8 +59,8 @@ namespace Catalyst.Core.Modules.Dfs
         {
             var node = await _ipfs.FileSystem.AddTextAsync(
                 content,
-                options: AddFileOptions(),
-                cancel: cancellationToken);
+                AddFileOptions(),
+                cancellationToken);
             var id = node.Id.Encode();
             _logger.Debug("Text added to IPFS with id {0}", id);
             return id;

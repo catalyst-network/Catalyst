@@ -28,21 +28,20 @@ using Autofac;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Ipfs;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Catalyst.Core.Modules.Hashing;
-using Multiformats.Hash;
-using SimpleBase;
+using Base32 = SimpleBase.Base32;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -57,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
         public GetDeltaRequestObserverTests()
         {
-            ContainerBuilder builder = new ContainerBuilder();
+            var builder = new ContainerBuilder();
             builder.RegisterModule<HashingModule>();
             _container = builder.Build();
             _container.BeginLifetimeScope();
@@ -78,9 +77,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             var invalidHash = "abcd";
             var invalidHashBytes = Encoding.UTF8.GetBytes(invalidHash);
+            var invalidMultiHash = _hashProvider.ComputeMultiHash(invalidHashBytes);
             CreateAndExpectDeltaFromCache(invalidHash);
 
-            var observable = CreateStreamWithDeltaRequest(invalidHashBytes);
+            var observable = CreateStreamWithDeltaRequest(invalidMultiHash);
 
             _observer.StartObserving(observable);
 
@@ -94,7 +94,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         public async Task GetDeltaRequestObserver_Should_Send_Response_When_Delta_Found_In_Cache()
         {
             var multiHash = GetMultiHash(_hashProvider, "abcd");
-            var multiHashBase32 = Base32.Crockford.Encode(multiHash, false);
+            var multiHashBase32 = multiHash.ToBase32();
 
             var delta = CreateAndExpectDeltaFromCache(multiHashBase32);
 
@@ -108,8 +108,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
                 s => s.Equals(multiHashBase32)), out Arg.Any<Delta>());
 
             await _fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm => 
-                    pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta.PreviousDeltaDfsHash == delta.PreviousDeltaDfsHash));
+               .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
+                    pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta.PreviousDeltaDfsHash ==
+                    delta.PreviousDeltaDfsHash));
         }
 
         [Fact]
@@ -124,22 +125,22 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler.Start();
 
             _deltaCache.Received(1).TryGetOrAddConfirmedDelta(Arg.Is<string>(
-                s => s.Equals(Base32.Crockford.Encode(multiHash, false))), out Arg.Any<Delta>());
+                s => s.Equals(multiHash.ToBase32())), out Arg.Any<Delta>());
 
             await _fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
                     pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta == null));
         }
 
-        private static byte[] GetMultiHash(IHashProvider hashProvider, string content)
+        private static MultiHash GetMultiHash(IHashProvider hashProvider, string content)
         {
-            var multiHash = hashProvider.ComputeRawHash(Encoding.UTF8.GetBytes(content));
+            var multiHash = hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes(content));
             return multiHash;
         }
 
-        private IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithDeltaRequest(byte[] hash)
+        private IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithDeltaRequest(MultiHash hash)
         {
-            var deltaRequest = new GetDeltaRequest {DeltaDfsHash = hash.ToByteString()};
+            var deltaRequest = new GetDeltaRequest {DeltaDfsHash = hash.ToArray().ToByteString()};
 
             var message = deltaRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
 
@@ -147,7 +148,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             return observable;
         }
 
-        private Delta CreateAndExpectDeltaFromCache(string hash)
+        private Delta CreateAndExpectDeltaFromCache(MultiHash hash)
         {
             var delta = DeltaHelper.GetDelta(_hashProvider);
 
@@ -161,4 +162,3 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         }
     }
 }
-

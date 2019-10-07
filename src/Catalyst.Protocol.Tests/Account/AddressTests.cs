@@ -39,28 +39,28 @@ namespace Catalyst.Protocol.Tests.Account
 
         public AddressTests(ITestOutputHelper output) { _output = output; }
 
-        [Fact]
-        public void Address_should_produce_different_bytes_for_all_possible_network_and_account_types()
-        {
-            var cartesianProduct = TestUtils.Protocol.AddressHelper.GetAllNetworksAndAccountTypesCombinations();
+        //[Fact]
+        //public void Address_should_produce_different_bytes_for_all_possible_network_and_account_types()
+        //{
+        //    var cartesianProduct = TestUtils.Protocol.AddressHelper.GetAllNetworksAndAccountTypesCombinations();
 
-            var addressTypes = cartesianProduct.ToList();
-            var forOutput = addressTypes.Select(x =>
-                $"{Convert.ToString(((int) x.NetworkType | (int) x.AccountType), 2).PadLeft(6, '0')} =>  {x.NetworkType}|{x.AccountType}");
-            forOutput.ToList().ForEach(o => _output.WriteLine(o));
+        //    var addressTypes = cartesianProduct.ToList();
+        //    var forOutput = addressTypes.Select(x =>
+        //        $"{Convert.ToString(((int) x.NetworkType | (int) x.AccountType), 2).PadLeft(6, '0')} =>  {x.NetworkType}|{x.AccountType}");
+        //    forOutput.ToList().ForEach(o => _output.WriteLine(o));
 
-            var pubKeyBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
+        //    var pubKeyBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
 
-            var addressesFromSamePubkey = addressTypes.Select(t => new Address
-            {
-                PublicKeyHash = pubKeyBytes.ToByteString(),
-                AccountType = t.AccountType,
-                NetworkType = t.NetworkType
-            }).ToList();
+        //    var addressesFromSamePubkey = addressTypes.Select(t => new Address
+        //    {
+        //        PublicKeyHash = pubKeyBytes.ToByteString(),
+        //        AccountType = t.AccountType,
+        //        NetworkType = t.NetworkType
+        //    }).ToList();
 
-            addressesFromSamePubkey
-               .Select(a => a.RawBytes.ToByteString().ToBase64()).Should().OnlyHaveUniqueItems();
-        }
+        //    addressesFromSamePubkey
+        //       .Select(a => a.RawBytes.ToByteString().ToBase64()).Should().OnlyHaveUniqueItems();
+        //}
     }
 }
 

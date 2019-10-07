@@ -38,7 +38,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         private readonly IDeltaElector _deltaElector;
         private readonly IHashProvider _hashProvider;
 
-        public FavouriteDeltaObserver(IDeltaElector deltaElector, ILogger logger, IHashProvider hashProvider) 
+        public FavouriteDeltaObserver(IDeltaElector deltaElector, IHashProvider hashProvider, ILogger logger) 
             : base(logger)
         {
             _deltaElector = deltaElector;
@@ -51,8 +51,8 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
-                _hashProvider.IsValidHash(deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray());
-                _hashProvider.IsValidHash(deserialised.Candidate.Hash.ToByteArray());
+                //_hashProvider.IsValidHash(deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray());
+                //_hashProvider.IsValidHash(deserialised.Candidate.Hash.ToByteArray());
 
                 deserialised.IsValid();
                 

@@ -28,9 +28,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Ipfs.Registry;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -43,9 +46,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         private readonly IpfsAdapter _ipfs;
         private readonly ILogger _logger;
         private readonly ITestOutputHelper _output;
+        private readonly IHashProvider _hashProvider;
 
         public DfsTests(ITestOutputHelper output) : base(output)
         {
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            _hashProvider = new HashProvider(hashingAlgorithm);
+
             _output = output;
             var passwordReader = Substitute.For<IPasswordManager>();
             passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
@@ -65,7 +72,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
 
             const string text = "good morning";
-            var dfs = new Dfs(_ipfs, _logger);
+            var dfs = new Dfs(_ipfs, _hashProvider, _logger);
             var id = await dfs.AddTextAsync(text, cts.Token);
             var content = await dfs.ReadTextAsync(id, cts.Token);
 
@@ -82,7 +89,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 1, 2, 3
             };
             var ms = new MemoryStream(binary);
-            var dfs = new Dfs(_ipfs, _logger);
+            var dfs = new Dfs(_ipfs, _hashProvider, _logger);
             var id = await dfs.AddAsync(ms, "", cts.Token);
             using (var stream = await dfs.ReadAsync(id, cts.Token))
             {

@@ -26,11 +26,13 @@ using System.IO;
 using System.Threading;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
@@ -38,6 +40,8 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Ipfs;
+using Ipfs.Registry;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
@@ -53,9 +57,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly AddFileToDfsRequestObserver _addFileToDfsRequestObserver;
         private readonly PeerId _senderIdentifier;
         private readonly IDfs _fakeDfs;
+        private readonly IHashProvider _hashProvider;
 
         public AddFileToDfsRequestObserverTests()
         {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _manualResetEvent = new ManualResetEvent(false);
             _senderIdentifier = PeerIdHelper.GetPeerId("sender");
             var peerSettings = _senderIdentifier.ToSubstitutedPeerSettings();
@@ -121,7 +127,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            var expectedHash = "expectedHash";
+            var expectedHash = _hashProvider.ComputeUtf8MultiHash("expectedHash");
             _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(expectedHash);
 
             var protocolMessage = GenerateProtocolMessage();
@@ -143,7 +149,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _manualResetEvent.WaitOne();
 
             addFileToDfsResponse.ResponseCode[0].Should().Be((byte) FileTransferResponseCodeTypes.Finished.Id);
-            addFileToDfsResponse.DfsHash.Should().Be(expectedHash);
+            addFileToDfsResponse.DfsHash.Should().Be(expectedHash.ToBase32());
         }
 
         [Fact]
