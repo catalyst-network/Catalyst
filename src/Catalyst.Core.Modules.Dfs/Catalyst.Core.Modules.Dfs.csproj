@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
 
         <RootNamespace>Catalyst.Core.Modules.Dfs</RootNamespace>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
@@ -11,16 +11,18 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
+        <ProjectReference Include="..\..\submodules\net-ipfs-engine\src\IpfsEngine.csproj" />
+        <ProjectReference Include="..\..\submodules\net-ipfs-http-gateway\src\HttpGateway.csproj" />
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Common.Logging.Serilog" Version="4.3.6" />
+        <PackageReference Include="Common.Logging.Serilog" Version="4.3.6" />
         <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" />
     </ItemGroup>
 
 </Project>
