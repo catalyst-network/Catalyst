@@ -21,13 +21,26 @@
 
 #endregion
 
- using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using AutoMapper;
+using Nethermind.Core.Crypto;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class AccountRepository : RepositoryWrapper<AccountDocument>, IAccountRepository
+    public class StringToKeccakConverter : IValueConverter<string, Keccak>
     {
-        public AccountRepository(IRepository<AccountDocument, string> repository) : base(repository) { }
+        public Keccak Convert(string sourceMember, ResolutionContext context)
+        {
+            var sourceValue = new Keccak(sourceMember);
+            return sourceValue;
+        }
+    }
+
+    public class KeccakToStringConverter : IValueConverter<Keccak, string>
+    {
+        public string Convert(Keccak sourceMember, ResolutionContext context)
+        {
+            var sourceValue = sourceMember.ToString();
+            return sourceValue; 
+        }
     }
 }

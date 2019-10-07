@@ -27,15 +27,22 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Account;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
+using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Multiformats.Hash;
+using Nethermind.Core;
+using Nethermind.Evm;
+using Nethermind.Store;
 using Serilog;
+using Address = Catalyst.Protocol.Account.Address;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -49,6 +56,9 @@ namespace Catalyst.Core.Modules.Ledger
         public IAccountRepository Accounts { get; }
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<MempoolDocument> _mempool;
+        private readonly IPeerSettings _peerSettings;
+        private readonly IVirtualMachine _evm;
+        private readonly IStateProvider _stateProvider;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
@@ -58,12 +68,18 @@ namespace Catalyst.Core.Modules.Ledger
         public Ledger(IAccountRepository accounts, 
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
-            IMempool<MempoolDocument> mempool, 
+            IMempool<MempoolDocument> mempool,
+            IPeerSettings peerSettings, 
+            IVirtualMachine evm,
+            IStateProvider stateProvider,
             ILogger logger)
         {
             Accounts = accounts;
             _synchroniser = synchroniser;
             _mempool = mempool;
+            _peerSettings = peerSettings;
+            _evm = evm;
+            _stateProvider = stateProvider;
             _logger = logger;
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
@@ -147,13 +163,25 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void UpdateLedgerAccountFromEntry(PublicEntry entry)
         {
-            var pubKey = _cryptoContext.GetPublicKeyFromBytes(entry.Base.ReceiverPublicKey.ToByteArray());
+            var address = GetAddress(entry.Base);
 
-            //todo: get an address from the key using the Account class from Common lib
-            var account = Accounts.Get(pubKey.Bytes.AsBase32Address());
+            var account = Accounts.Get(address.);
 
-            //todo: a different logic for to and from entries
             account.Balance += entry.Amount.ToUInt256();
+        }
+
+        private void RunSmartContract(ContractEntry entry)
+        {
+            var address = GetAddress(entry.Base);
+            var codeInfo = _evm.GetCachedCodeInfo(address);
+            
+        }
+
+        private Address GetAddress(BaseEntry entry)
+        {
+            var pubKey = _cryptoContext.GetPublicKeyFromBytes(entry.ReceiverPublicKey.ToByteArray());
+            var address = pubKey.ToAddress(_peerSettings.NetworkType, AccountType.PublicAccount);
+            return new Address(address.RawBytes);
         }
 
         public Multihash LatestKnownDelta { get; private set; }

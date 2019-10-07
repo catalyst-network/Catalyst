@@ -21,31 +21,26 @@
 
 #endregion
 
-using Catalyst.Abstractions.Repository;
-using Catalyst.Abstractions.Types;
+using AutoMapper;
 using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.Modules.Ledger.Models
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    /// <summary>
-    /// This class represent a user account of which there can be the following types:
-    /// confidential account, non-confidential account and smart contract account
-    /// </summary>
-    public interface IAccount : IDocument
+    public class StringToUInt256Converter : IValueConverter<string, UInt256>
     {
-        /// <summary>
-        /// The address used to identify the account.
-        /// </summary>
-        string PublicAddress { get; }
+        public UInt256 Convert(string sourceMember, ResolutionContext context)
+        {
+            var sourceValue = UInt256.Parse(sourceMember);
+            return sourceValue;
+        }
+    }
 
-        /// <summary>
-        /// Type of the account: public or confidential.
-        /// </summary>
-        AccountTypes AccountType { get; }
-
-        /// <summary>
-        /// The balance of the account.
-        /// </summary>
-        UInt256 Balance { get; set; }
+    public class UInt256ToStringConverter : IValueConverter<UInt256, string>
+    {
+        public string Convert(UInt256 sourceMember, ResolutionContext context)
+        {
+            var sourceValue = sourceMember.ToString();
+            return sourceValue; 
+        }
     }
 }

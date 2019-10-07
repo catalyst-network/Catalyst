@@ -21,13 +21,13 @@
 
 #endregion
 
- using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using Catalyst.Abstractions.Repository;
+using Catalyst.Core.Lib.DAO;
 
 namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    public class AccountRepository : RepositoryWrapper<AccountDocument>, IAccountRepository
+    public class AccountDocument : AccountDao, IDocument
     {
-        public AccountRepository(IRepository<AccountDocument, string> repository) : base(repository) { }
+        public string DocumentId => CodeHash;
     }
 }

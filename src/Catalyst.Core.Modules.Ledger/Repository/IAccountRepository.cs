@@ -22,9 +22,8 @@
 #endregion
 
 using Catalyst.Abstractions.Repository;
-using Catalyst.Core.Modules.Ledger.Models;
 
 namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    public interface IAccountRepository : IRepositoryWrapper<Account> { }
+    public interface IAccountRepository : IRepositoryWrapper<AccountDocument> { }
 }
