@@ -31,7 +31,6 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Config;
 using Dawn;
 using Ipfs;
-using Ipfs.Registry;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -75,7 +74,7 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<MultiHash> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
+        public async Task<Cid> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {
             var bytes = Encoding.UTF8.GetBytes(utf8Content);
             var contentHash = _hashProvider.ComputeMultiHash(bytes);
@@ -89,15 +88,16 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<string> ReadTextAsync(MultiHash hash, CancellationToken cancellationToken = default)
+        public async Task<string> ReadTextAsync(Cid cid, CancellationToken cancellationToken = default)
         {
-            return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, hash.ToBase32()),
+            var encodedCid = cid.Encode();
+            return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, encodedCid),
                 Encoding.UTF8,
                 cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<MultiHash> AddAsync(Stream content,
+        public async Task<Cid> AddAsync(Stream content,
             string name = "",
             CancellationToken cancellationToken = default)
         {
@@ -114,9 +114,10 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<Stream> ReadAsync(MultiHash hash, CancellationToken cancellationToken = default)
+        public async Task<Stream> ReadAsync(Cid cid, CancellationToken cancellationToken = default)
         {
-            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, hash.ToBase32())))
+            var encodedCid = cid.Encode();
+            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, encodedCid)))
                .ConfigureAwait(false);
         }
     }

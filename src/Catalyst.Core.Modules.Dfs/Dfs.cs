@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<MultiHash> AddTextAsync(string content, CancellationToken cancellationToken = default)
+        public async Task<Cid> AddTextAsync(string content, CancellationToken cancellationToken = default)
         {
             var node = await _ipfs.FileSystem.AddTextAsync(
                 content,
@@ -63,36 +63,38 @@ namespace Catalyst.Core.Modules.Dfs
                 cancellationToken);
             var id = node.Id.Encode();
             _logger.Debug("Text added to IPFS with id {0}", id);
-            return id;
+            return node.Id;
         }
 
         /// <inheritdoc />
-        public Task<string> ReadTextAsync(MultiHash hash,
+        public Task<string> ReadTextAsync(Cid cid,
             CancellationToken cancellationToken = default)
         {
-            _logger.Debug("Reading content at path {0} from IPFS", hash.ToBase32());
-            return _ipfs.FileSystem.ReadAllTextAsync(hash.ToBase32(), cancellationToken);
+            var encodedCid = cid.Encode();
+            _logger.Debug("Reading content at path {0} from IPFS", encodedCid);
+            return _ipfs.FileSystem.ReadAllTextAsync(encodedCid, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<MultiHash> AddAsync(Stream content,
+        public async Task<Cid> AddAsync(Stream content,
             string name = "",
             CancellationToken cancellationToken = default)
         {
             var node = await _ipfs.FileSystem
                .AddAsync(content, name, AddFileOptions(), cancellationToken);
             var id = node.Id.Encode();
-            _logger.Debug("Content {1}added to IPFS with id {0}",
+            _logger.Debug("Content {1} added to IPFS with id {0}",
                 id, name + " ");
-            return _hashProvider.Cast(id.FromBase32());
+            return node.Id.Hash;
         }
 
         /// <inheritdoc />
-        public Task<Stream> ReadAsync(MultiHash hash,
+        public Task<Stream> ReadAsync(Cid cid,
             CancellationToken cancellationToken = default)
         {
-            _logger.Debug("Reading content at path {0} from Ipfs", hash.ToBase32());
-            return _ipfs.FileSystem.ReadFileAsync(hash.ToBase32(), cancellationToken);
+            var encodedCid = cid.Encode();
+            _logger.Debug("Reading content at path {0} from Ipfs", encodedCid);
+            return _ipfs.FileSystem.ReadFileAsync(encodedCid, cancellationToken);
         }
     }
 }
