@@ -45,16 +45,16 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static byte[] ToUtf8Bytes(this string @string) { return Encoding.UTF8.GetBytes(@string); }
 
-        public static PeerId BuildPeerIdFromBase32CrockfordKey(this string base32CrockfordKey, IPEndPoint ipEndPoint)
+        public static PeerId BuildPeerIdFromBase32Key(this string base32Key, IPEndPoint ipEndPoint)
         {
-            return BuildPeerIdFromBase32CrockfordKey(base32CrockfordKey, ipEndPoint.Address, ipEndPoint.Port);
+            return BuildPeerIdFromBase32Key(base32Key, ipEndPoint.Address, ipEndPoint.Port);
         }
 
-        public static PeerId BuildPeerIdFromBase32CrockfordKey(this string base32CrockfordKey,
+        public static PeerId BuildPeerIdFromBase32Key(this string base32Key,
             IPAddress ipAddress,
             int port)
         {
-            return base32CrockfordKey.KeyToBytes().BuildPeerIdFromPublicKey(ipAddress, port);
+            return base32Key.KeyToBytes().BuildPeerIdFromPublicKey(ipAddress, port);
         }
 
         public static T ParseHexStringTo<T>(this string hex16Pid) where T : IMessage<T>, new()

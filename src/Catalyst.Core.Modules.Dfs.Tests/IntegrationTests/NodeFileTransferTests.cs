@@ -57,8 +57,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
         public NodeFileTransferTests(ITestOutputHelper testOutput) : base(testOutput)
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();

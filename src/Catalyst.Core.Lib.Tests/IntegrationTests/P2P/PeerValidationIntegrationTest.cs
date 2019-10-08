@@ -142,7 +142,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             Output.WriteLine(ip.ToString());
             Output.WriteLine(port.ToString());
 
-            var recipient = publicKey.BuildPeerIdFromBase32CrockfordKey(ip, port);
+            var recipient = publicKey.BuildPeerIdFromBase32Key(ip, port);
             
             return await _peerChallenger.ChallengePeerAsync(recipient);
         }

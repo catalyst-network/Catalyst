@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             var expectedFileName = _hashProvider.ComputeMultiHash(contentBytes);
             var filename = await _dfs.AddAsync(contentStream);
 
-            filename.Should().Be(expectedFileName.ToBase32());
+            filename.ToBase32().Should().Be(expectedFileName.ToBase32());
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
                 Arg.Is(Encoding.UTF8),
                 Arg.Any<CancellationToken>());
 
-            filename.Should().Be(expectedFileName);
+            filename.ToBase32().Should().Be(expectedFileName);
         }
 
         [Fact]
@@ -154,8 +154,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             var utf8Hash = _hashProvider.ComputeUtf8MultiHash(someGoodUtf8Content);
             var uf32Hash = _hashProvider.ComputeMultiHash(Encoding.UTF32.GetBytes(someGoodUtf8Content));
 
-            contentHash.Should().Be(utf8Hash.ToBase32());
-            contentHash.Should().NotBe(uf32Hash.ToBase32());
+            contentHash.Should().Be(utf8Hash);
+            contentHash.Should().NotBe(uf32Hash);
         }
 
         [Fact]
@@ -178,10 +178,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadAsync_Should_Point_To_The_Correct_File()
         {
-            var fileName = "myFileHash";
+            var fileName = _hashProvider.ComputeUtf8MultiHash("myFileHash");
             await _dfs.ReadAsync(fileName);
             _fileSystem.File.Received(1)
-               .OpenRead(Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, fileName))));
+               .OpenRead(Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, fileName.ToBase32()))));
         }
 
         [Fact]
@@ -189,7 +189,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         {
             var cancellationToken = new CancellationToken();
             await _dfs.ReadTextAsync(
-                @"https://media.giphy.com/media/KZwQMLTSx7M8bJ9OkZ/giphy.gif",
+                _hashProvider.ComputeUtf8MultiHash(@"https://media.giphy.com/media/KZwQMLTSx7M8bJ9OkZ/giphy.gif"),
                 cancellationToken);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
                 Arg.Any<string>(),
@@ -200,7 +200,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadTextAsync_Should_Assume_UTF8_Content()
         {
-            await _dfs.ReadTextAsync("hello");
+            await _dfs.ReadTextAsync(_hashProvider.ComputeUtf8MultiHash("hello"));
             await _fileSystem.File.Received(1).ReadAllTextAsync(
                 Arg.Any<string>(),
                 Arg.Is(Encoding.UTF8),
@@ -210,10 +210,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadTextAsync_Should_Point_To_The_Correct_File()
         {
-            var fileHash = "hello";
+            var fileHash = _hashProvider.ComputeUtf8MultiHash("hello");
             await _dfs.ReadTextAsync(fileHash);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
-                Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, fileHash))),
+                Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, fileHash.ToBase32()))),
                 Arg.Any<Encoding>(),
                 Arg.Any<CancellationToken>());
         }

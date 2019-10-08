@@ -52,8 +52,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
 
         public DfsTests()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _ipfsEngine = Substitute.For<ICoreApi>();
             var fileSystem = Substitute.For<IFileSystemApi>();

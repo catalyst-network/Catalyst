@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Dfs
             var id = node.Id.Encode();
             _logger.Debug("Content {1}added to IPFS with id {0}",
                 id, name + " ");
-            return id;
+            return _hashProvider.Cast(id.FromBase32());
         }
 
         /// <inheritdoc />

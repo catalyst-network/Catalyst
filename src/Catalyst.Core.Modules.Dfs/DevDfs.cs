@@ -48,18 +48,18 @@ namespace Catalyst.Core.Modules.Dfs
     /// <inheritdoc cref="IDfs" />
     public class DevDfs : IDfs
     {
-        private readonly IHashProvider _hashProvider;
         private readonly DirectoryInfo _baseFolder;
         private readonly IFileSystem _fileSystem;
+        private readonly IHashProvider _hashProvider;
 
         public DevDfs(IFileSystem fileSystem,
-            IHashProvider _hashProvider,
+            IHashProvider hashProvider,
             string baseFolder = null)
         {
-            Guard.Argument(_hashProvider.HashingAlgorithm, nameof(_hashProvider.HashingAlgorithm))
+            Guard.Argument(hashProvider.HashingAlgorithm, nameof(hashProvider.HashingAlgorithm))
                .Require(h => h.DigestSize <= 159, h =>
                     "The hashing algorithm needs to produce file names smaller than 255 base 32 characters or 160 bytes" +
-                    $"but the default length for {_hashProvider.HashingAlgorithm.GetType().Name} is {h.DigestSize}.");
+                    $"but the default length for {hashProvider.HashingAlgorithm.GetType().Name} is {h.DigestSize}.");
 
             var dfsBaseFolder = baseFolder ?? Path.Combine(fileSystem.GetCatalystDataDir().FullName,
                 Constants.DfsDataSubDir);
@@ -71,6 +71,7 @@ namespace Catalyst.Core.Modules.Dfs
             }
 
             _fileSystem = fileSystem;
+            _hashProvider = hashProvider;
         }
 
         /// <inheritdoc />
