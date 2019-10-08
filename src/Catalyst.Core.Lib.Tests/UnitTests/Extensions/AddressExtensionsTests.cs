@@ -24,6 +24,8 @@
 using System.Linq;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Account;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Cryptography.BulletProofs.Types;
 using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Network;
 using FluentAssertions;
@@ -57,6 +59,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
                    .AsBase32Crockford());
 
             base32Addresses.Should().OnlyHaveUniqueItems();
+        }
+
+        [Fact]
+        public void ToEthereumAddress_should_understand_catalyst_public_key()
+        {
+            var publicKey = ByteUtil.GenerateRandomByteArray(32);
+            var ethereumAddress = publicKey.ToEthereumAddress(NetworkType.Devnet, AccountType.PublicAccount);
+            
+            ethereumAddress.Bytes.Length.Should().Be(20);
         }
     }
 }

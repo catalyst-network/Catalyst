@@ -32,7 +32,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Account;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Transaction;
@@ -43,6 +42,7 @@ using Nethermind.Evm;
 using Nethermind.Store;
 using Serilog;
 using Address = Catalyst.Protocol.Account.Address;
+using EthereumAddress = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -163,25 +163,22 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void UpdateLedgerAccountFromEntry(PublicEntry entry)
         {
-            var address = GetAddress(entry.Base);
+            var address = GetEthereumReceiverAddress(entry.Base);
 
-            var account = Accounts.Get(address.);
-
-            account.Balance += entry.Amount.ToUInt256();
+            var account = Accounts.Get(address.ToString());
         }
 
         private void RunSmartContract(ContractEntry entry)
         {
-            var address = GetAddress(entry.Base);
+            var address = GetEthereumReceiverAddress(entry.Base);
             var codeInfo = _evm.GetCachedCodeInfo(address);
-            
         }
 
-        private Address GetAddress(BaseEntry entry)
+        private EthereumAddress GetEthereumReceiverAddress(BaseEntry entry)
         {
             var pubKey = _cryptoContext.GetPublicKeyFromBytes(entry.ReceiverPublicKey.ToByteArray());
-            var address = pubKey.ToAddress(_peerSettings.NetworkType, AccountType.PublicAccount);
-            return new Address(address.RawBytes);
+            var address = pubKey.Bytes.ToEthereumAddress(_peerSettings.NetworkType, AccountType.PublicAccount);
+            return address;
         }
 
         public Multihash LatestKnownDelta { get; private set; }

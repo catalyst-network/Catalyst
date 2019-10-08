@@ -25,7 +25,9 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Network;
+using Google.Protobuf;
 using Multiformats.Hash;
+using EthereumAddress = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Lib.Extensions.Protocol.Account
 {
@@ -45,6 +47,22 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Account
                    .ToByteString()
             };
             return result;
+        }
+
+        public static EthereumAddress ToEthereumAddress(this byte[] publicKey,
+            NetworkType networkType,
+            AccountType accountType)
+        {
+            var ethereumAddress = new EthereumAddress(publicKey.ToAddress(networkType, accountType)
+               .ToByteArray());
+            return ethereumAddress;
+        }
+
+        public static EthereumAddress ToEthereumAddress(this ByteString publicKey,
+            NetworkType networkType,
+            AccountType accountType)
+        {
+            return publicKey.ToByteArray().ToEthereumAddress(networkType, accountType);
         }
 
         public static Address ToAddress(this IPublicKey publicKey,
