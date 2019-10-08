@@ -21,8 +21,8 @@
 
 #endregion
 
-using Catalyst.Core.Modules.Ledger.Models;
 using Multiformats.Hash;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Modules.Ledger
 {

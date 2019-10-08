@@ -32,7 +32,6 @@ using Ipfs;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
-using NLog.LayoutRenderers.Wrappers;
 
 namespace Catalyst.Core.Modules.Ledger.Adapters
 {
@@ -45,8 +44,15 @@ namespace Catalyst.Core.Modules.Ledger.Adapters
             var timestamp = new UInt256(new BigInteger(delta.TimeStamp.Seconds) * new BigInteger(Math.Pow(10, 9)) + delta.TimeStamp.Nanos);
             var beneficiary = delta.CoinbaseEntries.First().ReceiverPublicKey.ToByteArray().ToAddress(networkType, AccountType.PublicAccount);
             var beneficiaryAddress = new Nethermind.Core.Address(beneficiary.RawBytes);
-            var header = new BlockHeader(parentKeccak, ommersKeccak, beneficiaryAddress, UInt256.Zero, 0, long.MaxValue, timestamp, new []{});
-            
+            var header = new BlockHeader(parentKeccak, 
+                ommersKeccak, 
+                beneficiaryAddress, 
+                UInt256.Zero, 
+                0, 
+                long.MaxValue,
+                timestamp, 
+                new byte[0]);
+
             var block = new Block(header);
             return block;
         }
