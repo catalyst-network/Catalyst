@@ -7,3 +7,12 @@
 [submodule "submodules/Cryptography.FFI.Rust"]
 	path = submodules/Cryptography.FFI.Rust
 	url = https://github.com/catalyst-network/Cryptography.FFI.Rust.git
+[submodule "submodules/net-ipfs-core"]
+	path = submodules/net-ipfs-core
+	url = https://github.com/catalyst-network/net-ipfs-core.git
+[submodule "submodules/net-ipfs-http-gateway"]
+	path = submodules/net-ipfs-http-gateway
+	url = https://github.com/catalyst-network/net-ipfs-http-gateway.git
+[submodule "submodules/net-ipfs-engine"]
+	path = submodules/net-ipfs-engine
+	url = https://github.com/catalyst-network/net-ipfs-engine.git

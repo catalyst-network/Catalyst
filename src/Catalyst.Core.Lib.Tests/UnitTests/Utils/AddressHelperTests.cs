@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         {
             _peerSettings.NetworkType.Returns(networkType);
 
-            var pubKeyBytes = ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength);
+            var pubKeyBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
             var expectedHash = pubKeyBytes.ComputeMultihash(_hashAlgorithm).Digest;
             _publicKey.Bytes.Returns(pubKeyBytes);
             

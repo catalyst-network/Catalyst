@@ -35,33 +35,31 @@ using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions.Protocol.Account;
 using Catalyst.Protocol.Account;
+using Nethereum.KeyStore;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Keystore
 {
-    public sealed class LocalKeyStore : IKeyStore
+    public sealed class LocalKeyStore : KeyStoreService, IKeyStore
     {
         private readonly ILogger _logger;
         private readonly IAddressHelper _addressHelper;
         private readonly IFileSystem _fileSystem;
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordManager _passwordManager;
-        private readonly IKeyStoreService _keyStoreService;
         private readonly PasswordRegistryTypes _defaultNodePassword = PasswordRegistryTypes.DefaultNodePassword;
 
         private static int MaxTries => 5;
 
         public LocalKeyStore(IPasswordManager passwordManager,
             ICryptoContext cryptoContext,
-            IKeyStoreService keyStoreService,
             IFileSystem fileSystem,
             ILogger logger,
             IAddressHelper addressHelper)
         {
             _passwordManager = passwordManager;
             _cryptoContext = cryptoContext;
-            _keyStoreService = keyStoreService;
             _fileSystem = fileSystem;
             _logger = logger;
             _addressHelper = addressHelper;            
@@ -80,7 +78,7 @@ namespace Catalyst.Core.Modules.Keystore
             IPrivateKey privateKey = null;
             try
             {
-                privateKey = _cryptoContext.PrivateKeyFromBytes(keyBytes);
+                privateKey = _cryptoContext.GetPrivateKeyFromBytes(keyBytes);
             }
             catch (ArgumentException)
             {
@@ -101,7 +99,7 @@ namespace Catalyst.Core.Modules.Keystore
                 
                 try
                 {
-                    var keyBytes = _keyStoreService.DecryptKeyStoreFromJson(password, json);
+                    var keyBytes = DecryptKeyStoreFromJson(password, json);
                     
                     if (keyBytes != null && keyBytes.Length > 0)
                     {
@@ -139,7 +137,7 @@ namespace Catalyst.Core.Modules.Keystore
     
                 var password = StringFromSecureString(securePassword);
     
-                var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
+                var json = EncryptAndGenerateDefaultKeyStoreAsJson(
                     password, 
                     _cryptoContext.ExportPrivateKey(privateKey),
                     address.AsBase32Crockford());

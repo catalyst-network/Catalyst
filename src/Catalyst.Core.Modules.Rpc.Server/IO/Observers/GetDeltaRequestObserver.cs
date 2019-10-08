@@ -58,9 +58,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 
-            var multiHash = getDeltaRequest.DeltaDfsHash.AsBase32Address();
-
-            _deltaCache.TryGetOrAddConfirmedDelta(multiHash, out var delta);
+            var hashAsBase32 = getDeltaRequest.DeltaDfsHash.AsBase32Address();
+            _deltaCache.TryGetOrAddConfirmedDelta(hashAsBase32, out var delta);
             return new GetDeltaResponse {Delta = delta};
         }
     }

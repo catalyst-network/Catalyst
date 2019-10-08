@@ -21,13 +21,25 @@
 
 #endregion
 
-namespace Catalyst.Abstractions.Keystore
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Registry;
+using Catalyst.Abstractions.Types;
+
+namespace Catalyst.Core.Lib.Cryptography
 {
-    public interface IKeyStoreService
+    public sealed class KeyRegistry : RegistryBase<KeyRegistryTypes, IPrivateKey>, IKeyRegistry
     {
-        string GetAddressFromKeyStore(string json);
-        string GenerateUtcFileName(string address);
-        byte[] DecryptKeyStoreFromJson(string password, string json);
-        string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
+        public KeyRegistry()
+        {
+            Registry = new Dictionary<KeyRegistryTypes, IPrivateKey>();
+        }
+        
+        public bool Contains(byte[] publicKeyBytes)
+        {
+            return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
+        }
     }
 }

@@ -72,7 +72,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             var signature = _keySigner.Sign(decodedMessage, signingContext);
 
-            var publicKey = _keySigner.CryptoContext.PublicKeyFromBytes(signature.PublicKeyBytes);
+            var publicKey = _keySigner.CryptoContext.GetPublicKeyFromBytes(signature.PublicKeyBytes);
 
             Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
 

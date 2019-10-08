@@ -32,13 +32,13 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Types
 
         internal Signature(byte[] signature, byte[] publicKey)
         {
-            var requiredSigLength = Ffi.SignatureLength;
+            var requiredSigLength = NativeBinding.SignatureLength;
             if (signature.Length != requiredSigLength)
             {
                 Error.ThrowArgumentExceptionSignatureLength(requiredSigLength);
             }
 
-            var requiredKeyLength = Ffi.PublicKeyLength;
+            var requiredKeyLength = NativeBinding.PublicKeyLength;
             if (publicKey.Length != requiredKeyLength)
             {
                 Error.ThrowArgumentExceptionPublicKeyLength(requiredKeyLength);

@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>Catalyst.Simulator</RootNamespace>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
         <SignAssembly>true</SignAssembly>
@@ -10,8 +10,8 @@
     </PropertyGroup>
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
-        <PackageReference Include="CommandLineParser" Version="2.5.0" />
-        <PackageReference Include="NSubstitute" Version="4.2.0" />
+        <PackageReference Include="CommandLineParser" Version="2.6.0" />
+        <PackageReference Include="NSubstitute" Version="4.2.1" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />

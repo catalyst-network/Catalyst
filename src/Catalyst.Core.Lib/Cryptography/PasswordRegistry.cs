@@ -27,7 +27,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
 
-namespace Catalyst.Core.Lib.Registry
+namespace Catalyst.Core.Lib.Cryptography
 {
     public sealed class PasswordRegistry : RegistryBase<PasswordRegistryTypes, SecureString>, IPasswordRegistry
     {
