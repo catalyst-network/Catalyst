@@ -58,7 +58,6 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 new PublicEntryDao(),
                 new ConfidentialEntryDao(),
                 new TransactionBroadcastDao(),
-                new RangeProofDao(),
                 new ContractEntryDao(),
                 new SignatureDao(),
                 new BaseEntryDao(),

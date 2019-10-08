@@ -29,12 +29,15 @@ namespace Catalyst.Core.Lib.DAO
 {
     public class BaseEntryDao : DaoBase<BaseEntry, BaseEntryDao>
     {
+        public ulong Nonce { get; set; }
         public string ReceiverPublicKey { get; set; }
         public string SenderPublicKey { get; set; }
         public string TransactionFees { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
+            cfg.CreateMap<BaseEntryDao, BaseEntryDao>().ReverseMap();
+
             cfg.CreateMap<BaseEntry, BaseEntryDao>()
                .ForMember(d => d.ReceiverPublicKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
                .ForMember(d => d.SenderPublicKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.SenderPublicKey))
