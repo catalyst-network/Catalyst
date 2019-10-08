@@ -29,11 +29,12 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Config;
-using Catalyst.Core.Lib.Extensions.Protocol.Account;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Account;
 using Ipfs;
 using Nethereum.KeyStore;
@@ -48,6 +49,8 @@ namespace Catalyst.Core.Modules.Keystore
         private readonly IFileSystem _fileSystem;
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordManager _passwordManager;
+        private readonly IHashProvider _hashProvider;
+        private readonly IPeerSettings _peerSettings;
         private readonly PasswordRegistryTypes _defaultNodePassword = PasswordRegistryTypes.DefaultNodePassword;
 
         private static int MaxTries => 5;
@@ -55,11 +58,15 @@ namespace Catalyst.Core.Modules.Keystore
         public LocalKeyStore(IPasswordManager passwordManager,
             ICryptoContext cryptoContext,
             IFileSystem fileSystem,
+            IHashProvider hashProvider,
+            IPeerSettings peerSettings,
             ILogger logger)
         {
             _passwordManager = passwordManager;
             _cryptoContext = cryptoContext;
             _fileSystem = fileSystem;
+            _hashProvider = hashProvider;
+            _peerSettings = peerSettings;
             _logger = logger;
         }
 
@@ -92,13 +99,14 @@ namespace Catalyst.Core.Modules.Keystore
 
             while (tries < MaxTries)
             {
-                var securePassword = _passwordManager.RetrieveOrPromptPassword(passwordIdentifier, "Please provide your node password");
+                var securePassword =
+                    _passwordManager.RetrieveOrPromptPassword(passwordIdentifier, "Please provide your node password");
                 var password = StringFromSecureString(securePassword);
-                
+
                 try
                 {
                     var keyBytes = DecryptKeyStoreFromJson(password, json);
-                    
+
                     if (keyBytes != null && keyBytes.Length > 0)
                     {
                         _passwordManager.AddPasswordToRegistry(passwordIdentifier, securePassword);
@@ -130,27 +138,31 @@ namespace Catalyst.Core.Modules.Keystore
         {
             try
             {
-                //var publicKeyHash = _hashAlgorithm.ComputeRawHash(privateKey.GetPublicKey().Bytes).ToByteString();
-                //var address = new Address
-                //{
-                //    PublicKeyHash = publicKeyHash,
-                //    AccountType = AccountType.PublicAccount,
-                //    NetworkType = _cryptoContext.
-                //};
+                var publicKeyHash = _hashProvider.ComputeMultiHash(privateKey.GetPublicKey().Bytes).ToArray()
+                   .ToByteString();
+                var address = new Address
+                {
+                    PublicKeyHash = publicKeyHash,
+                    AccountType = AccountType.PublicAccount,
+                    NetworkType = _peerSettings.NetworkType
+                };
+
                 //            return address;
                 //_addressHelper.GenerateAddress(privateKey.GetPublicKey(), AccountType.PublicAccount);        
-                var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword, "Please create a password for this node");
-    
+                var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword,
+                    "Please create a password for this node");
+
                 var password = StringFromSecureString(securePassword);
-    
-                //var json = EncryptAndGenerateDefaultKeyStoreAsJson(
-                //    password, 
-                //    _cryptoContext.ExportPrivateKey(privateKey),
-                //    address.RawBytes.ToBase32());
+
+                var json = EncryptAndGenerateDefaultKeyStoreAsJson(
+                    password,
+                    _cryptoContext.ExportPrivateKey(privateKey),
+                    address.RawBytes.ToBase32());
 
                 _passwordManager.AddPasswordToRegistry(_defaultNodePassword, securePassword);
 
-                //await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
+                await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir,
+                    json);
             }
             catch (Exception e)
             {

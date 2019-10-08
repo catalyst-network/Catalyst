@@ -52,10 +52,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         [Fact]
         public async Task Can_Populate_Peers_Correctly()
         {
-            //_hashProvider.ComputeUtf8MultiHash("hello")
             var peerRepository = Substitute.For<IPeerRepository>();
-            //var pubkey = "hello".ComputeUtf8Multihash(new ID())
-            //   .ToString(MultibaseEncoding.Base58Btc);
             var pubkey = _hashProvider.ComputeUtf8MultiHash("hello").ToBase32();
 
             var peers = new[]

@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
@@ -37,7 +36,6 @@ using Google.Protobuf;
 using Ipfs;
 using Ipfs.Registry;
 using Microsoft.Extensions.Caching.Memory;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -49,7 +47,6 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
     {
         private readonly List<Peer> _peers;
         private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
-        private readonly IMultihashAlgorithm _hashAlgorithm;
         private readonly MultiHash _previousDeltaHash;
         private readonly IMemoryCache _producersByPreviousDelta;
         private readonly string _previousDeltaHashString;
@@ -78,15 +75,12 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             _previousDeltaHash = _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
             _previousDeltaHashString = _previousDeltaHash.ToBase32();
 
-            _hashAlgorithm = Substitute.For<IMultihashAlgorithm>();
-            _hashAlgorithm.ComputeHash(Arg.Any<byte[]>()).Returns(ci => (byte[]) ci[0]);
-
             _producersByPreviousDelta = Substitute.For<IMemoryCache>();
 
-            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository, 
-                PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings(), 
-                _producersByPreviousDelta, 
-                _hashProvider, 
+            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository,
+                PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings(),
+                _producersByPreviousDelta,
+                _hashProvider,
                 logger);
         }
 
@@ -113,12 +107,15 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
 
             var peersAndNodeItselfCount = _peers.Count + 1;
-            _hashAlgorithm.ReceivedWithAnyArgs(peersAndNodeItselfCount).ComputeHash(null);
+            //_hashAlgorithm.ReceivedWithAnyArgs(peersAndNodeItselfCount).ComputeHash(null);
 
-            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)), out Arg.Any<object>());
-            _producersByPreviousDelta.Received(1).CreateEntry(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)));
+            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)),
+                out Arg.Any<object>());
+            _producersByPreviousDelta.Received(1)
+               .CreateEntry(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)));
 
-            producers.Count.Should().Be(expectedProducers.Count + 1, "producers are all the peers, and the node itself.");
+            producers.Count.Should()
+               .Be(expectedProducers.Count + 1, "producers are all the peers, and the node itself.");
             producers.Should().OnlyHaveUniqueItems();
 
             for (var i = 0; i < expectedProducers.Count; i++)
@@ -131,7 +128,8 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void GetDeltaProducersFromPreviousDelta_when_cached_should_not_recompute()
         {
-            _producersByPreviousDelta.TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)), out Arg.Any<object>())
+            _producersByPreviousDelta.TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)),
+                    out Arg.Any<object>())
                .Returns(ci =>
                 {
                     ci[1] = new List<PeerId>();
@@ -140,9 +138,8 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
 
-            _hashAlgorithm.DidNotReceiveWithAnyArgs().ComputeHash(null);
-
-            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)), out Arg.Any<object>());
+            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)),
+                out Arg.Any<object>());
             _producersByPreviousDelta.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<string>());
 
             producers.Should().NotBeNull();

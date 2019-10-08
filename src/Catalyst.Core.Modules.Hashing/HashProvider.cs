@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,14 +38,17 @@ namespace Catalyst.Core.Modules.Hashing
 
         public HashProvider(HashingAlgorithm hashingAlgorithm) { HashingAlgorithm = hashingAlgorithm; }
 
-        public MultiHash Cast(byte[] data) { return new MultiHash(HashingAlgorithm.Name, data); }
+        public MultiHash Cast(byte[] data)
+        {
+            return new MultiHash(data);
+        }
 
         public MultiHash ComputeUtf8MultiHash(string data) { return ComputeMultiHash(Encoding.UTF8.GetBytes(data)); }
 
         public MultiHash ComputeMultiHash(IEnumerable<byte> data) { return ComputeMultiHash(data.ToArray()); }
 
-        public MultiHash ComputeMultiHash(byte[] data) { return MultiHash.ComputeHash(data); }
+        public MultiHash ComputeMultiHash(byte[] data) { return MultiHash.ComputeHash(data, HashingAlgorithm.Name); }
 
-        public MultiHash ComputeMultiHash(Stream data) { return MultiHash.ComputeHash(data); }
+        public MultiHash ComputeMultiHash(Stream data) { return MultiHash.ComputeHash(data, HashingAlgorithm.Name); }
     }
 }

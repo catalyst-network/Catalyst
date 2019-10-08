@@ -31,9 +31,11 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Ipfs.Registry;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -61,11 +63,13 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            //var addressHelper = new AddressHelper(peerSettings);
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _keystore = new LocalKeyStore(_passwordManager,
                 _context,
                 _fileSystem,
+                hashProvider,
+                peerSettings,
                 logger);
         }
 

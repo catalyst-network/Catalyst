@@ -65,10 +65,10 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private Dictionary<MultiHash, Delta> BuildChainedDeltas(int chainSize)
         {
             var chainedDeltas = Enumerable.Range(0, chainSize + 1).ToDictionary(
-                i => _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes(i.ToString())),
+                i => _hashProvider.ComputeUtf8MultiHash(i.ToString()),
                 i =>
                 {
-                    var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes((i - 1).ToString()));
+                    var previousHash = _hashProvider.ComputeUtf8MultiHash((i - 1).ToString());
                     var delta = DeltaHelper.GetDelta(_hashProvider, previousHash);
                     return delta;
                 });
@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         {
             foreach (var delta in deltasByHash)
             {
-                _deltaCache.TryGetOrAddConfirmedDelta(delta.Key.ToBase32(), out Arg.Any<Delta>())
+                _deltaCache.TryGetOrAddConfirmedDelta(delta.Key, out Arg.Any<Delta>())
                    .Returns(ci =>
                     {
                         ci[1] = delta.Value;
@@ -102,7 +102,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
             var hashes = chain.Keys.ToArray();
             var brokenChainIndex = 2;
-            _deltaCache.TryGetOrAddConfirmedDelta(hashes[brokenChainIndex].ToBase32(), out Arg.Any<Delta>())
+            _deltaCache.TryGetOrAddConfirmedDelta(hashes[brokenChainIndex], out Arg.Any<Delta>())
                .Returns(false);
             _output.WriteLine($"chain is broken for {hashes[brokenChainIndex]}, it cannot be found on Dfs.");
 
@@ -114,7 +114,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             cachedHashes.Count.Should().Be(chainSize - brokenChainIndex);
             hashes.TakeLast(chainSize - brokenChainIndex + 1).ToList().ForEach(h =>
             {
-                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h.ToBase32(),
+                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h,
                     out Arg.Any<Delta>(), _cancellationToken);
             });
         }
@@ -148,7 +148,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
             hashes.TakeLast(expectedResultLength - 1).Reverse().ToList().ForEach(h =>
             {
-                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h.ToBase32(),
+                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h,
                     out Arg.Any<Delta>(), _cancellationToken);
             });
         }

@@ -22,12 +22,12 @@
 #endregion
 
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Config;
 using Dawn;
 using Ipfs;
@@ -48,19 +48,18 @@ namespace Catalyst.Core.Modules.Dfs
     /// <inheritdoc cref="IDfs" />
     public class DevDfs : IDfs
     {
+        private readonly IHashProvider _hashProvider;
         private readonly DirectoryInfo _baseFolder;
         private readonly IFileSystem _fileSystem;
-        private readonly HashingAlgorithm _hashingAlgorithm;
 
         public DevDfs(IFileSystem fileSystem,
-            HashingAlgorithm hashingAlgorithm = null,
+            IHashProvider _hashProvider,
             string baseFolder = null)
         {
-            var hashingAlgo = hashingAlgorithm ?? HashingAlgorithm.All.First(x => x.Name == "blake2b-256");
-            Guard.Argument(hashingAlgo, nameof(hashingAlgo))
+            Guard.Argument(_hashProvider.HashingAlgorithm, nameof(_hashProvider.HashingAlgorithm))
                .Require(h => h.DigestSize <= 159, h =>
                     "The hashing algorithm needs to produce file names smaller than 255 base 32 characters or 160 bytes" +
-                    $"but the default length for {hashingAlgo.GetType().Name} is {h.DigestSize}.");
+                    $"but the default length for {_hashProvider.HashingAlgorithm.GetType().Name} is {h.DigestSize}.");
 
             var dfsBaseFolder = baseFolder ?? Path.Combine(fileSystem.GetCatalystDataDir().FullName,
                 Constants.DfsDataSubDir);
@@ -71,7 +70,6 @@ namespace Catalyst.Core.Modules.Dfs
                 _baseFolder.Create();
             }
 
-            _hashingAlgorithm = hashingAlgo;
             _fileSystem = fileSystem;
         }
 
@@ -79,8 +77,8 @@ namespace Catalyst.Core.Modules.Dfs
         public async Task<MultiHash> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {
             var bytes = Encoding.UTF8.GetBytes(utf8Content);
-            var contentHash = MultiHash.ComputeHash(bytes, _hashingAlgorithm.Name).ToBase32();
-            var filePath = Path.Combine(_baseFolder.FullName, contentHash);
+            var contentHash = _hashProvider.ComputeMultiHash(bytes);
+            var filePath = Path.Combine(_baseFolder.FullName, contentHash.ToBase32());
 
             await _fileSystem.File.WriteAllTextAsync(
                 filePath,
@@ -92,7 +90,8 @@ namespace Catalyst.Core.Modules.Dfs
         /// <inheritdoc />
         public async Task<string> ReadTextAsync(MultiHash hash, CancellationToken cancellationToken = default)
         {
-            return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, hash.ToBase32()), Encoding.UTF8,
+            return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, hash.ToBase32()),
+                Encoding.UTF8,
                 cancellationToken);
         }
 
@@ -101,8 +100,8 @@ namespace Catalyst.Core.Modules.Dfs
             string name = "",
             CancellationToken cancellationToken = default)
         {
-            var contentHash = MultiHash.ComputeHash(content, _hashingAlgorithm.Name).ToBase32();
-            var filePath = Path.Combine(_baseFolder.FullName, contentHash);
+            var contentHash = _hashProvider.ComputeMultiHash(content);
+            var filePath = Path.Combine(_baseFolder.FullName, contentHash.ToBase32());
 
             using (var file = _fileSystem.File.Create(filePath))
             {

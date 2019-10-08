@@ -30,6 +30,7 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Ipfs;
 using Ipfs.Registry;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -139,7 +140,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _logger.Received(1).Debug(Arg.Any<string>(), Arg.Any<object>());
         }
 
-        private void ExpectDeltaFromDfsAndNotFromCache(string hash, Delta deltaFromDfs)
+        private void ExpectDeltaFromDfsAndNotFromCache(MultiHash hash, Delta deltaFromDfs)
         {
             _memoryCache.TryGetValue(Arg.Is(hash), out Arg.Any<Delta>())
                .Returns(false);

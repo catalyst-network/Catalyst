@@ -146,7 +146,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                 });
 
             _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(default)
-               .ReturnsForAnyArgs(_hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(1000)).ToBase32());
+               .ReturnsForAnyArgs(_hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(1000)));
 
             _cycleEventProvider.MovePastNextPhase(PhaseName.Voting);
             _cycleEventProvider.Scheduler.Stop();

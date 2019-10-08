@@ -23,7 +23,7 @@
 
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
-using SimpleBase;
+using Ipfs;
 
 namespace Catalyst.Core.Lib.Util
 {
@@ -32,12 +32,12 @@ namespace Catalyst.Core.Lib.Util
     {
         public static string KeyToString(this byte[] keyAsBytes)
         {
-            return Base32.Crockford.Encode(keyAsBytes, false).ToLowerInvariant();
+            return Base32.ToBase32(keyAsBytes).ToLowerInvariant();
         }
 
         public static byte[] KeyToBytes(this string keyAsString)
         {
-            return Base32.Crockford.Decode(keyAsString);
+            return keyAsString.FromBase32();
         }
 
         public static ByteString KeyToByteString(this string keyAsString)

@@ -66,8 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 
         public CycleEventsProviderTests(ITestOutputHelper output)
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _output = output;
             _testScheduler = new TestScheduler();
@@ -79,7 +78,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             _logger = Substitute.For<ILogger>();
 
             _deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
-               .Returns(_hashProvider.Cast(ByteUtil.GenerateRandomByteArray(32)));
+               .Returns(_hashProvider.ComputeUtf8MultiHash("test"));
 
             _dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
             _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider,

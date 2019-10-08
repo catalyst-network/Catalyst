@@ -24,16 +24,19 @@
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Ipfs.Registry;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -45,15 +48,18 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
     {
         public KeySignerIntegrationTests(ITestOutputHelper output) : base(output)
         {
-            //var addressHelper = new AddressHelper(NetworkType.Devnet);
-
             var logger = Substitute.For<ILogger>();
 
             var passwordManager = Substitute.For<IPasswordManager>(); 
 
             var cryptoContext = new FfiWrapper();
-            
-            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, logger);
+
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
+
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+
+            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, hashProvider, peerSettings, logger);
 
             var keyRegistry = new KeyRegistry();
 
