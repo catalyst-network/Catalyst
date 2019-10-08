@@ -1,32 +1,45 @@
 # <p style="text-align: center;"> Catalyst Network </p>
 
-|Windows Build   |OSX Build   |Linux Build   | Code Quality | Slack Chat | Contributors
-|:-:	|:-:	|:-:	|:-:	|:-: |:-: |
-|[![Build Status](https://dev.azure.com/AtlasCityIO/catalyst-network/_apis/build/status/catalyst-network-windows-build-develop?branchName=develop)](https://dev.azure.com/AtlasCityIO/catalyst-network/_build/latest?definitionId=3&branchName=develop)   	|[![Build Status](https://dev.azure.com/AtlasCityIO/catalyst-network/_apis/build/status/catalyst-network-osx-build-develop?branchName=develop)](https://dev.azure.com/AtlasCityIO/catalyst-network/_build/latest?definitionId=2&branchName=develop)   	|[![Build Status](https://dev.azure.com/AtlasCityIO/catalyst-network/_apis/build/status/catalyst-network-linux-build-develop?branchName=develop)](https://dev.azure.com/AtlasCityIO/catalyst-network/_build/latest?definitionId=1&branchName=develop)   	|[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0940fa58afc24dbf96ad566f1fdc1390)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=catalyst-network/Catalyst.Node&amp;utm_campaign=Badge_Grade)	| [<img src="https://img.shields.io/badge/slack-@catalystnet-purple.svg?logo=slack">](https://join.slack.com/t/catalystnet/shared_invite/enQtNjA5MzM5NDk3MzgyLTQyYTZmMDlhMjc3ODRkODRhNTU2Njk0M2FlOGRhNjRhNzkyZGExYjUyODBkODQ1ODBkYjA2YzUwZDdjMTZiYzY) | [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors) |
+> Fast, scalable PBFT distributed ledger
+
+|Windows Build   |OSX Build   |Linux Build   | Code Quality | Slack Chat | Contributors | Discord
+|:-:	|:-:	|:-:	|:-:	|:-: |:-: |:-: |
+|[![Build Status](https://dev.azure.com/AtlasCityIO/catalyst-network/_apis/build/status/catalyst-network-windows-build-develop?branchName=develop)](https://dev.azure.com/AtlasCityIO/catalyst-network/_build/latest?definitionId=3&branchName=develop)   	|[![Build Status](https://dev.azure.com/AtlasCityIO/catalyst-network/_apis/build/status/catalyst-network-osx-build-develop?branchName=develop)](https://dev.azure.com/AtlasCityIO/catalyst-network/_build/latest?definitionId=2&branchName=develop)   	|[![Build Status](https://dev.azure.com/AtlasCityIO/catalyst-network/_apis/build/status/catalyst-network-linux-build-develop?branchName=develop)](https://dev.azure.com/AtlasCityIO/catalyst-network/_build/latest?definitionId=1&branchName=develop)   	|[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0940fa58afc24dbf96ad566f1fdc1390)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=catalyst-network/Catalyst.Node&amp;utm_campaign=Badge_Grade)	| [<img src="https://img.shields.io/badge/slack-@catalystnet-purple.svg?logo=slack">](https://join.slack.com/t/catalystnet/shared_invite/enQtNjA5MzM5NDk3MzgyLTQyYTZmMDlhMjc3ODRkODRhNTU2Njk0M2FlOGRhNjRhNzkyZGExYjUyODBkODQ1ODBkYjA2YzUwZDdjMTZiYzY) | [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors) | [![Discord](https://img.shields.io/discord/629667101774446593?color=blueviolet&label=discord)](https://discord.gg/anTP7xm)
 
 <hr/>
 
-## What is the Catalyst Network ?
+Join us on our [Discord](https://discord.gg/anTP7xm)) for any questions and discussions.
+
+**Table of Contents**
+
+- [Background](#background)
+  - [What is the Catalyst Network?](#what-is-the-catalyst-network)
+  - [What is Catalyst.Node?](#what-is-catalystnode)
+  - [Features](#features)
+  - [Documentation](#documentation)
+- [Install](#install)
+  - [Install the Rust Toolchain](#install-the-rust-toolchain)
+    - [Install Rust via the Rustup tool:](#install-rust-via-the-rustup-tool)
+- [Contributors](#contributors)
+- [Contributing](#contributing)
+- [License](#license)
+
+
+## Background
+
+### What is the Catalyst Network?
 
 Catalyst Network is the distributed operating system that enterprise and developers can get straight on. No language barriers.  No architecture constraints. Scalable, fast and lean. The first DLT that is fit for purpose.
 
 The decentralised protocol is designed from engineering first principles and built by an experienced team of software developers and financial service experts. With an enterprise focus it allows industries to leverage decentralisation into their operations.
 
-## What is Catalyst.Node ?
+### What is Catalyst.Node?
 
 Catalyst.Node is the .Net implementation of the Catalyst Network. The spcification of our protocol is outlined in our technical while paper a more indepth implementation orientated document can be found in the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/)
 
 Catalyst.Node is developed on dotnet core 2.2 therefore supports Linux, macOS and Windows operating systems.
 
-## Questions & Discussions
-
-Join us on our [Slack Channel](https://catalystnet.slack.com/messages/CGNJ845QV) for any questions and discussions.
-
-## Documentation
-
-Is coming (don't you hate it when they say that). For now you can read through the project [wiki](https://github.com/catalyst-network/Catalyst.Node/wiki) or the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/)
-
-## Features
+### Features
 
 - Protobuffs wire format ([see why](https://github.com/catalyst-network/protocol-protobuffs#why-protobuffs))
 - RPC core protocol methods
@@ -35,36 +48,42 @@ Is coming (don't you hate it when they say that). For now you can read through t
 - Fast new and novel consensus Probabalistic BFT
 - Flexible modula design
 
-## Install Rust Toolchain
+### Documentation
 
-Catalyst.Core uses our native [Rust BulletProof library](https://github.com/catalyst-network/Cryptography.FFI.Rust)
+Our current docs can be found on our [wiki](https://github.com/catalyst-network/Catalyst.Node/wiki) or the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/). If you're interested in helping us write more, please open an issue or a PR.
 
-To build the solution will require installing Rust, msbuild prebuild tasks will then compile the Bulletproof library when you try to build the project.
+## Install
+
+To get started very quickly, you can do this:
+
+```sh
+# Clone the repo and the submodules
+git clone git@github.com:catalyst-network/Catalyst.Node.git 
+cd Catalyst.Node
+git submodule update --init --force --recursive
+cd src
+
+# Then run the build
+dotnet restore
+dotnet build
+```
+
+More details on how to get going can be found in the [Quick Start Guide](https://github.com/catalyst-network/Catalyst.Node/wiki/Quick-Start-Guide).
+
+### Install the Rust Toolchain
+
+Catalyst.Core uses our native [Rust BulletProof library](https://github.com/catalyst-network/Cryptography.FFI.Rust).
+
+To build the solution will require installing [Rust](https://www.rust-lang.org/). `msbuild prebuild tasks` will then compile the Bulletproof library when you try to build the project.
 
 
-#####Install Rust via the Rustup tool:
+#### Install Rust via the Rustup tool:
 
 ```curl https://sh.rustup.rs -sSf | sh```
 
 If ```rustc --version``` fails, restart your console to ensure changes to ```PATH``` have taken effect.
 
-Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-network/Cryptography.FFI.Rust) for docs and issue
-
-## Real Quick Start Guide
-
-`git clone git@github.com:catalyst-network/Catalyst.Node.git `
-
-`cd Catalyst.Node`
-
-`git submodule update --init --force --recursive`
-
-`cd src`
-
-`dotnet restore`
-
-`dotnet build`
-
-If that was really too quick try reading the [Quick Start Guide](https://github.com/catalyst-network/Catalyst.Node/wiki/Quick-Start-Guide)
+Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-network/Cryptography.FFI.Rust) for docs. If you have issues with this part of the installation, please raise them there.
 
 ## Contributors
 
@@ -85,3 +104,17 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 </table>
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+## Contributing
+
+Now that you've seen all of the contributors, why not contribute? We're always keen on getting more contributions and growing our community! Open a PR! Log an issue! :D
+
+**Take a look at our organization-wide [Contributing Guide](https://github.com/catalyst-network/Community/blob/master/CONTRIBUTING.md).** You'll find most of your questions answered there.
+
+As far as code goes, we would be happy to accept PRs! If you want to work on something, it'd be good to talk beforehand to make sure nobody else is working on it. You can reach us [on Discord](https://discord.gg/anTP7xm), or in the [issues section](https://github.com/catalyst-network/Catalyst.Node/issues).
+
+Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md), and that all activity in the [@catalyst-network](https://github.com/catalyst-network) organization falls under it. Read it when you get the chance, as being part of this community means that you agree to abide by it. Thanks.
+
+## License
+
+[GPL](LICENSE) © 2019 Catalyst Network
