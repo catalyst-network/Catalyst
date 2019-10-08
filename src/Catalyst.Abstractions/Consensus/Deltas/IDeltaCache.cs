@@ -29,28 +29,28 @@ using Ipfs;
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
     /// <summary>
-    /// This service should be used to retrieve and cache Delta from the Dfs
+    ///     This service should be used to retrieve and cache Delta from the Dfs
     /// </summary>
     public interface IDeltaCache
     {
         /// <summary>
-        /// Attempts to retrieve a delta which has already been confirmed by other producers
-        /// from the local cache first, then, if the delta was not found there,
-        /// the retrieval is done from the Dfs and the delta is added to the local cache for
-        /// later use.
+        ///     Attempts to retrieve a delta which has already been confirmed by other producers
+        ///     from the local cache first, then, if the delta was not found there,
+        ///     the retrieval is done from the Dfs and the delta is added to the local cache for
+        ///     later use.
         /// </summary>
         /// <param name="hash">The hash or address of the delta on the Dfs.</param>
         /// <param name="delta">The delta retrieved on the Dfs.</param>
         /// <param name="cancellationToken">A token allowing to cancel the task before it ends.</param>
         /// <returns><c>true</c> if the retrieval was successful, <c>false</c> otherwise.</returns>
         bool TryGetOrAddConfirmedDelta(MultiHash hash,
-            out Delta delta, 
+            out Delta delta,
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Attempts to retrieve a local delta which was locally produced and stored in
-        /// cache in case it was elected in a later phase of the cycle. If the delta is not found
-        /// it is because the confirmed delta was not locally produced.
+        ///     Attempts to retrieve a local delta which was locally produced and stored in
+        ///     cache in case it was elected in a later phase of the cycle. If the delta is not found
+        ///     it is because the confirmed delta was not locally produced.
         /// </summary>
         /// <param name="candidate">The candidate for which we want too retrieve the full content.</param>
         /// <param name="delta">The full delta content retrieved expected to be found on cache.</param>
@@ -58,17 +58,19 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         bool TryGetLocalDelta(CandidateDeltaBroadcast candidate, out Delta delta);
 
         /// <summary>
-        /// Stores a locally produced delta, with Hash of the corresponding candidate as a key.
-        /// This allows for later retrieval of the full content of the delta if the candidate gets
-        /// confirmed.
+        ///     Stores a locally produced delta, with Hash of the corresponding candidate as a key.
+        ///     This allows for later retrieval of the full content of the delta if the candidate gets
+        ///     confirmed.
         /// </summary>
-        /// <param name="localCandidate">The candidate produced locally (<see cref="IDeltaBuilder.BuildCandidateDelta(byte[])"/>>)</param>
+        /// <param name="localCandidate">The candidate produced locally (<see cref="IDeltaBuilder.BuildCandidateDelta(byte[])" />>)</param>
         /// <param name="delta">The full content of the produced delta.</param>
         void AddLocalDelta(CandidateDeltaBroadcast localCandidate, Delta delta);
 
         /// <summary>
-        /// Dfs address of the content for the very first delta.
+        ///     Dfs address of the content for the very first delta.
         /// </summary>
-        MultiHash GenesisAddress { get; }
+        MultiHash GenesisHash { get; set; }
+
+        string GenesisAddress { get; }
     }
 }

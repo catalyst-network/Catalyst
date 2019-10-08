@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32();
 
         public static string GetCandidateListCacheKey(MultiHash previousDeltaHash) => 
-            nameof(DeltaVoter) + "-" + previousDeltaHash;
+            nameof(DeltaVoter) + "-" + previousDeltaHash.ToBase32();
 
         /// <summary>
         /// This cache is used to maintain the candidates with their scores, and for each previous delta hash we found,

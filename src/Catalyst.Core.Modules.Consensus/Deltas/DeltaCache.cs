@@ -45,7 +45,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
         public MultiHash GenesisHash { get; set; }
-        public MultiHash GenesisAddress { get; }
+        public string GenesisAddress { get; }
 
         public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate)
         {
@@ -57,20 +57,22 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IDeltaDfsReader dfsReader,
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
-        {
-            GenesisHash = _hashProvider.Cast(new Delta().ToByteArray());
-            GenesisAddress = GenesisHash.ToBase32();
+        {  
+            _hashProvider = hashProvider;
 
             var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
-            _hashProvider = hashProvider;
-            _memoryCache = memoryCache;
-            _memoryCache.Set(GenesisAddress, genesisDelta);
+
+            GenesisHash = _hashProvider.ComputeMultiHash(new Delta().ToByteArray());
+            GenesisAddress = GenesisHash.ToBase32();
 
             _dfsReader = dfsReader;
             _logger = logger;
             _entryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(changeTokenProvider.GetChangeToken())
                .RegisterPostEvictionCallback(EvictionCallback);
+
+            _memoryCache = memoryCache;
+            _memoryCache.Set(GenesisAddress, genesisDelta);
         }
 
         private void EvictionCallback(object key, object value, EvictionReason reason, object state)

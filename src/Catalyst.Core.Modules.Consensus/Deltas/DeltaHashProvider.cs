@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             };
 
             _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
-                _deltaCache.GenesisAddress);
+                _deltaCache.GenesisHash);
         }
 
         /// <inheritdoc />

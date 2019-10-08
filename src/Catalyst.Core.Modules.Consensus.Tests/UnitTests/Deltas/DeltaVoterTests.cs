@@ -96,8 +96,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaVoterTests()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _cache = Substitute.For<IMemoryCache>();
 
@@ -152,7 +151,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 _previousDeltaHash,
                 producerId: _producerIds.First());
 
-            var candidateHashAsString = _hashProvider.ComputeMultiHash(candidate.Hash).ToBase32();
+            var candidateHashAsString = _hashProvider.Cast(candidate.Hash.ToByteArray()).ToBase32();
 
             var addedEntry = Substitute.For<ICacheEntry>();
             _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)))
@@ -183,7 +182,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 previousDeltaHash: _previousDeltaHash,
                 score: initialScore);
 
-            var candidateHashAsString = _hashProvider.ComputeMultiHash(cacheCandidate.Candidate.Hash).ToBase32();
+            var candidateHashAsString = _hashProvider.Cast(cacheCandidate.Candidate.Hash.ToByteArray()).ToBase32();
 
             _cache.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(ci =>
             {

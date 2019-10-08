@@ -107,7 +107,6 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
 
             var peersAndNodeItselfCount = _peers.Count + 1;
-            //_hashAlgorithm.ReceivedWithAnyArgs(peersAndNodeItselfCount).ComputeHash(null);
 
             _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)),
                 out Arg.Any<object>());

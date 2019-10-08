@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
             _hashProvider = new HashProvider(hashingAlgorithm);
 
-            _deltaCache.GenesisAddress.Returns(_hashProvider.ComputeMultiHash(new Delta().ToByteArray()));
+            _deltaCache.GenesisAddress.Returns(_hashProvider.ComputeMultiHash(new Delta().ToByteArray()).ToBase32());
         }
 
         [Fact]
@@ -127,28 +127,28 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             BuildDeltasAndSetCacheExpectations(deltaCount);
 
             const int cacheCapacity = 3;
-            var hashProvider = new DeltaHashProvider(_deltaCache, _hashProvider, _logger, cacheCapacity);
+            var deltaHashProvider = new DeltaHashProvider(_deltaCache, _hashProvider, _logger, cacheCapacity);
 
             Enumerable.Range(1, deltaCount - 1).ToList().ForEach(i =>
             {
-                var updated = hashProvider.TryUpdateLatestHash(GetHash(i - 1), GetHash(i));
+                var updated = deltaHashProvider.TryUpdateLatestHash(GetHash(i - 1), GetHash(i));
                 updated.Should().BeTrue();
             });
 
-            hashProvider.GetLatestDeltaHash().Should().Be(GetHash(deltaCount - 1));
+            deltaHashProvider.GetLatestDeltaHash().Should().Be(GetHash(deltaCount - 1));
 
             var evictedCount = deltaCount - cacheCapacity;
             var nonEvictedRange = Enumerable.Range(evictedCount, deltaCount - evictedCount);
             nonEvictedRange.ToList().ForEach(i =>
             {
-                hashProvider.GetLatestDeltaHash(GetDateTimeForIndex(i))
+                deltaHashProvider.GetLatestDeltaHash(GetDateTimeForIndex(i))
                    .Should().Be(GetHash(i));
             });
 
             var evictedRange = Enumerable.Range(0, evictedCount);
             evictedRange.ToList().ForEach(i =>
             {
-                hashProvider.GetLatestDeltaHash(GetDateTimeForIndex(i))
+                deltaHashProvider.GetLatestDeltaHash(GetDateTimeForIndex(i))
                    .Should().Be(default);
             });
         }

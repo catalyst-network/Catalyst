@@ -124,8 +124,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        [InlineData("Fr2a300k06032b657793", "92.207.178.198", 1574)]
-        [InlineData("pp2a300k55032b657791", "198.51.100.3", 2524)]
+        [InlineData("ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa", "92.207.178.198", 1574)]
+        [InlineData("fzqm5kpzpo7bvl5e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusd", "198.51.100.3", 2524)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey,
             string ip,
             int port)

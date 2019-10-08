@@ -60,16 +60,14 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         {
             _testScheduler = new TestScheduler();
             _fakeRepository = Substitute.For<IAccountRepository>();
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _logger = Substitute.For<ILogger>();
             _mempool = Substitute.For<IMempool<MempoolDocument>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
-            _genesisHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("genesis"));
-            _ledgerSynchroniser.DeltaCache.GenesisAddress
-               .Returns(_genesisHash);
+            _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
+            _ledgerSynchroniser.DeltaCache.GenesisAddress.Returns(_genesisHash.ToBase32());
         }
 
         [Fact]
@@ -89,8 +87,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         [Fact]
         public void Should_Reconcile_On_New_Delta_Hash()
         {
-            var hash1 = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("update"));
-            var hash2 = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("update again"));
+            var hash1 = _hashProvider.ComputeUtf8MultiHash("update");
+            var hash2 = _hashProvider.ComputeUtf8MultiHash("update again");
             var updates = new[] {hash1, hash2};
 
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)

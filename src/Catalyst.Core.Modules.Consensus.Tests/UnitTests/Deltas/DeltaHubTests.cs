@@ -120,7 +120,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public async Task PublishDeltaToIpfsAsync_should_return_ipfs_address()
         {
             var delta = DeltaHelper.GetDelta(_hashProvider);
-            var dfsHash = "lskdjaslkjfweoho";
+            var dfsHash = _hashProvider.ComputeUtf8MultiHash("lskdjaslkjfweoho");
             var cancellationToken = new CancellationToken();
 
             _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken).Returns(dfsHash);
@@ -134,9 +134,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public async Task PublishDeltaToIpfsAsync_should_retry_then_return_ipfs_address()
         {
             var delta = DeltaHelper.GetDelta(_hashProvider);
-            var dfsHash = "success";
+            var dfsHash = _hashProvider.ComputeUtf8MultiHash("success");
 
-            var dfsResults = new SubstituteResults<string>(() => throw new Exception("this one failed"))
+            var dfsResults = new SubstituteResults<MultiHash>(() => throw new Exception("this one failed"))
                .Then(() => throw new Exception("this one failed too"))
                .Then(dfsHash);
 
