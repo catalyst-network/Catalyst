@@ -41,7 +41,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Ledger
 {
     /// <summary>
-    ///  This class represents a ledger and is a collection of accounts and data store.
+    ///     This class represents a ledger and is a collection of accounts and data store.
     /// </summary>
     /// <inheritdoc cref="ILedger" />
     /// <inheritdoc cref="IDisposable" />
@@ -57,11 +57,14 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly object _synchronisationLock = new object();
         private readonly ICryptoContext _cryptoContext;
 
+        public MultiHash LatestKnownDelta { get; private set; }
+        public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
+
         public Ledger(IHashProvider hashProvider,
-            IAccountRepository accounts, 
+            IAccountRepository accounts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
-            IMempool<MempoolDocument> mempool, 
+            IMempool<MempoolDocument> mempool,
             ILogger logger)
         {
             Accounts = accounts;
@@ -71,7 +74,7 @@ namespace Catalyst.Core.Modules.Ledger
             _logger = logger;
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
-            LatestKnownDelta = _synchroniser.DeltaCache.GenesisAddress;
+            LatestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
             _cryptoContext = new FfiWrapper();
         }
 
@@ -113,7 +116,8 @@ namespace Catalyst.Core.Modules.Ledger
                     if (!Equals(chainedDeltaHashes.First(), LatestKnownDelta))
                     {
                         _logger.Warning(
-                            "Failed to walk back the delta chain to {LatestKnownDelta}, giving up ledger update.", LatestKnownDelta);
+                            "Failed to walk back the delta chain to {LatestKnownDelta}, giving up ledger update.",
+                            LatestKnownDelta);
                         return;
                     }
 
@@ -128,7 +132,8 @@ namespace Catalyst.Core.Modules.Ledger
             }
             catch (Exception exception)
             {
-                _logger.Error(exception, "Failed to update the ledger using the delta with hash {deltaHash}", deltaHash);
+                _logger.Error(exception, "Failed to update the ledger using the delta with hash {deltaHash}",
+                    deltaHash);
             }
         }
 
@@ -159,10 +164,6 @@ namespace Catalyst.Core.Modules.Ledger
             //todo: a different logic for to and from entries
             account.Balance += entry.Amount.ToUInt256();
         }
-
-        public MultiHash LatestKnownDelta { get; private set; }
-
-        public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
         protected virtual void Dispose(bool disposing)
         {

@@ -45,6 +45,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
     public class PoaDeltaProducersProviderTests
     {
+        private readonly Peer _selfAsPeer;
         private readonly List<Peer> _peers;
         private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
         private readonly MultiHash _previousDeltaHash;
@@ -56,14 +57,15 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         {
             var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
             _hashProvider = new HashProvider(hashingAlgorithm);
+
+            var peerSettings = PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings();
+            _selfAsPeer = new Peer {PeerId = peerSettings.PeerId};
             var rand = new Random();
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>
                 {
                     var peerIdentifier = PeerIdHelper.GetPeerId(rand.Next().ToString());
-
                     var peer = new Peer {PeerId = peerIdentifier};
-
                     return peer;
                 }).ToList();
 
@@ -78,7 +80,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             _producersByPreviousDelta = Substitute.For<IMemoryCache>();
 
             _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository,
-                PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings(),
+                peerSettings,
                 _producersByPreviousDelta,
                 _hashProvider,
                 logger);
@@ -89,11 +91,13 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         {
             _producersByPreviousDelta.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(false);
 
-            var expectedProducers = _peers.Select(p =>
+            var peers = _peers.Concat(new[] {_selfAsPeer});
+
+            var expectedProducers = peers.Select(p =>
                 {
                     var bytesToHash = p.PeerId.ToByteArray()
                        .Concat(_previousDeltaHash.ToArray()).ToArray();
-                    var ranking = bytesToHash;
+                    var ranking = _hashProvider.ComputeMultiHash(bytesToHash).ToArray();
                     return new
                     {
                         PeerIdentifier = p.PeerId,
@@ -106,15 +110,11 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
 
-            var peersAndNodeItselfCount = _peers.Count + 1;
-
             _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)),
                 out Arg.Any<object>());
             _producersByPreviousDelta.Received(1)
                .CreateEntry(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)));
 
-            producers.Count.Should()
-               .Be(expectedProducers.Count + 1, "producers are all the peers, and the node itself.");
             producers.Should().OnlyHaveUniqueItems();
 
             for (var i = 0; i < expectedProducers.Count; i++)

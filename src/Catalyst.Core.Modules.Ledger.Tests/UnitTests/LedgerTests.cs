@@ -67,6 +67,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
+            _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
             _ledgerSynchroniser.DeltaCache.GenesisAddress.Returns(_genesisHash.ToBase32());
         }
 
