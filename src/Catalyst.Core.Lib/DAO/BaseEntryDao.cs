@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
+            cfg.CreateMap<BaseEntryDao, BaseEntryDao>().ReverseMap();
 
             cfg.CreateMap<BaseEntry, BaseEntryDao>()
                .ForMember(d => d.ReceiverPublicKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
