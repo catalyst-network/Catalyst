@@ -296,11 +296,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var pubKeyBytes = new byte[30];
             var pedersenCommitBytes = new byte[50];
-            var rangeProof = new byte[50];
+            var rangeProofBytes = new byte[50];
 
             var rnd = new Random();
             rnd.NextBytes(pubKeyBytes);
             rnd.NextBytes(pedersenCommitBytes);
+            rnd.NextBytes(rangeProofBytes);
 
             var original = new ConfidentialEntry
             {
@@ -311,7 +312,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                     TransactionFees = UInt256.Zero.ToUint256ByteString()
                 },
                 PedersenCommitment = pedersenCommitBytes.ToByteString(),
-                RangeProof = rangeProof.ToByteString()
+                RangeProof = rangeProofBytes.ToByteString()
             };
 
             var transactionEntryDao = cfTransactionEntryDao.ToDao(original);
@@ -319,6 +320,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
             transactionEntryDao.Base.Nonce.Should().Be(ulong.MaxValue);
             transactionEntryDao.PedersenCommitment.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
+            transactionEntryDao.RangeProof.Should().Be(rangeProofBytes.ToByteString().ToBase64());
 
             var reconverted = transactionEntryDao.ToProtoBuff();
             reconverted.Should().Be(original);
