@@ -249,9 +249,6 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             signature.PublicKeyBytes.Should().Equal(publicKey.Bytes);
         }
 
-        [Fact]
-        public void Lets_See_If_This_Test_Fails_Then_Shall_We() { false.Should().BeTrue(); }
-
         private static byte[] GenerateRandomByteArray(int length)
         {
             var buf = new byte[length];
