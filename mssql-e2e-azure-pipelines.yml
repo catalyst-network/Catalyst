@@ -13,6 +13,11 @@ strategy:
       netcore_sdk: 3.0.100
       rustup_toolchain: stable
 
+variables:
+  release.type: '-beta'
+  BuildPlatform: 'any cpu'
+  BuildConfiguration: 'Debug'
+
 pool:
   vmImage: $(imageName)
 
