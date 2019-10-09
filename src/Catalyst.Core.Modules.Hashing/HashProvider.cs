@@ -40,7 +40,20 @@ namespace Catalyst.Core.Modules.Hashing
 
         public MultiHash Cast(byte[] data) { return CastIfHashIsValid(data); }
 
-        public bool IsValidHash(byte[] data) { return CastIfHashIsValid(data) != null; }
+        public bool IsValidHash(byte[] data)
+        {
+            try
+            {
+                CastIfHashIsValid(data);
+                return true;
+            }
+            catch (MultiHashNotValidException)
+            {
+                return false;
+            }
+        }
+
+        public void CheckHash(byte[] data) { CastIfHashIsValid(data); }
 
         private MultiHash CastIfHashIsValid(byte[] data)
         {

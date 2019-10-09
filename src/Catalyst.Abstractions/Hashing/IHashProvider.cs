@@ -37,5 +37,6 @@ namespace Catalyst.Abstractions.Hashing
         MultiHash ComputeMultiHash(IEnumerable<byte> content);
         MultiHash Cast(byte[] data);
         bool IsValidHash(byte[] data);
+        void CheckHash(byte[] data);
     }
 }

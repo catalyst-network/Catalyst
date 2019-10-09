@@ -51,8 +51,8 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
-                //_hashProvider.IsValidHash(deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray());
-                //_hashProvider.IsValidHash(deserialised.Candidate.Hash.ToByteArray());
+                _hashProvider.CheckHash(deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray());
+                _hashProvider.CheckHash(deserialised.Candidate.Hash.ToByteArray());
 
                 deserialised.IsValid();
                 

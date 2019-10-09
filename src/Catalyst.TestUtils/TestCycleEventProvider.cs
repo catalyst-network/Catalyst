@@ -63,10 +63,6 @@ namespace Catalyst.TestUtils
                     BitConverter.GetBytes(((DateTime) ci[0]).Ticks /
                         (int) _cycleEventsProvider.Configuration.CycleDuration.Ticks)));
 
-            //deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
-            //   .Returns(ci => Multihash.Sum(HashType.BLAKE2B_256,
-            //        BitConverter.GetBytes(((DateTime) ci[0]).Ticks / (int) _cycleEventsProvider.Configuration.CycleDuration.Ticks)));
-
             _deltaUpdatesSubscription = PhaseChanges.Subscribe(p => CurrentPhase = p);
         }
 

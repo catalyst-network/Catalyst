@@ -22,8 +22,8 @@
 #endregion
 
 using System.Linq;
+using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -43,7 +43,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
     public sealed class CandidateDeltaObserverTests
     {
-        private readonly IHashProvider _hashProvider;
         private readonly IDeltaVoter _deltaVoter;
         private readonly IChannelHandlerContext _fakeChannelContext;
         private readonly MultiHash _newHash;
@@ -53,21 +52,20 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 
         public CandidateDeltaObserverTests()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _deltaVoter = Substitute.For<IDeltaVoter>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
-            _newHash = _hashProvider.ComputeUtf8MultiHash("newHash");
-            _prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash");
+            _newHash = hashProvider.ComputeUtf8MultiHash("newHash");
+            _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash");
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
-            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, _hashProvider, logger);
+            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, hashProvider, logger);
         }
 
         [Fact]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Send_To_Voter()
         {
-            var receivedMessage = PrepareReceivedMessage(_newHash, _prevHash, _producerId);
+            var receivedMessage = PrepareReceivedMessage(_newHash.ToArray(), _prevHash.ToArray(), _producerId);
 
             _candidateDeltaObserver.HandleBroadcast(receivedMessage);
 
@@ -77,36 +75,36 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
              && c.ProducerId.Equals(_producerId)));
         }
 
-        //[Fact]
-        //public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_Hash()
-        //{
-        //    var invalidNewHash = _hashProvider.ComputeUtf8MultiHash("invalid hash");
-        //    var receivedMessage = PrepareReceivedMessage(invalidNewHash, _prevHash, _producerId);
+        [Fact]
+        public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_Hash()
+        {
+            var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
+            var receivedMessage = PrepareReceivedMessage(invalidNewHash, _prevHash.ToArray(), _producerId);
 
-        //    _candidateDeltaObserver.HandleBroadcast(receivedMessage);
+            _candidateDeltaObserver.HandleBroadcast(receivedMessage);
 
-        //    _deltaVoter.DidNotReceiveWithAnyArgs().OnNext(default);
-        //}
+            _deltaVoter.DidNotReceiveWithAnyArgs().OnNext(default);
+        }
 
-        //[Fact]
-        //public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_PreviousHash()
-        //{
-        //    var invalidPreviousHash = _hashProvider.ComputeUtf8MultiHash("invalid previous hash");
-        //    var receivedMessage = PrepareReceivedMessage(_newHash, invalidPreviousHash, _producerId);
+        [Fact]
+        public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_PreviousHash()
+        {
+            var invalidPreviousHash = Encoding.UTF8.GetBytes("invalid previous hash");
+            var receivedMessage = PrepareReceivedMessage(_newHash.ToArray(), invalidPreviousHash, _producerId);
 
-        //    _candidateDeltaObserver.HandleBroadcast(receivedMessage);
+            _candidateDeltaObserver.HandleBroadcast(receivedMessage);
 
-        //    _deltaVoter.DidNotReceiveWithAnyArgs().OnNext(default);
-        //}
+            _deltaVoter.DidNotReceiveWithAnyArgs().OnNext(default);
+        }
 
-        private IObserverDto<ProtocolMessage> PrepareReceivedMessage(MultiHash newHash,
-            MultiHash prevHash,
+        private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash,
+            byte[] prevHash,
             PeerId producerId)
         {
             var message = new CandidateDeltaBroadcast
             {
-                Hash = newHash.ToArray().ToByteString(),
-                PreviousDeltaDfsHash = prevHash.ToArray().ToByteString(),
+                Hash = newHash.ToByteString(),
+                PreviousDeltaDfsHash = prevHash.ToByteString(),
                 ProducerId = producerId
             };
 
