@@ -69,24 +69,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 
-        //[Fact]
-        //public async Task GetDeltaRequestObserver_Should_Not_Hit_The_Cache_On_Invalid_Hash()
-        //{
-        //    var invalidHash = "abcd";
-        //    var invalidHashBytes = Encoding.UTF8.GetBytes(invalidHash);
-        //    var invalidMultiHash = _hashProvider.ComputeMultiHash(invalidHashBytes);
-        //    CreateAndExpectDeltaFromCache(invalidMultiHash);
-
-        //    var observable = CreateStreamWithDeltaRequest(invalidMultiHash);
-
-        //    _observer.StartObserving(observable);
-
-        //    _testScheduler.Start();
-
-        //    _deltaCache.DidNotReceiveWithAnyArgs().TryGetOrAddConfirmedDelta(default, out _);
-        //    await _fakeContext.Channel.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(default);
-        //}
-
         [Fact]
         public async Task GetDeltaRequestObserver_Should_Send_Response_When_Delta_Found_In_Cache()
         {

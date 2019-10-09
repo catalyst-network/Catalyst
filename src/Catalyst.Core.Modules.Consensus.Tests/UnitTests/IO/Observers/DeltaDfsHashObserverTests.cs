@@ -48,40 +48,39 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 
         public DeltaDfsHashObserverTests()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             _logger = Substitute.For<ILogger>();
         }
 
-        //[Fact]
-        //public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Try_Update()
-        //{
-        //    var newHash = Multihash.Sum(HashType.ID, Encoding.UTF8.GetBytes("newHash"));
-        //    var prevHash = Multihash.Sum(HashType.ID, Encoding.UTF8.GetBytes("prevHash"));
-        //    var receivedMessage = PrepareReceivedMessage(newHash, prevHash);
+        [Fact]
+        public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Try_Update()
+        {
+            var newHash = _hashProvider.ComputeUtf8MultiHash("newHash");
+            var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash");
+            var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-        //    var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _hashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _hashProvider, _logger);
 
-        //    deltaDfsHashObserver.HandleBroadcast(receivedMessage);
+            deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
-        //    _deltaHashProvider.Received(1).TryUpdateLatestHash(prevHash, newHash);
-        //}
+            _deltaHashProvider.Received(1).TryUpdateLatestHash(prevHash, newHash);
+        }
 
-        //[Fact]
-        //public void HandleBroadcast_Should_Not_Try_Update_Invalid_Hash()
-        //{
-        //    var invalidNewHash = _hashProvider.ComputeUtf8MultiHash("invalid hash");
-        //    var prevHash = Multihash.Sum(HashType.ID, Encoding.UTF8.GetBytes("prevHash"));
-        //    var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash);
+        [Fact]
+        public void HandleBroadcast_Should_Not_Try_Update_Invalid_Hash()
+        {
+            var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
+            var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash");
+            var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash.ToArray());
 
-        //    var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _hashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _hashProvider, _logger);
 
-        //    deltaDfsHashObserver.HandleBroadcast(receivedMessage);
+            deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
-        //    _deltaHashProvider.DidNotReceiveWithAnyArgs().TryUpdateLatestHash(default, default);
-        //}
+            _deltaHashProvider.DidNotReceiveWithAnyArgs().TryUpdateLatestHash(default, default);
+        }
 
         private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash, byte[] prevHash)
         {

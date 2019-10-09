@@ -23,7 +23,6 @@
 
 using System;
 using System.Reactive.Linq;
-using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
@@ -35,7 +34,6 @@ using Catalyst.TestUtils;
 using Ipfs;
 using Ipfs.Registry;
 using Microsoft.Reactive.Testing;
-using Multiformats.Hash.Algorithms;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using Serilog;
@@ -74,11 +72,11 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         [Fact]
         public void Save_Account_State_To_Ledger_Repository()
         {
-            _ledger = new LedgerService(_hashProvider, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
+            _ledger = new LedgerService(_fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
-                var account = AccountHelper.GetAccount(balance: (UInt256) i * 5);
+                var account = AccountHelper.GetAccount((UInt256) i * 5);
                 _ledger.SaveAccountState(account);
             }
 
@@ -97,7 +95,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 
-            _ledger = new LedgerService(_hashProvider, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
+            _ledger = new LedgerService(_fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
 
             _testScheduler.Start();
 

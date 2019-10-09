@@ -26,7 +26,6 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Documents;
@@ -48,7 +47,6 @@ namespace Catalyst.Core.Modules.Ledger
     public class Ledger : ILedger, IDisposable
     {
         public IAccountRepository Accounts { get; }
-        private readonly IHashProvider _hashProvider;
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<MempoolDocument> _mempool;
         private readonly ILogger _logger;
@@ -60,15 +58,13 @@ namespace Catalyst.Core.Modules.Ledger
         public MultiHash LatestKnownDelta { get; private set; }
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
-        public Ledger(IHashProvider hashProvider,
-            IAccountRepository accounts,
+        public Ledger(IAccountRepository accounts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
             IMempool<MempoolDocument> mempool,
             ILogger logger)
         {
             Accounts = accounts;
-            _hashProvider = hashProvider;
             _synchroniser = synchroniser;
             _mempool = mempool;
             _logger = logger;
