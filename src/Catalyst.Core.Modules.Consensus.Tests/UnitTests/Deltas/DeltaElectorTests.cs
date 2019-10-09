@@ -24,8 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reactive.Linq;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
@@ -38,7 +36,6 @@ using FluentAssertions;
 using Ipfs;
 using Ipfs.Registry;
 using Microsoft.Extensions.Caching.Memory;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -47,12 +44,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public class BadFavouritesData : TheoryData<FavouriteDeltaBroadcast, Type>
     {
-        private readonly IHashProvider _hashProvider;
-
         public BadFavouritesData()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             Add(null, typeof(ArgumentNullException));
             Add(new FavouriteDeltaBroadcast(), typeof(InvalidDataException));
@@ -67,7 +61,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }, typeof(InvalidDataException));
             Add(new FavouriteDeltaBroadcast
             {
-                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider)
+                Candidate = DeltaHelper.GetCandidateDelta(hashProvider)
             }, typeof(InvalidDataException));
         }
     }
@@ -81,8 +75,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaElectorTests()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _logger = Substitute.For<ILogger>();
             _cache = Substitute.For<IMemoryCache>();
             _deltaProducersProvider = Substitute.For<IDeltaProducersProvider>();

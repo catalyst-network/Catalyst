@@ -22,11 +22,9 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
@@ -39,15 +37,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     public sealed class DevDfsTests : FileSystemBasedTest
     {
-        private readonly IHashProvider _hashProvider;
         private readonly IDfs _dfs;
         private readonly CancellationToken _cancellationToken;
 
         public DevDfsTests(ITestOutputHelper output) : base(output)
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(200)).Token;
-            _dfs = new DevDfs(FileSystem, _hashProvider);
+            _dfs = new DevDfs(FileSystem, hashProvider);
         }
 
         [Fact(Skip = "https://github.com/catalyst-network/Catalyst.Node/issues/986")]

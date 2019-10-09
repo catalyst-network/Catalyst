@@ -130,9 +130,7 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<CancellationTokenProvider>().As<ICancellationTokenProvider>();
             builder.RegisterType<TtlChangeTokenProvider>().As<IChangeTokenProvider>()
                .WithParameter("timeToLiveInMs", 8000);
-            
-            //builder.RegisterType<AddressHelper>().As<IAddressHelper>();
-            
+
             // Register Cache
             builder.RegisterType<MemoryCache>().As<IMemoryCache>().SingleInstance();
             builder.RegisterType<MemoryCacheOptions>().As<IOptions<MemoryCacheOptions>>();

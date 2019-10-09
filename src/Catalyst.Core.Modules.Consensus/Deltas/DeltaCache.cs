@@ -39,7 +39,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     /// <inheritdoc cref="IDisposable" />
     public class DeltaCache : IDeltaCache, IDisposable
     {
-        private readonly IHashProvider _hashProvider;
         private readonly IMemoryCache _memoryCache;
         private readonly IDeltaDfsReader _dfsReader;
         private readonly ILogger _logger;
@@ -57,12 +56,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IDeltaDfsReader dfsReader,
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
-        {  
-            _hashProvider = hashProvider;
-
+        {
             var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
 
-            GenesisHash = _hashProvider.ComputeMultiHash(new Delta().ToByteArray());
+            GenesisHash = hashProvider.ComputeMultiHash(new Delta().ToByteArray());
             GenesisAddress = GenesisHash.ToBase32();
 
             _dfsReader = dfsReader;

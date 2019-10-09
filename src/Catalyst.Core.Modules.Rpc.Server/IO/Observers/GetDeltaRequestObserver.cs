@@ -63,7 +63,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 
             var hash = _hashProvider.Cast(getDeltaRequest.DeltaDfsHash.ToByteArray());
-            //var hashAsBase32 = getDeltaRequest.DeltaDfsHash.ToByteArray().ToBase32();
 
             _deltaCache.TryGetOrAddConfirmedDelta(hash, out var delta);
 

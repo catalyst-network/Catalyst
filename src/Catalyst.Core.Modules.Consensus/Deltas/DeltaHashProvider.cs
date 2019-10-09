@@ -27,7 +27,6 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf.WellKnownTypes;
 using Ipfs;
@@ -40,7 +39,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     public class DeltaHashProvider : IDeltaHashProvider
     {
         private readonly IDeltaCache _deltaCache;
-        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
 
         private readonly ReplaySubject<MultiHash> _deltaHashUpdatesSubject;
@@ -49,20 +47,18 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         public IObservable<MultiHash> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
 
-        public DeltaHashProvider(IDeltaCache deltaCache, 
-            IHashProvider hashProvider,
+        public DeltaHashProvider(IDeltaCache deltaCache,
             ILogger logger,
             int capacity = 10_000)
         {
             _deltaCache = deltaCache;
-            _hashProvider = hashProvider;
             _logger = logger;
             _deltaHashUpdatesSubject = new ReplaySubject<MultiHash>(0);
-            var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, @descending: true);
+            var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, descending: true);
             _capacity = capacity;
             _hashesByTimeDescending = new SortedList<Timestamp, MultiHash>(comparer)
             {
-                Capacity = _capacity,
+                Capacity = _capacity
             };
 
             _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
@@ -74,12 +70,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             var newAddress = newHash;
             var previousAddress = previousHash;
-            _logger.Debug("New hash {hash} received for previous hash {previousHash}", 
+            _logger.Debug("New hash {hash} received for previous hash {previousHash}",
                 newAddress, previousAddress);
             var foundNewDelta = _deltaCache.TryGetOrAddConfirmedDelta(newAddress, out var newDelta);
             var foundPreviousDelta = _deltaCache.TryGetOrAddConfirmedDelta(previousAddress, out var previousDelta);
 
-            if (!foundNewDelta 
+            if (!foundNewDelta
              || !foundPreviousDelta
              || newDelta.PreviousDeltaDfsHash != previousHash.ToArray().ToByteString()
              || previousDelta.TimeStamp >= newDelta.TimeStamp)
@@ -100,7 +96,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     _hashesByTimeDescending.RemoveAt(_capacity);
                 }
             }
-            
+
             _deltaHashUpdatesSubject.OnNext(newAddress);
 
             return true;

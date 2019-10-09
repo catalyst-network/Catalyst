@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.Consensus.Deltas;
@@ -41,7 +40,6 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Base32 = SimpleBase.Base32;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -51,17 +49,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly IDeltaCache _deltaCache;
         private readonly GetDeltaRequestObserver _observer;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IContainer _container;
         private readonly IHashProvider _hashProvider;
 
         public GetDeltaRequestObserverTests()
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule<HashingModule>();
-            _container = builder.Build();
-            _container.BeginLifetimeScope();
+            var container = builder.Build();
+            container.BeginLifetimeScope();
 
-            _hashProvider = _container.Resolve<IHashProvider>();
+            _hashProvider = container.Resolve<IHashProvider>();
 
             _testScheduler = new TestScheduler();
             var logger = Substitute.For<ILogger>();

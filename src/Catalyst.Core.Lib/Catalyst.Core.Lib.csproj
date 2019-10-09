@@ -47,6 +47,7 @@
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
     </ItemGroup>
     <ItemGroup>
+      <Folder Include="Extensions\Protocol\Account\" />
       <Folder Include="Registry" />
     </ItemGroup>
 </Project>

@@ -79,7 +79,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             const int deltaCount = 2;
             BuildDeltasAndSetCacheExpectations(deltaCount);
 
-            var hashProvider = new DeltaHashProvider(_deltaCache, _hashProvider, _logger, 3);
+            var hashProvider = new DeltaHashProvider(_deltaCache, _logger, 3);
             var updated = hashProvider.TryUpdateLatestHash(GetHash(0), GetHash(1));
             updated.Should().BeTrue();
 
@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             BuildDeltasAndSetCacheExpectations(deltaCount);
             var observer = Substitute.For<IObserver<MultiHash>>();
 
-            var hashProvider = new DeltaHashProvider(_deltaCache, _hashProvider, _logger, 3);
+            var hashProvider = new DeltaHashProvider(_deltaCache, _logger, 3);
 
             using (hashProvider.DeltaHashUpdates.Subscribe((IObserver<MultiHash>) observer))
             {
@@ -110,7 +110,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             const int deltaCount = 3;
             BuildDeltasAndSetCacheExpectations(deltaCount);
 
-            var hashProvider = new DeltaHashProvider(_deltaCache, _hashProvider, _logger, 4);
+            var hashProvider = new DeltaHashProvider(_deltaCache, _logger, 4);
             var updated = hashProvider.TryUpdateLatestHash(GetHash(0), GetHash(1));
             updated.Should().BeTrue();
             updated = hashProvider.TryUpdateLatestHash(GetHash(1), GetHash(2));
@@ -127,7 +127,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             BuildDeltasAndSetCacheExpectations(deltaCount);
 
             const int cacheCapacity = 3;
-            var deltaHashProvider = new DeltaHashProvider(_deltaCache, _hashProvider, _logger, cacheCapacity);
+            var deltaHashProvider = new DeltaHashProvider(_deltaCache, _logger, cacheCapacity);
 
             Enumerable.Range(1, deltaCount - 1).ToList().ForEach(i =>
             {
