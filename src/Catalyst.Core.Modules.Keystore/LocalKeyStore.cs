@@ -147,8 +147,6 @@ namespace Catalyst.Core.Modules.Keystore
                     NetworkType = _peerSettings.NetworkType
                 };
 
-                //            return address;
-                //_addressHelper.GenerateAddress(privateKey.GetPublicKey(), AccountType.PublicAccount);        
                 var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword,
                     "Please create a password for this node");
 

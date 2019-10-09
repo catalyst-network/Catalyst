@@ -21,30 +21,22 @@
 
 #endregion
 
-using System.Reflection;
-using Serilog;
+using System.Runtime.Serialization;
 
-namespace Catalyst.Protocol.Transaction
+namespace Catalyst.Core.Modules.Hashing.Exception
 {
-    public partial class ConfidentialEntry
+    using System;
+
+    [Serializable]
+    public class MultiHashNotValidException : Exception
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        public MultiHashNotValidException() { }
+        public MultiHashNotValidException(string message) : base(message) { }
 
-        public bool IsValid()
-        {
-            if (!RangeProof.IsEmpty && !PedersenCommitment.IsEmpty) return true;
+        public MultiHashNotValidException(string message, Exception innerException)
+            : base(message, innerException) { }
 
-            if (PedersenCommitment.IsEmpty)
-            {
-                Logger.Debug("{field} cannot be empty", nameof(PedersenCommitment));
-            }
-
-            if (RangeProof.IsEmpty)
-            {
-                Logger.Debug("{field} cannot be empty", nameof(RangeProof));
-            }
-
-            return false;
-        }
+        protected MultiHashNotValidException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 }

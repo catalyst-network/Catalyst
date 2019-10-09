@@ -21,12 +21,12 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Core.Modules.Hashing.Exception;
 using Ipfs;
 using Ipfs.Registry;
 
@@ -38,9 +38,26 @@ namespace Catalyst.Core.Modules.Hashing
 
         public HashProvider(HashingAlgorithm hashingAlgorithm) { HashingAlgorithm = hashingAlgorithm; }
 
-        public MultiHash Cast(byte[] data)
+        public MultiHash Cast(byte[] data) { return CastIfHashIsValid(data); }
+
+        public bool IsValidHash(byte[] data) { return CastIfHashIsValid(data) != null; }
+
+        private MultiHash CastIfHashIsValid(byte[] data)
         {
-            return new MultiHash(data);
+            try
+            {
+                var multiHash = new MultiHash(data);
+                if (multiHash.Algorithm == HashingAlgorithm && multiHash.Digest.Length == HashingAlgorithm.DigestSize)
+                {
+                    return multiHash;
+                }
+
+                throw new MultiHashNotValidException("MultiHash is not valid");
+            }
+            catch (System.Exception exc)
+            {
+                throw new MultiHashNotValidException(exc.Message, exc);
+            }
         }
 
         public MultiHash ComputeUtf8MultiHash(string data) { return ComputeMultiHash(Encoding.UTF8.GetBytes(data)); }
