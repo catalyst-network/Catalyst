@@ -26,8 +26,8 @@ steps:
       version: 3.0.100
   
   - bash: |
-        git submodule update --init --force --recursive
-      displayName: 'Clone submodules'
+      git submodule update --init --force --recursive
+    displayName: 'Clone submodules'
   
   - task: PowerShell@2
     inputs: 
