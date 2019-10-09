@@ -50,8 +50,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _keySigner = Substitute.For<IKeySigner>();
             _signingContext = DevNetPeerSigningContext.Instance;
 
-            var signatureBytes = ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength);
-            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength);
+            var signatureBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
+            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
             var peerId = PeerIdHelper.GetPeerId(publicKeyBytes);
 
             _protocolMessageSigned = new PingRequest()

@@ -31,7 +31,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Types
 
         internal PublicKey(byte[] publicKey)
         {
-            var requiredLength = Ffi.PublicKeyLength;
+            var requiredLength = NativeBinding.PublicKeyLength;
             if (publicKey.Length != requiredLength)
             {
                 Error.ThrowArgumentExceptionPublicKeyLength(requiredLength);

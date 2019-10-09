@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         {
             foreach (var delta in deltasByHash)
             {
-                _deltaCache.TryGetOrAddConfirmedDelta(delta.Key, out Arg.Any<Delta>())
+                _deltaCache.TryGetOrAddConfirmedDelta(delta.Key.AsBase32Address(), out Arg.Any<Delta>())
                    .Returns(ci =>
                     {
                         ci[1] = delta.Value;
@@ -98,7 +98,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
             var hashes = chain.Keys.ToArray();
             var brokenChainIndex = 2;
-            _deltaCache.TryGetOrAddConfirmedDelta(hashes[brokenChainIndex], out Arg.Any<Delta>())
+            _deltaCache.TryGetOrAddConfirmedDelta(hashes[brokenChainIndex].AsBase32Address(), out Arg.Any<Delta>())
                .Returns(false);
             _output.WriteLine($"chain is broken for {hashes[brokenChainIndex]}, it cannot be found on Dfs.");
 
@@ -110,7 +110,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             cachedHashes.Count.Should().Be(chainSize - brokenChainIndex);
             hashes.TakeLast(chainSize - brokenChainIndex + 1).ToList().ForEach(h =>
             {
-                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h,
+                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h.AsBase32Address(),
                     out Arg.Any<Delta>(), _cancellationToken);
             });
         }
@@ -144,7 +144,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
             hashes.TakeLast(expectedResultLength - 1).Reverse().ToList().ForEach(h =>
             {
-                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h.ToString(),
+                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h.AsBase32Address(),
                     out Arg.Any<Delta>(), _cancellationToken);
             });
         }

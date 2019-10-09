@@ -21,25 +21,25 @@
 
 #endregion
 
-using System.Reflection;
-using Serilog;
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Registry;
+using Catalyst.Abstractions.Types;
 
-namespace Catalyst.Protocol.Transaction
+namespace Catalyst.Core.Lib.Cryptography
 {
-    public partial class RangeProof
+    public sealed class KeyRegistry : RegistryBase<KeyRegistryTypes, IPrivateKey>, IKeyRegistry
     {
-        public static readonly RangeProof None = new RangeProof();
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
-        public bool IsValid()
+        public KeyRegistry()
         {
-            if (!Equals(None))
-            {
-                return true;
-            }
-            
-            Logger.Debug("{instance} cannot have default value", nameof(RangeProof));
-            return false;
+            Registry = new Dictionary<KeyRegistryTypes, IPrivateKey>();
+        }
+        
+        public bool Contains(byte[] publicKeyBytes)
+        {
+            return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
         }
     }
 }

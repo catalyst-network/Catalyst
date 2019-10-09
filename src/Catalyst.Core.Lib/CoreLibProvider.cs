@@ -50,7 +50,6 @@ using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
-using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Lib.Validators;
@@ -117,7 +116,6 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<PasswordRegistry>().As<IPasswordRegistry>().SingleInstance();
             
             // Register Cryptography
-            builder.RegisterType<CryptoContext>().As<ICryptoContext>();
             builder.RegisterType<IsaacRandom>().As<IDeterministicRandom>();
             builder.RegisterType<ConsolePasswordReader>().As<IPasswordReader>().SingleInstance();
             builder.RegisterType<CertificateStore>().As<ICertificateStore>().SingleInstance();

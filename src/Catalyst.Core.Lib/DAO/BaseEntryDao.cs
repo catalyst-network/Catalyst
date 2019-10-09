@@ -32,6 +32,7 @@ namespace Catalyst.Core.Lib.DAO
 {
     public class BaseEntryDao : DaoBase<BaseEntry, BaseEntryDao>
     {
+        public ulong Nonce { get; set; }
         public string ReceiverPublicKey { get; set; }
         public string SenderPublicKey { get; set; }
         public string TransactionFees { get; set; }

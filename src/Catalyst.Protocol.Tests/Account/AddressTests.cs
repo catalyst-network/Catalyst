@@ -49,7 +49,7 @@ namespace Catalyst.Protocol.Tests.Account
                 $"{Convert.ToString(((int) x.NetworkType | (int) x.AccountType), 2).PadLeft(6, '0')} =>  {x.NetworkType}|{x.AccountType}");
             forOutput.ToList().ForEach(o => _output.WriteLine(o));
 
-            var pubKeyBytes = ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength);
+            var pubKeyBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
 
             var addressesFromSamePubkey = addressTypes.Select(t => new Address
             {

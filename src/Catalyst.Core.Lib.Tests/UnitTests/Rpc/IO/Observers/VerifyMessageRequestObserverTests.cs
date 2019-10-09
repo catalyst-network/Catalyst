@@ -33,7 +33,6 @@ using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using System.Linq;
-using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
@@ -64,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
 
             _keySigner = Substitute.For<IKeySigner>();
-            _keySigner.CryptoContext.Returns(new CryptoContext(new CryptoWrapper()));
+            _keySigner.CryptoContext.Returns(new FfiWrapper());
 
             var logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -79,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [Fact]
         public void VerifyMessageRequestObserver_Can_Reject_Invalid_Public_Key_Length()
         {
-            _verifyMessageRequest.PublicKey = ByteString.CopyFrom(new byte[Ffi.PublicKeyLength + 1]);
+            _verifyMessageRequest.PublicKey = ByteString.CopyFrom(new byte[new FfiWrapper().PublicKeyLength + 1]);
 
             AssertVerifyResponse(false);
         }
@@ -87,7 +86,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [Fact]
         public void VerifyMessageRequestObserver_Can_Reject_Invalid_Signature_Length()
         {
-            _verifyMessageRequest.Signature = ByteString.CopyFrom(new byte[Ffi.SignatureLength + 1]);
+            _verifyMessageRequest.Signature = ByteString.CopyFrom(new byte[new FfiWrapper().SignatureLength + 1]);
             AssertVerifyResponse(false);
         }
 

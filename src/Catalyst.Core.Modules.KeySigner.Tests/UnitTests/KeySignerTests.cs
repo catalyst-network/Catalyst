@@ -25,7 +25,8 @@ using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
 using FluentAssertions;
 using NSubstitute;
@@ -35,28 +36,29 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 {
     public sealed class KeySignerTests
     {
+        private readonly IKeyStore _keystore;
+        private readonly IKeyRegistry _keyRegistry;
+        private readonly ISignature _signature;
+        private readonly IPrivateKey _privateKey;
+        private readonly SigningContext _signingContext;
+        private ICryptoContext _cryptoContext;
+
         public KeySignerTests()
         {
             _keystore = Substitute.For<IKeyStore>();
             _keyRegistry = Substitute.For<IKeyRegistry>();
-            _wrapper = Substitute.For<IWrapper>();
             _signature = Substitute.For<ISignature>();
             _privateKey = Substitute.For<IPrivateKey>();
+            _cryptoContext = Substitute.For<ICryptoContext>();
+
+            _cryptoContext.Sign(default, default, default).ReturnsForAnyArgs(_signature);
+            _privateKey.Bytes.Returns(ByteUtil.GenerateRandomByteArray(32));
 
             _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs(_privateKey);
-
-            _wrapper.StdSign(default, default, default).ReturnsForAnyArgs(_signature);
-
+            
             _signingContext = new SigningContext();
         }
-
-        private readonly IKeyStore _keystore;
-        private readonly IKeyRegistry _keyRegistry;
-        private readonly IWrapper _wrapper;
-        private readonly ISignature _signature;
-        private readonly IPrivateKey _privateKey;
-        private readonly SigningContext _signingContext;
-
+        
         [Fact]
         public void On_Init_KeySigner_Can_Retrieve_Key_From_KeyStore_If_Key_Doesnt_Initially_Exist_In_Registry()
         {
@@ -64,7 +66,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            var keySigner = new KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
+            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
             keySigner.Should().NotBe(null);
@@ -79,7 +81,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 
             _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs((IPrivateKey) null);
 
-            var keySigner = new KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
+            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
             _keystore.Received(1).KeyStoreGenerate(Arg.Any<KeyRegistryTypes>());
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
@@ -93,7 +95,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            var keySigner = new KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
+            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
 
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             _keystore.ClearReceivedCalls();
@@ -112,14 +114,14 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
         [Fact] 
         public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
         {            
-            var keySigner = new KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);            
+            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);            
             _keystore.ClearReceivedCalls();
             _keyRegistry.ClearReceivedCalls();
 
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(null, _privateKey);
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
-
+            
             var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
 
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());

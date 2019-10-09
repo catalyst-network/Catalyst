@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public static readonly Multihash GenesisHash 
             = new Delta().ToByteArray().ComputeMultihash(Constants.HashAlgorithm);
 
-        public string GenesisAddress => GenesisHash.AsBase32Address();
+        public string GenesisAddress { get; } = GenesisHash.AsBase32Address();
 
         public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
             nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsBase32Address();
@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
 
             _memoryCache = memoryCache;
-            _memoryCache.Set(GenesisHash, genesisDelta);
+            _memoryCache.Set(GenesisAddress, genesisDelta);
 
             _dfsReader = dfsReader;
             _logger = logger;
