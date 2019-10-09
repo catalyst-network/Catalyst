@@ -131,16 +131,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             try
             {
-                MultiHash fileHash;
+                Cid cid;
 
                 using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    fileHash = await _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
+                    cid = await _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
                 }
 
-                fileTransferInformation.DfsHash = fileHash.ToBase32();
+                fileTransferInformation.DfsHash = cid.Encode();
 
-                Logger.Information($"Added File Name {fileTransferInformation.FileOutputPath} to DFS, Hash: {fileHash}");
+                Logger.Information($"Added File Name {fileTransferInformation.FileOutputPath} to DFS, Hash: {fileTransferInformation.DfsHash}");
             }
             catch (Exception e)
             {

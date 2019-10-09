@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
 
-        protected virtual AsyncRetryPolicy<MultiHash> DfsRetryPolicy { get; }
+        protected virtual AsyncRetryPolicy<Cid> DfsRetryPolicy { get; }
 
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerSettings peerSettings,
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _hashProvider = hashProvider;
             _logger = logger;
 
-            DfsRetryPolicy = Policy<MultiHash>.Handle<Exception>()
+            DfsRetryPolicy = Policy<Cid>.Handle<Exception>()
                .WaitAndRetryAsync(4, retryAttempt =>
                     TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }
@@ -104,14 +104,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public async Task<MultiHash> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta, CancellationToken cancellationToken = default)
+        public async Task<Cid> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta, CancellationToken cancellationToken = default)
         {
             var newAddress = await PublishDeltaToDfs(delta, cancellationToken).ConfigureAwait(false);
             await BroadcastNewDfsFileAddressAsync(newAddress, delta.PreviousDeltaDfsHash).ConfigureAwait(false);
             return newAddress;
         }
 
-        private async Task<MultiHash> PublishDeltaToDfs(Delta delta, CancellationToken cancellationToken)
+        private async Task<Cid> PublishDeltaToDfs(Delta delta, CancellationToken cancellationToken)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
         }
 
-        private async Task BroadcastNewDfsFileAddressAsync(MultiHash dfsFileAddress, ByteString previousDeltaHash)
+        private async Task BroadcastNewDfsFileAddressAsync(Cid dfsFileAddress, ByteString previousDeltaHash)
         {
             if (dfsFileAddress == null)
             {
@@ -156,7 +156,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
         }
 
-        private async Task<MultiHash> PublishDfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)
+        private async Task<Cid> PublishDfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -164,9 +164,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 memoryStream.Flush();
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                var hash = await _dfs.AddAsync(memoryStream, cancellationToken: cancellationToken);
+                var cid = await _dfs.AddAsync(memoryStream, cancellationToken: cancellationToken);
 
-                return hash;
+                return cid;
             }
         }
     }

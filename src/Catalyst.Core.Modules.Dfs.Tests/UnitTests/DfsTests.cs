@@ -22,13 +22,12 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
 using Ipfs;
@@ -59,15 +58,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             _ipfsEngine.FileSystem.Returns(fileSystem);
 
             var logger = Substitute.For<ILogger>();
-            var hashBits = CorrelationId.GenerateCorrelationId().Id.ToByteArray().Concat(new byte[16]).ToArray();
-            _expectedCid = new Cid
-            {
-                Encoding = _hashProvider.HashingAlgorithm.ToString().ToLowerInvariant(),
-                Hash = _hashProvider.Cast(hashBits)
-            };
+            //var hashBits = CorrelationId.GenerateCorrelationId().Id.ToByteArray().Concat(new byte[16]).ToArray();
+            //_expectedCid = new Cid
+            //{
+            //    Encoding = _hashProvider.HashingAlgorithm.ToString().ToLowerInvariant(),
+            //    Hash = _hashProvider.Cast(hashBits)
+            //};
 
-            _addedRecord = Substitute.For<IFileSystemNode>();
-            _addedRecord.Id.ReturnsForAnyArgs(_expectedCid);
+            //_addedRecord = Substitute.For<IFileSystemNode>();
+            //_addedRecord.Id.ReturnsForAnyArgs(_expectedCid);
             _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(DelayInMs));
 
             _dfs = new Dfs(_ipfsEngine, _hashProvider, logger);
@@ -97,11 +96,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadAsync_Should_Rely_On_IpfsEngine_And_Return_Streamed_Content()
         {
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
             _ipfsEngine.FileSystem
-               .ReadFileAsync("some path", Arg.Any<CancellationToken>())
+               .ReadFileAsync(cid.Encode(), Arg.Any<CancellationToken>())
                .Returns(c => "the content".ToMemoryStream());
 
-            using (var stream = await _dfs.ReadAsync("some path"))
+            using (var stream = await _dfs.ReadAsync(cid.Encode()))
             {
                 stream.ReadAllAsUtf8String(false).Should().Be("the content");
             }
@@ -110,11 +110,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadTextAsync_Should_Rely_On_IpfsEngine_And_Return_Text_Content()
         {
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
             _ipfsEngine.FileSystem
-               .ReadAllTextAsync("some path", Arg.Any<CancellationToken>())
+               .ReadAllTextAsync(cid.Encode(), Arg.Any<CancellationToken>())
                .Returns(c => "the other content");
 
-            var text = await _dfs.ReadTextAsync("some path");
+            var text = await _dfs.ReadTextAsync(cid.Encode());
             text.Should().Be("the other content");
         }
 

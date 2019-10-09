@@ -62,7 +62,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public async Task Should_have_a_URL_for_content(string expectedText)
         {
             var id = await _dfs.AddTextAsync(expectedText).ConfigureAwait(false);
-            string url = _dfsGateway.ContentUrl(id.ToBase32());
+            string url = _dfsGateway.ContentUrl(id.Encode());
             url.Should().StartWith("http");
         }
 
@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public async Task Should_serve_the_content(string expectedText)
         {
             var id = await _dfs.AddTextAsync(expectedText);
-            string url = _dfsGateway.ContentUrl(id.ToBase32());
+            string url = _dfsGateway.ContentUrl(id.Encode());
             using (var httpClient = new HttpClient())
             {
                 string content = await httpClient.GetStringAsync(url);

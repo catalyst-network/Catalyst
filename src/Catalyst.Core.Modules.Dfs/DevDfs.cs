@@ -29,8 +29,10 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.Util;
 using Dawn;
 using Ipfs;
+using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -76,22 +78,20 @@ namespace Catalyst.Core.Modules.Dfs
         /// <inheritdoc />
         public async Task<Cid> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {
-            var bytes = Encoding.UTF8.GetBytes(utf8Content);
-            var contentHash = _hashProvider.ComputeMultiHash(bytes);
-            var filePath = Path.Combine(_baseFolder.FullName, contentHash.ToBase32());
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash(utf8Content));
+            var filePath = Path.Combine(_baseFolder.FullName, cid);
 
             await _fileSystem.File.WriteAllTextAsync(
                 filePath,
                 utf8Content, Encoding.UTF8, cancellationToken);
 
-            return contentHash;
+            return cid;
         }
 
         /// <inheritdoc />
         public async Task<string> ReadTextAsync(Cid cid, CancellationToken cancellationToken = default)
         {
-            var encodedCid = cid.Encode();
-            return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, encodedCid),
+            return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, cid),
                 Encoding.UTF8,
                 cancellationToken);
         }
@@ -101,8 +101,8 @@ namespace Catalyst.Core.Modules.Dfs
             string name = "",
             CancellationToken cancellationToken = default)
         {
-            var contentHash = _hashProvider.ComputeMultiHash(content);
-            var filePath = Path.Combine(_baseFolder.FullName, contentHash.ToBase32());
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(content));
+            var filePath = Path.Combine(_baseFolder.FullName, cid);
 
             using (var file = _fileSystem.File.Create(filePath))
             {
@@ -110,14 +110,13 @@ namespace Catalyst.Core.Modules.Dfs
                 await content.CopyToAsync(file, cancellationToken).ConfigureAwait(false);
             }
 
-            return contentHash;
+            return cid;
         }
 
         /// <inheritdoc />
         public async Task<Stream> ReadAsync(Cid cid, CancellationToken cancellationToken = default)
         {
-            var encodedCid = cid.Encode();
-            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, encodedCid)))
+            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, cid)))
                .ConfigureAwait(false);
         }
     }

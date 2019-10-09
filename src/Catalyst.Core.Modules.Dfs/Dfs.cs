@@ -50,6 +50,7 @@ namespace Catalyst.Core.Modules.Dfs
             return new AddFileOptions
             {
                 Hash = _hashProvider.HashingAlgorithm.Name,
+                Encoding = "base32",
                 RawLeaves = true
             };
         }
@@ -61,8 +62,7 @@ namespace Catalyst.Core.Modules.Dfs
                 content,
                 AddFileOptions(),
                 cancellationToken);
-            var id = node.Id.Encode();
-            _logger.Debug("Text added to IPFS with id {0}", id);
+            _logger.Debug("Text added to IPFS with id {0}", node.Id);
             return node.Id;
         }
 
@@ -70,9 +70,8 @@ namespace Catalyst.Core.Modules.Dfs
         public Task<string> ReadTextAsync(Cid cid,
             CancellationToken cancellationToken = default)
         {
-            var encodedCid = cid.Encode();
-            _logger.Debug("Reading content at path {0} from IPFS", encodedCid);
-            return _ipfs.FileSystem.ReadAllTextAsync(encodedCid, cancellationToken);
+            _logger.Debug("Reading content at path {0} from IPFS", cid);
+            return _ipfs.FileSystem.ReadAllTextAsync(cid, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -82,19 +81,17 @@ namespace Catalyst.Core.Modules.Dfs
         {
             var node = await _ipfs.FileSystem
                .AddAsync(content, name, AddFileOptions(), cancellationToken);
-            var id = node.Id.Encode();
             _logger.Debug("Content {1} added to IPFS with id {0}",
-                id, name + " ");
-            return node.Id.Hash;
+                node.Id, name + " ");
+            return node.Id;
         }
 
         /// <inheritdoc />
         public Task<Stream> ReadAsync(Cid cid,
             CancellationToken cancellationToken = default)
         {
-            var encodedCid = cid.Encode();
-            _logger.Debug("Reading content at path {0} from Ipfs", encodedCid);
-            return _ipfs.FileSystem.ReadFileAsync(encodedCid, cancellationToken);
+            _logger.Debug("Reading content at path {0} from Ipfs", cid);
+            return _ipfs.FileSystem.ReadFileAsync(cid, cancellationToken);
         }
     }
 }

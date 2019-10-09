@@ -33,10 +33,11 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Ipfs;
@@ -60,7 +61,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfs = Substitute.For<IDfs>();
             var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
-            _observer = new GetFileFromDfsRequestObserver(_dfs, _hashProvider, peerSettings, _fileTransferFactory, Substitute.For<ILogger>());
+            _observer = new GetFileFromDfsRequestObserver(_dfs, _hashProvider, peerSettings, _fileTransferFactory,
+                Substitute.For<ILogger>());
         }
 
         [Fact]
@@ -69,8 +71,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             using (GetFakeDfsStream(FileTransferResponseCodeTypes.Successful))
             {
                 _observer.OnNext(GetFileFromDfsRequestMessage());
-                _dfs.Received(1).ReadAsync(Arg.Any<MultiHash>());
-                _fileTransferFactory.Received(1).FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
+                _dfs.Received(1).ReadAsync(Arg.Any<Cid>());
+                _fileTransferFactory.Received(1)
+                   .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
             }
         }
 
@@ -84,30 +87,27 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 Assert.False(fakeStream.CanRead);
             }
         }
-        
+
         private MemoryStream GetFakeDfsStream(FileTransferResponseCodeTypes fakeResponse)
         {
             var fakeStream = new MemoryStream();
             fakeStream.Write(new byte[50]);
-            _dfs.ReadAsync(Arg.Any<MultiHash>()).Returns(fakeStream);
+            _dfs.ReadAsync(Arg.Any<Cid>()).Returns(fakeStream);
             _fileTransferFactory.RegisterTransfer(Arg.Any<IUploadFileInformation>()).Returns(fakeResponse);
             return fakeStream;
         }
-        
+
         private IObserverDto<ProtocolMessage> GetFileFromDfsRequestMessage()
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
             {
-                DfsHash = _hashProvider.ComputeUtf8MultiHash("test").ToBase32()
+                DfsHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("test"))
             };
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());
             return new ObserverDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
         }
-        
-        public void Dispose()
-        {
-            _observer?.Dispose();
-        }
+
+        public void Dispose() { _observer?.Dispose(); }
     }
 }

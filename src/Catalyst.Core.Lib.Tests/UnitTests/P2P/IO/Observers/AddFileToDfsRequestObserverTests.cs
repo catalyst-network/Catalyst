@@ -32,6 +32,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Peer;
@@ -127,8 +128,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            var expectedHash = _hashProvider.ComputeUtf8MultiHash("expectedHash");
-            _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(expectedHash);
+            var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("expectedHash"));
+            _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(expectedCid);
 
             var protocolMessage = GenerateProtocolMessage();
 
@@ -149,7 +150,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _manualResetEvent.WaitOne();
 
             addFileToDfsResponse.ResponseCode[0].Should().Be((byte) FileTransferResponseCodeTypes.Finished.Id);
-            addFileToDfsResponse.DfsHash.Should().Be(expectedHash.ToBase32());
+            addFileToDfsResponse.DfsHash.Should().Be(expectedCid);
         }
 
         [Fact]

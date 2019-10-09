@@ -30,6 +30,7 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Wire;
@@ -64,8 +65,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 IHashProvider hashProvider, 
                 ILogger logger) : base(broadcastManager, peerSettings, dfs, hashProvider, logger) { }
 
-            protected override AsyncRetryPolicy<MultiHash> DfsRetryPolicy => 
-                Policy<MultiHash>.Handle<Exception>()
+            protected override AsyncRetryPolicy<Cid> DfsRetryPolicy => 
+                Policy<Cid>.Handle<Exception>()
                    .WaitAndRetryAsync(4, retryAttempt => 
                         TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt)));
         }
@@ -120,32 +121,32 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public async Task PublishDeltaToIpfsAsync_should_return_ipfs_address()
         {
             var delta = DeltaHelper.GetDelta(_hashProvider);
-            var dfsHash = _hashProvider.ComputeUtf8MultiHash("lskdjaslkjfweoho");
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("lskdjaslkjfweoho"));
             var cancellationToken = new CancellationToken();
 
-            _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken).Returns(dfsHash);
+            _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken).Returns(cid);
 
-            var deltaHash = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken);
-            deltaHash.Should().NotBeNull();
-            deltaHash.Should().Be(dfsHash);
+            var deltaCid = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken);
+            deltaCid.Should().NotBeNull();
+            deltaCid.Should().Be(cid);
         }
 
         [Fact]
         public async Task PublishDeltaToIpfsAsync_should_retry_then_return_ipfs_address()
         {
             var delta = DeltaHelper.GetDelta(_hashProvider);
-            var dfsHash = _hashProvider.ComputeUtf8MultiHash("success");
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("success"));
 
-            var dfsResults = new SubstituteResults<MultiHash>(() => throw new Exception("this one failed"))
+            var dfsResults = new SubstituteResults<Cid>(() => throw new Exception("this one failed"))
                .Then(() => throw new Exception("this one failed too"))
-               .Then(dfsHash);
+               .Then(cid);
 
             _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>())
                .Returns(ci => dfsResults.Next());
 
-            var deltaHash = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta);
-            deltaHash.Should().NotBeNull();
-            deltaHash.Should().Be(dfsHash);
+            var deltaCid = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta);
+            deltaCid.Should().NotBeNull();
+            deltaCid.Should().Be(cid);
 
             await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
         }

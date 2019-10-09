@@ -66,6 +66,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// </summary>
         /// <param name="delta">The delta which has been elected for this cycle.</param>
         /// <param name="cancellationToken">A cancellation token allowing to abort the tasks.</param>
-        Task<MultiHash> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta, CancellationToken cancellationToken = default);
+        Task<Cid> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta, CancellationToken cancellationToken = default);
     }
 }

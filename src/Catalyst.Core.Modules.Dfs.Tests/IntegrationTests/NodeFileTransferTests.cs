@@ -39,6 +39,7 @@ using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Ipfs;
 using Ipfs.Registry;
 using NSubstitute;
 using Serilog;

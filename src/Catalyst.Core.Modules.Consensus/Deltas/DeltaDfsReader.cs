@@ -44,13 +44,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public bool TryReadDeltaFromDfs(MultiHash hash,
+        public bool TryReadDeltaFromDfs(Cid cid,
             out Delta delta,
             CancellationToken cancellationToken)
         {
             try
             {
-                using (var responseStream = _dfs.ReadAsync(hash, cancellationToken).GetAwaiter().GetResult())
+                using (var responseStream = _dfs.ReadAsync(cid, cancellationToken).GetAwaiter().GetResult())
                 {
                     var uncheckedDelta = Delta.Parser.ParseFrom(responseStream);
                     var isValid = uncheckedDelta.IsValid();
@@ -67,7 +67,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to retrieve delta with hash {0} from the Dfs", hash);
+                _logger.Error(e, "Failed to retrieve delta with hash {0} from the Dfs", cid);
                 delta = default;
                 return false;
             }
