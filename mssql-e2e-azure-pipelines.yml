@@ -6,8 +6,15 @@
 trigger:
 - develop
 
+strategy:
+  matrix:
+    Windows-VS2019:
+      imageName: 'windows-2019'
+      netcore_sdk: 3.0.100
+      rustup_toolchain: stable
+
 pool:
-  vmImage: 'windows-latest'
+  vmImage: $(imageName)
 
 steps:
 - script: choco install sql-server-express -d -v -y
@@ -42,10 +49,10 @@ steps:
     failOnStandardError: 'true'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Run unit tests'
+  displayName: 'Run end to end tests'
   inputs:
     command: test
     projects: 'src/*[Tt]ests/*.csproj'
-    arguments: '--filter TestType=e2e --configuration $(BuildConfiguration)'
+    arguments: '--filter TestType=EndToEndTest_MSSQL --configuration $(BuildConfiguration)'
     failOnStandardError: 'true'
   timeoutInMinutes: 10
