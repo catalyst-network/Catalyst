@@ -32,8 +32,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.OpenApi.Models;
 using Serilog;
-using Swashbuckle.AspNetCore.Swagger;
 using Module = Autofac.Module;
 
 namespace Catalyst.Core.Modules.Web3
@@ -100,7 +100,7 @@ namespace Catalyst.Core.Modules.Web3
             {
                 services.AddSwaggerGen(swagger =>
                 {
-                    swagger.SwaggerDoc("v1", new Info {Title = "Catalyst API", Description = "Catalyst"});
+                    swagger.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalyst API", Description = "Catalyst"});
                 });
             }
 

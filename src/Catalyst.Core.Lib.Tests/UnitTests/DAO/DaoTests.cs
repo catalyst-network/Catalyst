@@ -71,7 +71,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new PublicEntryDao(),
                 new ConfidentialEntryDao(),
                 new TransactionBroadcastDao(),
-                new RangeProofDao(), 
                 new ContractEntryDao(),
                 new SignatureDao(),
                 new BaseEntryDao(), 
@@ -143,37 +142,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var peer = peerIdDao.ToDao(original);
             var reconverted = peer.ToProtoBuff();
             reconverted.Should().Be(original);
-        }
-
-        [Fact]
-        public void RangeProofDao_RangeProof_Should_Be_Convertible()
-        {
-            var peerIdDao = GetMapper<RangeProofDao>();
-
-            var rangeProof = GetEntryRangeProof();
-
-            var peer = peerIdDao.ToDao(rangeProof);
-            var reconverted = peer.ToProtoBuff();
-            reconverted.Should().Be(rangeProof);
-        }
-
-        private static RangeProof GetEntryRangeProof()
-        {
-            return new RangeProof
-            {
-                BitCommitment = "a".ToUtf8ByteString(),
-                APrime0 = "a prime 0".ToUtf8ByteString(),
-                BPrime0 = "b prime 0".ToUtf8ByteString(),
-                ProofOfShareMu = "mu".ToUtf8ByteString(),
-                PerBitBlindingFactorCommitment = "s".ToUtf8ByteString(),
-                T = "t".ToUtf8ByteString(),
-                PolyCommitmentT1 = "t1".ToUtf8ByteString(),
-                PolyCommitmentT2 = "t2".ToUtf8ByteString(),
-                ProofOfShareTau = "tau".ToUtf8ByteString(),
-                AggregatedVectorPolynomialL = {"L".ToUtf8ByteString()},
-                AggregatedVectorPolynomialR = {"R".ToUtf8ByteString()},
-                ValueCommitment = {"V".ToUtf8ByteString()},
-            };
         }
 
         [Fact]
@@ -333,26 +301,31 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var pubKeyBytes = new byte[30];
             var pedersenCommitBytes = new byte[50];
+            var rangeProofBytes = new byte[50];
 
             var rnd = new Random();
             rnd.NextBytes(pubKeyBytes);
             rnd.NextBytes(pedersenCommitBytes);
+            rnd.NextBytes(rangeProofBytes);
 
             var original = new ConfidentialEntry
             {
                 Base = new BaseEntry
                 {
+                    Nonce = ulong.MaxValue,
                     SenderPublicKey = pubKeyBytes.ToByteString(),
                     TransactionFees = UInt256.Zero.ToUint256ByteString()
                 },
                 PedersenCommitment = pedersenCommitBytes.ToByteString(),
-                RangeProof = GetEntryRangeProof()
+                RangeProof = rangeProofBytes.ToByteString()
             };
 
             var transactionEntryDao = cfTransactionEntryDao.ToDao(original);
 
             transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
+            transactionEntryDao.Base.Nonce.Should().Be(ulong.MaxValue);
             transactionEntryDao.PedersenCommitment.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
+            transactionEntryDao.RangeProof.Should().Be(rangeProofBytes.ToByteString().ToBase64());
 
             var reconverted = transactionEntryDao.ToProtoBuff();
             reconverted.Should().Be(original);
