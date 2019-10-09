@@ -21,13 +21,20 @@
 
 #endregion
 
-namespace Catalyst.Abstractions.Keystore
+using System.Net;
+using Catalyst.Abstractions.Rpc;
+using NSubstitute;
+
+namespace Catalyst.TestUtils
 {
-    public interface IKeyStoreService
+    public class RpcSettingsHelper
     {
-        string GetAddressFromKeyStore(string json);
-        string GenerateUtcFileName(string address);
-        byte[] DecryptKeyStoreFromJson(string password, string json);
-        string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
+        public static IRpcServerSettings GetRpcServerSettings(int port = 42051)
+        {
+            var settings = Substitute.For<IRpcServerSettings>();
+            settings.Port.Returns(port);
+            settings.BindAddress.Returns(IPAddress.Loopback);
+            return settings;
+        }
     }
 }

@@ -50,12 +50,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         {
             _ipAddressConverter.CanConvert(IPAddress.Loopback.GetType()).Should().BeTrue();
         }
-
+        
         [Fact]
         public void Check_Convertibility_Should_Fail()
         {
             var ipAddressBytes = Encoding.ASCII.GetBytes("FalseData_Fake_Ip_Address_198.0.yplor");
-
+        
             _ipAddressConverter.CanConvert(ipAddressBytes.GetType()).Should().BeFalse();
         }
 

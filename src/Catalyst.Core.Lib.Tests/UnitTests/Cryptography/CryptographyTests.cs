@@ -24,7 +24,6 @@
 using System;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Exceptions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Types;
@@ -36,7 +35,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public sealed class CryptographyTests
     {
-        public CryptographyTests() { _context = new CryptoContext(new CryptoWrapper()); }
+        public CryptographyTests() { _context = new FfiWrapper(); }
 
         private readonly ICryptoContext _context;
 
@@ -57,9 +56,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             var signature = _context.Sign(key1, data, signingContext);
 
             var key2 = _context.GeneratePrivateKey();
-            var publicKey2 = _context.GetPublicKey(key2);
+            var publicKey2 = _context.GetPublicKeyFromPrivateKey(key2);
 
-            var invalidSignature = _context.SignatureFromBytes(signature.SignatureBytes, publicKey2.Bytes);
+            var invalidSignature = _context.GetSignatureFromBytes(signature.SignatureBytes, publicKey2.Bytes);
 
             _context.Verify(invalidSignature, data, signingContext)
                .Should().BeFalse("signature should not verify with incorrect key");
@@ -69,7 +68,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         public void TestPublicKeyFromPrivateKey()
         {
             var privateKey = _context.GeneratePrivateKey();
-            var publicKey = _context.GetPublicKey(privateKey);
+            var publicKey = _context.GetPublicKeyFromPrivateKey(privateKey);
 
             publicKey.Should().NotBeNull(" a valid public key should be created from a private key");
         }
@@ -90,15 +89,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         public void TestVerifyWithImportedPublicKey()
         {
             var privateKey = _context.GeneratePrivateKey();
-            var publicKey = _context.GetPublicKey(privateKey);
+            var publicKey = _context.GetPublicKeyFromPrivateKey(privateKey);
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
             var signingContext = Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
             var signature = _context.Sign(privateKey, data, signingContext);
 
             var blob = _context.ExportPublicKey(publicKey);
 
-            var importedKey = _context.PublicKeyFromBytes(blob);
-            var signatureWithImportedKey = _context.SignatureFromBytes(signature.SignatureBytes, importedKey.Bytes);
+            var importedKey = _context.GetPublicKeyFromBytes(blob);
+            var signatureWithImportedKey = _context.GetSignatureFromBytes(signature.SignatureBytes, importedKey.Bytes);
             _context.Verify(signatureWithImportedKey, data, signingContext).Should()
                .BeTrue("signature should verify with imported public key");
         }
@@ -121,10 +120,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         public void Can_Throw_Signature_Exception_On_Invalid_Signature()
         {
             IPrivateKey privateKey = _context.GeneratePrivateKey();
-            IPublicKey publicKey = _context.GetPublicKey(privateKey);
+            IPublicKey publicKey = _context.GetPublicKeyFromPrivateKey(privateKey);
             string invalidSignature = "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIA==";
             byte[] signatureBytes = Convert.FromBase64String(invalidSignature);
-            var invalidSig = _context.SignatureFromBytes(signatureBytes, publicKey.Bytes);
+            var invalidSig = _context.GetSignatureFromBytes(signatureBytes, publicKey.Bytes);
             byte[] message = Encoding.UTF8.GetBytes("fa la la la");
             Action action = () => { _context.Verify(invalidSig, message, Encoding.UTF8.GetBytes("")); };
             action.Should().Throw<SignatureException>();
@@ -158,7 +157,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             var publicKeyBytes = publicKey.HexToByteArray();
             var messageBytes = message.HexToByteArray();
             var contextBytes = Encoding.UTF8.GetBytes(context);
-            var signature = _context.SignatureFromBytes(signatureBytes.Array, publicKeyBytes);
+            var signature = _context.GetSignatureFromBytes(signatureBytes.Array, publicKeyBytes);
             
             _context.Verify(signature, messageBytes, contextBytes).Should().Be(expectedResult);
         }

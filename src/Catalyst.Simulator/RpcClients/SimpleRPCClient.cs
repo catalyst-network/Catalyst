@@ -39,7 +39,6 @@ using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P;
-using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -82,13 +81,10 @@ namespace Catalyst.Simulator.RpcClients
             var consolePasswordReader = new ConsolePasswordReader(userOutput, new ConsoleUserInput());
             var passwordManager = new PasswordManager(consolePasswordReader, passwordRegistry);
 
-            var wrapper = new CryptoWrapper();
-            var cryptoContext = new CryptoContext(wrapper);
-
-            var keyServiceStore = new KeyStoreServiceWrapped(cryptoContext);
-
+            var cryptoContext = new FfiWrapper();
+            
             var addressHelper = new AddressHelper(signingContextProvider.NetworkType);
-            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, keyServiceStore, fileSystem,
+            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, fileSystem,
                 _logger, addressHelper);
 
             var keyRegistry = new KeyRegistry();

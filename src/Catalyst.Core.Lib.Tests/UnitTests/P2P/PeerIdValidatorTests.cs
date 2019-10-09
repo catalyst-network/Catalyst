@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -47,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             _output = output;
             _validPeerId = PeerIdHelper.GetPeerId();
-            _peerIdValidator = new PeerIdValidator(new CryptoContext(new CryptoWrapper()));
+            _peerIdValidator = new PeerIdValidator(new FfiWrapper());
         }
 
         [Fact]

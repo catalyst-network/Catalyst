@@ -31,7 +31,6 @@ using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Serilog;
-using System;
 
 namespace Catalyst.Core.Lib.IO.Events
 {

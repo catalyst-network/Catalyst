@@ -108,17 +108,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 Signature = signedResponse.Signature,
             };
 
-            var publicKeyBytes = Encoding.UTF8.GetBytes("sender")
-               .Concat(Enumerable.Repeat(default(byte), Ffi.PublicKeyLength))
-               .Take(Ffi.PublicKeyLength).ToArray();
-
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var protocolMessage =
-                signMessageResponse.ToProtocolMessage(PeerIdHelper.GetPeerId(
-                    publicKeyBytes, 
-                    IPAddress.Parse("127.0.0.1"),
-                    25781), correlationId);
+                signMessageResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"), correlationId);
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage
