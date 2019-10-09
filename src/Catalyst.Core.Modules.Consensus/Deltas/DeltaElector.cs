@@ -47,9 +47,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
-        public string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate)
+        public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate, IHashProvider hashProvider)
         {
-            return nameof(DeltaElector) + "-" + _hashProvider.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
+            return nameof(DeltaElector) + "-" + hashProvider.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
         }
 
         public string GetCandidateListCacheKey(MultiHash previousDeltaHash)
@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     return;
                 }
 
-                var candidateListKey = GetCandidateListCacheKey(candidate);
+                var candidateListKey = GetCandidateListCacheKey(candidate, _hashProvider);
 
                 if (_candidatesCache.TryGetValue(candidateListKey,
                     out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))

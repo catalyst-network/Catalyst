@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,40 +59,35 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             _ipfsEngine.FileSystem.Returns(fileSystem);
 
             var logger = Substitute.For<ILogger>();
-            //var hashBits = CorrelationId.GenerateCorrelationId().Id.ToByteArray().Concat(new byte[16]).ToArray();
-            //_expectedCid = new Cid
-            //{
-            //    Encoding = _hashProvider.HashingAlgorithm.ToString().ToLowerInvariant(),
-            //    Hash = _hashProvider.Cast(hashBits)
-            //};
+            _expectedCid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("data"));
 
-            //_addedRecord = Substitute.For<IFileSystemNode>();
-            //_addedRecord.Id.ReturnsForAnyArgs(_expectedCid);
+            _addedRecord = Substitute.For<IFileSystemNode>();
+            _addedRecord.Id.ReturnsForAnyArgs(_expectedCid);
             _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(DelayInMs));
 
             _dfs = new Dfs(_ipfsEngine, _hashProvider, logger);
         }
 
-        //[Fact]
-        //public async Task AddTextAsync_Should_Rely_On_IpfsEngine_And_Return_Record_Id()
-        //{
-        //    _ipfsEngine.FileSystem.AddTextAsync("good morning", Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
-        //       .Returns(c => Task.FromResult(_addedRecord));
+        [Fact]
+        public async Task AddTextAsync_Should_Rely_On_IpfsEngine_And_Return_Record_Id()
+        {
+            _ipfsEngine.FileSystem.AddTextAsync("good morning", Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
+               .Returns(c => Task.FromResult(_addedRecord));
 
-        //    var record = await _dfs.AddTextAsync("good morning");
-        //    Cid.Decode(record).Should().Be(_expectedCid);
-        //}
+            var record = await _dfs.AddTextAsync("good morning");
+            record.Should().Be(_expectedCid);
+        }
 
-        //[Fact]
-        //public async Task AddAsync_Should_Rely_On_IpfsEngine_And_Return_Record_Id()
-        //{
-        //    _ipfsEngine.FileSystem.AddAsync(Stream.Null, Arg.Any<string>(), Arg.Any<AddFileOptions>(),
-        //            Arg.Any<CancellationToken>())
-        //       .Returns(c => Task.FromResult(_addedRecord));
+        [Fact]
+        public async Task AddAsync_Should_Rely_On_IpfsEngine_And_Return_Record_Id()
+        {
+            _ipfsEngine.FileSystem.AddAsync(Stream.Null, Arg.Any<string>(), Arg.Any<AddFileOptions>(),
+                    Arg.Any<CancellationToken>())
+               .Returns(c => Task.FromResult(_addedRecord));
 
-        //    var record = await _dfs.AddAsync(Stream.Null);
-        //    Cid.Decode(record).Should().Be(_expectedCid);
-        //}
+            var record = await _dfs.AddAsync(Stream.Null);
+            record.Should().Be(_expectedCid);
+        }
 
         [Fact]
         public async Task ReadAsync_Should_Rely_On_IpfsEngine_And_Return_Streamed_Content()

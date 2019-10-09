@@ -77,30 +77,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
              && c.Candidate.ProducerId.Equals(_producerId)));
         }
 
-        //[Fact]
-        //public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_Hash()
-        //{
-        //    var invalidNewHash = _hashProvider.Cast(Encoding.UTF8.GetBytes("invalid hash"));
-
-        //    var receivedMessage = PrepareReceivedMessage(invalidNewHash, _prevHash, _producerId, _voterId);
-
-        //    _favouriteDeltaObserver.HandleBroadcast(receivedMessage);
-
-        //    _deltaElector.DidNotReceiveWithAnyArgs().OnNext(default);
-        //}
-
-        //[Fact]
-        //public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_PreviousHash()
-        //{
-        //    var invalidPrevHash = _hashProvider.Cast(Encoding.UTF8.GetBytes("invalid previous hash"));
-
-        //    var receivedMessage = PrepareReceivedMessage(_newHash, invalidPrevHash, _producerId, _voterId);
-
-        //    _favouriteDeltaObserver.HandleBroadcast(receivedMessage);
-
-        //    _deltaElector.DidNotReceiveWithAnyArgs().OnNext(default);
-        //}
-
         private IObserverDto<ProtocolMessage> PrepareReceivedMessage(MultiHash newHash,
             MultiHash prevHash,
             PeerId producerId,

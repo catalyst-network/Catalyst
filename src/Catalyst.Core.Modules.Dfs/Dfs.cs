@@ -50,7 +50,6 @@ namespace Catalyst.Core.Modules.Dfs
             return new AddFileOptions
             {
                 Hash = _hashProvider.HashingAlgorithm.Name,
-                Encoding = "base32",
                 RawLeaves = true
             };
         }

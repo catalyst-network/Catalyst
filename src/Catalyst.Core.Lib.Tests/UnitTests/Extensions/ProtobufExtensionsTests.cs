@@ -80,17 +80,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
                .Should().Throw<ArgumentException>();
         }
 
-        //[Fact]
-        //public void ToMultihash_Can_Convert_Valid_ByteString_To_Multihash()
-        //{
-        //    var initialHash = Multihash.Sum(HashType.BLAKE2B_256, Encoding.UTF8.GetBytes("hello"));
-        //    var byteString = initialHash.ToBytes().ToByteString();
-
-        //    var convertedHash = byteString.AsMultihash();
-
-        //    convertedHash.Should().Be(initialHash);
-        //}
-
         [Fact]
         public void ToCorrelationId_Should_Take_Care_Of_All_ByteStrings()
         {
