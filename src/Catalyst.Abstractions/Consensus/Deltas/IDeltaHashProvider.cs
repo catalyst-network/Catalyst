@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Dfs;
-using Ipfs;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {

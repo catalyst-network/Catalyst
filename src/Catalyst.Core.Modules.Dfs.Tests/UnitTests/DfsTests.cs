@@ -23,19 +23,19 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
-using Ipfs;
-using Ipfs.CoreApi;
-using Ipfs.Registry;
+using LibP2P;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.Ipfs.Abstractions;
+using TheDotNetLeague.Ipfs.Core.Lib;
+using TheDotNetLeague.Ipfs.Core.Lib.CoreApi;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests

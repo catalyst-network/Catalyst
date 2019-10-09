@@ -25,8 +25,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
-using Ipfs;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
+using LibP2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {

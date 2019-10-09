@@ -36,10 +36,10 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Account;
-using Ipfs;
 using Nethereum.KeyStore;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Keystore
 {

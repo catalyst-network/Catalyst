@@ -39,13 +39,13 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Ipfs;
-using Ipfs.Registry;
 using NSubstitute;
 using Polly;
 using Polly.Retry;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
+using LibP2P;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -65,8 +65,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 IHashProvider hashProvider, 
                 ILogger logger) : base(broadcastManager, peerSettings, dfs, hashProvider, logger) { }
 
-            protected override AsyncRetryPolicy<Cid> DfsRetryPolicy => 
-                Policy<Cid>.Handle<Exception>()
+            protected override AsyncRetryPolicy<Cid> DfsRetryPolicy =>
+                Polly.Policy<Cid>.Handle<Exception>()
                    .WaitAndRetryAsync(4, retryAttempt => 
                         TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt)));
         }

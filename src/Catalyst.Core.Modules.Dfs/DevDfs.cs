@@ -31,8 +31,7 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Util;
 using Dawn;
-using Ipfs;
-using Multiformats.Hash.Algorithms;
+using LibP2P;
 
 namespace Catalyst.Core.Modules.Dfs
 {

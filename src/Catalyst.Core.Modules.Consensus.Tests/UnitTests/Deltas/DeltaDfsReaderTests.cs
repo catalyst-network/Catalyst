@@ -33,11 +33,11 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Ipfs;
-using Ipfs.Registry;
+using LibP2P;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas

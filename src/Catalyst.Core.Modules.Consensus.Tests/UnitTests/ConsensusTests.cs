@@ -30,10 +30,9 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
-using Ipfs;
-using Ipfs.Registry;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests

@@ -23,8 +23,7 @@
 
 using System.Collections.Generic;
 using System.IO;
-using Ipfs;
-using Ipfs.Registry;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Abstractions.Hashing
 {

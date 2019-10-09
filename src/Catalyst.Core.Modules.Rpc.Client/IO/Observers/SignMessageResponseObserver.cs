@@ -29,9 +29,9 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Ipfs;
 using Nethereum.RLP;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
 {

@@ -39,8 +39,8 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using Ipfs;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas

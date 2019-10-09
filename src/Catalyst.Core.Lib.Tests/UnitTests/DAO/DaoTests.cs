@@ -38,8 +38,8 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using FluentAssertions;
-using Ipfs.Registry;
 using Nethermind.Dirichlet.Numerics;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
@@ -52,8 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
         public DaoTests()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _mappers = new IMapperInitializer[]
             {

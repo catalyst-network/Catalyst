@@ -33,9 +33,9 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Ipfs.Registry;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -50,12 +50,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
         public DfsTests(ITestOutputHelper output) : base(output)
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _output = output;
             var passwordReader = Substitute.For<IPasswordManager>();
-            passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
+            passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>())
+               .Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 
             _logger = Substitute.For<ILogger>();
             _ipfs = new IpfsAdapter(passwordReader, FileSystem, _logger);
@@ -120,7 +120,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 await Task.Delay(100).ConfigureAwait(false);
             }
 
-            _output.WriteLine($"Found in {(DateTime.Now - start).TotalSeconds.ToString(CultureInfo.InvariantCulture)} seconds.");
+            _output.WriteLine(
+                $"Found in {(DateTime.Now - start).TotalSeconds.ToString(CultureInfo.InvariantCulture)} seconds.");
         }
 
         protected override void Dispose(bool disposing)

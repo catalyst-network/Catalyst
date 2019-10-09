@@ -41,11 +41,10 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Ipfs;
-using Ipfs.Registry;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers

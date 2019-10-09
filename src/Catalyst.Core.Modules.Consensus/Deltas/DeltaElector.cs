@@ -31,10 +31,10 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Dawn;
-using Ipfs;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

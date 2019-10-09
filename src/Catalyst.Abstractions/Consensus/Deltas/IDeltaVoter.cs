@@ -23,8 +23,7 @@
 
 using System;
 using Catalyst.Protocol.Wire;
-using Ipfs;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {

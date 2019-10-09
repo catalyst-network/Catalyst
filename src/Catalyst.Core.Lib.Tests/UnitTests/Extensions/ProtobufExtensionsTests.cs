@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using System.Text;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
@@ -33,7 +32,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Multiformats.Hash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions

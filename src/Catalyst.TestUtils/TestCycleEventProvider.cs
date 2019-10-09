@@ -27,10 +27,10 @@ using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Hashing;
-using Ipfs.Registry;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.TestUtils
 {

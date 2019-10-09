@@ -31,15 +31,13 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Enumerator;
-using Catalyst.Abstractions.Hashing;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
-using Ipfs.Registry;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 

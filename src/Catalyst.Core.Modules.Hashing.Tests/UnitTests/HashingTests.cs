@@ -25,7 +25,7 @@ using System;
 using Autofac;
 using Catalyst.Abstractions.Hashing;
 using FluentAssertions;
-using Ipfs.Registry;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Hashing.Tests.UnitTests

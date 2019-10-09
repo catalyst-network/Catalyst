@@ -37,11 +37,10 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
-using Ipfs;
 using Polly;
 using Polly.Retry;
 using Serilog;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
+using LibP2P;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -69,7 +68,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _hashProvider = hashProvider;
             _logger = logger;
 
-            DfsRetryPolicy = Policy<Cid>.Handle<Exception>()
+            DfsRetryPolicy = Polly.Policy<Cid>.Handle<Exception>()
                .WaitAndRetryAsync(4, retryAttempt =>
                     TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }

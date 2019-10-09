@@ -42,8 +42,8 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Ipfs;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {

@@ -29,7 +29,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf.WellKnownTypes;
-using Ipfs;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.TestUtils
 {

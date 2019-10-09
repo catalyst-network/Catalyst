@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
-using Ipfs;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

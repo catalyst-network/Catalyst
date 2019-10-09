@@ -32,10 +32,9 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Ipfs;
-using Ipfs.Registry;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 

@@ -29,9 +29,9 @@ using System.Reactive.Subjects;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf.WellKnownTypes;
-using Ipfs;
 using Nito.Comparers;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

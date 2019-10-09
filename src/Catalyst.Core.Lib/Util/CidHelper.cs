@@ -21,7 +21,8 @@
 
 #endregion
 
-using Ipfs;
+using LibP2P;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Lib.Util
 {

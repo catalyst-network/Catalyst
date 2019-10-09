@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Ipfs;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Abstractions.Consensus.Cycle
 {

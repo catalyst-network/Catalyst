@@ -24,7 +24,7 @@
 using System.Threading;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
-using Ipfs;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {

@@ -53,10 +53,10 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Simulator.Interfaces;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Ipfs.Registry;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Simulator.RpcClients
 {

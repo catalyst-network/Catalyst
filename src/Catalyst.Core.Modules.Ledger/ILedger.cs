@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Core.Modules.Ledger.Models;
-using Ipfs;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Ledger
 {

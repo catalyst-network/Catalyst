@@ -27,9 +27,9 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Lib.Extensions;
-using Ipfs;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Web3.Controllers
 {

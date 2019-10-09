@@ -33,10 +33,10 @@ using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
-using Ipfs;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
 namespace Catalyst.Modules.POA.Consensus.Deltas

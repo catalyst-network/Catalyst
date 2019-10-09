@@ -27,8 +27,7 @@ using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Hashing.Exception;
-using Ipfs;
-using Ipfs.Registry;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Hashing
 {

@@ -29,9 +29,9 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using Ipfs;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

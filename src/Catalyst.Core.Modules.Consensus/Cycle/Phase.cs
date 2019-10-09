@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Consensus.Cycle;
-using Ipfs;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Cycle
 {
