@@ -28,12 +28,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
-using Ipfs;
-using Ipfs.Registry;
 using NSubstitute;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
@@ -41,24 +43,24 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
 {
     public class DevDfsTests
     {
+        private readonly IHashProvider _hashProvider;
+        private readonly IFileSystem _fileSystem;
+        private readonly DevDfs _dfs;
+        private readonly string _baseFolder;
+
         public DevDfsTests()
         {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _fileSystem = Substitute.For<IFileSystem>();
             var file = Substitute.For<IFile>();
             _fileSystem.File.Returns(file);
             _fileSystem.GetCatalystDataDir()
                .Returns(new DirectoryInfo("correct-information"));
-            _hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-256");
-            _dfs = new DevDfs(_fileSystem, _hashingAlgorithm);
+            _dfs = new DevDfs(_fileSystem, _hashProvider);
 
             _baseFolder = Path.Combine(_fileSystem.GetCatalystDataDir().FullName,
                 Constants.DfsDataSubDir);
         }
-
-        private readonly IFileSystem _fileSystem;
-        private readonly HashingAlgorithm _hashingAlgorithm;
-        private readonly DevDfs _dfs;
-        private readonly string _baseFolder;
 
         [Fact]
         public async Task AddAsync_Should_Be_Cancellable()
@@ -76,13 +78,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         public async Task AddAsync_Should_Save_File_In_Subfolder_With_Hash_As_Name()
         {
             _fileSystem.File.Create(Arg.Any<string>()).Returns(new MemoryStream());
+
             var contentBytes = BitConverter.GetBytes(123456);
             var contentStream = contentBytes.ToMemoryStream();
 
-            var expectedFileName = MultiHash.ComputeHash(contentBytes, _hashingAlgorithm.Name);
-            var filename = await _dfs.AddAsync(contentStream);
+            var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(contentBytes));
 
-            filename.Should().Be(expectedFileName.ToBase32());
+            var cid = await _dfs.AddAsync(contentStream);
+
+            cid.Should().Be(expectedCid);
         }
 
         [Fact]
@@ -124,17 +128,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         {
             var someGoodUtf8Content = "some good utf8 content!";
 
-            var filename = await _dfs.AddTextAsync(someGoodUtf8Content);
-            var expectedFileName =
-                MultiHash.ComputeHash(Encoding.UTF8.GetBytes(someGoodUtf8Content), _hashingAlgorithm.Name).ToBase32();
+            var cid = await _dfs.AddTextAsync(someGoodUtf8Content);
+            var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash(someGoodUtf8Content));
 
             await _fileSystem.File.Received(1).WriteAllTextAsync(
-                Arg.Is(Path.Combine(_baseFolder, expectedFileName)),
+                Arg.Is(Path.Combine(_baseFolder, expectedCid.Encode())),
                 Arg.Any<string>(),
                 Arg.Is(Encoding.UTF8),
                 Arg.Any<CancellationToken>());
 
-            filename.Should().Be(expectedFileName);
+            cid.Should().Be(expectedCid);
         }
 
         [Fact]
@@ -142,7 +145,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         {
             var someGoodUtf8Content = "some good utf8 content!";
 
-            var contentHash = await _dfs.AddTextAsync(someGoodUtf8Content);
+            var cid = await _dfs.AddTextAsync(someGoodUtf8Content);
 
             await _fileSystem.File.Received(1).WriteAllTextAsync(
                 Arg.Any<string>(),
@@ -150,11 +153,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
                 Arg.Is(Encoding.UTF8),
                 Arg.Any<CancellationToken>());
 
-            var utf8Hash = MultiHash.ComputeHash(Encoding.UTF8.GetBytes(someGoodUtf8Content), _hashingAlgorithm.Name);
-            var uf32Hash = MultiHash.ComputeHash(Encoding.UTF32.GetBytes(someGoodUtf8Content), _hashingAlgorithm.Name);
+            var utf8Hash = _hashProvider.ComputeUtf8MultiHash(someGoodUtf8Content);
+            var uf32Hash = _hashProvider.ComputeMultiHash(Encoding.UTF32.GetBytes(someGoodUtf8Content));
 
-            contentHash.Should().Be(utf8Hash.ToBase32());
-            contentHash.Should().NotBe(uf32Hash.ToBase32());
+            cid.Hash.Should().Be(utf8Hash);
+            cid.Hash.Should().NotBe(uf32Hash);
         }
 
         [Fact]
@@ -166,21 +169,22 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             var longEnoughHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize <= 159);
 
             // ReSharper disable once ObjectCreationAsStatement
-            new Action(() => new DevDfs(_fileSystem, toLongHashingAlgorithm)).Should().Throw<ArgumentException>()
+            new Action(() => new DevDfs(_fileSystem, new HashProvider(toLongHashingAlgorithm))).Should()
+               .Throw<ArgumentException>()
                .And.Message.Should().Contain(nameof(HashingAlgorithm));
 
             // ReSharper disable once ObjectCreationAsStatement
-            new Action(() => new DevDfs(_fileSystem, longEnoughHashingAlgorithm)).Should()
+            new Action(() => new DevDfs(_fileSystem, new HashProvider(longEnoughHashingAlgorithm))).Should()
                .NotThrow<ArgumentException>();
         }
 
         [Fact]
         public async Task ReadAsync_Should_Point_To_The_Correct_File()
         {
-            var fileName = "myFileHash";
-            await _dfs.ReadAsync(fileName);
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
+            await _dfs.ReadAsync(cid);
             _fileSystem.File.Received(1)
-               .OpenRead(Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, fileName))));
+               .OpenRead(Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, cid.Encode()))));
         }
 
         [Fact]
@@ -188,7 +192,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         {
             var cancellationToken = new CancellationToken();
             await _dfs.ReadTextAsync(
-                @"https://media.giphy.com/media/KZwQMLTSx7M8bJ9OkZ/giphy.gif",
+                _hashProvider.ComputeUtf8MultiHash(@"https://media.giphy.com/media/KZwQMLTSx7M8bJ9OkZ/giphy.gif"),
                 cancellationToken);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
                 Arg.Any<string>(),
@@ -199,7 +203,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadTextAsync_Should_Assume_UTF8_Content()
         {
-            await _dfs.ReadTextAsync("hello");
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
+            await _dfs.ReadTextAsync(cid);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
                 Arg.Any<string>(),
                 Arg.Is(Encoding.UTF8),
@@ -209,10 +214,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadTextAsync_Should_Point_To_The_Correct_File()
         {
-            var filHash = "hello";
-            await _dfs.ReadTextAsync(filHash);
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
+            await _dfs.ReadTextAsync(cid);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
-                Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, filHash))),
+                Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, cid.Encode()))),
                 Arg.Any<Encoding>(),
                 Arg.Any<CancellationToken>());
         }

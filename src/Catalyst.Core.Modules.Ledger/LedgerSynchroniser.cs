@@ -24,9 +24,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Extensions;
-using Multiformats.Hash;
+using Catalyst.Abstractions.Hashing;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -34,10 +34,12 @@ namespace Catalyst.Core.Modules.Ledger
     public class LedgerSynchroniser : ILedgerSynchroniser
     {
         private readonly ILogger _logger;
+        private readonly IHashProvider _hashProvider;
 
-        public LedgerSynchroniser(IDeltaCache deltaCache, ILogger logger)
+        public LedgerSynchroniser(IDeltaCache deltaCache, IHashProvider hashProvider, ILogger logger)
         {
             DeltaCache = deltaCache;
+            _hashProvider = hashProvider;
             _logger = logger;
         }
 
@@ -45,20 +47,20 @@ namespace Catalyst.Core.Modules.Ledger
         public IDeltaCache DeltaCache { get; }
 
         /// <inheritdoc />
-        public IEnumerable<Multihash> CacheDeltasBetween(Multihash latestKnownDeltaHash,
-            Multihash targetDeltaHash,
+        public IEnumerable<MultiHash> CacheDeltasBetween(MultiHash latestKnownDeltaHash,
+            MultiHash targetDeltaHash,
             CancellationToken cancellationToken)
         {
             var thisHash = targetDeltaHash;
 
             do
             {
-                if (!DeltaCache.TryGetOrAddConfirmedDelta(thisHash.AsBase32Address(), out var retrievedDelta, cancellationToken))
+                if (!DeltaCache.TryGetOrAddConfirmedDelta(thisHash, out var retrievedDelta, cancellationToken))
                 {
                     yield break;
                 }
 
-                var previousDfsHash = retrievedDelta.PreviousDeltaDfsHash.AsMultihash();
+                var previousDfsHash = _hashProvider.Cast(retrievedDelta.PreviousDeltaDfsHash.ToByteArray());
 
                 _logger.Debug("Retrieved delta {previous} as predecessor of {current}",
                     previousDfsHash, thisHash);
@@ -66,7 +68,7 @@ namespace Catalyst.Core.Modules.Ledger
                 yield return thisHash;
 
                 thisHash = previousDfsHash;
-            } while ((thisHash.AsBase32Address() != latestKnownDeltaHash.AsBase32Address())
+            } while (!thisHash.Equals(latestKnownDeltaHash)
              && !cancellationToken.IsCancellationRequested);
 
             yield return thisHash;

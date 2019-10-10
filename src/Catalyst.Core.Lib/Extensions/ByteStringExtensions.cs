@@ -23,22 +23,11 @@
 
 using System;
 using Google.Protobuf;
-using Multiformats.Hash;
 
 namespace Catalyst.Core.Lib.Extensions
 {
     public static class ByteStringExtensions
     {
         public static ByteString ToByteString(this Guid guid) { return guid.ToByteArray().ToByteString(); }
-
-        public static Multihash AsMultihash(this ByteString byteString)
-        {
-            return Multihash.Decode(byteString.ToByteArray());
-        }
-
-        public static string AsBase32Address(this ByteString byteString)
-        {
-            return AsMultihash(byteString).AsBase32Address();
-        }
     }
 }

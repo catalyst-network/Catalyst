@@ -24,10 +24,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Catalyst.Core.Lib.Extensions.Protocol.Account;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Network;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.TestUtils.Protocol
 {
@@ -37,7 +38,15 @@ namespace Catalyst.TestUtils.Protocol
             NetworkType networkType = NetworkType.Devnet,
             AccountType accountType = AccountType.PublicAccount)
         {
-            return Encoding.UTF8.GetBytes(publicKeySeed).ToAddress(networkType, accountType);
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+
+            var address = new Address
+            {
+                AccountType = accountType,
+                NetworkType = networkType,
+                PublicKeyHash = hashProvider.ComputeUtf8MultiHash(publicKeySeed).ToArray().ToByteString()
+            };
+            return address;
         }
 
         public class AddressType

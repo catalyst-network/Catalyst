@@ -24,14 +24,17 @@
 using System;
 using System.Linq;
 using System.Threading;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
@@ -55,11 +58,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             }
         }
 
+        private readonly IHashProvider _hashProvider;
+
+        public BroadcastObserverBaseTests()
+        {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+        }
+
         [Fact]
         public void OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
             var testScheduler = new TestScheduler();
-            var candidateDeltaMessages = Enumerable.Repeat(DeltaHelper.GetCandidateDelta(), 10).ToArray();
+            var candidateDeltaMessages = Enumerable.Repeat(DeltaHelper.GetCandidateDelta(_hashProvider), 10).ToArray();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(testScheduler, candidateDeltaMessages);
             using (var observer = new FailingBroadCastObserver(Substitute.For<ILogger>()))

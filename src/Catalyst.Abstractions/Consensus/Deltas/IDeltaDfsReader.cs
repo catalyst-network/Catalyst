@@ -23,6 +23,7 @@
 
 using System.Threading;
 using Catalyst.Protocol.Deltas;
+using LibP2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
@@ -34,7 +35,7 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// <summary>
         /// Asynchronously retrieves the content at the hash/address on the Dfs, and tries to parse it as a Delta.
         /// </summary>
-        /// <param name="hash">The hash or address of the delta on the Dfs.</param>
+        /// <param name="cid">The Cid or address of the delta on the Dfs.</param>
         /// <param name="delta">The retrieved delta.</param>
         /// <param name="cancellationToken">An optional cancellation token which can be used to interrupt the tasks.</param>
         /// <returns><see>
@@ -44,6 +45,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         ///         <cref>false</cref>
         ///     </see>
         ///     otherwise.</returns>
-        bool TryReadDeltaFromDfs(string hash, out Delta delta, CancellationToken cancellationToken = default);
+        bool TryReadDeltaFromDfs(Cid cid, out Delta delta, CancellationToken cancellationToken = default);
     }
 }

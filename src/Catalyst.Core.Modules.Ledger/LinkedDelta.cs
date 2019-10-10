@@ -21,8 +21,6 @@
 
 #endregion
 
-using Multiformats.Hash;
-
 namespace Catalyst.Core.Modules.Ledger
 {
     /// <summary>
@@ -31,7 +29,7 @@ namespace Catalyst.Core.Modules.Ledger
     /// </summary>
     public class ChainedDeltaHash
     {
-        public ChainedDeltaHash(Multihash previousDfsHash, Multihash dfsHash, Multihash nextDeltaDfsHash)
+        public ChainedDeltaHash(byte[] previousDfsHash, byte[] dfsHash, byte[] nextDeltaDfsHash)
         {
             PreviousDfsHash = previousDfsHash;
             DfsHash = dfsHash;
@@ -41,16 +39,16 @@ namespace Catalyst.Core.Modules.Ledger
         /// <summary>
         /// The hash or address of the predecessor of this delta on the Dfs.
         /// </summary>
-        public Multihash PreviousDfsHash { get; }
+        public byte[] PreviousDfsHash { get; }
 
         /// <summary>
         /// The hash or address of this delta on the Dfs.
         /// </summary>
-        public Multihash DfsHash { get; }
+        public byte[] DfsHash { get; }
 
         /// <summary>
         /// The hash or address of the successor of this delta on the Dfs. 
         /// </summary>
-        private Multihash NextDeltaDfsHash { get; }
+        private byte[] NextDeltaDfsHash { get; }
     }
 }

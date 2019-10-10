@@ -21,25 +21,26 @@
 
 #endregion
 
-using Ipfs.HttpGateway;
+//todo
+//using Ipfs.HttpGateway;
 
-namespace Catalyst.Abstractions.Dfs
-{
-    /// <summary>
-    ///   Provides read-only access to the distribute files system via HTTP.
-    /// </summary>
-    /// <seealso cref="IDfs"/>
-    public interface IDfsGateway
-    {
-        GatewayHost Gateway { get; }
+//namespace Catalyst.Abstractions.Dfs
+//{
+//    /// <summary>
+//    ///   Provides read-only access to the distribute files system via HTTP.
+//    /// </summary>
+//    /// <seealso cref="IDfs"/>
+//    public interface IDfsGateway
+//    {
+//        GatewayHost Gateway { get; }
         
-        /// <summary>
-        ///   Gets the URL of DFS content.
-        /// </summary>
-        /// <param name="id">The unique ID of the content in the DFS.</param>
-        /// <returns>
-        ///   The URL of the DFS <paramref name="id"/>.
-        /// </returns>
-        string ContentUrl(string id);
-    }
-}
+//        /// <summary>
+//        ///   Gets the URL of DFS content.
+//        /// </summary>
+//        /// <param name="id">The unique ID of the content in the DFS.</param>
+//        /// <returns>
+//        ///   The URL of the DFS <paramref name="id"/>.
+//        /// </returns>
+//        string ContentUrl(string id);
+//    }
+//}

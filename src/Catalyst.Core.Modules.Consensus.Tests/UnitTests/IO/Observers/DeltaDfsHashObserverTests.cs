@@ -23,28 +23,32 @@
 
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using Multiformats.Hash;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
     public sealed class DeltaDfsHashObserverTests
     {
+        private readonly IHashProvider _hashProvider;
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IChannelHandlerContext _fakeChannelContext;
         private readonly ILogger _logger;
 
         public DeltaDfsHashObserverTests()
         {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             _logger = Substitute.For<ILogger>();
@@ -53,11 +57,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         [Fact]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Try_Update()
         {
-            var newHash = Multihash.Sum(HashType.ID, Encoding.UTF8.GetBytes("newHash"));
-            var prevHash = Multihash.Sum(HashType.ID, Encoding.UTF8.GetBytes("prevHash"));
-            var receivedMessage = PrepareReceivedMessage(newHash, prevHash);
+            var newHash = _hashProvider.ComputeUtf8MultiHash("newHash");
+            var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash");
+            var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _hashProvider, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
@@ -68,10 +72,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         public void HandleBroadcast_Should_Not_Try_Update_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
-            var prevHash = Multihash.Sum(HashType.ID, Encoding.UTF8.GetBytes("prevHash"));
-            var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash);
+            var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash");
+            var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash.ToArray());
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _hashProvider, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 

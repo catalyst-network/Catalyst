@@ -21,19 +21,20 @@
 
 #endregion
 
-using Catalyst.Protocol.Account;
-using IPublicKey = Catalyst.Abstractions.Cryptography.IPublicKey;
+using System.Collections.Generic;
+using System.IO;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Abstractions.Util
+namespace Catalyst.Abstractions.Hashing
 {
-    public interface IAddressHelper
+    public interface IHashProvider
     {
-        /// <summary>
-        ///     Generates an address from the 20 last bytes of the hashed public key.
-        /// </summary>
-        /// <param name="publicKey">The public key from which the address is derived.</param>
-        /// <param name="accountType">Account type represented by this address.</param>
-        /// <returns>The Hex encoded bytes corresponding to the address.</returns>
-        Address GenerateAddress(IPublicKey publicKey, AccountType accountType);
+        HashingAlgorithm HashingAlgorithm { set; get; }
+        MultiHash ComputeUtf8MultiHash(string data);
+        MultiHash ComputeMultiHash(Stream data);
+        MultiHash ComputeMultiHash(byte[] data);
+        MultiHash ComputeMultiHash(IEnumerable<byte> content);
+        MultiHash Cast(byte[] data);
+        bool IsValidHash(byte[] data);
     }
 }

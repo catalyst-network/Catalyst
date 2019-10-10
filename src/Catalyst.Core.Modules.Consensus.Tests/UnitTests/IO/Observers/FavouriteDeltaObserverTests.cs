@@ -28,15 +28,15 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -52,16 +52,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 
         public FavouriteDeltaObserverTests()
         {
-            IMultihashAlgorithm multihashAlgorithm = new BLAKE2B_128();
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _deltaElector = Substitute.For<IDeltaElector>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
             _voterId = PeerIdHelper.GetPeerId("favourite delta voter");
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
 
-            _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, logger);
-            _newHash = Encoding.UTF8.GetBytes("newHash").ComputeMultihash(multihashAlgorithm).ToBytes();
-            _prevHash = Encoding.UTF8.GetBytes("prevHash").ComputeMultihash(multihashAlgorithm).ToBytes();
+            _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, hashProvider, logger);
+            _newHash = hashProvider.ComputeUtf8MultiHash("newHash").ToArray();
+            _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash").ToArray();
         }
 
         [Fact]
@@ -70,10 +70,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var receivedMessage = PrepareReceivedMessage(_newHash, _prevHash, _producerId, _voterId);
 
             _favouriteDeltaObserver.HandleBroadcast(receivedMessage);
-            
+
             _deltaElector.Received(1).OnNext(Arg.Is<FavouriteDeltaBroadcast>(c =>
-                c.Candidate.Hash.SequenceEqual(_newHash.ToByteString())
-             && c.Candidate.PreviousDeltaDfsHash.Equals(_prevHash.ToByteString())
+                c.Candidate.Hash.SequenceEqual(_newHash.ToArray().ToByteString())
+             && c.Candidate.PreviousDeltaDfsHash.Equals(_prevHash.ToArray().ToByteString())
              && c.Candidate.ProducerId.Equals(_producerId)));
         }
 
@@ -101,7 +101,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector.DidNotReceiveWithAnyArgs().OnNext(default);
         }
 
-        private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash, byte[] prevHash, PeerId producerId, PeerId voterId)
+        private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash,
+            byte[] prevHash,
+            PeerId producerId,
+            PeerId voterId)
         {
             var candidate = new CandidateDeltaBroadcast
             {

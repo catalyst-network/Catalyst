@@ -56,7 +56,6 @@ using Catalyst.Core.Lib.Validators;
 using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Core.Lib
 {
@@ -131,17 +130,11 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<CancellationTokenProvider>().As<ICancellationTokenProvider>();
             builder.RegisterType<TtlChangeTokenProvider>().As<IChangeTokenProvider>()
                .WithParameter("timeToLiveInMs", 8000);
-            
-            builder.RegisterType<AddressHelper>().As<IAddressHelper>();
-            
+
             // Register Cache
             builder.RegisterType<MemoryCache>().As<IMemoryCache>().SingleInstance();
             builder.RegisterType<MemoryCacheOptions>().As<IOptions<MemoryCacheOptions>>();
-
-            // @TODO encapsulate to own module
-            // Register hashlib
-            builder.RegisterType<BLAKE2B_256>().As<IMultihashAlgorithm>();
-
+            
             // Register file transfer
             builder.RegisterType<DownloadFileTransferFactory>().As<IDownloadFileTransferFactory>().SingleInstance();
             builder.RegisterType<UploadFileTransferFactory>().As<IUploadFileTransferFactory>().SingleInstance();
