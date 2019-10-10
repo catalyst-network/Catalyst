@@ -13,7 +13,6 @@
       <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Multiformats.Base" Version="2.0.1" />
       <PackageReference Include="Serilog" Version="2.8.0" />
     </ItemGroup>
 </Project>
