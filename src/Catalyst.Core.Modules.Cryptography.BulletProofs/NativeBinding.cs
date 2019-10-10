@@ -22,6 +22,8 @@
 #endregion
 
 using System.Runtime.InteropServices;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Core.Modules.Cryptography.BulletProofs.Types;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 {
@@ -32,7 +34,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int generate_key(byte[] bytes);
 
-        internal static byte[] GeneratePrivateKey()
+        internal static IPrivateKey GeneratePrivateKey()
         {
             var key = new byte[PrivateKeyLength];
             var errorCode = generate_key(key);
@@ -41,13 +43,13 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
                 Error.ThrowErrorFromErrorCode(errorCode.ToString());
             }
 
-            return key;
+            return new PrivateKey(key);
         }
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int std_sign(byte[] signature, byte[] privateKey, byte[] message, int messageLength, byte[] context, int contextLength);
+        private static extern int std_sign(byte[] signature, byte[] publicKey, byte[] privateKey, byte[] message, int messageLength, byte[] context, int contextLength);
 
-        internal static byte[] StdSign(byte[] privateKey, byte[] message, byte[] context)
+        internal static ISignature StdSign(byte[] privateKey, byte[] message, byte[] context)
         {
             if (privateKey.Length != PrivateKeyLength)
             {
@@ -55,13 +57,15 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             }
 
             var signature = new byte[SignatureLength];
-            var errorCode = std_sign(signature, privateKey, message, message.Length, context, context.Length);
+            var public_key = new byte[PublicKeyLength];
+
+            var errorCode = std_sign(signature, public_key, privateKey, message, message.Length, context, context.Length);
             if (errorCode != 0)
             {
                 Error.ThrowErrorFromErrorCode(errorCode.ToString());
             }
 
-            return signature;
+            return new Signature(signature, public_key);
         }
         
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
@@ -113,7 +117,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern void publickey_from_private(byte[] publicKey, byte[] privateKey);
 
-        internal static byte[] GetPublicKeyFromPrivate(byte[] privateKey)
+        internal static IPublicKey GetPublicKeyFromPrivate(byte[] privateKey)
         {
             if (privateKey.Length != PrivateKeyLength)
             {
@@ -123,7 +127,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             var publicKeyBytes = new byte[PublicKeyLength];
             publickey_from_private(publicKeyBytes, privateKey);
             
-            return publicKeyBytes;
+            return new PublicKey(publicKeyBytes);
         }
 
         internal static string GetLastError()

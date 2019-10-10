@@ -41,11 +41,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 
         public ISignature Sign(IPrivateKey privateKey, byte[] messageBytes, byte[] contextBytes)
         {
-            var signatureBytes = NativeBinding.StdSign(privateKey.Bytes, messageBytes, contextBytes);
-            var publicKeyBytes = NativeBinding.GetPublicKeyFromPrivate(privateKey.Bytes);
-            NativeBinding.ValidatePublicKeyOrThrow(publicKeyBytes);
-
-            return new Signature(signatureBytes, publicKeyBytes);            
+            return NativeBinding.StdSign(privateKey.Bytes, messageBytes, contextBytes);           
         }
 
         public bool Verify(ISignature signature, byte[] message, byte[] context)
@@ -55,15 +51,12 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         
         public IPrivateKey GeneratePrivateKey()
         {           
-            var privateKeyBytes = NativeBinding.GeneratePrivateKey();
-            return new PrivateKey(privateKeyBytes);
+            return NativeBinding.GeneratePrivateKey();
         }
         
         public IPublicKey GetPublicKeyFromPrivateKey(IPrivateKey privateKey)
         {
-            var publicKeyBytes = NativeBinding.GetPublicKeyFromPrivate(privateKey.Bytes);
-
-            return new PublicKey(publicKeyBytes);
+            return NativeBinding.GetPublicKeyFromPrivate(privateKey.Bytes);
         }
 
         public IPrivateKey GetPrivateKeyFromBytes(byte[] privateKeyBytes)
