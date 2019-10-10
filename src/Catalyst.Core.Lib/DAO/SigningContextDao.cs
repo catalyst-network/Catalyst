@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
@@ -31,6 +32,9 @@ namespace Catalyst.Core.Lib.DAO
     {
         public NetworkType NetworkType { get; set; }
         public SignatureType SignatureType { get; set; }
+
+        [Column]
+        private SignatureDao SignatureDao { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {

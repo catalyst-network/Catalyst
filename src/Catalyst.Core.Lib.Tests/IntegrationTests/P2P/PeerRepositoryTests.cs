@@ -30,8 +30,10 @@ using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.Repository;
 using SharpRepository.Repository;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Catalyst.TestUtils.Repository;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
@@ -109,7 +111,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
         
         [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Trait(Traits.TestType, Traits.E2E_MongoDB)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
@@ -119,13 +121,51 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
 
         [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Trait(Traits.TestType, Traits.E2E_MongoDB)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
 
             PeerRepo_Can_Save_And_Retrieve();
+        }
+
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Trait(Traits.TestType, Traits.E2E_MSSQL)]
+        public void PeerRepo_EfCore_Dbs_Update_And_Retrieve()
+        {
+            var connectionStr = ContainerProvider.ConfigurationRoot
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+
+            RegisterModules(new EfCoreDbTestModule<Peer, PeerDao>(connectionStr));
+
+            CheckForDatabaseCreation();
+
+            PeerRepo_Can_Update_And_Retrieve();
+        }
+
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Trait(Traits.TestType, Traits.E2E_MSSQL)]
+        public void PeerRepo_EfCore_Dbs_Can_Save_And_Retrieve()
+        {
+            var connectionStr = ContainerProvider.ConfigurationRoot
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+
+            RegisterModules(new EfCoreDbTestModule<Peer, PeerDao>(connectionStr));
+
+            CheckForDatabaseCreation();
+
+            PeerRepo_Can_Save_And_Retrieve();
+        }
+
+        private void CheckForDatabaseCreation()
+        {
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+            {
+                var contextDb = scope.Resolve<IDbContext>();
+
+                ((DbContext) contextDb).Database.EnsureCreated();
+            }
         }
 
         private void RegisterModules(Module module)
