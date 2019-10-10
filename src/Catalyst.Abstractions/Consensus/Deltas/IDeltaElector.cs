@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Protocol.Wire;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
@@ -38,6 +38,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// <param name="previousDeltaDfsHash">The DFS hash of the delta for which we are
         /// trying to produce a successor.</param>
         /// <returns>The most popular candidate for a given cycle.</returns>
-        CandidateDeltaBroadcast GetMostPopularCandidateDelta(byte[] previousDeltaDfsHash);
+        CandidateDeltaBroadcast GetMostPopularCandidateDelta(MultiHash previousDeltaDfsHash);
     }
 }

@@ -23,7 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Core.Lib.Registry;
+using Catalyst.Core.Lib.Cryptography;
 
 namespace Catalyst.Core.Modules.Keystore
 {
@@ -33,7 +33,6 @@ namespace Catalyst.Core.Modules.Keystore
         {
             builder.RegisterType<SigningContextProvider>().As<ISigningContextProvider>();
             builder.RegisterType<LocalKeyStore>().As<IKeyStore>();
-            builder.RegisterType<KeyStoreServiceWrapped>().As<IKeyStoreService>();
             builder.RegisterType<KeyRegistry>().As<IKeyRegistry>().SingleInstance();
             builder.RegisterType<LocalKeyStore>().As<IKeyStore>();
         }  

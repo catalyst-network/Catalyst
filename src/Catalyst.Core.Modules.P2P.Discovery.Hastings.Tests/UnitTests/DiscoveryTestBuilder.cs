@@ -104,9 +104,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
         public DiscoveryTestBuilder WithPeerRepository(IPeerRepository peerRepository = default, bool mock = false)
         {
-            _peerRepository = peerRepository == default && mock == false
+            _peerRepository = peerRepository == default(IPeerRepository) && mock == false
                 ? Substitute.For<IPeerRepository>()
-                : peerRepository == default
+                : peerRepository == null
                     ? _peerRepository = DiscoveryHelper.MockPeerRepository()
                     : _peerRepository = peerRepository;
 
@@ -123,9 +123,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             bool mock = false,
             IPeerSettings peerSettings = default)
         {
-            _dnsClient = dnsClient == default && mock == false
+            _dnsClient = dnsClient == default(IDns) && mock == false
                 ? Substitute.For<IDns>()
-                : DiscoveryHelper.MockDnsClient(_peerSettings = _peerSettings == null && peerSettings == default
+                : DiscoveryHelper.MockDnsClient(_peerSettings = _peerSettings == null && peerSettings == default(IPeerSettings)
                     ? PeerSettingsHelper.TestPeerSettings()
                     : peerSettings);
 

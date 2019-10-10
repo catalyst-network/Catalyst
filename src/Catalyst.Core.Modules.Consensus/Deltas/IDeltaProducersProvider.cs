@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -38,7 +39,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         /// </summary>
         /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
         /// <returns>The list of peers which are eligible for the production of the delta following <see cref="previousDeltaHash"/></returns>
-        IList<PeerId> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash);
+        IList<PeerId> GetDeltaProducersFromPreviousDelta(MultiHash previousDeltaHash);
 
         /// <summary>
         /// A peer repository containing peers eligible for the production of the next delta.

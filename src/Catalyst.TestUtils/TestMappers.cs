@@ -41,7 +41,6 @@ namespace Catalyst.TestUtils
                 new PublicEntryDao(),
                 new ConfidentialEntryDao(),
                 new TransactionBroadcastDao(),
-                new RangeProofDao(),
                 new ContractEntryDao(),
                 new SignatureDao(),
                 new BaseEntryDao()

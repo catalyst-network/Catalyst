@@ -6,7 +6,7 @@
         <PackageLicenseUrl>http://opensource.org/licenses/GPL-3.0</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/Catalyst-network/Catalyst.Node</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <RuntimeFrameworkVersion>2.2.1</RuntimeFrameworkVersion>
+        <RuntimeFrameworkVersion>3.0.0</RuntimeFrameworkVersion>
         <LangVersion>7.3</LangVersion>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Deterministic>true</Deterministic>

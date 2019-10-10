@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using FluentAssertions;
@@ -29,12 +28,12 @@ using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
-    public class KeyUtilTest
+    public sealed class KeyUtilTest
     {
         [Fact]
         public void Can_Encode_And_Decode_Correctly()
         {
-            var cryptoContext = new CryptoContext(new CryptoWrapper());
+            var cryptoContext = new FfiWrapper();
             var privateKey = cryptoContext.GeneratePrivateKey();
             var publicKey = privateKey.GetPublicKey();
 

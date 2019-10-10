@@ -2,15 +2,15 @@ strategy:
   matrix:
     Windows-VS2019:
       imageName: 'windows-2019'
-      netcore_sdk: 2.2.104
+      netcore_sdk: 3.0.100
       rustup_toolchain: stable
     Osx-Mojave:
       imageName: 'macos-10.14'
-      netcore_sdk: 2.2.104
+      netcore_sdk: 3.0.100
       rustup_toolchain: stable
     Ubuntu-1604:
       imageName: 'ubuntu-16.04'
-      netcore_sdk: 2.2.104
+      netcore_sdk: 3.0.100
       rustup_toolchain: stable
   maxParallel: 3
 
@@ -56,7 +56,8 @@ steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Install .NetCore SDK'
     inputs:
-      version: 2.2.104
+      version: 3.0.100
+      failOnStandardError: 'true'
 
   - bash: |
       git submodule update --init --force --recursive
@@ -67,6 +68,7 @@ steps:
       echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
     displayName: Install rust
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
+
   - script: |
       curl -sSf -o rustup-init.exe https://win.rustup.rs
       rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%

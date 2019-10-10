@@ -25,5 +25,14 @@ using Catalyst.Abstractions.Repository;
 
 namespace Catalyst.Abstractions.Mempool.Repositories
 {
-    public interface IMempoolRepository<T> : IRepositoryWrapper<T> where T : class { }
+    public interface IMempoolRepository<T> : IRepositoryWrapper<T> where T : class
+    {
+        bool TryReadItem(string signature);
+
+        T ReadItem(string signature);
+
+        bool DeleteItem(params string[] transactionSignatures);
+
+        bool CreateItem(T transactionBroadcast);
+    }
 }

@@ -21,9 +21,12 @@
 
 #endregion
 
+using System;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Repository;
+using Dawn;
+using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Repositories
@@ -32,5 +35,52 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
         IMempoolRepository<TransactionBroadcastDao>
     {
         public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository) { }
+
+        /// <inheritdoc />
+        public bool TryReadItem(string signature)
+        {
+            Guard.Argument(signature, nameof(signature)).NotNull();
+            return Repository.TryGet(signature, out _);
+        }
+
+        public TransactionBroadcastDao ReadItem(string signature)
+        {
+            Guard.Argument(signature, nameof(signature)).NotNull();
+            return Repository.Get(signature);
+        }
+
+        /// <inheritdoc />
+        public bool DeleteItem(params string[] transactionSignatures)
+        {
+            try
+            {
+                Repository.Delete(transactionSignatures);
+            }
+            catch (Exception exception)
+            {
+                Log.Logger.Error(exception, "Failed to delete transactions from the mempool {transactionSignatures}",
+                    transactionSignatures);
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool CreateItem(TransactionBroadcastDao transactionBroadcast)
+        {
+            Guard.Argument(transactionBroadcast.Signature, nameof(transactionBroadcast.Signature)).NotNull();
+
+            try
+            {
+                Repository.Add(transactionBroadcast);
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e, e.Message);
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -24,11 +24,13 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Text;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Deltas;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
@@ -36,8 +38,8 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using FluentAssertions;
-using Multiformats.Hash.Algorithms;
 using Nethermind.Dirichlet.Numerics;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
@@ -45,11 +47,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
     public class DaoTests
     {
-        private readonly IMultihashAlgorithm _hashingAlgorithm = new BLAKE2B_256();
         private readonly IMapperInitializer[] _mappers;
-        
+        private readonly HashProvider _hashProvider;
+
         public DaoTests()
         {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+
             _mappers = new IMapperInitializer[]
             {
                 new ProtocolMessageDao(),
@@ -66,7 +70,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new PublicEntryDao(),
                 new ConfidentialEntryDao(),
                 new TransactionBroadcastDao(),
-                new RangeProofDao(), 
                 new ContractEntryDao(),
                 new SignatureDao(),
                 new BaseEntryDao(), 
@@ -141,37 +144,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         }
 
         [Fact]
-        public void RangeProofDao_RangeProof_Should_Be_Convertible()
-        {
-            var peerIdDao = GetMapper<RangeProofDao>();
-
-            var rangeProof = GetEntryRangeProof();
-
-            var peer = peerIdDao.ToDao(rangeProof);
-            var reconverted = peer.ToProtoBuff();
-            reconverted.Should().Be(rangeProof);
-        }
-
-        private static RangeProof GetEntryRangeProof()
-        {
-            return new RangeProof
-            {
-                BitCommitment = "a".ToUtf8ByteString(),
-                APrime0 = "a prime 0".ToUtf8ByteString(),
-                BPrime0 = "b prime 0".ToUtf8ByteString(),
-                ProofOfShareMu = "mu".ToUtf8ByteString(),
-                PerBitBlindingFactorCommitment = "s".ToUtf8ByteString(),
-                T = "t".ToUtf8ByteString(),
-                PolyCommitmentT1 = "t1".ToUtf8ByteString(),
-                PolyCommitmentT2 = "t2".ToUtf8ByteString(),
-                ProofOfShareTau = "tau".ToUtf8ByteString(),
-                AggregatedVectorPolynomialL = {"L".ToUtf8ByteString()},
-                AggregatedVectorPolynomialR = {"R".ToUtf8ByteString()},
-                ValueCommitment = {"V".ToUtf8ByteString()},
-            };
-        }
-
-        [Fact]
         public void SigningContextDao_SigningContext_Should_Be_Convertible()
         {
             var signingContextDao = GetMapper<SigningContextDao>();
@@ -211,9 +183,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             var deltaDao = GetMapper<DeltaDao>();
 
-            var previousHash = "previousHash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
+            var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
 
-            var original = DeltaHelper.GetDelta(previousHash);
+            var original = DeltaHelper.GetDelta(_hashProvider, previousHash);
 
             var messageDao = deltaDao.ToDao(original);
             var reconverted = messageDao.ToProtoBuff();
@@ -224,14 +196,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void CandidateDeltaBroadcastDao_CandidateDeltaBroadcast_Should_Be_Convertible()
         {
             var candidateDeltaBroadcastDao = GetMapper<CandidateDeltaBroadcastDao>();
-            var previousHash = "previousHash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
-            var hash = "anotherHash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
+            var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
+            var hash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("anotherHash"));
 
             var original = new CandidateDeltaBroadcast
             {
-                Hash = hash.ToByteString(),
+                Hash = hash.ToArray().ToByteString(),
                 ProducerId = PeerIdHelper.GetPeerId("test"),
-                PreviousDeltaDfsHash = previousHash.ToByteString()
+                PreviousDeltaDfsHash = previousHash.ToArray().ToByteString()
             };
 
             var candidateDeltaBroadcast = candidateDeltaBroadcastDao.ToDao(original);
@@ -244,13 +216,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             var deltaDfsHashBroadcastDao = GetMapper<DeltaDfsHashBroadcastDao>();
 
-            var hash = "this hash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
-            var previousDfsHash = "previousDfsHash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
+            var hash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("this hash"));
+            var previousDfsHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousDfsHash"));
 
             var original = new DeltaDfsHashBroadcast
             {
-                DeltaDfsHash = hash.ToByteString(),
-                PreviousDeltaDfsHash = previousDfsHash.ToByteString()
+                DeltaDfsHash = hash.ToArray().ToByteString(),
+                PreviousDeltaDfsHash = previousDfsHash.ToArray().ToByteString()
             };
 
             var contextDao = deltaDfsHashBroadcastDao.ToDao(original);
@@ -265,7 +237,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new FavouriteDeltaBroadcast
             {
-                Candidate = DeltaHelper.GetCandidateDelta(producerId: PeerIdHelper.GetPeerId("not me")),
+                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: PeerIdHelper.GetPeerId("not me")),
                 VoterId = PeerIdHelper.GetPeerId("test")
             };
 
@@ -328,26 +300,31 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var pubKeyBytes = new byte[30];
             var pedersenCommitBytes = new byte[50];
+            var rangeProofBytes = new byte[50];
 
             var rnd = new Random();
             rnd.NextBytes(pubKeyBytes);
             rnd.NextBytes(pedersenCommitBytes);
+            rnd.NextBytes(rangeProofBytes);
 
             var original = new ConfidentialEntry
             {
                 Base = new BaseEntry
                 {
+                    Nonce = ulong.MaxValue,
                     SenderPublicKey = pubKeyBytes.ToByteString(),
                     TransactionFees = UInt256.Zero.ToUint256ByteString()
                 },
                 PedersenCommitment = pedersenCommitBytes.ToByteString(),
-                RangeProof = GetEntryRangeProof()
+                RangeProof = rangeProofBytes.ToByteString()
             };
 
             var transactionEntryDao = cfTransactionEntryDao.ToDao(original);
 
             transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
+            transactionEntryDao.Base.Nonce.Should().Be(ulong.MaxValue);
             transactionEntryDao.PedersenCommitment.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
+            transactionEntryDao.RangeProof.Should().Be(rangeProofBytes.ToByteString().ToBase64());
 
             var reconverted = transactionEntryDao.ToProtoBuff();
             reconverted.Should().Be(original);

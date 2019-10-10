@@ -24,13 +24,12 @@
 using System;
 using Catalyst.Core.Lib.DAO;
 using Microsoft.EntityFrameworkCore;
-using DbContext = Microsoft.EntityFrameworkCore.DbContext;
 
 namespace Catalyst.Core.Lib.Repository
 {
     public interface IDbContext : IDisposable
     {
-        Microsoft.EntityFrameworkCore.DbSet<TEntity> Set<TEntity>() where TEntity : class;
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
     }
 
     public sealed class EfCoreContext : DbContext, IDbContext
@@ -39,19 +38,15 @@ namespace Catalyst.Core.Lib.Repository
             : base(new DbContextOptionsBuilder<EfCoreContext>()
                .UseSqlServer(connectionString).Options) { }
 
-        public Microsoft.EntityFrameworkCore.DbSet<PeerIdDao> PeerIdDaoStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<PeerDao> PeerDaoStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<TransactionBroadcastDao> TransactionBroadcastStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<RangeProofDao> RangeProofDaoStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<PublicEntryDao> PublicEntryDaoStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<ConfidentialEntryDao> ConfidentialEntryDaoStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<ContractEntryDao> ContractEntryDaoStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<BaseEntryDao> BaseEntryDaoStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<SignatureDao> SignatureDaoStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<SigningContextDao> SigningContextDaoStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<ValueCommitmentDao> ValueCommitmentStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<AggregatedVectorPolynomialLDao> AggregatedVectorPolynomialLStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<AggregatedVectorPolynomialRDao> AggregatedVectorPolynomialRStore { get; set; }
+        public DbSet<PeerIdDao> PeerIdDaoStore { get; set; }
+        public DbSet<PeerDao> PeerDaoStore { get; set; }
+        public DbSet<TransactionBroadcastDao> TransactionBroadcastStore { get; set; }
+        public DbSet<PublicEntryDao> PublicEntryDaoStore { get; set; }
+        public DbSet<ConfidentialEntryDao> ConfidentialEntryDaoStore { get; set; }
+        public DbSet<ContractEntryDao> ContractEntryDaoStore { get; set; }
+        public DbSet<BaseEntryDao> BaseEntryDaoStore { get; set; }
+        public DbSet<SignatureDao> SignatureDaoStore { get; set; }
+        public DbSet<SigningContextDao> SigningContextDaoStore { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,4 +54,3 @@ namespace Catalyst.Core.Lib.Repository
         }
     }
 }
-

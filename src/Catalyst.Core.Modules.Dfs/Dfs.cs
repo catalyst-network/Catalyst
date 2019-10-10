@@ -25,69 +25,73 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Core.Lib.Config;
-using Ipfs;
-using Ipfs.CoreApi;
+using Catalyst.Abstractions.Hashing;
+using LibP2P;
 using Serilog;
+using TheDotNetLeague.Ipfs.Core.Lib;
+using TheDotNetLeague.Ipfs.Core.Lib.CoreApi;
 
 namespace Catalyst.Core.Modules.Dfs
 {
     public sealed class Dfs : IDfs
     {
-        private static readonly AddFileOptions AddFileOptions = new AddFileOptions
-        {
-            Hash = MultiHash.GetHashAlgorithmName(Constants.HashAlgorithmType.GetHashCode()),
-            RawLeaves = true
-        };
-
         private readonly ICoreApi _ipfs;
+        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
 
-        public Dfs(ICoreApi ipfsAdapter, ILogger logger)
+        public Dfs(ICoreApi ipfsAdapter, IHashProvider hashProvider, ILogger logger)
         {
             _ipfs = ipfsAdapter;
+            _hashProvider = hashProvider;
             _logger = logger;
         }
 
+        private AddFileOptions AddFileOptions()
+        {
+            return new AddFileOptions
+            {
+                Hash = _hashProvider.HashingAlgorithm.Name,
+                RawLeaves = true
+            };
+        }
+
         /// <inheritdoc />
-        public async Task<string> AddTextAsync(string content, CancellationToken cancellationToken = default)
+        public async Task<Cid> AddTextAsync(string content, CancellationToken cancellationToken = default)
         {
             var node = await _ipfs.FileSystem.AddTextAsync(
                 content,
-                options: AddFileOptions,
-                cancel: cancellationToken);
-            var id = node.Id.Encode();
-            _logger.Debug("Text added to IPFS with id {0}", id);
-            return id;
+                AddFileOptions(),
+                cancellationToken);
+            _logger.Debug("Text added to IPFS with id {0}", node.Id);
+            return node.Id;
         }
 
         /// <inheritdoc />
-        public Task<string> ReadTextAsync(string id,
+        public Task<string> ReadTextAsync(Cid cid,
             CancellationToken cancellationToken = default)
         {
-            _logger.Debug("Reading content at path {0} from IPFS", id);
-            return _ipfs.FileSystem.ReadAllTextAsync(id, cancellationToken);
+            _logger.Debug("Reading content at path {0} from IPFS", cid);
+            return _ipfs.FileSystem.ReadAllTextAsync(cid, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<string> AddAsync(Stream content,
+        public async Task<Cid> AddAsync(Stream content,
             string name = "",
             CancellationToken cancellationToken = default)
         {
             var node = await _ipfs.FileSystem
-               .AddAsync(content, name, AddFileOptions, cancellationToken);
-            var id = node.Id.Encode();
-            _logger.Debug("Content {1}added to IPFS with id {0}",
-                id, name + " ");
-            return id;
+               .AddAsync(content, name, AddFileOptions(), cancellationToken);
+            _logger.Debug("Content {1} added to IPFS with id {0}",
+                node.Id, name + " ");
+            return node.Id;
         }
 
         /// <inheritdoc />
-        public Task<Stream> ReadAsync(string id,
+        public Task<Stream> ReadAsync(Cid cid,
             CancellationToken cancellationToken = default)
         {
-            _logger.Debug("Reading content at path {0} from Ipfs", id);
-            return _ipfs.FileSystem.ReadFileAsync(id, cancellationToken);
+            _logger.Debug("Reading content at path {0} from Ipfs", cid);
+            return _ipfs.FileSystem.ReadFileAsync(cid, cancellationToken);
         }
     }
 }

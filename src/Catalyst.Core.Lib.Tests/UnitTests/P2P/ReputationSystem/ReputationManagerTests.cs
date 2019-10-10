@@ -72,6 +72,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             
             reputationManager.OnNext(peerReputationChange);
 
+            _testScheduler.Start();
+
             _subbedPeerRepository.ReceivedWithAnyArgs(1).GetAll();
             _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is(subbedPeer));
         }
@@ -97,6 +99,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger);
             
             reputationManager.OnNext(peerReputationChange);
+
+            _testScheduler.Start();
 
             _subbedPeerRepository.ReceivedWithAnyArgs(1).GetAll();
             _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is<Peer>(r => r.Reputation == 200));
@@ -124,6 +128,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger);
             
             reputationManager.OnNext(peerReputationChange);
+
+            _testScheduler.Start();
 
             _subbedPeerRepository.ReceivedWithAnyArgs(1).GetAll();
             _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is<Peer>(r => r.Reputation == 0));

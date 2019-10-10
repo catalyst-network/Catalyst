@@ -21,16 +21,19 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Security;
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Registry;
-using Catalyst.Abstractions.Types;
+using Autofac;
+using Catalyst.Abstractions.Hashing;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Core.Lib.Registry
+namespace Catalyst.Core.Modules.Hashing
 {
-    public sealed class PasswordRegistry : RegistryBase<PasswordRegistryTypes, SecureString>, IPasswordRegistry
+    public class HashingModule : Module
     {
-        public PasswordRegistry() { Registry = new Dictionary<PasswordRegistryTypes, SecureString>(); }
+        protected override void Load(ContainerBuilder builder)
+        {
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            builder.RegisterInstance(hashingAlgorithm).SingleInstance();
+            builder.RegisterType<HashProvider>().As<IHashProvider>().SingleInstance();
+        }
     }
 }

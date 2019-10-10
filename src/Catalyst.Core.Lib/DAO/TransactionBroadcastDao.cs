@@ -35,7 +35,18 @@ namespace Catalyst.Core.Lib.DAO
     [BsonIgnoreExtraElements]
     public class TransactionBroadcastDao : DaoBase<TransactionBroadcast, TransactionBroadcastDao>
     {
-        public SignatureDao Signature { get; set; }
+        private SignatureDao _signature;
+
+        public SignatureDao Signature
+        {
+            get => _signature;
+            set
+            {
+                _signature = value;
+                Id = value.RawBytes;
+            }
+        }
+
         public DateTime TimeStamp { get; set; }
         public IEnumerable<PublicEntryDao> PublicEntries { get; set; }
         public IEnumerable<ConfidentialEntryDao> ConfidentialEntries { get; set; }

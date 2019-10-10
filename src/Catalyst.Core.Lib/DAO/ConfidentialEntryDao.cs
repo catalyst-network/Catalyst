@@ -33,7 +33,7 @@ namespace Catalyst.Core.Lib.DAO
     {
         public BaseEntryDao Base { get; set; }
         public string PedersenCommitment { get; set; }
-        public RangeProofDao RangeProof { get; set; }
+        public string RangeProof { get; set; }
 
         [Column]
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
@@ -41,10 +41,14 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>()
+               .ForMember(e => e.RangeProof,
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
                .ForMember(e => e.PedersenCommitment,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
             cfg.CreateMap<ConfidentialEntryDao, ConfidentialEntry>()
+               .ForMember(e => e.RangeProof,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
                .ForMember(e => e.PedersenCommitment,
                     opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }

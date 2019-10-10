@@ -22,8 +22,9 @@
 #endregion
 
 using System;
-using Ipfs.CoreApi;
-using Ipfs.Engine;
+using LibP2P;
+using TheDotNetLeague.Ipfs.Abstractions;
+using TheDotNetLeague.Ipfs.Core.Lib;
 
 namespace Catalyst.Abstractions.Dfs
 {

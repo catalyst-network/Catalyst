@@ -22,10 +22,10 @@
 #endregion
 
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
@@ -38,12 +38,15 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     public sealed class GetDeltaRequestObserver
         : RequestObserverBase<GetDeltaRequest, GetDeltaResponse>, IRpcRequestObserver
     {
+        private readonly IHashProvider _hashProvider;
         private readonly IDeltaCache _deltaCache;
 
-        public GetDeltaRequestObserver(IDeltaCache deltaCache,
+        public GetDeltaRequestObserver(IHashProvider hashProvider,
+            IDeltaCache deltaCache,
             IPeerSettings peerSettings,
             ILogger logger) : base(logger, peerSettings)
         {
+            _hashProvider = hashProvider;
             _deltaCache = deltaCache;
         }
 
@@ -58,9 +61,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 
-            var multiHash = getDeltaRequest.DeltaDfsHash.AsBase32Address();
+            var hash = _hashProvider.Cast(getDeltaRequest.DeltaDfsHash.ToByteArray());
 
-            _deltaCache.TryGetOrAddConfirmedDelta(multiHash, out var delta);
+            _deltaCache.TryGetOrAddConfirmedDelta(hash, out var delta);
+
             return new GetDeltaResponse {Delta = delta};
         }
     }
