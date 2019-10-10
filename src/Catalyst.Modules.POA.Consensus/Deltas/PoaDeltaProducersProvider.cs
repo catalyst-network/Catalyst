@@ -33,10 +33,10 @@ using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
+using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
 namespace Catalyst.Modules.POA.Consensus.Deltas
@@ -71,22 +71,20 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             _producersByPreviousDelta = producersByPreviousDelta;
         }
 
-        public IList<PeerId> GetDeltaProducersFromPreviousDelta(MultiHash previousDeltaHash)
+        public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
         {
             Guard.Argument(previousDeltaHash, nameof(previousDeltaHash)).NotNull();
 
-            var previousDeltaHashAsString = previousDeltaHash.ToBase32();
-
-            if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHashAsString),
+            if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHash),
                 out IList<PeerId> cachedPeerIdsInPriorityOrder))
             {
                 _logger.Information("Retrieved favourite delta producers for successor of {0} from cache.",
-                    previousDeltaHashAsString);
+                    previousDeltaHash);
                 return cachedPeerIdsInPriorityOrder;
             }
 
             _logger.Information("Calculating favourite delta producers for the successor of {0}.",
-                previousDeltaHashAsString);
+                previousDeltaHash);
 
             var allPeers = PeerRepository.GetAll().Concat(new[] {_selfAsPeer});
 
@@ -105,9 +103,9 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
                .ToList();
 
             _logger.Information("Adding favourite delta producers for the successor of {0} to cache.",
-                previousDeltaHashAsString);
+                previousDeltaHash);
             _logger.Debug("Favourite producers are, in that order, [{0}]", string.Join(", ", peerIdsInPriorityOrder));
-            _producersByPreviousDelta.Set(GetCacheKey(previousDeltaHashAsString), peerIdsInPriorityOrder,
+            _producersByPreviousDelta.Set(GetCacheKey(previousDeltaHash), peerIdsInPriorityOrder,
                 _cacheEntryOptions);
 
             return peerIdsInPriorityOrder;

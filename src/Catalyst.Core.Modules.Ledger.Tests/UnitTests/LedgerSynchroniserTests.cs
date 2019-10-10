@@ -26,12 +26,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using LibP2P;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
@@ -48,8 +51,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
         public LedgerSynchroniserTests(ITestOutputHelper output)
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _output = output;
             _deltaCache = Substitute.For<IDeltaCache>();
@@ -60,13 +62,13 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _synchroniser = new LedgerSynchroniser(_deltaCache, _hashProvider, logger);
         }
 
-        private Dictionary<MultiHash, Delta> BuildChainedDeltas(int chainSize)
+        private Dictionary<Cid, Delta> BuildChainedDeltas(int chainSize)
         {
             var chainedDeltas = Enumerable.Range(0, chainSize + 1).ToDictionary(
-                i => _hashProvider.ComputeUtf8MultiHash(i.ToString()),
+                i => CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash(i.ToString())),
                 i =>
                 {
-                    var previousHash = _hashProvider.ComputeUtf8MultiHash((i - 1).ToString());
+                    var previousHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash((i - 1).ToString()));
                     var delta = DeltaHelper.GetDelta(_hashProvider, previousHash);
                     return delta;
                 });
@@ -74,11 +76,11 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _output.WriteLine("chain is:");
             _output.WriteLine(string.Join(Environment.NewLine,
                 chainedDeltas.Select((c, i) =>
-                    $"{i}: current {c.Key} | previous {_hashProvider.Cast(c.Value.PreviousDeltaDfsHash.ToByteArray())}")));
+                    $"{i}: current {c.Key} | previous {Cid.Decode(c.Value.PreviousDeltaDfsHash.ToByteArray().ToBase32())}")));
             return chainedDeltas;
         }
 
-        private void SetCacheExpectations(Dictionary<MultiHash, Delta> deltasByHash)
+        private void SetCacheExpectations(Dictionary<Cid, Delta> deltasByHash)
         {
             foreach (var delta in deltasByHash)
             {
@@ -117,7 +119,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             });
         }
 
-        private void OutputCachedHashes(List<MultiHash> cachedHashes)
+        private void OutputCachedHashes(List<Cid> cachedHashes)
         {
             _output.WriteLine("cached hashes between: ");
             _output.WriteLine(string.Join(", ", cachedHashes));

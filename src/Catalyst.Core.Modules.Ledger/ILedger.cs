@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Core.Modules.Ledger.Models;
+using LibP2P;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Ledger
@@ -48,12 +49,12 @@ namespace Catalyst.Core.Modules.Ledger
         /// the delta received is not immediately following the current <seealso cref="LatestKnownDelta"/>.
         /// </summary>
         /// <param name="deltaHash">The address of the delta used to update the ledger on the Dfs.</param>
-        void Update(MultiHash deltaHash);
+        void Update(Cid deltaHash);
 
         /// <summary>
         /// The latest hash that was process
         /// </summary>
-        MultiHash LatestKnownDelta { get; }
+        Cid LatestKnownDelta { get; }
 
         /// <summary>
         /// A boolean indicating whether a synchronisation of the ledger is in currently in process. 

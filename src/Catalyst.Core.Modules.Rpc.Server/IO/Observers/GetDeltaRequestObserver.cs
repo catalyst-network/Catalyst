@@ -31,7 +31,9 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using LibP2P;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -60,10 +62,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
+            
+            var cid = Cid.Decode(getDeltaRequest.DeltaDfsHash.ToByteArray().ToBase32());
 
-            var hash = _hashProvider.Cast(getDeltaRequest.DeltaDfsHash.ToByteArray());
-
-            _deltaCache.TryGetOrAddConfirmedDelta(hash, out var delta);
+            _deltaCache.TryGetOrAddConfirmedDelta(cid, out var delta);
 
             return new GetDeltaResponse {Delta = delta};
         }

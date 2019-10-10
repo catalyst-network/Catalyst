@@ -32,6 +32,7 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
+using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
@@ -49,8 +50,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate) => 
             nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32();
 
-        public static string GetCandidateListCacheKey(MultiHash previousDeltaHash) => 
-            nameof(DeltaVoter) + "-" + previousDeltaHash.ToBase32();
+        public static string GetCandidateListCacheKey(Cid previousDeltaHash) => 
+            nameof(DeltaVoter) + "-" + previousDeltaHash;
 
         /// <summary>
         /// This cache is used to maintain the candidates with their scores, and for each previous delta hash we found,
@@ -135,7 +136,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32(), candidatesForPreviousHash);
         }
 
-        public bool TryGetFavouriteDelta(MultiHash previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
+        public bool TryGetFavouriteDelta(Cid previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
         {
             Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull();
             _logger.Debug("Retrieving favourite candidate delta for the successor of delta {0}", 
@@ -145,7 +146,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             if (!_candidatesCache.TryGetValue(cacheKey, out ConcurrentBag<string> candidates))
             {
                 _logger.Debug("Failed to retrieve any scored candidate with previous delta {0}",
-                    previousDeltaDfsHash.ToBase32());
+                    previousDeltaDfsHash);
                 favourite = default;
                 return false;
             }
@@ -164,7 +165,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             _logger.Debug("Retrieved favourite candidate delta {candidate} for the successor of delta {previousDelta}",
                 bestCandidate.Hash.ToByteArray().ToBase32(),
-                previousDeltaDfsHash.ToBase32());
+                previousDeltaDfsHash);
 
             return true;
         }

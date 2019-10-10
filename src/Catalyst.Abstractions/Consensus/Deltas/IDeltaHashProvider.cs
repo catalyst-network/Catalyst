@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Dfs;
+using LibP2P;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
@@ -47,18 +48,18 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         ///         <cref>false</cref>
         ///     </see>
         ///     otherwise.</returns>
-        bool TryUpdateLatestHash(MultiHash previousHash, MultiHash newHash);
+        bool TryUpdateLatestHash(Cid previousHash, Cid newHash);
 
         /// <summary>
         /// Retrieve the latest ledger update, as seen from an optional point in time in the past.
         /// </summary>
         /// <param name="asOf">An optional point in time in the past, if not provided, it will use <see cref="IDateTimeProvider.UtcNow"/></param>
         /// <returns>The hash, or address on the DFS, of the latest ledger state update as a string, as returned in <seealso cref="IDfs.AddAsync"/></returns>
-        MultiHash GetLatestDeltaHash(DateTime? asOf = null);
+        Cid GetLatestDeltaHash(DateTime? asOf = null);
 
         /// <summary>
         /// Subscribe to these updates to get live notifications for the hashes of new deltas as they get published on the Dfs.
         /// </summary>
-        IObservable<MultiHash> DeltaHashUpdates { get; }
+        IObservable<Cid> DeltaHashUpdates { get; }
     }
 }

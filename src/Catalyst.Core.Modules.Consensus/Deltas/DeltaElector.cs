@@ -31,10 +31,10 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Dawn;
+using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -49,10 +49,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate, IHashProvider hashProvider)
         {
-            return nameof(DeltaElector) + "-" + hashProvider.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
+            return nameof(DeltaElector) + "-" +
+                hashProvider.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
         }
 
-        public string GetCandidateListCacheKey(MultiHash previousDeltaHash)
+        public string GetCandidateListCacheKey(Cid previousDeltaHash)
         {
             return nameof(DeltaElector) + "-" + previousDeltaHash;
         }
@@ -85,9 +86,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             try
             {
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
-                var multiHash = new MultiHash(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
+                var cid = _hashProvider.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
                 if (!_deltaProducersProvider
-                   .GetDeltaProducersFromPreviousDelta(multiHash)
+                   .GetDeltaProducersFromPreviousDelta(cid)
                    .Any(p => p.Equals(candidate.VoterId)))
                 {
                     //https://github.com/catalyst-network/Catalyst.Node/issues/827
@@ -118,14 +119,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public CandidateDeltaBroadcast GetMostPopularCandidateDelta(MultiHash previousDeltaDfsHash)
+        public CandidateDeltaBroadcast GetMostPopularCandidateDelta(Cid previousDeltaDfsHash)
         {
             var candidateListCacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
             if (!_candidatesCache.TryGetValue(candidateListCacheKey,
                 out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
             {
                 _logger.Debug("Failed to retrieve any favourite candidate with previous delta {0}",
-                    previousDeltaDfsHash.ToBase32());
+                    previousDeltaDfsHash);
                 return null;
             }
 

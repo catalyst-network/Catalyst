@@ -37,6 +37,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private readonly IMemoryCache _cache;
         private readonly IDeltaProducersProvider _producersProvider;
         private DeltaVoter _voter;
-        private readonly MultiHash _previousDeltaHash;
+        private readonly Cid _previousDeltaHash;
         private readonly IList<PeerId> _producerIds;
         private readonly PeerId _localIdentifier;
         private readonly ILogger _logger;
@@ -98,13 +99,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _cache = Substitute.For<IMemoryCache>();
 
-            _previousDeltaHash = _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
+            _previousDeltaHash = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)));
 
             _producerIds = "1234"
                .Select((c, i) => PeerIdHelper.GetPeerId(c.ToString()))
                .Shuffle();
             _producersProvider = Substitute.For<IDeltaProducersProvider>();
-            _producersProvider.GetDeltaProducersFromPreviousDelta(Arg.Any<MultiHash>())
+            _producersProvider.GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
                .Returns(_producerIds);
 
             _localIdentifier = PeerIdHelper.GetPeerId("myself, a producer");

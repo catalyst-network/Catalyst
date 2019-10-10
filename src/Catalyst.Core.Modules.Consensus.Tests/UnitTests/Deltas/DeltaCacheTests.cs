@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void Genesis_Hash_Should_Be_Always_Present()
         {
-            _memoryCache.Received().CreateEntry(_deltaCache.GenesisAddress);
+            _memoryCache.Received().CreateEntry(_deltaCache.GenesisHash);
         }
 
         [Fact]
@@ -75,14 +75,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var deltaFromCache = DeltaHelper.GetDelta(_hashProvider);
             var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("abc"));
 
-            _memoryCache.TryGetValue(Arg.Is(cid.Hash), out Arg.Any<Delta>())
+            _memoryCache.TryGetValue(Arg.Is(cid), out Arg.Any<Delta>())
                .Returns(ci =>
                 {
                     ci[1] = deltaFromCache;
                     return true;
                 });
 
-            var found = _deltaCache.TryGetOrAddConfirmedDelta(cid.Hash, out var delta);
+            var found = _deltaCache.TryGetOrAddConfirmedDelta(cid, out var delta);
 
             delta.Should().Be(deltaFromCache);
             found.Should().BeTrue();
@@ -100,14 +100,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             ExpectDeltaFromDfsAndNotFromCache(cid, deltaFromDfs);
 
             var cacheEntry = Substitute.For<ICacheEntry>();
-            _memoryCache.CreateEntry(cid.Hash).Returns(cacheEntry);
+            _memoryCache.CreateEntry(cid).Returns(cacheEntry);
 
-            var found = _deltaCache.TryGetOrAddConfirmedDelta(cid.Hash, out var delta);
+            var found = _deltaCache.TryGetOrAddConfirmedDelta(cid, out var delta);
 
             delta.Should().Be(deltaFromDfs);
             found.Should().BeTrue();
 
-            _memoryCache.Received(1).TryGetValue(cid.Hash, out Arg.Any<Delta>());
+            _memoryCache.Received(1).TryGetValue(cid, out Arg.Any<Delta>());
             _dfsReader.Received(1).TryReadDeltaFromDfs(cid, out Arg.Any<Delta>());
         }
 
@@ -124,11 +124,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var expirationCallbacks = new List<PostEvictionCallbackRegistration>();
             cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
 
-            _memoryCache.CreateEntry(cid.Hash).Returns(cacheEntry);
+            _memoryCache.CreateEntry(cid).Returns(cacheEntry);
 
-            _deltaCache.TryGetOrAddConfirmedDelta(cid.Hash, out _);
+            _deltaCache.TryGetOrAddConfirmedDelta(cid, out _);
 
-            _memoryCache.Received(1).CreateEntry(cid.Hash);
+            _memoryCache.Received(1).CreateEntry(cid);
             cacheEntry.Value.Should().Be(deltaFromDfs);
 
             cacheEntry.ExpirationTokens.Count.Should().Be(1);
@@ -142,7 +142,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         private void ExpectDeltaFromDfsAndNotFromCache(Cid cid, Delta deltaFromDfs)
         {
-            _memoryCache.TryGetValue(Arg.Is(cid.Hash), out Arg.Any<Delta>())
+            _memoryCache.TryGetValue(Arg.Is(cid), out Arg.Any<Delta>())
                .Returns(false);
             _dfsReader.TryReadDeltaFromDfs(Arg.Is(cid), out Arg.Any<Delta>())
                .Returns(ci =>

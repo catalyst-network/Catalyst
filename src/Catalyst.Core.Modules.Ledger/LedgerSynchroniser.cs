@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
+using LibP2P;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
@@ -47,8 +48,8 @@ namespace Catalyst.Core.Modules.Ledger
         public IDeltaCache DeltaCache { get; }
 
         /// <inheritdoc />
-        public IEnumerable<MultiHash> CacheDeltasBetween(MultiHash latestKnownDeltaHash,
-            MultiHash targetDeltaHash,
+        public IEnumerable<Cid> CacheDeltasBetween(Cid latestKnownDeltaHash,
+            Cid targetDeltaHash,
             CancellationToken cancellationToken)
         {
             var thisHash = targetDeltaHash;
