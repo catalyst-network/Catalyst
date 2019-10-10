@@ -2,15 +2,15 @@ strategy:
   matrix:
     Windows-VS2019:
       imageName: 'windows-2019'
-      netcore_sdk: 2.2.104
+      netcore_sdk: 3.0.100
       rustup_toolchain: stable
     Osx-Mojave:
       imageName: 'macos-10.14'
-      netcore_sdk: 2.2.104
+      netcore_sdk: 3.0.100
       rustup_toolchain: stable
     Ubuntu-1604:
       imageName: 'ubuntu-16.04'
-      netcore_sdk: 2.2.104
+      netcore_sdk: 3.0.100
       rustup_toolchain: stable
   maxParallel: 3
 
