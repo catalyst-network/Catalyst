@@ -51,8 +51,17 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
-                _hashProvider.CheckHash(deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray());
-                _hashProvider.CheckHash(deserialised.Candidate.Hash.ToByteArray());
+                if (!_hashProvider.IsValidHash(deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray()))
+                {
+                    Logger.Error($"PreviousDeltaDfsHash is not a valid hash");
+                    return;
+                }
+
+                if (!_hashProvider.IsValidHash(deserialised.Candidate.Hash.ToByteArray()))
+                {
+                    Logger.Error($"Hash is not a valid hash");
+                    return;
+                }
 
                 deserialised.IsValid();
                 

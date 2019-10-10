@@ -21,12 +21,12 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Core.Modules.Hashing.Exception;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Hashing
@@ -39,20 +39,7 @@ namespace Catalyst.Core.Modules.Hashing
 
         public MultiHash Cast(byte[] data) { return CastIfHashIsValid(data); }
 
-        public bool IsValidHash(byte[] data)
-        {
-            try
-            {
-                CastIfHashIsValid(data);
-                return true;
-            }
-            catch (MultiHashNotValidException)
-            {
-                return false;
-            }
-        }
-
-        public void CheckHash(byte[] data) { CastIfHashIsValid(data); }
+        public bool IsValidHash(byte[] data) { return CastIfHashIsValid(data) != null; }
 
         private MultiHash CastIfHashIsValid(byte[] data)
         {
@@ -64,11 +51,11 @@ namespace Catalyst.Core.Modules.Hashing
                     return multiHash;
                 }
 
-                throw new MultiHashNotValidException("MultiHash is not valid");
+                return null;
             }
-            catch (System.Exception exc)
+            catch (Exception exc)
             {
-                throw new MultiHashNotValidException(exc.Message, exc);
+                return null;
             }
         }
 

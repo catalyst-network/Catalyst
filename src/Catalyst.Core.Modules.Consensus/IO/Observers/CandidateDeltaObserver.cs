@@ -53,8 +53,17 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     messageDto.Payload.PeerId.Port);
                 var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
 
-                _hashProvider.CheckHash(deserialised.PreviousDeltaDfsHash.ToByteArray());
-                _hashProvider.CheckHash(deserialised.Hash.ToByteArray());
+                if (!_hashProvider.IsValidHash(deserialised.PreviousDeltaDfsHash.ToByteArray()))
+                {
+                    Logger.Error($"PreviousDeltaDfsHash is not a valid hash");
+                    return;
+                }
+
+                if (!_hashProvider.IsValidHash(deserialised.Hash.ToByteArray()))
+                {
+                    Logger.Error($"Hash is not a valid hash");
+                    return;
+                }
 
                 deserialised.IsValid();
                 

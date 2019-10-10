@@ -50,8 +50,21 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
+
                 var previousHash = _hashProvider.Cast(deserialised.PreviousDeltaDfsHash.ToByteArray());
+                if (previousHash == null)
+                {
+                    Logger.Error($"PreviousDeltaDfsHash is not a valid hash");
+                    return;
+                }
+
                 var newHash = _hashProvider.Cast(deserialised.DeltaDfsHash.ToByteArray());
+                if (newHash == null)
+                {
+                    Logger.Error($"DeltaDfsHash is not a valid hash");
+                    return;
+                }
+
                 _deltaHashProvider.TryUpdateLatestHash(previousHash, newHash);
             }
             catch (Exception exception)
