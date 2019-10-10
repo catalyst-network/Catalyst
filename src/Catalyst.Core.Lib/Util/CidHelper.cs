@@ -21,17 +21,16 @@
 
 #endregion
 
-using Multiformats.Hash;
-using SimpleBase;
+using LibP2P;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Core.Lib.Extensions
+namespace Catalyst.Core.Lib.Util
 {
-    public static class MultihashExtensions
+    public static class CidHelper
     {
-        public static string AsBase32Address(this Multihash multihash)
+        public static Cid CreateCid(MultiHash multiHash)
         {
-            var result = Base32.Rfc4648.Encode(multihash.ToBytes(), false).ToLowerInvariant();
-            return result;
+            return new Cid {Version = 1, Hash = multiHash};
         }
     }
 }

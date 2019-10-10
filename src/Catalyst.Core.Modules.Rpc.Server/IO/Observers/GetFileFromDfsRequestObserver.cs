@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.FileTransfer;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
@@ -36,45 +37,49 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     /// <summary>
-    /// The request handler to get a file from the DFS
+    ///     The request handler to get a file from the DFS
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class GetFileFromDfsRequestObserver
         : RequestObserverBase<GetFileFromDfsRequest, GetFileFromDfsResponse>,
             IRpcRequestObserver
     {
+        private readonly IHashProvider _hashProvider;
+
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The DFS</summary>
         private readonly IDfs _dfs;
 
-        /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestObserver"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestObserver" /> class.</summary>
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerSettings"></param>
         /// <param name="fileTransferFactory">The upload file transfer factory.</param>
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestObserver(IDfs dfs,
+            IHashProvider hashProvider,
             IPeerSettings peerSettings,
             IUploadFileTransferFactory fileTransferFactory,
             ILogger logger) : base(logger, peerSettings)
         {
+            _hashProvider = hashProvider;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getFileFromDfsRequest"></param>
         /// <param name="channelHandlerContext"></param>
@@ -100,7 +105,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 {
                     responseCodeType = await Task.Run(async () =>
                     {
-                        var stream = await _dfs.ReadAsync(getFileFromDfsRequest.DfsHash).ConfigureAwait(false);
+                        var stream = await _dfs.ReadAsync(_hashProvider.Cast(getFileFromDfsRequest.DfsHash.FromBase32())).ConfigureAwait(false);
                         fileLen = stream.Length;
                         using (var fileTransferInformation = new UploadFileTransferInformation(
                             stream,
@@ -117,7 +122,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 catch (Exception e)
                 {
                     Logger.Error(e,
-                        "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}", getFileFromDfsRequest);
+                        "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}",
+                        getFileFromDfsRequest);
                     responseCodeType = FileTransferResponseCodeTypes.Error;
                 }
 

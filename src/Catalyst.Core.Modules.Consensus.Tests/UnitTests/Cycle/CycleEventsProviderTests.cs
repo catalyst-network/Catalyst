@@ -31,13 +31,13 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Enumerator;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Cycle;
+using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
-using Multiformats.Hash;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -46,7 +46,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
     public sealed class CycleEventsProviderTests : IDisposable
     {
         private const int PhaseCountPerCycle = 12;
-        private static readonly PhaseStatus[] StatusesInOrder = {PhaseStatus.Producing, PhaseStatus.Collecting, PhaseStatus.Idle};
+
+        private static readonly PhaseStatus[] StatusesInOrder =
+            {PhaseStatus.Producing, PhaseStatus.Collecting, PhaseStatus.Idle};
+
         private readonly TestScheduler _testScheduler;
         private readonly CycleEventsProvider _cycleProvider;
         private readonly IDisposable _subscription;
@@ -60,6 +63,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 
         public CycleEventsProviderTests(ITestOutputHelper output)
         {
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+
             _output = output;
             _testScheduler = new TestScheduler();
 
@@ -70,10 +75,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             _logger = Substitute.For<ILogger>();
 
             _deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
-               .Returns(Multihash.Sum(HashType.ID, ByteUtil.GenerateRandomByteArray(32)));
+               .Returns(hashProvider.ComputeUtf8MultiHash("test"));
 
             _dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
-            _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider, _deltaHashProvider, _logger);
+            _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider,
+                _deltaHashProvider, _logger);
 
             _spy = Substitute.For<IObserver<IPhase>>();
 
@@ -170,15 +176,18 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             _testScheduler.AdvanceBy(secondProviderStartOffset.Ticks);
 
             var spy2 = Substitute.For<IObserver<IPhase>>();
-            using (var cycleProvider2 = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider, _deltaHashProvider, _logger))
+            using (var cycleProvider2 = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider,
+                _schedulerProvider, _deltaHashProvider, _logger))
             using (cycleProvider2.PhaseChanges.Take(50 - PhaseCountPerCycle)
                .Subscribe(p =>
                 {
-                    _output.WriteLine($"{_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture)} % 2 -- {p}");
+                    _output.WriteLine(
+                        $"{_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture)} % 2 -- {p}");
                     spy2.OnNext(p);
                 }, () =>
                 {
-                    _output.WriteLine($"% 2 -- completed after {_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture):g}");
+                    _output.WriteLine(
+                        $"% 2 -- completed after {_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture):g}");
                     spy2.OnCompleted();
                 }))
             {
@@ -194,7 +203,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
                 receivedPhases2.Count.Should().Be(50 - PhaseCountPerCycle);
 
                 (receivedPhases2.First().UtcStartTime - receivedPhases.First().UtcStartTime)
-                   .TotalMilliseconds.Should().BeApproximately(CycleConfiguration.Default.CycleDuration.TotalMilliseconds, 0.0001d,
+                   .TotalMilliseconds.Should().BeApproximately(
+                        CycleConfiguration.Default.CycleDuration.TotalMilliseconds, 0.0001d,
                         "the provider should start on the second cycle");
 
                 foreach (var phases in receivedPhases.Skip(PhaseCountPerCycle)

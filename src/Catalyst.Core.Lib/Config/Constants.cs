@@ -22,9 +22,6 @@
 #endregion
 
 using Catalyst.Protocol.Network;
-using Multiformats.Base;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Core.Lib.Config
 {
@@ -35,25 +32,25 @@ namespace Catalyst.Core.Lib.Config
 
         // <summary> Serilog configuration file </summary>
         public static string SerilogJsonConfigFile => "serilog.json";
-        
+
         // <summary> Search pattern for Json files </summary>
         public static string JsonFilePattern => "{0}.json";
-        
+
         // <summary> Default Catalyst data directory </summary>
         public static string CatalystDataDir => ".catalyst";
-        
+
         // <summary> Default dfs data directory inside the Catalyst data directory </summary>
         public static string DfsDataSubDir => "dfs";
 
         // <summary> Default keystore data directory inside the Catalyst data directory </summary>
         public static string KeyStoreDataSubDir => "keystore";
-        
+
         /// <summary>The expiry minutes of initialization </summary>
         public static int FileTransferExpirySeconds => 60;
 
         /// <summary>The chunk size in bytes </summary>
         public static int FileTransferChunkSize => 200000;
-        
+
         /// <summary>The maximum chunk retry count </summary>
         public static int FileTransferMaxChunkRetryCount => 3;
 
@@ -62,14 +59,6 @@ namespace Catalyst.Core.Lib.Config
 
         /// <summary> EdDSA Curve  type </summary>
         public static string KeyChainDefaultKeyType => "ed25519";
-
-        /// <summary> Hashing algorithm </summary>
-        public static IMultihashAlgorithm HashAlgorithm { get; } = new BLAKE2B_256();
-
-        /// <summary> Hashing algorithm type </summary>
-        public static HashType HashAlgorithmType => HashAlgorithm.Code;
-
-        public static MultibaseEncoding EncodingAlgorithm => MultibaseEncoding.Base58Btc;
 
         /// <summary> Number of random peers to provide when processing a GetNeighbourRequest</summary>
         public static int NumberOfRandomPeers => 5;

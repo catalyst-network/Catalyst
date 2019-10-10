@@ -31,11 +31,13 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Common.Logging;
 using Common.Logging.Serilog;
-using Ipfs;
-using Ipfs.CoreApi;
-using Ipfs.Engine;
-using PeerTalk.Cryptography;
+using LibP2P;
+using LibP2P.Cryptography;
 using Serilog;
+using TheDotNetLeague.Ipfs.Abstractions;
+using TheDotNetLeague.Ipfs.Core.Lib;
+using TheDotNetLeague.MultiFormats.MultiAddress;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Dfs
 {

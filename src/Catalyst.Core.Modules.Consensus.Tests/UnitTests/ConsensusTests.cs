@@ -22,24 +22,24 @@
 #endregion
 
 using System;
-using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Cycle;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {
     public class ConsensusTests : IDisposable
     {
+        private readonly IHashProvider _hashProvider;
         private readonly IDeltaBuilder _deltaBuilder;
         private readonly IDeltaVoter _deltaVoter;
         private readonly IDeltaElector _deltaElector;
@@ -50,47 +50,52 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 
         public ConsensusTests()
         {
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            _hashProvider = new HashProvider(hashingAlgorithm);
             _cycleEventProvider = new TestCycleEventProvider();
             _deltaBuilder = Substitute.For<IDeltaBuilder>();
             _deltaVoter = Substitute.For<IDeltaVoter>();
             _deltaElector = Substitute.For<IDeltaElector>();
             _deltaCache = Substitute.For<IDeltaCache>();
             _deltaHub = Substitute.For<IDeltaHub>();
-            var hashProvider = Substitute.For<IDeltaHashProvider>();
+            var deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             var logger = Substitute.For<ILogger>();
             _consensus = new Consensus(
-                _deltaBuilder, 
-                _deltaVoter, 
+                _deltaBuilder,
+                _deltaVoter,
                 _deltaElector,
                 _deltaCache,
-                _deltaHub, 
+                _deltaHub,
                 _cycleEventProvider,
-                hashProvider,
+                deltaHashProvider,
+                _hashProvider,
                 logger);
 
             _consensus.StartProducing();
         }
 
-        private byte[] PreviousDeltaBytes => _cycleEventProvider.CurrentPhase.PreviousDeltaDfsHash.ToBytes();
+        private MultiHash PreviousDeltaBytes => _cycleEventProvider.CurrentPhase.PreviousDeltaDfsHash;
 
         [Fact]
-        public void ConstructionProducingSubscription_Should_Trigger_BuildDeltaCandidate_On_Construction_Producing_Phase()
+        public void
+            ConstructionProducingSubscription_Should_Trigger_BuildDeltaCandidate_On_Construction_Producing_Phase()
         {
-            var builtCandidate = DeltaHelper.GetCandidateDelta();
-            _deltaBuilder.BuildCandidateDelta(Arg.Any<byte[]>()).Returns(builtCandidate);
-            
+            var builtCandidate = DeltaHelper.GetCandidateDelta(_hashProvider);
+            _deltaBuilder.BuildCandidateDelta(Arg.Any<MultiHash>()).Returns(builtCandidate);
+
             _cycleEventProvider.MovePastNextPhase(PhaseName.Construction);
 
             _deltaBuilder.Received(1).BuildCandidateDelta(
-                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
+                Arg.Is<MultiHash>(b => b == PreviousDeltaBytes));
             _deltaHub.Received(1).BroadcastCandidate(Arg.Is(builtCandidate));
         }
 
         [Fact]
-        public void CampaigningProductionSubscription_Should_Trigger_TryGetFavouriteDelta_On_Campaigning_Producing_Phase()
+        public void
+            CampaigningProductionSubscription_Should_Trigger_TryGetFavouriteDelta_On_Campaigning_Producing_Phase()
         {
-            var favourite = DeltaHelper.GetFavouriteDelta();
-            _deltaVoter.TryGetFavouriteDelta(Arg.Any<byte[]>(), out Arg.Any<FavouriteDeltaBroadcast>())
+            var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
+            _deltaVoter.TryGetFavouriteDelta(Arg.Any<MultiHash>(), out Arg.Any<FavouriteDeltaBroadcast>())
                .Returns(ci =>
                 {
                     ci[1] = favourite;
@@ -100,7 +105,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _cycleEventProvider.MovePastNextPhase(PhaseName.Campaigning);
 
             _deltaVoter.Received(1).TryGetFavouriteDelta(
-                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)), 
+                Arg.Is<MultiHash>(b => b == PreviousDeltaBytes),
                 out Arg.Any<FavouriteDeltaBroadcast>());
             _deltaHub.Received(1).BroadcastFavouriteCandidateDelta(Arg.Is(favourite));
         }
@@ -108,7 +113,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
         [Fact]
         public void CampaigningProductionSubscription_Should_Not_Broadcast_On_TryGetFavouriteDelta_Null()
         {
-            _deltaVoter.TryGetFavouriteDelta(Arg.Any<byte[]>(), out Arg.Any<FavouriteDeltaBroadcast>())
+            _deltaVoter.TryGetFavouriteDelta(Arg.Any<MultiHash>(), out Arg.Any<FavouriteDeltaBroadcast>())
                .Returns(ci =>
                 {
                     ci[1] = null;
@@ -118,7 +123,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _cycleEventProvider.MovePastNextPhase(PhaseName.Campaigning);
 
             _deltaVoter.Received(1).TryGetFavouriteDelta(
-                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)),
+                Arg.Is<MultiHash>(b => b == PreviousDeltaBytes),
                 out Arg.Any<FavouriteDeltaBroadcast>());
 
             _deltaHub.DidNotReceiveWithAnyArgs().BroadcastFavouriteCandidateDelta(default);
@@ -127,10 +132,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
         [Fact]
         public void VotingProductionSubscription_Should_Hit_Cache_And_Publish_To_Dfs()
         {
-            var popularCandidate = DeltaHelper.GetCandidateDelta();
-            var localDelta = DeltaHelper.GetDelta();
+            var popularCandidate = DeltaHelper.GetCandidateDelta(_hashProvider);
+            var localDelta = DeltaHelper.GetDelta(_hashProvider);
 
-            _deltaElector.GetMostPopularCandidateDelta(Arg.Any<byte[]>())
+            _deltaElector.GetMostPopularCandidateDelta(Arg.Any<MultiHash>())
                .Returns(popularCandidate);
             _deltaCache.TryGetLocalDelta(Arg.Any<CandidateDeltaBroadcast>(), out Arg.Any<Delta>())
                .Returns(ci =>
@@ -140,30 +145,30 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                 });
 
             _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(default)
-               .ReturnsForAnyArgs(ByteUtil.GenerateRandomByteArray(1000).ComputeMultihash(new BLAKE2B_256())
-                   .AsBase32Address());
+               .ReturnsForAnyArgs(_hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(1000)));
 
             _cycleEventProvider.MovePastNextPhase(PhaseName.Voting);
             _cycleEventProvider.Scheduler.Stop();
 
             _deltaElector.Received(1).GetMostPopularCandidateDelta(
-                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
+                Arg.Is<MultiHash>(b => b == PreviousDeltaBytes));
 
             _deltaCache.Received(1).TryGetLocalDelta(popularCandidate, out _);
             _deltaHub.Received(1).PublishDeltaToDfsAndBroadcastAddressAsync(localDelta);
         }
 
         [Fact]
-        public void VotingProductionSubscription_Should_Not_Hit_Cache_Or_Publish_To_Dfs_On_GetMostPopularCandidateDelta_Null()
+        public void
+            VotingProductionSubscription_Should_Not_Hit_Cache_Or_Publish_To_Dfs_On_GetMostPopularCandidateDelta_Null()
         {
-            _deltaElector.GetMostPopularCandidateDelta(Arg.Any<byte[]>())
+            _deltaElector.GetMostPopularCandidateDelta(Arg.Any<MultiHash>())
                .Returns((CandidateDeltaBroadcast) null);
 
             _cycleEventProvider.MovePastNextPhase(PhaseName.Voting);
             _cycleEventProvider.Scheduler.Stop();
 
             _deltaElector.Received(1).GetMostPopularCandidateDelta(
-                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
+                Arg.Is<MultiHash>(b => b == PreviousDeltaBytes));
 
             _deltaCache.DidNotReceiveWithAnyArgs().TryGetLocalDelta(default, out _);
             _deltaHub.DidNotReceiveWithAnyArgs().PublishDeltaToDfsAndBroadcastAddressAsync(default);
@@ -172,9 +177,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
         [Fact]
         public void VotingProductionSubscription_Should_Not_Publish_To_Dfs_On_GetMostPopularCandidateDelta_Null()
         {
-            var popularCandidate = DeltaHelper.GetCandidateDelta();
+            var popularCandidate = DeltaHelper.GetCandidateDelta(_hashProvider);
 
-            _deltaElector.GetMostPopularCandidateDelta(Arg.Any<byte[]>())
+            _deltaElector.GetMostPopularCandidateDelta(Arg.Any<MultiHash>())
                .Returns(popularCandidate);
             _deltaCache.TryGetLocalDelta(Arg.Any<CandidateDeltaBroadcast>(), out Arg.Any<Delta>())
                .Returns(ci =>
@@ -187,7 +192,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _cycleEventProvider.Scheduler.Stop();
 
             _deltaElector.Received(1).GetMostPopularCandidateDelta(
-                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
+                Arg.Is<MultiHash>(b => b == PreviousDeltaBytes));
 
             _deltaCache.Received(1).TryGetLocalDelta(popularCandidate, out _);
             _deltaHub.DidNotReceiveWithAnyArgs().PublishDeltaToDfsAndBroadcastAddressAsync(default);

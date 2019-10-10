@@ -27,6 +27,7 @@ using System.Linq;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
@@ -38,8 +39,8 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using Multiformats.Hash.Algorithms;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
@@ -49,7 +50,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private readonly IDeltaTransactionRetriever _transactionRetriever;
         private readonly IDeterministicRandomFactory _randomFactory;
-        private readonly IMultihashAlgorithm _hashAlgorithm;
+        private readonly IHashProvider _hashProvider;
         private readonly PeerId _producerUniqueId;
         private readonly IDeltaCache _deltaCache;
         private readonly IDateTimeProvider _dateTimeProvider;
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
             IDeterministicRandomFactory randomFactory,
-            IMultihashAlgorithm hashAlgorithm,
+            IHashProvider hashProvider,
             IPeerSettings peerSettings,
             IDeltaCache deltaCache,
             IDateTimeProvider dateTimeProvider,
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             _transactionRetriever = transactionRetriever;
             _randomFactory = randomFactory;
-            _hashAlgorithm = hashAlgorithm;
+            _hashProvider = hashProvider;
             _producerUniqueId = peerSettings.PeerId;
             _deltaCache = deltaCache;
             _dateTimeProvider = dateTimeProvider;
@@ -73,7 +74,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         ///<inheritdoc />
-        public CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash)
+        public CandidateDeltaBroadcast BuildCandidateDelta(MultiHash previousDeltaHash)
         {
             _logger.Debug("Building candidate delta locally");
 
@@ -86,7 +87,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
             var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
-                t => t.PublicEntries.Select(e => new RawEntryWithSaltedAndHashedEntry(e, salt, _hashAlgorithm)));
+                t => t.PublicEntries.Select(e => new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
 
             // (Eα;Oα)
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
@@ -119,18 +120,18 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var candidate = new CandidateDeltaBroadcast
             {
                 // h∆j
-                Hash = globalLedgerStateUpdate.ComputeMultihash(_hashAlgorithm).ToBytes().ToByteString(),
+                Hash = _hashProvider.ComputeMultiHash(globalLedgerStateUpdate).ToArray().ToByteString(),
 
                 // Idj
                 ProducerId = _producerUniqueId,
-                PreviousDeltaDfsHash = previousDeltaHash.ToByteString()
+                PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString()
             };
 
             _logger.Debug("Building full delta locally");
 
             var producedDelta = new Delta
             {
-                PreviousDeltaDfsHash = previousDeltaHash.ToByteString(),
+                PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
                 CoinbaseEntries = {coinbaseEntry},
                 PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries)},
@@ -144,9 +145,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             return candidate;
         }
 
-        private IEnumerable<byte> GetSaltFromPreviousDelta(byte[] previousDeltaHash)
+        private IEnumerable<byte> GetSaltFromPreviousDelta(MultiHash previousDeltaHash)
         {
-            var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash);
+            var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash.ToArray());
             return BitConverter.GetBytes(isaac.NextInt());
         }
 
@@ -155,10 +156,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             public PublicEntry RawEntry { get; }
             public byte[] SaltedAndHashedEntry { get; }
 
-            public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry, IEnumerable<byte> salt, IMultihashAlgorithm hashAlgorithm)
+            public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry, IEnumerable<byte> salt, IHashProvider hashProvider)
             {
                 RawEntry = rawEntry;
-                SaltedAndHashedEntry = rawEntry.ToByteArray().Concat(salt).ComputeRawHash(hashAlgorithm);
+                SaltedAndHashedEntry = hashProvider.ComputeMultiHash(rawEntry.ToByteArray().Concat(salt)).ToArray();
             }
         }
 

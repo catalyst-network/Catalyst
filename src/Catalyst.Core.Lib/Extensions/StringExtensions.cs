@@ -27,9 +27,7 @@ using System.Text;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
-using Multiformats.Base;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
+using SimpleBase;
 
 namespace Catalyst.Core.Lib.Extensions
 {
@@ -44,40 +42,25 @@ namespace Catalyst.Core.Lib.Extensions
             stream.Position = 0;
             return stream;
         }
-        
-        public static byte[] ToUtf8Bytes(this string @string) => Encoding.UTF8.GetBytes(@string);
 
-        public static Multihash ComputeUtf8Multihash(this string content, IMultihashAlgorithm algorithm)
+        public static byte[] ToUtf8Bytes(this string @string) { return Encoding.UTF8.GetBytes(@string); }
+
+        public static PeerId BuildPeerIdFromBase32Key(this string base32Key, IPEndPoint ipEndPoint)
         {
-            var multihash = content.ToUtf8Bytes().ComputeMultihash(algorithm);
-            return multihash;
+            return BuildPeerIdFromBase32Key(base32Key, ipEndPoint.Address, ipEndPoint.Port);
         }
 
-        public static Multihash FromBase32Address(this string address)
+        public static PeerId BuildPeerIdFromBase32Key(this string base32Key,
+            IPAddress ipAddress,
+            int port)
         {
-            var success = Multihash.TryParse(address, MultibaseEncoding.Base32Lower, out var multihash);
-            if (!success)
-            {
-                throw new InvalidDataException($"{address} is not valid");
-            }
-            
-            return multihash;
-        }
-
-        public static PeerId BuildPeerIdFromBase32CrockfordKey(this string base32CrockfordKey, IPEndPoint ipEndPoint)
-        {
-            return BuildPeerIdFromBase32CrockfordKey(base32CrockfordKey, ipEndPoint.Address, ipEndPoint.Port);
-        }
-
-        public static PeerId BuildPeerIdFromBase32CrockfordKey(this string base32CrockfordKey, IPAddress ipAddress, int port)
-        {
-            return base32CrockfordKey.KeyToBytes().BuildPeerIdFromPublicKey(ipAddress, port);
+            return base32Key.KeyToBytes().BuildPeerIdFromPublicKey(ipAddress, port);
         }
 
         public static T ParseHexStringTo<T>(this string hex16Pid) where T : IMessage<T>, new()
         {
             var parser = new MessageParser<T>(() => new T());
-            return parser.ParseFrom((SimpleBase.Base16.Decode(hex16Pid)));
+            return parser.ParseFrom(Base16.Decode(hex16Pid));
         }
     }
 }

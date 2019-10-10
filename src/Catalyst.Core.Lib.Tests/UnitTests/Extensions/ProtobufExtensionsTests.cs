@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using System.Text;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
@@ -33,7 +32,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Multiformats.Hash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
@@ -78,17 +76,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
             };
             new Action(() => response.ToProtocolMessage(peerId))
                .Should().Throw<ArgumentException>();
-        }
-
-        [Fact]
-        public void ToMultihash_Can_Convert_Valid_ByteString_To_Multihash()
-        {
-            var initialHash = Multihash.Sum(HashType.BLAKE2B_256, Encoding.UTF8.GetBytes("hello"));
-            var byteString = initialHash.ToBytes().ToByteString();
-
-            var convertedHash = byteString.AsMultihash();
-
-            convertedHash.Should().Be(initialHash);
         }
 
         [Fact]

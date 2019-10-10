@@ -26,9 +26,8 @@ using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Consensus.Cycle;
-using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus
@@ -45,6 +44,7 @@ namespace Catalyst.Core.Modules.Consensus
 
         private readonly ICycleEventsProvider _cycleEventsProvider;
         private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly IHashProvider _hashProvider;
         private readonly IDeltaBuilder _deltaBuilder;
         private readonly IDeltaHub _deltaHub;
         private readonly IDeltaCache _deltaCache;
@@ -57,12 +57,14 @@ namespace Catalyst.Core.Modules.Consensus
             IDeltaHub deltaHub,
             ICycleEventsProvider cycleEventsProvider,
             IDeltaHashProvider deltaHashProvider,
+            IHashProvider hashProvider,
             ILogger logger)
         {
             _deltaVoter = deltaVoter;
             _deltaElector = deltaElector;
             _cycleEventsProvider = cycleEventsProvider;
             _deltaHashProvider = deltaHashProvider;
+            _hashProvider = hashProvider;
             _deltaBuilder = deltaBuilder;
             _deltaHub = deltaHub;
             _deltaCache = deltaCache;
@@ -108,14 +110,13 @@ namespace Catalyst.Core.Modules.Consensus
                .Subscribe(d =>
                 {
                     _logger.Information("New Delta following {deltaHash} published", 
-                        d.PreviousDeltaDfsHash.AsBase32Address());
+                        d.PreviousDeltaDfsHash);
 
-                    var newHash = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
+                    var newCid = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
                        .ConfigureAwait(false).GetAwaiter().GetResult();
-                    var newMultiHash = Multihash.Parse(newHash);
-                    var previousHash = Multihash.Cast(d.PreviousDeltaDfsHash.ToByteArray());
+                    var previousHash = _hashProvider.Cast(d.PreviousDeltaDfsHash.ToByteArray());
 
-                    _deltaHashProvider.TryUpdateLatestHash(previousHash, newMultiHash);
+                    _deltaHashProvider.TryUpdateLatestHash(previousHash, newCid.Hash);
                 });
         }
         

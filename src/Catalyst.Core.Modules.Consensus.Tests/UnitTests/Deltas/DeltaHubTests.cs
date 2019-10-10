@@ -26,10 +26,13 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
@@ -40,12 +43,15 @@ using NSubstitute;
 using Polly;
 using Polly.Retry;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
+using LibP2P;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaHubTests
     {
+        private readonly IHashProvider _hashProvider;
         private readonly IBroadcastManager _broadcastManager;
         private readonly PeerId _peerId;
         private readonly DeltaHub _hub;
@@ -56,27 +62,30 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             public DeltaHubWithFastRetryPolicy(IBroadcastManager broadcastManager,
                 IPeerSettings peerSettings,
                 IDfs dfs,
-                ILogger logger) : base(broadcastManager, peerSettings, dfs, logger) { }
+                IHashProvider hashProvider, 
+                ILogger logger) : base(broadcastManager, peerSettings, dfs, hashProvider, logger) { }
 
-            protected override AsyncRetryPolicy<string> DfsRetryPolicy => 
-                Policy<string>.Handle<Exception>()
+            protected override AsyncRetryPolicy<Cid> DfsRetryPolicy =>
+                Polly.Policy<Cid>.Handle<Exception>()
                    .WaitAndRetryAsync(4, retryAttempt => 
                         TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt)));
         }
 
         public DeltaHubTests()
         {
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            _hashProvider = new HashProvider(hashingAlgorithm);
             _broadcastManager = Substitute.For<IBroadcastManager>();
             var logger = Substitute.For<ILogger>();
             _peerId = PeerIdHelper.GetPeerId("me");
             _dfs = Substitute.For<IDfs>();
-            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId.ToSubstitutedPeerSettings(), _dfs, logger);
+            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId.ToSubstitutedPeerSettings(), _dfs, _hashProvider, logger);
         }
 
         [Fact]
         public void BroadcastCandidate_should_not_broadcast_candidates_from_other_nodes()
         {
-            var notMyCandidate = DeltaHelper.GetCandidateDelta(
+            var notMyCandidate = DeltaHelper.GetCandidateDelta(_hashProvider,
                 producerId: PeerIdHelper.GetPeerId("not me"));
 
             _hub.BroadcastCandidate(notMyCandidate);
@@ -86,7 +95,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void BroadcastCandidate_should_allow_broadcasting_candidate_from_this_node()
         {
-            var myCandidate = DeltaHelper.GetCandidateDelta(
+            var myCandidate = DeltaHelper.GetCandidateDelta(_hashProvider,
                 producerId: _peerId);
 
             _hub.BroadcastCandidate(myCandidate);
@@ -99,7 +108,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             var favourite = new FavouriteDeltaBroadcast
             {
-                Candidate = DeltaHelper.GetCandidateDelta(),
+                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider),
                 VoterId = _peerId
             };
 
@@ -111,33 +120,33 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public async Task PublishDeltaToIpfsAsync_should_return_ipfs_address()
         {
-            var delta = DeltaHelper.GetDelta();
-            var dfsHash = "lskdjaslkjfweoho";
+            var delta = DeltaHelper.GetDelta(_hashProvider);
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("lskdjaslkjfweoho"));
             var cancellationToken = new CancellationToken();
 
-            _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken).Returns(dfsHash);
+            _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken).Returns(cid);
 
-            var deltaHash = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken);
-            deltaHash.Should().NotBeNullOrEmpty();
-            deltaHash.Should().Be(dfsHash);
+            var deltaCid = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken);
+            deltaCid.Should().NotBeNull();
+            deltaCid.Should().Be(cid);
         }
 
         [Fact]
         public async Task PublishDeltaToIpfsAsync_should_retry_then_return_ipfs_address()
         {
-            var delta = DeltaHelper.GetDelta();
-            var dfsHash = "success";
+            var delta = DeltaHelper.GetDelta(_hashProvider);
+            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("success"));
 
-            var dfsResults = new SubstituteResults<string>(() => throw new Exception("this one failed"))
+            var dfsResults = new SubstituteResults<Cid>(() => throw new Exception("this one failed"))
                .Then(() => throw new Exception("this one failed too"))
-               .Then(dfsHash);
+               .Then(cid);
 
             _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>())
                .Returns(ci => dfsResults.Next());
 
-            var deltaHash = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta);
-            deltaHash.Should().NotBeNullOrEmpty();
-            deltaHash.Should().Be(dfsHash);
+            var deltaCid = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta);
+            deltaCid.Should().NotBeNull();
+            deltaCid.Should().Be(cid);
 
             await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
         }
@@ -145,7 +154,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public async Task PublishDeltaToIpfsAsync_should_retry_until_cancelled()
         {
-            var delta = DeltaHelper.GetDelta();
+            var delta = DeltaHelper.GetDelta(_hashProvider);
             var dfsHash = "success";
             var cancellationSource = new CancellationTokenSource();
             var cancellationToken = cancellationSource.Token;
@@ -172,8 +181,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             public BadDeltas()
             {
+                var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+                var hashProvider = new HashProvider(hashingAlgorithm);
                 var noPreviousHash = new Delta {PreviousDeltaDfsHash = (new byte[0]).ToByteString()};
-                var noMerkleRoot = DeltaHelper.GetDelta(merkleRoot: new byte[0]);
+                var noMerkleRoot = DeltaHelper.GetDelta(hashProvider, merkleRoot: new byte[0]);
                 
                 AddRow(noMerkleRoot, typeof(InvalidDataException));
                 AddRow(noPreviousHash, typeof(InvalidDataException));
