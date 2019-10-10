@@ -21,9 +21,12 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Numerics;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO
 {
@@ -34,9 +37,12 @@ namespace Catalyst.Core.Lib.DAO
         public string SenderPublicKey { get; set; }
         public string TransactionFees { get; set; }
 
+        [Column]
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
+
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<BaseEntryDao, BaseEntryDao>().ReverseMap();
+            cfg.CreateMap<BaseEntry, BaseEntryDao>().ReverseMap();
 
             cfg.CreateMap<BaseEntry, BaseEntryDao>()
                .ForMember(d => d.ReceiverPublicKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
