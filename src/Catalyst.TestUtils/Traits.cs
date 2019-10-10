@@ -27,7 +27,6 @@ namespace Catalyst.TestUtils
     {
         public const string TestType = "TestType";
         public const string IntegrationTest = "IntegrationTest";
-        public const string UnitTest = "UnitTest";
         public const string EmbeddedChannelTest = "EmbeddedChannelTest";
         public const string E2E_MSSQL = "EndToEndTest_MSSQL";
         public const string E2E_MongoDB = "EndToEndTest_MongoDB";

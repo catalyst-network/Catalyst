@@ -25,7 +25,6 @@ using System;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Exceptions;
-using Catalyst.TestUtils;
 using FluentAssertions;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Xunit;
@@ -47,7 +46,6 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.UnitTest)]
         public void TestGenerateDifferentKey()
         {
             IPrivateKey privateKey1 = _wrapper.GeneratePrivateKey();
