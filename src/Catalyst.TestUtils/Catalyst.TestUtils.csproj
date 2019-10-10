@@ -11,9 +11,6 @@
     </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
-      <Compile Remove="ProtocolHelpers\RangeProofHelper.cs" />
-    </ItemGroup>
-    <ItemGroup>
         <None Update="Config\**\*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
