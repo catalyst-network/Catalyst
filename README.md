@@ -1,6 +1,6 @@
 # <p style="text-align: center;"> Catalyst Network </p>
 
-> Fast, scalable PBFT distributed ledger
+## Fast, scalable PBFT distributed ledger
 
 |Build Status   | Code Quality | Slack Chat | Contributors | Discord
 |:-:	|:-:	|:-: |:-: |:-: |
