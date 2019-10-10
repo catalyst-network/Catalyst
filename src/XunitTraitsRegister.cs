@@ -36,14 +36,23 @@ using Xunit;
 /// </summary>
 public class XunitTraitsRegister
 {
+    [Fact]
     [Trait(Traits.TestType, Traits.IntegrationTest)]
     public void IntegrationTest() { true.Should().BeTrue(); }
+
+    [Fact]
     [Trait(Traits.TestType, Traits.EmbeddedChannelTest)]
     public void EmbeddedChannelTest() { true.Should().BeTrue(); }
+
+    [Fact]
     [Trait(Traits.TestType, Traits.E2E_CosmosDB)]
     public void E2E_CosmosDB() { true.Should().BeTrue(); }
+
+    [Fact]
     [Trait(Traits.TestType, Traits.E2E_MongoDB)]
     public void E2E_MongoDB() { true.Should().BeTrue(); }
+
+    [Fact]
     [Trait(Traits.TestType, Traits.E2E_MSSQL)]
     public void E2E_MSSQL() { true.Should().BeTrue(); }
 }
