@@ -238,6 +238,17 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
             _wrapper.GetSignatureFromBytes(signatureBytes, publicKey.Bytes).Should().NotBe(null);
         }
 
+        [Fact]
+        public void Signature_Should_Contain_Public_Key_Corresponding_To_Private_Key()
+        {
+            IPrivateKey privateKey = _wrapper.GeneratePrivateKey();
+            IPublicKey publicKey = _wrapper.GetPublicKeyFromPrivateKey(privateKey);
+            byte[] message = Encoding.UTF8.GetBytes("fa la la la");
+            byte[] context = Encoding.UTF8.GetBytes("context");
+            ISignature signature = _wrapper.Sign(privateKey, message, context);
+            signature.PublicKeyBytes.Should().Equal(publicKey.Bytes);
+        }
+
         private static byte[] GenerateRandomByteArray(int length)
         {
             var buf = new byte[length];

@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Types
 
         public IPublicKey GetPublicKey()
         {
-            return new PublicKey(NativeBinding.GetPublicKeyFromPrivate(Bytes));
+            return NativeBinding.GetPublicKeyFromPrivate(Bytes);
         }
     }
 }
