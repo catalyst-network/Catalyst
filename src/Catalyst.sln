@@ -88,6 +88,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687
 		Common.Packable.props = Common.Packable.props
 		Common.Projects.props = Common.Projects.props
 		Common.TestProjects.props = Common.TestProjects.props
+		XunitTraitsRegister.cs = XunitTraitsRegister.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"
@@ -163,11 +164,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.P2P.Di
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ipfs", "ipfs", "{A5829136-9363-448A-A616-47AC39B82C0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IpfsCore", "..\submodules\net-ipfs-core\src\IpfsCore.csproj", "{A3DE56DD-90BD-4949-A352-0A6C8F400D74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IpfsCore", "..\submodules\net-ipfs-core\src\IpfsCore.csproj", "{A3DE56DD-90BD-4949-A352-0A6C8F400D74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IpfsEngine", "..\submodules\net-ipfs-engine\src\IpfsEngine.csproj", "{BF99C813-8998-4DA0-81B8-D21C7A253385}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IpfsEngine", "..\submodules\net-ipfs-engine\src\IpfsEngine.csproj", "{BF99C813-8998-4DA0-81B8-D21C7A253385}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpGateway", "..\submodules\net-ipfs-http-gateway\src\HttpGateway.csproj", "{F7E55189-F3EB-4344-9DC9-CFBC787D3968}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpGateway", "..\submodules\net-ipfs-http-gateway\src\HttpGateway.csproj", "{F7E55189-F3EB-4344-9DC9-CFBC787D3968}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

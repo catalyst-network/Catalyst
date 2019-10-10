@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
@@ -10,6 +10,9 @@
         <RootNamespace>Catalyst.TestUtils</RootNamespace>
     </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
+    <ItemGroup>
+      <Compile Remove="..\Catalyst.TestUtils\DefaultTests\TaggedTests.cs" />
+    </ItemGroup>
     <ItemGroup>
         <None Update="Config\**\*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -30,5 +33,8 @@
     <ItemGroup>
       <PackageReference Include="Serilog" Version="2.8.0" />
       <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.3" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="DefaultTests\" />
     </ItemGroup>
 </Project>
