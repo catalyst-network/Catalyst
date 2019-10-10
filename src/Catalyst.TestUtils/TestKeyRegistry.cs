@@ -31,7 +31,7 @@ namespace Catalyst.TestUtils
 {
     public static class TestKeyRegistry
     {
-        public static readonly string TestPrivateKey = "9tejqf7y6z31rb7xbpdyzt1acpek9bec7n8r1e41gnzxt85rx20g";
+        public static readonly string TestPrivateKey = "ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa";
         public static readonly string TestPublicKey; // = "qnb9bw3b2yj4hpjcmsvgp12bkwff313v9gaqb18atvwfpevrmmf0"
 
         static TestKeyRegistry()

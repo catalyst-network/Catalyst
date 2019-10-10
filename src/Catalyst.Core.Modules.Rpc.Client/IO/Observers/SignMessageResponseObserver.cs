@@ -30,10 +30,10 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Multiformats.Base;
-using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 using Nethermind.Core.Extensions;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
 {
@@ -85,8 +85,8 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
                 Guard.Argument(originalMessage, nameof(originalMessage)).NotNull();
 
                 _output.WriteLine(
-                    $@"Signature: {Multibase.Encode(MultibaseEncoding.Base64, signMessageRequest.Signature.ToByteArray())} " +
-                    $@"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, signMessageRequest.PublicKey.ToByteArray())} Original Message: {originalMessage}");
+                    $@"Signature: {signMessageRequest.Signature.ToByteArray().ToBase32()} " +
+                    $@"Public Key: {signMessageRequest.PublicKey.ToByteArray().ToBase32()} Original Message: {originalMessage}");
             }
             catch (Exception ex)
             {

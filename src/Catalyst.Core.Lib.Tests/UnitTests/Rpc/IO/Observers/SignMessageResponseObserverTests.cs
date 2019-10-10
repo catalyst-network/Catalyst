@@ -31,10 +31,10 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Ipfs;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers

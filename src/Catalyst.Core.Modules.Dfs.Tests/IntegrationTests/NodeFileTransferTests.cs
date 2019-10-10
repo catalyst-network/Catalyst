@@ -33,12 +33,14 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -53,6 +55,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
         public NodeFileTransferTests(ITestOutputHelper testOutput) : base(testOutput)
         {
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory(_logger);
@@ -65,7 +69,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var ipfsEngine = new IpfsAdapter(passwordManager, FileSystem, _logger);
 
             _logger = Substitute.For<ILogger>();
-            _dfs = new Dfs(ipfsEngine, _logger);
+            _dfs = new Dfs(ipfsEngine, hashProvider, _logger);
         }
 
         [Fact]

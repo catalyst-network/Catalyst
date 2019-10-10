@@ -11,9 +11,6 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
-        <ProjectReference Include="..\..\submodules\net-ipfs-core\src\IpfsCore.csproj" />
-        <ProjectReference Include="..\..\submodules\net-ipfs-engine\src\IpfsEngine.csproj" />
-        <ProjectReference Include="..\..\submodules\net-ipfs-http-gateway\src\HttpGateway.csproj" />
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     </ItemGroup>

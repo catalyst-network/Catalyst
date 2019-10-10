@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
@@ -35,11 +36,13 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public class FavouriteDeltaObserver : BroadcastObserverBase<FavouriteDeltaBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaElector _deltaElector;
+        private readonly IHashProvider _hashProvider;
 
-        public FavouriteDeltaObserver(IDeltaElector deltaElector, ILogger logger) 
+        public FavouriteDeltaObserver(IDeltaElector deltaElector, IHashProvider hashProvider, ILogger logger) 
             : base(logger)
         {
             _deltaElector = deltaElector;
+            _hashProvider = hashProvider;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
@@ -48,8 +51,18 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
-                deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
-                deserialised.Candidate.Hash.ToByteArray().AsMultihash();
+                if (!_hashProvider.IsValidHash(deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray()))
+                {
+                    Logger.Error($"PreviousDeltaDfsHash is not a valid hash");
+                    return;
+                }
+
+                if (!_hashProvider.IsValidHash(deserialised.Candidate.Hash.ToByteArray()))
+                {
+                    Logger.Error($"Hash is not a valid hash");
+                    return;
+                }
+
                 deserialised.IsValid();
                 
                 _deltaElector.OnNext(deserialised);

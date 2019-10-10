@@ -43,7 +43,7 @@ namespace Catalyst.Protocol.Transaction
             {
                 Logger.Debug("{field} cannot be empty", nameof(RangeProof));
             }
-            
+
             return false;
         }
     }
