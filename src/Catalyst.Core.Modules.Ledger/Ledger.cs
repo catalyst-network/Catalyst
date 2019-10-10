@@ -34,13 +34,14 @@ using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Transaction;
 using Dawn;
-using Multiformats.Hash;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Ledger
 {
     /// <summary>
-    ///  This class represents a ledger and is a collection of accounts and data store.
+    ///     This class represents a ledger and is a collection of accounts and data store.
     /// </summary>
     /// <inheritdoc cref="ILedger" />
     /// <inheritdoc cref="IDisposable" />
@@ -55,10 +56,13 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly object _synchronisationLock = new object();
         private readonly ICryptoContext _cryptoContext;
 
-        public Ledger(IAccountRepository accounts, 
+        public MultiHash LatestKnownDelta { get; private set; }
+        public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
+
+        public Ledger(IAccountRepository accounts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
-            IMempool<MempoolDocument> mempool, 
+            IMempool<MempoolDocument> mempool,
             ILogger logger)
         {
             Accounts = accounts;
@@ -67,7 +71,7 @@ namespace Catalyst.Core.Modules.Ledger
             _logger = logger;
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
-            LatestKnownDelta = _synchroniser.DeltaCache.GenesisAddress;
+            LatestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
             _cryptoContext = new FfiWrapper();
         }
 
@@ -95,7 +99,7 @@ namespace Catalyst.Core.Modules.Ledger
         }
 
         /// <inheritdoc />
-        public void Update(Multihash deltaHash)
+        public void Update(MultiHash deltaHash)
         {
             try
             {
@@ -109,7 +113,8 @@ namespace Catalyst.Core.Modules.Ledger
                     if (!Equals(chainedDeltaHashes.First(), LatestKnownDelta))
                     {
                         _logger.Warning(
-                            "Failed to walk back the delta chain to {LatestKnownDelta}, giving up ledger update.", LatestKnownDelta);
+                            "Failed to walk back the delta chain to {LatestKnownDelta}, giving up ledger update.",
+                            LatestKnownDelta);
                         return;
                     }
 
@@ -124,13 +129,14 @@ namespace Catalyst.Core.Modules.Ledger
             }
             catch (Exception exception)
             {
-                _logger.Error(exception, "Failed to update the ledger using the delta with hash {deltaHash}", deltaHash);
+                _logger.Error(exception, "Failed to update the ledger using the delta with hash {deltaHash}",
+                    deltaHash);
             }
         }
 
-        private void UpdateLedgerFromDelta(Multihash deltaHash)
+        private void UpdateLedgerFromDelta(MultiHash deltaHash)
         {
-            if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash.AsBase32Address(), out var nextDeltaInChain))
+            if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var nextDeltaInChain))
             {
                 _logger.Warning(
                     "Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.", deltaHash);
@@ -150,15 +156,11 @@ namespace Catalyst.Core.Modules.Ledger
             var pubKey = _cryptoContext.GetPublicKeyFromBytes(entry.Base.ReceiverPublicKey.ToByteArray());
 
             //todo: get an address from the key using the Account class from Common lib
-            var account = Accounts.Get(pubKey.Bytes.AsBase32Address());
+            var account = Accounts.Get(pubKey.Bytes.ToBase32());
 
             //todo: a different logic for to and from entries
             account.Balance += entry.Amount.ToUInt256();
         }
-
-        public Multihash LatestKnownDelta { get; private set; }
-
-        public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
         protected virtual void Dispose(bool disposing)
         {

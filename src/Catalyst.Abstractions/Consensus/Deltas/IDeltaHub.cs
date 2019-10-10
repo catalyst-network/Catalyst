@@ -25,7 +25,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
+using LibP2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
@@ -65,6 +65,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// </summary>
         /// <param name="delta">The delta which has been elected for this cycle.</param>
         /// <param name="cancellationToken">A cancellation token allowing to abort the tasks.</param>
-        Task<string> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta, CancellationToken cancellationToken = default);
+        Task<Cid> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta, CancellationToken cancellationToken = default);
     }
 }

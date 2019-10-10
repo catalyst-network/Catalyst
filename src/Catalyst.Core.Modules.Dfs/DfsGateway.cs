@@ -21,32 +21,33 @@
 
 #endregion
 
-using System;
-using Catalyst.Abstractions.Dfs;
-using Ipfs.CoreApi;
-using Ipfs.HttpGateway;
+//todo
+//using System;
+//using Catalyst.Abstractions.Dfs;
+//using Ipfs.CoreApi;
+//using Ipfs.HttpGateway;
 
-namespace Catalyst.Core.Modules.Dfs
-{
-    public sealed class DfsGateway : IDfsGateway, IDisposable
-    {
-        public GatewayHost Gateway { get; }
+//namespace Catalyst.Core.Modules.Dfs
+//{
+//    public sealed class DfsGateway : IDfsGateway, IDisposable
+//    {
+//        public GatewayHost Gateway { get; }
 
-        public DfsGateway(ICoreApi ipfs)
-        {
-            // Make sure IPFS and the gateway are started.
-            ipfs.Generic.IdAsync().Wait();
-            Gateway = new GatewayHost(ipfs, "http://127.0.0.1:8181");
-        }
+//        public DfsGateway(ICoreApi ipfs)
+//        {
+//            // Make sure IPFS and the gateway are started.
+//            ipfs.Generic.IdAsync().Wait();
+//            Gateway = new GatewayHost(ipfs, "http://127.0.0.1:8181");
+//        }
 
-        public string ContentUrl(string id)
-        {
-            return Gateway.IpfsUrl(id);
-        }
+//        public string ContentUrl(string id)
+//        {
+//            return Gateway.IpfsUrl(id);
+//        }
 
-        public void Dispose()
-        {
-            Gateway?.Dispose();
-        }
-    }
-}
+//        public void Dispose()
+//        {
+//            Gateway?.Dispose();
+//        }
+//    }
+//}
