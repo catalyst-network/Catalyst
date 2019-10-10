@@ -23,13 +23,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -47,23 +43,29 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        public static readonly List<object[]> QueryContents;
+        public static readonly List<object[]> QueryContents = InitialiseQueryData();
 
         private readonly IUserOutput _output;
 
         private SignMessageResponseObserver _handler;
 
-        //@TODO why not mock the actual response object? if we ever change it then the test will pass but fail in real world
-        public struct SignedResponse
+        public struct SignedResponse : IEquatable<SignedResponse>
         {
             internal ByteString Signature;
             internal ByteString PublicKey;
             internal ByteString OriginalMessage;
+
+            public bool Equals(SignedResponse other)
+            {
+                return (Signature == other.Signature)
+                 && (OriginalMessage == other.OriginalMessage)
+                 && (PublicKey == other.PublicKey);
+            }
         }
 
-        static SignMessageResponseHandlerTests()
+        static List<object[]> InitialiseQueryData()
         {
-            QueryContents = new List<object[]> 
+            return new List<object[]> 
             {
                 new object[]
                 {
