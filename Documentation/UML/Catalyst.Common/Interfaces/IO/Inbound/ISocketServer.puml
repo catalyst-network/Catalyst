@@ -1,6 +1,0 @@
-@startuml
-interface ISocketServer {
-}
-ISocket <|-- ISocketServer
-ISocketServer --> "Channel" IChannel
-@enduml

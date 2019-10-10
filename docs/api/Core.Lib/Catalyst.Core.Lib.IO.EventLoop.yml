@@ -1,0 +1,58 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.EventLoop
+  commentId: N:Catalyst.Core.Lib.IO.EventLoop
+  id: Catalyst.Core.Lib.IO.EventLoop
+  children:
+  - Catalyst.Core.Lib.IO.EventLoop.BaseLoopGroupFactory
+  - Catalyst.Core.Lib.IO.EventLoop.EventLoopGroupFactoryConfiguration
+  - Catalyst.Core.Lib.IO.EventLoop.TcpClientEventLoopGroupFactory
+  - Catalyst.Core.Lib.IO.EventLoop.TcpServerEventLoopGroupFactory
+  - Catalyst.Core.Lib.IO.EventLoop.UdpClientEventLoopGroupFactory
+  - Catalyst.Core.Lib.IO.EventLoop.UdpServerEventLoopGroupFactory
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.IO.EventLoop
+  nameWithType: Catalyst.Core.Lib.IO.EventLoop
+  fullName: Catalyst.Core.Lib.IO.EventLoop
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.IO.EventLoop.BaseLoopGroupFactory
+  commentId: T:Catalyst.Core.Lib.IO.EventLoop.BaseLoopGroupFactory
+  parent: Catalyst.Core.Lib.IO.EventLoop
+  name: BaseLoopGroupFactory
+  nameWithType: BaseLoopGroupFactory
+  fullName: Catalyst.Core.Lib.IO.EventLoop.BaseLoopGroupFactory
+- uid: Catalyst.Core.Lib.IO.EventLoop.EventLoopGroupFactoryConfiguration
+  commentId: T:Catalyst.Core.Lib.IO.EventLoop.EventLoopGroupFactoryConfiguration
+  name: EventLoopGroupFactoryConfiguration
+  nameWithType: EventLoopGroupFactoryConfiguration
+  fullName: Catalyst.Core.Lib.IO.EventLoop.EventLoopGroupFactoryConfiguration
+- uid: Catalyst.Core.Lib.IO.EventLoop.TcpClientEventLoopGroupFactory
+  commentId: T:Catalyst.Core.Lib.IO.EventLoop.TcpClientEventLoopGroupFactory
+  name: TcpClientEventLoopGroupFactory
+  nameWithType: TcpClientEventLoopGroupFactory
+  fullName: Catalyst.Core.Lib.IO.EventLoop.TcpClientEventLoopGroupFactory
+- uid: Catalyst.Core.Lib.IO.EventLoop.TcpServerEventLoopGroupFactory
+  commentId: T:Catalyst.Core.Lib.IO.EventLoop.TcpServerEventLoopGroupFactory
+  name: TcpServerEventLoopGroupFactory
+  nameWithType: TcpServerEventLoopGroupFactory
+  fullName: Catalyst.Core.Lib.IO.EventLoop.TcpServerEventLoopGroupFactory
+- uid: Catalyst.Core.Lib.IO.EventLoop.UdpClientEventLoopGroupFactory
+  commentId: T:Catalyst.Core.Lib.IO.EventLoop.UdpClientEventLoopGroupFactory
+  name: UdpClientEventLoopGroupFactory
+  nameWithType: UdpClientEventLoopGroupFactory
+  fullName: Catalyst.Core.Lib.IO.EventLoop.UdpClientEventLoopGroupFactory
+- uid: Catalyst.Core.Lib.IO.EventLoop.UdpServerEventLoopGroupFactory
+  commentId: T:Catalyst.Core.Lib.IO.EventLoop.UdpServerEventLoopGroupFactory
+  name: UdpServerEventLoopGroupFactory
+  nameWithType: UdpServerEventLoopGroupFactory
+  fullName: Catalyst.Core.Lib.IO.EventLoop.UdpServerEventLoopGroupFactory
+- uid: Catalyst.Core.Lib.IO.EventLoop
+  commentId: N:Catalyst.Core.Lib.IO.EventLoop
+  name: Catalyst.Core.Lib.IO.EventLoop
+  nameWithType: Catalyst.Core.Lib.IO.EventLoop
+  fullName: Catalyst.Core.Lib.IO.EventLoop

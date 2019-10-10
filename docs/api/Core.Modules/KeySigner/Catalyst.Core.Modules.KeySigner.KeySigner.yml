@@ -1,0 +1,871 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner
+  commentId: T:Catalyst.Core.Modules.KeySigner.KeySigner
+  id: KeySigner
+  parent: Catalyst.Core.Modules.KeySigner
+  children:
+  - Catalyst.Core.Modules.KeySigner.KeySigner.#ctor(Catalyst.Abstractions.Keystore.IKeyStore,Catalyst.Abstractions.Cryptography.ICryptoContext,Catalyst.Abstractions.Keystore.IKeyRegistry)
+  - Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#CryptoContext
+  - Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#KeyStore
+  - Catalyst.Core.Modules.KeySigner.KeySigner.ExportKey
+  - Catalyst.Core.Modules.KeySigner.KeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  - Catalyst.Core.Modules.KeySigner.KeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  langs:
+  - csharp
+  - vb
+  name: KeySigner
+  nameWithType: KeySigner
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: KeySigner
+    path: ../src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Modules.KeySigner
+  namespace: Catalyst.Core.Modules.KeySigner
+  syntax:
+    content: 'public sealed class KeySigner : IKeySigner'
+    content.vb: >-
+      Public NotInheritable Class KeySigner
+
+          Implements IKeySigner
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.KeySigner.IKeySigner
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.#ctor(Catalyst.Abstractions.Keystore.IKeyStore,Catalyst.Abstractions.Cryptography.ICryptoContext,Catalyst.Abstractions.Keystore.IKeyRegistry)
+  commentId: M:Catalyst.Core.Modules.KeySigner.KeySigner.#ctor(Catalyst.Abstractions.Keystore.IKeyStore,Catalyst.Abstractions.Cryptography.ICryptoContext,Catalyst.Abstractions.Keystore.IKeyRegistry)
+  id: '#ctor(Catalyst.Abstractions.Keystore.IKeyStore,Catalyst.Abstractions.Cryptography.ICryptoContext,Catalyst.Abstractions.Keystore.IKeyRegistry)'
+  parent: Catalyst.Core.Modules.KeySigner.KeySigner
+  langs:
+  - csharp
+  - vb
+  name: KeySigner(IKeyStore, ICryptoContext, IKeyRegistry)
+  nameWithType: KeySigner.KeySigner(IKeyStore, ICryptoContext, IKeyRegistry)
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.KeySigner(Catalyst.Abstractions.Keystore.IKeyStore, Catalyst.Abstractions.Cryptography.ICryptoContext, Catalyst.Abstractions.Keystore.IKeyRegistry)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+    startLine: 45
+  assemblies:
+  - Catalyst.Core.Modules.KeySigner
+  namespace: Catalyst.Core.Modules.KeySigner
+  summary: Initializes a new instance of the <xref href="Catalyst.Core.Modules.KeySigner.KeySigner" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext, IKeyRegistry keyRegistry)
+    parameters:
+    - id: keyStore
+      type: Catalyst.Abstractions.Keystore.IKeyStore
+      description: The key store.
+    - id: cryptoContext
+      type: Catalyst.Abstractions.Cryptography.ICryptoContext
+      description: The crypto context.
+    - id: keyRegistry
+      type: Catalyst.Abstractions.Keystore.IKeyRegistry
+      description: The key registry.
+    content.vb: Public Sub New(keyStore As IKeyStore, cryptoContext As ICryptoContext, keyRegistry As IKeyRegistry)
+  overload: Catalyst.Core.Modules.KeySigner.KeySigner.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#KeyStore
+  commentId: P:Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#KeyStore
+  id: Catalyst#Abstractions#KeySigner#IKeySigner#KeyStore
+  isEii: true
+  parent: Catalyst.Core.Modules.KeySigner.KeySigner
+  langs:
+  - csharp
+  - vb
+  name: IKeySigner.KeyStore
+  nameWithType: KeySigner.IKeySigner.KeyStore
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+    path: ../src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+    startLine: 73
+  assemblies:
+  - Catalyst.Core.Modules.KeySigner
+  namespace: Catalyst.Core.Modules.KeySigner
+  example: []
+  syntax:
+    content: IKeyStore IKeySigner.KeyStore { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Keystore.IKeyStore
+    content.vb: ReadOnly WriteOnly Property Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore As IKeyStore Implements IKeySigner.KeyStore
+  overload: Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#KeyStore*
+  implements:
+  - Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  nameWithType.vb: KeySigner.Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  name.vb: Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#CryptoContext
+  commentId: P:Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#CryptoContext
+  id: Catalyst#Abstractions#KeySigner#IKeySigner#CryptoContext
+  isEii: true
+  parent: Catalyst.Core.Modules.KeySigner.KeySigner
+  langs:
+  - csharp
+  - vb
+  name: IKeySigner.CryptoContext
+  nameWithType: KeySigner.IKeySigner.CryptoContext
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+    path: ../src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+    startLine: 76
+  assemblies:
+  - Catalyst.Core.Modules.KeySigner
+  namespace: Catalyst.Core.Modules.KeySigner
+  example: []
+  syntax:
+    content: ICryptoContext IKeySigner.CryptoContext { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Cryptography.ICryptoContext
+    content.vb: ReadOnly WriteOnly Property Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext As ICryptoContext Implements IKeySigner.CryptoContext
+  overload: Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#CryptoContext*
+  implements:
+  - Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  nameWithType.vb: KeySigner.Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  name.vb: Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  commentId: M:Catalyst.Core.Modules.KeySigner.KeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  id: Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  parent: Catalyst.Core.Modules.KeySigner.KeySigner
+  langs:
+  - csharp
+  - vb
+  name: Sign(Byte[], SigningContext)
+  nameWithType: KeySigner.Sign(Byte[], SigningContext)
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.Sign(System.Byte[], Catalyst.Protocol.Cryptography.SigningContext)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Sign
+    path: ../src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+    startLine: 89
+  assemblies:
+  - Catalyst.Core.Modules.KeySigner
+  namespace: Catalyst.Core.Modules.KeySigner
+  syntax:
+    content: public ISignature Sign(byte[] data, SigningContext signingContext)
+    parameters:
+    - id: data
+      type: System.Byte[]
+    - id: signingContext
+      type: Catalyst.Protocol.Cryptography.SigningContext
+    return:
+      type: Catalyst.Abstractions.Cryptography.ISignature
+    content.vb: Public Function Sign(data As Byte(), signingContext As SigningContext) As ISignature
+  overload: Catalyst.Core.Modules.KeySigner.KeySigner.Sign*
+  implements:
+  - Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  nameWithType.vb: KeySigner.Sign(Byte(), SigningContext)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.KeySigner.KeySigner.Sign(System.Byte(), Catalyst.Protocol.Cryptography.SigningContext)
+  name.vb: Sign(Byte(), SigningContext)
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  commentId: M:Catalyst.Core.Modules.KeySigner.KeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  id: Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  parent: Catalyst.Core.Modules.KeySigner.KeySigner
+  langs:
+  - csharp
+  - vb
+  name: Verify(ISignature, Byte[], SigningContext)
+  nameWithType: KeySigner.Verify(ISignature, Byte[], SigningContext)
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature, System.Byte[], Catalyst.Protocol.Cryptography.SigningContext)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Verify
+    path: ../src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+    startLine: 100
+  assemblies:
+  - Catalyst.Core.Modules.KeySigner
+  namespace: Catalyst.Core.Modules.KeySigner
+  example: []
+  syntax:
+    content: public bool Verify(ISignature signature, byte[] message, SigningContext signingContext)
+    parameters:
+    - id: signature
+      type: Catalyst.Abstractions.Cryptography.ISignature
+    - id: message
+      type: System.Byte[]
+    - id: signingContext
+      type: Catalyst.Protocol.Cryptography.SigningContext
+    return:
+      type: System.Boolean
+    content.vb: Public Function Verify(signature As ISignature, message As Byte(), signingContext As SigningContext) As Boolean
+  overload: Catalyst.Core.Modules.KeySigner.KeySigner.Verify*
+  implements:
+  - Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  nameWithType.vb: KeySigner.Verify(ISignature, Byte(), SigningContext)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.KeySigner.KeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature, System.Byte(), Catalyst.Protocol.Cryptography.SigningContext)
+  name.vb: Verify(ISignature, Byte(), SigningContext)
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.ExportKey
+  commentId: M:Catalyst.Core.Modules.KeySigner.KeySigner.ExportKey
+  id: ExportKey
+  parent: Catalyst.Core.Modules.KeySigner.KeySigner
+  langs:
+  - csharp
+  - vb
+  name: ExportKey()
+  nameWithType: KeySigner.ExportKey()
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.ExportKey()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ExportKey
+    path: ../src/Catalyst.Core.Modules.KeySigner/KeySigner.cs
+    startLine: 106
+  assemblies:
+  - Catalyst.Core.Modules.KeySigner
+  namespace: Catalyst.Core.Modules.KeySigner
+  example: []
+  syntax:
+    content: public void ExportKey()
+    content.vb: Public Sub ExportKey
+  overload: Catalyst.Core.Modules.KeySigner.KeySigner.ExportKey*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.KeySigner
+  commentId: N:Catalyst.Core.Modules.KeySigner
+  name: Catalyst.Core.Modules.KeySigner
+  nameWithType: Catalyst.Core.Modules.KeySigner
+  fullName: Catalyst.Core.Modules.KeySigner
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner
+  commentId: T:Catalyst.Abstractions.KeySigner.IKeySigner
+  parent: Catalyst.Abstractions.KeySigner
+  name: IKeySigner
+  nameWithType: IKeySigner
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.KeySigner
+  commentId: N:Catalyst.Abstractions.KeySigner
+  name: Catalyst.Abstractions.KeySigner
+  nameWithType: Catalyst.Abstractions.KeySigner
+  fullName: Catalyst.Abstractions.KeySigner
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner
+  commentId: T:Catalyst.Core.Modules.KeySigner.KeySigner
+  name: KeySigner
+  nameWithType: KeySigner
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.KeySigner.KeySigner.#ctor
+  name: KeySigner
+  nameWithType: KeySigner.KeySigner
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.KeySigner
+- uid: Catalyst.Abstractions.Keystore.IKeyStore
+  commentId: T:Catalyst.Abstractions.Keystore.IKeyStore
+  parent: Catalyst.Abstractions.Keystore
+  name: IKeyStore
+  nameWithType: IKeyStore
+  fullName: Catalyst.Abstractions.Keystore.IKeyStore
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext
+  commentId: T:Catalyst.Abstractions.Cryptography.ICryptoContext
+  parent: Catalyst.Abstractions.Cryptography
+  name: ICryptoContext
+  nameWithType: ICryptoContext
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext
+- uid: Catalyst.Abstractions.Keystore.IKeyRegistry
+  commentId: T:Catalyst.Abstractions.Keystore.IKeyRegistry
+  parent: Catalyst.Abstractions.Keystore
+  name: IKeyRegistry
+  nameWithType: IKeyRegistry
+  fullName: Catalyst.Abstractions.Keystore.IKeyRegistry
+- uid: Catalyst.Abstractions.Keystore
+  commentId: N:Catalyst.Abstractions.Keystore
+  name: Catalyst.Abstractions.Keystore
+  nameWithType: Catalyst.Abstractions.Keystore
+  fullName: Catalyst.Abstractions.Keystore
+- uid: Catalyst.Abstractions.Cryptography
+  commentId: N:Catalyst.Abstractions.Cryptography
+  name: Catalyst.Abstractions.Cryptography
+  nameWithType: Catalyst.Abstractions.Cryptography
+  fullName: Catalyst.Abstractions.Cryptography
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#KeyStore*
+  commentId: Overload:Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#KeyStore
+  name: IKeySigner.KeyStore
+  nameWithType: KeySigner.IKeySigner.KeyStore
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  nameWithType.vb: KeySigner.Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  name.vb: Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  commentId: P:Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  parent: Catalyst.Abstractions.KeySigner.IKeySigner
+  name: KeyStore
+  nameWithType: IKeySigner.KeyStore
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#CryptoContext*
+  commentId: Overload:Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#CryptoContext
+  name: IKeySigner.CryptoContext
+  nameWithType: KeySigner.IKeySigner.CryptoContext
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  nameWithType.vb: KeySigner.Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  name.vb: Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  commentId: P:Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  parent: Catalyst.Abstractions.KeySigner.IKeySigner
+  name: CryptoContext
+  nameWithType: IKeySigner.CryptoContext
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.Sign*
+  commentId: Overload:Catalyst.Core.Modules.KeySigner.KeySigner.Sign
+  name: Sign
+  nameWithType: KeySigner.Sign
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.Sign
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  commentId: M:Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  parent: Catalyst.Abstractions.KeySigner.IKeySigner
+  isExternal: true
+  name: Sign(Byte[], SigningContext)
+  nameWithType: IKeySigner.Sign(Byte[], SigningContext)
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte[], Catalyst.Protocol.Cryptography.SigningContext)
+  nameWithType.vb: IKeySigner.Sign(Byte(), SigningContext)
+  fullName.vb: Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte(), Catalyst.Protocol.Cryptography.SigningContext)
+  name.vb: Sign(Byte(), SigningContext)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+    name: Sign
+    nameWithType: IKeySigner.Sign
+    fullName: Catalyst.Abstractions.KeySigner.IKeySigner.Sign
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Protocol.Cryptography.SigningContext
+    name: SigningContext
+    nameWithType: SigningContext
+    fullName: Catalyst.Protocol.Cryptography.SigningContext
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+    name: Sign
+    nameWithType: IKeySigner.Sign
+    fullName: Catalyst.Abstractions.KeySigner.IKeySigner.Sign
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Protocol.Cryptography.SigningContext
+    name: SigningContext
+    nameWithType: SigningContext
+    fullName: Catalyst.Protocol.Cryptography.SigningContext
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Catalyst.Protocol.Cryptography.SigningContext
+  commentId: T:Catalyst.Protocol.Cryptography.SigningContext
+  parent: Catalyst.Protocol.Cryptography
+  name: SigningContext
+  nameWithType: SigningContext
+  fullName: Catalyst.Protocol.Cryptography.SigningContext
+- uid: Catalyst.Abstractions.Cryptography.ISignature
+  commentId: T:Catalyst.Abstractions.Cryptography.ISignature
+  parent: Catalyst.Abstractions.Cryptography
+  name: ISignature
+  nameWithType: ISignature
+  fullName: Catalyst.Abstractions.Cryptography.ISignature
+- uid: Catalyst.Protocol.Cryptography
+  commentId: N:Catalyst.Protocol.Cryptography
+  name: Catalyst.Protocol.Cryptography
+  nameWithType: Catalyst.Protocol.Cryptography
+  fullName: Catalyst.Protocol.Cryptography
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.Verify*
+  commentId: Overload:Catalyst.Core.Modules.KeySigner.KeySigner.Verify
+  name: Verify
+  nameWithType: KeySigner.Verify
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.Verify
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  commentId: M:Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  parent: Catalyst.Abstractions.KeySigner.IKeySigner
+  isExternal: true
+  name: Verify(ISignature, Byte[], SigningContext)
+  nameWithType: IKeySigner.Verify(ISignature, Byte[], SigningContext)
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature, System.Byte[], Catalyst.Protocol.Cryptography.SigningContext)
+  nameWithType.vb: IKeySigner.Verify(ISignature, Byte(), SigningContext)
+  fullName.vb: Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature, System.Byte(), Catalyst.Protocol.Cryptography.SigningContext)
+  name.vb: Verify(ISignature, Byte(), SigningContext)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+    name: Verify
+    nameWithType: IKeySigner.Verify
+    fullName: Catalyst.Abstractions.KeySigner.IKeySigner.Verify
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.ISignature
+    name: ISignature
+    nameWithType: ISignature
+    fullName: Catalyst.Abstractions.Cryptography.ISignature
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Protocol.Cryptography.SigningContext
+    name: SigningContext
+    nameWithType: SigningContext
+    fullName: Catalyst.Protocol.Cryptography.SigningContext
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+    name: Verify
+    nameWithType: IKeySigner.Verify
+    fullName: Catalyst.Abstractions.KeySigner.IKeySigner.Verify
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.ISignature
+    name: ISignature
+    nameWithType: ISignature
+    fullName: Catalyst.Abstractions.Cryptography.ISignature
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Protocol.Cryptography.SigningContext
+    name: SigningContext
+    nameWithType: SigningContext
+    fullName: Catalyst.Protocol.Cryptography.SigningContext
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Core.Modules.KeySigner.KeySigner.ExportKey*
+  commentId: Overload:Catalyst.Core.Modules.KeySigner.KeySigner.ExportKey
+  name: ExportKey
+  nameWithType: KeySigner.ExportKey
+  fullName: Catalyst.Core.Modules.KeySigner.KeySigner.ExportKey

@@ -1,0 +1,791 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase
+  commentId: T:Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase
+  id: ByteUtil.ByteListComparerBase
+  parent: Catalyst.Core.Lib.Util
+  children:
+  - Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.#ctor
+  - Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.Compare(System.Collections.Generic.IList{System.Byte},System.Collections.Generic.IList{System.Byte})
+  langs:
+  - csharp
+  - vb
+  name: ByteUtil.ByteListComparerBase
+  nameWithType: ByteUtil.ByteListComparerBase
+  fullName: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/ByteUtil.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ByteListComparerBase
+    path: ../src/Catalyst.Core.Lib/Util/ByteUtil.cs
+    startLine: 102
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: 'public class ByteListComparerBase : IComparer<IList<byte>>'
+    content.vb: >-
+      Public Class ByteListComparerBase
+
+          Implements IComparer(Of IList(Of Byte))
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - Catalyst.Core.Lib.Util.ByteUtil.ByteListComparer
+  - Catalyst.Core.Lib.Util.ByteUtil.ByteListMinSizeComparer
+  implements:
+  - System.Collections.Generic.IComparer{System.Collections.Generic.IList{System.Byte}}
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.#ctor
+  commentId: M:Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.#ctor
+  id: '#ctor'
+  parent: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase
+  langs:
+  - csharp
+  - vb
+  name: ByteListComparerBase()
+  nameWithType: ByteUtil.ByteListComparerBase.ByteListComparerBase()
+  fullName: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.ByteListComparerBase()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/ByteUtil.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/Util/ByteUtil.cs
+    startLine: 104
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: protected ByteListComparerBase()
+    content.vb: Protected Sub New
+  overload: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.#ctor*
+  modifiers.csharp:
+  - protected
+  modifiers.vb:
+  - Protected
+- uid: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.Compare(System.Collections.Generic.IList{System.Byte},System.Collections.Generic.IList{System.Byte})
+  commentId: M:Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.Compare(System.Collections.Generic.IList{System.Byte},System.Collections.Generic.IList{System.Byte})
+  id: Compare(System.Collections.Generic.IList{System.Byte},System.Collections.Generic.IList{System.Byte})
+  parent: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase
+  langs:
+  - csharp
+  - vb
+  name: Compare(IList<Byte>, IList<Byte>)
+  nameWithType: ByteUtil.ByteListComparerBase.Compare(IList<Byte>, IList<Byte>)
+  fullName: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.Compare(System.Collections.Generic.IList<System.Byte>, System.Collections.Generic.IList<System.Byte>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/ByteUtil.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Compare
+    path: ../src/Catalyst.Core.Lib/Util/ByteUtil.cs
+    startLine: 106
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: public virtual int Compare(IList<byte> x, IList<byte> y)
+    parameters:
+    - id: x
+      type: System.Collections.Generic.IList{System.Byte}
+    - id: y
+      type: System.Collections.Generic.IList{System.Byte}
+    return:
+      type: System.Int32
+    content.vb: Public Overridable Function Compare(x As IList(Of Byte), y As IList(Of Byte)) As Integer
+  overload: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.Compare*
+  implements:
+  - System.Collections.Generic.IComparer{System.Collections.Generic.IList{System.Byte}}.Compare(System.Collections.Generic.IList{System.Byte},System.Collections.Generic.IList{System.Byte})
+  nameWithType.vb: ByteUtil.ByteListComparerBase.Compare(IList(Of Byte), IList(Of Byte))
+  modifiers.csharp:
+  - public
+  - virtual
+  modifiers.vb:
+  - Public
+  - Overridable
+  fullName.vb: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.Compare(System.Collections.Generic.IList(Of System.Byte), System.Collections.Generic.IList(Of System.Byte))
+  name.vb: Compare(IList(Of Byte), IList(Of Byte))
+references:
+- uid: Catalyst.Core.Lib.Util
+  commentId: N:Catalyst.Core.Lib.Util
+  name: Catalyst.Core.Lib.Util
+  nameWithType: Catalyst.Core.Lib.Util
+  fullName: Catalyst.Core.Lib.Util
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Collections.Generic.IComparer{System.Collections.Generic.IList{System.Byte}}
+  commentId: T:System.Collections.Generic.IComparer{System.Collections.Generic.IList{System.Byte}}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IComparer`1
+  name: IComparer<IList<Byte>>
+  nameWithType: IComparer<IList<Byte>>
+  fullName: System.Collections.Generic.IComparer<System.Collections.Generic.IList<System.Byte>>
+  nameWithType.vb: IComparer(Of IList(Of Byte))
+  fullName.vb: System.Collections.Generic.IComparer(Of System.Collections.Generic.IList(Of System.Byte))
+  name.vb: IComparer(Of IList(Of Byte))
+  spec.csharp:
+  - uid: System.Collections.Generic.IComparer`1
+    name: IComparer
+    nameWithType: IComparer
+    fullName: System.Collections.Generic.IComparer
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IComparer`1
+    name: IComparer
+    nameWithType: IComparer
+    fullName: System.Collections.Generic.IComparer
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.IComparer`1
+  commentId: T:System.Collections.Generic.IComparer`1
+  isExternal: true
+  name: IComparer<T>
+  nameWithType: IComparer<T>
+  fullName: System.Collections.Generic.IComparer<T>
+  nameWithType.vb: IComparer(Of T)
+  fullName.vb: System.Collections.Generic.IComparer(Of T)
+  name.vb: IComparer(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IComparer`1
+    name: IComparer
+    nameWithType: IComparer
+    fullName: System.Collections.Generic.IComparer
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IComparer`1
+    name: IComparer
+    nameWithType: IComparer
+    fullName: System.Collections.Generic.IComparer
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.#ctor
+  name: ByteListComparerBase
+  nameWithType: ByteUtil.ByteListComparerBase.ByteListComparerBase
+  fullName: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.ByteListComparerBase
+- uid: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.Compare*
+  commentId: Overload:Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.Compare
+  name: Compare
+  nameWithType: ByteUtil.ByteListComparerBase.Compare
+  fullName: Catalyst.Core.Lib.Util.ByteUtil.ByteListComparerBase.Compare
+- uid: System.Collections.Generic.IComparer{System.Collections.Generic.IList{System.Byte}}.Compare(System.Collections.Generic.IList{System.Byte},System.Collections.Generic.IList{System.Byte})
+  commentId: M:System.Collections.Generic.IComparer{System.Collections.Generic.IList{System.Byte}}.Compare(System.Collections.Generic.IList{System.Byte},System.Collections.Generic.IList{System.Byte})
+  parent: System.Collections.Generic.IComparer{System.Collections.Generic.IList{System.Byte}}
+  definition: System.Collections.Generic.IComparer`1.Compare(`0,`0)
+  name: Compare(IList<Byte>, IList<Byte>)
+  nameWithType: IComparer<IList<Byte>>.Compare(IList<Byte>, IList<Byte>)
+  fullName: System.Collections.Generic.IComparer<System.Collections.Generic.IList<System.Byte>>.Compare(System.Collections.Generic.IList<System.Byte>, System.Collections.Generic.IList<System.Byte>)
+  nameWithType.vb: IComparer(Of IList(Of Byte)).Compare(IList(Of Byte), IList(Of Byte))
+  fullName.vb: System.Collections.Generic.IComparer(Of System.Collections.Generic.IList(Of System.Byte)).Compare(System.Collections.Generic.IList(Of System.Byte), System.Collections.Generic.IList(Of System.Byte))
+  name.vb: Compare(IList(Of Byte), IList(Of Byte))
+  spec.csharp:
+  - uid: System.Collections.Generic.IComparer`1.Compare(`0,`0)
+    name: Compare
+    nameWithType: IComparer<IList<Byte>>.Compare
+    fullName: System.Collections.Generic.IComparer<System.Collections.Generic.IList<System.Byte>>.Compare
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Generic.IComparer`1.Compare(`0,`0)
+    name: Compare
+    nameWithType: IComparer(Of IList(Of Byte)).Compare
+    fullName: System.Collections.Generic.IComparer(Of System.Collections.Generic.IList(Of System.Byte)).Compare
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IList{System.Byte}
+  commentId: T:System.Collections.Generic.IList{System.Byte}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IList`1
+  name: IList<Byte>
+  nameWithType: IList<Byte>
+  fullName: System.Collections.Generic.IList<System.Byte>
+  nameWithType.vb: IList(Of Byte)
+  fullName.vb: System.Collections.Generic.IList(Of System.Byte)
+  name.vb: IList(Of Byte)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System.Collections.Generic.IComparer`1.Compare(`0,`0)
+  commentId: M:System.Collections.Generic.IComparer`1.Compare(`0,`0)
+  isExternal: true
+  name: Compare(T, T)
+  nameWithType: IComparer<T>.Compare(T, T)
+  fullName: System.Collections.Generic.IComparer<T>.Compare(T, T)
+  nameWithType.vb: IComparer(Of T).Compare(T, T)
+  fullName.vb: System.Collections.Generic.IComparer(Of T).Compare(T, T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IComparer`1.Compare(`0,`0)
+    name: Compare
+    nameWithType: IComparer<T>.Compare
+    fullName: System.Collections.Generic.IComparer<T>.Compare
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Generic.IComparer`1.Compare(`0,`0)
+    name: Compare
+    nameWithType: IComparer(Of T).Compare
+    fullName: System.Collections.Generic.IComparer(Of T).Compare
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IList`1
+  commentId: T:System.Collections.Generic.IList`1
+  isExternal: true
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

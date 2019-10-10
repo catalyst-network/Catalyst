@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Modules.Repository.MongoDb
+  commentId: N:Catalyst.Modules.Repository.MongoDb
+  id: Catalyst.Modules.Repository.MongoDb
+  children:
+  - Catalyst.Modules.Repository.MongoDb.MempoolModule
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Modules.Repository.MongoDb
+  nameWithType: Catalyst.Modules.Repository.MongoDb
+  fullName: Catalyst.Modules.Repository.MongoDb
+  type: Namespace
+  assemblies:
+  - Catalyst.Modules.Repository.MongoDb
+references:
+- uid: Catalyst.Modules.Repository.MongoDb.MempoolModule
+  commentId: T:Catalyst.Modules.Repository.MongoDb.MempoolModule
+  name: MempoolModule
+  nameWithType: MempoolModule
+  fullName: Catalyst.Modules.Repository.MongoDb.MempoolModule

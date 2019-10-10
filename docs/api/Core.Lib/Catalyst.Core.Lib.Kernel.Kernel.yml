@@ -1,0 +1,1235 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Kernel.Kernel
+  commentId: T:Catalyst.Core.Lib.Kernel.Kernel
+  id: Kernel
+  parent: Catalyst.Core.Lib.Kernel
+  children:
+  - Catalyst.Core.Lib.Kernel.Kernel.BuildKernel(System.Boolean,System.String)
+  - Catalyst.Core.Lib.Kernel.Kernel.CancellationTokenProvider
+  - Catalyst.Core.Lib.Kernel.Kernel.ContainerBuilder
+  - Catalyst.Core.Lib.Kernel.Kernel.CurrentDomain_ProcessExit(System.Object,System.EventArgs)
+  - Catalyst.Core.Lib.Kernel.Kernel.Dispose
+  - Catalyst.Core.Lib.Kernel.Kernel.Initramfs(System.Boolean,System.String,Catalyst.Abstractions.Util.ICancellationTokenProvider)
+  - Catalyst.Core.Lib.Kernel.Kernel.Instance
+  - Catalyst.Core.Lib.Kernel.Kernel.Logger
+  - Catalyst.Core.Lib.Kernel.Kernel.LogUnhandledException(System.Object,System.UnhandledExceptionEventArgs)
+  - Catalyst.Core.Lib.Kernel.Kernel.StartContainer
+  - Catalyst.Core.Lib.Kernel.Kernel.StartCustom(Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic)
+  - Catalyst.Core.Lib.Kernel.Kernel.WithConfigCopier(Catalyst.Abstractions.Config.IConfigCopier)
+  - Catalyst.Core.Lib.Kernel.Kernel.WithConfigurationFile(System.String)
+  - Catalyst.Core.Lib.Kernel.Kernel.WithDataDirectory
+  - Catalyst.Core.Lib.Kernel.Kernel.WithNetworksConfigFile(Catalyst.Protocol.Network.NetworkType,System.String)
+  - Catalyst.Core.Lib.Kernel.Kernel.WithPassword(Catalyst.Abstractions.Types.PasswordRegistryTypes,System.String)
+  - Catalyst.Core.Lib.Kernel.Kernel.WithPersistenceConfiguration(System.String)
+  - Catalyst.Core.Lib.Kernel.Kernel.WithSerilogConfigFile(System.String)
+  langs:
+  - csharp
+  - vb
+  name: Kernel
+  nameWithType: Kernel
+  fullName: Catalyst.Core.Lib.Kernel.Kernel
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Kernel
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 44
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: 'public sealed class Kernel : IDisposable'
+    content.vb: >-
+      Public NotInheritable Class Kernel
+
+          Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.Kernel.Kernel.Instance
+  commentId: F:Catalyst.Core.Lib.Kernel.Kernel.Instance
+  id: Instance
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: Instance
+  nameWithType: Kernel.Instance
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.Instance
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Instance
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 52
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public ILifetimeScope Instance
+    return:
+      type: Autofac.ILifetimeScope
+    content.vb: Public Instance As ILifetimeScope
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.Logger
+  commentId: P:Catalyst.Core.Lib.Kernel.Kernel.Logger
+  id: Logger
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: Logger
+  nameWithType: Kernel.Logger
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.Logger
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Logger
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 54
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public ILogger Logger { get; }
+    parameters: []
+    return:
+      type: Serilog.ILogger
+    content.vb: Public ReadOnly Property Logger As ILogger
+  overload: Catalyst.Core.Lib.Kernel.Kernel.Logger*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Kernel.Kernel.ContainerBuilder
+  commentId: P:Catalyst.Core.Lib.Kernel.Kernel.ContainerBuilder
+  id: ContainerBuilder
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: ContainerBuilder
+  nameWithType: Kernel.ContainerBuilder
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.ContainerBuilder
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ContainerBuilder
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public ContainerBuilder ContainerBuilder { get; set; }
+    parameters: []
+    return:
+      type: Autofac.ContainerBuilder
+    content.vb: Public Property ContainerBuilder As ContainerBuilder
+  overload: Catalyst.Core.Lib.Kernel.Kernel.ContainerBuilder*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.CancellationTokenProvider
+  commentId: P:Catalyst.Core.Lib.Kernel.Kernel.CancellationTokenProvider
+  id: CancellationTokenProvider
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: CancellationTokenProvider
+  nameWithType: Kernel.CancellationTokenProvider
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.CancellationTokenProvider
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CancellationTokenProvider
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 56
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public ICancellationTokenProvider CancellationTokenProvider { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Util.ICancellationTokenProvider
+    content.vb: Public ReadOnly Property CancellationTokenProvider As ICancellationTokenProvider
+  overload: Catalyst.Core.Lib.Kernel.Kernel.CancellationTokenProvider*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Kernel.Kernel.Initramfs(System.Boolean,System.String,Catalyst.Abstractions.Util.ICancellationTokenProvider)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.Initramfs(System.Boolean,System.String,Catalyst.Abstractions.Util.ICancellationTokenProvider)
+  id: Initramfs(System.Boolean,System.String,Catalyst.Abstractions.Util.ICancellationTokenProvider)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: Initramfs(Boolean, String, ICancellationTokenProvider)
+  nameWithType: Kernel.Initramfs(Boolean, String, ICancellationTokenProvider)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.Initramfs(System.Boolean, System.String, Catalyst.Abstractions.Util.ICancellationTokenProvider)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Initramfs
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 60
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public static Kernel Initramfs(bool overwrite = false, string fileName = "Catalyst.Node..log", ICancellationTokenProvider cancellationTokenProvider = null)
+    parameters:
+    - id: overwrite
+      type: System.Boolean
+    - id: fileName
+      type: System.String
+    - id: cancellationTokenProvider
+      type: Catalyst.Abstractions.Util.ICancellationTokenProvider
+    return:
+      type: Catalyst.Core.Lib.Kernel.Kernel
+    content.vb: Public Shared Function Initramfs(overwrite As Boolean = False, fileName As String = "Catalyst.Node..log", cancellationTokenProvider As ICancellationTokenProvider = Nothing) As Kernel
+  overload: Catalyst.Core.Lib.Kernel.Kernel.Initramfs*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.Kernel.Kernel.LogUnhandledException(System.Object,System.UnhandledExceptionEventArgs)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.LogUnhandledException(System.Object,System.UnhandledExceptionEventArgs)
+  id: LogUnhandledException(System.Object,System.UnhandledExceptionEventArgs)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: LogUnhandledException(Object, UnhandledExceptionEventArgs)
+  nameWithType: Kernel.LogUnhandledException(Object, UnhandledExceptionEventArgs)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.LogUnhandledException(System.Object, System.UnhandledExceptionEventArgs)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: LogUnhandledException
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 67
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    parameters:
+    - id: sender
+      type: System.Object
+    - id: e
+      type: System.UnhandledExceptionEventArgs
+    content.vb: Public Sub LogUnhandledException(sender As Object, e As UnhandledExceptionEventArgs)
+  overload: Catalyst.Core.Lib.Kernel.Kernel.LogUnhandledException*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.CurrentDomain_ProcessExit(System.Object,System.EventArgs)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.CurrentDomain_ProcessExit(System.Object,System.EventArgs)
+  id: CurrentDomain_ProcessExit(System.Object,System.EventArgs)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: CurrentDomain_ProcessExit(Object, EventArgs)
+  nameWithType: Kernel.CurrentDomain_ProcessExit(Object, EventArgs)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.CurrentDomain_ProcessExit(System.Object, System.EventArgs)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CurrentDomain_ProcessExit
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 72
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public void CurrentDomain_ProcessExit(object sender, EventArgs e)
+    parameters:
+    - id: sender
+      type: System.Object
+    - id: e
+      type: System.EventArgs
+    content.vb: Public Sub CurrentDomain_ProcessExit(sender As Object, e As EventArgs)
+  overload: Catalyst.Core.Lib.Kernel.Kernel.CurrentDomain_ProcessExit*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.BuildKernel(System.Boolean,System.String)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.BuildKernel(System.Boolean,System.String)
+  id: BuildKernel(System.Boolean,System.String)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: BuildKernel(Boolean, String)
+  nameWithType: Kernel.BuildKernel(Boolean, String)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.BuildKernel(System.Boolean, System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BuildKernel
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 92
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public Kernel BuildKernel(bool overwrite = false, string overrideNetworkFile = null)
+    parameters:
+    - id: overwrite
+      type: System.Boolean
+    - id: overrideNetworkFile
+      type: System.String
+    return:
+      type: Catalyst.Core.Lib.Kernel.Kernel
+    content.vb: Public Function BuildKernel(overwrite As Boolean = False, overrideNetworkFile As String = Nothing) As Kernel
+  overload: Catalyst.Core.Lib.Kernel.Kernel.BuildKernel*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithDataDirectory
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.WithDataDirectory
+  id: WithDataDirectory
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: WithDataDirectory()
+  nameWithType: Kernel.WithDataDirectory()
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithDataDirectory()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WithDataDirectory
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 124
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public Kernel WithDataDirectory()
+    return:
+      type: Catalyst.Core.Lib.Kernel.Kernel
+    content.vb: Public Function WithDataDirectory As Kernel
+  overload: Catalyst.Core.Lib.Kernel.Kernel.WithDataDirectory*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithNetworksConfigFile(Catalyst.Protocol.Network.NetworkType,System.String)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.WithNetworksConfigFile(Catalyst.Protocol.Network.NetworkType,System.String)
+  id: WithNetworksConfigFile(Catalyst.Protocol.Network.NetworkType,System.String)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: WithNetworksConfigFile(NetworkType, String)
+  nameWithType: Kernel.WithNetworksConfigFile(NetworkType, String)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithNetworksConfigFile(Catalyst.Protocol.Network.NetworkType, System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WithNetworksConfigFile
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 130
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public Kernel WithNetworksConfigFile(NetworkType networkType = NetworkType.Devnet, string overrideNetworkFile = null)
+    parameters:
+    - id: networkType
+      type: Catalyst.Protocol.Network.NetworkType
+    - id: overrideNetworkFile
+      type: System.String
+    return:
+      type: Catalyst.Core.Lib.Kernel.Kernel
+    content.vb: Public Function WithNetworksConfigFile(networkType As NetworkType = NetworkType.Devnet, overrideNetworkFile As String = Nothing) As Kernel
+  overload: Catalyst.Core.Lib.Kernel.Kernel.WithNetworksConfigFile*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithSerilogConfigFile(System.String)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.WithSerilogConfigFile(System.String)
+  id: WithSerilogConfigFile(System.String)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: WithSerilogConfigFile(String)
+  nameWithType: Kernel.WithSerilogConfigFile(String)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithSerilogConfigFile(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WithSerilogConfigFile
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 142
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public Kernel WithSerilogConfigFile(string serilog = null)
+    parameters:
+    - id: serilog
+      type: System.String
+    return:
+      type: Catalyst.Core.Lib.Kernel.Kernel
+    content.vb: Public Function WithSerilogConfigFile(serilog As String = Nothing) As Kernel
+  overload: Catalyst.Core.Lib.Kernel.Kernel.WithSerilogConfigFile*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithConfigurationFile(System.String)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.WithConfigurationFile(System.String)
+  id: WithConfigurationFile(System.String)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: WithConfigurationFile(String)
+  nameWithType: Kernel.WithConfigurationFile(String)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithConfigurationFile(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WithConfigurationFile
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 152
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public Kernel WithConfigurationFile(string configFileName)
+    parameters:
+    - id: configFileName
+      type: System.String
+    return:
+      type: Catalyst.Core.Lib.Kernel.Kernel
+    content.vb: Public Function WithConfigurationFile(configFileName As String) As Kernel
+  overload: Catalyst.Core.Lib.Kernel.Kernel.WithConfigurationFile*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithConfigCopier(Catalyst.Abstractions.Config.IConfigCopier)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.WithConfigCopier(Catalyst.Abstractions.Config.IConfigCopier)
+  id: WithConfigCopier(Catalyst.Abstractions.Config.IConfigCopier)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: WithConfigCopier(IConfigCopier)
+  nameWithType: Kernel.WithConfigCopier(IConfigCopier)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithConfigCopier(Catalyst.Abstractions.Config.IConfigCopier)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WithConfigCopier
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 162
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public Kernel WithConfigCopier(IConfigCopier configCopier)
+    parameters:
+    - id: configCopier
+      type: Catalyst.Abstractions.Config.IConfigCopier
+    return:
+      type: Catalyst.Core.Lib.Kernel.Kernel
+    content.vb: Public Function WithConfigCopier(configCopier As IConfigCopier) As Kernel
+  overload: Catalyst.Core.Lib.Kernel.Kernel.WithConfigCopier*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithPersistenceConfiguration(System.String)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.WithPersistenceConfiguration(System.String)
+  id: WithPersistenceConfiguration(System.String)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: WithPersistenceConfiguration(String)
+  nameWithType: Kernel.WithPersistenceConfiguration(String)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithPersistenceConfiguration(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WithPersistenceConfiguration
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 168
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public Kernel WithPersistenceConfiguration(string configSection = null)
+    parameters:
+    - id: configSection
+      type: System.String
+    return:
+      type: Catalyst.Core.Lib.Kernel.Kernel
+    content.vb: Public Function WithPersistenceConfiguration(configSection As String = Nothing) As Kernel
+  overload: Catalyst.Core.Lib.Kernel.Kernel.WithPersistenceConfiguration*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.StartCustom(Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.StartCustom(Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic)
+  id: StartCustom(Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: StartCustom(Kernel.CustomBootLogic)
+  nameWithType: Kernel.StartCustom(Kernel.CustomBootLogic)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.StartCustom(Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: StartCustom
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 179
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  summary: "\nAllows custom nodes to write custom code for containerBuilder\n"
+  example: []
+  syntax:
+    content: public void StartCustom(Kernel.CustomBootLogic customBootLogic)
+    parameters:
+    - id: customBootLogic
+      type: Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic
+      description: ''
+    content.vb: Public Sub StartCustom(customBootLogic As Kernel.CustomBootLogic)
+  overload: Catalyst.Core.Lib.Kernel.Kernel.StartCustom*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.Dispose
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.Dispose
+  id: Dispose
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: Kernel.Dispose()
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 184
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose
+  overload: Catalyst.Core.Lib.Kernel.Kernel.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithPassword(Catalyst.Abstractions.Types.PasswordRegistryTypes,System.String)
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.WithPassword(Catalyst.Abstractions.Types.PasswordRegistryTypes,System.String)
+  id: WithPassword(Catalyst.Abstractions.Types.PasswordRegistryTypes,System.String)
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: WithPassword(PasswordRegistryTypes, String)
+  nameWithType: Kernel.WithPassword(PasswordRegistryTypes, String)
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithPassword(Catalyst.Abstractions.Types.PasswordRegistryTypes, System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WithPassword
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 189
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public Kernel WithPassword(PasswordRegistryTypes types, string password)
+    parameters:
+    - id: types
+      type: Catalyst.Abstractions.Types.PasswordRegistryTypes
+    - id: password
+      type: System.String
+    return:
+      type: Catalyst.Core.Lib.Kernel.Kernel
+    content.vb: Public Function WithPassword(types As PasswordRegistryTypes, password As String) As Kernel
+  overload: Catalyst.Core.Lib.Kernel.Kernel.WithPassword*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Kernel.Kernel.StartContainer
+  commentId: M:Catalyst.Core.Lib.Kernel.Kernel.StartContainer
+  id: StartContainer
+  parent: Catalyst.Core.Lib.Kernel.Kernel
+  langs:
+  - csharp
+  - vb
+  name: StartContainer()
+  nameWithType: Kernel.StartContainer()
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.StartContainer()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Kernel/Kernel.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: StartContainer
+    path: ../src/Catalyst.Core.Lib/Kernel/Kernel.cs
+    startLine: 211
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Kernel
+  syntax:
+    content: public void StartContainer()
+    content.vb: Public Sub StartContainer
+  overload: Catalyst.Core.Lib.Kernel.Kernel.StartContainer*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.Kernel
+  commentId: N:Catalyst.Core.Lib.Kernel
+  name: Catalyst.Core.Lib.Kernel
+  nameWithType: Catalyst.Core.Lib.Kernel
+  fullName: Catalyst.Core.Lib.Kernel
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Autofac.ILifetimeScope
+  commentId: T:Autofac.ILifetimeScope
+  parent: Autofac
+  isExternal: true
+  name: ILifetimeScope
+  nameWithType: ILifetimeScope
+  fullName: Autofac.ILifetimeScope
+- uid: Autofac
+  commentId: N:Autofac
+  isExternal: true
+  name: Autofac
+  nameWithType: Autofac
+  fullName: Autofac
+- uid: Catalyst.Core.Lib.Kernel.Kernel.Logger*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.Logger
+  name: Logger
+  nameWithType: Kernel.Logger
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.Logger
+- uid: Serilog.ILogger
+  commentId: T:Serilog.ILogger
+  parent: Serilog
+  isExternal: true
+  name: ILogger
+  nameWithType: ILogger
+  fullName: Serilog.ILogger
+- uid: Serilog
+  commentId: N:Serilog
+  isExternal: true
+  name: Serilog
+  nameWithType: Serilog
+  fullName: Serilog
+- uid: Catalyst.Core.Lib.Kernel.Kernel.ContainerBuilder*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.ContainerBuilder
+  name: ContainerBuilder
+  nameWithType: Kernel.ContainerBuilder
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.ContainerBuilder
+- uid: Autofac.ContainerBuilder
+  commentId: T:Autofac.ContainerBuilder
+  parent: Autofac
+  isExternal: true
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: Autofac.ContainerBuilder
+- uid: Catalyst.Core.Lib.Kernel.Kernel.CancellationTokenProvider*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.CancellationTokenProvider
+  name: CancellationTokenProvider
+  nameWithType: Kernel.CancellationTokenProvider
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.CancellationTokenProvider
+- uid: Catalyst.Abstractions.Util.ICancellationTokenProvider
+  commentId: T:Catalyst.Abstractions.Util.ICancellationTokenProvider
+  parent: Catalyst.Abstractions.Util
+  name: ICancellationTokenProvider
+  nameWithType: ICancellationTokenProvider
+  fullName: Catalyst.Abstractions.Util.ICancellationTokenProvider
+- uid: Catalyst.Abstractions.Util
+  commentId: N:Catalyst.Abstractions.Util
+  name: Catalyst.Abstractions.Util
+  nameWithType: Catalyst.Abstractions.Util
+  fullName: Catalyst.Abstractions.Util
+- uid: Catalyst.Core.Lib.Kernel.Kernel.Initramfs*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.Initramfs
+  name: Initramfs
+  nameWithType: Kernel.Initramfs
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.Initramfs
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.Kernel.Kernel
+  commentId: T:Catalyst.Core.Lib.Kernel.Kernel
+  parent: Catalyst.Core.Lib.Kernel
+  name: Kernel
+  nameWithType: Kernel
+  fullName: Catalyst.Core.Lib.Kernel.Kernel
+- uid: Catalyst.Core.Lib.Kernel.Kernel.LogUnhandledException*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.LogUnhandledException
+  name: LogUnhandledException
+  nameWithType: Kernel.LogUnhandledException
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.LogUnhandledException
+- uid: System.UnhandledExceptionEventArgs
+  commentId: T:System.UnhandledExceptionEventArgs
+  parent: System
+  isExternal: true
+  name: UnhandledExceptionEventArgs
+  nameWithType: UnhandledExceptionEventArgs
+  fullName: System.UnhandledExceptionEventArgs
+- uid: Catalyst.Core.Lib.Kernel.Kernel.CurrentDomain_ProcessExit*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.CurrentDomain_ProcessExit
+  name: CurrentDomain_ProcessExit
+  nameWithType: Kernel.CurrentDomain_ProcessExit
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.CurrentDomain_ProcessExit
+- uid: System.EventArgs
+  commentId: T:System.EventArgs
+  parent: System
+  isExternal: true
+  name: EventArgs
+  nameWithType: EventArgs
+  fullName: System.EventArgs
+- uid: Catalyst.Core.Lib.Kernel.Kernel.BuildKernel*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.BuildKernel
+  name: BuildKernel
+  nameWithType: Kernel.BuildKernel
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.BuildKernel
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithDataDirectory*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.WithDataDirectory
+  name: WithDataDirectory
+  nameWithType: Kernel.WithDataDirectory
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithDataDirectory
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithNetworksConfigFile*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.WithNetworksConfigFile
+  name: WithNetworksConfigFile
+  nameWithType: Kernel.WithNetworksConfigFile
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithNetworksConfigFile
+- uid: Catalyst.Protocol.Network.NetworkType
+  commentId: T:Catalyst.Protocol.Network.NetworkType
+  parent: Catalyst.Protocol.Network
+  name: NetworkType
+  nameWithType: NetworkType
+  fullName: Catalyst.Protocol.Network.NetworkType
+- uid: Catalyst.Protocol.Network
+  commentId: N:Catalyst.Protocol.Network
+  name: Catalyst.Protocol.Network
+  nameWithType: Catalyst.Protocol.Network
+  fullName: Catalyst.Protocol.Network
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithSerilogConfigFile*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.WithSerilogConfigFile
+  name: WithSerilogConfigFile
+  nameWithType: Kernel.WithSerilogConfigFile
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithSerilogConfigFile
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithConfigurationFile*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.WithConfigurationFile
+  name: WithConfigurationFile
+  nameWithType: Kernel.WithConfigurationFile
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithConfigurationFile
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithConfigCopier*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.WithConfigCopier
+  name: WithConfigCopier
+  nameWithType: Kernel.WithConfigCopier
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithConfigCopier
+- uid: Catalyst.Abstractions.Config.IConfigCopier
+  commentId: T:Catalyst.Abstractions.Config.IConfigCopier
+  parent: Catalyst.Abstractions.Config
+  name: IConfigCopier
+  nameWithType: IConfigCopier
+  fullName: Catalyst.Abstractions.Config.IConfigCopier
+- uid: Catalyst.Abstractions.Config
+  commentId: N:Catalyst.Abstractions.Config
+  name: Catalyst.Abstractions.Config
+  nameWithType: Catalyst.Abstractions.Config
+  fullName: Catalyst.Abstractions.Config
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithPersistenceConfiguration*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.WithPersistenceConfiguration
+  name: WithPersistenceConfiguration
+  nameWithType: Kernel.WithPersistenceConfiguration
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithPersistenceConfiguration
+- uid: Catalyst.Core.Lib.Kernel.Kernel.StartCustom*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.StartCustom
+  name: StartCustom
+  nameWithType: Kernel.StartCustom
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.StartCustom
+- uid: Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic
+  commentId: T:Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic
+  parent: Catalyst.Core.Lib.Kernel
+  name: Kernel.CustomBootLogic
+  nameWithType: Kernel.CustomBootLogic
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic
+- uid: Catalyst.Core.Lib.Kernel.Kernel.Dispose*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.Dispose
+  name: Dispose
+  nameWithType: Kernel.Dispose
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.Kernel.Kernel.WithPassword*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.WithPassword
+  name: WithPassword
+  nameWithType: Kernel.WithPassword
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.WithPassword
+- uid: Catalyst.Abstractions.Types.PasswordRegistryTypes
+  commentId: T:Catalyst.Abstractions.Types.PasswordRegistryTypes
+  parent: Catalyst.Abstractions.Types
+  name: PasswordRegistryTypes
+  nameWithType: PasswordRegistryTypes
+  fullName: Catalyst.Abstractions.Types.PasswordRegistryTypes
+- uid: Catalyst.Abstractions.Types
+  commentId: N:Catalyst.Abstractions.Types
+  name: Catalyst.Abstractions.Types
+  nameWithType: Catalyst.Abstractions.Types
+  fullName: Catalyst.Abstractions.Types
+- uid: Catalyst.Core.Lib.Kernel.Kernel.StartContainer*
+  commentId: Overload:Catalyst.Core.Lib.Kernel.Kernel.StartContainer
+  name: StartContainer
+  nameWithType: Kernel.StartContainer
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.StartContainer

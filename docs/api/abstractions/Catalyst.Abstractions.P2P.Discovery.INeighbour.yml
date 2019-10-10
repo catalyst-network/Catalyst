@@ -1,0 +1,189 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.INeighbour
+  id: INeighbour
+  parent: Catalyst.Abstractions.P2P.Discovery
+  children:
+  - Catalyst.Abstractions.P2P.Discovery.INeighbour.DiscoveryPingCorrelationId
+  - Catalyst.Abstractions.P2P.Discovery.INeighbour.PeerId
+  - Catalyst.Abstractions.P2P.Discovery.INeighbour.StateTypes
+  langs:
+  - csharp
+  - vb
+  name: INeighbour
+  nameWithType: INeighbour
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/INeighbour.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: INeighbour
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/INeighbour.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  syntax:
+    content: public interface INeighbour
+    content.vb: Public Interface INeighbour
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbour.StateTypes
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.INeighbour.StateTypes
+  id: StateTypes
+  parent: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  langs:
+  - csharp
+  - vb
+  name: StateTypes
+  nameWithType: INeighbour.StateTypes
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour.StateTypes
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/INeighbour.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: StateTypes
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/INeighbour.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  syntax:
+    content: NeighbourStateTypes StateTypes { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Types.NeighbourStateTypes
+    content.vb: Property StateTypes As NeighbourStateTypes
+  overload: Catalyst.Abstractions.P2P.Discovery.INeighbour.StateTypes*
+  modifiers.csharp:
+  - get
+  - set
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbour.PeerId
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.INeighbour.PeerId
+  id: PeerId
+  parent: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  langs:
+  - csharp
+  - vb
+  name: PeerId
+  nameWithType: INeighbour.PeerId
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour.PeerId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/INeighbour.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PeerId
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/INeighbour.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  syntax:
+    content: PeerId PeerId { get; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: ReadOnly Property PeerId As PeerId
+  overload: Catalyst.Abstractions.P2P.Discovery.INeighbour.PeerId*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbour.DiscoveryPingCorrelationId
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.INeighbour.DiscoveryPingCorrelationId
+  id: DiscoveryPingCorrelationId
+  parent: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  langs:
+  - csharp
+  - vb
+  name: DiscoveryPingCorrelationId
+  nameWithType: INeighbour.DiscoveryPingCorrelationId
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour.DiscoveryPingCorrelationId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/INeighbour.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: DiscoveryPingCorrelationId
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/INeighbour.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  syntax:
+    content: ICorrelationId DiscoveryPingCorrelationId { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    content.vb: ReadOnly Property DiscoveryPingCorrelationId As ICorrelationId
+  overload: Catalyst.Abstractions.P2P.Discovery.INeighbour.DiscoveryPingCorrelationId*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbour.StateTypes*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.INeighbour.StateTypes
+  name: StateTypes
+  nameWithType: INeighbour.StateTypes
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour.StateTypes
+- uid: Catalyst.Abstractions.Types.NeighbourStateTypes
+  commentId: T:Catalyst.Abstractions.Types.NeighbourStateTypes
+  parent: Catalyst.Abstractions.Types
+  name: NeighbourStateTypes
+  nameWithType: NeighbourStateTypes
+  fullName: Catalyst.Abstractions.Types.NeighbourStateTypes
+- uid: Catalyst.Abstractions.Types
+  commentId: N:Catalyst.Abstractions.Types
+  name: Catalyst.Abstractions.Types
+  nameWithType: Catalyst.Abstractions.Types
+  fullName: Catalyst.Abstractions.Types
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbour.PeerId*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.INeighbour.PeerId
+  name: PeerId
+  nameWithType: INeighbour.PeerId
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour.PeerId
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbour.DiscoveryPingCorrelationId*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.INeighbour.DiscoveryPingCorrelationId
+  name: DiscoveryPingCorrelationId
+  nameWithType: INeighbour.DiscoveryPingCorrelationId
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour.DiscoveryPingCorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  name: ICorrelationId
+  nameWithType: ICorrelationId
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation

@@ -1,0 +1,625 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+  commentId: T:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+  id: RpcClientMessageDto`1
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  children:
+  - Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor(`0,Catalyst.Protocol.Peer.PeerId)
+  - Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message
+  - Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender
+  langs:
+  - csharp
+  - vb
+  name: RpcClientMessageDto<T>
+  nameWithType: RpcClientMessageDto<T>
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: RpcClientMessageDto
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  syntax:
+    content: 'public sealed class RpcClientMessageDto<T> : IRpcClientMessageDto<T> where T : IMessage'
+    typeParameters:
+    - id: T
+    content.vb: >-
+      Public NotInheritable Class RpcClientMessageDto(Of T As IMessage)
+
+          Implements IRpcClientMessageDto(Of T)
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{{T}}
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  nameWithType.vb: RpcClientMessageDto(Of T)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T)
+  name.vb: RpcClientMessageDto(Of T)
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender
+  id: Sender
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+  langs:
+  - csharp
+  - vb
+  name: Sender
+  nameWithType: RpcClientMessageDto<T>.Sender
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.Sender
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Sender
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  syntax:
+    content: public PeerId Sender { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public Property Sender As PeerId
+  overload: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender*
+  implements:
+  - Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{{T}}.Sender
+  nameWithType.vb: RpcClientMessageDto(Of T).Sender
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).Sender
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message
+  id: Message
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+  langs:
+  - csharp
+  - vb
+  name: Message
+  nameWithType: RpcClientMessageDto<T>.Message
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.Message
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Message
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  syntax:
+    content: public T Message { get; set; }
+    parameters: []
+    return:
+      type: '{T}'
+    content.vb: Public Property Message As T
+  overload: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message*
+  implements:
+  - Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{{T}}.Message
+  nameWithType.vb: RpcClientMessageDto(Of T).Message
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).Message
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor(`0,Catalyst.Protocol.Peer.PeerId)
+  commentId: M:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor(`0,Catalyst.Protocol.Peer.PeerId)
+  id: '#ctor(`0,Catalyst.Protocol.Peer.PeerId)'
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+  langs:
+  - csharp
+  - vb
+  name: RpcClientMessageDto(T, PeerId)
+  nameWithType: RpcClientMessageDto<T>.RpcClientMessageDto(T, PeerId)
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.RpcClientMessageDto(T, Catalyst.Protocol.Peer.PeerId)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  syntax:
+    content: public RpcClientMessageDto(T message, PeerId sender)
+    parameters:
+    - id: message
+      type: '{T}'
+    - id: sender
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public Sub New(message As T, sender As PeerId)
+  overload: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor*
+  nameWithType.vb: RpcClientMessageDto(Of T).RpcClientMessageDto(T, PeerId)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).RpcClientMessageDto(T, Catalyst.Protocol.Peer.PeerId)
+references:
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  commentId: N:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  name: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  nameWithType: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{{T}}
+  commentId: T:Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{`0}
+  parent: Catalyst.Abstractions.Rpc.IO.Messaging.Dto
+  definition: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1
+  name: IRpcClientMessageDto<T>
+  nameWithType: IRpcClientMessageDto<T>
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto<T>
+  nameWithType.vb: IRpcClientMessageDto(Of T)
+  fullName.vb: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto(Of T)
+  name.vb: IRpcClientMessageDto(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1
+    name: IRpcClientMessageDto
+    nameWithType: IRpcClientMessageDto
+    fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1
+    name: IRpcClientMessageDto
+    nameWithType: IRpcClientMessageDto
+    fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1
+  commentId: T:Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1
+  name: IRpcClientMessageDto<T>
+  nameWithType: IRpcClientMessageDto<T>
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto<T>
+  nameWithType.vb: IRpcClientMessageDto(Of T)
+  fullName.vb: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto(Of T)
+  name.vb: IRpcClientMessageDto(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1
+    name: IRpcClientMessageDto
+    nameWithType: IRpcClientMessageDto
+    fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1
+    name: IRpcClientMessageDto
+    nameWithType: IRpcClientMessageDto
+    fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto
+  commentId: N:Catalyst.Abstractions.Rpc.IO.Messaging.Dto
+  name: Catalyst.Abstractions.Rpc.IO.Messaging.Dto
+  nameWithType: Catalyst.Abstractions.Rpc.IO.Messaging.Dto
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender
+  name: Sender
+  nameWithType: RpcClientMessageDto<T>.Sender
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.Sender
+  nameWithType.vb: RpcClientMessageDto(Of T).Sender
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).Sender
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{{T}}.Sender
+  commentId: P:Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{`0}.Sender
+  parent: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{{T}}
+  definition: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1.Sender
+  name: Sender
+  nameWithType: IRpcClientMessageDto<T>.Sender
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto<T>.Sender
+  nameWithType.vb: IRpcClientMessageDto(Of T).Sender
+  fullName.vb: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto(Of T).Sender
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1.Sender
+  commentId: P:Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1.Sender
+  name: Sender
+  nameWithType: IRpcClientMessageDto<T>.Sender
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto<T>.Sender
+  nameWithType.vb: IRpcClientMessageDto(Of T).Sender
+  fullName.vb: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto(Of T).Sender
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message
+  name: Message
+  nameWithType: RpcClientMessageDto<T>.Message
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.Message
+  nameWithType.vb: RpcClientMessageDto(Of T).Message
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).Message
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{{T}}.Message
+  commentId: P:Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{`0}.Message
+  parent: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto{{T}}
+  definition: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1.Message
+  name: Message
+  nameWithType: IRpcClientMessageDto<T>.Message
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto<T>.Message
+  nameWithType.vb: IRpcClientMessageDto(Of T).Message
+  fullName.vb: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto(Of T).Message
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1.Message
+  commentId: P:Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto`1.Message
+  name: Message
+  nameWithType: IRpcClientMessageDto<T>.Message
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto<T>.Message
+  nameWithType.vb: IRpcClientMessageDto(Of T).Message
+  fullName.vb: Catalyst.Abstractions.Rpc.IO.Messaging.Dto.IRpcClientMessageDto(Of T).Message
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor
+  name: RpcClientMessageDto
+  nameWithType: RpcClientMessageDto<T>.RpcClientMessageDto
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.RpcClientMessageDto
+  nameWithType.vb: RpcClientMessageDto(Of T).RpcClientMessageDto
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).RpcClientMessageDto

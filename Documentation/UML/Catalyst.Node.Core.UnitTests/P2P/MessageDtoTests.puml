@@ -1,9 +1,0 @@
-@startuml
-class MessageDtoTests <<sealed>> {
-    + MessageDtoTests()
-    + CanInitMessageDtoCorrectly() : void
-}
-class "P2PMessageDto`2"<T1,T2> {
-}
-MessageDtoTests --> "_p2PMessageDto<IMessage,P2PMessages>" "P2PMessageDto`2"
-@enduml

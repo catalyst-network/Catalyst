@@ -1,0 +1,244 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.IPhase
+  id: IPhase
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  children:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhase.Name
+  - Catalyst.Abstractions.Consensus.Cycle.IPhase.PreviousDeltaDfsHash
+  - Catalyst.Abstractions.Consensus.Cycle.IPhase.Status
+  - Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime
+  langs:
+  - csharp
+  - vb
+  name: IPhase
+  nameWithType: IPhase
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhase.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IPhase
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhase.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nRepresents a given phaseDetails of the ledger update cycle, namely,\nConstruction, Campaigning, Voting and Synchronisation.\n"
+  example: []
+  syntax:
+    content: public interface IPhase
+    content.vb: Public Interface IPhase
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.PreviousDeltaDfsHash
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhase.PreviousDeltaDfsHash
+  id: PreviousDeltaDfsHash
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  langs:
+  - csharp
+  - vb
+  name: PreviousDeltaDfsHash
+  nameWithType: IPhase.PreviousDeltaDfsHash
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.PreviousDeltaDfsHash
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhase.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PreviousDeltaDfsHash
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhase.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nAddress on the DFS of the delta elected on the previous cycle, here used as\na unique identifier for this phase.\n"
+  example: []
+  syntax:
+    content: MultiHash PreviousDeltaDfsHash { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+    content.vb: ReadOnly Property PreviousDeltaDfsHash As MultiHash
+  overload: Catalyst.Abstractions.Consensus.Cycle.IPhase.PreviousDeltaDfsHash*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.Name
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhase.Name
+  id: Name
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: IPhase.Name
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.Name
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhase.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Name
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhase.cs
+    startLine: 43
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nThe name of the phase represented by this instance.\n"
+  example: []
+  syntax:
+    content: IPhaseName Name { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+    content.vb: ReadOnly Property Name As IPhaseName
+  overload: Catalyst.Abstractions.Consensus.Cycle.IPhase.Name*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.Status
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhase.Status
+  id: Status
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  langs:
+  - csharp
+  - vb
+  name: Status
+  nameWithType: IPhase.Status
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.Status
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhase.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Status
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhase.cs
+    startLine: 48
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nStatus in which our Phase is.\n"
+  example: []
+  syntax:
+    content: IPhaseStatus Status { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+    content.vb: ReadOnly Property Status As IPhaseStatus
+  overload: Catalyst.Abstractions.Consensus.Cycle.IPhase.Status*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime
+  id: UtcStartTime
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  langs:
+  - csharp
+  - vb
+  name: UtcStartTime
+  nameWithType: IPhase.UtcStartTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhase.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: UtcStartTime
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhase.cs
+    startLine: 53
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nThe time at which the phase was started.\n"
+  example: []
+  syntax:
+    content: DateTime UtcStartTime { get; }
+    parameters: []
+    return:
+      type: System.DateTime
+    content.vb: ReadOnly Property UtcStartTime As Date
+  overload: Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.Consensus.Cycle
+  commentId: N:Catalyst.Abstractions.Consensus.Cycle
+  name: Catalyst.Abstractions.Consensus.Cycle
+  nameWithType: Catalyst.Abstractions.Consensus.Cycle
+  fullName: Catalyst.Abstractions.Consensus.Cycle
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.PreviousDeltaDfsHash*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.IPhase.PreviousDeltaDfsHash
+  name: PreviousDeltaDfsHash
+  nameWithType: IPhase.PreviousDeltaDfsHash
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.PreviousDeltaDfsHash
+- uid: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+  commentId: T:TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+  parent: TheDotNetLeague.MultiFormats.MultiHash
+  isExternal: true
+  name: MultiHash
+  nameWithType: MultiHash
+  fullName: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+- uid: TheDotNetLeague.MultiFormats.MultiHash
+  commentId: N:TheDotNetLeague.MultiFormats.MultiHash
+  isExternal: true
+  name: TheDotNetLeague.MultiFormats.MultiHash
+  nameWithType: TheDotNetLeague.MultiFormats.MultiHash
+  fullName: TheDotNetLeague.MultiFormats.MultiHash
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.Name*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.IPhase.Name
+  name: Name
+  nameWithType: IPhase.Name
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.Name
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: IPhaseName
+  nameWithType: IPhaseName
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.Status*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.IPhase.Status
+  name: Status
+  nameWithType: IPhase.Status
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.Status
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: IPhaseStatus
+  nameWithType: IPhaseStatus
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime
+  name: UtcStartTime
+  nameWithType: IPhase.UtcStartTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime
+- uid: System.DateTime
+  commentId: T:System.DateTime
+  parent: System
+  isExternal: true
+  name: DateTime
+  nameWithType: DateTime
+  fullName: System.DateTime
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

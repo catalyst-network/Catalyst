@@ -1,0 +1,34 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem
+  commentId: N:Catalyst.Core.Lib.P2P.ReputationSystem
+  id: Catalyst.Core.Lib.P2P.ReputationSystem
+  children:
+  - Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  - Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.P2P.ReputationSystem
+  nameWithType: Catalyst.Core.Lib.P2P.ReputationSystem
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  commentId: T:Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem
+  name: IReputationManager
+  nameWithType: IReputationManager
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  commentId: T:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  name: ReputationManager
+  nameWithType: ReputationManager
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem
+  commentId: N:Catalyst.Core.Lib.P2P.ReputationSystem
+  name: Catalyst.Core.Lib.P2P.ReputationSystem
+  nameWithType: Catalyst.Core.Lib.P2P.ReputationSystem
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem

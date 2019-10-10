@@ -1,5 +1,0 @@
-@startuml
-class StreamExtensions <<static>> {
-    + {static} ReadAllAsUtf8String(stream:Stream, leaveOpen:bool) : string
-}
-@enduml

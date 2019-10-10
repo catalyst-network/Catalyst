@@ -1,0 +1,640 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings
+  commentId: T:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings
+  id: RpcServerSettings
+  parent: Catalyst.Core.Modules.Rpc.Server
+  children:
+  - Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.#ctor(Microsoft.Extensions.Configuration.IConfigurationRoot)
+  - Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.BindAddress
+  - Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.NodeConfig
+  - Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.PfxFileName
+  - Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.Port
+  langs:
+  - csharp
+  - vb
+  name: RpcServerSettings
+  nameWithType: RpcServerSettings
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: RpcServerSettings
+    path: ../src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Server
+  namespace: Catalyst.Core.Modules.Rpc.Server
+  summary: "\nThis class provides the settings for the RpcServer class.\n"
+  example: []
+  syntax:
+    content: 'public sealed class RpcServerSettings : IRpcServerSettings'
+    content.vb: >-
+      Public NotInheritable Class RpcServerSettings
+
+          Implements IRpcServerSettings
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Rpc.IRpcServerSettings
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.#ctor(Microsoft.Extensions.Configuration.IConfigurationRoot)
+  commentId: M:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.#ctor(Microsoft.Extensions.Configuration.IConfigurationRoot)
+  id: '#ctor(Microsoft.Extensions.Configuration.IConfigurationRoot)'
+  parent: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings
+  langs:
+  - csharp
+  - vb
+  name: RpcServerSettings(IConfigurationRoot)
+  nameWithType: RpcServerSettings.RpcServerSettings(IConfigurationRoot)
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.RpcServerSettings(Microsoft.Extensions.Configuration.IConfigurationRoot)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Server
+  namespace: Catalyst.Core.Modules.Rpc.Server
+  summary: "\nSets RpcServerSetting Attributes\n"
+  example: []
+  syntax:
+    content: public RpcServerSettings(IConfigurationRoot rootSection)
+    parameters:
+    - id: rootSection
+      type: Microsoft.Extensions.Configuration.IConfigurationRoot
+      description: ''
+    content.vb: Public Sub New(rootSection As IConfigurationRoot)
+  overload: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.NodeConfig
+  commentId: P:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.NodeConfig
+  id: NodeConfig
+  parent: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings
+  langs:
+  - csharp
+  - vb
+  name: NodeConfig
+  nameWithType: RpcServerSettings.NodeConfig
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.NodeConfig
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: NodeConfig
+    path: ../src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+    startLine: 53
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Server
+  namespace: Catalyst.Core.Modules.Rpc.Server
+  syntax:
+    content: public IConfigurationRoot NodeConfig { get; }
+    parameters: []
+    return:
+      type: Microsoft.Extensions.Configuration.IConfigurationRoot
+    content.vb: Public ReadOnly Property NodeConfig As IConfigurationRoot
+  overload: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.NodeConfig*
+  implements:
+  - Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.Port
+  commentId: P:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.Port
+  id: Port
+  parent: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings
+  langs:
+  - csharp
+  - vb
+  name: Port
+  nameWithType: RpcServerSettings.Port
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.Port
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Port
+    path: ../src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+    startLine: 54
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Server
+  namespace: Catalyst.Core.Modules.Rpc.Server
+  syntax:
+    content: public int Port { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Port As Integer
+  overload: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.Port*
+  implements:
+  - Catalyst.Abstractions.Rpc.IRpcServerSettings.Port
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.BindAddress
+  commentId: P:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.BindAddress
+  id: BindAddress
+  parent: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings
+  langs:
+  - csharp
+  - vb
+  name: BindAddress
+  nameWithType: RpcServerSettings.BindAddress
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.BindAddress
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BindAddress
+    path: ../src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Server
+  namespace: Catalyst.Core.Modules.Rpc.Server
+  syntax:
+    content: public IPAddress BindAddress { get; }
+    parameters: []
+    return:
+      type: System.Net.IPAddress
+    content.vb: Public ReadOnly Property BindAddress As IPAddress
+  overload: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.BindAddress*
+  implements:
+  - Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.PfxFileName
+  commentId: P:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.PfxFileName
+  id: PfxFileName
+  parent: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings
+  langs:
+  - csharp
+  - vb
+  name: PfxFileName
+  nameWithType: RpcServerSettings.PfxFileName
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.PfxFileName
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PfxFileName
+    path: ../src/Catalyst.Core.Modules.Rpc.Server/RpcServerSettings.cs
+    startLine: 56
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Server
+  namespace: Catalyst.Core.Modules.Rpc.Server
+  syntax:
+    content: public string PfxFileName { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property PfxFileName As String
+  overload: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.PfxFileName*
+  implements:
+  - Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+references:
+- uid: Catalyst.Core.Modules.Rpc.Server
+  commentId: N:Catalyst.Core.Modules.Rpc.Server
+  name: Catalyst.Core.Modules.Rpc.Server
+  nameWithType: Catalyst.Core.Modules.Rpc.Server
+  fullName: Catalyst.Core.Modules.Rpc.Server
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  commentId: T:Catalyst.Abstractions.Rpc.IRpcServerSettings
+  parent: Catalyst.Abstractions.Rpc
+  name: IRpcServerSettings
+  nameWithType: IRpcServerSettings
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Rpc
+  commentId: N:Catalyst.Abstractions.Rpc
+  name: Catalyst.Abstractions.Rpc
+  nameWithType: Catalyst.Abstractions.Rpc
+  fullName: Catalyst.Abstractions.Rpc
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.#ctor
+  name: RpcServerSettings
+  nameWithType: RpcServerSettings.RpcServerSettings
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.RpcServerSettings
+- uid: Microsoft.Extensions.Configuration.IConfigurationRoot
+  commentId: T:Microsoft.Extensions.Configuration.IConfigurationRoot
+  parent: Microsoft.Extensions.Configuration
+  isExternal: true
+  name: IConfigurationRoot
+  nameWithType: IConfigurationRoot
+  fullName: Microsoft.Extensions.Configuration.IConfigurationRoot
+- uid: Microsoft.Extensions.Configuration
+  commentId: N:Microsoft.Extensions.Configuration
+  isExternal: true
+  name: Microsoft.Extensions.Configuration
+  nameWithType: Microsoft.Extensions.Configuration
+  fullName: Microsoft.Extensions.Configuration
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.NodeConfig*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.NodeConfig
+  name: NodeConfig
+  nameWithType: RpcServerSettings.NodeConfig
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.NodeConfig
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig
+  parent: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  name: NodeConfig
+  nameWithType: IRpcServerSettings.NodeConfig
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.Port*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.Port
+  name: Port
+  nameWithType: RpcServerSettings.Port
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.Port
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.Port
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcServerSettings.Port
+  parent: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  name: Port
+  nameWithType: IRpcServerSettings.Port
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.Port
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.BindAddress*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.BindAddress
+  name: BindAddress
+  nameWithType: RpcServerSettings.BindAddress
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.BindAddress
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress
+  parent: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  name: BindAddress
+  nameWithType: IRpcServerSettings.BindAddress
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress
+- uid: System.Net.IPAddress
+  commentId: T:System.Net.IPAddress
+  parent: System.Net
+  isExternal: true
+  name: IPAddress
+  nameWithType: IPAddress
+  fullName: System.Net.IPAddress
+- uid: System.Net
+  commentId: N:System.Net
+  isExternal: true
+  name: System.Net
+  nameWithType: System.Net
+  fullName: System.Net
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.PfxFileName*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.PfxFileName
+  name: PfxFileName
+  nameWithType: RpcServerSettings.PfxFileName
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings.PfxFileName
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName
+  parent: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  name: PfxFileName
+  nameWithType: IRpcServerSettings.PfxFileName
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String

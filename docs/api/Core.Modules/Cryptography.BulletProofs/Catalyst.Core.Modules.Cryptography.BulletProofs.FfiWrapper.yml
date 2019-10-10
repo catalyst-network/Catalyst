@@ -1,0 +1,2016 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  commentId: T:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  id: FfiWrapper
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs
+  children:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.BatchVerifyRangeProof(System.Collections.Generic.List{System.Byte[]},System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32},System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32})
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CTransactionEntry(Catalyst.Abstractions.Cryptography.IPublicKey,Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32,System.Int32)
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtSign(System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64},Catalyst.Abstractions.Cryptography.IPrivateKey,Catalyst.Abstractions.Types.Byte32)
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtVerify(System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64},Catalyst.Abstractions.Cryptography.ISignature)
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePedersenCommitment(Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePrivateKey
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GenerateRangeProof(Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPrivateKeyFromBytes(System.Byte[])
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromBytes(System.Byte[])
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetSignatureFromBytes(System.Byte[],System.Byte[])
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PrivateKeyLength
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PublicKeyLength
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey,System.Byte[],System.Byte[])
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureContextMaxLength
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureLength
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],System.Byte[])
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.VerifyRangeProof(System.Byte[],Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  langs:
+  - csharp
+  - vb
+  name: FfiWrapper
+  nameWithType: FfiWrapper
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: FfiWrapper
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: 'public sealed class FfiWrapper : ICryptoContext'
+    content.vb: >-
+      Public NotInheritable Class FfiWrapper
+
+          Implements ICryptoContext
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PrivateKeyLength
+  commentId: P:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PrivateKeyLength
+  id: PrivateKeyLength
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: PrivateKeyLength
+  nameWithType: FfiWrapper.PrivateKeyLength
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PrivateKeyLength
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PrivateKeyLength
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public int PrivateKeyLength { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property PrivateKeyLength As Integer
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PrivateKeyLength*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.PrivateKeyLength
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PublicKeyLength
+  commentId: P:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PublicKeyLength
+  id: PublicKeyLength
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: PublicKeyLength
+  nameWithType: FfiWrapper.PublicKeyLength
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PublicKeyLength
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PublicKeyLength
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public int PublicKeyLength { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property PublicKeyLength As Integer
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PublicKeyLength*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.PublicKeyLength
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureLength
+  commentId: P:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureLength
+  id: SignatureLength
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: SignatureLength
+  nameWithType: FfiWrapper.SignatureLength
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureLength
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: SignatureLength
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 37
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public int SignatureLength { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property SignatureLength As Integer
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureLength*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.SignatureLength
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureContextMaxLength
+  commentId: P:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureContextMaxLength
+  id: SignatureContextMaxLength
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: SignatureContextMaxLength
+  nameWithType: FfiWrapper.SignatureContextMaxLength
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureContextMaxLength
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: SignatureContextMaxLength
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public int SignatureContextMaxLength { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property SignatureContextMaxLength As Integer
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureContextMaxLength*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.SignatureContextMaxLength
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey,System.Byte[],System.Byte[])
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey,System.Byte[],System.Byte[])
+  id: Sign(Catalyst.Abstractions.Cryptography.IPrivateKey,System.Byte[],System.Byte[])
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: Sign(IPrivateKey, Byte[], Byte[])
+  nameWithType: FfiWrapper.Sign(IPrivateKey, Byte[], Byte[])
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey, System.Byte[], System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Sign
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public ISignature Sign(IPrivateKey privateKey, byte[] messageBytes, byte[] contextBytes)
+    parameters:
+    - id: privateKey
+      type: Catalyst.Abstractions.Cryptography.IPrivateKey
+    - id: messageBytes
+      type: System.Byte[]
+    - id: contextBytes
+      type: System.Byte[]
+    return:
+      type: Catalyst.Abstractions.Cryptography.ISignature
+    content.vb: Public Function Sign(privateKey As IPrivateKey, messageBytes As Byte(), contextBytes As Byte()) As ISignature
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Sign*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey,System.Byte[],System.Byte[])
+  nameWithType.vb: FfiWrapper.Sign(IPrivateKey, Byte(), Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey, System.Byte(), System.Byte())
+  name.vb: Sign(IPrivateKey, Byte(), Byte())
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],System.Byte[])
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],System.Byte[])
+  id: Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],System.Byte[])
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: Verify(ISignature, Byte[], Byte[])
+  nameWithType: FfiWrapper.Verify(ISignature, Byte[], Byte[])
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Verify(Catalyst.Abstractions.Cryptography.ISignature, System.Byte[], System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Verify
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public bool Verify(ISignature signature, byte[] message, byte[] context)
+    parameters:
+    - id: signature
+      type: Catalyst.Abstractions.Cryptography.ISignature
+    - id: message
+      type: System.Byte[]
+    - id: context
+      type: System.Byte[]
+    return:
+      type: System.Boolean
+    content.vb: Public Function Verify(signature As ISignature, message As Byte(), context As Byte()) As Boolean
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Verify*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],System.Byte[])
+  nameWithType.vb: FfiWrapper.Verify(ISignature, Byte(), Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Verify(Catalyst.Abstractions.Cryptography.ISignature, System.Byte(), System.Byte())
+  name.vb: Verify(ISignature, Byte(), Byte())
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePrivateKey
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePrivateKey
+  id: GeneratePrivateKey
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: GeneratePrivateKey()
+  nameWithType: FfiWrapper.GeneratePrivateKey()
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePrivateKey()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GeneratePrivateKey
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public IPrivateKey GeneratePrivateKey()
+    return:
+      type: Catalyst.Abstractions.Cryptography.IPrivateKey
+    content.vb: Public Function GeneratePrivateKey As IPrivateKey
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePrivateKey*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.GeneratePrivateKey
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  id: GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: GetPublicKeyFromPrivateKey(IPrivateKey)
+  nameWithType: FfiWrapper.GetPublicKeyFromPrivateKey(IPrivateKey)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetPublicKeyFromPrivateKey
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 61
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public IPublicKey GetPublicKeyFromPrivateKey(IPrivateKey privateKey)
+    parameters:
+    - id: privateKey
+      type: Catalyst.Abstractions.Cryptography.IPrivateKey
+    return:
+      type: Catalyst.Abstractions.Cryptography.IPublicKey
+    content.vb: Public Function GetPublicKeyFromPrivateKey(privateKey As IPrivateKey) As IPublicKey
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromPrivateKey*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPrivateKeyFromBytes(System.Byte[])
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPrivateKeyFromBytes(System.Byte[])
+  id: GetPrivateKeyFromBytes(System.Byte[])
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: GetPrivateKeyFromBytes(Byte[])
+  nameWithType: FfiWrapper.GetPrivateKeyFromBytes(Byte[])
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPrivateKeyFromBytes(System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetPrivateKeyFromBytes
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 68
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public IPrivateKey GetPrivateKeyFromBytes(byte[] privateKeyBytes)
+    parameters:
+    - id: privateKeyBytes
+      type: System.Byte[]
+    return:
+      type: Catalyst.Abstractions.Cryptography.IPrivateKey
+    content.vb: Public Function GetPrivateKeyFromBytes(privateKeyBytes As Byte()) As IPrivateKey
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPrivateKeyFromBytes*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.GetPrivateKeyFromBytes(System.Byte[])
+  nameWithType.vb: FfiWrapper.GetPrivateKeyFromBytes(Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPrivateKeyFromBytes(System.Byte())
+  name.vb: GetPrivateKeyFromBytes(Byte())
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromBytes(System.Byte[])
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromBytes(System.Byte[])
+  id: GetPublicKeyFromBytes(System.Byte[])
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: GetPublicKeyFromBytes(Byte[])
+  nameWithType: FfiWrapper.GetPublicKeyFromBytes(Byte[])
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromBytes(System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetPublicKeyFromBytes
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 73
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public IPublicKey GetPublicKeyFromBytes(byte[] publicKeyBytes)
+    parameters:
+    - id: publicKeyBytes
+      type: System.Byte[]
+    return:
+      type: Catalyst.Abstractions.Cryptography.IPublicKey
+    content.vb: Public Function GetPublicKeyFromBytes(publicKeyBytes As Byte()) As IPublicKey
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromBytes*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromBytes(System.Byte[])
+  nameWithType.vb: FfiWrapper.GetPublicKeyFromBytes(Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromBytes(System.Byte())
+  name.vb: GetPublicKeyFromBytes(Byte())
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetSignatureFromBytes(System.Byte[],System.Byte[])
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetSignatureFromBytes(System.Byte[],System.Byte[])
+  id: GetSignatureFromBytes(System.Byte[],System.Byte[])
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: GetSignatureFromBytes(Byte[], Byte[])
+  nameWithType: FfiWrapper.GetSignatureFromBytes(Byte[], Byte[])
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetSignatureFromBytes(System.Byte[], System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetSignatureFromBytes
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 79
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public ISignature GetSignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes)
+    parameters:
+    - id: signatureBytes
+      type: System.Byte[]
+    - id: publicKeyBytes
+      type: System.Byte[]
+    return:
+      type: Catalyst.Abstractions.Cryptography.ISignature
+    content.vb: Public Function GetSignatureFromBytes(signatureBytes As Byte(), publicKeyBytes As Byte()) As ISignature
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetSignatureFromBytes*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.GetSignatureFromBytes(System.Byte[],System.Byte[])
+  nameWithType.vb: FfiWrapper.GetSignatureFromBytes(Byte(), Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetSignatureFromBytes(System.Byte(), System.Byte())
+  name.vb: GetSignatureFromBytes(Byte(), Byte())
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  id: ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: ExportPrivateKey(IPrivateKey)
+  nameWithType: FfiWrapper.ExportPrivateKey(IPrivateKey)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ExportPrivateKey
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 86
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  example: []
+  syntax:
+    content: public byte[] ExportPrivateKey(IPrivateKey privateKey)
+    parameters:
+    - id: privateKey
+      type: Catalyst.Abstractions.Cryptography.IPrivateKey
+    return:
+      type: System.Byte[]
+    content.vb: Public Function ExportPrivateKey(privateKey As IPrivateKey) As Byte()
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPrivateKey*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+  id: ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: ExportPublicKey(IPublicKey)
+  nameWithType: FfiWrapper.ExportPublicKey(IPublicKey)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ExportPublicKey
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 92
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  example: []
+  syntax:
+    content: public byte[] ExportPublicKey(IPublicKey publicKey)
+    parameters:
+    - id: publicKey
+      type: Catalyst.Abstractions.Cryptography.IPublicKey
+    return:
+      type: System.Byte[]
+    content.vb: Public Function ExportPublicKey(publicKey As IPublicKey) As Byte()
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPublicKey*
+  implements:
+  - Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CTransactionEntry(Catalyst.Abstractions.Cryptography.IPublicKey,Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32,System.Int32)
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CTransactionEntry(Catalyst.Abstractions.Cryptography.IPublicKey,Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32,System.Int32)
+  id: CTransactionEntry(Catalyst.Abstractions.Cryptography.IPublicKey,Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32,System.Int32)
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: CTransactionEntry(IPublicKey, Byte32, Byte32, Byte32, Int32)
+  nameWithType: FfiWrapper.CTransactionEntry(IPublicKey, Byte32, Byte32, Byte32, Int32)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CTransactionEntry(Catalyst.Abstractions.Cryptography.IPublicKey, Catalyst.Abstractions.Types.Byte32, Catalyst.Abstractions.Types.Byte32, Catalyst.Abstractions.Types.Byte32, System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CTransactionEntry
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 97
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public Byte64 CTransactionEntry(IPublicKey publicKey, Byte32 value, Byte32 blinding, Byte32 totalFees, int noParticipants)
+    parameters:
+    - id: publicKey
+      type: Catalyst.Abstractions.Cryptography.IPublicKey
+    - id: value
+      type: Catalyst.Abstractions.Types.Byte32
+    - id: blinding
+      type: Catalyst.Abstractions.Types.Byte32
+    - id: totalFees
+      type: Catalyst.Abstractions.Types.Byte32
+    - id: noParticipants
+      type: System.Int32
+    return:
+      type: Catalyst.Abstractions.Types.Byte64
+    content.vb: Public Function CTransactionEntry(publicKey As IPublicKey, value As Byte32, blinding As Byte32, totalFees As Byte32, noParticipants As Integer) As Byte64
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CTransactionEntry*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtSign(System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64},Catalyst.Abstractions.Cryptography.IPrivateKey,Catalyst.Abstractions.Types.Byte32)
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtSign(System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64},Catalyst.Abstractions.Cryptography.IPrivateKey,Catalyst.Abstractions.Types.Byte32)
+  id: CtSign(System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64},Catalyst.Abstractions.Cryptography.IPrivateKey,Catalyst.Abstractions.Types.Byte32)
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: CtSign(List<Byte64>, IPrivateKey, Byte32)
+  nameWithType: FfiWrapper.CtSign(List<Byte64>, IPrivateKey, Byte32)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtSign(System.Collections.Generic.List<Catalyst.Abstractions.Types.Byte64>, Catalyst.Abstractions.Cryptography.IPrivateKey, Catalyst.Abstractions.Types.Byte32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CtSign
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 102
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public ISignature CtSign(List<Byte64> cTransactionEntries, IPrivateKey privateKey, Byte32 blinding)
+    parameters:
+    - id: cTransactionEntries
+      type: System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64}
+    - id: privateKey
+      type: Catalyst.Abstractions.Cryptography.IPrivateKey
+    - id: blinding
+      type: Catalyst.Abstractions.Types.Byte32
+    return:
+      type: Catalyst.Abstractions.Cryptography.ISignature
+    content.vb: Public Function CtSign(cTransactionEntries As List(Of Byte64), privateKey As IPrivateKey, blinding As Byte32) As ISignature
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtSign*
+  nameWithType.vb: FfiWrapper.CtSign(List(Of Byte64), IPrivateKey, Byte32)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtSign(System.Collections.Generic.List(Of Catalyst.Abstractions.Types.Byte64), Catalyst.Abstractions.Cryptography.IPrivateKey, Catalyst.Abstractions.Types.Byte32)
+  name.vb: CtSign(List(Of Byte64), IPrivateKey, Byte32)
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtVerify(System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64},Catalyst.Abstractions.Cryptography.ISignature)
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtVerify(System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64},Catalyst.Abstractions.Cryptography.ISignature)
+  id: CtVerify(System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64},Catalyst.Abstractions.Cryptography.ISignature)
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: CtVerify(List<Byte64>, ISignature)
+  nameWithType: FfiWrapper.CtVerify(List<Byte64>, ISignature)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtVerify(System.Collections.Generic.List<Catalyst.Abstractions.Types.Byte64>, Catalyst.Abstractions.Cryptography.ISignature)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CtVerify
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 107
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public bool CtVerify(List<Byte64> cTransactionEntries, ISignature cTSignature)
+    parameters:
+    - id: cTransactionEntries
+      type: System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64}
+    - id: cTSignature
+      type: Catalyst.Abstractions.Cryptography.ISignature
+    return:
+      type: System.Boolean
+    content.vb: Public Function CtVerify(cTransactionEntries As List(Of Byte64), cTSignature As ISignature) As Boolean
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtVerify*
+  nameWithType.vb: FfiWrapper.CtVerify(List(Of Byte64), ISignature)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtVerify(System.Collections.Generic.List(Of Catalyst.Abstractions.Types.Byte64), Catalyst.Abstractions.Cryptography.ISignature)
+  name.vb: CtVerify(List(Of Byte64), ISignature)
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePedersenCommitment(Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePedersenCommitment(Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  id: GeneratePedersenCommitment(Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: GeneratePedersenCommitment(Byte32, Byte32)
+  nameWithType: FfiWrapper.GeneratePedersenCommitment(Byte32, Byte32)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePedersenCommitment(Catalyst.Abstractions.Types.Byte32, Catalyst.Abstractions.Types.Byte32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GeneratePedersenCommitment
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 112
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public Byte32 GeneratePedersenCommitment(Byte32 value, Byte32 blinding)
+    parameters:
+    - id: value
+      type: Catalyst.Abstractions.Types.Byte32
+    - id: blinding
+      type: Catalyst.Abstractions.Types.Byte32
+    return:
+      type: Catalyst.Abstractions.Types.Byte32
+    content.vb: Public Function GeneratePedersenCommitment(value As Byte32, blinding As Byte32) As Byte32
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePedersenCommitment*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GenerateRangeProof(Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GenerateRangeProof(Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  id: GenerateRangeProof(Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: GenerateRangeProof(Byte32, Byte32)
+  nameWithType: FfiWrapper.GenerateRangeProof(Byte32, Byte32)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GenerateRangeProof(Catalyst.Abstractions.Types.Byte32, Catalyst.Abstractions.Types.Byte32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GenerateRangeProof
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 117
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public byte[] GenerateRangeProof(Byte32 value, Byte32 blinding)
+    parameters:
+    - id: value
+      type: Catalyst.Abstractions.Types.Byte32
+    - id: blinding
+      type: Catalyst.Abstractions.Types.Byte32
+    return:
+      type: System.Byte[]
+    content.vb: Public Function GenerateRangeProof(value As Byte32, blinding As Byte32) As Byte()
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GenerateRangeProof*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.VerifyRangeProof(System.Byte[],Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.VerifyRangeProof(System.Byte[],Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  id: VerifyRangeProof(System.Byte[],Catalyst.Abstractions.Types.Byte32,Catalyst.Abstractions.Types.Byte32)
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: VerifyRangeProof(Byte[], Byte32, Byte32)
+  nameWithType: FfiWrapper.VerifyRangeProof(Byte[], Byte32, Byte32)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.VerifyRangeProof(System.Byte[], Catalyst.Abstractions.Types.Byte32, Catalyst.Abstractions.Types.Byte32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: VerifyRangeProof
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 122
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public bool VerifyRangeProof(byte[] rangeproof, Byte32 oldCommitment, Byte32 deltaCommitment)
+    parameters:
+    - id: rangeproof
+      type: System.Byte[]
+    - id: oldCommitment
+      type: Catalyst.Abstractions.Types.Byte32
+    - id: deltaCommitment
+      type: Catalyst.Abstractions.Types.Byte32
+    return:
+      type: System.Boolean
+    content.vb: Public Function VerifyRangeProof(rangeproof As Byte(), oldCommitment As Byte32, deltaCommitment As Byte32) As Boolean
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.VerifyRangeProof*
+  nameWithType.vb: FfiWrapper.VerifyRangeProof(Byte(), Byte32, Byte32)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.VerifyRangeProof(System.Byte(), Catalyst.Abstractions.Types.Byte32, Catalyst.Abstractions.Types.Byte32)
+  name.vb: VerifyRangeProof(Byte(), Byte32, Byte32)
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.BatchVerifyRangeProof(System.Collections.Generic.List{System.Byte[]},System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32},System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32})
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.BatchVerifyRangeProof(System.Collections.Generic.List{System.Byte[]},System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32},System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32})
+  id: BatchVerifyRangeProof(System.Collections.Generic.List{System.Byte[]},System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32},System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32})
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  langs:
+  - csharp
+  - vb
+  name: BatchVerifyRangeProof(List<Byte[]>, List<Byte32>, List<Byte32>)
+  nameWithType: FfiWrapper.BatchVerifyRangeProof(List<Byte[]>, List<Byte32>, List<Byte32>)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.BatchVerifyRangeProof(System.Collections.Generic.List<System.Byte[]>, System.Collections.Generic.List<Catalyst.Abstractions.Types.Byte32>, System.Collections.Generic.List<Catalyst.Abstractions.Types.Byte32>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BatchVerifyRangeProof
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/FfiWrapper.cs
+    startLine: 127
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: public bool BatchVerifyRangeProof(List<byte[]> rangeproofs, List<Byte32> oldCommitments, List<Byte32> deltaCommitments)
+    parameters:
+    - id: rangeproofs
+      type: System.Collections.Generic.List{System.Byte[]}
+    - id: oldCommitments
+      type: System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32}
+    - id: deltaCommitments
+      type: System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32}
+    return:
+      type: System.Boolean
+    content.vb: Public Function BatchVerifyRangeProof(rangeproofs As List(Of Byte()), oldCommitments As List(Of Byte32), deltaCommitments As List(Of Byte32)) As Boolean
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.BatchVerifyRangeProof*
+  nameWithType.vb: FfiWrapper.BatchVerifyRangeProof(List(Of Byte()), List(Of Byte32), List(Of Byte32))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.BatchVerifyRangeProof(System.Collections.Generic.List(Of System.Byte()), System.Collections.Generic.List(Of Catalyst.Abstractions.Types.Byte32), System.Collections.Generic.List(Of Catalyst.Abstractions.Types.Byte32))
+  name.vb: BatchVerifyRangeProof(List(Of Byte()), List(Of Byte32), List(Of Byte32))
+references:
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs
+  commentId: N:Catalyst.Core.Modules.Cryptography.BulletProofs
+  name: Catalyst.Core.Modules.Cryptography.BulletProofs
+  nameWithType: Catalyst.Core.Modules.Cryptography.BulletProofs
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext
+  commentId: T:Catalyst.Abstractions.Cryptography.ICryptoContext
+  parent: Catalyst.Abstractions.Cryptography
+  name: ICryptoContext
+  nameWithType: ICryptoContext
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Cryptography
+  commentId: N:Catalyst.Abstractions.Cryptography
+  name: Catalyst.Abstractions.Cryptography
+  nameWithType: Catalyst.Abstractions.Cryptography
+  fullName: Catalyst.Abstractions.Cryptography
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PrivateKeyLength*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PrivateKeyLength
+  name: PrivateKeyLength
+  nameWithType: FfiWrapper.PrivateKeyLength
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PrivateKeyLength
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.PrivateKeyLength
+  commentId: P:Catalyst.Abstractions.Cryptography.ICryptoContext.PrivateKeyLength
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  name: PrivateKeyLength
+  nameWithType: ICryptoContext.PrivateKeyLength
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.PrivateKeyLength
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PublicKeyLength*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PublicKeyLength
+  name: PublicKeyLength
+  nameWithType: FfiWrapper.PublicKeyLength
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.PublicKeyLength
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.PublicKeyLength
+  commentId: P:Catalyst.Abstractions.Cryptography.ICryptoContext.PublicKeyLength
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  name: PublicKeyLength
+  nameWithType: ICryptoContext.PublicKeyLength
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.PublicKeyLength
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureLength*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureLength
+  name: SignatureLength
+  nameWithType: FfiWrapper.SignatureLength
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureLength
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.SignatureLength
+  commentId: P:Catalyst.Abstractions.Cryptography.ICryptoContext.SignatureLength
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  name: SignatureLength
+  nameWithType: ICryptoContext.SignatureLength
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.SignatureLength
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureContextMaxLength*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureContextMaxLength
+  name: SignatureContextMaxLength
+  nameWithType: FfiWrapper.SignatureContextMaxLength
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.SignatureContextMaxLength
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.SignatureContextMaxLength
+  commentId: P:Catalyst.Abstractions.Cryptography.ICryptoContext.SignatureContextMaxLength
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  name: SignatureContextMaxLength
+  nameWithType: ICryptoContext.SignatureContextMaxLength
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.SignatureContextMaxLength
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Sign*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Sign
+  name: Sign
+  nameWithType: FfiWrapper.Sign
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Sign
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey,System.Byte[],System.Byte[])
+  commentId: M:Catalyst.Abstractions.Cryptography.ICryptoContext.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey,System.Byte[],System.Byte[])
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  isExternal: true
+  name: Sign(IPrivateKey, Byte[], Byte[])
+  nameWithType: ICryptoContext.Sign(IPrivateKey, Byte[], Byte[])
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey, System.Byte[], System.Byte[])
+  nameWithType.vb: ICryptoContext.Sign(IPrivateKey, Byte(), Byte())
+  fullName.vb: Catalyst.Abstractions.Cryptography.ICryptoContext.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey, System.Byte(), System.Byte())
+  name.vb: Sign(IPrivateKey, Byte(), Byte())
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey,System.Byte[],System.Byte[])
+    name: Sign
+    nameWithType: ICryptoContext.Sign
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.Sign
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.Sign(Catalyst.Abstractions.Cryptography.IPrivateKey,System.Byte[],System.Byte[])
+    name: Sign
+    nameWithType: ICryptoContext.Sign
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.Sign
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+  commentId: T:Catalyst.Abstractions.Cryptography.IPrivateKey
+  parent: Catalyst.Abstractions.Cryptography
+  name: IPrivateKey
+  nameWithType: IPrivateKey
+  fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Catalyst.Abstractions.Cryptography.ISignature
+  commentId: T:Catalyst.Abstractions.Cryptography.ISignature
+  parent: Catalyst.Abstractions.Cryptography
+  name: ISignature
+  nameWithType: ISignature
+  fullName: Catalyst.Abstractions.Cryptography.ISignature
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Verify*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Verify
+  name: Verify
+  nameWithType: FfiWrapper.Verify
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.Verify
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],System.Byte[])
+  commentId: M:Catalyst.Abstractions.Cryptography.ICryptoContext.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],System.Byte[])
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  isExternal: true
+  name: Verify(ISignature, Byte[], Byte[])
+  nameWithType: ICryptoContext.Verify(ISignature, Byte[], Byte[])
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.Verify(Catalyst.Abstractions.Cryptography.ISignature, System.Byte[], System.Byte[])
+  nameWithType.vb: ICryptoContext.Verify(ISignature, Byte(), Byte())
+  fullName.vb: Catalyst.Abstractions.Cryptography.ICryptoContext.Verify(Catalyst.Abstractions.Cryptography.ISignature, System.Byte(), System.Byte())
+  name.vb: Verify(ISignature, Byte(), Byte())
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],System.Byte[])
+    name: Verify
+    nameWithType: ICryptoContext.Verify
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.Verify
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.ISignature
+    name: ISignature
+    nameWithType: ISignature
+    fullName: Catalyst.Abstractions.Cryptography.ISignature
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],System.Byte[])
+    name: Verify
+    nameWithType: ICryptoContext.Verify
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.Verify
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.ISignature
+    name: ISignature
+    nameWithType: ISignature
+    fullName: Catalyst.Abstractions.Cryptography.ISignature
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePrivateKey*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePrivateKey
+  name: GeneratePrivateKey
+  nameWithType: FfiWrapper.GeneratePrivateKey
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePrivateKey
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GeneratePrivateKey
+  commentId: M:Catalyst.Abstractions.Cryptography.ICryptoContext.GeneratePrivateKey
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  name: GeneratePrivateKey()
+  nameWithType: ICryptoContext.GeneratePrivateKey()
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GeneratePrivateKey()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GeneratePrivateKey
+    name: GeneratePrivateKey
+    nameWithType: ICryptoContext.GeneratePrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GeneratePrivateKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GeneratePrivateKey
+    name: GeneratePrivateKey
+    nameWithType: ICryptoContext.GeneratePrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GeneratePrivateKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromPrivateKey*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromPrivateKey
+  name: GetPublicKeyFromPrivateKey
+  nameWithType: FfiWrapper.GetPublicKeyFromPrivateKey
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromPrivateKey
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  commentId: M:Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  name: GetPublicKeyFromPrivateKey(IPrivateKey)
+  nameWithType: ICryptoContext.GetPublicKeyFromPrivateKey(IPrivateKey)
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+    name: GetPublicKeyFromPrivateKey
+    nameWithType: ICryptoContext.GetPublicKeyFromPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromPrivateKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+    name: GetPublicKeyFromPrivateKey
+    nameWithType: ICryptoContext.GetPublicKeyFromPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromPrivateKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Cryptography.IPublicKey
+  commentId: T:Catalyst.Abstractions.Cryptography.IPublicKey
+  parent: Catalyst.Abstractions.Cryptography
+  name: IPublicKey
+  nameWithType: IPublicKey
+  fullName: Catalyst.Abstractions.Cryptography.IPublicKey
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPrivateKeyFromBytes*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPrivateKeyFromBytes
+  name: GetPrivateKeyFromBytes
+  nameWithType: FfiWrapper.GetPrivateKeyFromBytes
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPrivateKeyFromBytes
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPrivateKeyFromBytes(System.Byte[])
+  commentId: M:Catalyst.Abstractions.Cryptography.ICryptoContext.GetPrivateKeyFromBytes(System.Byte[])
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  isExternal: true
+  name: GetPrivateKeyFromBytes(Byte[])
+  nameWithType: ICryptoContext.GetPrivateKeyFromBytes(Byte[])
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPrivateKeyFromBytes(System.Byte[])
+  nameWithType.vb: ICryptoContext.GetPrivateKeyFromBytes(Byte())
+  fullName.vb: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPrivateKeyFromBytes(System.Byte())
+  name.vb: GetPrivateKeyFromBytes(Byte())
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPrivateKeyFromBytes(System.Byte[])
+    name: GetPrivateKeyFromBytes
+    nameWithType: ICryptoContext.GetPrivateKeyFromBytes
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPrivateKeyFromBytes
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPrivateKeyFromBytes(System.Byte[])
+    name: GetPrivateKeyFromBytes
+    nameWithType: ICryptoContext.GetPrivateKeyFromBytes
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPrivateKeyFromBytes
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromBytes*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromBytes
+  name: GetPublicKeyFromBytes
+  nameWithType: FfiWrapper.GetPublicKeyFromBytes
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetPublicKeyFromBytes
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromBytes(System.Byte[])
+  commentId: M:Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromBytes(System.Byte[])
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  isExternal: true
+  name: GetPublicKeyFromBytes(Byte[])
+  nameWithType: ICryptoContext.GetPublicKeyFromBytes(Byte[])
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromBytes(System.Byte[])
+  nameWithType.vb: ICryptoContext.GetPublicKeyFromBytes(Byte())
+  fullName.vb: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromBytes(System.Byte())
+  name.vb: GetPublicKeyFromBytes(Byte())
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromBytes(System.Byte[])
+    name: GetPublicKeyFromBytes
+    nameWithType: ICryptoContext.GetPublicKeyFromBytes
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromBytes
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromBytes(System.Byte[])
+    name: GetPublicKeyFromBytes
+    nameWithType: ICryptoContext.GetPublicKeyFromBytes
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetPublicKeyFromBytes
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetSignatureFromBytes*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetSignatureFromBytes
+  name: GetSignatureFromBytes
+  nameWithType: FfiWrapper.GetSignatureFromBytes
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GetSignatureFromBytes
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetSignatureFromBytes(System.Byte[],System.Byte[])
+  commentId: M:Catalyst.Abstractions.Cryptography.ICryptoContext.GetSignatureFromBytes(System.Byte[],System.Byte[])
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  isExternal: true
+  name: GetSignatureFromBytes(Byte[], Byte[])
+  nameWithType: ICryptoContext.GetSignatureFromBytes(Byte[], Byte[])
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetSignatureFromBytes(System.Byte[], System.Byte[])
+  nameWithType.vb: ICryptoContext.GetSignatureFromBytes(Byte(), Byte())
+  fullName.vb: Catalyst.Abstractions.Cryptography.ICryptoContext.GetSignatureFromBytes(System.Byte(), System.Byte())
+  name.vb: GetSignatureFromBytes(Byte(), Byte())
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetSignatureFromBytes(System.Byte[],System.Byte[])
+    name: GetSignatureFromBytes
+    nameWithType: ICryptoContext.GetSignatureFromBytes
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetSignatureFromBytes
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.GetSignatureFromBytes(System.Byte[],System.Byte[])
+    name: GetSignatureFromBytes
+    nameWithType: ICryptoContext.GetSignatureFromBytes
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.GetSignatureFromBytes
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPrivateKey*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPrivateKey
+  name: ExportPrivateKey
+  nameWithType: FfiWrapper.ExportPrivateKey
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPrivateKey
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  commentId: M:Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  name: ExportPrivateKey(IPrivateKey)
+  nameWithType: ICryptoContext.ExportPrivateKey(IPrivateKey)
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+    name: ExportPrivateKey
+    nameWithType: ICryptoContext.ExportPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPrivateKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPrivateKey(Catalyst.Abstractions.Cryptography.IPrivateKey)
+    name: ExportPrivateKey
+    nameWithType: ICryptoContext.ExportPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPrivateKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPublicKey*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPublicKey
+  name: ExportPublicKey
+  nameWithType: FfiWrapper.ExportPublicKey
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.ExportPublicKey
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+  commentId: M:Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+  parent: Catalyst.Abstractions.Cryptography.ICryptoContext
+  name: ExportPublicKey(IPublicKey)
+  nameWithType: ICryptoContext.ExportPublicKey(IPublicKey)
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+    name: ExportPublicKey
+    nameWithType: ICryptoContext.ExportPublicKey
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPublicKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.IPublicKey
+    name: IPublicKey
+    nameWithType: IPublicKey
+    fullName: Catalyst.Abstractions.Cryptography.IPublicKey
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPublicKey(Catalyst.Abstractions.Cryptography.IPublicKey)
+    name: ExportPublicKey
+    nameWithType: ICryptoContext.ExportPublicKey
+    fullName: Catalyst.Abstractions.Cryptography.ICryptoContext.ExportPublicKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Cryptography.IPublicKey
+    name: IPublicKey
+    nameWithType: IPublicKey
+    fullName: Catalyst.Abstractions.Cryptography.IPublicKey
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CTransactionEntry*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CTransactionEntry
+  name: CTransactionEntry
+  nameWithType: FfiWrapper.CTransactionEntry
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CTransactionEntry
+- uid: Catalyst.Abstractions.Types.Byte32
+  commentId: T:Catalyst.Abstractions.Types.Byte32
+  parent: Catalyst.Abstractions.Types
+  name: Byte32
+  nameWithType: Byte32
+  fullName: Catalyst.Abstractions.Types.Byte32
+- uid: Catalyst.Abstractions.Types.Byte64
+  commentId: T:Catalyst.Abstractions.Types.Byte64
+  parent: Catalyst.Abstractions.Types
+  name: Byte64
+  nameWithType: Byte64
+  fullName: Catalyst.Abstractions.Types.Byte64
+- uid: Catalyst.Abstractions.Types
+  commentId: N:Catalyst.Abstractions.Types
+  name: Catalyst.Abstractions.Types
+  nameWithType: Catalyst.Abstractions.Types
+  fullName: Catalyst.Abstractions.Types
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtSign*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtSign
+  name: CtSign
+  nameWithType: FfiWrapper.CtSign
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtSign
+- uid: System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64}
+  commentId: T:System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte64}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Byte64>
+  nameWithType: List<Byte64>
+  fullName: System.Collections.Generic.List<Catalyst.Abstractions.Types.Byte64>
+  nameWithType.vb: List(Of Byte64)
+  fullName.vb: System.Collections.Generic.List(Of Catalyst.Abstractions.Types.Byte64)
+  name.vb: List(Of Byte64)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.Types.Byte64
+    name: Byte64
+    nameWithType: Byte64
+    fullName: Catalyst.Abstractions.Types.Byte64
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.Types.Byte64
+    name: Byte64
+    nameWithType: Byte64
+    fullName: Catalyst.Abstractions.Types.Byte64
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtVerify*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtVerify
+  name: CtVerify
+  nameWithType: FfiWrapper.CtVerify
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.CtVerify
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePedersenCommitment*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePedersenCommitment
+  name: GeneratePedersenCommitment
+  nameWithType: FfiWrapper.GeneratePedersenCommitment
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GeneratePedersenCommitment
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GenerateRangeProof*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GenerateRangeProof
+  name: GenerateRangeProof
+  nameWithType: FfiWrapper.GenerateRangeProof
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.GenerateRangeProof
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.VerifyRangeProof*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.VerifyRangeProof
+  name: VerifyRangeProof
+  nameWithType: FfiWrapper.VerifyRangeProof
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.VerifyRangeProof
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.BatchVerifyRangeProof*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.BatchVerifyRangeProof
+  name: BatchVerifyRangeProof
+  nameWithType: FfiWrapper.BatchVerifyRangeProof
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper.BatchVerifyRangeProof
+- uid: System.Collections.Generic.List{System.Byte[]}
+  commentId: T:System.Collections.Generic.List{System.Byte[]}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Byte[]>
+  nameWithType: List<Byte[]>
+  fullName: System.Collections.Generic.List<System.Byte[]>
+  nameWithType.vb: List(Of Byte())
+  fullName.vb: System.Collections.Generic.List(Of System.Byte())
+  name.vb: List(Of Byte())
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32}
+  commentId: T:System.Collections.Generic.List{Catalyst.Abstractions.Types.Byte32}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Byte32>
+  nameWithType: List<Byte32>
+  fullName: System.Collections.Generic.List<Catalyst.Abstractions.Types.Byte32>
+  nameWithType.vb: List(Of Byte32)
+  fullName.vb: System.Collections.Generic.List(Of Catalyst.Abstractions.Types.Byte32)
+  name.vb: List(Of Byte32)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.Types.Byte32
+    name: Byte32
+    nameWithType: Byte32
+    fullName: Catalyst.Abstractions.Types.Byte32
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.Types.Byte32
+    name: Byte32
+    nameWithType: Byte32
+    fullName: Catalyst.Abstractions.Types.Byte32
+  - name: )
+    nameWithType: )
+    fullName: )

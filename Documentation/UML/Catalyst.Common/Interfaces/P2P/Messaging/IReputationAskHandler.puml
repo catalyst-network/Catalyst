@@ -1,5 +1,0 @@
-@startuml
-interface "IReputationAskHandler`1"<out TReputableCache> {
-    ReputableCache : TReputableCache <<get>>
-}
-@enduml

@@ -1,0 +1,568 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Cryptography.IsaacRandom
+  commentId: T:Catalyst.Core.Lib.Cryptography.IsaacRandom
+  id: IsaacRandom
+  parent: Catalyst.Core.Lib.Cryptography
+  children:
+  - Catalyst.Core.Lib.Cryptography.IsaacRandom.#ctor(System.String)
+  - Catalyst.Core.Lib.Cryptography.IsaacRandom.NextByte
+  - Catalyst.Core.Lib.Cryptography.IsaacRandom.NextInt
+  langs:
+  - csharp
+  - vb
+  name: IsaacRandom
+  nameWithType: IsaacRandom
+  fullName: Catalyst.Core.Lib.Cryptography.IsaacRandom
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Cryptography/IsaacRandom.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsaacRandom
+    path: ../src/Catalyst.Core.Lib/Cryptography/IsaacRandom.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Cryptography
+  summary: "\nThe Isaac Random\nSee www.rosettacode.org/wiki/The_ISAAC_Cipher\n"
+  example: []
+  syntax:
+    content: 'public sealed class IsaacRandom : IDeterministicRandom'
+    content.vb: >-
+      Public NotInheritable Class IsaacRandom
+
+          Implements IDeterministicRandom
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Cryptography.IDeterministicRandom
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.Cryptography.IsaacRandom.#ctor(System.String)
+  commentId: M:Catalyst.Core.Lib.Cryptography.IsaacRandom.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: Catalyst.Core.Lib.Cryptography.IsaacRandom
+  langs:
+  - csharp
+  - vb
+  name: IsaacRandom(String)
+  nameWithType: IsaacRandom.IsaacRandom(String)
+  fullName: Catalyst.Core.Lib.Cryptography.IsaacRandom.IsaacRandom(System.String)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Cryptography/IsaacRandom.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/Cryptography/IsaacRandom.cs
+    startLine: 196
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Cryptography
+  summary: Initializes a new instance of the <xref href="Catalyst.Core.Lib.Cryptography.IsaacRandom" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public IsaacRandom(string seed)
+    parameters:
+    - id: seed
+      type: System.String
+      description: The seed.
+    content.vb: Public Sub New(seed As String)
+  overload: Catalyst.Core.Lib.Cryptography.IsaacRandom.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Cryptography.IsaacRandom.NextInt
+  commentId: M:Catalyst.Core.Lib.Cryptography.IsaacRandom.NextInt
+  id: NextInt
+  parent: Catalyst.Core.Lib.Cryptography.IsaacRandom
+  langs:
+  - csharp
+  - vb
+  name: NextInt()
+  nameWithType: IsaacRandom.NextInt()
+  fullName: Catalyst.Core.Lib.Cryptography.IsaacRandom.NextInt()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Cryptography/IsaacRandom.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: NextInt
+    path: ../src/Catalyst.Core.Lib/Cryptography/IsaacRandom.cs
+    startLine: 209
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Cryptography
+  example: []
+  syntax:
+    content: public uint NextInt()
+    return:
+      type: System.UInt32
+    content.vb: Public Function NextInt As UInteger
+  overload: Catalyst.Core.Lib.Cryptography.IsaacRandom.NextInt*
+  implements:
+  - Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Cryptography.IsaacRandom.NextByte
+  commentId: M:Catalyst.Core.Lib.Cryptography.IsaacRandom.NextByte
+  id: NextByte
+  parent: Catalyst.Core.Lib.Cryptography.IsaacRandom
+  langs:
+  - csharp
+  - vb
+  name: NextByte()
+  nameWithType: IsaacRandom.NextByte()
+  fullName: Catalyst.Core.Lib.Cryptography.IsaacRandom.NextByte()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Cryptography/IsaacRandom.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: NextByte
+    path: ../src/Catalyst.Core.Lib/Cryptography/IsaacRandom.cs
+    startLine: 225
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Cryptography
+  example: []
+  syntax:
+    content: public byte NextByte()
+    return:
+      type: System.Byte
+    content.vb: Public Function NextByte As Byte
+  overload: Catalyst.Core.Lib.Cryptography.IsaacRandom.NextByte*
+  implements:
+  - Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.Cryptography
+  commentId: N:Catalyst.Core.Lib.Cryptography
+  name: Catalyst.Core.Lib.Cryptography
+  nameWithType: Catalyst.Core.Lib.Cryptography
+  fullName: Catalyst.Core.Lib.Cryptography
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom
+  commentId: T:Catalyst.Abstractions.Cryptography.IDeterministicRandom
+  parent: Catalyst.Abstractions.Cryptography
+  name: IDeterministicRandom
+  nameWithType: IDeterministicRandom
+  fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Cryptography
+  commentId: N:Catalyst.Abstractions.Cryptography
+  name: Catalyst.Abstractions.Cryptography
+  nameWithType: Catalyst.Abstractions.Cryptography
+  fullName: Catalyst.Abstractions.Cryptography
+- uid: Catalyst.Core.Lib.Cryptography.IsaacRandom
+  commentId: T:Catalyst.Core.Lib.Cryptography.IsaacRandom
+  name: IsaacRandom
+  nameWithType: IsaacRandom
+  fullName: Catalyst.Core.Lib.Cryptography.IsaacRandom
+- uid: Catalyst.Core.Lib.Cryptography.IsaacRandom.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.Cryptography.IsaacRandom.#ctor
+  name: IsaacRandom
+  nameWithType: IsaacRandom.IsaacRandom
+  fullName: Catalyst.Core.Lib.Cryptography.IsaacRandom.IsaacRandom
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.Cryptography.IsaacRandom.NextInt*
+  commentId: Overload:Catalyst.Core.Lib.Cryptography.IsaacRandom.NextInt
+  name: NextInt
+  nameWithType: IsaacRandom.NextInt
+  fullName: Catalyst.Core.Lib.Cryptography.IsaacRandom.NextInt
+- uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+  commentId: M:Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+  parent: Catalyst.Abstractions.Cryptography.IDeterministicRandom
+  name: NextInt()
+  nameWithType: IDeterministicRandom.NextInt()
+  fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+    name: NextInt
+    nameWithType: IDeterministicRandom.NextInt
+    fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+    name: NextInt
+    nameWithType: IDeterministicRandom.NextInt
+    fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  name: UInt32
+  nameWithType: UInt32
+  fullName: System.UInt32
+- uid: Catalyst.Core.Lib.Cryptography.IsaacRandom.NextByte*
+  commentId: Overload:Catalyst.Core.Lib.Cryptography.IsaacRandom.NextByte
+  name: NextByte
+  nameWithType: IsaacRandom.NextByte
+  fullName: Catalyst.Core.Lib.Cryptography.IsaacRandom.NextByte
+- uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+  commentId: M:Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+  parent: Catalyst.Abstractions.Cryptography.IDeterministicRandom
+  name: NextByte()
+  nameWithType: IDeterministicRandom.NextByte()
+  fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+    name: NextByte
+    nameWithType: IDeterministicRandom.NextByte
+    fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+    name: NextByte
+    nameWithType: IDeterministicRandom.NextByte
+    fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  name: Byte
+  nameWithType: Byte
+  fullName: System.Byte

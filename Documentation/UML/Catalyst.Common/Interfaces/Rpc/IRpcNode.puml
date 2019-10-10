@@ -1,6 +1,0 @@
-@startuml
-interface IRpcNode {
-}
-IRpcNode --> "Config" IRpcNodeConfig
-IRpcNode --> "SocketClient" ISocketClient
-@enduml

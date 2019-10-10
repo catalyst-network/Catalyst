@@ -1,0 +1,114 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Validators.ITransactionValidator
+  commentId: T:Catalyst.Abstractions.Validators.ITransactionValidator
+  id: ITransactionValidator
+  parent: Catalyst.Abstractions.Validators
+  children:
+  - Catalyst.Abstractions.Validators.ITransactionValidator.ValidateTransaction(Catalyst.Protocol.Wire.TransactionBroadcast,Catalyst.Protocol.Network.NetworkType)
+  langs:
+  - csharp
+  - vb
+  name: ITransactionValidator
+  nameWithType: ITransactionValidator
+  fullName: Catalyst.Abstractions.Validators.ITransactionValidator
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Validators/ITransactionValidator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ITransactionValidator
+    path: ../src/Catalyst.Abstractions/Validators/ITransactionValidator.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Validators
+  syntax:
+    content: public interface ITransactionValidator
+    content.vb: Public Interface ITransactionValidator
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Validators.ITransactionValidator.ValidateTransaction(Catalyst.Protocol.Wire.TransactionBroadcast,Catalyst.Protocol.Network.NetworkType)
+  commentId: M:Catalyst.Abstractions.Validators.ITransactionValidator.ValidateTransaction(Catalyst.Protocol.Wire.TransactionBroadcast,Catalyst.Protocol.Network.NetworkType)
+  id: ValidateTransaction(Catalyst.Protocol.Wire.TransactionBroadcast,Catalyst.Protocol.Network.NetworkType)
+  parent: Catalyst.Abstractions.Validators.ITransactionValidator
+  langs:
+  - csharp
+  - vb
+  name: ValidateTransaction(TransactionBroadcast, NetworkType)
+  nameWithType: ITransactionValidator.ValidateTransaction(TransactionBroadcast, NetworkType)
+  fullName: Catalyst.Abstractions.Validators.ITransactionValidator.ValidateTransaction(Catalyst.Protocol.Wire.TransactionBroadcast, Catalyst.Protocol.Network.NetworkType)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Validators/ITransactionValidator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ValidateTransaction
+    path: ../src/Catalyst.Abstractions/Validators/ITransactionValidator.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Validators
+  syntax:
+    content: bool ValidateTransaction(TransactionBroadcast transactionBroadcast, NetworkType networkType)
+    parameters:
+    - id: transactionBroadcast
+      type: Catalyst.Protocol.Wire.TransactionBroadcast
+    - id: networkType
+      type: Catalyst.Protocol.Network.NetworkType
+    return:
+      type: System.Boolean
+    content.vb: Function ValidateTransaction(transactionBroadcast As TransactionBroadcast, networkType As NetworkType) As Boolean
+  overload: Catalyst.Abstractions.Validators.ITransactionValidator.ValidateTransaction*
+references:
+- uid: Catalyst.Abstractions.Validators
+  commentId: N:Catalyst.Abstractions.Validators
+  name: Catalyst.Abstractions.Validators
+  nameWithType: Catalyst.Abstractions.Validators
+  fullName: Catalyst.Abstractions.Validators
+- uid: Catalyst.Abstractions.Validators.ITransactionValidator.ValidateTransaction*
+  commentId: Overload:Catalyst.Abstractions.Validators.ITransactionValidator.ValidateTransaction
+  name: ValidateTransaction
+  nameWithType: ITransactionValidator.ValidateTransaction
+  fullName: Catalyst.Abstractions.Validators.ITransactionValidator.ValidateTransaction
+- uid: Catalyst.Protocol.Wire.TransactionBroadcast
+  commentId: T:Catalyst.Protocol.Wire.TransactionBroadcast
+  parent: Catalyst.Protocol.Wire
+  name: TransactionBroadcast
+  nameWithType: TransactionBroadcast
+  fullName: Catalyst.Protocol.Wire.TransactionBroadcast
+- uid: Catalyst.Protocol.Network.NetworkType
+  commentId: T:Catalyst.Protocol.Network.NetworkType
+  parent: Catalyst.Protocol.Network
+  name: NetworkType
+  nameWithType: NetworkType
+  fullName: Catalyst.Protocol.Network.NetworkType
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Protocol.Wire
+  commentId: N:Catalyst.Protocol.Wire
+  name: Catalyst.Protocol.Wire
+  nameWithType: Catalyst.Protocol.Wire
+  fullName: Catalyst.Protocol.Wire
+- uid: Catalyst.Protocol.Network
+  commentId: N:Catalyst.Protocol.Network
+  name: Catalyst.Protocol.Network
+  nameWithType: Catalyst.Protocol.Network
+  fullName: Catalyst.Protocol.Network
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

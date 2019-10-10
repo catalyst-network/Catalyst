@@ -1,0 +1,527 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Cli.ConsoleUserOutput
+  commentId: T:Catalyst.Core.Lib.Cli.ConsoleUserOutput
+  id: ConsoleUserOutput
+  parent: Catalyst.Core.Lib.Cli
+  children:
+  - Catalyst.Core.Lib.Cli.ConsoleUserOutput.Write(System.String)
+  - Catalyst.Core.Lib.Cli.ConsoleUserOutput.WriteLine(System.String)
+  langs:
+  - csharp
+  - vb
+  name: ConsoleUserOutput
+  nameWithType: ConsoleUserOutput
+  fullName: Catalyst.Core.Lib.Cli.ConsoleUserOutput
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Cli/ConsoleUserOutput.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ConsoleUserOutput
+    path: ../src/Catalyst.Core.Lib/Cli/ConsoleUserOutput.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Cli
+  syntax:
+    content: 'public sealed class ConsoleUserOutput : IUserOutput'
+    content.vb: >-
+      Public NotInheritable Class ConsoleUserOutput
+
+          Implements IUserOutput
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Cli.IUserOutput
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.Cli.ConsoleUserOutput.WriteLine(System.String)
+  commentId: M:Catalyst.Core.Lib.Cli.ConsoleUserOutput.WriteLine(System.String)
+  id: WriteLine(System.String)
+  parent: Catalyst.Core.Lib.Cli.ConsoleUserOutput
+  langs:
+  - csharp
+  - vb
+  name: WriteLine(String)
+  nameWithType: ConsoleUserOutput.WriteLine(String)
+  fullName: Catalyst.Core.Lib.Cli.ConsoleUserOutput.WriteLine(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Cli/ConsoleUserOutput.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WriteLine
+    path: ../src/Catalyst.Core.Lib/Cli/ConsoleUserOutput.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Cli
+  syntax:
+    content: public void WriteLine(string content)
+    parameters:
+    - id: content
+      type: System.String
+    content.vb: Public Sub WriteLine(content As String)
+  overload: Catalyst.Core.Lib.Cli.ConsoleUserOutput.WriteLine*
+  implements:
+  - Catalyst.Abstractions.Cli.IUserOutput.WriteLine(System.String)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Cli.ConsoleUserOutput.Write(System.String)
+  commentId: M:Catalyst.Core.Lib.Cli.ConsoleUserOutput.Write(System.String)
+  id: Write(System.String)
+  parent: Catalyst.Core.Lib.Cli.ConsoleUserOutput
+  langs:
+  - csharp
+  - vb
+  name: Write(String)
+  nameWithType: ConsoleUserOutput.Write(String)
+  fullName: Catalyst.Core.Lib.Cli.ConsoleUserOutput.Write(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Cli/ConsoleUserOutput.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Write
+    path: ../src/Catalyst.Core.Lib/Cli/ConsoleUserOutput.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Cli
+  syntax:
+    content: public void Write(string content)
+    parameters:
+    - id: content
+      type: System.String
+    content.vb: Public Sub Write(content As String)
+  overload: Catalyst.Core.Lib.Cli.ConsoleUserOutput.Write*
+  implements:
+  - Catalyst.Abstractions.Cli.IUserOutput.Write(System.String)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.Cli
+  commentId: N:Catalyst.Core.Lib.Cli
+  name: Catalyst.Core.Lib.Cli
+  nameWithType: Catalyst.Core.Lib.Cli
+  fullName: Catalyst.Core.Lib.Cli
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Cli.IUserOutput
+  commentId: T:Catalyst.Abstractions.Cli.IUserOutput
+  parent: Catalyst.Abstractions.Cli
+  name: IUserOutput
+  nameWithType: IUserOutput
+  fullName: Catalyst.Abstractions.Cli.IUserOutput
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Cli
+  commentId: N:Catalyst.Abstractions.Cli
+  name: Catalyst.Abstractions.Cli
+  nameWithType: Catalyst.Abstractions.Cli
+  fullName: Catalyst.Abstractions.Cli
+- uid: Catalyst.Core.Lib.Cli.ConsoleUserOutput.WriteLine*
+  commentId: Overload:Catalyst.Core.Lib.Cli.ConsoleUserOutput.WriteLine
+  name: WriteLine
+  nameWithType: ConsoleUserOutput.WriteLine
+  fullName: Catalyst.Core.Lib.Cli.ConsoleUserOutput.WriteLine
+- uid: Catalyst.Abstractions.Cli.IUserOutput.WriteLine(System.String)
+  commentId: M:Catalyst.Abstractions.Cli.IUserOutput.WriteLine(System.String)
+  parent: Catalyst.Abstractions.Cli.IUserOutput
+  isExternal: true
+  name: WriteLine(String)
+  nameWithType: IUserOutput.WriteLine(String)
+  fullName: Catalyst.Abstractions.Cli.IUserOutput.WriteLine(System.String)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cli.IUserOutput.WriteLine(System.String)
+    name: WriteLine
+    nameWithType: IUserOutput.WriteLine
+    fullName: Catalyst.Abstractions.Cli.IUserOutput.WriteLine
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cli.IUserOutput.WriteLine(System.String)
+    name: WriteLine
+    nameWithType: IUserOutput.WriteLine
+    fullName: Catalyst.Abstractions.Cli.IUserOutput.WriteLine
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.Cli.ConsoleUserOutput.Write*
+  commentId: Overload:Catalyst.Core.Lib.Cli.ConsoleUserOutput.Write
+  name: Write
+  nameWithType: ConsoleUserOutput.Write
+  fullName: Catalyst.Core.Lib.Cli.ConsoleUserOutput.Write
+- uid: Catalyst.Abstractions.Cli.IUserOutput.Write(System.String)
+  commentId: M:Catalyst.Abstractions.Cli.IUserOutput.Write(System.String)
+  parent: Catalyst.Abstractions.Cli.IUserOutput
+  isExternal: true
+  name: Write(String)
+  nameWithType: IUserOutput.Write(String)
+  fullName: Catalyst.Abstractions.Cli.IUserOutput.Write(System.String)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cli.IUserOutput.Write(System.String)
+    name: Write
+    nameWithType: IUserOutput.Write
+    fullName: Catalyst.Abstractions.Cli.IUserOutput.Write
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cli.IUserOutput.Write(System.String)
+    name: Write
+    nameWithType: IUserOutput.Write
+    fullName: Catalyst.Abstractions.Cli.IUserOutput.Write
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )

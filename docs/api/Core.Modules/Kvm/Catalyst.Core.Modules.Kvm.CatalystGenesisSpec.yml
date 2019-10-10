@@ -1,0 +1,2383 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  commentId: T:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  id: CatalystGenesisSpec
+  parent: Catalyst.Core.Modules.Kvm
+  children:
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.BlockReward
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBombDelay
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBoundDivisor
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.GasLimitBoundDivisor
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Instance
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip100Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1014Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1052Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1108Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1234Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1283Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1344Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip140Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip145Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip150Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip152Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip155Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158IgnoredAccount(Nethermind.Core.Address)
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip160Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip170Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1884Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip196Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip197Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip198Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2028Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip211Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip214Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2200Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip649Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip658Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip7Enabled
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsTimeAdjustmentPostOlympic
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaxCodeSize
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumExtraDataSize
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumUncleCount
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MinGasLimit
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Registrar
+  langs:
+  - csharp
+  - vb
+  name: CatalystGenesisSpec
+  nameWithType: CatalystGenesisSpec
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CatalystGenesisSpec
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: 'public sealed class CatalystGenesisSpec : IReleaseSpec'
+    content.vb: >-
+      Public NotInheritable Class CatalystGenesisSpec
+
+          Implements IReleaseSpec
+  inheritance:
+  - System.Object
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Instance
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Instance
+  id: Instance
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: Instance
+  nameWithType: CatalystGenesisSpec.Instance
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Instance
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Instance
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  syntax:
+    content: public static CatalystGenesisSpec Instance { get; }
+    parameters: []
+    return:
+      type: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+    content.vb: Public Shared ReadOnly Property Instance As CatalystGenesisSpec
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Instance*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumExtraDataSize
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumExtraDataSize
+  id: MaximumExtraDataSize
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: MaximumExtraDataSize
+  nameWithType: CatalystGenesisSpec.MaximumExtraDataSize
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumExtraDataSize
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MaximumExtraDataSize
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 48
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public long MaximumExtraDataSize { get; }
+    parameters: []
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly Property MaximumExtraDataSize As Long
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumExtraDataSize*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.MaximumExtraDataSize
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaxCodeSize
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaxCodeSize
+  id: MaxCodeSize
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: MaxCodeSize
+  nameWithType: CatalystGenesisSpec.MaxCodeSize
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaxCodeSize
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MaxCodeSize
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 51
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public long MaxCodeSize { get; }
+    parameters: []
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly Property MaxCodeSize As Long
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaxCodeSize*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.MaxCodeSize
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MinGasLimit
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MinGasLimit
+  id: MinGasLimit
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: MinGasLimit
+  nameWithType: CatalystGenesisSpec.MinGasLimit
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MinGasLimit
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MinGasLimit
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 54
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public long MinGasLimit { get; }
+    parameters: []
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly Property MinGasLimit As Long
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MinGasLimit*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.MinGasLimit
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.GasLimitBoundDivisor
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.GasLimitBoundDivisor
+  id: GasLimitBoundDivisor
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: GasLimitBoundDivisor
+  nameWithType: CatalystGenesisSpec.GasLimitBoundDivisor
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.GasLimitBoundDivisor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GasLimitBoundDivisor
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 57
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public long GasLimitBoundDivisor { get; }
+    parameters: []
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly Property GasLimitBoundDivisor As Long
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.GasLimitBoundDivisor*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.GasLimitBoundDivisor
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Registrar
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Registrar
+  id: Registrar
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: Registrar
+  nameWithType: CatalystGenesisSpec.Registrar
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Registrar
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Registrar
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 60
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public Address Registrar { get; }
+    parameters: []
+    return:
+      type: Nethermind.Core.Address
+    content.vb: Public ReadOnly Property Registrar As Address
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Registrar*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.Registrar
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.BlockReward
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.BlockReward
+  id: BlockReward
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: BlockReward
+  nameWithType: CatalystGenesisSpec.BlockReward
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.BlockReward
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BlockReward
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 63
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public UInt256 BlockReward { get; }
+    parameters: []
+    return:
+      type: Nethermind.Dirichlet.Numerics.UInt256
+    content.vb: Public ReadOnly Property BlockReward As UInt256
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.BlockReward*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.BlockReward
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBombDelay
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBombDelay
+  id: DifficultyBombDelay
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: DifficultyBombDelay
+  nameWithType: CatalystGenesisSpec.DifficultyBombDelay
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBombDelay
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: DifficultyBombDelay
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 66
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public long DifficultyBombDelay { get; }
+    parameters: []
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly Property DifficultyBombDelay As Long
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBombDelay*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.DifficultyBombDelay
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBoundDivisor
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBoundDivisor
+  id: DifficultyBoundDivisor
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: DifficultyBoundDivisor
+  nameWithType: CatalystGenesisSpec.DifficultyBoundDivisor
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBoundDivisor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: DifficultyBoundDivisor
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 69
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public long DifficultyBoundDivisor { get; }
+    parameters: []
+    return:
+      type: System.Int64
+    content.vb: Public ReadOnly Property DifficultyBoundDivisor As Long
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBoundDivisor*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.DifficultyBoundDivisor
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumUncleCount
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumUncleCount
+  id: MaximumUncleCount
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: MaximumUncleCount
+  nameWithType: CatalystGenesisSpec.MaximumUncleCount
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumUncleCount
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MaximumUncleCount
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 72
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public int MaximumUncleCount { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property MaximumUncleCount As Integer
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumUncleCount*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.MaximumUncleCount
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsTimeAdjustmentPostOlympic
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsTimeAdjustmentPostOlympic
+  id: IsTimeAdjustmentPostOlympic
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsTimeAdjustmentPostOlympic
+  nameWithType: CatalystGenesisSpec.IsTimeAdjustmentPostOlympic
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsTimeAdjustmentPostOlympic
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsTimeAdjustmentPostOlympic
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 75
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsTimeAdjustmentPostOlympic { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsTimeAdjustmentPostOlympic As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsTimeAdjustmentPostOlympic*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsTimeAdjustmentPostOlympic
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2Enabled
+  id: IsEip2Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip2Enabled
+  nameWithType: CatalystGenesisSpec.IsEip2Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip2Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 78
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip2Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip2Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip2Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip7Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip7Enabled
+  id: IsEip7Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip7Enabled
+  nameWithType: CatalystGenesisSpec.IsEip7Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip7Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip7Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 81
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip7Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip7Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip7Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip7Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip100Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip100Enabled
+  id: IsEip100Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip100Enabled
+  nameWithType: CatalystGenesisSpec.IsEip100Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip100Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip100Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 84
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip100Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip100Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip100Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip100Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip140Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip140Enabled
+  id: IsEip140Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip140Enabled
+  nameWithType: CatalystGenesisSpec.IsEip140Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip140Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip140Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 87
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip140Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip140Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip140Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip140Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip150Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip150Enabled
+  id: IsEip150Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip150Enabled
+  nameWithType: CatalystGenesisSpec.IsEip150Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip150Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip150Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 90
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip150Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip150Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip150Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip150Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip155Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip155Enabled
+  id: IsEip155Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip155Enabled
+  nameWithType: CatalystGenesisSpec.IsEip155Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip155Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip155Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 93
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip155Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip155Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip155Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip155Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158Enabled
+  id: IsEip158Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip158Enabled
+  nameWithType: CatalystGenesisSpec.IsEip158Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip158Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 96
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip158Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip158Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip158Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip160Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip160Enabled
+  id: IsEip160Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip160Enabled
+  nameWithType: CatalystGenesisSpec.IsEip160Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip160Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip160Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 99
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip160Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip160Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip160Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip160Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip170Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip170Enabled
+  id: IsEip170Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip170Enabled
+  nameWithType: CatalystGenesisSpec.IsEip170Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip170Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip170Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 102
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip170Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip170Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip170Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip170Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip196Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip196Enabled
+  id: IsEip196Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip196Enabled
+  nameWithType: CatalystGenesisSpec.IsEip196Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip196Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip196Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 105
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip196Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip196Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip196Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip196Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip197Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip197Enabled
+  id: IsEip197Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip197Enabled
+  nameWithType: CatalystGenesisSpec.IsEip197Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip197Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip197Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 108
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip197Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip197Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip197Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip197Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip198Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip198Enabled
+  id: IsEip198Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip198Enabled
+  nameWithType: CatalystGenesisSpec.IsEip198Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip198Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip198Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 111
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip198Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip198Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip198Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip198Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip211Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip211Enabled
+  id: IsEip211Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip211Enabled
+  nameWithType: CatalystGenesisSpec.IsEip211Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip211Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip211Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 114
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip211Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip211Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip211Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip211Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip214Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip214Enabled
+  id: IsEip214Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip214Enabled
+  nameWithType: CatalystGenesisSpec.IsEip214Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip214Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip214Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 117
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip214Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip214Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip214Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip214Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip649Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip649Enabled
+  id: IsEip649Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip649Enabled
+  nameWithType: CatalystGenesisSpec.IsEip649Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip649Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip649Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 120
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip649Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip649Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip649Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip649Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip658Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip658Enabled
+  id: IsEip658Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip658Enabled
+  nameWithType: CatalystGenesisSpec.IsEip658Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip658Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip658Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 123
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip658Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip658Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip658Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip658Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip145Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip145Enabled
+  id: IsEip145Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip145Enabled
+  nameWithType: CatalystGenesisSpec.IsEip145Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip145Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip145Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 126
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip145Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip145Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip145Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip145Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1014Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1014Enabled
+  id: IsEip1014Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip1014Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1014Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1014Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip1014Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 129
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip1014Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip1014Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1014Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip1014Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1052Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1052Enabled
+  id: IsEip1052Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip1052Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1052Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1052Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip1052Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 132
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip1052Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip1052Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1052Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip1052Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1283Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1283Enabled
+  id: IsEip1283Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip1283Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1283Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1283Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip1283Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 135
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip1283Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip1283Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1283Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip1283Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1234Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1234Enabled
+  id: IsEip1234Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip1234Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1234Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1234Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip1234Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 138
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip1234Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip1234Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1234Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip1234Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1344Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1344Enabled
+  id: IsEip1344Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip1344Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1344Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1344Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip1344Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 141
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip1344Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip1344Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1344Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip1344Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2028Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2028Enabled
+  id: IsEip2028Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip2028Enabled
+  nameWithType: CatalystGenesisSpec.IsEip2028Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2028Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip2028Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 144
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip2028Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip2028Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2028Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip2028Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip152Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip152Enabled
+  id: IsEip152Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip152Enabled
+  nameWithType: CatalystGenesisSpec.IsEip152Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip152Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip152Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 147
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip152Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip152Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip152Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip152Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1108Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1108Enabled
+  id: IsEip1108Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip1108Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1108Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1108Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip1108Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 150
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip1108Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip1108Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1108Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip1108Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1884Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1884Enabled
+  id: IsEip1884Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip1884Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1884Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1884Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip1884Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 153
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip1884Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip1884Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1884Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip1884Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2200Enabled
+  commentId: P:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2200Enabled
+  id: IsEip2200Enabled
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip2200Enabled
+  nameWithType: CatalystGenesisSpec.IsEip2200Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2200Enabled
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip2200Enabled
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 156
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip2200Enabled { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsEip2200Enabled As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2200Enabled*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip2200Enabled
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158IgnoredAccount(Nethermind.Core.Address)
+  commentId: M:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158IgnoredAccount(Nethermind.Core.Address)
+  id: IsEip158IgnoredAccount(Nethermind.Core.Address)
+  parent: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  langs:
+  - csharp
+  - vb
+  name: IsEip158IgnoredAccount(Address)
+  nameWithType: CatalystGenesisSpec.IsEip158IgnoredAccount(Address)
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158IgnoredAccount(Nethermind.Core.Address)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsEip158IgnoredAccount
+    path: ../src/Catalyst.Core.Modules.Kvm/CatalystGenesisSpec.cs
+    startLine: 159
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public bool IsEip158IgnoredAccount(Address address)
+    parameters:
+    - id: address
+      type: Nethermind.Core.Address
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsEip158IgnoredAccount(address As Address) As Boolean
+  overload: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158IgnoredAccount*
+  implements:
+  - Nethermind.Core.Specs.IReleaseSpec.IsEip158IgnoredAccount(Nethermind.Core.Address)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.Kvm
+  commentId: N:Catalyst.Core.Modules.Kvm
+  name: Catalyst.Core.Modules.Kvm
+  nameWithType: Catalyst.Core.Modules.Kvm
+  fullName: Catalyst.Core.Modules.Kvm
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Nethermind.Core.Specs.IReleaseSpec
+  commentId: T:Nethermind.Core.Specs.IReleaseSpec
+  parent: Nethermind.Core.Specs
+  name: IReleaseSpec
+  nameWithType: IReleaseSpec
+  fullName: Nethermind.Core.Specs.IReleaseSpec
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nethermind.Core.Specs
+  commentId: N:Nethermind.Core.Specs
+  name: Nethermind.Core.Specs
+  nameWithType: Nethermind.Core.Specs
+  fullName: Nethermind.Core.Specs
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Instance*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Instance
+  name: Instance
+  nameWithType: CatalystGenesisSpec.Instance
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Instance
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  commentId: T:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  parent: Catalyst.Core.Modules.Kvm
+  name: CatalystGenesisSpec
+  nameWithType: CatalystGenesisSpec
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumExtraDataSize*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumExtraDataSize
+  name: MaximumExtraDataSize
+  nameWithType: CatalystGenesisSpec.MaximumExtraDataSize
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumExtraDataSize
+- uid: Nethermind.Core.Specs.IReleaseSpec.MaximumExtraDataSize
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.MaximumExtraDataSize
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: MaximumExtraDataSize
+  nameWithType: IReleaseSpec.MaximumExtraDataSize
+  fullName: Nethermind.Core.Specs.IReleaseSpec.MaximumExtraDataSize
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  name: Int64
+  nameWithType: Int64
+  fullName: System.Int64
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaxCodeSize*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaxCodeSize
+  name: MaxCodeSize
+  nameWithType: CatalystGenesisSpec.MaxCodeSize
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaxCodeSize
+- uid: Nethermind.Core.Specs.IReleaseSpec.MaxCodeSize
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.MaxCodeSize
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: MaxCodeSize
+  nameWithType: IReleaseSpec.MaxCodeSize
+  fullName: Nethermind.Core.Specs.IReleaseSpec.MaxCodeSize
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MinGasLimit*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MinGasLimit
+  name: MinGasLimit
+  nameWithType: CatalystGenesisSpec.MinGasLimit
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MinGasLimit
+- uid: Nethermind.Core.Specs.IReleaseSpec.MinGasLimit
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.MinGasLimit
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: MinGasLimit
+  nameWithType: IReleaseSpec.MinGasLimit
+  fullName: Nethermind.Core.Specs.IReleaseSpec.MinGasLimit
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.GasLimitBoundDivisor*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.GasLimitBoundDivisor
+  name: GasLimitBoundDivisor
+  nameWithType: CatalystGenesisSpec.GasLimitBoundDivisor
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.GasLimitBoundDivisor
+- uid: Nethermind.Core.Specs.IReleaseSpec.GasLimitBoundDivisor
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.GasLimitBoundDivisor
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: GasLimitBoundDivisor
+  nameWithType: IReleaseSpec.GasLimitBoundDivisor
+  fullName: Nethermind.Core.Specs.IReleaseSpec.GasLimitBoundDivisor
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Registrar*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Registrar
+  name: Registrar
+  nameWithType: CatalystGenesisSpec.Registrar
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.Registrar
+- uid: Nethermind.Core.Specs.IReleaseSpec.Registrar
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.Registrar
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: Registrar
+  nameWithType: IReleaseSpec.Registrar
+  fullName: Nethermind.Core.Specs.IReleaseSpec.Registrar
+- uid: Nethermind.Core.Address
+  commentId: T:Nethermind.Core.Address
+  parent: Nethermind.Core
+  name: Address
+  nameWithType: Address
+  fullName: Nethermind.Core.Address
+- uid: Nethermind.Core
+  commentId: N:Nethermind.Core
+  name: Nethermind.Core
+  nameWithType: Nethermind.Core
+  fullName: Nethermind.Core
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.BlockReward*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.BlockReward
+  name: BlockReward
+  nameWithType: CatalystGenesisSpec.BlockReward
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.BlockReward
+- uid: Nethermind.Core.Specs.IReleaseSpec.BlockReward
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.BlockReward
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: BlockReward
+  nameWithType: IReleaseSpec.BlockReward
+  fullName: Nethermind.Core.Specs.IReleaseSpec.BlockReward
+- uid: Nethermind.Dirichlet.Numerics.UInt256
+  commentId: T:Nethermind.Dirichlet.Numerics.UInt256
+  parent: Nethermind.Dirichlet.Numerics
+  name: UInt256
+  nameWithType: UInt256
+  fullName: Nethermind.Dirichlet.Numerics.UInt256
+- uid: Nethermind.Dirichlet.Numerics
+  commentId: N:Nethermind.Dirichlet.Numerics
+  name: Nethermind.Dirichlet.Numerics
+  nameWithType: Nethermind.Dirichlet.Numerics
+  fullName: Nethermind.Dirichlet.Numerics
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBombDelay*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBombDelay
+  name: DifficultyBombDelay
+  nameWithType: CatalystGenesisSpec.DifficultyBombDelay
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBombDelay
+- uid: Nethermind.Core.Specs.IReleaseSpec.DifficultyBombDelay
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.DifficultyBombDelay
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: DifficultyBombDelay
+  nameWithType: IReleaseSpec.DifficultyBombDelay
+  fullName: Nethermind.Core.Specs.IReleaseSpec.DifficultyBombDelay
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBoundDivisor*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBoundDivisor
+  name: DifficultyBoundDivisor
+  nameWithType: CatalystGenesisSpec.DifficultyBoundDivisor
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.DifficultyBoundDivisor
+- uid: Nethermind.Core.Specs.IReleaseSpec.DifficultyBoundDivisor
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.DifficultyBoundDivisor
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: DifficultyBoundDivisor
+  nameWithType: IReleaseSpec.DifficultyBoundDivisor
+  fullName: Nethermind.Core.Specs.IReleaseSpec.DifficultyBoundDivisor
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumUncleCount*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumUncleCount
+  name: MaximumUncleCount
+  nameWithType: CatalystGenesisSpec.MaximumUncleCount
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.MaximumUncleCount
+- uid: Nethermind.Core.Specs.IReleaseSpec.MaximumUncleCount
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.MaximumUncleCount
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: MaximumUncleCount
+  nameWithType: IReleaseSpec.MaximumUncleCount
+  fullName: Nethermind.Core.Specs.IReleaseSpec.MaximumUncleCount
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsTimeAdjustmentPostOlympic*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsTimeAdjustmentPostOlympic
+  name: IsTimeAdjustmentPostOlympic
+  nameWithType: CatalystGenesisSpec.IsTimeAdjustmentPostOlympic
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsTimeAdjustmentPostOlympic
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsTimeAdjustmentPostOlympic
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsTimeAdjustmentPostOlympic
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsTimeAdjustmentPostOlympic
+  nameWithType: IReleaseSpec.IsTimeAdjustmentPostOlympic
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsTimeAdjustmentPostOlympic
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2Enabled
+  name: IsEip2Enabled
+  nameWithType: CatalystGenesisSpec.IsEip2Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip2Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip2Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip2Enabled
+  nameWithType: IReleaseSpec.IsEip2Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip2Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip7Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip7Enabled
+  name: IsEip7Enabled
+  nameWithType: CatalystGenesisSpec.IsEip7Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip7Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip7Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip7Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip7Enabled
+  nameWithType: IReleaseSpec.IsEip7Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip7Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip100Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip100Enabled
+  name: IsEip100Enabled
+  nameWithType: CatalystGenesisSpec.IsEip100Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip100Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip100Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip100Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip100Enabled
+  nameWithType: IReleaseSpec.IsEip100Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip100Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip140Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip140Enabled
+  name: IsEip140Enabled
+  nameWithType: CatalystGenesisSpec.IsEip140Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip140Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip140Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip140Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip140Enabled
+  nameWithType: IReleaseSpec.IsEip140Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip140Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip150Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip150Enabled
+  name: IsEip150Enabled
+  nameWithType: CatalystGenesisSpec.IsEip150Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip150Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip150Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip150Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip150Enabled
+  nameWithType: IReleaseSpec.IsEip150Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip150Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip155Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip155Enabled
+  name: IsEip155Enabled
+  nameWithType: CatalystGenesisSpec.IsEip155Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip155Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip155Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip155Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip155Enabled
+  nameWithType: IReleaseSpec.IsEip155Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip155Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158Enabled
+  name: IsEip158Enabled
+  nameWithType: CatalystGenesisSpec.IsEip158Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip158Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip158Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip158Enabled
+  nameWithType: IReleaseSpec.IsEip158Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip158Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip160Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip160Enabled
+  name: IsEip160Enabled
+  nameWithType: CatalystGenesisSpec.IsEip160Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip160Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip160Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip160Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip160Enabled
+  nameWithType: IReleaseSpec.IsEip160Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip160Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip170Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip170Enabled
+  name: IsEip170Enabled
+  nameWithType: CatalystGenesisSpec.IsEip170Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip170Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip170Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip170Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip170Enabled
+  nameWithType: IReleaseSpec.IsEip170Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip170Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip196Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip196Enabled
+  name: IsEip196Enabled
+  nameWithType: CatalystGenesisSpec.IsEip196Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip196Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip196Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip196Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip196Enabled
+  nameWithType: IReleaseSpec.IsEip196Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip196Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip197Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip197Enabled
+  name: IsEip197Enabled
+  nameWithType: CatalystGenesisSpec.IsEip197Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip197Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip197Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip197Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip197Enabled
+  nameWithType: IReleaseSpec.IsEip197Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip197Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip198Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip198Enabled
+  name: IsEip198Enabled
+  nameWithType: CatalystGenesisSpec.IsEip198Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip198Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip198Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip198Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip198Enabled
+  nameWithType: IReleaseSpec.IsEip198Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip198Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip211Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip211Enabled
+  name: IsEip211Enabled
+  nameWithType: CatalystGenesisSpec.IsEip211Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip211Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip211Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip211Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip211Enabled
+  nameWithType: IReleaseSpec.IsEip211Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip211Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip214Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip214Enabled
+  name: IsEip214Enabled
+  nameWithType: CatalystGenesisSpec.IsEip214Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip214Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip214Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip214Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip214Enabled
+  nameWithType: IReleaseSpec.IsEip214Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip214Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip649Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip649Enabled
+  name: IsEip649Enabled
+  nameWithType: CatalystGenesisSpec.IsEip649Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip649Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip649Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip649Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip649Enabled
+  nameWithType: IReleaseSpec.IsEip649Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip649Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip658Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip658Enabled
+  name: IsEip658Enabled
+  nameWithType: CatalystGenesisSpec.IsEip658Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip658Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip658Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip658Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip658Enabled
+  nameWithType: IReleaseSpec.IsEip658Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip658Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip145Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip145Enabled
+  name: IsEip145Enabled
+  nameWithType: CatalystGenesisSpec.IsEip145Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip145Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip145Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip145Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip145Enabled
+  nameWithType: IReleaseSpec.IsEip145Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip145Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1014Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1014Enabled
+  name: IsEip1014Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1014Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1014Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip1014Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip1014Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip1014Enabled
+  nameWithType: IReleaseSpec.IsEip1014Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip1014Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1052Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1052Enabled
+  name: IsEip1052Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1052Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1052Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip1052Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip1052Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip1052Enabled
+  nameWithType: IReleaseSpec.IsEip1052Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip1052Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1283Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1283Enabled
+  name: IsEip1283Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1283Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1283Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip1283Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip1283Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip1283Enabled
+  nameWithType: IReleaseSpec.IsEip1283Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip1283Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1234Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1234Enabled
+  name: IsEip1234Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1234Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1234Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip1234Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip1234Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip1234Enabled
+  nameWithType: IReleaseSpec.IsEip1234Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip1234Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1344Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1344Enabled
+  name: IsEip1344Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1344Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1344Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip1344Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip1344Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip1344Enabled
+  nameWithType: IReleaseSpec.IsEip1344Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip1344Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2028Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2028Enabled
+  name: IsEip2028Enabled
+  nameWithType: CatalystGenesisSpec.IsEip2028Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2028Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip2028Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip2028Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip2028Enabled
+  nameWithType: IReleaseSpec.IsEip2028Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip2028Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip152Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip152Enabled
+  name: IsEip152Enabled
+  nameWithType: CatalystGenesisSpec.IsEip152Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip152Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip152Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip152Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip152Enabled
+  nameWithType: IReleaseSpec.IsEip152Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip152Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1108Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1108Enabled
+  name: IsEip1108Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1108Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1108Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip1108Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip1108Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip1108Enabled
+  nameWithType: IReleaseSpec.IsEip1108Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip1108Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1884Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1884Enabled
+  name: IsEip1884Enabled
+  nameWithType: CatalystGenesisSpec.IsEip1884Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip1884Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip1884Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip1884Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip1884Enabled
+  nameWithType: IReleaseSpec.IsEip1884Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip1884Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2200Enabled*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2200Enabled
+  name: IsEip2200Enabled
+  nameWithType: CatalystGenesisSpec.IsEip2200Enabled
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip2200Enabled
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip2200Enabled
+  commentId: P:Nethermind.Core.Specs.IReleaseSpec.IsEip2200Enabled
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip2200Enabled
+  nameWithType: IReleaseSpec.IsEip2200Enabled
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip2200Enabled
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158IgnoredAccount*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158IgnoredAccount
+  name: IsEip158IgnoredAccount
+  nameWithType: CatalystGenesisSpec.IsEip158IgnoredAccount
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec.IsEip158IgnoredAccount
+- uid: Nethermind.Core.Specs.IReleaseSpec.IsEip158IgnoredAccount(Nethermind.Core.Address)
+  commentId: M:Nethermind.Core.Specs.IReleaseSpec.IsEip158IgnoredAccount(Nethermind.Core.Address)
+  parent: Nethermind.Core.Specs.IReleaseSpec
+  name: IsEip158IgnoredAccount(Address)
+  nameWithType: IReleaseSpec.IsEip158IgnoredAccount(Address)
+  fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip158IgnoredAccount(Nethermind.Core.Address)
+  spec.csharp:
+  - uid: Nethermind.Core.Specs.IReleaseSpec.IsEip158IgnoredAccount(Nethermind.Core.Address)
+    name: IsEip158IgnoredAccount
+    nameWithType: IReleaseSpec.IsEip158IgnoredAccount
+    fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip158IgnoredAccount
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Nethermind.Core.Address
+    name: Address
+    nameWithType: Address
+    fullName: Nethermind.Core.Address
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Nethermind.Core.Specs.IReleaseSpec.IsEip158IgnoredAccount(Nethermind.Core.Address)
+    name: IsEip158IgnoredAccount
+    nameWithType: IReleaseSpec.IsEip158IgnoredAccount
+    fullName: Nethermind.Core.Specs.IReleaseSpec.IsEip158IgnoredAccount
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Nethermind.Core.Address
+    name: Address
+    nameWithType: Address
+    fullName: Nethermind.Core.Address
+  - name: )
+    nameWithType: )
+    fullName: )

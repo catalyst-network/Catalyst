@@ -1,0 +1,1862 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  commentId: T:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  id: FavouriteDeltaBroadcast
+  parent: Catalyst.Protocol.Wire
+  children:
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.#ctor
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.#ctor(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CalculateSize
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Candidate
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CandidateFieldNumber
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Clone
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Descriptor
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals(System.Object)
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.GetHashCode
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Google#Protobuf#IMessage#Descriptor
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.IsValid
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom(Google.Protobuf.CodedInputStream)
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Parser
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.ToString
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterId
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterIdFieldNumber
+  - Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.WriteTo(Google.Protobuf.CodedOutputStream)
+  langs:
+  - csharp
+  - vb
+  name: FavouriteDeltaBroadcast
+  nameWithType: FavouriteDeltaBroadcast
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: FavouriteDeltaBroadcast
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1010
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: 'public sealed class FavouriteDeltaBroadcast : IMessage<FavouriteDeltaBroadcast>, IMessage, IEquatable<FavouriteDeltaBroadcast>, IDeepCloneable<FavouriteDeltaBroadcast>'
+    content.vb: >-
+      Public NotInheritable Class FavouriteDeltaBroadcast
+
+          Implements IMessage(Of FavouriteDeltaBroadcast), IMessage, IEquatable(Of FavouriteDeltaBroadcast), IDeepCloneable(Of FavouriteDeltaBroadcast)
+  inheritance:
+  - System.Object
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  - Google.Protobuf.IMessage
+  - System.IEquatable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.IsValid
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.IsValid
+  id: IsValid
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: IsValid()
+  nameWithType: FavouriteDeltaBroadcast.IsValid()
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.IsValid()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/Wire/FavouriteDeltaBroadcast.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsValid
+    path: ../src/Catalyst.Protocol/Wire/FavouriteDeltaBroadcast.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public bool IsValid()
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsValid As Boolean
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.IsValid*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Parser
+  commentId: P:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Parser
+  id: Parser
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: Parser
+  nameWithType: FavouriteDeltaBroadcast.Parser
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Parser
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Parser
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1013
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public static MessageParser<FavouriteDeltaBroadcast> Parser { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.MessageParser{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+    content.vb: Public Shared ReadOnly Property Parser As MessageParser(Of FavouriteDeltaBroadcast)
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Parser*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Descriptor
+  commentId: P:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Descriptor
+  id: Descriptor
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: Descriptor
+  nameWithType: FavouriteDeltaBroadcast.Descriptor
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1016
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public static MessageDescriptor Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: Public Shared ReadOnly Property Descriptor As MessageDescriptor
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Descriptor*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Google#Protobuf#IMessage#Descriptor
+  commentId: P:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Google#Protobuf#IMessage#Descriptor
+  id: Google#Protobuf#IMessage#Descriptor
+  isEii: true
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: IMessage.Descriptor
+  nameWithType: FavouriteDeltaBroadcast.IMessage.Descriptor
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Google.Protobuf.IMessage.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: pb::Google.Protobuf.IMessage.Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1021
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: MessageDescriptor IMessage.Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: ReadOnly WriteOnly Property pb::Google.Protobuf.IMessage.Descriptor As MessageDescriptor Implements IMessage.Descriptor
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Google#Protobuf#IMessage#Descriptor*
+  implements:
+  - Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: FavouriteDeltaBroadcast.pb::Google.Protobuf.IMessage.Descriptor
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.#ctor
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.#ctor
+  id: '#ctor'
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: FavouriteDeltaBroadcast()
+  nameWithType: FavouriteDeltaBroadcast.FavouriteDeltaBroadcast()
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.FavouriteDeltaBroadcast()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1026
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public FavouriteDeltaBroadcast()
+    content.vb: Public Sub New
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.#ctor(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.#ctor(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  id: '#ctor(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)'
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: FavouriteDeltaBroadcast(FavouriteDeltaBroadcast)
+  nameWithType: FavouriteDeltaBroadcast.FavouriteDeltaBroadcast(FavouriteDeltaBroadcast)
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.FavouriteDeltaBroadcast(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1033
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public FavouriteDeltaBroadcast(FavouriteDeltaBroadcast other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    content.vb: Public Sub New(other As FavouriteDeltaBroadcast)
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Clone
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Clone
+  id: Clone
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: Clone()
+  nameWithType: FavouriteDeltaBroadcast.Clone()
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Clone()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Clone
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1040
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public FavouriteDeltaBroadcast Clone()
+    return:
+      type: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    content.vb: Public Function Clone As FavouriteDeltaBroadcast
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Clone*
+  implements:
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.Clone
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CandidateFieldNumber
+  commentId: F:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CandidateFieldNumber
+  id: CandidateFieldNumber
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: CandidateFieldNumber
+  nameWithType: FavouriteDeltaBroadcast.CandidateFieldNumber
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CandidateFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CandidateFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1046
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  summary: Field number for the &quot;candidate&quot; field.
+  example: []
+  syntax:
+    content: public const int CandidateFieldNumber = 1
+    return:
+      type: System.Int32
+    content.vb: Public Const CandidateFieldNumber As Integer = 1
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Candidate
+  commentId: P:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Candidate
+  id: Candidate
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: Candidate
+  nameWithType: FavouriteDeltaBroadcast.Candidate
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Candidate
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Candidate
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1051
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  summary: "\nThe candidate favoured by the voter broadcasting this message.\n"
+  example: []
+  syntax:
+    content: public CandidateDeltaBroadcast Candidate { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+    content.vb: Public Property Candidate As CandidateDeltaBroadcast
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Candidate*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterIdFieldNumber
+  commentId: F:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterIdFieldNumber
+  id: VoterIdFieldNumber
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: VoterIdFieldNumber
+  nameWithType: FavouriteDeltaBroadcast.VoterIdFieldNumber
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterIdFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: VoterIdFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1060
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  summary: Field number for the &quot;voter_id&quot; field.
+  example: []
+  syntax:
+    content: public const int VoterIdFieldNumber = 2
+    return:
+      type: System.Int32
+    content.vb: Public Const VoterIdFieldNumber As Integer = 2
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterId
+  commentId: P:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterId
+  id: VoterId
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: VoterId
+  nameWithType: FavouriteDeltaBroadcast.VoterId
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: VoterId
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1065
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  summary: "\nThe PeerId of the participant submitting its vote to the network.\n"
+  example: []
+  syntax:
+    content: public PeerId VoterId { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public Property VoterId As PeerId
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterId*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals(System.Object)
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: Equals(Object)
+  nameWithType: FavouriteDeltaBroadcast.Equals(Object)
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals(System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1073
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public override bool Equals(object other)
+    parameters:
+    - id: other
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function Equals(other As Object) As Boolean
+  overridden: System.Object.Equals(System.Object)
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  id: Equals(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: Equals(FavouriteDeltaBroadcast)
+  nameWithType: FavouriteDeltaBroadcast.Equals(FavouriteDeltaBroadcast)
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1078
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public bool Equals(FavouriteDeltaBroadcast other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    return:
+      type: System.Boolean
+    content.vb: Public Function Equals(other As FavouriteDeltaBroadcast) As Boolean
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals*
+  implements:
+  - System.IEquatable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.Equals(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.GetHashCode
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.GetHashCode
+  id: GetHashCode
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: FavouriteDeltaBroadcast.GetHashCode()
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetHashCode
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1091
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+    content.vb: Public Overrides Function GetHashCode As Integer
+  overridden: System.Object.GetHashCode
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.GetHashCode*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.ToString
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.ToString
+  id: ToString
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: FavouriteDeltaBroadcast.ToString()
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ToString
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1102
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.WriteTo(Google.Protobuf.CodedOutputStream)
+  id: WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: WriteTo(CodedOutputStream)
+  nameWithType: FavouriteDeltaBroadcast.WriteTo(CodedOutputStream)
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.WriteTo(Google.Protobuf.CodedOutputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WriteTo
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1107
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public void WriteTo(CodedOutputStream output)
+    parameters:
+    - id: output
+      type: Google.Protobuf.CodedOutputStream
+    content.vb: Public Sub WriteTo(output As CodedOutputStream)
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.WriteTo*
+  implements:
+  - Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CalculateSize
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CalculateSize
+  id: CalculateSize
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: CalculateSize()
+  nameWithType: FavouriteDeltaBroadcast.CalculateSize()
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CalculateSize()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CalculateSize
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1122
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public int CalculateSize()
+    return:
+      type: System.Int32
+    content.vb: Public Function CalculateSize As Integer
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CalculateSize*
+  implements:
+  - Google.Protobuf.IMessage.CalculateSize
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  id: MergeFrom(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(FavouriteDeltaBroadcast)
+  nameWithType: FavouriteDeltaBroadcast.MergeFrom(FavouriteDeltaBroadcast)
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1137
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public void MergeFrom(FavouriteDeltaBroadcast other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    content.vb: Public Sub MergeFrom(other As FavouriteDeltaBroadcast)
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.MergeFrom(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom(Google.Protobuf.CodedInputStream)
+  id: MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(CodedInputStream)
+  nameWithType: FavouriteDeltaBroadcast.MergeFrom(CodedInputStream)
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom(Google.Protobuf.CodedInputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 1157
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public void MergeFrom(CodedInputStream input)
+    parameters:
+    - id: input
+      type: Google.Protobuf.CodedInputStream
+    content.vb: Public Sub MergeFrom(input As CodedInputStream)
+  overload: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Protocol.Wire
+  commentId: N:Catalyst.Protocol.Wire
+  name: Catalyst.Protocol.Wire
+  nameWithType: Catalyst.Protocol.Wire
+  fullName: Catalyst.Protocol.Wire
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  commentId: T:Google.Protobuf.IMessage{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IMessage`1
+  name: IMessage<FavouriteDeltaBroadcast>
+  nameWithType: IMessage<FavouriteDeltaBroadcast>
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>
+  nameWithType.vb: IMessage(Of FavouriteDeltaBroadcast)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  name.vb: IMessage(Of FavouriteDeltaBroadcast)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage
+  commentId: T:Google.Protobuf.IMessage
+  parent: Google.Protobuf
+  isExternal: true
+  name: IMessage
+  nameWithType: IMessage
+  fullName: Google.Protobuf.IMessage
+- uid: System.IEquatable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  commentId: T:System.IEquatable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  parent: System
+  definition: System.IEquatable`1
+  name: IEquatable<FavouriteDeltaBroadcast>
+  nameWithType: IEquatable<FavouriteDeltaBroadcast>
+  fullName: System.IEquatable<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>
+  nameWithType.vb: IEquatable(Of FavouriteDeltaBroadcast)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  name.vb: IEquatable(Of FavouriteDeltaBroadcast)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  commentId: T:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IDeepCloneable`1
+  name: IDeepCloneable<FavouriteDeltaBroadcast>
+  nameWithType: IDeepCloneable<FavouriteDeltaBroadcast>
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>
+  nameWithType.vb: IDeepCloneable(Of FavouriteDeltaBroadcast)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  name.vb: IDeepCloneable(Of FavouriteDeltaBroadcast)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Google.Protobuf.IMessage`1
+  commentId: T:Google.Protobuf.IMessage`1
+  isExternal: true
+  name: IMessage<T>
+  nameWithType: IMessage<T>
+  fullName: Google.Protobuf.IMessage<T>
+  nameWithType.vb: IMessage(Of T)
+  fullName.vb: Google.Protobuf.IMessage(Of T)
+  name.vb: IMessage(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf
+  commentId: N:Google.Protobuf
+  isExternal: true
+  name: Google.Protobuf
+  nameWithType: Google.Protobuf
+  fullName: Google.Protobuf
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1
+  commentId: T:Google.Protobuf.IDeepCloneable`1
+  isExternal: true
+  name: IDeepCloneable<T>
+  nameWithType: IDeepCloneable<T>
+  fullName: Google.Protobuf.IDeepCloneable<T>
+  nameWithType.vb: IDeepCloneable(Of T)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T)
+  name.vb: IDeepCloneable(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.IsValid*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.IsValid
+  name: IsValid
+  nameWithType: FavouriteDeltaBroadcast.IsValid
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.IsValid
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Parser*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Parser
+  name: Parser
+  nameWithType: FavouriteDeltaBroadcast.Parser
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Parser
+- uid: Google.Protobuf.MessageParser{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  commentId: T:Google.Protobuf.MessageParser{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.MessageParser`1
+  name: MessageParser<FavouriteDeltaBroadcast>
+  nameWithType: MessageParser<FavouriteDeltaBroadcast>
+  fullName: Google.Protobuf.MessageParser<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>
+  nameWithType.vb: MessageParser(Of FavouriteDeltaBroadcast)
+  fullName.vb: Google.Protobuf.MessageParser(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  name.vb: MessageParser(Of FavouriteDeltaBroadcast)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.MessageParser`1
+  commentId: T:Google.Protobuf.MessageParser`1
+  isExternal: true
+  name: MessageParser<T>
+  nameWithType: MessageParser<T>
+  fullName: Google.Protobuf.MessageParser<T>
+  nameWithType.vb: MessageParser(Of T)
+  fullName.vb: Google.Protobuf.MessageParser(Of T)
+  name.vb: MessageParser(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Descriptor*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Descriptor
+  name: Descriptor
+  nameWithType: FavouriteDeltaBroadcast.Descriptor
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Descriptor
+- uid: Google.Protobuf.Reflection.MessageDescriptor
+  commentId: T:Google.Protobuf.Reflection.MessageDescriptor
+  parent: Google.Protobuf.Reflection
+  isExternal: true
+  name: MessageDescriptor
+  nameWithType: MessageDescriptor
+  fullName: Google.Protobuf.Reflection.MessageDescriptor
+- uid: Google.Protobuf.Reflection
+  commentId: N:Google.Protobuf.Reflection
+  isExternal: true
+  name: Google.Protobuf.Reflection
+  nameWithType: Google.Protobuf.Reflection
+  fullName: Google.Protobuf.Reflection
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Google#Protobuf#IMessage#Descriptor*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Google#Protobuf#IMessage#Descriptor
+  name: IMessage.Descriptor
+  nameWithType: FavouriteDeltaBroadcast.IMessage.Descriptor
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: FavouriteDeltaBroadcast.pb::Google.Protobuf.IMessage.Descriptor
+  fullName.vb: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Google.Protobuf.IMessage.Descriptor
+  commentId: P:Google.Protobuf.IMessage.Descriptor
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: Descriptor
+  nameWithType: IMessage.Descriptor
+  fullName: Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.#ctor*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.#ctor
+  name: FavouriteDeltaBroadcast
+  nameWithType: FavouriteDeltaBroadcast.FavouriteDeltaBroadcast
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.FavouriteDeltaBroadcast
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  commentId: T:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  parent: Catalyst.Protocol.Wire
+  name: FavouriteDeltaBroadcast
+  nameWithType: FavouriteDeltaBroadcast
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Clone*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Clone
+  name: Clone
+  nameWithType: FavouriteDeltaBroadcast.Clone
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Clone
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.Clone
+  parent: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  definition: Google.Protobuf.IDeepCloneable`1.Clone
+  name: Clone()
+  nameWithType: IDeepCloneable<FavouriteDeltaBroadcast>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.Clone()
+  nameWithType.vb: IDeepCloneable(Of FavouriteDeltaBroadcast).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<FavouriteDeltaBroadcast>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of FavouriteDeltaBroadcast).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable`1.Clone
+  isExternal: true
+  name: Clone()
+  nameWithType: IDeepCloneable<T>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<T>.Clone()
+  nameWithType.vb: IDeepCloneable(Of T).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<T>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<T>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of T).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of T).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Candidate*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Candidate
+  name: Candidate
+  nameWithType: FavouriteDeltaBroadcast.Candidate
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Candidate
+- uid: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+  commentId: T:Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+  parent: Catalyst.Protocol.Wire
+  name: CandidateDeltaBroadcast
+  nameWithType: CandidateDeltaBroadcast
+  fullName: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterId*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterId
+  name: VoterId
+  nameWithType: FavouriteDeltaBroadcast.VoterId
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.VoterId
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals
+  name: Equals
+  nameWithType: FavouriteDeltaBroadcast.Equals
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.Equals
+- uid: System.IEquatable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.Equals(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  commentId: M:System.IEquatable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.Equals(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  parent: System.IEquatable{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  definition: System.IEquatable`1.Equals(`0)
+  name: Equals(FavouriteDeltaBroadcast)
+  nameWithType: IEquatable<FavouriteDeltaBroadcast>.Equals(FavouriteDeltaBroadcast)
+  fullName: System.IEquatable<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.Equals(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  nameWithType.vb: IEquatable(Of FavouriteDeltaBroadcast).Equals(FavouriteDeltaBroadcast)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).Equals(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<FavouriteDeltaBroadcast>.Equals
+    fullName: System.IEquatable<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of FavouriteDeltaBroadcast).Equals
+    fullName: System.IEquatable(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<T>.Equals
+    fullName: System.IEquatable<T>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of T).Equals
+    fullName: System.IEquatable(Of T).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.GetHashCode*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.GetHashCode
+  name: GetHashCode
+  nameWithType: FavouriteDeltaBroadcast.GetHashCode
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.GetHashCode
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.ToString*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.ToString
+  name: ToString
+  nameWithType: FavouriteDeltaBroadcast.ToString
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.WriteTo*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.WriteTo
+  name: WriteTo
+  nameWithType: FavouriteDeltaBroadcast.WriteTo
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.WriteTo
+- uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: WriteTo(CodedOutputStream)
+  nameWithType: IMessage.WriteTo(CodedOutputStream)
+  fullName: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedOutputStream
+  commentId: T:Google.Protobuf.CodedOutputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedOutputStream
+  nameWithType: CodedOutputStream
+  fullName: Google.Protobuf.CodedOutputStream
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CalculateSize*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CalculateSize
+  name: CalculateSize
+  nameWithType: FavouriteDeltaBroadcast.CalculateSize
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.CalculateSize
+- uid: Google.Protobuf.IMessage.CalculateSize
+  commentId: M:Google.Protobuf.IMessage.CalculateSize
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: CalculateSize()
+  nameWithType: IMessage.CalculateSize()
+  fullName: Google.Protobuf.IMessage.CalculateSize()
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom*
+  commentId: Overload:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom
+  name: MergeFrom
+  nameWithType: FavouriteDeltaBroadcast.MergeFrom
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast.MergeFrom
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.MergeFrom(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  commentId: M:Google.Protobuf.IMessage{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.MergeFrom(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  parent: Google.Protobuf.IMessage{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  definition: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  name: MergeFrom(FavouriteDeltaBroadcast)
+  nameWithType: IMessage<FavouriteDeltaBroadcast>.MergeFrom(FavouriteDeltaBroadcast)
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.MergeFrom(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  nameWithType.vb: IMessage(Of FavouriteDeltaBroadcast).MergeFrom(FavouriteDeltaBroadcast)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).MergeFrom(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<FavouriteDeltaBroadcast>.MergeFrom
+    fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of FavouriteDeltaBroadcast).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  commentId: M:Google.Protobuf.IMessage`1.MergeFrom(`0)
+  isExternal: true
+  name: MergeFrom(T)
+  nameWithType: IMessage<T>.MergeFrom(T)
+  fullName: Google.Protobuf.IMessage<T>.MergeFrom(T)
+  nameWithType.vb: IMessage(Of T).MergeFrom(T)
+  fullName.vb: Google.Protobuf.IMessage(Of T).MergeFrom(T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<T>.MergeFrom
+    fullName: Google.Protobuf.IMessage<T>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of T).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of T).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: MergeFrom(CodedInputStream)
+  nameWithType: IMessage.MergeFrom(CodedInputStream)
+  fullName: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedInputStream
+  commentId: T:Google.Protobuf.CodedInputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedInputStream
+  nameWithType: CodedInputStream
+  fullName: Google.Protobuf.CodedInputStream

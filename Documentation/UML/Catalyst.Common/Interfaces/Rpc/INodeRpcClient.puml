@@ -1,8 +1,0 @@
-@startuml
-interface INodeRpcClient {
-}
-class "IChanneledMessageStreamer`1"<T> {
-}
-ISocketClient <|-- INodeRpcClient
-"IChanneledMessageStreamer`1" "<AnySigned>" <|-- INodeRpcClient
-@enduml

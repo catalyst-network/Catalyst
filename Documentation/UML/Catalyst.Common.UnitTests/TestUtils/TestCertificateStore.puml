@@ -1,7 +1,0 @@
-@startuml
-class TestCertificateStore <<sealed>> {
-    + ReadOrCreateCertificateFile(fileName:string) : X509Certificate2
-    + ReadOrCreateCertificateFile(fileName:string, password:string) : X509Certificate2
-}
-ICertificateStore <|-- TestCertificateStore
-@enduml

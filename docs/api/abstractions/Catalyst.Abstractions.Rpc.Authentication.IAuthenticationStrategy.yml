@@ -1,0 +1,107 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+  commentId: T:Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+  id: IAuthenticationStrategy
+  parent: Catalyst.Abstractions.Rpc.Authentication
+  children:
+  - Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy.Authenticate(Catalyst.Protocol.Peer.PeerId)
+  langs:
+  - csharp
+  - vb
+  name: IAuthenticationStrategy
+  nameWithType: IAuthenticationStrategy
+  fullName: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/Authentication/IAuthenticationStrategy.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IAuthenticationStrategy
+    path: ../src/Catalyst.Abstractions/Rpc/Authentication/IAuthenticationStrategy.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc.Authentication
+  summary: "\nThe authentication strategy decides how to whitelist a node \n"
+  example: []
+  syntax:
+    content: public interface IAuthenticationStrategy
+    content.vb: Public Interface IAuthenticationStrategy
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy.Authenticate(Catalyst.Protocol.Peer.PeerId)
+  commentId: M:Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy.Authenticate(Catalyst.Protocol.Peer.PeerId)
+  id: Authenticate(Catalyst.Protocol.Peer.PeerId)
+  parent: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+  langs:
+  - csharp
+  - vb
+  name: Authenticate(PeerId)
+  nameWithType: IAuthenticationStrategy.Authenticate(PeerId)
+  fullName: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy.Authenticate(Catalyst.Protocol.Peer.PeerId)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/Authentication/IAuthenticationStrategy.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Authenticate
+    path: ../src/Catalyst.Abstractions/Rpc/Authentication/IAuthenticationStrategy.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc.Authentication
+  summary: Authenticates the specified peer identifier.
+  example: []
+  syntax:
+    content: bool Authenticate(PeerId peerIdentifier)
+    parameters:
+    - id: peerIdentifier
+      type: Catalyst.Protocol.Peer.PeerId
+      description: The peer identifier.
+    return:
+      type: System.Boolean
+      description: if [true] then whitelist node operator messages otherwise if [false] block messages
+    content.vb: Function Authenticate(peerIdentifier As PeerId) As Boolean
+  overload: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy.Authenticate*
+references:
+- uid: Catalyst.Abstractions.Rpc.Authentication
+  commentId: N:Catalyst.Abstractions.Rpc.Authentication
+  name: Catalyst.Abstractions.Rpc.Authentication
+  nameWithType: Catalyst.Abstractions.Rpc.Authentication
+  fullName: Catalyst.Abstractions.Rpc.Authentication
+- uid: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy.Authenticate*
+  commentId: Overload:Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy.Authenticate
+  name: Authenticate
+  nameWithType: IAuthenticationStrategy.Authenticate
+  fullName: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy.Authenticate
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

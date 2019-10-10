@@ -1,8 +1,0 @@
-@startuml
-class JsonConfiguredModuleTest <<sealed>> {
-    + JsonConfiguredModuleTest()
-    - {static} PerformExtraRegistrations(builder:ContainerBuilder) : void
-    - ComponentsJsonFile_should_configure_modules(interfaceType:Type, resolutionType:Type) : void
-}
-JsonConfiguredModuleTest --> "_container" IContainer
-@enduml

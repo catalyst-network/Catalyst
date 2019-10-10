@@ -1,0 +1,34 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Ledger.Repository
+  commentId: N:Catalyst.Core.Modules.Ledger.Repository
+  id: Catalyst.Core.Modules.Ledger.Repository
+  children:
+  - Catalyst.Core.Modules.Ledger.Repository.AccountRepository
+  - Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Modules.Ledger.Repository
+  nameWithType: Catalyst.Core.Modules.Ledger.Repository
+  fullName: Catalyst.Core.Modules.Ledger.Repository
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+references:
+- uid: Catalyst.Core.Modules.Ledger.Repository.AccountRepository
+  commentId: T:Catalyst.Core.Modules.Ledger.Repository.AccountRepository
+  name: AccountRepository
+  nameWithType: AccountRepository
+  fullName: Catalyst.Core.Modules.Ledger.Repository.AccountRepository
+- uid: Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+  commentId: T:Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+  parent: Catalyst.Core.Modules.Ledger.Repository
+  name: IAccountRepository
+  nameWithType: IAccountRepository
+  fullName: Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+- uid: Catalyst.Core.Modules.Ledger.Repository
+  commentId: N:Catalyst.Core.Modules.Ledger.Repository
+  name: Catalyst.Core.Modules.Ledger.Repository
+  nameWithType: Catalyst.Core.Modules.Ledger.Repository
+  fullName: Catalyst.Core.Modules.Ledger.Repository

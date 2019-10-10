@@ -1,0 +1,60 @@
+### YamlMime:TableOfContent
+- uid: Catalyst.Core.Modules.Rpc.Client
+  name: Catalyst.Core.Modules.Rpc.Client
+  items:
+  - uid: Catalyst.Core.Modules.Rpc.Client.RpcClient
+    name: RpcClient
+  - uid: Catalyst.Core.Modules.Rpc.Client.RpcClientFactory
+    name: RpcClientFactory
+  - uid: Catalyst.Core.Modules.Rpc.Client.RpcClientModule
+    name: RpcClientModule
+  - uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+    name: RpcClientSettings
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  name: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  items:
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+    name: RpcClientMessageDto<T>
+    name.vb: RpcClientMessageDto(Of T)
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers
+  name: Catalyst.Core.Modules.Rpc.Client.IO.Observers
+  items:
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.AddFileToDfsResponseObserver
+    name: AddFileToDfsResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.BroadcastRawTransactionResponseObserver
+    name: BroadcastRawTransactionResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.ChangeDataFolderResponseObserver
+    name: ChangeDataFolderResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.GetDeltaResponseObserver
+    name: GetDeltaResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.GetFileFromDfsResponseObserver
+    name: GetFileFromDfsResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.GetInfoResponseObserver
+    name: GetInfoResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.GetMempoolResponseObserver
+    name: GetMempoolResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.GetPeerInfoResponseObserver
+    name: GetPeerInfoResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.GetVersionResponseObserver
+    name: GetVersionResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.PeerBlackListingResponseObserver
+    name: PeerBlackListingResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.PeerCountResponseObserver
+    name: PeerCountResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.PeerListResponseObserver
+    name: PeerListResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.PeerReputationResponseObserver
+    name: PeerReputationResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.RemovePeerResponseObserver
+    name: RemovePeerResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.SignMessageResponseObserver
+    name: SignMessageResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.TransferFileBytesResponseObserver
+    name: TransferFileBytesResponseObserver
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Observers.VerifyMessageResponseObserver
+    name: VerifyMessageResponseObserver
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  name: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  items:
+  - uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory
+    name: RpcClientChannelFactory

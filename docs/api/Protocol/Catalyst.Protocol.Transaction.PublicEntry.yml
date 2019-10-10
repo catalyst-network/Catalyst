@@ -1,0 +1,1856 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Transaction.PublicEntry
+  commentId: T:Catalyst.Protocol.Transaction.PublicEntry
+  id: PublicEntry
+  parent: Catalyst.Protocol.Transaction
+  children:
+  - Catalyst.Protocol.Transaction.PublicEntry.#ctor
+  - Catalyst.Protocol.Transaction.PublicEntry.#ctor(Catalyst.Protocol.Transaction.PublicEntry)
+  - Catalyst.Protocol.Transaction.PublicEntry.Amount
+  - Catalyst.Protocol.Transaction.PublicEntry.AmountFieldNumber
+  - Catalyst.Protocol.Transaction.PublicEntry.Base
+  - Catalyst.Protocol.Transaction.PublicEntry.BaseFieldNumber
+  - Catalyst.Protocol.Transaction.PublicEntry.CalculateSize
+  - Catalyst.Protocol.Transaction.PublicEntry.Clone
+  - Catalyst.Protocol.Transaction.PublicEntry.Descriptor
+  - Catalyst.Protocol.Transaction.PublicEntry.Equals(Catalyst.Protocol.Transaction.PublicEntry)
+  - Catalyst.Protocol.Transaction.PublicEntry.Equals(System.Object)
+  - Catalyst.Protocol.Transaction.PublicEntry.GetHashCode
+  - Catalyst.Protocol.Transaction.PublicEntry.Google#Protobuf#IMessage#Descriptor
+  - Catalyst.Protocol.Transaction.PublicEntry.IsValid
+  - Catalyst.Protocol.Transaction.PublicEntry.MergeFrom(Catalyst.Protocol.Transaction.PublicEntry)
+  - Catalyst.Protocol.Transaction.PublicEntry.MergeFrom(Google.Protobuf.CodedInputStream)
+  - Catalyst.Protocol.Transaction.PublicEntry.Parser
+  - Catalyst.Protocol.Transaction.PublicEntry.ToString
+  - Catalyst.Protocol.Transaction.PublicEntry.WriteTo(Google.Protobuf.CodedOutputStream)
+  langs:
+  - csharp
+  - vb
+  name: PublicEntry
+  nameWithType: PublicEntry
+  fullName: Catalyst.Protocol.Transaction.PublicEntry
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PublicEntry
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 74
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: 'public sealed class PublicEntry : IMessage<PublicEntry>, IMessage, IEquatable<PublicEntry>, IDeepCloneable<PublicEntry>'
+    content.vb: >-
+      Public NotInheritable Class PublicEntry
+
+          Implements IMessage(Of PublicEntry), IMessage, IEquatable(Of PublicEntry), IDeepCloneable(Of PublicEntry)
+  inheritance:
+  - System.Object
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.Transaction.PublicEntry}
+  - Google.Protobuf.IMessage
+  - System.IEquatable{Catalyst.Protocol.Transaction.PublicEntry}
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Transaction.PublicEntry}
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Protocol.Transaction.PublicEntry.IsValid
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.IsValid
+  id: IsValid
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: IsValid()
+  nameWithType: PublicEntry.IsValid()
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.IsValid()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/Transaction/PublicEntry.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsValid
+    path: ../src/Catalyst.Protocol/Transaction/PublicEntry.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public bool IsValid()
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsValid As Boolean
+  overload: Catalyst.Protocol.Transaction.PublicEntry.IsValid*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Parser
+  commentId: P:Catalyst.Protocol.Transaction.PublicEntry.Parser
+  id: Parser
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: Parser
+  nameWithType: PublicEntry.Parser
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Parser
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Parser
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 77
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public static MessageParser<PublicEntry> Parser { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.MessageParser{Catalyst.Protocol.Transaction.PublicEntry}
+    content.vb: Public Shared ReadOnly Property Parser As MessageParser(Of PublicEntry)
+  overload: Catalyst.Protocol.Transaction.PublicEntry.Parser*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Descriptor
+  commentId: P:Catalyst.Protocol.Transaction.PublicEntry.Descriptor
+  id: Descriptor
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: Descriptor
+  nameWithType: PublicEntry.Descriptor
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 80
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public static MessageDescriptor Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: Public Shared ReadOnly Property Descriptor As MessageDescriptor
+  overload: Catalyst.Protocol.Transaction.PublicEntry.Descriptor*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Google#Protobuf#IMessage#Descriptor
+  commentId: P:Catalyst.Protocol.Transaction.PublicEntry.Google#Protobuf#IMessage#Descriptor
+  id: Google#Protobuf#IMessage#Descriptor
+  isEii: true
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: IMessage.Descriptor
+  nameWithType: PublicEntry.IMessage.Descriptor
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Google.Protobuf.IMessage.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: pb::Google.Protobuf.IMessage.Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 85
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: MessageDescriptor IMessage.Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: ReadOnly WriteOnly Property pb::Google.Protobuf.IMessage.Descriptor As MessageDescriptor Implements IMessage.Descriptor
+  overload: Catalyst.Protocol.Transaction.PublicEntry.Google#Protobuf#IMessage#Descriptor*
+  implements:
+  - Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: PublicEntry.pb::Google.Protobuf.IMessage.Descriptor
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Protocol.Transaction.PublicEntry.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.Transaction.PublicEntry.#ctor
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.#ctor
+  id: '#ctor'
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: PublicEntry()
+  nameWithType: PublicEntry.PublicEntry()
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.PublicEntry()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 90
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public PublicEntry()
+    content.vb: Public Sub New
+  overload: Catalyst.Protocol.Transaction.PublicEntry.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Transaction.PublicEntry.#ctor(Catalyst.Protocol.Transaction.PublicEntry)
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.#ctor(Catalyst.Protocol.Transaction.PublicEntry)
+  id: '#ctor(Catalyst.Protocol.Transaction.PublicEntry)'
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: PublicEntry(PublicEntry)
+  nameWithType: PublicEntry.PublicEntry(PublicEntry)
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.PublicEntry(Catalyst.Protocol.Transaction.PublicEntry)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 97
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public PublicEntry(PublicEntry other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Transaction.PublicEntry
+    content.vb: Public Sub New(other As PublicEntry)
+  overload: Catalyst.Protocol.Transaction.PublicEntry.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Clone
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.Clone
+  id: Clone
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: Clone()
+  nameWithType: PublicEntry.Clone()
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Clone()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Clone
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 104
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public PublicEntry Clone()
+    return:
+      type: Catalyst.Protocol.Transaction.PublicEntry
+    content.vb: Public Function Clone As PublicEntry
+  overload: Catalyst.Protocol.Transaction.PublicEntry.Clone*
+  implements:
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Transaction.PublicEntry}.Clone
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Transaction.PublicEntry.BaseFieldNumber
+  commentId: F:Catalyst.Protocol.Transaction.PublicEntry.BaseFieldNumber
+  id: BaseFieldNumber
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: BaseFieldNumber
+  nameWithType: PublicEntry.BaseFieldNumber
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.BaseFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BaseFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 110
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  summary: Field number for the &quot;base&quot; field.
+  example: []
+  syntax:
+    content: public const int BaseFieldNumber = 1
+    return:
+      type: System.Int32
+    content.vb: Public Const BaseFieldNumber As Integer = 1
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Base
+  commentId: P:Catalyst.Protocol.Transaction.PublicEntry.Base
+  id: Base
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: Base
+  nameWithType: PublicEntry.Base
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Base
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Base
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 112
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public BaseEntry Base { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Transaction.BaseEntry
+    content.vb: Public Property Base As BaseEntry
+  overload: Catalyst.Protocol.Transaction.PublicEntry.Base*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Transaction.PublicEntry.AmountFieldNumber
+  commentId: F:Catalyst.Protocol.Transaction.PublicEntry.AmountFieldNumber
+  id: AmountFieldNumber
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: AmountFieldNumber
+  nameWithType: PublicEntry.AmountFieldNumber
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.AmountFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: AmountFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 121
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  summary: Field number for the &quot;amount&quot; field.
+  example: []
+  syntax:
+    content: public const int AmountFieldNumber = 2
+    return:
+      type: System.Int32
+    content.vb: Public Const AmountFieldNumber As Integer = 2
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Amount
+  commentId: P:Catalyst.Protocol.Transaction.PublicEntry.Amount
+  id: Amount
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: Amount
+  nameWithType: PublicEntry.Amount
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Amount
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Amount
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 126
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  summary: "\nuint256 amount\n"
+  example: []
+  syntax:
+    content: public ByteString Amount { get; set; }
+    parameters: []
+    return:
+      type: Google.Protobuf.ByteString
+    content.vb: Public Property Amount As ByteString
+  overload: Catalyst.Protocol.Transaction.PublicEntry.Amount*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Equals(System.Object)
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: Equals(Object)
+  nameWithType: PublicEntry.Equals(Object)
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Equals(System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 134
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public override bool Equals(object other)
+    parameters:
+    - id: other
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function Equals(other As Object) As Boolean
+  overridden: System.Object.Equals(System.Object)
+  overload: Catalyst.Protocol.Transaction.PublicEntry.Equals*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Equals(Catalyst.Protocol.Transaction.PublicEntry)
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.Equals(Catalyst.Protocol.Transaction.PublicEntry)
+  id: Equals(Catalyst.Protocol.Transaction.PublicEntry)
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: Equals(PublicEntry)
+  nameWithType: PublicEntry.Equals(PublicEntry)
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Equals(Catalyst.Protocol.Transaction.PublicEntry)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 139
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public bool Equals(PublicEntry other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Transaction.PublicEntry
+    return:
+      type: System.Boolean
+    content.vb: Public Function Equals(other As PublicEntry) As Boolean
+  overload: Catalyst.Protocol.Transaction.PublicEntry.Equals*
+  implements:
+  - System.IEquatable{Catalyst.Protocol.Transaction.PublicEntry}.Equals(Catalyst.Protocol.Transaction.PublicEntry)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Transaction.PublicEntry.GetHashCode
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.GetHashCode
+  id: GetHashCode
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: PublicEntry.GetHashCode()
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetHashCode
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 152
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+    content.vb: Public Overrides Function GetHashCode As Integer
+  overridden: System.Object.GetHashCode
+  overload: Catalyst.Protocol.Transaction.PublicEntry.GetHashCode*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Transaction.PublicEntry.ToString
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.ToString
+  id: ToString
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: PublicEntry.ToString()
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ToString
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 163
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Catalyst.Protocol.Transaction.PublicEntry.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Transaction.PublicEntry.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.WriteTo(Google.Protobuf.CodedOutputStream)
+  id: WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: WriteTo(CodedOutputStream)
+  nameWithType: PublicEntry.WriteTo(CodedOutputStream)
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.WriteTo(Google.Protobuf.CodedOutputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WriteTo
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 168
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public void WriteTo(CodedOutputStream output)
+    parameters:
+    - id: output
+      type: Google.Protobuf.CodedOutputStream
+    content.vb: Public Sub WriteTo(output As CodedOutputStream)
+  overload: Catalyst.Protocol.Transaction.PublicEntry.WriteTo*
+  implements:
+  - Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Transaction.PublicEntry.CalculateSize
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.CalculateSize
+  id: CalculateSize
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: CalculateSize()
+  nameWithType: PublicEntry.CalculateSize()
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.CalculateSize()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CalculateSize
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 183
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public int CalculateSize()
+    return:
+      type: System.Int32
+    content.vb: Public Function CalculateSize As Integer
+  overload: Catalyst.Protocol.Transaction.PublicEntry.CalculateSize*
+  implements:
+  - Google.Protobuf.IMessage.CalculateSize
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Transaction.PublicEntry.MergeFrom(Catalyst.Protocol.Transaction.PublicEntry)
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.MergeFrom(Catalyst.Protocol.Transaction.PublicEntry)
+  id: MergeFrom(Catalyst.Protocol.Transaction.PublicEntry)
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(PublicEntry)
+  nameWithType: PublicEntry.MergeFrom(PublicEntry)
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.MergeFrom(Catalyst.Protocol.Transaction.PublicEntry)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 198
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public void MergeFrom(PublicEntry other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Transaction.PublicEntry
+    content.vb: Public Sub MergeFrom(other As PublicEntry)
+  overload: Catalyst.Protocol.Transaction.PublicEntry.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.Transaction.PublicEntry}.MergeFrom(Catalyst.Protocol.Transaction.PublicEntry)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Transaction.PublicEntry.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Catalyst.Protocol.Transaction.PublicEntry.MergeFrom(Google.Protobuf.CodedInputStream)
+  id: MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Catalyst.Protocol.Transaction.PublicEntry
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(CodedInputStream)
+  nameWithType: PublicEntry.MergeFrom(CodedInputStream)
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.MergeFrom(Google.Protobuf.CodedInputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 215
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public void MergeFrom(CodedInputStream input)
+    parameters:
+    - id: input
+      type: Google.Protobuf.CodedInputStream
+    content.vb: Public Sub MergeFrom(input As CodedInputStream)
+  overload: Catalyst.Protocol.Transaction.PublicEntry.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Protocol.Transaction
+  commentId: N:Catalyst.Protocol.Transaction
+  name: Catalyst.Protocol.Transaction
+  nameWithType: Catalyst.Protocol.Transaction
+  fullName: Catalyst.Protocol.Transaction
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.Transaction.PublicEntry}
+  commentId: T:Google.Protobuf.IMessage{Catalyst.Protocol.Transaction.PublicEntry}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IMessage`1
+  name: IMessage<PublicEntry>
+  nameWithType: IMessage<PublicEntry>
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Transaction.PublicEntry>
+  nameWithType.vb: IMessage(Of PublicEntry)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.Transaction.PublicEntry)
+  name.vb: IMessage(Of PublicEntry)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage
+  commentId: T:Google.Protobuf.IMessage
+  parent: Google.Protobuf
+  isExternal: true
+  name: IMessage
+  nameWithType: IMessage
+  fullName: Google.Protobuf.IMessage
+- uid: System.IEquatable{Catalyst.Protocol.Transaction.PublicEntry}
+  commentId: T:System.IEquatable{Catalyst.Protocol.Transaction.PublicEntry}
+  parent: System
+  definition: System.IEquatable`1
+  name: IEquatable<PublicEntry>
+  nameWithType: IEquatable<PublicEntry>
+  fullName: System.IEquatable<Catalyst.Protocol.Transaction.PublicEntry>
+  nameWithType.vb: IEquatable(Of PublicEntry)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.Transaction.PublicEntry)
+  name.vb: IEquatable(Of PublicEntry)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Transaction.PublicEntry}
+  commentId: T:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Transaction.PublicEntry}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IDeepCloneable`1
+  name: IDeepCloneable<PublicEntry>
+  nameWithType: IDeepCloneable<PublicEntry>
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Transaction.PublicEntry>
+  nameWithType.vb: IDeepCloneable(Of PublicEntry)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Transaction.PublicEntry)
+  name.vb: IDeepCloneable(Of PublicEntry)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Google.Protobuf.IMessage`1
+  commentId: T:Google.Protobuf.IMessage`1
+  isExternal: true
+  name: IMessage<T>
+  nameWithType: IMessage<T>
+  fullName: Google.Protobuf.IMessage<T>
+  nameWithType.vb: IMessage(Of T)
+  fullName.vb: Google.Protobuf.IMessage(Of T)
+  name.vb: IMessage(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf
+  commentId: N:Google.Protobuf
+  isExternal: true
+  name: Google.Protobuf
+  nameWithType: Google.Protobuf
+  fullName: Google.Protobuf
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1
+  commentId: T:Google.Protobuf.IDeepCloneable`1
+  isExternal: true
+  name: IDeepCloneable<T>
+  nameWithType: IDeepCloneable<T>
+  fullName: Google.Protobuf.IDeepCloneable<T>
+  nameWithType.vb: IDeepCloneable(Of T)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T)
+  name.vb: IDeepCloneable(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Transaction.PublicEntry.IsValid*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.IsValid
+  name: IsValid
+  nameWithType: PublicEntry.IsValid
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.IsValid
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Parser*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.Parser
+  name: Parser
+  nameWithType: PublicEntry.Parser
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Parser
+- uid: Google.Protobuf.MessageParser{Catalyst.Protocol.Transaction.PublicEntry}
+  commentId: T:Google.Protobuf.MessageParser{Catalyst.Protocol.Transaction.PublicEntry}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.MessageParser`1
+  name: MessageParser<PublicEntry>
+  nameWithType: MessageParser<PublicEntry>
+  fullName: Google.Protobuf.MessageParser<Catalyst.Protocol.Transaction.PublicEntry>
+  nameWithType.vb: MessageParser(Of PublicEntry)
+  fullName.vb: Google.Protobuf.MessageParser(Of Catalyst.Protocol.Transaction.PublicEntry)
+  name.vb: MessageParser(Of PublicEntry)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.MessageParser`1
+  commentId: T:Google.Protobuf.MessageParser`1
+  isExternal: true
+  name: MessageParser<T>
+  nameWithType: MessageParser<T>
+  fullName: Google.Protobuf.MessageParser<T>
+  nameWithType.vb: MessageParser(Of T)
+  fullName.vb: Google.Protobuf.MessageParser(Of T)
+  name.vb: MessageParser(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Descriptor*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.Descriptor
+  name: Descriptor
+  nameWithType: PublicEntry.Descriptor
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Descriptor
+- uid: Google.Protobuf.Reflection.MessageDescriptor
+  commentId: T:Google.Protobuf.Reflection.MessageDescriptor
+  parent: Google.Protobuf.Reflection
+  isExternal: true
+  name: MessageDescriptor
+  nameWithType: MessageDescriptor
+  fullName: Google.Protobuf.Reflection.MessageDescriptor
+- uid: Google.Protobuf.Reflection
+  commentId: N:Google.Protobuf.Reflection
+  isExternal: true
+  name: Google.Protobuf.Reflection
+  nameWithType: Google.Protobuf.Reflection
+  fullName: Google.Protobuf.Reflection
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Google#Protobuf#IMessage#Descriptor*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.Google#Protobuf#IMessage#Descriptor
+  name: IMessage.Descriptor
+  nameWithType: PublicEntry.IMessage.Descriptor
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: PublicEntry.pb::Google.Protobuf.IMessage.Descriptor
+  fullName.vb: Catalyst.Protocol.Transaction.PublicEntry.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Google.Protobuf.IMessage.Descriptor
+  commentId: P:Google.Protobuf.IMessage.Descriptor
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: Descriptor
+  nameWithType: IMessage.Descriptor
+  fullName: Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.Transaction.PublicEntry.#ctor*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.#ctor
+  name: PublicEntry
+  nameWithType: PublicEntry.PublicEntry
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.PublicEntry
+- uid: Catalyst.Protocol.Transaction.PublicEntry
+  commentId: T:Catalyst.Protocol.Transaction.PublicEntry
+  parent: Catalyst.Protocol.Transaction
+  name: PublicEntry
+  nameWithType: PublicEntry
+  fullName: Catalyst.Protocol.Transaction.PublicEntry
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Clone*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.Clone
+  name: Clone
+  nameWithType: PublicEntry.Clone
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Clone
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Transaction.PublicEntry}.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Transaction.PublicEntry}.Clone
+  parent: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Transaction.PublicEntry}
+  definition: Google.Protobuf.IDeepCloneable`1.Clone
+  name: Clone()
+  nameWithType: IDeepCloneable<PublicEntry>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Transaction.PublicEntry>.Clone()
+  nameWithType.vb: IDeepCloneable(Of PublicEntry).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Transaction.PublicEntry).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<PublicEntry>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Transaction.PublicEntry>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of PublicEntry).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Transaction.PublicEntry).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable`1.Clone
+  isExternal: true
+  name: Clone()
+  nameWithType: IDeepCloneable<T>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<T>.Clone()
+  nameWithType.vb: IDeepCloneable(Of T).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<T>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<T>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of T).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of T).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Base*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.Base
+  name: Base
+  nameWithType: PublicEntry.Base
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Base
+- uid: Catalyst.Protocol.Transaction.BaseEntry
+  commentId: T:Catalyst.Protocol.Transaction.BaseEntry
+  parent: Catalyst.Protocol.Transaction
+  name: BaseEntry
+  nameWithType: BaseEntry
+  fullName: Catalyst.Protocol.Transaction.BaseEntry
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Amount*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.Amount
+  name: Amount
+  nameWithType: PublicEntry.Amount
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Amount
+- uid: Google.Protobuf.ByteString
+  commentId: T:Google.Protobuf.ByteString
+  parent: Google.Protobuf
+  isExternal: true
+  name: ByteString
+  nameWithType: ByteString
+  fullName: Google.Protobuf.ByteString
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Transaction.PublicEntry.Equals*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.Equals
+  name: Equals
+  nameWithType: PublicEntry.Equals
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.Equals
+- uid: System.IEquatable{Catalyst.Protocol.Transaction.PublicEntry}.Equals(Catalyst.Protocol.Transaction.PublicEntry)
+  commentId: M:System.IEquatable{Catalyst.Protocol.Transaction.PublicEntry}.Equals(Catalyst.Protocol.Transaction.PublicEntry)
+  parent: System.IEquatable{Catalyst.Protocol.Transaction.PublicEntry}
+  definition: System.IEquatable`1.Equals(`0)
+  name: Equals(PublicEntry)
+  nameWithType: IEquatable<PublicEntry>.Equals(PublicEntry)
+  fullName: System.IEquatable<Catalyst.Protocol.Transaction.PublicEntry>.Equals(Catalyst.Protocol.Transaction.PublicEntry)
+  nameWithType.vb: IEquatable(Of PublicEntry).Equals(PublicEntry)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.Transaction.PublicEntry).Equals(Catalyst.Protocol.Transaction.PublicEntry)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<PublicEntry>.Equals
+    fullName: System.IEquatable<Catalyst.Protocol.Transaction.PublicEntry>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of PublicEntry).Equals
+    fullName: System.IEquatable(Of Catalyst.Protocol.Transaction.PublicEntry).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<T>.Equals
+    fullName: System.IEquatable<T>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of T).Equals
+    fullName: System.IEquatable(Of T).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Transaction.PublicEntry.GetHashCode*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.GetHashCode
+  name: GetHashCode
+  nameWithType: PublicEntry.GetHashCode
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.GetHashCode
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Transaction.PublicEntry.ToString*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.ToString
+  name: ToString
+  nameWithType: PublicEntry.ToString
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Protocol.Transaction.PublicEntry.WriteTo*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.WriteTo
+  name: WriteTo
+  nameWithType: PublicEntry.WriteTo
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.WriteTo
+- uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: WriteTo(CodedOutputStream)
+  nameWithType: IMessage.WriteTo(CodedOutputStream)
+  fullName: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedOutputStream
+  commentId: T:Google.Protobuf.CodedOutputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedOutputStream
+  nameWithType: CodedOutputStream
+  fullName: Google.Protobuf.CodedOutputStream
+- uid: Catalyst.Protocol.Transaction.PublicEntry.CalculateSize*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.CalculateSize
+  name: CalculateSize
+  nameWithType: PublicEntry.CalculateSize
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.CalculateSize
+- uid: Google.Protobuf.IMessage.CalculateSize
+  commentId: M:Google.Protobuf.IMessage.CalculateSize
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: CalculateSize()
+  nameWithType: IMessage.CalculateSize()
+  fullName: Google.Protobuf.IMessage.CalculateSize()
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Transaction.PublicEntry.MergeFrom*
+  commentId: Overload:Catalyst.Protocol.Transaction.PublicEntry.MergeFrom
+  name: MergeFrom
+  nameWithType: PublicEntry.MergeFrom
+  fullName: Catalyst.Protocol.Transaction.PublicEntry.MergeFrom
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.Transaction.PublicEntry}.MergeFrom(Catalyst.Protocol.Transaction.PublicEntry)
+  commentId: M:Google.Protobuf.IMessage{Catalyst.Protocol.Transaction.PublicEntry}.MergeFrom(Catalyst.Protocol.Transaction.PublicEntry)
+  parent: Google.Protobuf.IMessage{Catalyst.Protocol.Transaction.PublicEntry}
+  definition: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  name: MergeFrom(PublicEntry)
+  nameWithType: IMessage<PublicEntry>.MergeFrom(PublicEntry)
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Transaction.PublicEntry>.MergeFrom(Catalyst.Protocol.Transaction.PublicEntry)
+  nameWithType.vb: IMessage(Of PublicEntry).MergeFrom(PublicEntry)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.Transaction.PublicEntry).MergeFrom(Catalyst.Protocol.Transaction.PublicEntry)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<PublicEntry>.MergeFrom
+    fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Transaction.PublicEntry>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of PublicEntry).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of Catalyst.Protocol.Transaction.PublicEntry).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Transaction.PublicEntry
+    name: PublicEntry
+    nameWithType: PublicEntry
+    fullName: Catalyst.Protocol.Transaction.PublicEntry
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  commentId: M:Google.Protobuf.IMessage`1.MergeFrom(`0)
+  isExternal: true
+  name: MergeFrom(T)
+  nameWithType: IMessage<T>.MergeFrom(T)
+  fullName: Google.Protobuf.IMessage<T>.MergeFrom(T)
+  nameWithType.vb: IMessage(Of T).MergeFrom(T)
+  fullName.vb: Google.Protobuf.IMessage(Of T).MergeFrom(T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<T>.MergeFrom
+    fullName: Google.Protobuf.IMessage<T>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of T).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of T).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: MergeFrom(CodedInputStream)
+  nameWithType: IMessage.MergeFrom(CodedInputStream)
+  fullName: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedInputStream
+  commentId: T:Google.Protobuf.CodedInputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedInputStream
+  nameWithType: CodedInputStream
+  fullName: Google.Protobuf.CodedInputStream

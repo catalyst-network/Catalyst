@@ -1,0 +1,300 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+  id: IHastingsCareTaker
+  parent: Catalyst.Abstractions.P2P.Discovery
+  children:
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Add(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Get
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Peek
+  langs:
+  - csharp
+  - vb
+  name: IHastingsCareTaker
+  nameWithType: IHastingsCareTaker
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsCareTaker.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IHastingsCareTaker
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsCareTaker.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  summary: "\nCaretaker of memento pattern is responsible for the memento&apos;s safekeeping,\nnever operates on or examines the contents of a memento.\nhttps://www.dofactory.com/net/memento-design-pattern\n"
+  example: []
+  syntax:
+    content: public interface IHastingsCareTaker
+    content.vb: Public Interface IHastingsCareTaker
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList
+  id: HastingMementoList
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+  langs:
+  - csharp
+  - vb
+  name: HastingMementoList
+  nameWithType: IHastingsCareTaker.HastingMementoList
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsCareTaker.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: HastingMementoList
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsCareTaker.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  syntax:
+    content: ConcurrentStack<IHastingsMemento> HastingMementoList { get; }
+    parameters: []
+    return:
+      type: System.Collections.Concurrent.ConcurrentStack{Catalyst.Abstractions.P2P.Discovery.IHastingsMemento}
+    content.vb: ReadOnly Property HastingMementoList As ConcurrentStack(Of IHastingsMemento)
+  overload: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Add(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Add(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  id: Add(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+  langs:
+  - csharp
+  - vb
+  name: Add(IHastingsMemento)
+  nameWithType: IHastingsCareTaker.Add(IHastingsMemento)
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Add(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsCareTaker.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Add
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsCareTaker.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  summary: "\nAdds a new state from the walk on top of the <xref href=\"Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList\" data-throw-if-not-resolved=\"false\"></xref>.\n"
+  example: []
+  syntax:
+    content: void Add(IHastingsMemento hastingsMemento)
+    parameters:
+    - id: hastingsMemento
+      type: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+      description: ''
+    content.vb: Sub Add(hastingsMemento As IHastingsMemento)
+  overload: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Add*
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Get
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Get
+  id: Get
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+  langs:
+  - csharp
+  - vb
+  name: Get()
+  nameWithType: IHastingsCareTaker.Get()
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Get()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsCareTaker.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Get
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsCareTaker.cs
+    startLine: 48
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  summary: "\nGets the last state of the walk from the queue and pops it off the <xref href=\"Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList\" data-throw-if-not-resolved=\"false\"></xref>.\n"
+  example: []
+  syntax:
+    content: IHastingsMemento Get()
+    return:
+      type: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+      description: ''
+    content.vb: Function Get As IHastingsMemento
+  overload: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Get*
+  exceptions:
+  - type: System.InvalidOperationException
+    commentId: T:System.InvalidOperationException
+    description: When the <xref href="Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList" data-throw-if-not-resolved="false"></xref> is empty.
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Peek
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Peek
+  id: Peek
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+  langs:
+  - csharp
+  - vb
+  name: Peek()
+  nameWithType: IHastingsCareTaker.Peek()
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Peek()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsCareTaker.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Peek
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsCareTaker.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  summary: "\nReturns the item at the top of the top of the <xref href=\"Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList\" data-throw-if-not-resolved=\"false\"></xref> without popping it.\n"
+  example: []
+  syntax:
+    content: IHastingsMemento Peek()
+    return:
+      type: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+      description: The memento currently at the top of the queue if any.
+    content.vb: Function Peek As IHastingsMemento
+  overload: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Peek*
+  exceptions:
+  - type: System.InvalidOperationException
+    commentId: T:System.InvalidOperationException
+    description: When the <xref href="Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList" data-throw-if-not-resolved="false"></xref> is empty.
+references:
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList
+  name: HastingMementoList
+  nameWithType: IHastingsCareTaker.HastingMementoList
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList
+- uid: System.Collections.Concurrent.ConcurrentStack{Catalyst.Abstractions.P2P.Discovery.IHastingsMemento}
+  commentId: T:System.Collections.Concurrent.ConcurrentStack{Catalyst.Abstractions.P2P.Discovery.IHastingsMemento}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.ConcurrentStack`1
+  name: ConcurrentStack<IHastingsMemento>
+  nameWithType: ConcurrentStack<IHastingsMemento>
+  fullName: System.Collections.Concurrent.ConcurrentStack<Catalyst.Abstractions.P2P.Discovery.IHastingsMemento>
+  nameWithType.vb: ConcurrentStack(Of IHastingsMemento)
+  fullName.vb: System.Collections.Concurrent.ConcurrentStack(Of Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  name.vb: ConcurrentStack(Of IHastingsMemento)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentStack`1
+    name: ConcurrentStack
+    nameWithType: ConcurrentStack
+    fullName: System.Collections.Concurrent.ConcurrentStack
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+    name: IHastingsMemento
+    nameWithType: IHastingsMemento
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentStack`1
+    name: ConcurrentStack
+    nameWithType: ConcurrentStack
+    fullName: System.Collections.Concurrent.ConcurrentStack
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+    name: IHastingsMemento
+    nameWithType: IHastingsMemento
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentStack`1
+  commentId: T:System.Collections.Concurrent.ConcurrentStack`1
+  isExternal: true
+  name: ConcurrentStack<T>
+  nameWithType: ConcurrentStack<T>
+  fullName: System.Collections.Concurrent.ConcurrentStack<T>
+  nameWithType.vb: ConcurrentStack(Of T)
+  fullName.vb: System.Collections.Concurrent.ConcurrentStack(Of T)
+  name.vb: ConcurrentStack(Of T)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentStack`1
+    name: ConcurrentStack
+    nameWithType: ConcurrentStack
+    fullName: System.Collections.Concurrent.ConcurrentStack
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentStack`1
+    name: ConcurrentStack
+    nameWithType: ConcurrentStack
+    fullName: System.Collections.Concurrent.ConcurrentStack
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent
+  commentId: N:System.Collections.Concurrent
+  isExternal: true
+  name: System.Collections.Concurrent
+  nameWithType: System.Collections.Concurrent
+  fullName: System.Collections.Concurrent
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.HastingMementoList
+  isExternal: true
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Add*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Add
+  name: Add
+  nameWithType: IHastingsCareTaker.Add
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Add
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: IHastingsMemento
+  nameWithType: IHastingsMemento
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+- uid: System.InvalidOperationException
+  commentId: T:System.InvalidOperationException
+  isExternal: true
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Get*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Get
+  name: Get
+  nameWithType: IHastingsCareTaker.Get
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Get
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Peek*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Peek
+  name: Peek
+  nameWithType: IHastingsCareTaker.Peek
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.Peek

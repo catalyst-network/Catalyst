@@ -1,0 +1,35 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Ledger.Models
+  commentId: N:Catalyst.Core.Modules.Ledger.Models
+  id: Catalyst.Core.Modules.Ledger.Models
+  children:
+  - Catalyst.Core.Modules.Ledger.Models.Account
+  - Catalyst.Core.Modules.Ledger.Models.IAccount
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Modules.Ledger.Models
+  nameWithType: Catalyst.Core.Modules.Ledger.Models
+  fullName: Catalyst.Core.Modules.Ledger.Models
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+references:
+- uid: Catalyst.Core.Modules.Ledger.Models.Account
+  commentId: T:Catalyst.Core.Modules.Ledger.Models.Account
+  parent: Catalyst.Core.Modules.Ledger.Models
+  name: Account
+  nameWithType: Account
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account
+- uid: Catalyst.Core.Modules.Ledger.Models.IAccount
+  commentId: T:Catalyst.Core.Modules.Ledger.Models.IAccount
+  parent: Catalyst.Core.Modules.Ledger.Models
+  name: IAccount
+  nameWithType: IAccount
+  fullName: Catalyst.Core.Modules.Ledger.Models.IAccount
+- uid: Catalyst.Core.Modules.Ledger.Models
+  commentId: N:Catalyst.Core.Modules.Ledger.Models
+  name: Catalyst.Core.Modules.Ledger.Models
+  nameWithType: Catalyst.Core.Modules.Ledger.Models
+  fullName: Catalyst.Core.Modules.Ledger.Models

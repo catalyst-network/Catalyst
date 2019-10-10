@@ -1,0 +1,862 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  commentId: T:Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  id: RangeProofPrecompile
+  parent: Catalyst.Core.Modules.Kvm
+  children:
+  - Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Address
+  - Catalyst.Core.Modules.Kvm.RangeProofPrecompile.AddressInKvm
+  - Catalyst.Core.Modules.Kvm.RangeProofPrecompile.BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+  - Catalyst.Core.Modules.Kvm.RangeProofPrecompile.DataGasCost(System.Byte[],Nethermind.Core.Specs.IReleaseSpec)
+  - Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Run(System.Byte[])
+  langs:
+  - csharp
+  - vb
+  name: RangeProofPrecompile
+  nameWithType: RangeProofPrecompile
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: RangeProofPrecompile
+    path: ../src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: 'public sealed class RangeProofPrecompile : IPrecompiledContract'
+    content.vb: >-
+      Public NotInheritable Class RangeProofPrecompile
+
+          Implements IPrecompiledContract
+  inheritance:
+  - System.Object
+  implements:
+  - Nethermind.Evm.Precompiles.IPrecompiledContract
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Address
+  commentId: P:Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Address
+  id: Address
+  parent: Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  langs:
+  - csharp
+  - vb
+  name: Address
+  nameWithType: RangeProofPrecompile.Address
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Address
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Address
+    path: ../src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  summary: "\nhttps: //github.com/ethereum/EIPs/blob/master/EIPS/eip-1352.md\n65535 (0xffff) will be registered for Ethereum, so we can start after that\n"
+  example: []
+  syntax:
+    content: public Address Address { get; }
+    parameters: []
+    return:
+      type: Nethermind.Core.Address
+    content.vb: Public ReadOnly Property Address As Address
+  overload: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Address*
+  implements:
+  - Nethermind.Evm.Precompiles.IPrecompiledContract.Address
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.AddressInKvm
+  commentId: P:Catalyst.Core.Modules.Kvm.RangeProofPrecompile.AddressInKvm
+  id: AddressInKvm
+  parent: Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  langs:
+  - csharp
+  - vb
+  name: AddressInKvm
+  nameWithType: RangeProofPrecompile.AddressInKvm
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.AddressInKvm
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: AddressInKvm
+    path: ../src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  syntax:
+    content: public static Address AddressInKvm { get; }
+    parameters: []
+    return:
+      type: Nethermind.Core.Address
+    content.vb: Public Shared ReadOnly Property AddressInKvm As Address
+  overload: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.AddressInKvm*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+  commentId: M:Catalyst.Core.Modules.Kvm.RangeProofPrecompile.BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+  id: BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+  parent: Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  langs:
+  - csharp
+  - vb
+  name: BaseGasCost(IReleaseSpec)
+  nameWithType: RangeProofPrecompile.BaseGasCost(IReleaseSpec)
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BaseGasCost
+    path: ../src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+    startLine: 44
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public long BaseGasCost(IReleaseSpec releaseSpec)
+    parameters:
+    - id: releaseSpec
+      type: Nethermind.Core.Specs.IReleaseSpec
+    return:
+      type: System.Int64
+    content.vb: Public Function BaseGasCost(releaseSpec As IReleaseSpec) As Long
+  overload: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.BaseGasCost*
+  implements:
+  - Nethermind.Evm.Precompiles.IPrecompiledContract.BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.DataGasCost(System.Byte[],Nethermind.Core.Specs.IReleaseSpec)
+  commentId: M:Catalyst.Core.Modules.Kvm.RangeProofPrecompile.DataGasCost(System.Byte[],Nethermind.Core.Specs.IReleaseSpec)
+  id: DataGasCost(System.Byte[],Nethermind.Core.Specs.IReleaseSpec)
+  parent: Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  langs:
+  - csharp
+  - vb
+  name: DataGasCost(Byte[], IReleaseSpec)
+  nameWithType: RangeProofPrecompile.DataGasCost(Byte[], IReleaseSpec)
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.DataGasCost(System.Byte[], Nethermind.Core.Specs.IReleaseSpec)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: DataGasCost
+    path: ../src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public long DataGasCost(byte[] inputData, IReleaseSpec releaseSpec)
+    parameters:
+    - id: inputData
+      type: System.Byte[]
+    - id: releaseSpec
+      type: Nethermind.Core.Specs.IReleaseSpec
+    return:
+      type: System.Int64
+    content.vb: Public Function DataGasCost(inputData As Byte(), releaseSpec As IReleaseSpec) As Long
+  overload: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.DataGasCost*
+  implements:
+  - Nethermind.Evm.Precompiles.IPrecompiledContract.DataGasCost(System.Byte[],Nethermind.Core.Specs.IReleaseSpec)
+  nameWithType.vb: RangeProofPrecompile.DataGasCost(Byte(), IReleaseSpec)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.DataGasCost(System.Byte(), Nethermind.Core.Specs.IReleaseSpec)
+  name.vb: DataGasCost(Byte(), IReleaseSpec)
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Run(System.Byte[])
+  commentId: M:Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Run(System.Byte[])
+  id: Run(System.Byte[])
+  parent: Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  langs:
+  - csharp
+  - vb
+  name: Run(Byte[])
+  nameWithType: RangeProofPrecompile.Run(Byte[])
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Run(System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Run
+    path: ../src/Catalyst.Core.Modules.Kvm/RangeProofPrecompile.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  example: []
+  syntax:
+    content: public (byte[], bool)Run(byte[] inputData)
+    parameters:
+    - id: inputData
+      type: System.Byte[]
+    return:
+      type: System.ValueTuple{System.Byte[],System.Boolean}
+    content.vb: Public Function Run(inputData As Byte()) As(Byte(), Boolean)
+  overload: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Run*
+  implements:
+  - Nethermind.Evm.Precompiles.IPrecompiledContract.Run(System.Byte[])
+  nameWithType.vb: RangeProofPrecompile.Run(Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Run(System.Byte())
+  name.vb: Run(Byte())
+references:
+- uid: Catalyst.Core.Modules.Kvm
+  commentId: N:Catalyst.Core.Modules.Kvm
+  name: Catalyst.Core.Modules.Kvm
+  nameWithType: Catalyst.Core.Modules.Kvm
+  fullName: Catalyst.Core.Modules.Kvm
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Nethermind.Evm.Precompiles.IPrecompiledContract
+  commentId: T:Nethermind.Evm.Precompiles.IPrecompiledContract
+  parent: Nethermind.Evm.Precompiles
+  name: IPrecompiledContract
+  nameWithType: IPrecompiledContract
+  fullName: Nethermind.Evm.Precompiles.IPrecompiledContract
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Nethermind.Evm.Precompiles
+  commentId: N:Nethermind.Evm.Precompiles
+  name: Nethermind.Evm.Precompiles
+  nameWithType: Nethermind.Evm.Precompiles
+  fullName: Nethermind.Evm.Precompiles
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Address*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Address
+  name: Address
+  nameWithType: RangeProofPrecompile.Address
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Address
+- uid: Nethermind.Evm.Precompiles.IPrecompiledContract.Address
+  commentId: P:Nethermind.Evm.Precompiles.IPrecompiledContract.Address
+  parent: Nethermind.Evm.Precompiles.IPrecompiledContract
+  name: Address
+  nameWithType: IPrecompiledContract.Address
+  fullName: Nethermind.Evm.Precompiles.IPrecompiledContract.Address
+- uid: Nethermind.Core.Address
+  commentId: T:Nethermind.Core.Address
+  parent: Nethermind.Core
+  name: Address
+  nameWithType: Address
+  fullName: Nethermind.Core.Address
+- uid: Nethermind.Core
+  commentId: N:Nethermind.Core
+  name: Nethermind.Core
+  nameWithType: Nethermind.Core
+  fullName: Nethermind.Core
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.AddressInKvm*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.RangeProofPrecompile.AddressInKvm
+  name: AddressInKvm
+  nameWithType: RangeProofPrecompile.AddressInKvm
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.AddressInKvm
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.BaseGasCost*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.RangeProofPrecompile.BaseGasCost
+  name: BaseGasCost
+  nameWithType: RangeProofPrecompile.BaseGasCost
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.BaseGasCost
+- uid: Nethermind.Evm.Precompiles.IPrecompiledContract.BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+  commentId: M:Nethermind.Evm.Precompiles.IPrecompiledContract.BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+  parent: Nethermind.Evm.Precompiles.IPrecompiledContract
+  name: BaseGasCost(IReleaseSpec)
+  nameWithType: IPrecompiledContract.BaseGasCost(IReleaseSpec)
+  fullName: Nethermind.Evm.Precompiles.IPrecompiledContract.BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+  spec.csharp:
+  - uid: Nethermind.Evm.Precompiles.IPrecompiledContract.BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+    name: BaseGasCost
+    nameWithType: IPrecompiledContract.BaseGasCost
+    fullName: Nethermind.Evm.Precompiles.IPrecompiledContract.BaseGasCost
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Nethermind.Core.Specs.IReleaseSpec
+    name: IReleaseSpec
+    nameWithType: IReleaseSpec
+    fullName: Nethermind.Core.Specs.IReleaseSpec
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Nethermind.Evm.Precompiles.IPrecompiledContract.BaseGasCost(Nethermind.Core.Specs.IReleaseSpec)
+    name: BaseGasCost
+    nameWithType: IPrecompiledContract.BaseGasCost
+    fullName: Nethermind.Evm.Precompiles.IPrecompiledContract.BaseGasCost
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Nethermind.Core.Specs.IReleaseSpec
+    name: IReleaseSpec
+    nameWithType: IReleaseSpec
+    fullName: Nethermind.Core.Specs.IReleaseSpec
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Nethermind.Core.Specs.IReleaseSpec
+  commentId: T:Nethermind.Core.Specs.IReleaseSpec
+  parent: Nethermind.Core.Specs
+  name: IReleaseSpec
+  nameWithType: IReleaseSpec
+  fullName: Nethermind.Core.Specs.IReleaseSpec
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  name: Int64
+  nameWithType: Int64
+  fullName: System.Int64
+- uid: Nethermind.Core.Specs
+  commentId: N:Nethermind.Core.Specs
+  name: Nethermind.Core.Specs
+  nameWithType: Nethermind.Core.Specs
+  fullName: Nethermind.Core.Specs
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.DataGasCost*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.RangeProofPrecompile.DataGasCost
+  name: DataGasCost
+  nameWithType: RangeProofPrecompile.DataGasCost
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.DataGasCost
+- uid: Nethermind.Evm.Precompiles.IPrecompiledContract.DataGasCost(System.Byte[],Nethermind.Core.Specs.IReleaseSpec)
+  commentId: M:Nethermind.Evm.Precompiles.IPrecompiledContract.DataGasCost(System.Byte[],Nethermind.Core.Specs.IReleaseSpec)
+  parent: Nethermind.Evm.Precompiles.IPrecompiledContract
+  isExternal: true
+  name: DataGasCost(Byte[], IReleaseSpec)
+  nameWithType: IPrecompiledContract.DataGasCost(Byte[], IReleaseSpec)
+  fullName: Nethermind.Evm.Precompiles.IPrecompiledContract.DataGasCost(System.Byte[], Nethermind.Core.Specs.IReleaseSpec)
+  nameWithType.vb: IPrecompiledContract.DataGasCost(Byte(), IReleaseSpec)
+  fullName.vb: Nethermind.Evm.Precompiles.IPrecompiledContract.DataGasCost(System.Byte(), Nethermind.Core.Specs.IReleaseSpec)
+  name.vb: DataGasCost(Byte(), IReleaseSpec)
+  spec.csharp:
+  - uid: Nethermind.Evm.Precompiles.IPrecompiledContract.DataGasCost(System.Byte[],Nethermind.Core.Specs.IReleaseSpec)
+    name: DataGasCost
+    nameWithType: IPrecompiledContract.DataGasCost
+    fullName: Nethermind.Evm.Precompiles.IPrecompiledContract.DataGasCost
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Nethermind.Core.Specs.IReleaseSpec
+    name: IReleaseSpec
+    nameWithType: IReleaseSpec
+    fullName: Nethermind.Core.Specs.IReleaseSpec
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Nethermind.Evm.Precompiles.IPrecompiledContract.DataGasCost(System.Byte[],Nethermind.Core.Specs.IReleaseSpec)
+    name: DataGasCost
+    nameWithType: IPrecompiledContract.DataGasCost
+    fullName: Nethermind.Evm.Precompiles.IPrecompiledContract.DataGasCost
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Nethermind.Core.Specs.IReleaseSpec
+    name: IReleaseSpec
+    nameWithType: IReleaseSpec
+    fullName: Nethermind.Core.Specs.IReleaseSpec
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Run*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Run
+  name: Run
+  nameWithType: RangeProofPrecompile.Run
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile.Run
+- uid: Nethermind.Evm.Precompiles.IPrecompiledContract.Run(System.Byte[])
+  commentId: M:Nethermind.Evm.Precompiles.IPrecompiledContract.Run(System.Byte[])
+  parent: Nethermind.Evm.Precompiles.IPrecompiledContract
+  isExternal: true
+  name: Run(Byte[])
+  nameWithType: IPrecompiledContract.Run(Byte[])
+  fullName: Nethermind.Evm.Precompiles.IPrecompiledContract.Run(System.Byte[])
+  nameWithType.vb: IPrecompiledContract.Run(Byte())
+  fullName.vb: Nethermind.Evm.Precompiles.IPrecompiledContract.Run(System.Byte())
+  name.vb: Run(Byte())
+  spec.csharp:
+  - uid: Nethermind.Evm.Precompiles.IPrecompiledContract.Run(System.Byte[])
+    name: Run
+    nameWithType: IPrecompiledContract.Run
+    fullName: Nethermind.Evm.Precompiles.IPrecompiledContract.Run
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Nethermind.Evm.Precompiles.IPrecompiledContract.Run(System.Byte[])
+    name: Run
+    nameWithType: IPrecompiledContract.Run
+    fullName: Nethermind.Evm.Precompiles.IPrecompiledContract.Run
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.ValueTuple{System.Byte[],System.Boolean}
+  commentId: T:System.ValueTuple{System.Byte[],System.Boolean}
+  parent: System
+  isExternal: true
+  name: ValueTuple<Byte[], Boolean>
+  nameWithType: ValueTuple<Byte[], Boolean>
+  fullName: System.ValueTuple<System.Byte[], System.Boolean>
+  nameWithType.vb: ValueTuple(Of Byte(), Boolean)
+  fullName.vb: System.ValueTuple(Of System.Byte(), System.Boolean)
+  name.vb: ValueTuple(Of Byte(), Boolean)
+  spec.csharp:
+  - uid: System.ValueTuple`2
+    name: ValueTuple
+    nameWithType: ValueTuple
+    fullName: System.ValueTuple
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.ValueTuple`2
+    name: ValueTuple
+    nameWithType: ValueTuple
+    fullName: System.ValueTuple
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )

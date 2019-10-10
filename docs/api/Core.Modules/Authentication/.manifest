@@ -1,0 +1,21 @@
+{
+  "Catalyst.Core.Modules.Authentication": "Catalyst.Core.Modules.Authentication.yml",
+  "Catalyst.Core.Modules.Authentication.AuthenticationModule": "Catalyst.Core.Modules.Authentication.AuthenticationModule.yml",
+  "Catalyst.Core.Modules.Authentication.AuthenticationModule.Load(Autofac.ContainerBuilder)": "Catalyst.Core.Modules.Authentication.AuthenticationModule.yml",
+  "Catalyst.Core.Modules.Authentication.Models": "Catalyst.Core.Modules.Authentication.Models.yml",
+  "Catalyst.Core.Modules.Authentication.Models.AuthCredentials": "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.yml",
+  "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.Created": "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.yml",
+  "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.DocumentId": "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.yml",
+  "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.IpAddress": "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.yml",
+  "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.Modified": "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.yml",
+  "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.PublicKey": "Catalyst.Core.Modules.Authentication.Models.AuthCredentials.yml",
+  "Catalyst.Core.Modules.Authentication.NoAuthenticationStrategy": "Catalyst.Core.Modules.Authentication.NoAuthenticationStrategy.yml",
+  "Catalyst.Core.Modules.Authentication.NoAuthenticationStrategy.Authenticate(Catalyst.Protocol.Peer.PeerId)": "Catalyst.Core.Modules.Authentication.NoAuthenticationStrategy.yml",
+  "Catalyst.Core.Modules.Authentication.Repository": "Catalyst.Core.Modules.Authentication.Repository.yml",
+  "Catalyst.Core.Modules.Authentication.Repository.AuthCredentialRepository": "Catalyst.Core.Modules.Authentication.Repository.AuthCredentialRepository.yml",
+  "Catalyst.Core.Modules.Authentication.Repository.AuthCredentialRepository.#ctor(SharpRepository.Repository.IRepository{Catalyst.Core.Modules.Authentication.Models.AuthCredentials,System.String})": "Catalyst.Core.Modules.Authentication.Repository.AuthCredentialRepository.yml",
+  "Catalyst.Core.Modules.Authentication.Repository.IAuthCredentialRepository": "Catalyst.Core.Modules.Authentication.Repository.IAuthCredentialRepository.yml",
+  "Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy": "Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy.yml",
+  "Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy.#ctor(Catalyst.Core.Modules.Authentication.Repository.IAuthCredentialRepository)": "Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy.yml",
+  "Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy.Authenticate(Catalyst.Protocol.Peer.PeerId)": "Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy.yml"
+}

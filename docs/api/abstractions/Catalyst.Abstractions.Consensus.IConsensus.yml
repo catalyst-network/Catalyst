@@ -1,0 +1,74 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Consensus.IConsensus
+  commentId: T:Catalyst.Abstractions.Consensus.IConsensus
+  id: IConsensus
+  parent: Catalyst.Abstractions.Consensus
+  children:
+  - Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+  langs:
+  - csharp
+  - vb
+  name: IConsensus
+  nameWithType: IConsensus
+  fullName: Catalyst.Abstractions.Consensus.IConsensus
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/IConsensus.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IConsensus
+    path: ../src/Catalyst.Abstractions/Consensus/IConsensus.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus
+  syntax:
+    content: public interface IConsensus
+    content.vb: Public Interface IConsensus
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+  commentId: M:Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+  id: StartProducing
+  parent: Catalyst.Abstractions.Consensus.IConsensus
+  langs:
+  - csharp
+  - vb
+  name: StartProducing()
+  nameWithType: IConsensus.StartProducing()
+  fullName: Catalyst.Abstractions.Consensus.IConsensus.StartProducing()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/IConsensus.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: StartProducing
+    path: ../src/Catalyst.Abstractions/Consensus/IConsensus.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus
+  summary: "\nCall this method to start acting as a producer of ledger state update.\n"
+  example: []
+  syntax:
+    content: void StartProducing()
+    content.vb: Sub StartProducing
+  overload: Catalyst.Abstractions.Consensus.IConsensus.StartProducing*
+references:
+- uid: Catalyst.Abstractions.Consensus
+  commentId: N:Catalyst.Abstractions.Consensus
+  name: Catalyst.Abstractions.Consensus
+  nameWithType: Catalyst.Abstractions.Consensus
+  fullName: Catalyst.Abstractions.Consensus
+- uid: Catalyst.Abstractions.Consensus.IConsensus.StartProducing*
+  commentId: Overload:Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+  name: StartProducing
+  nameWithType: IConsensus.StartProducing
+  fullName: Catalyst.Abstractions.Consensus.IConsensus.StartProducing

@@ -1,0 +1,700 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1
+  commentId: T:Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1
+  id: MessageEvictionEvent`1
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation
+  children:
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.#ctor(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage{`0},Catalyst.Protocol.Peer.PeerId)
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.EvictedContent
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.PeerId
+  langs:
+  - csharp
+  - vb
+  name: MessageEvictionEvent<T>
+  nameWithType: MessageEvictionEvent<T>
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent<T>
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/MessageEvictionEvent.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MessageEvictionEvent
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/MessageEvictionEvent.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  syntax:
+    content: 'public sealed class MessageEvictionEvent<T> : ICacheEvictionEvent<T> where T : IMessage'
+    typeParameters:
+    - id: T
+    content.vb: >-
+      Public NotInheritable Class MessageEvictionEvent(Of T As IMessage)
+
+          Implements ICacheEvictionEvent(Of T)
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{{T}}
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  nameWithType.vb: MessageEvictionEvent(Of T)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent(Of T)
+  name.vb: MessageEvictionEvent(Of T)
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.EvictedContent
+  commentId: P:Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.EvictedContent
+  id: EvictedContent
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1
+  langs:
+  - csharp
+  - vb
+  name: EvictedContent
+  nameWithType: MessageEvictionEvent<T>.EvictedContent
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent<T>.EvictedContent
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/MessageEvictionEvent.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: EvictedContent
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/MessageEvictionEvent.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  syntax:
+    content: public T EvictedContent { get; }
+    parameters: []
+    return:
+      type: '{T}'
+    content.vb: Public ReadOnly Property EvictedContent As T
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.EvictedContent*
+  implements:
+  - Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{{T}}.EvictedContent
+  nameWithType.vb: MessageEvictionEvent(Of T).EvictedContent
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent(Of T).EvictedContent
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.PeerId
+  commentId: P:Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.PeerId
+  id: PeerId
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1
+  langs:
+  - csharp
+  - vb
+  name: PeerId
+  nameWithType: MessageEvictionEvent<T>.PeerId
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent<T>.PeerId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/MessageEvictionEvent.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PeerId
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/MessageEvictionEvent.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  syntax:
+    content: public PeerId PeerId { get; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public ReadOnly Property PeerId As PeerId
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.PeerId*
+  implements:
+  - Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{{T}}.PeerId
+  nameWithType.vb: MessageEvictionEvent(Of T).PeerId
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent(Of T).PeerId
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.#ctor(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage{`0},Catalyst.Protocol.Peer.PeerId)
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.#ctor(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage{`0},Catalyst.Protocol.Peer.PeerId)
+  id: '#ctor(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage{`0},Catalyst.Protocol.Peer.PeerId)'
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1
+  langs:
+  - csharp
+  - vb
+  name: MessageEvictionEvent(CorrelatableMessage<T>, PeerId)
+  nameWithType: MessageEvictionEvent<T>.MessageEvictionEvent(CorrelatableMessage<T>, PeerId)
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent<T>.MessageEvictionEvent(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage<T>, Catalyst.Protocol.Peer.PeerId)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/MessageEvictionEvent.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/MessageEvictionEvent.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  syntax:
+    content: public MessageEvictionEvent(CorrelatableMessage<T> correlatableMessage, PeerId sender)
+    parameters:
+    - id: correlatableMessage
+      type: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage{{T}}
+    - id: sender
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public Sub New(correlatableMessage As CorrelatableMessage(Of T), sender As PeerId)
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.#ctor*
+  nameWithType.vb: MessageEvictionEvent(Of T).MessageEvictionEvent(CorrelatableMessage(Of T), PeerId)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent(Of T).MessageEvictionEvent(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage(Of T), Catalyst.Protocol.Peer.PeerId)
+  name.vb: MessageEvictionEvent(CorrelatableMessage(Of T), PeerId)
+references:
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation
+  commentId: N:Catalyst.Core.Lib.IO.Messaging.Correlation
+  name: Catalyst.Core.Lib.IO.Messaging.Correlation
+  nameWithType: Catalyst.Core.Lib.IO.Messaging.Correlation
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{{T}}
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{`0}
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  definition: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1
+  name: ICacheEvictionEvent<T>
+  nameWithType: ICacheEvictionEvent<T>
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent<T>
+  nameWithType.vb: ICacheEvictionEvent(Of T)
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent(Of T)
+  name.vb: ICacheEvictionEvent(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1
+    name: ICacheEvictionEvent
+    nameWithType: ICacheEvictionEvent
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1
+    name: ICacheEvictionEvent
+    nameWithType: ICacheEvictionEvent
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1
+  name: ICacheEvictionEvent<T>
+  nameWithType: ICacheEvictionEvent<T>
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent<T>
+  nameWithType.vb: ICacheEvictionEvent(Of T)
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent(Of T)
+  name.vb: ICacheEvictionEvent(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1
+    name: ICacheEvictionEvent
+    nameWithType: ICacheEvictionEvent
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1
+    name: ICacheEvictionEvent
+    nameWithType: ICacheEvictionEvent
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.EvictedContent*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.EvictedContent
+  name: EvictedContent
+  nameWithType: MessageEvictionEvent<T>.EvictedContent
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent<T>.EvictedContent
+  nameWithType.vb: MessageEvictionEvent(Of T).EvictedContent
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent(Of T).EvictedContent
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{{T}}.EvictedContent
+  commentId: P:Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{`0}.EvictedContent
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{{T}}
+  definition: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1.EvictedContent
+  name: EvictedContent
+  nameWithType: ICacheEvictionEvent<T>.EvictedContent
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent<T>.EvictedContent
+  nameWithType.vb: ICacheEvictionEvent(Of T).EvictedContent
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent(Of T).EvictedContent
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1.EvictedContent
+  commentId: P:Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1.EvictedContent
+  name: EvictedContent
+  nameWithType: ICacheEvictionEvent<T>.EvictedContent
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent<T>.EvictedContent
+  nameWithType.vb: ICacheEvictionEvent(Of T).EvictedContent
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent(Of T).EvictedContent
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.PeerId*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.PeerId
+  name: PeerId
+  nameWithType: MessageEvictionEvent<T>.PeerId
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent<T>.PeerId
+  nameWithType.vb: MessageEvictionEvent(Of T).PeerId
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent(Of T).PeerId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{{T}}.PeerId
+  commentId: P:Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{`0}.PeerId
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{{T}}
+  definition: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1.PeerId
+  name: PeerId
+  nameWithType: ICacheEvictionEvent<T>.PeerId
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent<T>.PeerId
+  nameWithType.vb: ICacheEvictionEvent(Of T).PeerId
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent(Of T).PeerId
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1.PeerId
+  commentId: P:Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1.PeerId
+  name: PeerId
+  nameWithType: ICacheEvictionEvent<T>.PeerId
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent<T>.PeerId
+  nameWithType.vb: ICacheEvictionEvent(Of T).PeerId
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent(Of T).PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent`1.#ctor
+  name: MessageEvictionEvent
+  nameWithType: MessageEvictionEvent<T>.MessageEvictionEvent
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent<T>.MessageEvictionEvent
+  nameWithType.vb: MessageEvictionEvent(Of T).MessageEvictionEvent
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Correlation.MessageEvictionEvent(Of T).MessageEvictionEvent
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage{{T}}
+  commentId: T:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage{`0}
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation
+  definition: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage`1
+  name: CorrelatableMessage<T>
+  nameWithType: CorrelatableMessage<T>
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage<T>
+  nameWithType.vb: CorrelatableMessage(Of T)
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage(Of T)
+  name.vb: CorrelatableMessage(Of T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage`1
+    name: CorrelatableMessage
+    nameWithType: CorrelatableMessage
+    fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage`1
+    name: CorrelatableMessage
+    nameWithType: CorrelatableMessage
+    fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage`1
+  commentId: T:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage`1
+  name: CorrelatableMessage<T>
+  nameWithType: CorrelatableMessage<T>
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage<T>
+  nameWithType.vb: CorrelatableMessage(Of T)
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage(Of T)
+  name.vb: CorrelatableMessage(Of T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage`1
+    name: CorrelatableMessage
+    nameWithType: CorrelatableMessage
+    fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage`1
+    name: CorrelatableMessage
+    nameWithType: CorrelatableMessage
+    fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelatableMessage
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

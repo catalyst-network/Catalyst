@@ -1,0 +1,217 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  id: IPhaseTimings
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  children:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime
+  langs:
+  - csharp
+  - vb
+  name: IPhaseTimings
+  nameWithType: IPhaseTimings
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IPhaseTimings
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhaseTimings.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  syntax:
+    content: public interface IPhaseTimings
+    content.vb: Public Interface IPhaseTimings
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset
+  id: Offset
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  langs:
+  - csharp
+  - vb
+  name: Offset
+  nameWithType: IPhaseTimings.Offset
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Offset
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhaseTimings.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nTime between the start of a cycle and the start of the phase.\n"
+  example: []
+  syntax:
+    content: TimeSpan Offset { get; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: ReadOnly Property Offset As TimeSpan
+  overload: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime
+  id: ProductionTime
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  langs:
+  - csharp
+  - vb
+  name: ProductionTime
+  nameWithType: IPhaseTimings.ProductionTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ProductionTime
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhaseTimings.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nTime during which a phase is in the <see>\n<cref>PhaseStatus.Producing</cref>\n</see>\nstatus.\n"
+  example: []
+  syntax:
+    content: TimeSpan ProductionTime { get; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: ReadOnly Property ProductionTime As TimeSpan
+  overload: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime
+  id: CollectionTime
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  langs:
+  - csharp
+  - vb
+  name: CollectionTime
+  nameWithType: IPhaseTimings.CollectionTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CollectionTime
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhaseTimings.cs
+    startLine: 48
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nTime during which a phase is in the <see>\n<cref>PhaseStatus.Collecting</cref>\n</see>\nstatus.\n"
+  example: []
+  syntax:
+    content: TimeSpan CollectionTime { get; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: ReadOnly Property CollectionTime As TimeSpan
+  overload: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime
+  id: TotalTime
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  langs:
+  - csharp
+  - vb
+  name: TotalTime
+  nameWithType: IPhaseTimings.TotalTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: TotalTime
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhaseTimings.cs
+    startLine: 56
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nThe total duration of the phase, after which it will go <see>\n<cref>PhaseStatus.Idle</cref>\n</see>\nuntil the next cycle.\n"
+  example: []
+  syntax:
+    content: TimeSpan TotalTime { get; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: ReadOnly Property TotalTime As TimeSpan
+  overload: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.Consensus.Cycle
+  commentId: N:Catalyst.Abstractions.Consensus.Cycle
+  name: Catalyst.Abstractions.Consensus.Cycle
+  nameWithType: Catalyst.Abstractions.Consensus.Cycle
+  fullName: Catalyst.Abstractions.Consensus.Cycle
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset
+  name: Offset
+  nameWithType: IPhaseTimings.Offset
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset
+- uid: System.TimeSpan
+  commentId: T:System.TimeSpan
+  parent: System
+  isExternal: true
+  name: TimeSpan
+  nameWithType: TimeSpan
+  fullName: System.TimeSpan
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime
+  name: ProductionTime
+  nameWithType: IPhaseTimings.ProductionTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime
+  name: CollectionTime
+  nameWithType: IPhaseTimings.CollectionTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime
+  name: TotalTime
+  nameWithType: IPhaseTimings.TotalTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime

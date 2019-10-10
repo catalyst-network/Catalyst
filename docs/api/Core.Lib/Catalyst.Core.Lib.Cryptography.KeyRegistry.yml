@@ -1,0 +1,1150 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Cryptography.KeyRegistry
+  commentId: T:Catalyst.Core.Lib.Cryptography.KeyRegistry
+  id: KeyRegistry
+  parent: Catalyst.Core.Lib.Cryptography
+  children:
+  - Catalyst.Core.Lib.Cryptography.KeyRegistry.#ctor
+  - Catalyst.Core.Lib.Cryptography.KeyRegistry.Contains(System.Byte[])
+  langs:
+  - csharp
+  - vb
+  name: KeyRegistry
+  nameWithType: KeyRegistry
+  fullName: Catalyst.Core.Lib.Cryptography.KeyRegistry
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Cryptography/KeyRegistry.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: KeyRegistry
+    path: ../src/Catalyst.Core.Lib/Cryptography/KeyRegistry.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Cryptography
+  syntax:
+    content: 'public sealed class KeyRegistry : RegistryBase<KeyRegistryTypes, IPrivateKey>, IKeyRegistry, IRegistryBase<KeyRegistryTypes, IPrivateKey>, IDisposable'
+    content.vb: >-
+      Public NotInheritable Class KeyRegistry
+
+          Inherits RegistryBase(Of KeyRegistryTypes, IPrivateKey)
+
+          Implements IKeyRegistry, IRegistryBase(Of KeyRegistryTypes, IPrivateKey), IDisposable
+  inheritance:
+  - System.Object
+  - Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  implements:
+  - Catalyst.Abstractions.Keystore.IKeyRegistry
+  - Catalyst.Abstractions.Registry.IRegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  - System.IDisposable
+  inheritedMembers:
+  - Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.Registry
+  - Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.AddItemToRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey)
+  - Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.GetItemFromRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  - Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.RegistryContainsKey(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  - Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.RemoveItemFromRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  - Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.System#IDisposable#Dispose
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.Cryptography.KeyRegistry.#ctor
+  commentId: M:Catalyst.Core.Lib.Cryptography.KeyRegistry.#ctor
+  id: '#ctor'
+  parent: Catalyst.Core.Lib.Cryptography.KeyRegistry
+  langs:
+  - csharp
+  - vb
+  name: KeyRegistry()
+  nameWithType: KeyRegistry.KeyRegistry()
+  fullName: Catalyst.Core.Lib.Cryptography.KeyRegistry.KeyRegistry()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Cryptography/KeyRegistry.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/Cryptography/KeyRegistry.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Cryptography
+  syntax:
+    content: public KeyRegistry()
+    content.vb: Public Sub New
+  overload: Catalyst.Core.Lib.Cryptography.KeyRegistry.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Cryptography.KeyRegistry.Contains(System.Byte[])
+  commentId: M:Catalyst.Core.Lib.Cryptography.KeyRegistry.Contains(System.Byte[])
+  id: Contains(System.Byte[])
+  parent: Catalyst.Core.Lib.Cryptography.KeyRegistry
+  langs:
+  - csharp
+  - vb
+  name: Contains(Byte[])
+  nameWithType: KeyRegistry.Contains(Byte[])
+  fullName: Catalyst.Core.Lib.Cryptography.KeyRegistry.Contains(System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Cryptography/KeyRegistry.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Contains
+    path: ../src/Catalyst.Core.Lib/Cryptography/KeyRegistry.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Cryptography
+  syntax:
+    content: public bool Contains(byte[] publicKeyBytes)
+    parameters:
+    - id: publicKeyBytes
+      type: System.Byte[]
+    return:
+      type: System.Boolean
+    content.vb: Public Function Contains(publicKeyBytes As Byte()) As Boolean
+  overload: Catalyst.Core.Lib.Cryptography.KeyRegistry.Contains*
+  implements:
+  - Catalyst.Abstractions.Keystore.IKeyRegistry.Contains(System.Byte[])
+  nameWithType.vb: KeyRegistry.Contains(Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Lib.Cryptography.KeyRegistry.Contains(System.Byte())
+  name.vb: Contains(Byte())
+references:
+- uid: Catalyst.Core.Lib.Cryptography
+  commentId: N:Catalyst.Core.Lib.Cryptography
+  name: Catalyst.Core.Lib.Cryptography
+  nameWithType: Catalyst.Core.Lib.Cryptography
+  fullName: Catalyst.Core.Lib.Cryptography
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  commentId: T:Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  parent: Catalyst.Abstractions.Registry
+  definition: Catalyst.Abstractions.Registry.RegistryBase`2
+  name: RegistryBase<KeyRegistryTypes, IPrivateKey>
+  nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>
+  nameWithType.vb: RegistryBase(Of KeyRegistryTypes, IPrivateKey)
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey)
+  name.vb: RegistryBase(Of KeyRegistryTypes, IPrivateKey)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2
+    name: RegistryBase
+    nameWithType: RegistryBase
+    fullName: Catalyst.Abstractions.Registry.RegistryBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2
+    name: RegistryBase
+    nameWithType: RegistryBase
+    fullName: Catalyst.Abstractions.Registry.RegistryBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Keystore.IKeyRegistry
+  commentId: T:Catalyst.Abstractions.Keystore.IKeyRegistry
+  parent: Catalyst.Abstractions.Keystore
+  name: IKeyRegistry
+  nameWithType: IKeyRegistry
+  fullName: Catalyst.Abstractions.Keystore.IKeyRegistry
+- uid: Catalyst.Abstractions.Registry.IRegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  commentId: T:Catalyst.Abstractions.Registry.IRegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  parent: Catalyst.Abstractions.Registry
+  definition: Catalyst.Abstractions.Registry.IRegistryBase`2
+  name: IRegistryBase<KeyRegistryTypes, IPrivateKey>
+  nameWithType: IRegistryBase<KeyRegistryTypes, IPrivateKey>
+  fullName: Catalyst.Abstractions.Registry.IRegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>
+  nameWithType.vb: IRegistryBase(Of KeyRegistryTypes, IPrivateKey)
+  fullName.vb: Catalyst.Abstractions.Registry.IRegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey)
+  name.vb: IRegistryBase(Of KeyRegistryTypes, IPrivateKey)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.IRegistryBase`2
+    name: IRegistryBase
+    nameWithType: IRegistryBase
+    fullName: Catalyst.Abstractions.Registry.IRegistryBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.IRegistryBase`2
+    name: IRegistryBase
+    nameWithType: IRegistryBase
+    fullName: Catalyst.Abstractions.Registry.IRegistryBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.Registry
+  commentId: P:Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.Registry
+  parent: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  definition: Catalyst.Abstractions.Registry.RegistryBase`2.Registry
+  name: Registry
+  nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.Registry
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.Registry
+  nameWithType.vb: RegistryBase(Of KeyRegistryTypes, IPrivateKey).Registry
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).Registry
+- uid: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.AddItemToRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey)
+  commentId: M:Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.AddItemToRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey)
+  parent: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  definition: Catalyst.Abstractions.Registry.RegistryBase`2.AddItemToRegistry(`0,`1)
+  name: AddItemToRegistry(KeyRegistryTypes, IPrivateKey)
+  nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.AddItemToRegistry(KeyRegistryTypes, IPrivateKey)
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.AddItemToRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey)
+  nameWithType.vb: RegistryBase(Of KeyRegistryTypes, IPrivateKey).AddItemToRegistry(KeyRegistryTypes, IPrivateKey)
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).AddItemToRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.AddItemToRegistry(`0,`1)
+    name: AddItemToRegistry
+    nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.AddItemToRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.AddItemToRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.AddItemToRegistry(`0,`1)
+    name: AddItemToRegistry
+    nameWithType: RegistryBase(Of KeyRegistryTypes, IPrivateKey).AddItemToRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).AddItemToRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+    name: IPrivateKey
+    nameWithType: IPrivateKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.GetItemFromRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  commentId: M:Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.GetItemFromRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  parent: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  definition: Catalyst.Abstractions.Registry.RegistryBase`2.GetItemFromRegistry(`0)
+  name: GetItemFromRegistry(KeyRegistryTypes)
+  nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.GetItemFromRegistry(KeyRegistryTypes)
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.GetItemFromRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  nameWithType.vb: RegistryBase(Of KeyRegistryTypes, IPrivateKey).GetItemFromRegistry(KeyRegistryTypes)
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).GetItemFromRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.GetItemFromRegistry(`0)
+    name: GetItemFromRegistry
+    nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.GetItemFromRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.GetItemFromRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.GetItemFromRegistry(`0)
+    name: GetItemFromRegistry
+    nameWithType: RegistryBase(Of KeyRegistryTypes, IPrivateKey).GetItemFromRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).GetItemFromRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.RegistryContainsKey(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  commentId: M:Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.RegistryContainsKey(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  parent: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  definition: Catalyst.Abstractions.Registry.RegistryBase`2.RegistryContainsKey(`0)
+  name: RegistryContainsKey(KeyRegistryTypes)
+  nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.RegistryContainsKey(KeyRegistryTypes)
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.RegistryContainsKey(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  nameWithType.vb: RegistryBase(Of KeyRegistryTypes, IPrivateKey).RegistryContainsKey(KeyRegistryTypes)
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).RegistryContainsKey(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.RegistryContainsKey(`0)
+    name: RegistryContainsKey
+    nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.RegistryContainsKey
+    fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.RegistryContainsKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.RegistryContainsKey(`0)
+    name: RegistryContainsKey
+    nameWithType: RegistryBase(Of KeyRegistryTypes, IPrivateKey).RegistryContainsKey
+    fullName: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).RegistryContainsKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.RemoveItemFromRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  commentId: M:Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.RemoveItemFromRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  parent: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  definition: Catalyst.Abstractions.Registry.RegistryBase`2.RemoveItemFromRegistry(`0)
+  name: RemoveItemFromRegistry(KeyRegistryTypes)
+  nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.RemoveItemFromRegistry(KeyRegistryTypes)
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.RemoveItemFromRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  nameWithType.vb: RegistryBase(Of KeyRegistryTypes, IPrivateKey).RemoveItemFromRegistry(KeyRegistryTypes)
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).RemoveItemFromRegistry(Catalyst.Abstractions.Types.KeyRegistryTypes)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.RemoveItemFromRegistry(`0)
+    name: RemoveItemFromRegistry
+    nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.RemoveItemFromRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.RemoveItemFromRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.RemoveItemFromRegistry(`0)
+    name: RemoveItemFromRegistry
+    nameWithType: RegistryBase(Of KeyRegistryTypes, IPrivateKey).RemoveItemFromRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).RemoveItemFromRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Types.KeyRegistryTypes
+    name: KeyRegistryTypes
+    nameWithType: KeyRegistryTypes
+    fullName: Catalyst.Abstractions.Types.KeyRegistryTypes
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.System#IDisposable#Dispose
+  commentId: M:Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}.System#IDisposable#Dispose
+  parent: Catalyst.Abstractions.Registry.RegistryBase{Catalyst.Abstractions.Types.KeyRegistryTypes,Catalyst.Abstractions.Cryptography.IPrivateKey}
+  definition: Catalyst.Abstractions.Registry.RegistryBase`2.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.IDisposable.Dispose()
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.System.IDisposable.Dispose()
+  nameWithType.vb: RegistryBase(Of KeyRegistryTypes, IPrivateKey).System.IDisposable.Dispose()
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).System.IDisposable.Dispose()
+  name.vb: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.System#IDisposable#Dispose
+    name: IDisposable.Dispose
+    nameWithType: RegistryBase<KeyRegistryTypes, IPrivateKey>.IDisposable.Dispose
+    fullName: Catalyst.Abstractions.Registry.RegistryBase<Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey>.System.IDisposable.Dispose
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.System#IDisposable#Dispose
+    name: System.IDisposable.Dispose
+    nameWithType: RegistryBase(Of KeyRegistryTypes, IPrivateKey).System.IDisposable.Dispose
+    fullName: Catalyst.Abstractions.Registry.RegistryBase(Of Catalyst.Abstractions.Types.KeyRegistryTypes, Catalyst.Abstractions.Cryptography.IPrivateKey).System.IDisposable.Dispose
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Registry.RegistryBase`2
+  commentId: T:Catalyst.Abstractions.Registry.RegistryBase`2
+  name: RegistryBase<TKey, TValue>
+  nameWithType: RegistryBase<TKey, TValue>
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>
+  nameWithType.vb: RegistryBase(Of TKey, TValue)
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue)
+  name.vb: RegistryBase(Of TKey, TValue)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2
+    name: RegistryBase
+    nameWithType: RegistryBase
+    fullName: Catalyst.Abstractions.Registry.RegistryBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2
+    name: RegistryBase
+    nameWithType: RegistryBase
+    fullName: Catalyst.Abstractions.Registry.RegistryBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Registry
+  commentId: N:Catalyst.Abstractions.Registry
+  name: Catalyst.Abstractions.Registry
+  nameWithType: Catalyst.Abstractions.Registry
+  fullName: Catalyst.Abstractions.Registry
+- uid: Catalyst.Abstractions.Keystore
+  commentId: N:Catalyst.Abstractions.Keystore
+  name: Catalyst.Abstractions.Keystore
+  nameWithType: Catalyst.Abstractions.Keystore
+  fullName: Catalyst.Abstractions.Keystore
+- uid: Catalyst.Abstractions.Registry.IRegistryBase`2
+  commentId: T:Catalyst.Abstractions.Registry.IRegistryBase`2
+  name: IRegistryBase<TKey, TValue>
+  nameWithType: IRegistryBase<TKey, TValue>
+  fullName: Catalyst.Abstractions.Registry.IRegistryBase<TKey, TValue>
+  nameWithType.vb: IRegistryBase(Of TKey, TValue)
+  fullName.vb: Catalyst.Abstractions.Registry.IRegistryBase(Of TKey, TValue)
+  name.vb: IRegistryBase(Of TKey, TValue)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.IRegistryBase`2
+    name: IRegistryBase
+    nameWithType: IRegistryBase
+    fullName: Catalyst.Abstractions.Registry.IRegistryBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.IRegistryBase`2
+    name: IRegistryBase
+    nameWithType: IRegistryBase
+    fullName: Catalyst.Abstractions.Registry.IRegistryBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Registry.RegistryBase`2.Registry
+  commentId: P:Catalyst.Abstractions.Registry.RegistryBase`2.Registry
+  name: Registry
+  nameWithType: RegistryBase<TKey, TValue>.Registry
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.Registry
+  nameWithType.vb: RegistryBase(Of TKey, TValue).Registry
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).Registry
+- uid: Catalyst.Abstractions.Registry.RegistryBase`2.AddItemToRegistry(`0,`1)
+  commentId: M:Catalyst.Abstractions.Registry.RegistryBase`2.AddItemToRegistry(`0,`1)
+  name: AddItemToRegistry(TKey, TValue)
+  nameWithType: RegistryBase<TKey, TValue>.AddItemToRegistry(TKey, TValue)
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.AddItemToRegistry(TKey, TValue)
+  nameWithType.vb: RegistryBase(Of TKey, TValue).AddItemToRegistry(TKey, TValue)
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).AddItemToRegistry(TKey, TValue)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.AddItemToRegistry(`0,`1)
+    name: AddItemToRegistry
+    nameWithType: RegistryBase<TKey, TValue>.AddItemToRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.AddItemToRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.AddItemToRegistry(`0,`1)
+    name: AddItemToRegistry
+    nameWithType: RegistryBase(Of TKey, TValue).AddItemToRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).AddItemToRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Registry.RegistryBase`2.GetItemFromRegistry(`0)
+  commentId: M:Catalyst.Abstractions.Registry.RegistryBase`2.GetItemFromRegistry(`0)
+  name: GetItemFromRegistry(TKey)
+  nameWithType: RegistryBase<TKey, TValue>.GetItemFromRegistry(TKey)
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.GetItemFromRegistry(TKey)
+  nameWithType.vb: RegistryBase(Of TKey, TValue).GetItemFromRegistry(TKey)
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).GetItemFromRegistry(TKey)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.GetItemFromRegistry(`0)
+    name: GetItemFromRegistry
+    nameWithType: RegistryBase<TKey, TValue>.GetItemFromRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.GetItemFromRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.GetItemFromRegistry(`0)
+    name: GetItemFromRegistry
+    nameWithType: RegistryBase(Of TKey, TValue).GetItemFromRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).GetItemFromRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Registry.RegistryBase`2.RegistryContainsKey(`0)
+  commentId: M:Catalyst.Abstractions.Registry.RegistryBase`2.RegistryContainsKey(`0)
+  name: RegistryContainsKey(TKey)
+  nameWithType: RegistryBase<TKey, TValue>.RegistryContainsKey(TKey)
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.RegistryContainsKey(TKey)
+  nameWithType.vb: RegistryBase(Of TKey, TValue).RegistryContainsKey(TKey)
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).RegistryContainsKey(TKey)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.RegistryContainsKey(`0)
+    name: RegistryContainsKey
+    nameWithType: RegistryBase<TKey, TValue>.RegistryContainsKey
+    fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.RegistryContainsKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.RegistryContainsKey(`0)
+    name: RegistryContainsKey
+    nameWithType: RegistryBase(Of TKey, TValue).RegistryContainsKey
+    fullName: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).RegistryContainsKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Registry.RegistryBase`2.RemoveItemFromRegistry(`0)
+  commentId: M:Catalyst.Abstractions.Registry.RegistryBase`2.RemoveItemFromRegistry(`0)
+  name: RemoveItemFromRegistry(TKey)
+  nameWithType: RegistryBase<TKey, TValue>.RemoveItemFromRegistry(TKey)
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.RemoveItemFromRegistry(TKey)
+  nameWithType.vb: RegistryBase(Of TKey, TValue).RemoveItemFromRegistry(TKey)
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).RemoveItemFromRegistry(TKey)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.RemoveItemFromRegistry(`0)
+    name: RemoveItemFromRegistry
+    nameWithType: RegistryBase<TKey, TValue>.RemoveItemFromRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.RemoveItemFromRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.RemoveItemFromRegistry(`0)
+    name: RemoveItemFromRegistry
+    nameWithType: RegistryBase(Of TKey, TValue).RemoveItemFromRegistry
+    fullName: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).RemoveItemFromRegistry
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Registry.RegistryBase`2.System#IDisposable#Dispose
+  commentId: M:Catalyst.Abstractions.Registry.RegistryBase`2.System#IDisposable#Dispose
+  name: IDisposable.Dispose()
+  nameWithType: RegistryBase<TKey, TValue>.IDisposable.Dispose()
+  fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.System.IDisposable.Dispose()
+  nameWithType.vb: RegistryBase(Of TKey, TValue).System.IDisposable.Dispose()
+  fullName.vb: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).System.IDisposable.Dispose()
+  name.vb: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.System#IDisposable#Dispose
+    name: IDisposable.Dispose
+    nameWithType: RegistryBase<TKey, TValue>.IDisposable.Dispose
+    fullName: Catalyst.Abstractions.Registry.RegistryBase<TKey, TValue>.System.IDisposable.Dispose
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Registry.RegistryBase`2.System#IDisposable#Dispose
+    name: System.IDisposable.Dispose
+    nameWithType: RegistryBase(Of TKey, TValue).System.IDisposable.Dispose
+    fullName: Catalyst.Abstractions.Registry.RegistryBase(Of TKey, TValue).System.IDisposable.Dispose
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.Cryptography.KeyRegistry.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.Cryptography.KeyRegistry.#ctor
+  name: KeyRegistry
+  nameWithType: KeyRegistry.KeyRegistry
+  fullName: Catalyst.Core.Lib.Cryptography.KeyRegistry.KeyRegistry
+- uid: Catalyst.Core.Lib.Cryptography.KeyRegistry.Contains*
+  commentId: Overload:Catalyst.Core.Lib.Cryptography.KeyRegistry.Contains
+  name: Contains
+  nameWithType: KeyRegistry.Contains
+  fullName: Catalyst.Core.Lib.Cryptography.KeyRegistry.Contains
+- uid: Catalyst.Abstractions.Keystore.IKeyRegistry.Contains(System.Byte[])
+  commentId: M:Catalyst.Abstractions.Keystore.IKeyRegistry.Contains(System.Byte[])
+  parent: Catalyst.Abstractions.Keystore.IKeyRegistry
+  isExternal: true
+  name: Contains(Byte[])
+  nameWithType: IKeyRegistry.Contains(Byte[])
+  fullName: Catalyst.Abstractions.Keystore.IKeyRegistry.Contains(System.Byte[])
+  nameWithType.vb: IKeyRegistry.Contains(Byte())
+  fullName.vb: Catalyst.Abstractions.Keystore.IKeyRegistry.Contains(System.Byte())
+  name.vb: Contains(Byte())
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Keystore.IKeyRegistry.Contains(System.Byte[])
+    name: Contains
+    nameWithType: IKeyRegistry.Contains
+    fullName: Catalyst.Abstractions.Keystore.IKeyRegistry.Contains
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Keystore.IKeyRegistry.Contains(System.Byte[])
+    name: Contains
+    nameWithType: IKeyRegistry.Contains
+    fullName: Catalyst.Abstractions.Keystore.IKeyRegistry.Contains
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean

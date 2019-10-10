@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Hashing
+  commentId: N:Catalyst.Core.Modules.Hashing
+  id: Catalyst.Core.Modules.Hashing
+  children:
+  - Catalyst.Core.Modules.Hashing.HashingModule
+  - Catalyst.Core.Modules.Hashing.HashProvider
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Modules.Hashing
+  nameWithType: Catalyst.Core.Modules.Hashing
+  fullName: Catalyst.Core.Modules.Hashing
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+references:
+- uid: Catalyst.Core.Modules.Hashing.HashingModule
+  commentId: T:Catalyst.Core.Modules.Hashing.HashingModule
+  name: HashingModule
+  nameWithType: HashingModule
+  fullName: Catalyst.Core.Modules.Hashing.HashingModule
+- uid: Catalyst.Core.Modules.Hashing.HashProvider
+  commentId: T:Catalyst.Core.Modules.Hashing.HashProvider
+  name: HashProvider
+  nameWithType: HashProvider
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider
