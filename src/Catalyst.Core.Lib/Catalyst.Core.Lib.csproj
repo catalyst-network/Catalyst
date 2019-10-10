@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Lib</RootNamespace>
@@ -13,9 +13,6 @@
       <Compile Remove="Extensions\Protocol\Transaction\**" />
       <EmbeddedResource Remove="Extensions\Protocol\Transaction\**" />
       <None Remove="Extensions\Protocol\Transaction\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <Compile Remove="DAO\RangeProofDao.cs" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.8.1" />
