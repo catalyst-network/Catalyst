@@ -34,7 +34,7 @@ using Xunit;
 ///     in the meantime this should automate the fix on all test projects
 ///     (cf. Common.TestProjects.props)
 /// </summary>
-public class TaggedTests
+public class XunitTraitsRegister
 {
     [Trait(Traits.TestType, Traits.IntegrationTest)]
     public void IntegrationTest() { true.Should().BeTrue(); }
