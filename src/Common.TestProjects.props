@@ -25,4 +25,9 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
     </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\Catalyst.TestUtils\DefaultTests\*.cs" Link="DefaultTests\*.cs" >
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Compile>
+    </ItemGroup>
 </Project>
