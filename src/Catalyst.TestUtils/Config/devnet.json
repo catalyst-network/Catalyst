@@ -34,7 +34,7 @@
                 //},
                 "efCore": {
                     "factory": "SharpRepository.EfCoreRepository.EfCoreConfigRepositoryFactory, SharpRepository.EfCoreRepository",
-                    "connectionString": "", // optional, you can configure it with dependency resolver
+                    "connectionString": "Server=localhost\\SQLExpress;Integrated Security=true;Initial Catalog=CatalystDB", // optional, you can configure it with dependency resolver
                     "dbContextType": "EfCoreContext, Catalyst.Core.Lib.Repository" // optional, you can configure it with dependency resolver
                 },
                 "inMemoryNoCaching": {
