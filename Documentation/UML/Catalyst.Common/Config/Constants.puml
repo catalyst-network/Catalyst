@@ -1,0 +1,18 @@
+@startuml
+class Constants <<static>> {
+    + {static} ConfigSubFolder : string <<get>>
+    + {static} ModulesSubFolder : string <<get>>
+    + {static} ComponentsJsonConfigFile : string <<get>>
+    + {static} SerilogJsonConfigFile : string <<get>>
+    - {static} JsonFilePattern : string <<get>>
+    <<internal>> {static} CatalystSubFolder : string <<get>>
+    + {static} ShellComponentsJsonConfigFile : string <<get>>
+    + {static} ShellNodesConfigFile : string <<get>>
+    + {static} ShellConfigFile : string <<get>>
+    + {static} MessageHandlersConfigFile : string <<get>>
+    + {static} NetworkConfigFile(network:Network) : string
+}
+class "IEnumerable`1"<T> {
+}
+Constants --> "AllModuleFiles<string>" "IEnumerable`1"
+@enduml

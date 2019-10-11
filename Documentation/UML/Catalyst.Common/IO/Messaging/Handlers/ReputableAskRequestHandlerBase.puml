@@ -1,0 +1,13 @@
+@startuml
+abstract class "ReputableAskRequestHandlerBase`2"<TProto,TReputableCache> {
+    + ReputableCache : TReputableCache <<get>>
+    # ReputableAskRequestHandlerBase(reputableCache:TReputableCache, logger:ILogger)
+    + <<override>> HandleMessage(message:IChanneledMessage<AnySigned>) : void
+}
+class "CorrelatableMessageHandlerBase`2"<T1,T2> {
+}
+class "IReputationAskHandler`1"<T> {
+}
+"CorrelatableMessageHandlerBase`2" "<TProto,TReputableCache>" <|-- "ReputableAskRequestHandlerBase`2"
+"IReputationAskHandler`1" "<TReputableCache>" <|-- "ReputableAskRequestHandlerBase`2"
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+class "OutboundChannelInitializerBase`1"<T> <<sealed>> {
+    + OutboundChannelInitializerBase(initializationAction:Action<T>, handlers:IList<IChannelHandler>, targetHost:IPAddress, certificate:X509Certificate)
+    + <<override>> ToString() : string
+}
+class "ChannelInitializerBase`1"<T> {
+}
+"ChannelInitializerBase`1" "<T>" <|-- "OutboundChannelInitializerBase`1"
+@enduml

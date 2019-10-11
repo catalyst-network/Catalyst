@@ -1,0 +1,5 @@
+@startuml
+interface INodeRpcClientFactory {
+    GetClient(certificate:X509Certificate, nodeConfig:IRpcNodeConfig) : INodeRpcClient
+}
+@enduml

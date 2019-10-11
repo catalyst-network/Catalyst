@@ -1,0 +1,17 @@
+@startuml
+class Peer {
+    + Reputation : int <<get>> <<set>>
+    + IsAwolPeer : bool <<get>>
+    + Dispose() : void
+    + Touch() : void
+    + IncreaseReputation(mer:int) : void
+    + DecreaseReputation(mer:int) : void
+    # <<virtual>> Dispose(disposing:bool) : void
+}
+IDisposable <|-- Peer
+IPeer <|-- Peer
+Peer o-> "Logger" ILogger
+Peer --> "LastSeen" DateTime
+Peer --> "PeerIdentifier" IPeerIdentifier
+Peer --> "InactiveFor" TimeSpan
+@enduml

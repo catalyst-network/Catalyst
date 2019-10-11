@@ -1,0 +1,8 @@
+@startuml
+class "TcpClient`1"<TChannel> {
+    # TcpClient(logger:ILogger)
+    # <<sealed>> <<override>> Bootstrap(channelInitializer:IChannelHandler, ipEndPoint:IPEndPoint) : void
+}
+Client <|-- "TcpClient`1"
+ITcpClient <|-- "TcpClient`1"
+@enduml

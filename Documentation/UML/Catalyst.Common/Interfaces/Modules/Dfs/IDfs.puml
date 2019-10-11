@@ -1,0 +1,8 @@
+@startuml
+interface IDfs {
+    AddTextAsync(content:string, cancellationToken:CancellationToken) : Task<string>
+    ReadTextAsync(id:string, cancellationToken:CancellationToken) : Task<string>
+    AddAsync(content:Stream, name:string, cancellationToken:CancellationToken) : Task<string>
+    ReadAsync(id:string, cancellationToken:CancellationToken) : Task<Stream>
+}
+@enduml

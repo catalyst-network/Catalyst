@@ -1,0 +1,14 @@
+@startuml
+class Program <<static>> {
+    - {static} <<readonly>> LifetimeTag : string
+    - {static} <<readonly>> ExecutionDirectory : string
+    - {static} <<readonly>> LogFileName : string = "Catalyst.Node..log"
+    {static} Program()
+    + {static} Main(args:string[]) : int
+    {static} CurrentDomain_ProcessExit(sender:object, e:EventArgs) : void
+    + {static} TryLoadAssemblyFromExecutionDirectory(context:AssemblyLoadContext, assemblyName:AssemblyName) : Assembly
+}
+Program --> "_logger" ILogger
+Program --> "DeclaringType" Type
+Program --> "_cancellationSource" CancellationTokenSource
+@enduml

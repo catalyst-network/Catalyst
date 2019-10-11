@@ -1,0 +1,5 @@
+@startuml
+interface IUserOutput {
+    WriteLine(content:string) : void
+}
+@enduml

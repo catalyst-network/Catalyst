@@ -1,0 +1,8 @@
+@startuml
+class ServerBootstrap <<sealed>> {
+    + ServerBootstrap()
+    + <<new>> BindAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
+}
+IServerBootstrap <|-- ServerBootstrap
+ServerBootstrap --> "_exponentialBackOffRetryPolicy" AsyncRetryPolicy
+@enduml

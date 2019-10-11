@@ -1,0 +1,7 @@
+@startuml
+interface ITcpServer {
+    Bootstrap(channelInitializer:IChannelHandler, listenAddress:IPAddress, port:int) : void
+    Shutdown() : Task
+}
+ITcpServer --> "Channel" IChannel
+@enduml

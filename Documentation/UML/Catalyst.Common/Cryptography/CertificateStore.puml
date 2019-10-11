@@ -1,0 +1,18 @@
+@startuml
+class CertificateStore <<sealed>> {
+    - <<const>> PasswordReTries : int = 1
+    - <<const>> LocalHost : string = "localhost"
+    - PasswordTries : int <<get>> <<set>>
+    + CertificateStore(fileSystem:IFileSystem, passwordReader:IPasswordReader)
+    + ReadOrCreateCertificateFile(pfxFilePath:string) : X509Certificate2
+    - CreateAndSaveSelfSignedCertificate(filePath:string, commonName:string) : X509Certificate2
+    - Save(certificate:X509Certificate2, fileName:string, password:SecureString) : void
+    - TryGet(fileName:string, certificate:X509Certificate2) : bool
+    - PasswordAttemptCounter(msg:string, path:string) : void
+    + {static} BuildSelfSignedServerCertificate(password:SecureString, commonName:string) : X509Certificate2
+}
+ICertificateStore <|-- CertificateStore
+CertificateStore o-> "Logger" ILogger
+CertificateStore --> "_passwordReader" IPasswordReader
+CertificateStore --> "_storageFolder" DirectoryInfo
+@enduml

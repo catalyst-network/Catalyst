@@ -1,0 +1,5 @@
+@startuml
+class StringUtil <<static>> {
+    + {static} StringComparatorException(stringA:string, stringB:string) : bool
+}
+@enduml

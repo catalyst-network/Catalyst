@@ -1,0 +1,6 @@
+@startuml
+interface "IChanneledMessage`1"<out T> {
+    Payload : T <<get>>
+}
+"IChanneledMessage`1" --> "Context" IChannelHandlerContext
+@enduml

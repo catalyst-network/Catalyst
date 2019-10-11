@@ -1,0 +1,8 @@
+@startuml
+class UdpClient {
+    # UdpClient(logger:ILogger)
+    # <<sealed>> <<override>> Bootstrap(channelInitializer:IChannelHandler, ipEndPoint:IPEndPoint) : void
+}
+Client <|-- UdpClient
+IUdpClient <|-- UdpClient
+@enduml

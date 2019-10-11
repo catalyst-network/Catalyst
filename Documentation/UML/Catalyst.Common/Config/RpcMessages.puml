@@ -1,0 +1,55 @@
+@startuml
+class RpcMessages {
+    - RpcMessages(id:int, name:string)
+}
+class GetInfoRequestMessage <<sealed>> {
+    + GetInfoRequestMessage()
+}
+class GetInfoResponseMessage <<sealed>> {
+    + GetInfoResponseMessage()
+}
+class GetMempoolRequestMessage <<sealed>> {
+    + GetMempoolRequestMessage()
+}
+class GetMempoolResponseMessage <<sealed>> {
+    + GetMempoolResponseMessage()
+}
+class GetVersionRequestMessage <<sealed>> {
+    + GetVersionRequestMessage()
+}
+class GetVersionResponseMessage <<sealed>> {
+    + GetVersionResponseMessage()
+}
+class SignMessageRequestMessage <<sealed>> {
+    + SignMessageRequestMessage()
+}
+class SignMessageResponseMessage <<sealed>> {
+    + SignMessageResponseMessage()
+}
+Enumeration <|-- RpcMessages
+IEnumerableMessageType <|-- RpcMessages
+RpcMessages o-> "GetInfoRequest" RpcMessages
+RpcMessages o-> "GetInfoResponse" RpcMessages
+RpcMessages o-> "GetMempoolRequest" RpcMessages
+RpcMessages o-> "GetMempoolResponse" RpcMessages
+RpcMessages o-> "GetVersionRequest" RpcMessages
+RpcMessages o-> "GetVersionResponse" RpcMessages
+RpcMessages o-> "SignMessageRequest" RpcMessages
+RpcMessages o-> "SignMessageResponse" RpcMessages
+RpcMessages +-- GetInfoRequestMessage
+RpcMessages <|-- GetInfoRequestMessage
+RpcMessages +-- GetInfoResponseMessage
+RpcMessages <|-- GetInfoResponseMessage
+RpcMessages +-- GetMempoolRequestMessage
+RpcMessages <|-- GetMempoolRequestMessage
+RpcMessages +-- GetMempoolResponseMessage
+RpcMessages <|-- GetMempoolResponseMessage
+RpcMessages +-- GetVersionRequestMessage
+RpcMessages <|-- GetVersionRequestMessage
+RpcMessages +-- GetVersionResponseMessage
+RpcMessages <|-- GetVersionResponseMessage
+RpcMessages +-- SignMessageRequestMessage
+RpcMessages <|-- SignMessageRequestMessage
+RpcMessages +-- SignMessageResponseMessage
+RpcMessages <|-- SignMessageResponseMessage
+@enduml

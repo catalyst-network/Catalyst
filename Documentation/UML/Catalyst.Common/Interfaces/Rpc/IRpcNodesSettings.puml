@@ -1,0 +1,7 @@
+@startuml
+interface IRpcNodesSettings {
+}
+class "List`1"<T> {
+}
+IRpcNodesSettings --> "NodesList<IRpcNodeConfig>" "List`1"
+@enduml

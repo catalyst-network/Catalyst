@@ -1,0 +1,10 @@
+@startuml
+interface IRpcServerSettings {
+    Port : int <<get>>
+    MutualAuthentication : bool <<get>>
+    AcceptInvalidCerts : bool <<get>>
+    PfxFileName : string <<get>>
+}
+IRpcServerSettings --> "NodeConfig" IConfigurationRoot
+IRpcServerSettings --> "BindAddress" IPAddress
+@enduml

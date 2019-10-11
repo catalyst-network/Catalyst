@@ -1,0 +1,12 @@
+@startuml
+interface IAdvancedShell {
+    OnDfsCommand(args:string[]) : bool
+    OnPeerCommand(args:string[]) : bool
+    OnWalletCommand(args:string[]) : bool
+    OnConsensusCommand(args:string[]) : bool
+    IsSocketChannelActive(node:INodeRpcClient) : bool
+    GetConnectedNode(nodeId:string) : INodeRpcClient
+    OnSignMessage(opts:object) : bool
+}
+IShell <|-- IAdvancedShell
+@enduml

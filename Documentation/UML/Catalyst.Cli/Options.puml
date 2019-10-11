@@ -1,0 +1,27 @@
+@startuml
+class GetInfoOptions {
+    + Info : bool <<get>> <<set>>
+    + Mempool : bool <<get>> <<set>>
+    + Version : bool <<get>> <<set>>
+    + NodeId : string <<get>> <<set>>
+}
+class ConnectOptions <<sealed>> {
+    + Node : bool <<get>> <<set>>
+    + NodeId : string <<get>> <<set>>
+}
+class SignOptions <<sealed>> {
+    + Message : string <<get>> <<set>>
+    + Node : string <<get>> <<set>>
+}
+class VerifyOptions {
+    + Message : string <<get>> <<set>>
+    + Address : string <<get>> <<set>>
+    + Signature : string <<get>> <<set>>
+    + Node : string <<get>> <<set>>
+}
+class "IEnumerable`1"<T> {
+}
+ConnectOptions --> "Examples<Example>" "IEnumerable`1"
+SignOptions --> "Examples<Example>" "IEnumerable`1"
+VerifyOptions --> "Examples<Example>" "IEnumerable`1"
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+class MessageCorrelationCacheBase {
+    + MessageCorrelationCacheBase(cache:IMemoryCache, logger:ILogger, cacheTtl:TimeSpan)
+    # <<virtual>> GetInheritorDelegate() : PostEvictionDelegate
+    + AddPendingRequest(pendingRequest:PendingRequest) : void
+    + <<virtual>> TryMatchResponse(response:AnySigned) : TRequest
+    # <<virtual>> Dispose(disposing:bool) : void
+    + Dispose() : void
+}
+IMessageCorrelationCache <|-- MessageCorrelationCacheBase
+MessageCorrelationCacheBase o-> "DefaultTtl" TimeSpan
+MessageCorrelationCacheBase --> "PendingRequests" IMemoryCache
+MessageCorrelationCacheBase --> "_entryOptions" MemoryCacheEntryOptions
+MessageCorrelationCacheBase --> "Logger" ILogger
+MessageCorrelationCacheBase --> "CacheTtl" TimeSpan
+@enduml

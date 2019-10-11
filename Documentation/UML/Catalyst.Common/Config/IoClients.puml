@@ -1,0 +1,18 @@
+@startuml
+class IoClients {
+    - IoClients(id:int, name:string)
+}
+class NodeRpcTcp <<sealed>> {
+    + NodeRpcTcp()
+}
+class NodePeerUdp <<sealed>> {
+    + NodePeerUdp()
+}
+Enumeration <|-- IoClients
+IoClients o-> "NodeRpcTcpClient" IoClients
+IoClients o-> "NodePeerUdpClient" IoClients
+IoClients +-- NodeRpcTcp
+IoClients <|-- NodeRpcTcp
+IoClients +-- NodePeerUdp
+IoClients <|-- NodePeerUdp
+@enduml

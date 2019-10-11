@@ -1,0 +1,46 @@
+@startuml
+class Shell <<sealed>> {
+    - <<const>> NoConfigMessage : string = "Node not configured. Add node to config file and try again."
+    + Shell(nodeRpcClientFactory:INodeRpcClientFactory, config:IConfigurationRoot, logger:ILogger, certificateStore:ICertificateStore)
+    - {static} BuildCliPeerId(configuration:IConfiguration) : IPeerIdentifier
+    + <<override>> ParseCommand(args:string[]) : bool
+    - OnGetCommands(opts:GetInfoOptions) : bool
+    - OnSignCommands(opts:SignOptions) : bool
+    - OnVerifyCommands(opts:VerifyOptions) : bool
+    + OnDfsCommand(args:string[]) : bool
+    + OnWalletCommand(args:string[]) : bool
+    + OnPeerCommand(args:string[]) : bool
+    + OnConsensusCommand(args:string[]) : bool
+    - OnHelpCommand() : bool
+    + <<override>> OnStart(args:string[]) : bool
+    + <<override>> OnStop(args:string[]) : bool
+    - OnConnectNode(nodeId:string) : bool
+    + <<override>> OnStartWork(args:string[]) : bool
+    + <<override>> OnStopNode(args:string[]) : bool
+    + SocketClientDisconnectedHandler() : void
+    + <<override>> OnStopWork(args:string[]) : bool
+    # <<override>> OnGetVersion(opts:object) : bool
+    # <<override>> OnGetConfig(opts:object) : bool
+    - OnGetDelta(args:string[]) : bool
+    # <<override>> OnGetMempool(opts:object) : bool
+    + OnSignMessage(opts:object) : bool
+    + <<override>> OnVerifyMessage(opts:object) : bool
+    - OnMessageCommand(args:string[]) : bool
+    + IsSocketChannelActive(node:INodeRpcClient) : bool
+    + GetConnectedNode(nodeId:string) : INodeRpcClient
+    - GetNodeConfig(nodeId:string) : IRpcNodeConfig
+    - ReturnUserMessage(message:string) : void
+}
+class "IList`1"<T> {
+}
+class "ISocketClientRegistry`1"<T> {
+}
+ShellBase <|-- Shell
+IAdvancedShell <|-- Shell
+Shell --> "_peerIdentifier" IPeerIdentifier
+Shell --> "_certificateStore" ICertificateStore
+Shell --> "_rpcNodeConfigs<IRpcNodeConfig>" "IList`1"
+Shell --> "_nodeRpcClientFactory" INodeRpcClientFactory
+Shell --> "_socketClientRegistry<INodeRpcClient>" "ISocketClientRegistry`1"
+Shell --> "_logger" ILogger
+@enduml

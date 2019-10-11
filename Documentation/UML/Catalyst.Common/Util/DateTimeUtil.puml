@@ -1,0 +1,11 @@
+@startuml
+class DateTimeUtil <<static>> {
+    + {static} Minutes(mins:int) : TimeSpan
+    + {static} Seconds(secs:int) : TimeSpan
+    + {static} Milliseconds(milliSecs:int) : TimeSpan
+}
+class "Func`1"<T> {
+}
+DateTimeUtil o-> "Current<DateTime>" "Func`1"
+DateTimeUtil --> "UtcNow" DateTime
+@enduml

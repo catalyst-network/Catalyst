@@ -1,0 +1,6 @@
+@startuml
+class NullObjects <<static>> {
+}
+NullObjects o-> "AnySigned" AnySigned
+NullObjects o-> "ChanneledAnySigned" ChanneledAnySigned
+@enduml

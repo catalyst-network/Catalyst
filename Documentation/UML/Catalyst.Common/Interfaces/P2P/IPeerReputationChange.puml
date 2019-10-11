@@ -1,0 +1,6 @@
+@startuml
+interface IPeerReputationChange {
+    ReputationChange : int <<get>>
+}
+IPeerReputationChange --> "PeerIdentifier" IPeerIdentifier
+@enduml

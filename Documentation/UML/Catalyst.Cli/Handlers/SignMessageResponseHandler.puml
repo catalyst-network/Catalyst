@@ -1,0 +1,11 @@
+@startuml
+class SignMessageResponseHandler <<sealed>> {
+    + SignMessageResponseHandler(output:IUserOutput, messageCorrelationCache:IMessageCorrelationCache, logger:ILogger)
+    # <<override>> Handler(message:IChanneledMessage<AnySigned>) : void
+}
+class "CorrelatableMessageHandlerBase`2"<T1,T2> {
+}
+"CorrelatableMessageHandlerBase`2" "<SignMessageResponse,IMessageCorrelationCache>" <|-- SignMessageResponseHandler
+IRpcResponseHandler <|-- SignMessageResponseHandler
+SignMessageResponseHandler --> "_output" IUserOutput
+@enduml

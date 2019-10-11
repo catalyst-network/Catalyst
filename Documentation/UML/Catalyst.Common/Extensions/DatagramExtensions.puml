@@ -1,0 +1,5 @@
+@startuml
+class DatagramExtensions <<static>> {
+    + {static} ToDatagram(anySignedMessage:AnySigned, recipient:IPEndPoint) : DatagramPacket
+}
+@enduml

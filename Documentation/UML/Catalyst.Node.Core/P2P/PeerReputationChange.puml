@@ -1,0 +1,8 @@
+@startuml
+class PeerReputationChange <<sealed>> {
+    + ReputationChange : int <<get>>
+    + PeerReputationChange(peerIdentifier:IPeerIdentifier, reputationChange:int)
+}
+IPeerReputationChange <|-- PeerReputationChange
+PeerReputationChange --> "PeerIdentifier" IPeerIdentifier
+@enduml

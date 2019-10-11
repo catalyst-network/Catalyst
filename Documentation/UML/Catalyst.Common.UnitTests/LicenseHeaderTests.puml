@@ -1,0 +1,11 @@
+@startuml
+class LicenseHeaderTests {
+    + LicenseHeaderTests(output:ITestOutputHelper)
+    - <<const>> LicenseHeaderFileName : string = "COPYING"
+    + {static} <<async>> All_Cs_Files_Should_Have_License_Header() : Task
+}
+class StringExtensions <<static>> {
+    <<internal>> {static} TrimEndOfLines(originalString:string) : string
+}
+FileSystemBasedTest <|-- LicenseHeaderTests
+@enduml

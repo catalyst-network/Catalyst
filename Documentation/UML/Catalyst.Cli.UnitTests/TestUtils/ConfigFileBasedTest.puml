@@ -1,0 +1,13 @@
+@startuml
+class ConfigFileBasedTest {
+    # ConfigFileBasedTest(output:ITestOutputHelper)
+    # WriteLogsToTestOutput : bool <<get>> <<set>> = false
+    # WriteLogsToFile : bool <<get>> <<set>> = false
+    # LogOutputTemplate : string <<get>> <<set>> = "{Timestamp:HH:mm:ss} [{Level:u3}] ({ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}"
+    # <<virtual>> ConfigureContainerBuilder(config:IConfigurationRoot) : void
+    - ConfigureLogging(config:IConfigurationRoot) : void
+}
+FileSystemBasedTest <|-- ConfigFileBasedTest
+ConfigFileBasedTest --> "ContainerBuilder" ContainerBuilder
+ConfigFileBasedTest o-> "LogEventLevel" LogEventLevel
+@enduml

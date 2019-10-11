@@ -1,0 +1,24 @@
+@startuml
+class SignMessageResponseHandlerTest <<sealed>> {
+    {static} SignMessageResponseHandlerTest()
+    + SignMessageResponseHandlerTest()
+    - CreateStreamWithMessage(response:AnySigned) : IObservable<ChanneledAnySigned>
+    + {static} SignMessage(messageToSign:string, signature:string, pubKey:string) : SignedResponse
+    + RpcClient_Can_Handle_SignMessageResponse(signedResponse:SignedResponse) : void
+    + Dispose() : void
+}
+class "List`1"<T> {
+}
+class SignedResponse <<struct>> {
+}
+IDisposable <|-- SignMessageResponseHandlerTest
+SignMessageResponseHandlerTest --> "_logger" ILogger
+SignMessageResponseHandlerTest --> "_fakeContext" IChannelHandlerContext
+SignMessageResponseHandlerTest --> "QueryContents<object[]>" "List`1"
+SignMessageResponseHandlerTest --> "_output" IUserOutput
+SignMessageResponseHandlerTest --> "_handler" SignMessageResponseHandler
+SignMessageResponseHandlerTest +-- SignedResponse
+SignedResponse --> "Signature" ByteString
+SignedResponse --> "PublicKey" ByteString
+SignedResponse --> "OriginalMessage" ByteString
+@enduml

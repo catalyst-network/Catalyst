@@ -1,0 +1,16 @@
+@startuml
+class "SocketClientRegistry`1"<TSocketChannel> <<sealed>> {
+    + SocketClientRegistry()
+    + GenerateClientHashCode(socketEndpoint:IPEndPoint) : int
+    + AddClientToRegistry(socketHashCode:int, socket:TSocketChannel) : bool
+    + GetClientFromRegistry(socketHashCode:int) : TSocketChannel
+    + RemoveClientFromRegistry(socketHashCode:int) : bool
+    + GetRegistryType() : string
+}
+class "ISocketClientRegistry`1"<T> {
+}
+class "IDictionary`2"<T1,T2> {
+}
+"ISocketClientRegistry`1" "<TSocketChannel>" <|-- "SocketClientRegistry`1"
+"SocketClientRegistry`1" --> "Registry<int,TSocketChannel>" "IDictionary`2"
+@enduml

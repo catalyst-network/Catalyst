@@ -1,0 +1,10 @@
+@startuml
+class NodeRpcClientFactory <<sealed>> {
+    + NodeRpcClientFactory(responseHandlers:IEnumerable<IRpcResponseHandler>)
+    + GetClient(certificate:X509Certificate, nodeConfig:IRpcNodeConfig) : INodeRpcClient
+}
+class "IEnumerable`1"<T> {
+}
+INodeRpcClientFactory <|-- NodeRpcClientFactory
+NodeRpcClientFactory --> "_responseHandlers<IRpcResponseHandler>" "IEnumerable`1"
+@enduml

@@ -1,0 +1,6 @@
+@startuml
+class Contract {
+    + Address : string <<get>> <<set>>
+}
+IContract <|-- Contract
+@enduml

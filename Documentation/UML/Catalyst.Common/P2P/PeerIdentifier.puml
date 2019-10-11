@@ -1,0 +1,25 @@
+@startuml
+class PeerIdentifier <<sealed>> {
+    + {static} <<readonly>> AssemblyMajorVersion2Digits : string
+    + ClientId : string <<get>>
+    + ClientVersion : string <<get>>
+    + Port : int <<get>>
+    + PeerIdentifier(peerId:PeerId)
+    + PeerIdentifier(publicKey:byte[], ipAddress:IPAddress, port:int)
+    + PeerIdentifier(settings:IPeerSettings)
+    - PeerIdentifier(publicKey:byte[], endPoint:IPEndPoint)
+    - {static} ValidatePeerId(peerId:PeerId) : bool
+    - {static} ValidateClientId(clientId:byte[]) : bool
+    - {static} ValidateClientVersion(clientVersion:byte[]) : bool
+    - {static} ValidateIp(clientIp:byte[]) : bool
+    - {static} ValidatePort(portBytes:byte[]) : bool
+    + <<override>> ToString() : string
+    + Equals(other:IPeerIdentifier) : bool
+    + <<override>> Equals(obj:object) : bool
+    + <<override>> GetHashCode() : int
+}
+IPeerIdentifier <|-- PeerIdentifier
+PeerIdentifier --> "Ip" IPAddress
+PeerIdentifier --> "IpEndPoint" IPEndPoint
+PeerIdentifier --> "PeerId" PeerId
+@enduml

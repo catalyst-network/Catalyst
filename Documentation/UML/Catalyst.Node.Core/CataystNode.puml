@@ -1,0 +1,20 @@
+@startuml
+class CatalystNode {
+    - _disposed : bool
+    + CatalystNode(p2P:IP2PService, certificateStore:ICertificateStore, consensus:IConsensus, dfs:IDfs, ledger:ILedger, keySigner:IKeySigner, logger:ILogger, nodeRpcServer:INodeRpcServer, mempool:IMempool, contract:IContract)
+    + <<async>> RunAsync(ct:CancellationToken) : Task
+    + Dispose() : void
+    # <<virtual>> Dispose(disposing:bool) : void
+}
+IDisposable <|-- CatalystNode
+ICatalystNode <|-- CatalystNode
+CatalystNode --> "_consensus" IConsensus
+CatalystNode --> "_contract" IContract
+CatalystNode --> "_dfs" IDfs
+CatalystNode --> "_ledger" ILedger
+CatalystNode --> "_keySigner" IKeySigner
+CatalystNode --> "_logger" ILogger
+CatalystNode --> "_mempool" IMempool
+CatalystNode --> "_p2P" IP2PService
+CatalystNode --> "_nodeRpcServer" INodeRpcServer
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+interface IMessageHandler {
+    StartObserving(messageStream:IObservable<IChanneledMessage<AnySigned>>) : void
+}
+interface IP2PMessageHandler {
+}
+interface IRpcRequestHandler {
+}
+interface IRpcResponseHandler {
+}
+IMessageHandler <|-- IP2PMessageHandler
+IMessageHandler <|-- IRpcRequestHandler
+IMessageHandler <|-- IRpcResponseHandler
+@enduml

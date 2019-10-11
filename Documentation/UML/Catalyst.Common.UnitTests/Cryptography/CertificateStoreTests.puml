@@ -1,0 +1,20 @@
+@startuml
+class CertificateStoreTests <<sealed>> {
+    + CertificateStoreTests(output:ITestOutputHelper)
+    - _fileWithPassName : string
+    - Create_certificate_store() : void
+    - Ensure_no_certificate_file_exists() : void
+    - Create_a_certificate_file_with_password() : void
+    - The_store_should_have_asked_for_a_password_on_creation_and_loading() : void
+    - Read_the_certificate_file_with_password() : void
+    - The_certificate_from_file_should_have_the_correct_thumbprint() : void
+    # <<override>> Dispose(disposing:bool) : void
+    + CertificateStore_CanReadAndWriteCertFiles_WithPassword() : void
+}
+FileSystemBasedTest <|-- CertificateStoreTests
+CertificateStoreTests --> "_directoryInfo" DirectoryInfo
+CertificateStoreTests --> "_certificateStore" CertificateStore
+CertificateStoreTests --> "_createdCertificate" X509Certificate2
+CertificateStoreTests --> "_retrievedCertificate" X509Certificate2
+CertificateStoreTests --> "_passwordReader" IPasswordReader
+@enduml

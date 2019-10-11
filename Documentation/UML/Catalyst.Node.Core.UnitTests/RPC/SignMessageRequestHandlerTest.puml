@@ -1,0 +1,11 @@
+@startuml
+class SignMessageRequestHandlerTest <<sealed>> {
+    + SignMessageRequestHandlerTest(output:ITestOutputHelper)
+    + RpcServer_Can_Handle_SignMessageRequest() : void
+    # <<override>> Dispose(disposing:bool) : void
+}
+ConfigFileBasedTest <|-- SignMessageRequestHandlerTest
+SignMessageRequestHandlerTest --> "_scope" ILifetimeScope
+SignMessageRequestHandlerTest --> "_logger" ILogger
+SignMessageRequestHandlerTest --> "_keySigner" IKeySigner
+@enduml

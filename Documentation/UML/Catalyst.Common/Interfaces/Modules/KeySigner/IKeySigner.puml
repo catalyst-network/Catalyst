@@ -1,0 +1,9 @@
+@startuml
+interface IKeySigner {
+    Sign(data:ReadOnlySpan<byte>, address:string, password:string) : Task
+    Verify() : void
+    ExportKey() : void
+}
+IKeySigner --> "KeyStore" IKeyStore
+IKeySigner --> "CryptoContext" ICryptoContext
+@enduml

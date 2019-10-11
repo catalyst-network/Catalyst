@@ -1,0 +1,7 @@
+@startuml
+interface IUdpServer {
+    Bootstrap(channelInitializer:IChannelHandler, listenAddress:IPAddress, port:int) : void
+    Shutdown() : Task
+}
+IUdpServer --> "Channel" IChannel
+@enduml

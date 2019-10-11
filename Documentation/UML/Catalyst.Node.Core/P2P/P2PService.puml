@@ -1,0 +1,11 @@
+@startuml
+class P2PService <<sealed>> {
+    + P2PService(settings:IPeerSettings, peerDiscovery:IPeerDiscovery, messageHandlers:IEnumerable<IP2PMessageHandler>)
+}
+class "IObservable`1"<T> {
+}
+UdpServer <|-- P2PService
+IP2PService <|-- P2PService
+P2PService --> "Discovery" IPeerDiscovery
+P2PService --> "MessageStream<IChanneledMessage<AnySigned>>" "IObservable`1"
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+class GetVersionResponseHandler <<sealed>> {
+    + GetVersionResponseHandler(output:IUserOutput, messageCorrelationCache:IMessageCorrelationCache, logger:ILogger)
+    # <<override>> Handler(message:IChanneledMessage<AnySigned>) : void
+}
+class "CorrelatableMessageHandlerBase`2"<T1,T2> {
+}
+"CorrelatableMessageHandlerBase`2" "<VersionResponse,IMessageCorrelationCache>" <|-- GetVersionResponseHandler
+IRpcResponseHandler <|-- GetVersionResponseHandler
+GetVersionResponseHandler --> "_output" IUserOutput
+@enduml

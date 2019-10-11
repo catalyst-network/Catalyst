@@ -1,0 +1,10 @@
+@startuml
+class MessageCorrelationCacheIntegrationTests <<sealed>> {
+    + MessageCorrelationCacheIntegrationTests(output:ITestOutputHelper)
+    + <<async>> RequestStore_should_not_keep_records_for_longer_than_ttl() : Task
+    # <<override>> Dispose(disposing:bool) : void
+}
+ConfigFileBasedTest <|-- MessageCorrelationCacheIntegrationTests
+MessageCorrelationCacheIntegrationTests --> "_scope" ILifetimeScope
+MessageCorrelationCacheIntegrationTests --> "_logger" ILogger
+@enduml

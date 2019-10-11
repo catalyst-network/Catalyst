@@ -1,0 +1,13 @@
+@startuml
+class KeySigner {
+    + KeySigner(keyStore:IKeyStore, cryptoContext:ICryptoContext)
+    + Sign(data:ReadOnlySpan<byte>, address:string, password:string) : Task
+    + Verify() : void
+    + ExportKey() : void
+}
+IKeySigner <|-- KeySigner
+KeySigner --> "_keyStore" IKeyStore
+KeySigner --> "_cryptoContext" ICryptoContext
+KeySigner --> "KeyStore" IKeyStore
+KeySigner --> "CryptoContext" ICryptoContext
+@enduml

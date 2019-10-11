@@ -1,0 +1,7 @@
+@startuml
+interface IReputationManager {
+}
+class "IRepository`1"<T> {
+}
+IReputationManager --> "PeerRepository<Peer>" "IRepository`1"
+@enduml

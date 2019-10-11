@@ -1,0 +1,17 @@
+@startuml
+class PeerDiscoveryUnitTest <<sealed>> {
+    + PeerDiscoveryUnitTest(output:ITestOutputHelper)
+    + ResolvesIPeerDiscoveryCorrectly() : void
+    + CanParseDnsNodesFromConfig() : void
+    + <<async>> CanGetSeedNodesFromDns() : Task
+    + CanReceiveEventsFromSubscribedStream() : void
+}
+class "IRepository`1"<T> {
+}
+ConfigFileBasedTest <|-- PeerDiscoveryUnitTest
+PeerDiscoveryUnitTest --> "_config" IConfigurationRoot
+PeerDiscoveryUnitTest --> "_dns" IDns
+PeerDiscoveryUnitTest --> "_peerRepository<Peer>" "IRepository`1"
+PeerDiscoveryUnitTest --> "_logger" ILogger
+PeerDiscoveryUnitTest --> "_lookupClient" ILookupClient
+@enduml

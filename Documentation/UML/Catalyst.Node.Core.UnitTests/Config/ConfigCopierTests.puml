@@ -1,0 +1,18 @@
+@startuml
+class ConfigCopierTests <<sealed>> {
+    + ConfigCopierTests(output:ITestOutputHelper)
+    + RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(moduleFileName:string, network:Network) : void
+    - RunConfigStartUp_Should_Not_Overwrite_Existing_Files(fileName:string, network:Network) : void
+    - {static} EnumerateConfigFiles(currentDirectory:DirectoryInfo, modulesDirectory:DirectoryInfo) : IEnumerable<string>
+    - GetExpectedFileList(network:Network) : IEnumerable<string>
+    + RunConfigStartUp_Should_Create_Folder_If_Needed() : void
+}
+class ConfigFilesOverwriteTestData <<sealed>> {
+    + ConfigFilesOverwriteTestData()
+}
+class "TheoryData`2"<T1,T2> {
+}
+FileSystemBasedTest <|-- ConfigCopierTests
+ConfigCopierTests +-- ConfigFilesOverwriteTestData
+"TheoryData`2" "<string,Network>" <|-- ConfigFilesOverwriteTestData
+@enduml

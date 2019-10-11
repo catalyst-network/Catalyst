@@ -1,0 +1,12 @@
+@startuml
+interface IPeer {
+    Reputation : int <<get>>
+    IsAwolPeer : bool <<get>>
+    Touch() : void
+    IncreaseReputation(mer:int) : void
+    DecreaseReputation(mer:int) : void
+}
+IPeer --> "LastSeen" DateTime
+IPeer --> "PeerIdentifier" IPeerIdentifier
+IPeer --> "InactiveFor" TimeSpan
+@enduml

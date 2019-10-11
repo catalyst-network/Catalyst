@@ -1,0 +1,9 @@
+@startuml
+interface INodeRpcServer {
+}
+class "IChanneledMessageStreamer`1"<T> {
+}
+"IChanneledMessageStreamer`1" "<AnySigned>" <|-- INodeRpcServer
+IDisposable <|-- INodeRpcServer
+INodeRpcServer --> "Settings" IRpcServerSettings
+@enduml
