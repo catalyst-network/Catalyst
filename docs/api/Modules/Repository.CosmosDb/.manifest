@@ -1,7 +1,0 @@
-{
-  "Catalyst.Modules.Repository.CosmosDb": "Catalyst.Modules.Repository.CosmosDb.yml",
-  "Catalyst.Modules.Repository.CosmosDb.CosmosDbRepository`1": "Catalyst.Modules.Repository.CosmosDb.CosmosDbRepository-1.yml",
-  "Catalyst.Modules.Repository.CosmosDb.CosmosDbRepository`1.#ctor(System.String,System.String,System.String,System.Boolean,System.String,SharpRepository.Repository.Caching.ICachingStrategy{`0,System.String})": "Catalyst.Modules.Repository.CosmosDb.CosmosDbRepository-1.yml",
-  "Catalyst.Modules.Repository.CosmosDb.CosmosDbRepository`1.Client": "Catalyst.Modules.Repository.CosmosDb.CosmosDbRepository-1.yml",
-  "Catalyst.Modules.Repository.CosmosDb.CosmosDbRepository`1.Database": "Catalyst.Modules.Repository.CosmosDb.CosmosDbRepository-1.yml"
-}
