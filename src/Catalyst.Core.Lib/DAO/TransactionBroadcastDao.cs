@@ -24,11 +24,9 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
 using MongoDB.Bson.Serialization.Attributes;
-using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO
 {
@@ -52,11 +50,6 @@ namespace Catalyst.Core.Lib.DAO
         public IEnumerable<ConfidentialEntryDao> ConfidentialEntries { get; set; }
         public IEnumerable<ContractEntryDao> ContractEntries { get; set; }
 
-        public bool IsContractDeployment { get; set; }
-        public bool IsContractCall { get; set; }
-        public bool IsPublicTransaction { get; set; }
-        public bool IsConfidentialTransaction { get; set; }
-
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>();
@@ -69,19 +62,6 @@ namespace Catalyst.Core.Lib.DAO
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
-        }
-
-        public UInt256 SummedEntryFees()
-        {
-            var sum = ContractEntries.Sum(e => UInt256.Parse(e.Base.TransactionFees))
-              + PublicEntries.Sum(e => UInt256.Parse(e.Base.TransactionFees))
-              + ConfidentialEntries.Sum(e => UInt256.Parse(e.Base.TransactionFees));
-            return sum;
-        }
-
-        public bool HasValidEntries()
-        {
-            return IsContractDeployment ^ IsContractCall ^ IsPublicTransaction ^ IsConfidentialTransaction;
         }
     }
 }

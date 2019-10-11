@@ -88,14 +88,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
                .Returns(true);
 
-            _mempool.Repository.Exists(Arg.Any<Expression<Func<TransactionBroadcastDao, bool>>>()).Returns(true);
+            _mempool.Repository.TryReadItem(Arg.Any<string>()).Returns(true);
 
             _transactionReceivedEvent
                .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
-            _mempool.Repository.DidNotReceiveWithAnyArgs().Add(Arg.Any<TransactionBroadcastDao>());
+            _mempool.Repository.DidNotReceiveWithAnyArgs().CreateItem(default);
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Successful);
 
-            _mempool.Repository.Received(1).Add(Arg.Any<TransactionBroadcastDao>());
+            _mempool.Repository.Received(1).CreateItem(Arg.Any<TransactionBroadcastDao>());
             _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
                 broadcastedMessage => broadcastedMessage.Value.ToByteArray().SequenceEqual(transaction.ToByteArray())));
         }
