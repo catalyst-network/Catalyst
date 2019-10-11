@@ -7,3 +7,6 @@
 [submodule "submodules/Cryptography.FFI.Rust"]
 	path = submodules/Cryptography.FFI.Rust
 	url = https://github.com/catalyst-network/Cryptography.FFI.Rust.git
+[submodule "docs/articles"]
+	path = docs/articles
+	url = git@github.com:catalyst-network/Catalyst.Framework.wiki.git
