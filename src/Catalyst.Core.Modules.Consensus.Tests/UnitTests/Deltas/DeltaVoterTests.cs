@@ -302,7 +302,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 scoredCandidates[1].Score.Should().BeGreaterThan(scoredCandidates[0].Score);
 
                 var previousDeltaHash =
-                    _hashProvider.Cast(scoredCandidates[0].Candidate.PreviousDeltaDfsHash.ToByteArray());
+                    CidHelper.Cast(scoredCandidates[0].Candidate.PreviousDeltaDfsHash.ToByteArray());
 
                 var found = _voter.TryGetFavouriteDelta(previousDeltaHash, out var favouriteCandidate);
 
@@ -326,7 +326,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 AddCandidatesToCacheAndVote(10, 500, realCache);
 
                 var found = _voter.TryGetFavouriteDelta(
-                    _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)), out var favouriteCandidate);
+                    CidHelper.CreateCid(_hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32))),
+                    out var favouriteCandidate);
 
                 found.Should().BeFalse();
                 favouriteCandidate.Should().BeNull();
@@ -347,7 +348,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 scoredCandidates.Select(c => c.Candidate.PreviousDeltaDfsHash).Distinct().Count().Should().Be(1);
 
                 var found = _voter.TryGetFavouriteDelta(
-                    _hashProvider.Cast(scoredCandidates.First().Candidate.PreviousDeltaDfsHash.ToByteArray()),
+                    CidHelper.Cast(scoredCandidates.First().Candidate.PreviousDeltaDfsHash.ToByteArray()),
                     out var favouriteCandidate);
 
                 found.Should().BeTrue();

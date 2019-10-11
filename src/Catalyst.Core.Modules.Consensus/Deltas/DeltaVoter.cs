@@ -37,7 +37,6 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -45,12 +44,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate)
         {
-            return nameof(DeltaVoter) + "-" + candidate.Hash.ToByteArray().ToBase32();
+            return nameof(DeltaVoter) + "-" + CidHelper.Cast(candidate.Hash.ToByteArray());
         }
 
         public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate)
         {
-            return nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32();
+            return nameof(DeltaVoter) + "-" + CidHelper.Cast(candidate.PreviousDeltaDfsHash.ToByteArray());
         }
 
         public static string GetCandidateListCacheKey(Cid previousDeltaHash)
@@ -142,7 +141,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         public bool TryGetFavouriteDelta(Cid previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
-
         {
             Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull();
             _logger.Debug("Retrieving favourite candidate delta for the successor of delta {0}",
@@ -170,7 +168,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             };
 
             _logger.Debug("Retrieved favourite candidate delta {candidate} for the successor of delta {previousDelta}",
-                bestCandidate.Hash.ToByteArray().ToBase32(),
+                CidHelper.Cast(bestCandidate.Hash.ToByteArray()),
                 previousDeltaDfsHash);
 
             return true;
@@ -179,7 +177,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private int GetProducerRankFactor(CandidateDeltaBroadcast candidate)
         {
             var preferredProducers = _deltaProducersProvider
-               .GetDeltaProducersFromPreviousDelta(new MultiHash(candidate.PreviousDeltaDfsHash.ToByteArray()));
+               .GetDeltaProducersFromPreviousDelta(CidHelper.Cast(candidate.PreviousDeltaDfsHash.ToByteArray()));
             var ranking = preferredProducers.ToList()
                .FindIndex(p => p.Equals(candidate.ProducerId));
 
@@ -192,7 +190,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 throw new KeyNotFoundException(
                     $"Producer {candidate.ProducerId} " +
                     "should not be sending candidate deltas with previous hash " +
-                    $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32()}");
+                    $"{CidHelper.Cast(candidate.PreviousDeltaDfsHash.ToByteArray())}");
             }
 
             return preferredProducers.Count - ranking;

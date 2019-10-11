@@ -50,7 +50,6 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
         private readonly Cid _previousDeltaHash;
         private readonly IMemoryCache _producersByPreviousDelta;
-        private readonly string _previousDeltaHashString;
         private readonly IHashProvider _hashProvider;
 
         public PoaDeltaProducersProviderTests()
@@ -108,10 +107,10 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
 
-            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)),
+            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)),
                 out Arg.Any<object>());
             _producersByPreviousDelta.Received(1)
-               .CreateEntry(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)));
+               .CreateEntry(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)));
 
             producers.Should().OnlyHaveUniqueItems();
 
@@ -125,7 +124,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void GetDeltaProducersFromPreviousDelta_when_cached_should_not_recompute()
         {
-            _producersByPreviousDelta.TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)),
+            _producersByPreviousDelta.TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)),
                     out Arg.Any<object>())
                .Returns(ci =>
                 {
@@ -135,7 +134,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
 
-            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)),
+            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)),
                 out Arg.Any<object>());
             _producersByPreviousDelta.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<string>());
 

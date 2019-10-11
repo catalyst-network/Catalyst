@@ -42,6 +42,7 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using LibP2P;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiBase;
 
@@ -101,7 +102,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 {
                     responseCodeType = await Task.Run(async () =>
                     {
-                        var stream = await _dfs.ReadAsync(CidHelper.Cast(getFileFromDfsRequest.DfsHash.FromBase32()))
+                        var stream = await _dfs.ReadAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
                            .ConfigureAwait(false);
                         fileLen = stream.Length;
                         using (var fileTransferInformation = new UploadFileTransferInformation(
