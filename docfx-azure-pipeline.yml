@@ -14,8 +14,4 @@ steps:
   - powershell: |
       choco install docfx -y
       docfx docs/docfx.json
-      if ($lastexitcode -ne 0){
-        throw ("Error generating document")
-      }
     displayName: "docfx build"
-
