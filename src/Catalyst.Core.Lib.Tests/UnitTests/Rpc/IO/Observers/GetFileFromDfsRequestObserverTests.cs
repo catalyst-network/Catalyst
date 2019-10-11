@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfs = Substitute.For<IDfs>();
             var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
-            _observer = new GetFileFromDfsRequestObserver(_dfs, _hashProvider, peerSettings, _fileTransferFactory,
+            _observer = new GetFileFromDfsRequestObserver(_dfs, peerSettings, _fileTransferFactory,
                 Substitute.For<ILogger>());
         }
 

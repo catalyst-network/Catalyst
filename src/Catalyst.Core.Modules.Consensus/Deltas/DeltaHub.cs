@@ -27,20 +27,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
+using LibP2P;
 using Polly;
 using Polly.Retry;
 using Serilog;
-using LibP2P;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -51,7 +51,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IBroadcastManager _broadcastManager;
         private readonly PeerId _peerId;
         private readonly IDfs _dfs;
-        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
 
         protected virtual AsyncRetryPolicy<Cid> DfsRetryPolicy { get; }
@@ -59,13 +58,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerSettings peerSettings,
             IDfs dfs,
-            IHashProvider hashProvider,
             ILogger logger)
         {
             _broadcastManager = broadcastManager;
             _peerId = peerSettings.PeerId;
             _dfs = dfs;
-            _hashProvider = hashProvider;
             _logger = logger;
 
             DfsRetryPolicy = Polly.Policy<Cid>.Handle<Exception>()
@@ -82,7 +79,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             if (!candidate.ProducerId.Equals(_peerId))
             {
                 _logger.Warning($"{nameof(BroadcastCandidate)} " +
-                    $"should only be called by the producer of a candidate.");
+                    "should only be called by the producer of a candidate.");
                 return;
             }
 
@@ -103,7 +100,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public async Task<Cid> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta, CancellationToken cancellationToken = default)
+        public async Task<Cid> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta,
+            CancellationToken cancellationToken = default)
         {
             var newAddress = await PublishDeltaToDfs(delta, cancellationToken).ConfigureAwait(false);
             await BroadcastNewDfsFileAddressAsync(newAddress, delta.PreviousDeltaDfsHash).ConfigureAwait(false);
@@ -116,7 +114,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 var deltaAsArray = delta.ToByteArray();
                 var dfsFileAddress = await DfsRetryPolicy.ExecuteAsync(
-                    async c => await PublishDfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
+                    async c => await PublishDfsFileAsync(deltaAsArray, c).ConfigureAwait(false),
                     cancellationToken).ConfigureAwait(false);
 
                 _logger.Debug("New delta published to DFS at address: {ipfsFileAddress}", dfsFileAddress);
@@ -138,8 +136,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             try
             {
-                _logger.Verbose("Broadcasting new delta dfs address {dfsAddress} for delta with previous delta hash {previousDeltaHash}",
-                    dfsFileAddress, _hashProvider.Cast(previousDeltaHash.ToByteArray()));
+                _logger.Verbose(
+                    "Broadcasting new delta dfs address {dfsAddress} for delta with previous delta hash {previousDeltaHash}",
+                    dfsFileAddress, CidHelper.Cast(previousDeltaHash.ToByteArray()));
 
                 var newDeltaHashOnDfs = new DeltaDfsHashBroadcast
                 {

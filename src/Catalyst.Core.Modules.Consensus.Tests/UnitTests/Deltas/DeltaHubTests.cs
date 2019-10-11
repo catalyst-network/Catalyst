@@ -43,9 +43,9 @@ using NSubstitute;
 using Polly;
 using Polly.Retry;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using LibP2P;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -63,7 +63,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 IPeerSettings peerSettings,
                 IDfs dfs,
                 IHashProvider hashProvider, 
-                ILogger logger) : base(broadcastManager, peerSettings, dfs, hashProvider, logger) { }
+                ILogger logger) : base(broadcastManager, peerSettings, dfs, logger) { }
 
             protected override AsyncRetryPolicy<Cid> DfsRetryPolicy =>
                 Polly.Policy<Cid>.Handle<Exception>()
@@ -73,8 +73,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaHubTests()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _broadcastManager = Substitute.For<IBroadcastManager>();
             var logger = Substitute.For<ILogger>();
             _peerId = PeerIdHelper.GetPeerId("me");
@@ -181,8 +180,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             public BadDeltas()
             {
-                var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-                var hashProvider = new HashProvider(hashingAlgorithm);
+                var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
                 var noPreviousHash = new Delta {PreviousDeltaDfsHash = (new byte[0]).ToByteString()};
                 var noMerkleRoot = DeltaHelper.GetDelta(hashProvider, merkleRoot: new byte[0]);
                 

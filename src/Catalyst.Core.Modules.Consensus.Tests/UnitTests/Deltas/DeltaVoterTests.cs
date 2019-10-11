@@ -152,19 +152,19 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 _previousDeltaHash,
                 producerId: _producerIds.First());
 
-            var candidateHashAsString = _hashProvider.Cast(candidate.Hash.ToByteArray()).ToBase32();
+            var candidateHash = CidHelper.Cast(candidate.Hash.ToByteArray());
 
             var addedEntry = Substitute.For<ICacheEntry>();
-            _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)))
+            _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHash)))
                .Returns(addedEntry);
 
             _voter.OnNext(candidate);
 
             _cache.Received(1)
-               .TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)), out Arg.Any<object>());
+               .TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHash)), out Arg.Any<object>());
 
             _cache.ReceivedWithAnyArgs(2).CreateEntry(Arg.Any<object>());
-            _cache.Received(1).CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)));
+            _cache.Received(1).CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHash)));
 
             addedEntry.Value.Should().BeAssignableTo<IScoredCandidateDelta>();
             var scoredCandidateDelta = (IScoredCandidateDelta) addedEntry.Value;
@@ -184,7 +184,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 previousDeltaHash: _previousDeltaHash,
                 score: initialScore);
 
-            var candidateHashAsString = _hashProvider.Cast(cacheCandidate.Candidate.Hash.ToByteArray()).ToBase32();
+            var candidateHash = CidHelper.Cast(cacheCandidate.Candidate.Hash.ToByteArray());
 
             _cache.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(ci =>
             {
@@ -195,7 +195,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _voter.OnNext(cacheCandidate.Candidate);
 
             _cache.Received(1)
-               .TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)), out Arg.Any<object>());
+               .TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHash)), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<string>());
 
             cacheCandidate.Score.Should().Be(initialScore + 1);

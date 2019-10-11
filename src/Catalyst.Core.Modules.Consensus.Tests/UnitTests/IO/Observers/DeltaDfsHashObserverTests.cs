@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash");
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _hashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
@@ -75,7 +75,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash");
             var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash.ToArray());
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _hashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 

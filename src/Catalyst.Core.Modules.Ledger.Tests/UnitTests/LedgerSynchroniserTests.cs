@@ -34,7 +34,6 @@ using FluentAssertions;
 using LibP2P;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
@@ -59,7 +58,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
             _cancellationToken = new CancellationToken();
 
-            _synchroniser = new LedgerSynchroniser(_deltaCache, _hashProvider, logger);
+            _synchroniser = new LedgerSynchroniser(_deltaCache, logger);
         }
 
         private Dictionary<Cid, Delta> BuildChainedDeltas(int chainSize)
@@ -76,7 +75,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _output.WriteLine("chain is:");
             _output.WriteLine(string.Join(Environment.NewLine,
                 chainedDeltas.Select((c, i) =>
-                    $"{i}: current {c.Key} | previous {Cid.Decode(c.Value.PreviousDeltaDfsHash.ToByteArray().ToBase32())}")));
+                    $"{i}: current {c.Key} | previous {CidHelper.Cast(c.Value.PreviousDeltaDfsHash.ToByteArray())}")));
             return chainedDeltas;
         }
 

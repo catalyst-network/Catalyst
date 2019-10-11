@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Dawn;
@@ -43,14 +42,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private readonly IMemoryCache _candidatesCache;
         private readonly IDeltaProducersProvider _deltaProducersProvider;
-        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
-        public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate, IHashProvider hashProvider)
+        public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate)
         {
             return nameof(DeltaElector) + "-" +
-                hashProvider.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
+                CidHelper.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
         }
 
         public string GetCandidateListCacheKey(Cid previousDeltaHash)
@@ -60,12 +58,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         public DeltaElector(IMemoryCache candidatesCache,
             IDeltaProducersProvider deltaProducersProvider,
-            IHashProvider hashProvider,
             ILogger logger)
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
-            _hashProvider = hashProvider;
             _cacheEntryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(
                     new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
@@ -87,7 +83,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
 
-                var cid = _hashProvider.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
+                var cid = CidHelper.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(cid)
                    .Any(p => p.Equals(candidate.VoterId)))
@@ -99,7 +95,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     return;
                 }
 
-                var candidateListKey = GetCandidateListCacheKey(candidate, _hashProvider);
+                var candidateListKey = GetCandidateListCacheKey(candidate);
 
                 if (_candidatesCache.TryGetValue(candidateListKey,
                     out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
@@ -126,7 +122,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             if (!_candidatesCache.TryGetValue(candidateListCacheKey,
                 out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
             {
-                _logger.Debug("Failed to retrieve any favourite candidate with previous delta {0}", previousDeltaDfsHash);
+                _logger.Debug("Failed to retrieve any favourite candidate with previous delta {0}",
+                    previousDeltaDfsHash);
                 return null;
             }
 
