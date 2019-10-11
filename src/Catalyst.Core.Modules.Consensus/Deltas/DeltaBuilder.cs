@@ -29,8 +29,8 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     /// <inheritdoc />
     public class DeltaBuilder : IDeltaBuilder
     {
-        private readonly IDeltaTransactionRetriever<TransactionBroadcastDao> _transactionRetriever;
+        private readonly IDeltaTransactionRetriever _transactionRetriever;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
         private readonly PeerId _producerUniqueId;
@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ILogger _logger;
 
-        public DeltaBuilder(IDeltaTransactionRetriever<TransactionBroadcastDao> transactionRetriever,
+        public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
             IDeterministicRandomFactory randomFactory,
             IHashProvider hashProvider,
             IPeerSettings peerSettings,
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
                 t => t.PublicEntries.Select(e =>
-                    new RawEntryWithSaltedAndHashedEntry(e.ToProtoBuff(), salt, _hashProvider)));
+                    new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
 
             // (Eα;Oα)
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             // dn
             var signaturesInOrder = includedTransactions
-               .Select(p => p.Signature.ToProtoBuff().ToByteArray())
+               .Select(p => p.Signature.ToByteArray())
                .OrderBy(s => s, ByteUtil.ByteListComparer.Default)
                .SelectMany(b => b)
                .ToArray();
@@ -134,7 +134,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
                 CoinbaseEntries = {coinbaseEntry},
-                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x.ToProtoBuff())},
+                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x)},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -170,8 +170,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         ///     Gets the valid transactions for delta.
         ///     This method can be used to extract the collection of transactions that meet the criteria for validating delta.
         /// </summary>
-        private IList<TransactionBroadcastDao> GetValidTransactionsForDelta(
-            IList<TransactionBroadcastDao> allTransactions)
+        private IList<TransactionBroadcast> GetValidTransactionsForDelta(IList<TransactionBroadcast> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now

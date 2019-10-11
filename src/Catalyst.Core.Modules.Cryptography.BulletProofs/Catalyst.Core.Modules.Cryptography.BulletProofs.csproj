@@ -27,34 +27,22 @@
     <!-- @TODO at moment this only assumes debug target for rust build, we should pass $(configuration) rust build command-->
     <Target Name="CompileNativeRuntimes" BeforeTargets="BeforeBuild">
         <!-- build for osx -->
-        <Exec
-            Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'"
-            Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml --target-dir ./Runtimes/osx-x64"
-            ConsoleToMSBuild="true" />
-        <ItemGroup
-            Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">
+        <Exec Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'" Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml --target-dir ./Runtimes/osx-x64" ConsoleToMSBuild="true" />
+        <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">
             <None Include=".\Runtimes\osx-x64\*\libcatalystffi.dylib" Link="libcatalystffi.dylib">
                 <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             </None>
         </ItemGroup>
         <!-- build for windows -->
-        <Exec
-            Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'"
-            Command="cargo build --manifest-path ..\..\submodules\Cryptography.FFI.Rust\Cargo.toml --target-dir .\Runtimes\win-x64"
-            ConsoleToMSBuild="true" />
-        <ItemGroup
-            Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">
+        <Exec Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'" Command="cargo build --manifest-path ..\..\submodules\Cryptography.FFI.Rust\Cargo.toml --target-dir .\Runtimes\win-x64" ConsoleToMSBuild="true" />
+        <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">
             <None Include=".\Runtimes\win-x64\*\catalystffi.dll" Link="catalystffi.dll">
                 <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             </None>
         </ItemGroup>
         <!-- build for *nix -->
-        <Exec
-            Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'"
-            Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml --target-dir ./Runtimes/linux-x64"
-            ConsoleToMSBuild="true" />
-        <ItemGroup
-            Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">
+        <Exec Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'" Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml --target-dir ./Runtimes/linux-x64" ConsoleToMSBuild="true" />
+        <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">
             <None Include=".\Runtimes\linux-x64/*\libcatalystffi.so" Link="libcatalystffi.so">
                 <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             </None>

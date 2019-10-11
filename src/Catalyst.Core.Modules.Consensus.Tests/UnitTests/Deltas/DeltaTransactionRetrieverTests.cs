@@ -24,10 +24,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -37,7 +38,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaTransactionRetrieverTests
     {
-        private readonly IList<TransactionBroadcastDao> _transactions;
+        private readonly IList<TransactionBroadcast> _transactions;
         private readonly DeltaTransactionRetriever _transactionRetriever;
 
         public DeltaTransactionRetrieverTests()
@@ -47,14 +48,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var random = new Random();
 
             var mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
-            _transactions = Enumerable.Range(0, 20).Select(i => new TransactionBroadcastDao().ToDao(
+            _transactions = Enumerable.Range(0, 20).Select(i =>
                 TransactionHelper.GetPublicTransaction(
                     transactionFees: (ulong) random.Next(),
                     timestamp: random.Next(),
                     signature: i.ToString())
-            )).ToList();
+            ).ToList();
 
-            mempool.Repository.GetAll().Returns(_transactions);
+            mempool.Repository.GetAll().Returns(_transactions.Select(x => new TransactionBroadcastDao().ToDao(x)));
 
             _transactionRetriever = new DeltaTransactionRetriever(mempool,
                 TransactionComparerByFeeTimestampAndHash.Default);

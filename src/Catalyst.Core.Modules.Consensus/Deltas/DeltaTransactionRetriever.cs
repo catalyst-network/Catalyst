@@ -27,31 +27,32 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Protocol.Wire;
 using Dawn;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
     /// <inheritdoc />
-    public class DeltaTransactionRetriever : IDeltaTransactionRetriever<TransactionBroadcastDao>
+    public class DeltaTransactionRetriever : IDeltaTransactionRetriever
     {
         private readonly IMempool<TransactionBroadcastDao> _mempool;
 
         /// <inheritdoc />
-        public ITransactionComparer<TransactionBroadcastDao> TransactionComparer { get; }
+        public ITransactionComparer TransactionComparer { get; }
 
         public DeltaTransactionRetriever(IMempool<TransactionBroadcastDao> mempool,
-            ITransactionComparer<TransactionBroadcastDao> transactionComparer)
+            ITransactionComparer transactionComparer)
         {
             _mempool = mempool;
             TransactionComparer = transactionComparer;
         }
 
         /// <inheritdoc />
-        public IList<TransactionBroadcastDao> GetMempoolTransactionsByPriority(int maxCount = 2147483647)
+        public IList<TransactionBroadcast> GetMempoolTransactionsByPriority(int maxCount = 2147483647)
         {
             Guard.Argument(maxCount, nameof(maxCount)).NotNegative().NotZero();
 
-            var allTransactions = _mempool.Repository.GetAll();
+            var allTransactions = _mempool.Repository.GetAll().Select(x => x.ToProtoBuff());
             var mempoolPrioritised = allTransactions.OrderByDescending(t => t, TransactionComparer)
                .Take(maxCount).Select(t => t).ToList();
 

@@ -26,5 +26,5 @@ using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.Consensus
 {
-    public interface ITransactionComparer<in T> : IComparer<T> { }
+    public interface ITransactionComparer : IComparer<TransactionBroadcast> { }
 }
