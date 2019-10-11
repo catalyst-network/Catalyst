@@ -1,9 +1,0 @@
-@startuml
-class NSecPrivateKeyWrapper <<sealed>> {
-    + NSecPrivateKeyWrapper(key:Key)
-    + GetNSecFormatPrivateKey() : Key
-    + GetNSecFormatPublicKey() : PublicKey
-}
-IPrivateKey <|-- NSecPrivateKeyWrapper
-NSecPrivateKeyWrapper --> "_key" Key
-@enduml

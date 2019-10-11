@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib
+  commentId: N:Catalyst.Core.Lib
+  id: Catalyst.Core.Lib
+  children:
+  - Catalyst.Core.Lib.CoreLibProvider
+  - Catalyst.Core.Lib.JsonConfiguredModule
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib
+  nameWithType: Catalyst.Core.Lib
+  fullName: Catalyst.Core.Lib
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.CoreLibProvider
+  commentId: T:Catalyst.Core.Lib.CoreLibProvider
+  name: CoreLibProvider
+  nameWithType: CoreLibProvider
+  fullName: Catalyst.Core.Lib.CoreLibProvider
+- uid: Catalyst.Core.Lib.JsonConfiguredModule
+  commentId: T:Catalyst.Core.Lib.JsonConfiguredModule
+  name: JsonConfiguredModule
+  nameWithType: JsonConfiguredModule
+  fullName: Catalyst.Core.Lib.JsonConfiguredModule

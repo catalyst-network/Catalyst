@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  commentId: N:Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  id: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  children:
+  - Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  nameWithType: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+references:
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory
+  commentId: T:Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory
+  name: RpcClientChannelFactory
+  nameWithType: RpcClientChannelFactory
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory

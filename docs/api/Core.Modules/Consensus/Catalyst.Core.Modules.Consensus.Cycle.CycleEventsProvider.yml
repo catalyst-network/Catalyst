@@ -1,0 +1,944 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  commentId: T:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  id: CycleEventsProvider
+  parent: Catalyst.Core.Modules.Consensus.Cycle
+  children:
+  - Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.#ctor(Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration,Catalyst.Abstractions.Consensus.IDateTimeProvider,Catalyst.Abstractions.Consensus.Cycle.ICycleSchedulerProvider,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Serilog.ILogger)
+  - Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Close
+  - Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Configuration
+  - Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose
+  - Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose(System.Boolean)
+  - Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.GetTimeSpanUntilNextCycleStart
+  - Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.PhaseChanges
+  - Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Scheduler
+  langs:
+  - csharp
+  - vb
+  name: CycleEventsProvider
+  nameWithType: CycleEventsProvider
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CycleEventsProvider
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: 'public class CycleEventsProvider : ICycleEventsProvider, IDisposable'
+    content.vb: >-
+      Public Class CycleEventsProvider
+
+          Implements ICycleEventsProvider, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Scheduler
+  commentId: F:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Scheduler
+  id: Scheduler
+  parent: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  langs:
+  - csharp
+  - vb
+  name: Scheduler
+  nameWithType: CycleEventsProvider.Scheduler
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Scheduler
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Scheduler
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  syntax:
+    content: protected readonly IScheduler Scheduler
+    return:
+      type: System.Reactive.Concurrency.IScheduler
+    content.vb: Protected ReadOnly Scheduler As IScheduler
+  modifiers.csharp:
+  - protected
+  - readonly
+  modifiers.vb:
+  - Protected
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.#ctor(Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration,Catalyst.Abstractions.Consensus.IDateTimeProvider,Catalyst.Abstractions.Consensus.Cycle.ICycleSchedulerProvider,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Serilog.ILogger)
+  commentId: M:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.#ctor(Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration,Catalyst.Abstractions.Consensus.IDateTimeProvider,Catalyst.Abstractions.Consensus.Cycle.ICycleSchedulerProvider,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Serilog.ILogger)
+  id: '#ctor(Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration,Catalyst.Abstractions.Consensus.IDateTimeProvider,Catalyst.Abstractions.Consensus.Cycle.ICycleSchedulerProvider,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Serilog.ILogger)'
+  parent: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  langs:
+  - csharp
+  - vb
+  name: CycleEventsProvider(ICycleConfiguration, IDateTimeProvider, ICycleSchedulerProvider, IDeltaHashProvider, ILogger)
+  nameWithType: CycleEventsProvider.CycleEventsProvider(ICycleConfiguration, IDateTimeProvider, ICycleSchedulerProvider, IDeltaHashProvider, ILogger)
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.CycleEventsProvider(Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration, Catalyst.Abstractions.Consensus.IDateTimeProvider, Catalyst.Abstractions.Consensus.Cycle.ICycleSchedulerProvider, Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider, Serilog.ILogger)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+    startLine: 42
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  syntax:
+    content: public CycleEventsProvider(ICycleConfiguration configuration, IDateTimeProvider timeProvider, ICycleSchedulerProvider schedulerProvider, IDeltaHashProvider deltaHashProvider, ILogger logger)
+    parameters:
+    - id: configuration
+      type: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+    - id: timeProvider
+      type: Catalyst.Abstractions.Consensus.IDateTimeProvider
+    - id: schedulerProvider
+      type: Catalyst.Abstractions.Consensus.Cycle.ICycleSchedulerProvider
+    - id: deltaHashProvider
+      type: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+    - id: logger
+      type: Serilog.ILogger
+    content.vb: Public Sub New(configuration As ICycleConfiguration, timeProvider As IDateTimeProvider, schedulerProvider As ICycleSchedulerProvider, deltaHashProvider As IDeltaHashProvider, logger As ILogger)
+  overload: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.GetTimeSpanUntilNextCycleStart
+  commentId: M:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.GetTimeSpanUntilNextCycleStart
+  id: GetTimeSpanUntilNextCycleStart
+  parent: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  langs:
+  - csharp
+  - vb
+  name: GetTimeSpanUntilNextCycleStart()
+  nameWithType: CycleEventsProvider.GetTimeSpanUntilNextCycleStart()
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.GetTimeSpanUntilNextCycleStart()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetTimeSpanUntilNextCycleStart
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+    startLine: 80
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  syntax:
+    content: public TimeSpan GetTimeSpanUntilNextCycleStart()
+    return:
+      type: System.TimeSpan
+    content.vb: Public Function GetTimeSpanUntilNextCycleStart As TimeSpan
+  overload: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.GetTimeSpanUntilNextCycleStart*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.GetTimeSpanUntilNextCycleStart
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Configuration
+  commentId: P:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Configuration
+  id: Configuration
+  parent: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  langs:
+  - csharp
+  - vb
+  name: Configuration
+  nameWithType: CycleEventsProvider.Configuration
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Configuration
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Configuration
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+    startLine: 90
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: public ICycleConfiguration Configuration { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+    content.vb: Public ReadOnly Property Configuration As ICycleConfiguration
+  overload: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Configuration*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Configuration
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.PhaseChanges
+  commentId: P:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.PhaseChanges
+  id: PhaseChanges
+  parent: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  langs:
+  - csharp
+  - vb
+  name: PhaseChanges
+  nameWithType: CycleEventsProvider.PhaseChanges
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.PhaseChanges
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PhaseChanges
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+    startLine: 93
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: public IObservable<IPhase> PhaseChanges { get; }
+    parameters: []
+    return:
+      type: System.IObservable{Catalyst.Abstractions.Consensus.Cycle.IPhase}
+    content.vb: Public ReadOnly Property PhaseChanges As IObservable(Of IPhase)
+  overload: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.PhaseChanges*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.PhaseChanges
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Close
+  commentId: M:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Close
+  id: Close
+  parent: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  langs:
+  - csharp
+  - vb
+  name: Close()
+  nameWithType: CycleEventsProvider.Close()
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Close()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Close
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+    startLine: 96
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: public void Close()
+    content.vb: Public Sub Close
+  overload: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Close*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Close
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose(System.Boolean)
+  commentId: M:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose(System.Boolean)
+  id: Dispose(System.Boolean)
+  parent: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  langs:
+  - csharp
+  - vb
+  name: Dispose(Boolean)
+  nameWithType: CycleEventsProvider.Dispose(Boolean)
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose(System.Boolean)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+    startLine: 98
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  syntax:
+    content: protected virtual void Dispose(bool disposing)
+    parameters:
+    - id: disposing
+      type: System.Boolean
+    content.vb: Protected Overridable Sub Dispose(disposing As Boolean)
+  overload: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose*
+  modifiers.csharp:
+  - protected
+  - virtual
+  modifiers.vb:
+  - Protected
+  - Overridable
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose
+  commentId: M:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose
+  id: Dispose
+  parent: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: CycleEventsProvider.Dispose()
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/CycleEventsProvider.cs
+    startLine: 114
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose
+  overload: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.Consensus.Cycle
+  commentId: N:Catalyst.Core.Modules.Consensus.Cycle
+  name: Catalyst.Core.Modules.Consensus.Cycle
+  nameWithType: Catalyst.Core.Modules.Consensus.Cycle
+  fullName: Catalyst.Core.Modules.Consensus.Cycle
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: ICycleEventsProvider
+  nameWithType: ICycleEventsProvider
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus.Cycle
+  commentId: N:Catalyst.Abstractions.Consensus.Cycle
+  name: Catalyst.Abstractions.Consensus.Cycle
+  nameWithType: Catalyst.Abstractions.Consensus.Cycle
+  fullName: Catalyst.Abstractions.Consensus.Cycle
+- uid: System.Reactive.Concurrency.IScheduler
+  commentId: T:System.Reactive.Concurrency.IScheduler
+  parent: System.Reactive.Concurrency
+  isExternal: true
+  name: IScheduler
+  nameWithType: IScheduler
+  fullName: System.Reactive.Concurrency.IScheduler
+- uid: System.Reactive.Concurrency
+  commentId: N:System.Reactive.Concurrency
+  isExternal: true
+  name: System.Reactive.Concurrency
+  nameWithType: System.Reactive.Concurrency
+  fullName: System.Reactive.Concurrency
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.#ctor
+  name: CycleEventsProvider
+  nameWithType: CycleEventsProvider.CycleEventsProvider
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.CycleEventsProvider
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: ICycleConfiguration
+  nameWithType: ICycleConfiguration
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+- uid: Catalyst.Abstractions.Consensus.IDateTimeProvider
+  commentId: T:Catalyst.Abstractions.Consensus.IDateTimeProvider
+  parent: Catalyst.Abstractions.Consensus
+  name: IDateTimeProvider
+  nameWithType: IDateTimeProvider
+  fullName: Catalyst.Abstractions.Consensus.IDateTimeProvider
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleSchedulerProvider
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.ICycleSchedulerProvider
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: ICycleSchedulerProvider
+  nameWithType: ICycleSchedulerProvider
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleSchedulerProvider
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IDeltaHashProvider
+  nameWithType: IDeltaHashProvider
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+- uid: Serilog.ILogger
+  commentId: T:Serilog.ILogger
+  parent: Serilog
+  isExternal: true
+  name: ILogger
+  nameWithType: ILogger
+  fullName: Serilog.ILogger
+- uid: Catalyst.Abstractions.Consensus
+  commentId: N:Catalyst.Abstractions.Consensus
+  name: Catalyst.Abstractions.Consensus
+  nameWithType: Catalyst.Abstractions.Consensus
+  fullName: Catalyst.Abstractions.Consensus
+- uid: Catalyst.Abstractions.Consensus.Deltas
+  commentId: N:Catalyst.Abstractions.Consensus.Deltas
+  name: Catalyst.Abstractions.Consensus.Deltas
+  nameWithType: Catalyst.Abstractions.Consensus.Deltas
+  fullName: Catalyst.Abstractions.Consensus.Deltas
+- uid: Serilog
+  commentId: N:Serilog
+  isExternal: true
+  name: Serilog
+  nameWithType: Serilog
+  fullName: Serilog
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.GetTimeSpanUntilNextCycleStart*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.GetTimeSpanUntilNextCycleStart
+  name: GetTimeSpanUntilNextCycleStart
+  nameWithType: CycleEventsProvider.GetTimeSpanUntilNextCycleStart
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.GetTimeSpanUntilNextCycleStart
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.GetTimeSpanUntilNextCycleStart
+  commentId: M:Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.GetTimeSpanUntilNextCycleStart
+  parent: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  name: GetTimeSpanUntilNextCycleStart()
+  nameWithType: ICycleEventsProvider.GetTimeSpanUntilNextCycleStart()
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.GetTimeSpanUntilNextCycleStart()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.GetTimeSpanUntilNextCycleStart
+    name: GetTimeSpanUntilNextCycleStart
+    nameWithType: ICycleEventsProvider.GetTimeSpanUntilNextCycleStart
+    fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.GetTimeSpanUntilNextCycleStart
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.GetTimeSpanUntilNextCycleStart
+    name: GetTimeSpanUntilNextCycleStart
+    nameWithType: ICycleEventsProvider.GetTimeSpanUntilNextCycleStart
+    fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.GetTimeSpanUntilNextCycleStart
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.TimeSpan
+  commentId: T:System.TimeSpan
+  parent: System
+  isExternal: true
+  name: TimeSpan
+  nameWithType: TimeSpan
+  fullName: System.TimeSpan
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Configuration*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Configuration
+  name: Configuration
+  nameWithType: CycleEventsProvider.Configuration
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Configuration
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Configuration
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Configuration
+  parent: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  name: Configuration
+  nameWithType: ICycleEventsProvider.Configuration
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Configuration
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.PhaseChanges*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.PhaseChanges
+  name: PhaseChanges
+  nameWithType: CycleEventsProvider.PhaseChanges
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.PhaseChanges
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.PhaseChanges
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.PhaseChanges
+  parent: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  name: PhaseChanges
+  nameWithType: ICycleEventsProvider.PhaseChanges
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.PhaseChanges
+- uid: System.IObservable{Catalyst.Abstractions.Consensus.Cycle.IPhase}
+  commentId: T:System.IObservable{Catalyst.Abstractions.Consensus.Cycle.IPhase}
+  parent: System
+  definition: System.IObservable`1
+  name: IObservable<IPhase>
+  nameWithType: IObservable<IPhase>
+  fullName: System.IObservable<Catalyst.Abstractions.Consensus.Cycle.IPhase>
+  nameWithType.vb: IObservable(Of IPhase)
+  fullName.vb: System.IObservable(Of Catalyst.Abstractions.Consensus.Cycle.IPhase)
+  name.vb: IObservable(Of IPhase)
+  spec.csharp:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.Consensus.Cycle.IPhase
+    name: IPhase
+    nameWithType: IPhase
+    fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.Consensus.Cycle.IPhase
+    name: IPhase
+    nameWithType: IPhase
+    fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObservable`1
+  commentId: T:System.IObservable`1
+  isExternal: true
+  name: IObservable<T>
+  nameWithType: IObservable<T>
+  fullName: System.IObservable<T>
+  nameWithType.vb: IObservable(Of T)
+  fullName.vb: System.IObservable(Of T)
+  name.vb: IObservable(Of T)
+  spec.csharp:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Close*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Close
+  name: Close
+  nameWithType: CycleEventsProvider.Close
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Close
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Close
+  commentId: M:Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Close
+  parent: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  name: Close()
+  nameWithType: ICycleEventsProvider.Close()
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Close()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Close
+    name: Close
+    nameWithType: ICycleEventsProvider.Close
+    fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Close
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Close
+    name: Close
+    nameWithType: ICycleEventsProvider.Close
+    fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider.Close
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose
+  name: Dispose
+  nameWithType: CycleEventsProvider.Dispose
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.CycleEventsProvider.Dispose
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )

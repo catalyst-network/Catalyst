@@ -1,0 +1,232 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Account.AccountType
+  commentId: T:Catalyst.Protocol.Account.AccountType
+  id: AccountType
+  parent: Catalyst.Protocol.Account
+  children:
+  - Catalyst.Protocol.Account.AccountType.ConfidentialAccount
+  - Catalyst.Protocol.Account.AccountType.PublicAccount
+  - Catalyst.Protocol.Account.AccountType.SmartContractAccount
+  - Catalyst.Protocol.Account.AccountType.Unknown
+  langs:
+  - csharp
+  - vb
+  name: AccountType
+  nameWithType: AccountType
+  fullName: Catalyst.Protocol.Account.AccountType
+  type: Enum
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Account.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: AccountType
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Account.cs
+    startLine: 49
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Account
+  summary: "\nWe need to leave the 3 first bits for the NetworkType and can use the rest\nfor the AccountType\n"
+  example: []
+  syntax:
+    content: public enum AccountType
+    content.vb: Public Enum AccountType
+  modifiers.csharp:
+  - public
+  - enum
+  modifiers.vb:
+  - Public
+  - Enum
+- uid: Catalyst.Protocol.Account.AccountType.Unknown
+  commentId: F:Catalyst.Protocol.Account.AccountType.Unknown
+  id: Unknown
+  parent: Catalyst.Protocol.Account.AccountType
+  langs:
+  - csharp
+  - vb
+  name: Unknown
+  nameWithType: AccountType.Unknown
+  fullName: Catalyst.Protocol.Account.AccountType.Unknown
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Account.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Unknown
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Account.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Account
+  syntax:
+    content: >-
+      [OriginalName("ACCOUNT_TYPE_UNKNOWN")]
+
+      Unknown = 0
+    return:
+      type: Catalyst.Protocol.Account.AccountType
+    content.vb: >-
+      <OriginalName("ACCOUNT_TYPE_UNKNOWN")>
+
+      Unknown = 0
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ACCOUNT_TYPE_UNKNOWN
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Account.AccountType.PublicAccount
+  commentId: F:Catalyst.Protocol.Account.AccountType.PublicAccount
+  id: PublicAccount
+  parent: Catalyst.Protocol.Account.AccountType
+  langs:
+  - csharp
+  - vb
+  name: PublicAccount
+  nameWithType: AccountType.PublicAccount
+  fullName: Catalyst.Protocol.Account.AccountType.PublicAccount
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Account.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PublicAccount
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Account.cs
+    startLine: 51
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Account
+  syntax:
+    content: >-
+      [OriginalName("PUBLIC_ACCOUNT")]
+
+      PublicAccount = 8
+    return:
+      type: Catalyst.Protocol.Account.AccountType
+    content.vb: >-
+      <OriginalName("PUBLIC_ACCOUNT")>
+
+      PublicAccount = 8
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: PUBLIC_ACCOUNT
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Account.AccountType.ConfidentialAccount
+  commentId: F:Catalyst.Protocol.Account.AccountType.ConfidentialAccount
+  id: ConfidentialAccount
+  parent: Catalyst.Protocol.Account.AccountType
+  langs:
+  - csharp
+  - vb
+  name: ConfidentialAccount
+  nameWithType: AccountType.ConfidentialAccount
+  fullName: Catalyst.Protocol.Account.AccountType.ConfidentialAccount
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Account.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ConfidentialAccount
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Account.cs
+    startLine: 52
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Account
+  syntax:
+    content: >-
+      [OriginalName("CONFIDENTIAL_ACCOUNT")]
+
+      ConfidentialAccount = 16
+    return:
+      type: Catalyst.Protocol.Account.AccountType
+    content.vb: >-
+      <OriginalName("CONFIDENTIAL_ACCOUNT")>
+
+      ConfidentialAccount = 16
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: CONFIDENTIAL_ACCOUNT
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Account.AccountType.SmartContractAccount
+  commentId: F:Catalyst.Protocol.Account.AccountType.SmartContractAccount
+  id: SmartContractAccount
+  parent: Catalyst.Protocol.Account.AccountType
+  langs:
+  - csharp
+  - vb
+  name: SmartContractAccount
+  nameWithType: AccountType.SmartContractAccount
+  fullName: Catalyst.Protocol.Account.AccountType.SmartContractAccount
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Account.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: SmartContractAccount
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Account.cs
+    startLine: 53
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Account
+  syntax:
+    content: >-
+      [OriginalName("SMART_CONTRACT_ACCOUNT")]
+
+      SmartContractAccount = 24
+    return:
+      type: Catalyst.Protocol.Account.AccountType
+    content.vb: >-
+      <OriginalName("SMART_CONTRACT_ACCOUNT")>
+
+      SmartContractAccount = 24
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: SMART_CONTRACT_ACCOUNT
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+references:
+- uid: Catalyst.Protocol.Account
+  commentId: N:Catalyst.Protocol.Account
+  name: Catalyst.Protocol.Account
+  nameWithType: Catalyst.Protocol.Account
+  fullName: Catalyst.Protocol.Account
+- uid: Catalyst.Protocol.Account.AccountType
+  commentId: T:Catalyst.Protocol.Account.AccountType
+  parent: Catalyst.Protocol.Account
+  name: AccountType
+  nameWithType: AccountType
+  fullName: Catalyst.Protocol.Account.AccountType

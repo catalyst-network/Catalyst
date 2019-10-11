@@ -1,0 +1,252 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Transport.ITcpClient
+  commentId: T:Catalyst.Abstractions.IO.Transport.ITcpClient
+  id: ITcpClient
+  parent: Catalyst.Abstractions.IO.Transport
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: ITcpClient
+  nameWithType: ITcpClient
+  fullName: Catalyst.Abstractions.IO.Transport.ITcpClient
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Transport/ITcpClient.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ITcpClient
+    path: ../src/Catalyst.Abstractions/IO/Transport/ITcpClient.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Transport
+  syntax:
+    content: 'public interface ITcpClient : ISocketClient, ISocket, IDisposable'
+    content.vb: >-
+      Public Interface ITcpClient
+
+          Inherits ISocketClient
+  inheritedMembers:
+  - Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage``1(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{{T}})
+  - Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  - Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+references:
+- uid: Catalyst.Abstractions.IO.Transport
+  commentId: N:Catalyst.Abstractions.IO.Transport
+  name: Catalyst.Abstractions.IO.Transport
+  nameWithType: Catalyst.Abstractions.IO.Transport
+  fullName: Catalyst.Abstractions.IO.Transport
+- uid: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage``1(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{{T}})
+  commentId: M:Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage``1(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{``0})
+  parent: Catalyst.Abstractions.IO.Transport.ISocketClient
+  definition: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage``1(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{``0})
+  name: SendMessage<T>(IMessageDto<T>)
+  nameWithType: ISocketClient.SendMessage<T>(IMessageDto<T>)
+  fullName: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage<T>(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>)
+  nameWithType.vb: ISocketClient.SendMessage(Of T)(IMessageDto(Of T))
+  fullName.vb: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage(Of T)(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T))
+  name.vb: SendMessage(Of T)(IMessageDto(Of T))
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage``1(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{``0})
+    name: SendMessage<T>
+    nameWithType: ISocketClient.SendMessage<T>
+    fullName: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage``1(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{``0})
+    name: SendMessage(Of T)
+    nameWithType: ISocketClient.SendMessage(Of T)
+    fullName: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  commentId: P:Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  parent: Catalyst.Abstractions.IO.Transport.ISocket
+  name: Channel
+  nameWithType: ISocket.Channel
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket.Channel
+- uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  commentId: M:Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  parent: Catalyst.Abstractions.IO.Transport.ISocket
+  name: StartAsync()
+  nameWithType: ISocket.StartAsync()
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+    name: StartAsync
+    nameWithType: ISocket.StartAsync
+    fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+    name: StartAsync
+    nameWithType: ISocket.StartAsync
+    fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage``1(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{``0})
+  commentId: M:Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage``1(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{``0})
+  name: SendMessage<T>(IMessageDto<T>)
+  nameWithType: ISocketClient.SendMessage<T>(IMessageDto<T>)
+  fullName: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage<T>(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>)
+  nameWithType.vb: ISocketClient.SendMessage(Of T)(IMessageDto(Of T))
+  fullName.vb: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage(Of T)(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T))
+  name.vb: SendMessage(Of T)(IMessageDto(Of T))
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage``1(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{``0})
+    name: SendMessage<T>
+    nameWithType: ISocketClient.SendMessage<T>
+    fullName: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage``1(Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{``0})
+    name: SendMessage(Of T)
+    nameWithType: ISocketClient.SendMessage(Of T)
+    fullName: Catalyst.Abstractions.IO.Transport.ISocketClient.SendMessage(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Transport.ISocketClient
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocketClient
+  parent: Catalyst.Abstractions.IO.Transport
+  name: ISocketClient
+  nameWithType: ISocketClient
+  fullName: Catalyst.Abstractions.IO.Transport.ISocketClient
+- uid: Catalyst.Abstractions.IO.Transport.ISocket
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocket
+  parent: Catalyst.Abstractions.IO.Transport
+  name: ISocket
+  nameWithType: ISocket
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

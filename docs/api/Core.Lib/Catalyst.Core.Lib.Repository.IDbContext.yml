@@ -1,0 +1,216 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Repository.IDbContext
+  commentId: T:Catalyst.Core.Lib.Repository.IDbContext
+  id: IDbContext
+  parent: Catalyst.Core.Lib.Repository
+  children:
+  - Catalyst.Core.Lib.Repository.IDbContext.Set``1
+  langs:
+  - csharp
+  - vb
+  name: IDbContext
+  nameWithType: IDbContext
+  fullName: Catalyst.Core.Lib.Repository.IDbContext
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Repository/EfCoreContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IDbContext
+    path: ../src/Catalyst.Core.Lib/Repository/EfCoreContext.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Repository
+  syntax:
+    content: 'public interface IDbContext : IDisposable'
+    content.vb: >-
+      Public Interface IDbContext
+
+          Inherits IDisposable
+  inheritedMembers:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Core.Lib.Repository.IDbContext.Set``1
+  commentId: M:Catalyst.Core.Lib.Repository.IDbContext.Set``1
+  id: Set``1
+  parent: Catalyst.Core.Lib.Repository.IDbContext
+  langs:
+  - csharp
+  - vb
+  name: Set<TEntity>()
+  nameWithType: IDbContext.Set<TEntity>()
+  fullName: Catalyst.Core.Lib.Repository.IDbContext.Set<TEntity>()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Repository/EfCoreContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Set
+    path: ../src/Catalyst.Core.Lib/Repository/EfCoreContext.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Repository
+  syntax:
+    content: >-
+      DbSet<TEntity> Set<TEntity>()
+
+          where TEntity : class
+    typeParameters:
+    - id: TEntity
+    return:
+      type: Microsoft.EntityFrameworkCore.DbSet{{TEntity}}
+    content.vb: Function Set(Of TEntity As Class) As DbSet(Of TEntity)
+  overload: Catalyst.Core.Lib.Repository.IDbContext.Set*
+  nameWithType.vb: IDbContext.Set(Of TEntity)()
+  fullName.vb: Catalyst.Core.Lib.Repository.IDbContext.Set(Of TEntity)()
+  name.vb: Set(Of TEntity)()
+references:
+- uid: Catalyst.Core.Lib.Repository
+  commentId: N:Catalyst.Core.Lib.Repository
+  name: Catalyst.Core.Lib.Repository
+  nameWithType: Catalyst.Core.Lib.Repository
+  fullName: Catalyst.Core.Lib.Repository
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.Repository.IDbContext.Set*
+  commentId: Overload:Catalyst.Core.Lib.Repository.IDbContext.Set
+  name: Set
+  nameWithType: IDbContext.Set
+  fullName: Catalyst.Core.Lib.Repository.IDbContext.Set
+- uid: Microsoft.EntityFrameworkCore.DbSet{{TEntity}}
+  commentId: T:Microsoft.EntityFrameworkCore.DbSet{``0}
+  parent: Microsoft.EntityFrameworkCore
+  definition: Microsoft.EntityFrameworkCore.DbSet`1
+  name: DbSet<TEntity>
+  nameWithType: DbSet<TEntity>
+  fullName: Microsoft.EntityFrameworkCore.DbSet<TEntity>
+  nameWithType.vb: DbSet(Of TEntity)
+  fullName.vb: Microsoft.EntityFrameworkCore.DbSet(Of TEntity)
+  name.vb: DbSet(Of TEntity)
+  spec.csharp:
+  - uid: Microsoft.EntityFrameworkCore.DbSet`1
+    name: DbSet
+    nameWithType: DbSet
+    fullName: Microsoft.EntityFrameworkCore.DbSet
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TEntity
+    nameWithType: TEntity
+    fullName: TEntity
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Microsoft.EntityFrameworkCore.DbSet`1
+    name: DbSet
+    nameWithType: DbSet
+    fullName: Microsoft.EntityFrameworkCore.DbSet
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TEntity
+    nameWithType: TEntity
+    fullName: TEntity
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Microsoft.EntityFrameworkCore.DbSet`1
+  commentId: T:Microsoft.EntityFrameworkCore.DbSet`1
+  isExternal: true
+  name: DbSet<TEntity>
+  nameWithType: DbSet<TEntity>
+  fullName: Microsoft.EntityFrameworkCore.DbSet<TEntity>
+  nameWithType.vb: DbSet(Of TEntity)
+  fullName.vb: Microsoft.EntityFrameworkCore.DbSet(Of TEntity)
+  name.vb: DbSet(Of TEntity)
+  spec.csharp:
+  - uid: Microsoft.EntityFrameworkCore.DbSet`1
+    name: DbSet
+    nameWithType: DbSet
+    fullName: Microsoft.EntityFrameworkCore.DbSet
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TEntity
+    nameWithType: TEntity
+    fullName: TEntity
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Microsoft.EntityFrameworkCore.DbSet`1
+    name: DbSet
+    nameWithType: DbSet
+    fullName: Microsoft.EntityFrameworkCore.DbSet
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TEntity
+    nameWithType: TEntity
+    fullName: TEntity
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Microsoft.EntityFrameworkCore
+  commentId: N:Microsoft.EntityFrameworkCore
+  isExternal: true
+  name: Microsoft.EntityFrameworkCore
+  nameWithType: Microsoft.EntityFrameworkCore
+  fullName: Microsoft.EntityFrameworkCore

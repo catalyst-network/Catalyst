@@ -1,0 +1,1646 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Network.InjectableLookupClient
+  commentId: T:Catalyst.Core.Lib.Network.InjectableLookupClient
+  id: InjectableLookupClient
+  parent: Catalyst.Core.Lib.Network
+  children:
+  - Catalyst.Core.Lib.Network.InjectableLookupClient.#ctor(Microsoft.Extensions.Configuration.IConfigurationRoot)
+  langs:
+  - csharp
+  - vb
+  name: InjectableLookupClient
+  nameWithType: InjectableLookupClient
+  fullName: Catalyst.Core.Lib.Network.InjectableLookupClient
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/InjectableLookupClient.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: InjectableLookupClient
+    path: ../src/Catalyst.Core.Lib/Network/InjectableLookupClient.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: 'public class InjectableLookupClient : LookupClient, ILookupClient, IDnsQuery'
+    content.vb: >-
+      Public Class InjectableLookupClient
+
+          Inherits LookupClient
+
+          Implements ILookupClient, IDnsQuery
+  inheritance:
+  - System.Object
+  - DnsClient.LookupClient
+  implements:
+  - DnsClient.ILookupClient
+  - DnsClient.IDnsQuery
+  inheritedMembers:
+  - DnsClient.LookupClient.QueryReverse(System.Net.IPAddress)
+  - DnsClient.LookupClient.QueryReverseAsync(System.Net.IPAddress,System.Threading.CancellationToken)
+  - DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.Net.IPAddress)
+  - DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.Net.IPAddress)
+  - DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.Net.IPAddress,System.Threading.CancellationToken)
+  - DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.Net.IPAddress,System.Threading.CancellationToken)
+  - DnsClient.LookupClient.Query(System.String,DnsClient.QueryType,DnsClient.QueryClass)
+  - DnsClient.LookupClient.QueryAsync(System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+  - DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.String,DnsClient.QueryType,DnsClient.QueryClass)
+  - DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.String,DnsClient.QueryType,DnsClient.QueryClass)
+  - DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+  - DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+  - DnsClient.LookupClient.UseTcpFallback
+  - DnsClient.LookupClient.UseTcpOnly
+  - DnsClient.LookupClient.NameServers
+  - DnsClient.LookupClient.EnableAuditTrail
+  - DnsClient.LookupClient.Recursion
+  - DnsClient.LookupClient.Retries
+  - DnsClient.LookupClient.ThrowDnsErrors
+  - DnsClient.LookupClient.Timeout
+  - DnsClient.LookupClient.UseCache
+  - DnsClient.LookupClient.MinimumCacheTimeout
+  - DnsClient.LookupClient.UseRandomNameServer
+  - DnsClient.LookupClient.ContinueOnDnsError
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.Network.InjectableLookupClient.#ctor(Microsoft.Extensions.Configuration.IConfigurationRoot)
+  commentId: M:Catalyst.Core.Lib.Network.InjectableLookupClient.#ctor(Microsoft.Extensions.Configuration.IConfigurationRoot)
+  id: '#ctor(Microsoft.Extensions.Configuration.IConfigurationRoot)'
+  parent: Catalyst.Core.Lib.Network.InjectableLookupClient
+  langs:
+  - csharp
+  - vb
+  name: InjectableLookupClient(IConfigurationRoot)
+  nameWithType: InjectableLookupClient.InjectableLookupClient(IConfigurationRoot)
+  fullName: Catalyst.Core.Lib.Network.InjectableLookupClient.InjectableLookupClient(Microsoft.Extensions.Configuration.IConfigurationRoot)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/InjectableLookupClient.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/Network/InjectableLookupClient.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public InjectableLookupClient(IConfigurationRoot configurationRoot)
+    parameters:
+    - id: configurationRoot
+      type: Microsoft.Extensions.Configuration.IConfigurationRoot
+    content.vb: Public Sub New(configurationRoot As IConfigurationRoot)
+  overload: Catalyst.Core.Lib.Network.InjectableLookupClient.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.Network
+  commentId: N:Catalyst.Core.Lib.Network
+  name: Catalyst.Core.Lib.Network
+  nameWithType: Catalyst.Core.Lib.Network
+  fullName: Catalyst.Core.Lib.Network
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: DnsClient.LookupClient
+  commentId: T:DnsClient.LookupClient
+  parent: DnsClient
+  isExternal: true
+  name: LookupClient
+  nameWithType: LookupClient
+  fullName: DnsClient.LookupClient
+- uid: DnsClient.ILookupClient
+  commentId: T:DnsClient.ILookupClient
+  parent: DnsClient
+  isExternal: true
+  name: ILookupClient
+  nameWithType: ILookupClient
+  fullName: DnsClient.ILookupClient
+- uid: DnsClient.IDnsQuery
+  commentId: T:DnsClient.IDnsQuery
+  parent: DnsClient
+  isExternal: true
+  name: IDnsQuery
+  nameWithType: IDnsQuery
+  fullName: DnsClient.IDnsQuery
+- uid: DnsClient.LookupClient.QueryReverse(System.Net.IPAddress)
+  commentId: M:DnsClient.LookupClient.QueryReverse(System.Net.IPAddress)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryReverse(IPAddress)
+  nameWithType: LookupClient.QueryReverse(IPAddress)
+  fullName: DnsClient.LookupClient.QueryReverse(System.Net.IPAddress)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryReverse(System.Net.IPAddress)
+    name: QueryReverse
+    nameWithType: LookupClient.QueryReverse
+    fullName: DnsClient.LookupClient.QueryReverse
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryReverse(System.Net.IPAddress)
+    name: QueryReverse
+    nameWithType: LookupClient.QueryReverse
+    fullName: DnsClient.LookupClient.QueryReverse
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.QueryReverseAsync(System.Net.IPAddress,System.Threading.CancellationToken)
+  commentId: M:DnsClient.LookupClient.QueryReverseAsync(System.Net.IPAddress,System.Threading.CancellationToken)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryReverseAsync(IPAddress, CancellationToken)
+  nameWithType: LookupClient.QueryReverseAsync(IPAddress, CancellationToken)
+  fullName: DnsClient.LookupClient.QueryReverseAsync(System.Net.IPAddress, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryReverseAsync(System.Net.IPAddress,System.Threading.CancellationToken)
+    name: QueryReverseAsync
+    nameWithType: LookupClient.QueryReverseAsync
+    fullName: DnsClient.LookupClient.QueryReverseAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryReverseAsync(System.Net.IPAddress,System.Threading.CancellationToken)
+    name: QueryReverseAsync
+    nameWithType: LookupClient.QueryReverseAsync
+    fullName: DnsClient.LookupClient.QueryReverseAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.Net.IPAddress)
+  commentId: M:DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.Net.IPAddress)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryServerReverse(IReadOnlyCollection<IPAddress>, IPAddress)
+  nameWithType: LookupClient.QueryServerReverse(IReadOnlyCollection<IPAddress>, IPAddress)
+  fullName: DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection<System.Net.IPAddress>, System.Net.IPAddress)
+  nameWithType.vb: LookupClient.QueryServerReverse(IReadOnlyCollection(Of IPAddress), IPAddress)
+  fullName.vb: DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection(Of System.Net.IPAddress), System.Net.IPAddress)
+  name.vb: QueryServerReverse(IReadOnlyCollection(Of IPAddress), IPAddress)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.Net.IPAddress)
+    name: QueryServerReverse
+    nameWithType: LookupClient.QueryServerReverse
+    fullName: DnsClient.LookupClient.QueryServerReverse
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.Net.IPAddress)
+    name: QueryServerReverse
+    nameWithType: LookupClient.QueryServerReverse
+    fullName: DnsClient.LookupClient.QueryServerReverse
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.Net.IPAddress)
+  commentId: M:DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.Net.IPAddress)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryServerReverse(IReadOnlyCollection<IPEndPoint>, IPAddress)
+  nameWithType: LookupClient.QueryServerReverse(IReadOnlyCollection<IPEndPoint>, IPAddress)
+  fullName: DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection<System.Net.IPEndPoint>, System.Net.IPAddress)
+  nameWithType.vb: LookupClient.QueryServerReverse(IReadOnlyCollection(Of IPEndPoint), IPAddress)
+  fullName.vb: DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection(Of System.Net.IPEndPoint), System.Net.IPAddress)
+  name.vb: QueryServerReverse(IReadOnlyCollection(Of IPEndPoint), IPAddress)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.Net.IPAddress)
+    name: QueryServerReverse
+    nameWithType: LookupClient.QueryServerReverse
+    fullName: DnsClient.LookupClient.QueryServerReverse
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Net.IPEndPoint
+    name: IPEndPoint
+    nameWithType: IPEndPoint
+    fullName: System.Net.IPEndPoint
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryServerReverse(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.Net.IPAddress)
+    name: QueryServerReverse
+    nameWithType: LookupClient.QueryServerReverse
+    fullName: DnsClient.LookupClient.QueryServerReverse
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Net.IPEndPoint
+    name: IPEndPoint
+    nameWithType: IPEndPoint
+    fullName: System.Net.IPEndPoint
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.Net.IPAddress,System.Threading.CancellationToken)
+  commentId: M:DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.Net.IPAddress,System.Threading.CancellationToken)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryServerReverseAsync(IReadOnlyCollection<IPAddress>, IPAddress, CancellationToken)
+  nameWithType: LookupClient.QueryServerReverseAsync(IReadOnlyCollection<IPAddress>, IPAddress, CancellationToken)
+  fullName: DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection<System.Net.IPAddress>, System.Net.IPAddress, System.Threading.CancellationToken)
+  nameWithType.vb: LookupClient.QueryServerReverseAsync(IReadOnlyCollection(Of IPAddress), IPAddress, CancellationToken)
+  fullName.vb: DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection(Of System.Net.IPAddress), System.Net.IPAddress, System.Threading.CancellationToken)
+  name.vb: QueryServerReverseAsync(IReadOnlyCollection(Of IPAddress), IPAddress, CancellationToken)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.Net.IPAddress,System.Threading.CancellationToken)
+    name: QueryServerReverseAsync
+    nameWithType: LookupClient.QueryServerReverseAsync
+    fullName: DnsClient.LookupClient.QueryServerReverseAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.Net.IPAddress,System.Threading.CancellationToken)
+    name: QueryServerReverseAsync
+    nameWithType: LookupClient.QueryServerReverseAsync
+    fullName: DnsClient.LookupClient.QueryServerReverseAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.Net.IPAddress,System.Threading.CancellationToken)
+  commentId: M:DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.Net.IPAddress,System.Threading.CancellationToken)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryServerReverseAsync(IReadOnlyCollection<IPEndPoint>, IPAddress, CancellationToken)
+  nameWithType: LookupClient.QueryServerReverseAsync(IReadOnlyCollection<IPEndPoint>, IPAddress, CancellationToken)
+  fullName: DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection<System.Net.IPEndPoint>, System.Net.IPAddress, System.Threading.CancellationToken)
+  nameWithType.vb: LookupClient.QueryServerReverseAsync(IReadOnlyCollection(Of IPEndPoint), IPAddress, CancellationToken)
+  fullName.vb: DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection(Of System.Net.IPEndPoint), System.Net.IPAddress, System.Threading.CancellationToken)
+  name.vb: QueryServerReverseAsync(IReadOnlyCollection(Of IPEndPoint), IPAddress, CancellationToken)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.Net.IPAddress,System.Threading.CancellationToken)
+    name: QueryServerReverseAsync
+    nameWithType: LookupClient.QueryServerReverseAsync
+    fullName: DnsClient.LookupClient.QueryServerReverseAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Net.IPEndPoint
+    name: IPEndPoint
+    nameWithType: IPEndPoint
+    fullName: System.Net.IPEndPoint
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryServerReverseAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.Net.IPAddress,System.Threading.CancellationToken)
+    name: QueryServerReverseAsync
+    nameWithType: LookupClient.QueryServerReverseAsync
+    fullName: DnsClient.LookupClient.QueryServerReverseAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Net.IPEndPoint
+    name: IPEndPoint
+    nameWithType: IPEndPoint
+    fullName: System.Net.IPEndPoint
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.Query(System.String,DnsClient.QueryType,DnsClient.QueryClass)
+  commentId: M:DnsClient.LookupClient.Query(System.String,DnsClient.QueryType,DnsClient.QueryClass)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: Query(String, QueryType, QueryClass)
+  nameWithType: LookupClient.Query(String, QueryType, QueryClass)
+  fullName: DnsClient.LookupClient.Query(System.String, DnsClient.QueryType, DnsClient.QueryClass)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.Query(System.String,DnsClient.QueryType,DnsClient.QueryClass)
+    name: Query
+    nameWithType: LookupClient.Query
+    fullName: DnsClient.LookupClient.Query
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.Query(System.String,DnsClient.QueryType,DnsClient.QueryClass)
+    name: Query
+    nameWithType: LookupClient.Query
+    fullName: DnsClient.LookupClient.Query
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.QueryAsync(System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+  commentId: M:DnsClient.LookupClient.QueryAsync(System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryAsync(String, QueryType, QueryClass, CancellationToken)
+  nameWithType: LookupClient.QueryAsync(String, QueryType, QueryClass, CancellationToken)
+  fullName: DnsClient.LookupClient.QueryAsync(System.String, DnsClient.QueryType, DnsClient.QueryClass, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryAsync(System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+    name: QueryAsync
+    nameWithType: LookupClient.QueryAsync
+    fullName: DnsClient.LookupClient.QueryAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryAsync(System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+    name: QueryAsync
+    nameWithType: LookupClient.QueryAsync
+    fullName: DnsClient.LookupClient.QueryAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.String,DnsClient.QueryType,DnsClient.QueryClass)
+  commentId: M:DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.String,DnsClient.QueryType,DnsClient.QueryClass)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryServer(IReadOnlyCollection<IPAddress>, String, QueryType, QueryClass)
+  nameWithType: LookupClient.QueryServer(IReadOnlyCollection<IPAddress>, String, QueryType, QueryClass)
+  fullName: DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection<System.Net.IPAddress>, System.String, DnsClient.QueryType, DnsClient.QueryClass)
+  nameWithType.vb: LookupClient.QueryServer(IReadOnlyCollection(Of IPAddress), String, QueryType, QueryClass)
+  fullName.vb: DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection(Of System.Net.IPAddress), System.String, DnsClient.QueryType, DnsClient.QueryClass)
+  name.vb: QueryServer(IReadOnlyCollection(Of IPAddress), String, QueryType, QueryClass)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.String,DnsClient.QueryType,DnsClient.QueryClass)
+    name: QueryServer
+    nameWithType: LookupClient.QueryServer
+    fullName: DnsClient.LookupClient.QueryServer
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.String,DnsClient.QueryType,DnsClient.QueryClass)
+    name: QueryServer
+    nameWithType: LookupClient.QueryServer
+    fullName: DnsClient.LookupClient.QueryServer
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.String,DnsClient.QueryType,DnsClient.QueryClass)
+  commentId: M:DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.String,DnsClient.QueryType,DnsClient.QueryClass)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryServer(IReadOnlyCollection<IPEndPoint>, String, QueryType, QueryClass)
+  nameWithType: LookupClient.QueryServer(IReadOnlyCollection<IPEndPoint>, String, QueryType, QueryClass)
+  fullName: DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection<System.Net.IPEndPoint>, System.String, DnsClient.QueryType, DnsClient.QueryClass)
+  nameWithType.vb: LookupClient.QueryServer(IReadOnlyCollection(Of IPEndPoint), String, QueryType, QueryClass)
+  fullName.vb: DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection(Of System.Net.IPEndPoint), System.String, DnsClient.QueryType, DnsClient.QueryClass)
+  name.vb: QueryServer(IReadOnlyCollection(Of IPEndPoint), String, QueryType, QueryClass)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.String,DnsClient.QueryType,DnsClient.QueryClass)
+    name: QueryServer
+    nameWithType: LookupClient.QueryServer
+    fullName: DnsClient.LookupClient.QueryServer
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Net.IPEndPoint
+    name: IPEndPoint
+    nameWithType: IPEndPoint
+    fullName: System.Net.IPEndPoint
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryServer(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.String,DnsClient.QueryType,DnsClient.QueryClass)
+    name: QueryServer
+    nameWithType: LookupClient.QueryServer
+    fullName: DnsClient.LookupClient.QueryServer
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Net.IPEndPoint
+    name: IPEndPoint
+    nameWithType: IPEndPoint
+    fullName: System.Net.IPEndPoint
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+  commentId: M:DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryServerAsync(IReadOnlyCollection<IPAddress>, String, QueryType, QueryClass, CancellationToken)
+  nameWithType: LookupClient.QueryServerAsync(IReadOnlyCollection<IPAddress>, String, QueryType, QueryClass, CancellationToken)
+  fullName: DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection<System.Net.IPAddress>, System.String, DnsClient.QueryType, DnsClient.QueryClass, System.Threading.CancellationToken)
+  nameWithType.vb: LookupClient.QueryServerAsync(IReadOnlyCollection(Of IPAddress), String, QueryType, QueryClass, CancellationToken)
+  fullName.vb: DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection(Of System.Net.IPAddress), System.String, DnsClient.QueryType, DnsClient.QueryClass, System.Threading.CancellationToken)
+  name.vb: QueryServerAsync(IReadOnlyCollection(Of IPAddress), String, QueryType, QueryClass, CancellationToken)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+    name: QueryServerAsync
+    nameWithType: LookupClient.QueryServerAsync
+    fullName: DnsClient.LookupClient.QueryServerAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPAddress},System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+    name: QueryServerAsync
+    nameWithType: LookupClient.QueryServerAsync
+    fullName: DnsClient.LookupClient.QueryServerAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+  commentId: M:DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: QueryServerAsync(IReadOnlyCollection<IPEndPoint>, String, QueryType, QueryClass, CancellationToken)
+  nameWithType: LookupClient.QueryServerAsync(IReadOnlyCollection<IPEndPoint>, String, QueryType, QueryClass, CancellationToken)
+  fullName: DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection<System.Net.IPEndPoint>, System.String, DnsClient.QueryType, DnsClient.QueryClass, System.Threading.CancellationToken)
+  nameWithType.vb: LookupClient.QueryServerAsync(IReadOnlyCollection(Of IPEndPoint), String, QueryType, QueryClass, CancellationToken)
+  fullName.vb: DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection(Of System.Net.IPEndPoint), System.String, DnsClient.QueryType, DnsClient.QueryClass, System.Threading.CancellationToken)
+  name.vb: QueryServerAsync(IReadOnlyCollection(Of IPEndPoint), String, QueryType, QueryClass, CancellationToken)
+  spec.csharp:
+  - uid: DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+    name: QueryServerAsync
+    nameWithType: LookupClient.QueryServerAsync
+    fullName: DnsClient.LookupClient.QueryServerAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Net.IPEndPoint
+    name: IPEndPoint
+    nameWithType: IPEndPoint
+    fullName: System.Net.IPEndPoint
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DnsClient.LookupClient.QueryServerAsync(System.Collections.Generic.IReadOnlyCollection{System.Net.IPEndPoint},System.String,DnsClient.QueryType,DnsClient.QueryClass,System.Threading.CancellationToken)
+    name: QueryServerAsync
+    nameWithType: LookupClient.QueryServerAsync
+    fullName: DnsClient.LookupClient.QueryServerAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Net.IPEndPoint
+    name: IPEndPoint
+    nameWithType: IPEndPoint
+    fullName: System.Net.IPEndPoint
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryType
+    name: QueryType
+    nameWithType: QueryType
+    fullName: DnsClient.QueryType
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: DnsClient.QueryClass
+    name: QueryClass
+    nameWithType: QueryClass
+    fullName: DnsClient.QueryClass
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DnsClient.LookupClient.UseTcpFallback
+  commentId: P:DnsClient.LookupClient.UseTcpFallback
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: UseTcpFallback
+  nameWithType: LookupClient.UseTcpFallback
+  fullName: DnsClient.LookupClient.UseTcpFallback
+- uid: DnsClient.LookupClient.UseTcpOnly
+  commentId: P:DnsClient.LookupClient.UseTcpOnly
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: UseTcpOnly
+  nameWithType: LookupClient.UseTcpOnly
+  fullName: DnsClient.LookupClient.UseTcpOnly
+- uid: DnsClient.LookupClient.NameServers
+  commentId: P:DnsClient.LookupClient.NameServers
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: NameServers
+  nameWithType: LookupClient.NameServers
+  fullName: DnsClient.LookupClient.NameServers
+- uid: DnsClient.LookupClient.EnableAuditTrail
+  commentId: P:DnsClient.LookupClient.EnableAuditTrail
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: EnableAuditTrail
+  nameWithType: LookupClient.EnableAuditTrail
+  fullName: DnsClient.LookupClient.EnableAuditTrail
+- uid: DnsClient.LookupClient.Recursion
+  commentId: P:DnsClient.LookupClient.Recursion
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: Recursion
+  nameWithType: LookupClient.Recursion
+  fullName: DnsClient.LookupClient.Recursion
+- uid: DnsClient.LookupClient.Retries
+  commentId: P:DnsClient.LookupClient.Retries
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: Retries
+  nameWithType: LookupClient.Retries
+  fullName: DnsClient.LookupClient.Retries
+- uid: DnsClient.LookupClient.ThrowDnsErrors
+  commentId: P:DnsClient.LookupClient.ThrowDnsErrors
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: ThrowDnsErrors
+  nameWithType: LookupClient.ThrowDnsErrors
+  fullName: DnsClient.LookupClient.ThrowDnsErrors
+- uid: DnsClient.LookupClient.Timeout
+  commentId: P:DnsClient.LookupClient.Timeout
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: Timeout
+  nameWithType: LookupClient.Timeout
+  fullName: DnsClient.LookupClient.Timeout
+- uid: DnsClient.LookupClient.UseCache
+  commentId: P:DnsClient.LookupClient.UseCache
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: UseCache
+  nameWithType: LookupClient.UseCache
+  fullName: DnsClient.LookupClient.UseCache
+- uid: DnsClient.LookupClient.MinimumCacheTimeout
+  commentId: P:DnsClient.LookupClient.MinimumCacheTimeout
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: MinimumCacheTimeout
+  nameWithType: LookupClient.MinimumCacheTimeout
+  fullName: DnsClient.LookupClient.MinimumCacheTimeout
+- uid: DnsClient.LookupClient.UseRandomNameServer
+  commentId: P:DnsClient.LookupClient.UseRandomNameServer
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: UseRandomNameServer
+  nameWithType: LookupClient.UseRandomNameServer
+  fullName: DnsClient.LookupClient.UseRandomNameServer
+- uid: DnsClient.LookupClient.ContinueOnDnsError
+  commentId: P:DnsClient.LookupClient.ContinueOnDnsError
+  parent: DnsClient.LookupClient
+  isExternal: true
+  name: ContinueOnDnsError
+  nameWithType: LookupClient.ContinueOnDnsError
+  fullName: DnsClient.LookupClient.ContinueOnDnsError
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: DnsClient
+  commentId: N:DnsClient
+  isExternal: true
+  name: DnsClient
+  nameWithType: DnsClient
+  fullName: DnsClient
+- uid: Catalyst.Core.Lib.Network.InjectableLookupClient.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.Network.InjectableLookupClient.#ctor
+  name: InjectableLookupClient
+  nameWithType: InjectableLookupClient.InjectableLookupClient
+  fullName: Catalyst.Core.Lib.Network.InjectableLookupClient.InjectableLookupClient
+- uid: Microsoft.Extensions.Configuration.IConfigurationRoot
+  commentId: T:Microsoft.Extensions.Configuration.IConfigurationRoot
+  parent: Microsoft.Extensions.Configuration
+  isExternal: true
+  name: IConfigurationRoot
+  nameWithType: IConfigurationRoot
+  fullName: Microsoft.Extensions.Configuration.IConfigurationRoot
+- uid: Microsoft.Extensions.Configuration
+  commentId: N:Microsoft.Extensions.Configuration
+  isExternal: true
+  name: Microsoft.Extensions.Configuration
+  nameWithType: Microsoft.Extensions.Configuration
+  fullName: Microsoft.Extensions.Configuration

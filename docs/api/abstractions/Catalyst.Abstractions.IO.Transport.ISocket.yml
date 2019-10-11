@@ -1,0 +1,188 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Transport.ISocket
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocket
+  id: ISocket
+  parent: Catalyst.Abstractions.IO.Transport
+  children:
+  - Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  - Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  langs:
+  - csharp
+  - vb
+  name: ISocket
+  nameWithType: ISocket
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Transport/ISocket.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ISocket
+    path: ../src/Catalyst.Abstractions/IO/Transport/ISocket.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Transport
+  syntax:
+    content: 'public interface ISocket : IDisposable'
+    content.vb: >-
+      Public Interface ISocket
+
+          Inherits IDisposable
+  inheritedMembers:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  commentId: P:Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  id: Channel
+  parent: Catalyst.Abstractions.IO.Transport.ISocket
+  langs:
+  - csharp
+  - vb
+  name: Channel
+  nameWithType: ISocket.Channel
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Transport/ISocket.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Channel
+    path: ../src/Catalyst.Abstractions/IO/Transport/ISocket.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Transport
+  syntax:
+    content: IChannel Channel { get; }
+    parameters: []
+    return:
+      type: DotNetty.Transport.Channels.IChannel
+    content.vb: ReadOnly Property Channel As IChannel
+  overload: Catalyst.Abstractions.IO.Transport.ISocket.Channel*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  commentId: M:Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  id: StartAsync
+  parent: Catalyst.Abstractions.IO.Transport.ISocket
+  langs:
+  - csharp
+  - vb
+  name: StartAsync()
+  nameWithType: ISocket.StartAsync()
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Transport/ISocket.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: StartAsync
+    path: ../src/Catalyst.Abstractions/IO/Transport/ISocket.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Transport
+  syntax:
+    content: Task StartAsync()
+    return:
+      type: System.Threading.Tasks.Task
+    content.vb: Function StartAsync As Task
+  overload: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync*
+references:
+- uid: Catalyst.Abstractions.IO.Transport
+  commentId: N:Catalyst.Abstractions.IO.Transport
+  name: Catalyst.Abstractions.IO.Transport
+  nameWithType: Catalyst.Abstractions.IO.Transport
+  fullName: Catalyst.Abstractions.IO.Transport
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.IO.Transport.ISocket.Channel*
+  commentId: Overload:Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  name: Channel
+  nameWithType: ISocket.Channel
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket.Channel
+- uid: DotNetty.Transport.Channels.IChannel
+  commentId: T:DotNetty.Transport.Channels.IChannel
+  parent: DotNetty.Transport.Channels
+  isExternal: true
+  name: IChannel
+  nameWithType: IChannel
+  fullName: DotNetty.Transport.Channels.IChannel
+- uid: DotNetty.Transport.Channels
+  commentId: N:DotNetty.Transport.Channels
+  isExternal: true
+  name: DotNetty.Transport.Channels
+  nameWithType: DotNetty.Transport.Channels
+  fullName: DotNetty.Transport.Channels
+- uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync*
+  commentId: Overload:Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  name: StartAsync
+  nameWithType: ISocket.StartAsync
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks

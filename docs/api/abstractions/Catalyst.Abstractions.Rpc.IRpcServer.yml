@@ -1,0 +1,279 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Rpc.IRpcServer
+  commentId: T:Catalyst.Abstractions.Rpc.IRpcServer
+  id: IRpcServer
+  parent: Catalyst.Abstractions.Rpc
+  children:
+  - Catalyst.Abstractions.Rpc.IRpcServer.Settings
+  langs:
+  - csharp
+  - vb
+  name: IRpcServer
+  nameWithType: IRpcServer
+  fullName: Catalyst.Abstractions.Rpc.IRpcServer
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcServer.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IRpcServer
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcServer.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: 'public interface IRpcServer : IObservableMessageStreamer<ProtocolMessage>, ISocket, IDisposable'
+    content.vb: >-
+      Public Interface IRpcServer
+
+          Inherits IObservableMessageStreamer(Of ProtocolMessage), ISocket
+  inheritedMembers:
+  - Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{Catalyst.Protocol.Wire.ProtocolMessage}.MessageStream
+  - Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  - Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Rpc.IRpcServer.Settings
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcServer.Settings
+  id: Settings
+  parent: Catalyst.Abstractions.Rpc.IRpcServer
+  langs:
+  - csharp
+  - vb
+  name: Settings
+  nameWithType: IRpcServer.Settings
+  fullName: Catalyst.Abstractions.Rpc.IRpcServer.Settings
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcServer.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Settings
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcServer.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: IRpcServerSettings Settings { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Rpc.IRpcServerSettings
+    content.vb: ReadOnly Property Settings As IRpcServerSettings
+  overload: Catalyst.Abstractions.Rpc.IRpcServer.Settings*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.Rpc
+  commentId: N:Catalyst.Abstractions.Rpc
+  name: Catalyst.Abstractions.Rpc
+  nameWithType: Catalyst.Abstractions.Rpc
+  fullName: Catalyst.Abstractions.Rpc
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{Catalyst.Protocol.Wire.ProtocolMessage}.MessageStream
+  commentId: P:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{Catalyst.Protocol.Wire.ProtocolMessage}.MessageStream
+  parent: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream
+  name: MessageStream
+  nameWithType: IObservableMessageStreamer<ProtocolMessage>.MessageStream
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<Catalyst.Protocol.Wire.ProtocolMessage>.MessageStream
+  nameWithType.vb: IObservableMessageStreamer(Of ProtocolMessage).MessageStream
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of Catalyst.Protocol.Wire.ProtocolMessage).MessageStream
+- uid: Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  commentId: P:Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  parent: Catalyst.Abstractions.IO.Transport.ISocket
+  name: Channel
+  nameWithType: ISocket.Channel
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket.Channel
+- uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  commentId: M:Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  parent: Catalyst.Abstractions.IO.Transport.ISocket
+  name: StartAsync()
+  nameWithType: ISocket.StartAsync()
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+    name: StartAsync
+    nameWithType: ISocket.StartAsync
+    fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+    name: StartAsync
+    nameWithType: ISocket.StartAsync
+    fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream
+  commentId: P:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream
+  name: MessageStream
+  nameWithType: IObservableMessageStreamer<T>.MessageStream
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<T>.MessageStream
+  nameWithType.vb: IObservableMessageStreamer(Of T).MessageStream
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of T).MessageStream
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{Catalyst.Protocol.Wire.ProtocolMessage}
+  commentId: T:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{Catalyst.Protocol.Wire.ProtocolMessage}
+  parent: Catalyst.Abstractions.IO.Observers
+  definition: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  name: IObservableMessageStreamer<ProtocolMessage>
+  nameWithType: IObservableMessageStreamer<ProtocolMessage>
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<Catalyst.Protocol.Wire.ProtocolMessage>
+  nameWithType.vb: IObservableMessageStreamer(Of ProtocolMessage)
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of Catalyst.Protocol.Wire.ProtocolMessage)
+  name.vb: IObservableMessageStreamer(Of ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Transport.ISocket
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocket
+  parent: Catalyst.Abstractions.IO.Transport
+  name: ISocket
+  nameWithType: ISocket
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  commentId: T:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  name: IObservableMessageStreamer<T>
+  nameWithType: IObservableMessageStreamer<T>
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<T>
+  nameWithType.vb: IObservableMessageStreamer(Of T)
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of T)
+  name.vb: IObservableMessageStreamer(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Observers
+  commentId: N:Catalyst.Abstractions.IO.Observers
+  name: Catalyst.Abstractions.IO.Observers
+  nameWithType: Catalyst.Abstractions.IO.Observers
+  fullName: Catalyst.Abstractions.IO.Observers
+- uid: Catalyst.Abstractions.IO.Transport
+  commentId: N:Catalyst.Abstractions.IO.Transport
+  name: Catalyst.Abstractions.IO.Transport
+  nameWithType: Catalyst.Abstractions.IO.Transport
+  fullName: Catalyst.Abstractions.IO.Transport
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Rpc.IRpcServer.Settings*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcServer.Settings
+  name: Settings
+  nameWithType: IRpcServer.Settings
+  fullName: Catalyst.Abstractions.Rpc.IRpcServer.Settings
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  commentId: T:Catalyst.Abstractions.Rpc.IRpcServerSettings
+  parent: Catalyst.Abstractions.Rpc
+  name: IRpcServerSettings
+  nameWithType: IRpcServerSettings
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings

@@ -1,0 +1,52 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  commentId: N:Catalyst.Core.Modules.P2P.Discovery.Hastings
+  id: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  children:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsCareTaker
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsMemento
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  nameWithType: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+references:
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule
+  commentId: T:Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule
+  name: DiscoveryHastingModule
+  nameWithType: DiscoveryHastingModule
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsCareTaker
+  commentId: T:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsCareTaker
+  name: HastingsCareTaker
+  nameWithType: HastingsCareTaker
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsCareTaker
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery
+  commentId: T:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery
+  name: HastingsDiscovery
+  nameWithType: HastingsDiscovery
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsMemento
+  commentId: T:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsMemento
+  name: HastingsMemento
+  nameWithType: HastingsMemento
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsMemento
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  commentId: T:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  name: HastingsOriginator
+  nameWithType: HastingsOriginator
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  commentId: N:Catalyst.Core.Modules.P2P.Discovery.Hastings
+  name: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  nameWithType: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings

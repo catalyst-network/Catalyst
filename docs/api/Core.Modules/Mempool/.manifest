@@ -1,0 +1,16 @@
+{
+  "Catalyst.Core.Modules.Mempool": "Catalyst.Core.Modules.Mempool.yml",
+  "Catalyst.Core.Modules.Mempool.Mempool": "Catalyst.Core.Modules.Mempool.Mempool.yml",
+  "Catalyst.Core.Modules.Mempool.Mempool.#ctor(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument})": "Catalyst.Core.Modules.Mempool.Mempool.yml",
+  "Catalyst.Core.Modules.Mempool.Mempool.Repository": "Catalyst.Core.Modules.Mempool.Mempool.yml",
+  "Catalyst.Core.Modules.Mempool.MempoolModule": "Catalyst.Core.Modules.Mempool.MempoolModule.yml",
+  "Catalyst.Core.Modules.Mempool.MempoolModule.Load(Autofac.ContainerBuilder)": "Catalyst.Core.Modules.Mempool.MempoolModule.yml",
+  "Catalyst.Core.Modules.Mempool.Repositories": "Catalyst.Core.Modules.Mempool.Repositories.yml",
+  "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository": "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.yml",
+  "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.#ctor(SharpRepository.Repository.IRepository{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument,System.String})": "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.yml",
+  "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.CreateItem(Catalyst.Protocol.Wire.TransactionBroadcast)": "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.yml",
+  "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.DeleteItem(System.String[])": "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.yml",
+  "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.GetAll": "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.yml",
+  "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.ReadItem(Google.Protobuf.ByteString)": "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.yml",
+  "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.TryReadItem(Google.Protobuf.ByteString)": "Catalyst.Core.Modules.Mempool.Repositories.MempoolDocumentRepository.yml"
+}

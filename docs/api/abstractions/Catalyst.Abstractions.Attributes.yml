@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Attributes
+  commentId: N:Catalyst.Abstractions.Attributes
+  id: Catalyst.Abstractions.Attributes
+  children:
+  - Catalyst.Abstractions.Attributes.IAuditable
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Attributes
+  nameWithType: Catalyst.Abstractions.Attributes
+  fullName: Catalyst.Abstractions.Attributes
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Attributes.IAuditable
+  commentId: T:Catalyst.Abstractions.Attributes.IAuditable
+  parent: Catalyst.Abstractions.Attributes
+  name: IAuditable
+  nameWithType: IAuditable
+  fullName: Catalyst.Abstractions.Attributes.IAuditable
+- uid: Catalyst.Abstractions.Attributes
+  commentId: N:Catalyst.Abstractions.Attributes
+  name: Catalyst.Abstractions.Attributes
+  nameWithType: Catalyst.Abstractions.Attributes
+  fullName: Catalyst.Abstractions.Attributes

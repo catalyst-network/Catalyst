@@ -1,0 +1,216 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Attributes.IAuditable
+  commentId: T:Catalyst.Abstractions.Attributes.IAuditable
+  id: IAuditable
+  parent: Catalyst.Abstractions.Attributes
+  children:
+  - Catalyst.Abstractions.Attributes.IAuditable.Created
+  - Catalyst.Abstractions.Attributes.IAuditable.Modified
+  langs:
+  - csharp
+  - vb
+  name: IAuditable
+  nameWithType: IAuditable
+  fullName: Catalyst.Abstractions.Attributes.IAuditable
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Attributes/IAuditable.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IAuditable
+    path: ../src/Catalyst.Abstractions/Attributes/IAuditable.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Attributes
+  syntax:
+    content: public interface IAuditable
+    content.vb: Public Interface IAuditable
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Attributes.IAuditable.Created
+  commentId: P:Catalyst.Abstractions.Attributes.IAuditable.Created
+  id: Created
+  parent: Catalyst.Abstractions.Attributes.IAuditable
+  langs:
+  - csharp
+  - vb
+  name: Created
+  nameWithType: IAuditable.Created
+  fullName: Catalyst.Abstractions.Attributes.IAuditable.Created
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Attributes/IAuditable.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Created
+    path: ../src/Catalyst.Abstractions/Attributes/IAuditable.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Attributes
+  summary: "\nAuto set field when Auditable entity is created\n"
+  example: []
+  syntax:
+    content: DateTime Created { get; set; }
+    parameters: []
+    return:
+      type: System.DateTime
+    content.vb: Property Created As Date
+  overload: Catalyst.Abstractions.Attributes.IAuditable.Created*
+  modifiers.csharp:
+  - get
+  - set
+- uid: Catalyst.Abstractions.Attributes.IAuditable.Modified
+  commentId: P:Catalyst.Abstractions.Attributes.IAuditable.Modified
+  id: Modified
+  parent: Catalyst.Abstractions.Attributes.IAuditable
+  langs:
+  - csharp
+  - vb
+  name: Modified
+  nameWithType: IAuditable.Modified
+  fullName: Catalyst.Abstractions.Attributes.IAuditable.Modified
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Attributes/IAuditable.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Modified
+    path: ../src/Catalyst.Abstractions/Attributes/IAuditable.cs
+    startLine: 37
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Attributes
+  summary: "\nAuto set field when Auditable entity is modified\n"
+  example: []
+  syntax:
+    content: DateTime? Modified { get; set; }
+    parameters: []
+    return:
+      type: System.Nullable{System.DateTime}
+    content.vb: Property Modified As Date?
+  overload: Catalyst.Abstractions.Attributes.IAuditable.Modified*
+  modifiers.csharp:
+  - get
+  - set
+references:
+- uid: Catalyst.Abstractions.Attributes
+  commentId: N:Catalyst.Abstractions.Attributes
+  name: Catalyst.Abstractions.Attributes
+  nameWithType: Catalyst.Abstractions.Attributes
+  fullName: Catalyst.Abstractions.Attributes
+- uid: Catalyst.Abstractions.Attributes.IAuditable.Created*
+  commentId: Overload:Catalyst.Abstractions.Attributes.IAuditable.Created
+  name: Created
+  nameWithType: IAuditable.Created
+  fullName: Catalyst.Abstractions.Attributes.IAuditable.Created
+- uid: System.DateTime
+  commentId: T:System.DateTime
+  parent: System
+  isExternal: true
+  name: DateTime
+  nameWithType: DateTime
+  fullName: System.DateTime
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Attributes.IAuditable.Modified*
+  commentId: Overload:Catalyst.Abstractions.Attributes.IAuditable.Modified
+  name: Modified
+  nameWithType: IAuditable.Modified
+  fullName: Catalyst.Abstractions.Attributes.IAuditable.Modified
+- uid: System.Nullable{System.DateTime}
+  commentId: T:System.Nullable{System.DateTime}
+  parent: System
+  definition: System.Nullable`1
+  name: Nullable<DateTime>
+  nameWithType: Nullable<DateTime>
+  fullName: System.Nullable<System.DateTime>
+  nameWithType.vb: Nullable(Of DateTime)
+  fullName.vb: System.Nullable(Of System.DateTime)
+  name.vb: Nullable(Of DateTime)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    nameWithType: Nullable
+    fullName: System.Nullable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.DateTime
+    name: DateTime
+    nameWithType: DateTime
+    fullName: System.DateTime
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    nameWithType: Nullable
+    fullName: System.Nullable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.DateTime
+    name: DateTime
+    nameWithType: DateTime
+    fullName: System.DateTime
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    nameWithType: Nullable
+    fullName: System.Nullable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    nameWithType: Nullable
+    fullName: System.Nullable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

@@ -1,0 +1,582 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  id: IMessageDto`1
+  parent: Catalyst.Abstractions.IO.Messaging.Dto
+  children:
+  - Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.CorrelationId
+  - Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.RecipientPeerIdentifier
+  - Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.SenderPeerIdentifier
+  langs:
+  - csharp
+  - vb
+  name: IMessageDto<T>
+  nameWithType: IMessageDto<T>
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Messaging/Dto/IMessageDto.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IMessageDto
+    path: ../src/Catalyst.Abstractions/IO/Messaging/Dto/IMessageDto.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Messaging.Dto
+  syntax:
+    content: 'public interface IMessageDto<out T> : IAddressedEnvelope<T>, IReferenceCounted where T : IMessage'
+    typeParameters:
+    - id: T
+    content.vb: >-
+      Public Interface IMessageDto(Of Out T As IMessage)
+
+          Inherits IAddressedEnvelope(Of T)
+  inheritedMembers:
+  - DotNetty.Transport.Channels.IAddressedEnvelope{{T}}.Content
+  - DotNetty.Transport.Channels.IAddressedEnvelope{{T}}.Sender
+  - DotNetty.Transport.Channels.IAddressedEnvelope{{T}}.Recipient
+  - DotNetty.Common.IReferenceCounted.Retain
+  - DotNetty.Common.IReferenceCounted.Retain(System.Int32)
+  - DotNetty.Common.IReferenceCounted.Touch
+  - DotNetty.Common.IReferenceCounted.Touch(System.Object)
+  - DotNetty.Common.IReferenceCounted.Release
+  - DotNetty.Common.IReferenceCounted.Release(System.Int32)
+  - DotNetty.Common.IReferenceCounted.ReferenceCount
+  nameWithType.vb: IMessageDto(Of T)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T)
+  name.vb: IMessageDto(Of T)
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.CorrelationId
+  commentId: P:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.CorrelationId
+  id: CorrelationId
+  parent: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  langs:
+  - csharp
+  - vb
+  name: CorrelationId
+  nameWithType: IMessageDto<T>.CorrelationId
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>.CorrelationId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Messaging/Dto/IMessageDto.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CorrelationId
+    path: ../src/Catalyst.Abstractions/IO/Messaging/Dto/IMessageDto.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Messaging.Dto
+  syntax:
+    content: ICorrelationId CorrelationId { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    content.vb: ReadOnly Property CorrelationId As ICorrelationId
+  overload: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.CorrelationId*
+  nameWithType.vb: IMessageDto(Of T).CorrelationId
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T).CorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.RecipientPeerIdentifier
+  commentId: P:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.RecipientPeerIdentifier
+  id: RecipientPeerIdentifier
+  parent: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  langs:
+  - csharp
+  - vb
+  name: RecipientPeerIdentifier
+  nameWithType: IMessageDto<T>.RecipientPeerIdentifier
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>.RecipientPeerIdentifier
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Messaging/Dto/IMessageDto.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: RecipientPeerIdentifier
+    path: ../src/Catalyst.Abstractions/IO/Messaging/Dto/IMessageDto.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Messaging.Dto
+  syntax:
+    content: PeerId RecipientPeerIdentifier { get; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: ReadOnly Property RecipientPeerIdentifier As PeerId
+  overload: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.RecipientPeerIdentifier*
+  nameWithType.vb: IMessageDto(Of T).RecipientPeerIdentifier
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T).RecipientPeerIdentifier
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.SenderPeerIdentifier
+  commentId: P:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.SenderPeerIdentifier
+  id: SenderPeerIdentifier
+  parent: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  langs:
+  - csharp
+  - vb
+  name: SenderPeerIdentifier
+  nameWithType: IMessageDto<T>.SenderPeerIdentifier
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>.SenderPeerIdentifier
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Messaging/Dto/IMessageDto.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: SenderPeerIdentifier
+    path: ../src/Catalyst.Abstractions/IO/Messaging/Dto/IMessageDto.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Messaging.Dto
+  syntax:
+    content: PeerId SenderPeerIdentifier { get; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: ReadOnly Property SenderPeerIdentifier As PeerId
+  overload: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.SenderPeerIdentifier*
+  nameWithType.vb: IMessageDto(Of T).SenderPeerIdentifier
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T).SenderPeerIdentifier
+references:
+- uid: Catalyst.Abstractions.IO.Messaging.Dto
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Dto
+  name: Catalyst.Abstractions.IO.Messaging.Dto
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Dto
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto
+- uid: DotNetty.Transport.Channels.IAddressedEnvelope{{T}}.Content
+  commentId: P:DotNetty.Transport.Channels.IAddressedEnvelope{`0}.Content
+  parent: DotNetty.Transport.Channels.IAddressedEnvelope{{T}}
+  definition: DotNetty.Transport.Channels.IAddressedEnvelope`1.Content
+  name: Content
+  nameWithType: IAddressedEnvelope<T>.Content
+  fullName: DotNetty.Transport.Channels.IAddressedEnvelope<T>.Content
+  nameWithType.vb: IAddressedEnvelope(Of T).Content
+  fullName.vb: DotNetty.Transport.Channels.IAddressedEnvelope(Of T).Content
+- uid: DotNetty.Transport.Channels.IAddressedEnvelope{{T}}.Sender
+  commentId: P:DotNetty.Transport.Channels.IAddressedEnvelope{`0}.Sender
+  parent: DotNetty.Transport.Channels.IAddressedEnvelope{{T}}
+  definition: DotNetty.Transport.Channels.IAddressedEnvelope`1.Sender
+  name: Sender
+  nameWithType: IAddressedEnvelope<T>.Sender
+  fullName: DotNetty.Transport.Channels.IAddressedEnvelope<T>.Sender
+  nameWithType.vb: IAddressedEnvelope(Of T).Sender
+  fullName.vb: DotNetty.Transport.Channels.IAddressedEnvelope(Of T).Sender
+- uid: DotNetty.Transport.Channels.IAddressedEnvelope{{T}}.Recipient
+  commentId: P:DotNetty.Transport.Channels.IAddressedEnvelope{`0}.Recipient
+  parent: DotNetty.Transport.Channels.IAddressedEnvelope{{T}}
+  definition: DotNetty.Transport.Channels.IAddressedEnvelope`1.Recipient
+  name: Recipient
+  nameWithType: IAddressedEnvelope<T>.Recipient
+  fullName: DotNetty.Transport.Channels.IAddressedEnvelope<T>.Recipient
+  nameWithType.vb: IAddressedEnvelope(Of T).Recipient
+  fullName.vb: DotNetty.Transport.Channels.IAddressedEnvelope(Of T).Recipient
+- uid: DotNetty.Common.IReferenceCounted.Retain
+  commentId: M:DotNetty.Common.IReferenceCounted.Retain
+  parent: DotNetty.Common.IReferenceCounted
+  isExternal: true
+  name: Retain()
+  nameWithType: IReferenceCounted.Retain()
+  fullName: DotNetty.Common.IReferenceCounted.Retain()
+  spec.csharp:
+  - uid: DotNetty.Common.IReferenceCounted.Retain
+    name: Retain
+    nameWithType: IReferenceCounted.Retain
+    fullName: DotNetty.Common.IReferenceCounted.Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Common.IReferenceCounted.Retain
+    name: Retain
+    nameWithType: IReferenceCounted.Retain
+    fullName: DotNetty.Common.IReferenceCounted.Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Common.IReferenceCounted.Retain(System.Int32)
+  commentId: M:DotNetty.Common.IReferenceCounted.Retain(System.Int32)
+  parent: DotNetty.Common.IReferenceCounted
+  isExternal: true
+  name: Retain(Int32)
+  nameWithType: IReferenceCounted.Retain(Int32)
+  fullName: DotNetty.Common.IReferenceCounted.Retain(System.Int32)
+  spec.csharp:
+  - uid: DotNetty.Common.IReferenceCounted.Retain(System.Int32)
+    name: Retain
+    nameWithType: IReferenceCounted.Retain
+    fullName: DotNetty.Common.IReferenceCounted.Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Common.IReferenceCounted.Retain(System.Int32)
+    name: Retain
+    nameWithType: IReferenceCounted.Retain
+    fullName: DotNetty.Common.IReferenceCounted.Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Common.IReferenceCounted.Touch
+  commentId: M:DotNetty.Common.IReferenceCounted.Touch
+  parent: DotNetty.Common.IReferenceCounted
+  isExternal: true
+  name: Touch()
+  nameWithType: IReferenceCounted.Touch()
+  fullName: DotNetty.Common.IReferenceCounted.Touch()
+  spec.csharp:
+  - uid: DotNetty.Common.IReferenceCounted.Touch
+    name: Touch
+    nameWithType: IReferenceCounted.Touch
+    fullName: DotNetty.Common.IReferenceCounted.Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Common.IReferenceCounted.Touch
+    name: Touch
+    nameWithType: IReferenceCounted.Touch
+    fullName: DotNetty.Common.IReferenceCounted.Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Common.IReferenceCounted.Touch(System.Object)
+  commentId: M:DotNetty.Common.IReferenceCounted.Touch(System.Object)
+  parent: DotNetty.Common.IReferenceCounted
+  isExternal: true
+  name: Touch(Object)
+  nameWithType: IReferenceCounted.Touch(Object)
+  fullName: DotNetty.Common.IReferenceCounted.Touch(System.Object)
+  spec.csharp:
+  - uid: DotNetty.Common.IReferenceCounted.Touch(System.Object)
+    name: Touch
+    nameWithType: IReferenceCounted.Touch
+    fullName: DotNetty.Common.IReferenceCounted.Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Common.IReferenceCounted.Touch(System.Object)
+    name: Touch
+    nameWithType: IReferenceCounted.Touch
+    fullName: DotNetty.Common.IReferenceCounted.Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Common.IReferenceCounted.Release
+  commentId: M:DotNetty.Common.IReferenceCounted.Release
+  parent: DotNetty.Common.IReferenceCounted
+  isExternal: true
+  name: Release()
+  nameWithType: IReferenceCounted.Release()
+  fullName: DotNetty.Common.IReferenceCounted.Release()
+  spec.csharp:
+  - uid: DotNetty.Common.IReferenceCounted.Release
+    name: Release
+    nameWithType: IReferenceCounted.Release
+    fullName: DotNetty.Common.IReferenceCounted.Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Common.IReferenceCounted.Release
+    name: Release
+    nameWithType: IReferenceCounted.Release
+    fullName: DotNetty.Common.IReferenceCounted.Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Common.IReferenceCounted.Release(System.Int32)
+  commentId: M:DotNetty.Common.IReferenceCounted.Release(System.Int32)
+  parent: DotNetty.Common.IReferenceCounted
+  isExternal: true
+  name: Release(Int32)
+  nameWithType: IReferenceCounted.Release(Int32)
+  fullName: DotNetty.Common.IReferenceCounted.Release(System.Int32)
+  spec.csharp:
+  - uid: DotNetty.Common.IReferenceCounted.Release(System.Int32)
+    name: Release
+    nameWithType: IReferenceCounted.Release
+    fullName: DotNetty.Common.IReferenceCounted.Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Common.IReferenceCounted.Release(System.Int32)
+    name: Release
+    nameWithType: IReferenceCounted.Release
+    fullName: DotNetty.Common.IReferenceCounted.Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Common.IReferenceCounted.ReferenceCount
+  commentId: P:DotNetty.Common.IReferenceCounted.ReferenceCount
+  parent: DotNetty.Common.IReferenceCounted
+  isExternal: true
+  name: ReferenceCount
+  nameWithType: IReferenceCounted.ReferenceCount
+  fullName: DotNetty.Common.IReferenceCounted.ReferenceCount
+- uid: DotNetty.Transport.Channels.IAddressedEnvelope`1.Content
+  commentId: P:DotNetty.Transport.Channels.IAddressedEnvelope`1.Content
+  isExternal: true
+  name: Content
+  nameWithType: IAddressedEnvelope<T>.Content
+  fullName: DotNetty.Transport.Channels.IAddressedEnvelope<T>.Content
+  nameWithType.vb: IAddressedEnvelope(Of T).Content
+  fullName.vb: DotNetty.Transport.Channels.IAddressedEnvelope(Of T).Content
+- uid: DotNetty.Transport.Channels.IAddressedEnvelope{{T}}
+  commentId: T:DotNetty.Transport.Channels.IAddressedEnvelope{`0}
+  parent: DotNetty.Transport.Channels
+  definition: DotNetty.Transport.Channels.IAddressedEnvelope`1
+  name: IAddressedEnvelope<T>
+  nameWithType: IAddressedEnvelope<T>
+  fullName: DotNetty.Transport.Channels.IAddressedEnvelope<T>
+  nameWithType.vb: IAddressedEnvelope(Of T)
+  fullName.vb: DotNetty.Transport.Channels.IAddressedEnvelope(Of T)
+  name.vb: IAddressedEnvelope(Of T)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.IAddressedEnvelope`1
+    name: IAddressedEnvelope
+    nameWithType: IAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.IAddressedEnvelope
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.IAddressedEnvelope`1
+    name: IAddressedEnvelope
+    nameWithType: IAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.IAddressedEnvelope
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.IAddressedEnvelope`1.Sender
+  commentId: P:DotNetty.Transport.Channels.IAddressedEnvelope`1.Sender
+  isExternal: true
+  name: Sender
+  nameWithType: IAddressedEnvelope<T>.Sender
+  fullName: DotNetty.Transport.Channels.IAddressedEnvelope<T>.Sender
+  nameWithType.vb: IAddressedEnvelope(Of T).Sender
+  fullName.vb: DotNetty.Transport.Channels.IAddressedEnvelope(Of T).Sender
+- uid: DotNetty.Transport.Channels.IAddressedEnvelope`1.Recipient
+  commentId: P:DotNetty.Transport.Channels.IAddressedEnvelope`1.Recipient
+  isExternal: true
+  name: Recipient
+  nameWithType: IAddressedEnvelope<T>.Recipient
+  fullName: DotNetty.Transport.Channels.IAddressedEnvelope<T>.Recipient
+  nameWithType.vb: IAddressedEnvelope(Of T).Recipient
+  fullName.vb: DotNetty.Transport.Channels.IAddressedEnvelope(Of T).Recipient
+- uid: DotNetty.Common.IReferenceCounted
+  commentId: T:DotNetty.Common.IReferenceCounted
+  parent: DotNetty.Common
+  isExternal: true
+  name: IReferenceCounted
+  nameWithType: IReferenceCounted
+  fullName: DotNetty.Common.IReferenceCounted
+- uid: DotNetty.Transport.Channels.IAddressedEnvelope`1
+  commentId: T:DotNetty.Transport.Channels.IAddressedEnvelope`1
+  isExternal: true
+  name: IAddressedEnvelope<T>
+  nameWithType: IAddressedEnvelope<T>
+  fullName: DotNetty.Transport.Channels.IAddressedEnvelope<T>
+  nameWithType.vb: IAddressedEnvelope(Of T)
+  fullName.vb: DotNetty.Transport.Channels.IAddressedEnvelope(Of T)
+  name.vb: IAddressedEnvelope(Of T)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.IAddressedEnvelope`1
+    name: IAddressedEnvelope
+    nameWithType: IAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.IAddressedEnvelope
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.IAddressedEnvelope`1
+    name: IAddressedEnvelope
+    nameWithType: IAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.IAddressedEnvelope
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels
+  commentId: N:DotNetty.Transport.Channels
+  isExternal: true
+  name: DotNetty.Transport.Channels
+  nameWithType: DotNetty.Transport.Channels
+  fullName: DotNetty.Transport.Channels
+- uid: DotNetty.Common
+  commentId: N:DotNetty.Common
+  isExternal: true
+  name: DotNetty.Common
+  nameWithType: DotNetty.Common
+  fullName: DotNetty.Common
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.CorrelationId*
+  commentId: Overload:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.CorrelationId
+  name: CorrelationId
+  nameWithType: IMessageDto<T>.CorrelationId
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>.CorrelationId
+  nameWithType.vb: IMessageDto(Of T).CorrelationId
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T).CorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  name: ICorrelationId
+  nameWithType: ICorrelationId
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.RecipientPeerIdentifier*
+  commentId: Overload:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.RecipientPeerIdentifier
+  name: RecipientPeerIdentifier
+  nameWithType: IMessageDto<T>.RecipientPeerIdentifier
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>.RecipientPeerIdentifier
+  nameWithType.vb: IMessageDto(Of T).RecipientPeerIdentifier
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T).RecipientPeerIdentifier
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.SenderPeerIdentifier*
+  commentId: Overload:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1.SenderPeerIdentifier
+  name: SenderPeerIdentifier
+  nameWithType: IMessageDto<T>.SenderPeerIdentifier
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>.SenderPeerIdentifier
+  nameWithType.vb: IMessageDto(Of T).SenderPeerIdentifier
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T).SenderPeerIdentifier

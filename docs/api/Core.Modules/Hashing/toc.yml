@@ -1,0 +1,8 @@
+### YamlMime:TableOfContent
+- uid: Catalyst.Core.Modules.Hashing
+  name: Catalyst.Core.Modules.Hashing
+  items:
+  - uid: Catalyst.Core.Modules.Hashing.HashingModule
+    name: HashingModule
+  - uid: Catalyst.Core.Modules.Hashing.HashProvider
+    name: HashProvider

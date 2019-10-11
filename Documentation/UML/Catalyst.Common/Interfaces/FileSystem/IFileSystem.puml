@@ -1,5 +1,0 @@
-@startuml
-interface IFileSystem {
-    GetCatalystHomeDir() : DirectoryInfo
-}
-@enduml

@@ -1,0 +1,76 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Consensus.Deltas
+  commentId: N:Catalyst.Abstractions.Consensus.Deltas
+  id: Catalyst.Abstractions.Consensus.Deltas
+  children:
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaCache
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaCacheChangeTokenProvider
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+  - Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Consensus.Deltas
+  nameWithType: Catalyst.Abstractions.Consensus.Deltas
+  fullName: Catalyst.Abstractions.Consensus.Deltas
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder
+  name: IDeltaBuilder
+  nameWithType: IDeltaBuilder
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaCache
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaCache
+  name: IDeltaCache
+  nameWithType: IDeltaCache
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaCache
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaCacheChangeTokenProvider
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaCacheChangeTokenProvider
+  name: IDeltaCacheChangeTokenProvider
+  nameWithType: IDeltaCacheChangeTokenProvider
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaCacheChangeTokenProvider
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader
+  name: IDeltaDfsReader
+  nameWithType: IDeltaDfsReader
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+  name: IDeltaElector
+  nameWithType: IDeltaElector
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+  name: IDeltaHashProvider
+  nameWithType: IDeltaHashProvider
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  name: IDeltaHub
+  nameWithType: IDeltaHub
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever
+  name: IDeltaTransactionRetriever
+  nameWithType: IDeltaTransactionRetriever
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+  name: IDeltaVoter
+  nameWithType: IDeltaVoter
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+- uid: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta
+  name: IScoredCandidateDelta
+  nameWithType: IScoredCandidateDelta
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta

@@ -1,5 +1,0 @@
-@startuml
-class Ledger {
-}
-ILedger <|-- Ledger
-@enduml

@@ -1,0 +1,1296 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  commentId: T:Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  id: DevDnsQueryResponse
+  parent: Catalyst.Core.Lib.Network
+  children:
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.Additionals
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.AllRecords
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.Answers
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.AuditTrail
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.Authorities
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.BuildDnsResourceRecords(System.String,System.String)
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.ErrorMessage
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.HasError
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.Header
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.MessageSize
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.NameServer
+  - Catalyst.Core.Lib.Network.DevDnsQueryResponse.Questions
+  langs:
+  - csharp
+  - vb
+  name: DevDnsQueryResponse
+  nameWithType: DevDnsQueryResponse
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: DevDnsQueryResponse
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: 'public sealed class DevDnsQueryResponse : IDnsQueryResponse'
+    content.vb: >-
+      Public NotInheritable Class DevDnsQueryResponse
+
+          Implements IDnsQueryResponse
+  inheritance:
+  - System.Object
+  implements:
+  - DnsClient.IDnsQueryResponse
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Questions
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.Questions
+  id: Questions
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: Questions
+  nameWithType: DevDnsQueryResponse.Questions
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Questions
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Questions
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public IReadOnlyList<DnsQuestion> Questions { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IReadOnlyList{DnsClient.DnsQuestion}
+    content.vb: Public ReadOnly Property Questions As IReadOnlyList(Of DnsQuestion)
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Questions*
+  implements:
+  - DnsClient.IDnsQueryResponse.Questions
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Additionals
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.Additionals
+  id: Additionals
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: Additionals
+  nameWithType: DevDnsQueryResponse.Additionals
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Additionals
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Additionals
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public IReadOnlyList<DnsResourceRecord> Additionals { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IReadOnlyList{DnsClient.Protocol.DnsResourceRecord}
+    content.vb: Public ReadOnly Property Additionals As IReadOnlyList(Of DnsResourceRecord)
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Additionals*
+  implements:
+  - DnsClient.IDnsQueryResponse.Additionals
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.AllRecords
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.AllRecords
+  id: AllRecords
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: AllRecords
+  nameWithType: DevDnsQueryResponse.AllRecords
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.AllRecords
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: AllRecords
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public IEnumerable<DnsResourceRecord> AllRecords { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IEnumerable{DnsClient.Protocol.DnsResourceRecord}
+    content.vb: Public ReadOnly Property AllRecords As IEnumerable(Of DnsResourceRecord)
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.AllRecords*
+  implements:
+  - DnsClient.IDnsQueryResponse.AllRecords
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Answers
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.Answers
+  id: Answers
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: Answers
+  nameWithType: DevDnsQueryResponse.Answers
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Answers
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Answers
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public IReadOnlyList<DnsResourceRecord> Answers { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IReadOnlyList{DnsClient.Protocol.DnsResourceRecord}
+    content.vb: Public Property Answers As IReadOnlyList(Of DnsResourceRecord)
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Answers*
+  implements:
+  - DnsClient.IDnsQueryResponse.Answers
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Authorities
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.Authorities
+  id: Authorities
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: Authorities
+  nameWithType: DevDnsQueryResponse.Authorities
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Authorities
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Authorities
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 44
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public IReadOnlyList<DnsResourceRecord> Authorities { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IReadOnlyList{DnsClient.Protocol.DnsResourceRecord}
+    content.vb: Public ReadOnly Property Authorities As IReadOnlyList(Of DnsResourceRecord)
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Authorities*
+  implements:
+  - DnsClient.IDnsQueryResponse.Authorities
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.AuditTrail
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.AuditTrail
+  id: AuditTrail
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: AuditTrail
+  nameWithType: DevDnsQueryResponse.AuditTrail
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.AuditTrail
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: AuditTrail
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public string AuditTrail { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property AuditTrail As String
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.AuditTrail*
+  implements:
+  - DnsClient.IDnsQueryResponse.AuditTrail
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.ErrorMessage
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.ErrorMessage
+  id: ErrorMessage
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: ErrorMessage
+  nameWithType: DevDnsQueryResponse.ErrorMessage
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.ErrorMessage
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ErrorMessage
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public string ErrorMessage { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property ErrorMessage As String
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.ErrorMessage*
+  implements:
+  - DnsClient.IDnsQueryResponse.ErrorMessage
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.HasError
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.HasError
+  id: HasError
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: HasError
+  nameWithType: DevDnsQueryResponse.HasError
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.HasError
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: HasError
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 53
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public bool HasError { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property HasError As Boolean
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.HasError*
+  implements:
+  - DnsClient.IDnsQueryResponse.HasError
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Header
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.Header
+  id: Header
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: Header
+  nameWithType: DevDnsQueryResponse.Header
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Header
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Header
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 56
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public DnsResponseHeader Header { get; }
+    parameters: []
+    return:
+      type: DnsClient.DnsResponseHeader
+    content.vb: Public ReadOnly Property Header As DnsResponseHeader
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Header*
+  implements:
+  - DnsClient.IDnsQueryResponse.Header
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.MessageSize
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.MessageSize
+  id: MessageSize
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: MessageSize
+  nameWithType: DevDnsQueryResponse.MessageSize
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.MessageSize
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MessageSize
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 59
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public int MessageSize { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property MessageSize As Integer
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.MessageSize*
+  implements:
+  - DnsClient.IDnsQueryResponse.MessageSize
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.NameServer
+  commentId: P:Catalyst.Core.Lib.Network.DevDnsQueryResponse.NameServer
+  id: NameServer
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: NameServer
+  nameWithType: DevDnsQueryResponse.NameServer
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.NameServer
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: NameServer
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 62
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public NameServer NameServer { get; }
+    parameters: []
+    return:
+      type: DnsClient.NameServer
+    content.vb: Public ReadOnly Property NameServer As NameServer
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.NameServer*
+  implements:
+  - DnsClient.IDnsQueryResponse.NameServer
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.BuildDnsResourceRecords(System.String,System.String)
+  commentId: M:Catalyst.Core.Lib.Network.DevDnsQueryResponse.BuildDnsResourceRecords(System.String,System.String)
+  id: BuildDnsResourceRecords(System.String,System.String)
+  parent: Catalyst.Core.Lib.Network.DevDnsQueryResponse
+  langs:
+  - csharp
+  - vb
+  name: BuildDnsResourceRecords(String, String)
+  nameWithType: DevDnsQueryResponse.BuildDnsResourceRecords(String, String)
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.BuildDnsResourceRecords(System.String, System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BuildDnsResourceRecords
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsQueryResponse.cs
+    startLine: 70
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  summary: "\nBuilds a mocked TXT resource record from a ILookup DNS query.\n"
+  example: []
+  syntax:
+    content: public static List<DnsResourceRecord> BuildDnsResourceRecords(string domainName, string value)
+    parameters:
+    - id: domainName
+      type: System.String
+      description: ''
+    - id: value
+      type: System.String
+      description: ''
+    return:
+      type: System.Collections.Generic.List{DnsClient.Protocol.DnsResourceRecord}
+      description: ''
+    content.vb: Public Shared Function BuildDnsResourceRecords(domainName As String, value As String) As List(Of DnsResourceRecord)
+  overload: Catalyst.Core.Lib.Network.DevDnsQueryResponse.BuildDnsResourceRecords*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+references:
+- uid: Catalyst.Core.Lib.Network
+  commentId: N:Catalyst.Core.Lib.Network
+  name: Catalyst.Core.Lib.Network
+  nameWithType: Catalyst.Core.Lib.Network
+  fullName: Catalyst.Core.Lib.Network
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: DnsClient.IDnsQueryResponse
+  commentId: T:DnsClient.IDnsQueryResponse
+  parent: DnsClient
+  isExternal: true
+  name: IDnsQueryResponse
+  nameWithType: IDnsQueryResponse
+  fullName: DnsClient.IDnsQueryResponse
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: DnsClient
+  commentId: N:DnsClient
+  isExternal: true
+  name: DnsClient
+  nameWithType: DnsClient
+  fullName: DnsClient
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Questions*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.Questions
+  name: Questions
+  nameWithType: DevDnsQueryResponse.Questions
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Questions
+- uid: DnsClient.IDnsQueryResponse.Questions
+  commentId: P:DnsClient.IDnsQueryResponse.Questions
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: Questions
+  nameWithType: IDnsQueryResponse.Questions
+  fullName: DnsClient.IDnsQueryResponse.Questions
+- uid: System.Collections.Generic.IReadOnlyList{DnsClient.DnsQuestion}
+  commentId: T:System.Collections.Generic.IReadOnlyList{DnsClient.DnsQuestion}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyList`1
+  name: IReadOnlyList<DnsQuestion>
+  nameWithType: IReadOnlyList<DnsQuestion>
+  fullName: System.Collections.Generic.IReadOnlyList<DnsClient.DnsQuestion>
+  nameWithType.vb: IReadOnlyList(Of DnsQuestion)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of DnsClient.DnsQuestion)
+  name.vb: IReadOnlyList(Of DnsQuestion)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    nameWithType: IReadOnlyList
+    fullName: System.Collections.Generic.IReadOnlyList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: DnsClient.DnsQuestion
+    name: DnsQuestion
+    nameWithType: DnsQuestion
+    fullName: DnsClient.DnsQuestion
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    nameWithType: IReadOnlyList
+    fullName: System.Collections.Generic.IReadOnlyList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: DnsClient.DnsQuestion
+    name: DnsQuestion
+    nameWithType: DnsQuestion
+    fullName: DnsClient.DnsQuestion
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IReadOnlyList`1
+  commentId: T:System.Collections.Generic.IReadOnlyList`1
+  isExternal: true
+  name: IReadOnlyList<T>
+  nameWithType: IReadOnlyList<T>
+  fullName: System.Collections.Generic.IReadOnlyList<T>
+  nameWithType.vb: IReadOnlyList(Of T)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of T)
+  name.vb: IReadOnlyList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    nameWithType: IReadOnlyList
+    fullName: System.Collections.Generic.IReadOnlyList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    nameWithType: IReadOnlyList
+    fullName: System.Collections.Generic.IReadOnlyList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Additionals*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.Additionals
+  name: Additionals
+  nameWithType: DevDnsQueryResponse.Additionals
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Additionals
+- uid: DnsClient.IDnsQueryResponse.Additionals
+  commentId: P:DnsClient.IDnsQueryResponse.Additionals
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: Additionals
+  nameWithType: IDnsQueryResponse.Additionals
+  fullName: DnsClient.IDnsQueryResponse.Additionals
+- uid: System.Collections.Generic.IReadOnlyList{DnsClient.Protocol.DnsResourceRecord}
+  commentId: T:System.Collections.Generic.IReadOnlyList{DnsClient.Protocol.DnsResourceRecord}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyList`1
+  name: IReadOnlyList<DnsResourceRecord>
+  nameWithType: IReadOnlyList<DnsResourceRecord>
+  fullName: System.Collections.Generic.IReadOnlyList<DnsClient.Protocol.DnsResourceRecord>
+  nameWithType.vb: IReadOnlyList(Of DnsResourceRecord)
+  fullName.vb: System.Collections.Generic.IReadOnlyList(Of DnsClient.Protocol.DnsResourceRecord)
+  name.vb: IReadOnlyList(Of DnsResourceRecord)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    nameWithType: IReadOnlyList
+    fullName: System.Collections.Generic.IReadOnlyList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: DnsClient.Protocol.DnsResourceRecord
+    name: DnsResourceRecord
+    nameWithType: DnsResourceRecord
+    fullName: DnsClient.Protocol.DnsResourceRecord
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyList`1
+    name: IReadOnlyList
+    nameWithType: IReadOnlyList
+    fullName: System.Collections.Generic.IReadOnlyList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: DnsClient.Protocol.DnsResourceRecord
+    name: DnsResourceRecord
+    nameWithType: DnsResourceRecord
+    fullName: DnsClient.Protocol.DnsResourceRecord
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.AllRecords*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.AllRecords
+  name: AllRecords
+  nameWithType: DevDnsQueryResponse.AllRecords
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.AllRecords
+- uid: DnsClient.IDnsQueryResponse.AllRecords
+  commentId: P:DnsClient.IDnsQueryResponse.AllRecords
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: AllRecords
+  nameWithType: IDnsQueryResponse.AllRecords
+  fullName: DnsClient.IDnsQueryResponse.AllRecords
+- uid: System.Collections.Generic.IEnumerable{DnsClient.Protocol.DnsResourceRecord}
+  commentId: T:System.Collections.Generic.IEnumerable{DnsClient.Protocol.DnsResourceRecord}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<DnsResourceRecord>
+  nameWithType: IEnumerable<DnsResourceRecord>
+  fullName: System.Collections.Generic.IEnumerable<DnsClient.Protocol.DnsResourceRecord>
+  nameWithType.vb: IEnumerable(Of DnsResourceRecord)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of DnsClient.Protocol.DnsResourceRecord)
+  name.vb: IEnumerable(Of DnsResourceRecord)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: DnsClient.Protocol.DnsResourceRecord
+    name: DnsResourceRecord
+    nameWithType: DnsResourceRecord
+    fullName: DnsClient.Protocol.DnsResourceRecord
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: DnsClient.Protocol.DnsResourceRecord
+    name: DnsResourceRecord
+    nameWithType: DnsResourceRecord
+    fullName: DnsClient.Protocol.DnsResourceRecord
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Answers*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.Answers
+  name: Answers
+  nameWithType: DevDnsQueryResponse.Answers
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Answers
+- uid: DnsClient.IDnsQueryResponse.Answers
+  commentId: P:DnsClient.IDnsQueryResponse.Answers
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: Answers
+  nameWithType: IDnsQueryResponse.Answers
+  fullName: DnsClient.IDnsQueryResponse.Answers
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Authorities*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.Authorities
+  name: Authorities
+  nameWithType: DevDnsQueryResponse.Authorities
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Authorities
+- uid: DnsClient.IDnsQueryResponse.Authorities
+  commentId: P:DnsClient.IDnsQueryResponse.Authorities
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: Authorities
+  nameWithType: IDnsQueryResponse.Authorities
+  fullName: DnsClient.IDnsQueryResponse.Authorities
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.AuditTrail*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.AuditTrail
+  name: AuditTrail
+  nameWithType: DevDnsQueryResponse.AuditTrail
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.AuditTrail
+- uid: DnsClient.IDnsQueryResponse.AuditTrail
+  commentId: P:DnsClient.IDnsQueryResponse.AuditTrail
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: AuditTrail
+  nameWithType: IDnsQueryResponse.AuditTrail
+  fullName: DnsClient.IDnsQueryResponse.AuditTrail
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.ErrorMessage*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.ErrorMessage
+  name: ErrorMessage
+  nameWithType: DevDnsQueryResponse.ErrorMessage
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.ErrorMessage
+- uid: DnsClient.IDnsQueryResponse.ErrorMessage
+  commentId: P:DnsClient.IDnsQueryResponse.ErrorMessage
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: ErrorMessage
+  nameWithType: IDnsQueryResponse.ErrorMessage
+  fullName: DnsClient.IDnsQueryResponse.ErrorMessage
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.HasError*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.HasError
+  name: HasError
+  nameWithType: DevDnsQueryResponse.HasError
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.HasError
+- uid: DnsClient.IDnsQueryResponse.HasError
+  commentId: P:DnsClient.IDnsQueryResponse.HasError
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: HasError
+  nameWithType: IDnsQueryResponse.HasError
+  fullName: DnsClient.IDnsQueryResponse.HasError
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Header*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.Header
+  name: Header
+  nameWithType: DevDnsQueryResponse.Header
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.Header
+- uid: DnsClient.IDnsQueryResponse.Header
+  commentId: P:DnsClient.IDnsQueryResponse.Header
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: Header
+  nameWithType: IDnsQueryResponse.Header
+  fullName: DnsClient.IDnsQueryResponse.Header
+- uid: DnsClient.DnsResponseHeader
+  commentId: T:DnsClient.DnsResponseHeader
+  parent: DnsClient
+  isExternal: true
+  name: DnsResponseHeader
+  nameWithType: DnsResponseHeader
+  fullName: DnsClient.DnsResponseHeader
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.MessageSize*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.MessageSize
+  name: MessageSize
+  nameWithType: DevDnsQueryResponse.MessageSize
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.MessageSize
+- uid: DnsClient.IDnsQueryResponse.MessageSize
+  commentId: P:DnsClient.IDnsQueryResponse.MessageSize
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: MessageSize
+  nameWithType: IDnsQueryResponse.MessageSize
+  fullName: DnsClient.IDnsQueryResponse.MessageSize
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.NameServer*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.NameServer
+  name: NameServer
+  nameWithType: DevDnsQueryResponse.NameServer
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.NameServer
+- uid: DnsClient.IDnsQueryResponse.NameServer
+  commentId: P:DnsClient.IDnsQueryResponse.NameServer
+  parent: DnsClient.IDnsQueryResponse
+  isExternal: true
+  name: NameServer
+  nameWithType: IDnsQueryResponse.NameServer
+  fullName: DnsClient.IDnsQueryResponse.NameServer
+- uid: DnsClient.NameServer
+  commentId: T:DnsClient.NameServer
+  parent: DnsClient
+  isExternal: true
+  name: NameServer
+  nameWithType: NameServer
+  fullName: DnsClient.NameServer
+- uid: Catalyst.Core.Lib.Network.DevDnsQueryResponse.BuildDnsResourceRecords*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsQueryResponse.BuildDnsResourceRecords
+  name: BuildDnsResourceRecords
+  nameWithType: DevDnsQueryResponse.BuildDnsResourceRecords
+  fullName: Catalyst.Core.Lib.Network.DevDnsQueryResponse.BuildDnsResourceRecords
+- uid: System.Collections.Generic.List{DnsClient.Protocol.DnsResourceRecord}
+  commentId: T:System.Collections.Generic.List{DnsClient.Protocol.DnsResourceRecord}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<DnsResourceRecord>
+  nameWithType: List<DnsResourceRecord>
+  fullName: System.Collections.Generic.List<DnsClient.Protocol.DnsResourceRecord>
+  nameWithType.vb: List(Of DnsResourceRecord)
+  fullName.vb: System.Collections.Generic.List(Of DnsClient.Protocol.DnsResourceRecord)
+  name.vb: List(Of DnsResourceRecord)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: DnsClient.Protocol.DnsResourceRecord
+    name: DnsResourceRecord
+    nameWithType: DnsResourceRecord
+    fullName: DnsClient.Protocol.DnsResourceRecord
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: DnsClient.Protocol.DnsResourceRecord
+    name: DnsResourceRecord
+    nameWithType: DnsResourceRecord
+    fullName: DnsClient.Protocol.DnsResourceRecord
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

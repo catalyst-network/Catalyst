@@ -1,8 +1,0 @@
-@startuml
-interface IMempool {
-    GetMemPoolContent() : IEnumerable<Transaction>
-    GetMemPoolContentEncoded() : List<byte[]>
-    SaveTransaction(transaction:Transaction) : bool
-    GetTransaction(key:TransactionSignature) : Transaction
-}
-@enduml

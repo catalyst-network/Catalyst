@@ -1,0 +1,348 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  id: IHastingsOriginator
+  parent: Catalyst.Abstractions.P2P.Discovery
+  children:
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  langs:
+  - csharp
+  - vb
+  name: IHastingsOriginator
+  nameWithType: IHastingsOriginator
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IHastingsOriginator
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  syntax:
+    content: public interface IHastingsOriginator
+    content.vb: Public Interface IHastingsOriginator
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer
+  id: Peer
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: Peer
+  nameWithType: IHastingsOriginator.Peer
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Peer
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  syntax:
+    content: PeerId Peer { get; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: ReadOnly Property Peer As PeerId
+  overload: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId
+  id: PnrCorrelationId
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: PnrCorrelationId
+  nameWithType: IHastingsOriginator.PnrCorrelationId
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PnrCorrelationId
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  summary: "\nEvery time you the walk moves forward with a new Peer, it will ask that peer for\nits neighbours sending a new <xref href=\"Catalyst.Protocol.IPPN.PeerNeighborsRequest\" data-throw-if-not-resolved=\"false\"></xref>.\nThis field stores the details for that request. \n"
+  example: []
+  syntax:
+    content: ICorrelationId PnrCorrelationId { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    content.vb: ReadOnly Property PnrCorrelationId As ICorrelationId
+  overload: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+  id: Neighbours
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: Neighbours
+  nameWithType: IHastingsOriginator.Neighbours
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Neighbours
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+    startLine: 45
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  summary: "\nA readonly list of the neighbours considered for <xref href=\"Catalyst.Protocol.IPPN.PingRequest\" data-throw-if-not-resolved=\"false\"></xref> at that stage of the node.\nThis list will be used to progress if any of them is valid (<xref href=\"Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate\" data-throw-if-not-resolved=\"false\"></xref>).\n"
+  example: []
+  syntax:
+    content: INeighbours Neighbours { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.P2P.Discovery.INeighbours
+    content.vb: ReadOnly Property Neighbours As INeighbours
+  overload: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+  id: CreateMemento
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: CreateMemento()
+  nameWithType: IHastingsOriginator.CreateMemento()
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CreateMemento
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+    startLine: 51
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  summary: "\ncreates a memento from current state\n"
+  example: []
+  syntax:
+    content: IHastingsMemento CreateMemento()
+    return:
+      type: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+      description: ''
+    content.vb: Function CreateMemento As IHastingsMemento
+  overload: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento*
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  id: RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: RestoreMemento(IHastingsMemento)
+  nameWithType: IHastingsOriginator.RestoreMemento(IHastingsMemento)
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: RestoreMemento
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+    startLine: 57
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  summary: "\nRestores the state from a memento\n"
+  example: []
+  syntax:
+    content: void RestoreMemento(IHastingsMemento hastingsMemento)
+    parameters:
+    - id: hastingsMemento
+      type: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+      description: ''
+    content.vb: Sub RestoreMemento(hastingsMemento As IHastingsMemento)
+  overload: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento*
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  id: HasValidCandidate
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: HasValidCandidate()
+  nameWithType: IHastingsOriginator.HasValidCandidate()
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: HasValidCandidate
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/IHastingsOriginator.cs
+    startLine: 69
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  summary: "\nFind out if the current state has any neighbour in a <xref href=\"Catalyst.Abstractions.Types.NeighbourStateTypes.Responsive\" data-throw-if-not-resolved=\"false\"></xref>\n"
+  example: []
+  syntax:
+    content: bool HasValidCandidate()
+    return:
+      type: System.Boolean
+      description: >-
+        <see>
+
+        <cref>true</cref>
+
+        </see>
+
+        if <xref href="Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours" data-throw-if-not-resolved="false"></xref> contains a <xref href="Catalyst.Abstractions.Types.NeighbourStateTypes.Responsive" data-throw-if-not-resolved="false"></xref> neighbour, <see>
+
+        <cref>false</cref>
+
+        </see>
+
+        otherwise.
+    content.vb: Function HasValidCandidate As Boolean
+  overload: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate*
+references:
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer
+  name: Peer
+  nameWithType: IHastingsOriginator.Peer
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Protocol.IPPN.PeerNeighborsRequest
+  commentId: T:Catalyst.Protocol.IPPN.PeerNeighborsRequest
+  isExternal: true
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId
+  name: PnrCorrelationId
+  nameWithType: IHastingsOriginator.PnrCorrelationId
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  name: ICorrelationId
+  nameWithType: ICorrelationId
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation
+- uid: Catalyst.Protocol.IPPN.PingRequest
+  commentId: T:Catalyst.Protocol.IPPN.PingRequest
+  isExternal: true
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  isExternal: true
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+  name: Neighbours
+  nameWithType: IHastingsOriginator.Neighbours
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbours
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.INeighbours
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: INeighbours
+  nameWithType: INeighbours
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbours
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+  name: CreateMemento
+  nameWithType: IHastingsOriginator.CreateMemento
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: IHastingsMemento
+  nameWithType: IHastingsMemento
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento
+  name: RestoreMemento
+  nameWithType: IHastingsOriginator.RestoreMemento
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento
+- uid: Catalyst.Abstractions.Types.NeighbourStateTypes.Responsive
+  commentId: F:Catalyst.Abstractions.Types.NeighbourStateTypes.Responsive
+  isExternal: true
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+  isExternal: true
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate*
+  commentId: Overload:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  name: HasValidCandidate
+  nameWithType: IHastingsOriginator.HasValidCandidate
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

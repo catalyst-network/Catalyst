@@ -1,0 +1,2495 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.P2P.Discovery.Neighbours
+  commentId: T:Catalyst.Core.Lib.P2P.Discovery.Neighbours
+  id: Neighbours
+  parent: Catalyst.Core.Lib.P2P.Discovery
+  children:
+  - Catalyst.Core.Lib.P2P.Discovery.Neighbours.#ctor(System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour})
+  - Catalyst.Core.Lib.P2P.Discovery.Neighbours.ToString
+  langs:
+  - csharp
+  - vb
+  name: Neighbours
+  nameWithType: Neighbours
+  fullName: Catalyst.Core.Lib.P2P.Discovery.Neighbours
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/Discovery/Neighbours.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Neighbours
+    path: ../src/Catalyst.Core.Lib/P2P/Discovery/Neighbours.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.Discovery
+  syntax:
+    content: 'public class Neighbours : ConcurrentQueue<INeighbour>, IProducerConsumerCollection<INeighbour>, ICollection, INeighbours, IReadOnlyCollection<INeighbour>, IEnumerable<INeighbour>, IEnumerable'
+    content.vb: >-
+      Public Class Neighbours
+
+          Inherits ConcurrentQueue(Of INeighbour)
+
+          Implements IProducerConsumerCollection(Of INeighbour), ICollection, INeighbours, IReadOnlyCollection(Of INeighbour), IEnumerable(Of INeighbour), IEnumerable
+  inheritance:
+  - System.Object
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  implements:
+  - System.Collections.Concurrent.IProducerConsumerCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  - System.Collections.ICollection
+  - Catalyst.Abstractions.P2P.Discovery.INeighbours
+  - System.Collections.Generic.IReadOnlyCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  - System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  - System.Collections.IEnumerable
+  inheritedMembers:
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Clear
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.CopyTo(Catalyst.Abstractions.P2P.Discovery.INeighbour[],System.Int32)
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Enqueue(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.GetEnumerator
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryAdd(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryTake(Catalyst.Abstractions.P2P.Discovery.INeighbour@)
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#ICollection#CopyTo(System.Array,System.Int32)
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#IEnumerable#GetEnumerator
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.ToArray
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.TryDequeue(Catalyst.Abstractions.P2P.Discovery.INeighbour@)
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.TryPeek(Catalyst.Abstractions.P2P.Discovery.INeighbour@)
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Count
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.IsEmpty
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#ICollection#IsSynchronized
+  - System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#ICollection#SyncRoot
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  extensionMethods:
+  - System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Func{Catalyst.Abstractions.P2P.Discovery.INeighbour,System.UInt64})
+  - System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Func{Catalyst.Abstractions.P2P.Discovery.INeighbour,Nethermind.Dirichlet.Numerics.UInt256})
+  - System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample``1(System.Int32)
+  - System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement``1
+  - System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle``1
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.P2P.Discovery.Neighbours.#ctor(System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour})
+  commentId: M:Catalyst.Core.Lib.P2P.Discovery.Neighbours.#ctor(System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour})
+  id: '#ctor(System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour})'
+  parent: Catalyst.Core.Lib.P2P.Discovery.Neighbours
+  langs:
+  - csharp
+  - vb
+  name: Neighbours(IEnumerable<INeighbour>)
+  nameWithType: Neighbours.Neighbours(IEnumerable<INeighbour>)
+  fullName: Catalyst.Core.Lib.P2P.Discovery.Neighbours.Neighbours(System.Collections.Generic.IEnumerable<Catalyst.Abstractions.P2P.Discovery.INeighbour>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/Discovery/Neighbours.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/P2P/Discovery/Neighbours.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.Discovery
+  syntax:
+    content: public Neighbours(IEnumerable<INeighbour> neighbours = null)
+    parameters:
+    - id: neighbours
+      type: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+    content.vb: Public Sub New(neighbours As IEnumerable(Of INeighbour) = Nothing)
+  overload: Catalyst.Core.Lib.P2P.Discovery.Neighbours.#ctor*
+  nameWithType.vb: Neighbours.Neighbours(IEnumerable(Of INeighbour))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Lib.P2P.Discovery.Neighbours.Neighbours(System.Collections.Generic.IEnumerable(Of Catalyst.Abstractions.P2P.Discovery.INeighbour))
+  name.vb: Neighbours(IEnumerable(Of INeighbour))
+- uid: Catalyst.Core.Lib.P2P.Discovery.Neighbours.ToString
+  commentId: M:Catalyst.Core.Lib.P2P.Discovery.Neighbours.ToString
+  id: ToString
+  parent: Catalyst.Core.Lib.P2P.Discovery.Neighbours
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: Neighbours.ToString()
+  fullName: Catalyst.Core.Lib.P2P.Discovery.Neighbours.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/Discovery/Neighbours.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ToString
+    path: ../src/Catalyst.Core.Lib/P2P/Discovery/Neighbours.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.Discovery
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Catalyst.Core.Lib.P2P.Discovery.Neighbours.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: Catalyst.Core.Lib.P2P.Discovery
+  commentId: N:Catalyst.Core.Lib.P2P.Discovery
+  name: Catalyst.Core.Lib.P2P.Discovery
+  nameWithType: Catalyst.Core.Lib.P2P.Discovery
+  fullName: Catalyst.Core.Lib.P2P.Discovery
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  commentId: T:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.ConcurrentQueue`1
+  name: ConcurrentQueue<INeighbour>
+  nameWithType: ConcurrentQueue<INeighbour>
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  nameWithType.vb: ConcurrentQueue(Of INeighbour)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  name.vb: ConcurrentQueue(Of INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1
+    name: ConcurrentQueue
+    nameWithType: ConcurrentQueue
+    fullName: System.Collections.Concurrent.ConcurrentQueue
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1
+    name: ConcurrentQueue
+    nameWithType: ConcurrentQueue
+    fullName: System.Collections.Concurrent.ConcurrentQueue
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.IProducerConsumerCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  commentId: T:System.Collections.Concurrent.IProducerConsumerCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  parent: System.Collections.Concurrent
+  definition: System.Collections.Concurrent.IProducerConsumerCollection`1
+  name: IProducerConsumerCollection<INeighbour>
+  nameWithType: IProducerConsumerCollection<INeighbour>
+  fullName: System.Collections.Concurrent.IProducerConsumerCollection<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  nameWithType.vb: IProducerConsumerCollection(Of INeighbour)
+  fullName.vb: System.Collections.Concurrent.IProducerConsumerCollection(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  name.vb: IProducerConsumerCollection(Of INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.IProducerConsumerCollection`1
+    name: IProducerConsumerCollection
+    nameWithType: IProducerConsumerCollection
+    fullName: System.Collections.Concurrent.IProducerConsumerCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.IProducerConsumerCollection`1
+    name: IProducerConsumerCollection
+    nameWithType: IProducerConsumerCollection
+    fullName: System.Collections.Concurrent.IProducerConsumerCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.ICollection
+  commentId: T:System.Collections.ICollection
+  parent: System.Collections
+  isExternal: true
+  name: ICollection
+  nameWithType: ICollection
+  fullName: System.Collections.ICollection
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbours
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.INeighbours
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: INeighbours
+  nameWithType: INeighbours
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbours
+- uid: System.Collections.Generic.IReadOnlyCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  commentId: T:System.Collections.Generic.IReadOnlyCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyCollection`1
+  name: IReadOnlyCollection<INeighbour>
+  nameWithType: IReadOnlyCollection<INeighbour>
+  fullName: System.Collections.Generic.IReadOnlyCollection<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  nameWithType.vb: IReadOnlyCollection(Of INeighbour)
+  fullName.vb: System.Collections.Generic.IReadOnlyCollection(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  name.vb: IReadOnlyCollection(Of INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  commentId: T:System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<INeighbour>
+  nameWithType: IEnumerable<INeighbour>
+  fullName: System.Collections.Generic.IEnumerable<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  nameWithType.vb: IEnumerable(Of INeighbour)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  name.vb: IEnumerable(Of INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.IEnumerable
+  commentId: T:System.Collections.IEnumerable
+  parent: System.Collections
+  isExternal: true
+  name: IEnumerable
+  nameWithType: IEnumerable
+  fullName: System.Collections.IEnumerable
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Clear
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Clear
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.Clear
+  name: Clear()
+  nameWithType: ConcurrentQueue<INeighbour>.Clear()
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.Clear()
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).Clear()
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).Clear()
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.Clear
+    name: Clear
+    nameWithType: ConcurrentQueue<INeighbour>.Clear
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.Clear
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.Clear
+    name: Clear
+    nameWithType: ConcurrentQueue(Of INeighbour).Clear
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).Clear
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.CopyTo(Catalyst.Abstractions.P2P.Discovery.INeighbour[],System.Int32)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.CopyTo(Catalyst.Abstractions.P2P.Discovery.INeighbour[],System.Int32)
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.CopyTo(`0[],System.Int32)
+  name: CopyTo(INeighbour[], Int32)
+  nameWithType: ConcurrentQueue<INeighbour>.CopyTo(INeighbour[], Int32)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.CopyTo(Catalyst.Abstractions.P2P.Discovery.INeighbour[], System.Int32)
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).CopyTo(INeighbour(), Int32)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).CopyTo(Catalyst.Abstractions.P2P.Discovery.INeighbour(), System.Int32)
+  name.vb: CopyTo(INeighbour(), Int32)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    nameWithType: ConcurrentQueue<INeighbour>.CopyTo
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.CopyTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    nameWithType: ConcurrentQueue(Of INeighbour).CopyTo
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).CopyTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Enqueue(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Enqueue(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.Enqueue(`0)
+  name: Enqueue(INeighbour)
+  nameWithType: ConcurrentQueue<INeighbour>.Enqueue(INeighbour)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.Enqueue(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).Enqueue(INeighbour)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).Enqueue(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.Enqueue(`0)
+    name: Enqueue
+    nameWithType: ConcurrentQueue<INeighbour>.Enqueue
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.Enqueue
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.Enqueue(`0)
+    name: Enqueue
+    nameWithType: ConcurrentQueue(Of INeighbour).Enqueue
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).Enqueue
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.GetEnumerator
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.GetEnumerator
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.GetEnumerator
+  name: GetEnumerator()
+  nameWithType: ConcurrentQueue<INeighbour>.GetEnumerator()
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.GetEnumerator()
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).GetEnumerator()
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.GetEnumerator
+    name: GetEnumerator
+    nameWithType: ConcurrentQueue<INeighbour>.GetEnumerator
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.GetEnumerator
+    name: GetEnumerator
+    nameWithType: ConcurrentQueue(Of INeighbour).GetEnumerator
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryAdd(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryAdd(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryAdd(`0)
+  name: IProducerConsumerCollection<INeighbour>.TryAdd(INeighbour)
+  nameWithType: ConcurrentQueue<INeighbour>.IProducerConsumerCollection<INeighbour>.TryAdd(INeighbour)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.System.Collections.Concurrent.IProducerConsumerCollection<Catalyst.Abstractions.P2P.Discovery.INeighbour>.TryAdd(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd(INeighbour)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  name.vb: System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd(INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryAdd(`0)
+    name: IProducerConsumerCollection<INeighbour>.TryAdd
+    nameWithType: ConcurrentQueue<INeighbour>.IProducerConsumerCollection<INeighbour>.TryAdd
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.System.Collections.Concurrent.IProducerConsumerCollection<Catalyst.Abstractions.P2P.Discovery.INeighbour>.TryAdd
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryAdd(`0)
+    name: System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd
+    nameWithType: ConcurrentQueue(Of INeighbour).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryTake(Catalyst.Abstractions.P2P.Discovery.INeighbour@)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryTake(Catalyst.Abstractions.P2P.Discovery.INeighbour@)
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryTake(`0@)
+  name: IProducerConsumerCollection<INeighbour>.TryTake(INeighbour)
+  nameWithType: ConcurrentQueue<INeighbour>.IProducerConsumerCollection<INeighbour>.TryTake(INeighbour)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.System.Collections.Concurrent.IProducerConsumerCollection<Catalyst.Abstractions.P2P.Discovery.INeighbour>.TryTake(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake(INeighbour)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  name.vb: System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake(INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryTake(`0@)
+    name: IProducerConsumerCollection<INeighbour>.TryTake
+    nameWithType: ConcurrentQueue<INeighbour>.IProducerConsumerCollection<INeighbour>.TryTake
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.System.Collections.Concurrent.IProducerConsumerCollection<Catalyst.Abstractions.P2P.Discovery.INeighbour>.TryTake
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryTake(`0@)
+    name: System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake
+    nameWithType: ConcurrentQueue(Of INeighbour).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#ICollection#CopyTo(System.Array,System.Int32)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#ICollection#CopyTo(System.Array,System.Int32)
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#CopyTo(System.Array,System.Int32)
+  name: ICollection.CopyTo(Array, Int32)
+  nameWithType: ConcurrentQueue<INeighbour>.ICollection.CopyTo(Array, Int32)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.System.Collections.ICollection.CopyTo(System.Array, System.Int32)
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).System.Collections.ICollection.CopyTo(Array, Int32)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).System.Collections.ICollection.CopyTo(System.Array, System.Int32)
+  name.vb: System.Collections.ICollection.CopyTo(Array, Int32)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#CopyTo(System.Array,System.Int32)
+    name: ICollection.CopyTo
+    nameWithType: ConcurrentQueue<INeighbour>.ICollection.CopyTo
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.System.Collections.ICollection.CopyTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Array
+    name: Array
+    nameWithType: Array
+    fullName: System.Array
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#CopyTo(System.Array,System.Int32)
+    name: System.Collections.ICollection.CopyTo
+    nameWithType: ConcurrentQueue(Of INeighbour).System.Collections.ICollection.CopyTo
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).System.Collections.ICollection.CopyTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Array
+    name: Array
+    nameWithType: Array
+    fullName: System.Array
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#IEnumerable#GetEnumerator
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#IEnumerable#GetEnumerator
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#IEnumerable#GetEnumerator
+  name: IEnumerable.GetEnumerator()
+  nameWithType: ConcurrentQueue<INeighbour>.IEnumerable.GetEnumerator()
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.System.Collections.IEnumerable.GetEnumerator()
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).System.Collections.IEnumerable.GetEnumerator()
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).System.Collections.IEnumerable.GetEnumerator()
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#IEnumerable#GetEnumerator
+    name: IEnumerable.GetEnumerator
+    nameWithType: ConcurrentQueue<INeighbour>.IEnumerable.GetEnumerator
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.System.Collections.IEnumerable.GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#IEnumerable#GetEnumerator
+    name: System.Collections.IEnumerable.GetEnumerator
+    nameWithType: ConcurrentQueue(Of INeighbour).System.Collections.IEnumerable.GetEnumerator
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).System.Collections.IEnumerable.GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.ToArray
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.ToArray
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.ToArray
+  name: ToArray()
+  nameWithType: ConcurrentQueue<INeighbour>.ToArray()
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.ToArray()
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).ToArray()
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).ToArray()
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.ToArray
+    name: ToArray
+    nameWithType: ConcurrentQueue<INeighbour>.ToArray
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.ToArray
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.ToArray
+    name: ToArray
+    nameWithType: ConcurrentQueue(Of INeighbour).ToArray
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).ToArray
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.TryDequeue(Catalyst.Abstractions.P2P.Discovery.INeighbour@)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.TryDequeue(Catalyst.Abstractions.P2P.Discovery.INeighbour@)
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.TryDequeue(`0@)
+  name: TryDequeue(INeighbour)
+  nameWithType: ConcurrentQueue<INeighbour>.TryDequeue(INeighbour)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.TryDequeue(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).TryDequeue(INeighbour)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).TryDequeue(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.TryDequeue(`0@)
+    name: TryDequeue
+    nameWithType: ConcurrentQueue<INeighbour>.TryDequeue
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.TryDequeue
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.TryDequeue(`0@)
+    name: TryDequeue
+    nameWithType: ConcurrentQueue(Of INeighbour).TryDequeue
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).TryDequeue
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.TryPeek(Catalyst.Abstractions.P2P.Discovery.INeighbour@)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.TryPeek(Catalyst.Abstractions.P2P.Discovery.INeighbour@)
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.TryPeek(`0@)
+  name: TryPeek(INeighbour)
+  nameWithType: ConcurrentQueue<INeighbour>.TryPeek(INeighbour)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.TryPeek(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).TryPeek(INeighbour)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).TryPeek(Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.TryPeek(`0@)
+    name: TryPeek
+    nameWithType: ConcurrentQueue<INeighbour>.TryPeek
+    fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.TryPeek
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.TryPeek(`0@)
+    name: TryPeek
+    nameWithType: ConcurrentQueue(Of INeighbour).TryPeek
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).TryPeek
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Count
+  commentId: P:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Count
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.Count
+  name: Count
+  nameWithType: ConcurrentQueue<INeighbour>.Count
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.Count
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).Count
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).Count
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.IsEmpty
+  commentId: P:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.IsEmpty
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.IsEmpty
+  name: IsEmpty
+  nameWithType: ConcurrentQueue<INeighbour>.IsEmpty
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.IsEmpty
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).IsEmpty
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).IsEmpty
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#ICollection#IsSynchronized
+  commentId: P:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#ICollection#IsSynchronized
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#IsSynchronized
+  name: ICollection.IsSynchronized
+  nameWithType: ConcurrentQueue<INeighbour>.ICollection.IsSynchronized
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.System.Collections.ICollection.IsSynchronized
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).System.Collections.ICollection.IsSynchronized
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).System.Collections.ICollection.IsSynchronized
+  name.vb: System.Collections.ICollection.IsSynchronized
+- uid: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#ICollection#SyncRoot
+  commentId: P:System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}.System#Collections#ICollection#SyncRoot
+  parent: System.Collections.Concurrent.ConcurrentQueue{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#SyncRoot
+  name: ICollection.SyncRoot
+  nameWithType: ConcurrentQueue<INeighbour>.ICollection.SyncRoot
+  fullName: System.Collections.Concurrent.ConcurrentQueue<Catalyst.Abstractions.P2P.Discovery.INeighbour>.System.Collections.ICollection.SyncRoot
+  nameWithType.vb: ConcurrentQueue(Of INeighbour).System.Collections.ICollection.SyncRoot
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).System.Collections.ICollection.SyncRoot
+  name.vb: System.Collections.ICollection.SyncRoot
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Func{Catalyst.Abstractions.P2P.Discovery.INeighbour,System.UInt64})
+  commentId: M:Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.UInt64})
+  parent: Catalyst.Core.Lib.Extensions.EnumerableExtensions
+  definition: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.UInt64})
+  name: Sum<INeighbour>(Func<INeighbour, UInt64>)
+  nameWithType: EnumerableExtensions.Sum<INeighbour>(Func<INeighbour, UInt64>)
+  fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum<Catalyst.Abstractions.P2P.Discovery.INeighbour>(System.Func<Catalyst.Abstractions.P2P.Discovery.INeighbour, System.UInt64>)
+  nameWithType.vb: EnumerableExtensions.Sum(Of INeighbour)(Func(Of INeighbour, UInt64))
+  fullName.vb: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)(System.Func(Of Catalyst.Abstractions.P2P.Discovery.INeighbour, System.UInt64))
+  name.vb: Sum(Of INeighbour)(Func(Of INeighbour, UInt64))
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Func{``0,System.UInt64})
+    name: Sum<INeighbour>
+    nameWithType: EnumerableExtensions.Sum<INeighbour>
+    fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.UInt64
+    name: UInt64
+    nameWithType: UInt64
+    fullName: System.UInt64
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Func{``0,System.UInt64})
+    name: Sum(Of INeighbour)
+    nameWithType: EnumerableExtensions.Sum(Of INeighbour)
+    fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.UInt64
+    name: UInt64
+    nameWithType: UInt64
+    fullName: System.UInt64
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Func{Catalyst.Abstractions.P2P.Discovery.INeighbour,Nethermind.Dirichlet.Numerics.UInt256})
+  commentId: M:Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,Nethermind.Dirichlet.Numerics.UInt256})
+  parent: Catalyst.Core.Lib.Extensions.EnumerableExtensions
+  definition: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,Nethermind.Dirichlet.Numerics.UInt256})
+  name: Sum<INeighbour>(Func<INeighbour, UInt256>)
+  nameWithType: EnumerableExtensions.Sum<INeighbour>(Func<INeighbour, UInt256>)
+  fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum<Catalyst.Abstractions.P2P.Discovery.INeighbour>(System.Func<Catalyst.Abstractions.P2P.Discovery.INeighbour, Nethermind.Dirichlet.Numerics.UInt256>)
+  nameWithType.vb: EnumerableExtensions.Sum(Of INeighbour)(Func(Of INeighbour, UInt256))
+  fullName.vb: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)(System.Func(Of Catalyst.Abstractions.P2P.Discovery.INeighbour, Nethermind.Dirichlet.Numerics.UInt256))
+  name.vb: Sum(Of INeighbour)(Func(Of INeighbour, UInt256))
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Func{``0,Nethermind.Dirichlet.Numerics.UInt256})
+    name: Sum<INeighbour>
+    nameWithType: EnumerableExtensions.Sum<INeighbour>
+    fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Nethermind.Dirichlet.Numerics.UInt256
+    name: UInt256
+    nameWithType: UInt256
+    fullName: Nethermind.Dirichlet.Numerics.UInt256
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Func{``0,Nethermind.Dirichlet.Numerics.UInt256})
+    name: Sum(Of INeighbour)
+    nameWithType: EnumerableExtensions.Sum(Of INeighbour)
+    fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Nethermind.Dirichlet.Numerics.UInt256
+    name: UInt256
+    nameWithType: UInt256
+    fullName: Nethermind.Dirichlet.Numerics.UInt256
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample``1(System.Int32)
+  commentId: M:Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample``1(System.Collections.Generic.IEnumerable{``0},System.Int32)
+  parent: Catalyst.Core.Lib.Extensions.RandomElementExtension
+  definition: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample``1(System.Collections.Generic.IEnumerable{``0},System.Int32)
+  name: RandomSample<INeighbour>(Int32)
+  nameWithType: RandomElementExtension.RandomSample<INeighbour>(Int32)
+  fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample<Catalyst.Abstractions.P2P.Discovery.INeighbour>(System.Int32)
+  nameWithType.vb: RandomElementExtension.RandomSample(Of INeighbour)(Int32)
+  fullName.vb: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)(System.Int32)
+  name.vb: RandomSample(Of INeighbour)(Int32)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample``1(System.Int32)
+    name: RandomSample<INeighbour>
+    nameWithType: RandomElementExtension.RandomSample<INeighbour>
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample``1(System.Int32)
+    name: RandomSample(Of INeighbour)
+    nameWithType: RandomElementExtension.RandomSample(Of INeighbour)
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement``1
+  commentId: M:Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement``1(System.Collections.Generic.IEnumerable{``0})
+  parent: Catalyst.Core.Lib.Extensions.RandomElementExtension
+  definition: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement``1(System.Collections.Generic.IEnumerable{``0})
+  name: RandomElement<INeighbour>()
+  nameWithType: RandomElementExtension.RandomElement<INeighbour>()
+  fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement<Catalyst.Abstractions.P2P.Discovery.INeighbour>()
+  nameWithType.vb: RandomElementExtension.RandomElement(Of INeighbour)()
+  fullName.vb: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)()
+  name.vb: RandomElement(Of INeighbour)()
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement``1
+    name: RandomElement<INeighbour>
+    nameWithType: RandomElementExtension.RandomElement<INeighbour>
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement``1
+    name: RandomElement(Of INeighbour)
+    nameWithType: RandomElementExtension.RandomElement(Of INeighbour)
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle``1
+  commentId: M:Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle``1(System.Collections.Generic.IEnumerable{``0})
+  parent: Catalyst.Core.Lib.Extensions.RandomElementExtension
+  definition: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle``1(System.Collections.Generic.IEnumerable{``0})
+  name: Shuffle<INeighbour>()
+  nameWithType: RandomElementExtension.Shuffle<INeighbour>()
+  fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle<Catalyst.Abstractions.P2P.Discovery.INeighbour>()
+  nameWithType.vb: RandomElementExtension.Shuffle(Of INeighbour)()
+  fullName.vb: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)()
+  name.vb: Shuffle(Of INeighbour)()
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle``1
+    name: Shuffle<INeighbour>
+    nameWithType: RandomElementExtension.Shuffle<INeighbour>
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle``1
+    name: Shuffle(Of INeighbour)
+    nameWithType: RandomElementExtension.Shuffle(Of INeighbour)
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Concurrent.ConcurrentQueue`1
+  commentId: T:System.Collections.Concurrent.ConcurrentQueue`1
+  isExternal: true
+  name: ConcurrentQueue<T>
+  nameWithType: ConcurrentQueue<T>
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>
+  nameWithType.vb: ConcurrentQueue(Of T)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T)
+  name.vb: ConcurrentQueue(Of T)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1
+    name: ConcurrentQueue
+    nameWithType: ConcurrentQueue
+    fullName: System.Collections.Concurrent.ConcurrentQueue
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1
+    name: ConcurrentQueue
+    nameWithType: ConcurrentQueue
+    fullName: System.Collections.Concurrent.ConcurrentQueue
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent
+  commentId: N:System.Collections.Concurrent
+  isExternal: true
+  name: System.Collections.Concurrent
+  nameWithType: System.Collections.Concurrent
+  fullName: System.Collections.Concurrent
+- uid: System.Collections.Concurrent.IProducerConsumerCollection`1
+  commentId: T:System.Collections.Concurrent.IProducerConsumerCollection`1
+  isExternal: true
+  name: IProducerConsumerCollection<T>
+  nameWithType: IProducerConsumerCollection<T>
+  fullName: System.Collections.Concurrent.IProducerConsumerCollection<T>
+  nameWithType.vb: IProducerConsumerCollection(Of T)
+  fullName.vb: System.Collections.Concurrent.IProducerConsumerCollection(Of T)
+  name.vb: IProducerConsumerCollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.IProducerConsumerCollection`1
+    name: IProducerConsumerCollection
+    nameWithType: IProducerConsumerCollection
+    fullName: System.Collections.Concurrent.IProducerConsumerCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Concurrent.IProducerConsumerCollection`1
+    name: IProducerConsumerCollection
+    nameWithType: IProducerConsumerCollection
+    fullName: System.Collections.Concurrent.IProducerConsumerCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections
+  commentId: N:System.Collections
+  isExternal: true
+  name: System.Collections
+  nameWithType: System.Collections
+  fullName: System.Collections
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery
+- uid: System.Collections.Generic.IReadOnlyCollection`1
+  commentId: T:System.Collections.Generic.IReadOnlyCollection`1
+  isExternal: true
+  name: IReadOnlyCollection<T>
+  nameWithType: IReadOnlyCollection<T>
+  fullName: System.Collections.Generic.IReadOnlyCollection<T>
+  nameWithType.vb: IReadOnlyCollection(Of T)
+  fullName.vb: System.Collections.Generic.IReadOnlyCollection(Of T)
+  name.vb: IReadOnlyCollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.Clear
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.Clear
+  isExternal: true
+  name: Clear()
+  nameWithType: ConcurrentQueue<T>.Clear()
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.Clear()
+  nameWithType.vb: ConcurrentQueue(Of T).Clear()
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).Clear()
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.Clear
+    name: Clear
+    nameWithType: ConcurrentQueue<T>.Clear
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.Clear
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.Clear
+    name: Clear
+    nameWithType: ConcurrentQueue(Of T).Clear
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).Clear
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.CopyTo(`0[],System.Int32)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.CopyTo(`0[],System.Int32)
+  isExternal: true
+  name: CopyTo(T[], Int32)
+  nameWithType: ConcurrentQueue<T>.CopyTo(T[], Int32)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.CopyTo(T[], System.Int32)
+  nameWithType.vb: ConcurrentQueue(Of T).CopyTo(T(), Int32)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).CopyTo(T(), System.Int32)
+  name.vb: CopyTo(T(), Int32)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    nameWithType: ConcurrentQueue<T>.CopyTo
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.CopyTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.CopyTo(`0[],System.Int32)
+    name: CopyTo
+    nameWithType: ConcurrentQueue(Of T).CopyTo
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).CopyTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.Enqueue(`0)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.Enqueue(`0)
+  isExternal: true
+  name: Enqueue(T)
+  nameWithType: ConcurrentQueue<T>.Enqueue(T)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.Enqueue(T)
+  nameWithType.vb: ConcurrentQueue(Of T).Enqueue(T)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).Enqueue(T)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.Enqueue(`0)
+    name: Enqueue
+    nameWithType: ConcurrentQueue<T>.Enqueue
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.Enqueue
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.Enqueue(`0)
+    name: Enqueue
+    nameWithType: ConcurrentQueue(Of T).Enqueue
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).Enqueue
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.GetEnumerator
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.GetEnumerator
+  isExternal: true
+  name: GetEnumerator()
+  nameWithType: ConcurrentQueue<T>.GetEnumerator()
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.GetEnumerator()
+  nameWithType.vb: ConcurrentQueue(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.GetEnumerator
+    name: GetEnumerator
+    nameWithType: ConcurrentQueue<T>.GetEnumerator
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.GetEnumerator
+    name: GetEnumerator
+    nameWithType: ConcurrentQueue(Of T).GetEnumerator
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryAdd(`0)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryAdd(`0)
+  isExternal: true
+  name: IProducerConsumerCollection<T>.TryAdd(T)
+  nameWithType: ConcurrentQueue<T>.IProducerConsumerCollection<T>.TryAdd(T)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd(T)
+  nameWithType.vb: ConcurrentQueue(Of T).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd(T)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd(T)
+  name.vb: System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd(T)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryAdd(`0)
+    name: IProducerConsumerCollection<T>.TryAdd
+    nameWithType: ConcurrentQueue<T>.IProducerConsumerCollection<T>.TryAdd
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryAdd(`0)
+    name: System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd
+    nameWithType: ConcurrentQueue(Of T).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryAdd
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryTake(`0@)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryTake(`0@)
+  isExternal: true
+  name: IProducerConsumerCollection<T>.TryTake(T)
+  nameWithType: ConcurrentQueue<T>.IProducerConsumerCollection<T>.TryTake(T)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake(T)
+  nameWithType.vb: ConcurrentQueue(Of T).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake(T)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake(T)
+  name.vb: System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake(T)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryTake(`0@)
+    name: IProducerConsumerCollection<T>.TryTake
+    nameWithType: ConcurrentQueue<T>.IProducerConsumerCollection<T>.TryTake
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#Concurrent#IProducerConsumerCollection{T}#TryTake(`0@)
+    name: System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake
+    nameWithType: ConcurrentQueue(Of T).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).System.Collections.Concurrent.IProducerConsumerCollection<T>.TryTake
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#CopyTo(System.Array,System.Int32)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#CopyTo(System.Array,System.Int32)
+  isExternal: true
+  name: ICollection.CopyTo(Array, Int32)
+  nameWithType: ConcurrentQueue<T>.ICollection.CopyTo(Array, Int32)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.System.Collections.ICollection.CopyTo(System.Array, System.Int32)
+  nameWithType.vb: ConcurrentQueue(Of T).System.Collections.ICollection.CopyTo(Array, Int32)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).System.Collections.ICollection.CopyTo(System.Array, System.Int32)
+  name.vb: System.Collections.ICollection.CopyTo(Array, Int32)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#CopyTo(System.Array,System.Int32)
+    name: ICollection.CopyTo
+    nameWithType: ConcurrentQueue<T>.ICollection.CopyTo
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.System.Collections.ICollection.CopyTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Array
+    name: Array
+    nameWithType: Array
+    fullName: System.Array
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#CopyTo(System.Array,System.Int32)
+    name: System.Collections.ICollection.CopyTo
+    nameWithType: ConcurrentQueue(Of T).System.Collections.ICollection.CopyTo
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).System.Collections.ICollection.CopyTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Array
+    name: Array
+    nameWithType: Array
+    fullName: System.Array
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#IEnumerable#GetEnumerator
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#IEnumerable#GetEnumerator
+  isExternal: true
+  name: IEnumerable.GetEnumerator()
+  nameWithType: ConcurrentQueue<T>.IEnumerable.GetEnumerator()
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.System.Collections.IEnumerable.GetEnumerator()
+  nameWithType.vb: ConcurrentQueue(Of T).System.Collections.IEnumerable.GetEnumerator()
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).System.Collections.IEnumerable.GetEnumerator()
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#IEnumerable#GetEnumerator
+    name: IEnumerable.GetEnumerator
+    nameWithType: ConcurrentQueue<T>.IEnumerable.GetEnumerator
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.System.Collections.IEnumerable.GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#IEnumerable#GetEnumerator
+    name: System.Collections.IEnumerable.GetEnumerator
+    nameWithType: ConcurrentQueue(Of T).System.Collections.IEnumerable.GetEnumerator
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).System.Collections.IEnumerable.GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.ToArray
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.ToArray
+  isExternal: true
+  name: ToArray()
+  nameWithType: ConcurrentQueue<T>.ToArray()
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.ToArray()
+  nameWithType.vb: ConcurrentQueue(Of T).ToArray()
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).ToArray()
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.ToArray
+    name: ToArray
+    nameWithType: ConcurrentQueue<T>.ToArray
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.ToArray
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.ToArray
+    name: ToArray
+    nameWithType: ConcurrentQueue(Of T).ToArray
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).ToArray
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.TryDequeue(`0@)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.TryDequeue(`0@)
+  isExternal: true
+  name: TryDequeue(T)
+  nameWithType: ConcurrentQueue<T>.TryDequeue(T)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.TryDequeue(T)
+  nameWithType.vb: ConcurrentQueue(Of T).TryDequeue(T)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).TryDequeue(T)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.TryDequeue(`0@)
+    name: TryDequeue
+    nameWithType: ConcurrentQueue<T>.TryDequeue
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.TryDequeue
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.TryDequeue(`0@)
+    name: TryDequeue
+    nameWithType: ConcurrentQueue(Of T).TryDequeue
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).TryDequeue
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.TryPeek(`0@)
+  commentId: M:System.Collections.Concurrent.ConcurrentQueue`1.TryPeek(`0@)
+  isExternal: true
+  name: TryPeek(T)
+  nameWithType: ConcurrentQueue<T>.TryPeek(T)
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.TryPeek(T)
+  nameWithType.vb: ConcurrentQueue(Of T).TryPeek(T)
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).TryPeek(T)
+  spec.csharp:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.TryPeek(`0@)
+    name: TryPeek
+    nameWithType: ConcurrentQueue<T>.TryPeek
+    fullName: System.Collections.Concurrent.ConcurrentQueue<T>.TryPeek
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Concurrent.ConcurrentQueue`1.TryPeek(`0@)
+    name: TryPeek
+    nameWithType: ConcurrentQueue(Of T).TryPeek
+    fullName: System.Collections.Concurrent.ConcurrentQueue(Of T).TryPeek
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.Count
+  commentId: P:System.Collections.Concurrent.ConcurrentQueue`1.Count
+  isExternal: true
+  name: Count
+  nameWithType: ConcurrentQueue<T>.Count
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.Count
+  nameWithType.vb: ConcurrentQueue(Of T).Count
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).Count
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.IsEmpty
+  commentId: P:System.Collections.Concurrent.ConcurrentQueue`1.IsEmpty
+  isExternal: true
+  name: IsEmpty
+  nameWithType: ConcurrentQueue<T>.IsEmpty
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.IsEmpty
+  nameWithType.vb: ConcurrentQueue(Of T).IsEmpty
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).IsEmpty
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#IsSynchronized
+  commentId: P:System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#IsSynchronized
+  isExternal: true
+  name: ICollection.IsSynchronized
+  nameWithType: ConcurrentQueue<T>.ICollection.IsSynchronized
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.System.Collections.ICollection.IsSynchronized
+  nameWithType.vb: ConcurrentQueue(Of T).System.Collections.ICollection.IsSynchronized
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).System.Collections.ICollection.IsSynchronized
+  name.vb: System.Collections.ICollection.IsSynchronized
+- uid: System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#SyncRoot
+  commentId: P:System.Collections.Concurrent.ConcurrentQueue`1.System#Collections#ICollection#SyncRoot
+  isExternal: true
+  name: ICollection.SyncRoot
+  nameWithType: ConcurrentQueue<T>.ICollection.SyncRoot
+  fullName: System.Collections.Concurrent.ConcurrentQueue<T>.System.Collections.ICollection.SyncRoot
+  nameWithType.vb: ConcurrentQueue(Of T).System.Collections.ICollection.SyncRoot
+  fullName.vb: System.Collections.Concurrent.ConcurrentQueue(Of T).System.Collections.ICollection.SyncRoot
+  name.vb: System.Collections.ICollection.SyncRoot
+- uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.UInt64})
+  commentId: M:Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.UInt64})
+  isExternal: true
+  name: Sum<T>(IEnumerable<T>, Func<T, UInt64>)
+  nameWithType: EnumerableExtensions.Sum<T>(IEnumerable<T>, Func<T, UInt64>)
+  fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum<T>(System.Collections.Generic.IEnumerable<T>, System.Func<T, System.UInt64>)
+  nameWithType.vb: EnumerableExtensions.Sum(Of T)(IEnumerable(Of T), Func(Of T, UInt64))
+  fullName.vb: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum(Of T)(System.Collections.Generic.IEnumerable(Of T), System.Func(Of T, System.UInt64))
+  name.vb: Sum(Of T)(IEnumerable(Of T), Func(Of T, UInt64))
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.UInt64})
+    name: Sum<T>
+    nameWithType: EnumerableExtensions.Sum<T>
+    fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.UInt64
+    name: UInt64
+    nameWithType: UInt64
+    fullName: System.UInt64
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.UInt64})
+    name: Sum(Of T)
+    nameWithType: EnumerableExtensions.Sum(Of T)
+    fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.UInt64
+    name: UInt64
+    nameWithType: UInt64
+    fullName: System.UInt64
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions
+  commentId: T:Catalyst.Core.Lib.Extensions.EnumerableExtensions
+  parent: Catalyst.Core.Lib.Extensions
+  name: EnumerableExtensions
+  nameWithType: EnumerableExtensions
+  fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions
+- uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,Nethermind.Dirichlet.Numerics.UInt256})
+  commentId: M:Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,Nethermind.Dirichlet.Numerics.UInt256})
+  isExternal: true
+  name: Sum<T>(IEnumerable<T>, Func<T, UInt256>)
+  nameWithType: EnumerableExtensions.Sum<T>(IEnumerable<T>, Func<T, UInt256>)
+  fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum<T>(System.Collections.Generic.IEnumerable<T>, System.Func<T, Nethermind.Dirichlet.Numerics.UInt256>)
+  nameWithType.vb: EnumerableExtensions.Sum(Of T)(IEnumerable(Of T), Func(Of T, UInt256))
+  fullName.vb: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum(Of T)(System.Collections.Generic.IEnumerable(Of T), System.Func(Of T, Nethermind.Dirichlet.Numerics.UInt256))
+  name.vb: Sum(Of T)(IEnumerable(Of T), Func(Of T, UInt256))
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,Nethermind.Dirichlet.Numerics.UInt256})
+    name: Sum<T>
+    nameWithType: EnumerableExtensions.Sum<T>
+    fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Nethermind.Dirichlet.Numerics.UInt256
+    name: UInt256
+    nameWithType: UInt256
+    fullName: Nethermind.Dirichlet.Numerics.UInt256
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,Nethermind.Dirichlet.Numerics.UInt256})
+    name: Sum(Of T)
+    nameWithType: EnumerableExtensions.Sum(Of T)
+    fullName: Catalyst.Core.Lib.Extensions.EnumerableExtensions.Sum(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Func`2
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Nethermind.Dirichlet.Numerics.UInt256
+    name: UInt256
+    nameWithType: UInt256
+    fullName: Nethermind.Dirichlet.Numerics.UInt256
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample``1(System.Collections.Generic.IEnumerable{``0},System.Int32)
+  commentId: M:Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample``1(System.Collections.Generic.IEnumerable{``0},System.Int32)
+  isExternal: true
+  name: RandomSample<T>(IEnumerable<T>, Int32)
+  nameWithType: RandomElementExtension.RandomSample<T>(IEnumerable<T>, Int32)
+  fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample<T>(System.Collections.Generic.IEnumerable<T>, System.Int32)
+  nameWithType.vb: RandomElementExtension.RandomSample(Of T)(IEnumerable(Of T), Int32)
+  fullName.vb: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample(Of T)(System.Collections.Generic.IEnumerable(Of T), System.Int32)
+  name.vb: RandomSample(Of T)(IEnumerable(Of T), Int32)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample``1(System.Collections.Generic.IEnumerable{``0},System.Int32)
+    name: RandomSample<T>
+    nameWithType: RandomElementExtension.RandomSample<T>
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample``1(System.Collections.Generic.IEnumerable{``0},System.Int32)
+    name: RandomSample(Of T)
+    nameWithType: RandomElementExtension.RandomSample(Of T)
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomSample(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.Extensions.RandomElementExtension
+  commentId: T:Catalyst.Core.Lib.Extensions.RandomElementExtension
+  parent: Catalyst.Core.Lib.Extensions
+  name: RandomElementExtension
+  nameWithType: RandomElementExtension
+  fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension
+- uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement``1(System.Collections.Generic.IEnumerable{``0})
+  commentId: M:Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement``1(System.Collections.Generic.IEnumerable{``0})
+  isExternal: true
+  name: RandomElement<T>(IEnumerable<T>)
+  nameWithType: RandomElementExtension.RandomElement<T>(IEnumerable<T>)
+  fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement<T>(System.Collections.Generic.IEnumerable<T>)
+  nameWithType.vb: RandomElementExtension.RandomElement(Of T)(IEnumerable(Of T))
+  fullName.vb: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement(Of T)(System.Collections.Generic.IEnumerable(Of T))
+  name.vb: RandomElement(Of T)(IEnumerable(Of T))
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement``1(System.Collections.Generic.IEnumerable{``0})
+    name: RandomElement<T>
+    nameWithType: RandomElementExtension.RandomElement<T>
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement``1(System.Collections.Generic.IEnumerable{``0})
+    name: RandomElement(Of T)
+    nameWithType: RandomElementExtension.RandomElement(Of T)
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.RandomElement(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle``1(System.Collections.Generic.IEnumerable{``0})
+  commentId: M:Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle``1(System.Collections.Generic.IEnumerable{``0})
+  isExternal: true
+  name: Shuffle<T>(IEnumerable<T>)
+  nameWithType: RandomElementExtension.Shuffle<T>(IEnumerable<T>)
+  fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle<T>(System.Collections.Generic.IEnumerable<T>)
+  nameWithType.vb: RandomElementExtension.Shuffle(Of T)(IEnumerable(Of T))
+  fullName.vb: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle(Of T)(System.Collections.Generic.IEnumerable(Of T))
+  name.vb: Shuffle(Of T)(IEnumerable(Of T))
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle``1(System.Collections.Generic.IEnumerable{``0})
+    name: Shuffle<T>
+    nameWithType: RandomElementExtension.Shuffle<T>
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle``1(System.Collections.Generic.IEnumerable{``0})
+    name: Shuffle(Of T)
+    nameWithType: RandomElementExtension.Shuffle(Of T)
+    fullName: Catalyst.Core.Lib.Extensions.RandomElementExtension.Shuffle(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.Extensions
+  commentId: N:Catalyst.Core.Lib.Extensions
+  name: Catalyst.Core.Lib.Extensions
+  nameWithType: Catalyst.Core.Lib.Extensions
+  fullName: Catalyst.Core.Lib.Extensions
+- uid: Catalyst.Core.Lib.P2P.Discovery.Neighbours.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.P2P.Discovery.Neighbours.#ctor
+  name: Neighbours
+  nameWithType: Neighbours.Neighbours
+  fullName: Catalyst.Core.Lib.P2P.Discovery.Neighbours.Neighbours
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.P2P.Discovery.Neighbours.ToString*
+  commentId: Overload:Catalyst.Core.Lib.P2P.Discovery.Neighbours.ToString
+  name: ToString
+  nameWithType: Neighbours.ToString
+  fullName: Catalyst.Core.Lib.P2P.Discovery.Neighbours.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String

@@ -1,0 +1,12 @@
+### YamlMime:TableOfContent
+- uid: Catalyst.Core.Modules.Dfs
+  name: Catalyst.Core.Modules.Dfs
+  items:
+  - uid: Catalyst.Core.Modules.Dfs.DevDfs
+    name: DevDfs
+  - uid: Catalyst.Core.Modules.Dfs.Dfs
+    name: Dfs
+  - uid: Catalyst.Core.Modules.Dfs.DfsModule
+    name: DfsModule
+  - uid: Catalyst.Core.Modules.Dfs.IpfsAdapter
+    name: IpfsAdapter

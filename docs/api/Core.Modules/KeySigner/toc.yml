@@ -1,0 +1,8 @@
+### YamlMime:TableOfContent
+- uid: Catalyst.Core.Modules.KeySigner
+  name: Catalyst.Core.Modules.KeySigner
+  items:
+  - uid: Catalyst.Core.Modules.KeySigner.KeySigner
+    name: KeySigner
+  - uid: Catalyst.Core.Modules.KeySigner.KeySignerModule
+    name: KeySignerModule

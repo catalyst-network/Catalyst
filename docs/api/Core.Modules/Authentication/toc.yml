@@ -1,0 +1,22 @@
+### YamlMime:TableOfContent
+- uid: Catalyst.Core.Modules.Authentication
+  name: Catalyst.Core.Modules.Authentication
+  items:
+  - uid: Catalyst.Core.Modules.Authentication.AuthenticationModule
+    name: AuthenticationModule
+  - uid: Catalyst.Core.Modules.Authentication.NoAuthenticationStrategy
+    name: NoAuthenticationStrategy
+  - uid: Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy
+    name: RepositoryAuthenticationStrategy
+- uid: Catalyst.Core.Modules.Authentication.Models
+  name: Catalyst.Core.Modules.Authentication.Models
+  items:
+  - uid: Catalyst.Core.Modules.Authentication.Models.AuthCredentials
+    name: AuthCredentials
+- uid: Catalyst.Core.Modules.Authentication.Repository
+  name: Catalyst.Core.Modules.Authentication.Repository
+  items:
+  - uid: Catalyst.Core.Modules.Authentication.Repository.AuthCredentialRepository
+    name: AuthCredentialRepository
+  - uid: Catalyst.Core.Modules.Authentication.Repository.IAuthCredentialRepository
+    name: IAuthCredentialRepository

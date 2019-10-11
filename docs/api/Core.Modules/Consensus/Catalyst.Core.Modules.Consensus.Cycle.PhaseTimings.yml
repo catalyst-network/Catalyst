@@ -1,0 +1,638 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings
+  commentId: T:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings
+  id: PhaseTimings
+  parent: Catalyst.Core.Modules.Consensus.Cycle
+  children:
+  - Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.#ctor(System.TimeSpan,System.TimeSpan,System.TimeSpan)
+  - Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.CollectionTime
+  - Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.Offset
+  - Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.ProductionTime
+  - Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.TotalTime
+  langs:
+  - csharp
+  - vb
+  name: PhaseTimings
+  nameWithType: PhaseTimings
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PhaseTimings
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  summary: "\nA placeholder for the timespans corresponding to the different periods of a given phase.\nEach phase starts with an Offset, then \n"
+  example: []
+  syntax:
+    content: 'public class PhaseTimings : IPhaseTimings'
+    content.vb: >-
+      Public Class PhaseTimings
+
+          Implements IPhaseTimings
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.#ctor(System.TimeSpan,System.TimeSpan,System.TimeSpan)
+  commentId: M:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.#ctor(System.TimeSpan,System.TimeSpan,System.TimeSpan)
+  id: '#ctor(System.TimeSpan,System.TimeSpan,System.TimeSpan)'
+  parent: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings
+  langs:
+  - csharp
+  - vb
+  name: PhaseTimings(TimeSpan, TimeSpan, TimeSpan)
+  nameWithType: PhaseTimings.PhaseTimings(TimeSpan, TimeSpan, TimeSpan)
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.PhaseTimings(System.TimeSpan, System.TimeSpan, System.TimeSpan)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  syntax:
+    content: public PhaseTimings(TimeSpan offset, TimeSpan productionTime, TimeSpan collectionTime)
+    parameters:
+    - id: offset
+      type: System.TimeSpan
+    - id: productionTime
+      type: System.TimeSpan
+    - id: collectionTime
+      type: System.TimeSpan
+    content.vb: Public Sub New(offset As TimeSpan, productionTime As TimeSpan, collectionTime As TimeSpan)
+  overload: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.Offset
+  commentId: P:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.Offset
+  id: Offset
+  parent: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings
+  langs:
+  - csharp
+  - vb
+  name: Offset
+  nameWithType: PhaseTimings.Offset
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.Offset
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Offset
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+    startLine: 44
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  summary: "\nTime between the start of a cycle and the start of the phase.\n"
+  example: []
+  syntax:
+    content: public TimeSpan Offset { get; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: Public ReadOnly Property Offset As TimeSpan
+  overload: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.Offset*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.ProductionTime
+  commentId: P:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.ProductionTime
+  id: ProductionTime
+  parent: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings
+  langs:
+  - csharp
+  - vb
+  name: ProductionTime
+  nameWithType: PhaseTimings.ProductionTime
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.ProductionTime
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ProductionTime
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+    startLine: 49
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  summary: "\nTime during which a phase is in the <xref href=\"Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Producing\" data-throw-if-not-resolved=\"false\"></xref> status.\n"
+  example: []
+  syntax:
+    content: public TimeSpan ProductionTime { get; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: Public ReadOnly Property ProductionTime As TimeSpan
+  overload: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.ProductionTime*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.CollectionTime
+  commentId: P:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.CollectionTime
+  id: CollectionTime
+  parent: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings
+  langs:
+  - csharp
+  - vb
+  name: CollectionTime
+  nameWithType: PhaseTimings.CollectionTime
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.CollectionTime
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CollectionTime
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+    startLine: 54
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  summary: "\nTime during which a phase is in the <xref href=\"Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Collecting\" data-throw-if-not-resolved=\"false\"></xref> status.\n"
+  example: []
+  syntax:
+    content: public TimeSpan CollectionTime { get; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: Public ReadOnly Property CollectionTime As TimeSpan
+  overload: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.CollectionTime*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.TotalTime
+  commentId: P:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.TotalTime
+  id: TotalTime
+  parent: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings
+  langs:
+  - csharp
+  - vb
+  name: TotalTime
+  nameWithType: PhaseTimings.TotalTime
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.TotalTime
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: TotalTime
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/PhaseTimings.cs
+    startLine: 60
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  summary: "\nThe total duration of the phase, after which it will go <xref href=\"Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Idle\" data-throw-if-not-resolved=\"false\"></xref>\nuntil the next cycle.\n"
+  example: []
+  syntax:
+    content: public TimeSpan TotalTime { get; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: Public ReadOnly Property TotalTime As TimeSpan
+  overload: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.TotalTime*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+references:
+- uid: Catalyst.Core.Modules.Consensus.Cycle
+  commentId: N:Catalyst.Core.Modules.Consensus.Cycle
+  name: Catalyst.Core.Modules.Consensus.Cycle
+  nameWithType: Catalyst.Core.Modules.Consensus.Cycle
+  fullName: Catalyst.Core.Modules.Consensus.Cycle
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: IPhaseTimings
+  nameWithType: IPhaseTimings
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus.Cycle
+  commentId: N:Catalyst.Abstractions.Consensus.Cycle
+  name: Catalyst.Abstractions.Consensus.Cycle
+  nameWithType: Catalyst.Abstractions.Consensus.Cycle
+  fullName: Catalyst.Abstractions.Consensus.Cycle
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.#ctor
+  name: PhaseTimings
+  nameWithType: PhaseTimings.PhaseTimings
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.PhaseTimings
+- uid: System.TimeSpan
+  commentId: T:System.TimeSpan
+  parent: System
+  isExternal: true
+  name: TimeSpan
+  nameWithType: TimeSpan
+  fullName: System.TimeSpan
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.Offset*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.Offset
+  name: Offset
+  nameWithType: PhaseTimings.Offset
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.Offset
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  name: Offset
+  nameWithType: IPhaseTimings.Offset
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.Offset
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Producing
+  commentId: F:Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Producing
+  parent: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus
+  name: Producing
+  nameWithType: PhaseStatus.Producing
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Producing
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.ProductionTime*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.ProductionTime
+  name: ProductionTime
+  nameWithType: PhaseTimings.ProductionTime
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.ProductionTime
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  name: ProductionTime
+  nameWithType: IPhaseTimings.ProductionTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.ProductionTime
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus
+  commentId: T:Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus
+  parent: Catalyst.Core.Modules.Consensus.Cycle
+  name: PhaseStatus
+  nameWithType: PhaseStatus
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Collecting
+  commentId: F:Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Collecting
+  parent: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus
+  name: Collecting
+  nameWithType: PhaseStatus.Collecting
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Collecting
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.CollectionTime*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.CollectionTime
+  name: CollectionTime
+  nameWithType: PhaseTimings.CollectionTime
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.CollectionTime
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  name: CollectionTime
+  nameWithType: IPhaseTimings.CollectionTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.CollectionTime
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Idle
+  commentId: F:Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Idle
+  parent: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus
+  name: Idle
+  nameWithType: PhaseStatus.Idle
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseStatus.Idle
+- uid: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.TotalTime*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.TotalTime
+  name: TotalTime
+  nameWithType: PhaseTimings.TotalTime
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.PhaseTimings.TotalTime
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  name: TotalTime
+  nameWithType: IPhaseTimings.TotalTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings.TotalTime

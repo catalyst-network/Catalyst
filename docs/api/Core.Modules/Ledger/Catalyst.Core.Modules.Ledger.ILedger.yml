@@ -1,0 +1,262 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Ledger.ILedger
+  commentId: T:Catalyst.Core.Modules.Ledger.ILedger
+  id: ILedger
+  parent: Catalyst.Core.Modules.Ledger
+  children:
+  - Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising
+  - Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+  - Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  - Catalyst.Core.Modules.Ledger.ILedger.Update(TheDotNetLeague.MultiFormats.MultiHash.MultiHash)
+  langs:
+  - csharp
+  - vb
+  name: ILedger
+  nameWithType: ILedger
+  fullName: Catalyst.Core.Modules.Ledger.ILedger
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/ILedger.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ILedger
+    path: ../src/Catalyst.Core.Modules.Ledger/ILedger.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  summary: "\nThis represents the ledger used to represent and store the state of the Catalyst\nnetwork. It acts a unique source of truth which can be queried to retrieve account\nbalances and which can only be updated by Delta / Ledger State Update objects. \n"
+  example: []
+  syntax:
+    content: public interface ILedger
+    content.vb: Public Interface ILedger
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  commentId: M:Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  id: SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  parent: Catalyst.Core.Modules.Ledger.ILedger
+  langs:
+  - csharp
+  - vb
+  name: SaveAccountState(Account)
+  nameWithType: ILedger.SaveAccountState(Account)
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/ILedger.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: SaveAccountState
+    path: ../src/Catalyst.Core.Modules.Ledger/ILedger.cs
+    startLine: 42
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  summary: "\nSaves the new state of a give <xref href=\"Catalyst.Core.Modules.Ledger.Models.IAccount\" data-throw-if-not-resolved=\"false\"></xref> on the ledger.\n"
+  remarks: >-
+    This might need to become private if we consider that accounts should only be updated through
+
+    deltas as they emerge from the consensus mechanism.
+  example: []
+  syntax:
+    content: bool SaveAccountState(Account account)
+    parameters:
+    - id: account
+      type: Catalyst.Core.Modules.Ledger.Models.Account
+      description: The new state of the account, to be inserted or updated in the ledger.
+    return:
+      type: System.Boolean
+      description: <code>true</code> if the update succeeded, <code>false</code> otherwise.
+    content.vb: Function SaveAccountState(account As Account) As Boolean
+  overload: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState*
+- uid: Catalyst.Core.Modules.Ledger.ILedger.Update(TheDotNetLeague.MultiFormats.MultiHash.MultiHash)
+  commentId: M:Catalyst.Core.Modules.Ledger.ILedger.Update(TheDotNetLeague.MultiFormats.MultiHash.MultiHash)
+  id: Update(TheDotNetLeague.MultiFormats.MultiHash.MultiHash)
+  parent: Catalyst.Core.Modules.Ledger.ILedger
+  langs:
+  - csharp
+  - vb
+  name: Update(MultiHash)
+  nameWithType: ILedger.Update(MultiHash)
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.Update(TheDotNetLeague.MultiFormats.MultiHash.MultiHash)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/ILedger.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Update
+    path: ../src/Catalyst.Core.Modules.Ledger/ILedger.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  summary: "\nDigests the information contained in a Delta object and uses it to update the various accounts involved\nin the transactions it contains. An update will trigger a potentially long running synchronisation if\nthe delta received is not immediately following the current <xref href=\"Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta\" data-throw-if-not-resolved=\"false\"></xref>.\n"
+  example: []
+  syntax:
+    content: void Update(MultiHash deltaHash)
+    parameters:
+    - id: deltaHash
+      type: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+      description: The address of the delta used to update the ledger on the Dfs.
+    content.vb: Sub Update(deltaHash As MultiHash)
+  overload: Catalyst.Core.Modules.Ledger.ILedger.Update*
+- uid: Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+  commentId: P:Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+  id: LatestKnownDelta
+  parent: Catalyst.Core.Modules.Ledger.ILedger
+  langs:
+  - csharp
+  - vb
+  name: LatestKnownDelta
+  nameWithType: ILedger.LatestKnownDelta
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/ILedger.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: LatestKnownDelta
+    path: ../src/Catalyst.Core.Modules.Ledger/ILedger.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  summary: "\nThe latest hash that was process\n"
+  example: []
+  syntax:
+    content: MultiHash LatestKnownDelta { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+    content.vb: ReadOnly Property LatestKnownDelta As MultiHash
+  overload: Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising
+  commentId: P:Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising
+  id: IsSynchonising
+  parent: Catalyst.Core.Modules.Ledger.ILedger
+  langs:
+  - csharp
+  - vb
+  name: IsSynchonising
+  nameWithType: ILedger.IsSynchonising
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/ILedger.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsSynchonising
+    path: ../src/Catalyst.Core.Modules.Ledger/ILedger.cs
+    startLine: 60
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  summary: "\nA boolean indicating whether a synchronisation of the ledger is in currently in process. \n"
+  example: []
+  syntax:
+    content: bool IsSynchonising { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: ReadOnly Property IsSynchonising As Boolean
+  overload: Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Core.Modules.Ledger
+  commentId: N:Catalyst.Core.Modules.Ledger
+  name: Catalyst.Core.Modules.Ledger
+  nameWithType: Catalyst.Core.Modules.Ledger
+  fullName: Catalyst.Core.Modules.Ledger
+- uid: Catalyst.Core.Modules.Ledger.Models.IAccount
+  commentId: T:Catalyst.Core.Modules.Ledger.Models.IAccount
+  parent: Catalyst.Core.Modules.Ledger.Models
+  name: IAccount
+  nameWithType: IAccount
+  fullName: Catalyst.Core.Modules.Ledger.Models.IAccount
+- uid: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState
+  name: SaveAccountState
+  nameWithType: ILedger.SaveAccountState
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState
+- uid: Catalyst.Core.Modules.Ledger.Models.Account
+  commentId: T:Catalyst.Core.Modules.Ledger.Models.Account
+  parent: Catalyst.Core.Modules.Ledger.Models
+  name: Account
+  nameWithType: Account
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Core.Modules.Ledger.Models
+  commentId: N:Catalyst.Core.Modules.Ledger.Models
+  name: Catalyst.Core.Modules.Ledger.Models
+  nameWithType: Catalyst.Core.Modules.Ledger.Models
+  fullName: Catalyst.Core.Modules.Ledger.Models
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+  commentId: P:Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+  parent: Catalyst.Core.Modules.Ledger.ILedger
+  name: LatestKnownDelta
+  nameWithType: ILedger.LatestKnownDelta
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+- uid: Catalyst.Core.Modules.Ledger.ILedger.Update*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.ILedger.Update
+  name: Update
+  nameWithType: ILedger.Update
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.Update
+- uid: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+  commentId: T:TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+  parent: TheDotNetLeague.MultiFormats.MultiHash
+  isExternal: true
+  name: MultiHash
+  nameWithType: MultiHash
+  fullName: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+- uid: Catalyst.Core.Modules.Ledger.ILedger
+  commentId: T:Catalyst.Core.Modules.Ledger.ILedger
+  parent: Catalyst.Core.Modules.Ledger
+  name: ILedger
+  nameWithType: ILedger
+  fullName: Catalyst.Core.Modules.Ledger.ILedger
+- uid: TheDotNetLeague.MultiFormats.MultiHash
+  commentId: N:TheDotNetLeague.MultiFormats.MultiHash
+  isExternal: true
+  name: TheDotNetLeague.MultiFormats.MultiHash
+  nameWithType: TheDotNetLeague.MultiFormats.MultiHash
+  fullName: TheDotNetLeague.MultiFormats.MultiHash
+- uid: Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+  name: LatestKnownDelta
+  nameWithType: ILedger.LatestKnownDelta
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+- uid: Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising
+  name: IsSynchonising
+  nameWithType: ILedger.IsSynchonising
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising

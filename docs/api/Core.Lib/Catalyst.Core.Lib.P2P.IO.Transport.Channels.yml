@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.P2P.IO.Transport.Channels
+  commentId: N:Catalyst.Core.Lib.P2P.IO.Transport.Channels
+  id: Catalyst.Core.Lib.P2P.IO.Transport.Channels
+  children:
+  - Catalyst.Core.Lib.P2P.IO.Transport.Channels.PeerClientChannelFactory
+  - Catalyst.Core.Lib.P2P.IO.Transport.Channels.PeerServerChannelFactory
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.P2P.IO.Transport.Channels
+  nameWithType: Catalyst.Core.Lib.P2P.IO.Transport.Channels
+  fullName: Catalyst.Core.Lib.P2P.IO.Transport.Channels
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.P2P.IO.Transport.Channels.PeerClientChannelFactory
+  commentId: T:Catalyst.Core.Lib.P2P.IO.Transport.Channels.PeerClientChannelFactory
+  name: PeerClientChannelFactory
+  nameWithType: PeerClientChannelFactory
+  fullName: Catalyst.Core.Lib.P2P.IO.Transport.Channels.PeerClientChannelFactory
+- uid: Catalyst.Core.Lib.P2P.IO.Transport.Channels.PeerServerChannelFactory
+  commentId: T:Catalyst.Core.Lib.P2P.IO.Transport.Channels.PeerServerChannelFactory
+  name: PeerServerChannelFactory
+  nameWithType: PeerServerChannelFactory
+  fullName: Catalyst.Core.Lib.P2P.IO.Transport.Channels.PeerServerChannelFactory

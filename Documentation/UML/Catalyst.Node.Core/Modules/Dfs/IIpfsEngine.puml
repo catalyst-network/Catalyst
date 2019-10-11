@@ -1,7 +1,0 @@
-@startuml
-interface IIpfsEngine {
-}
-ICoreApi <|-- IIpfsEngine
-IDisposable <|-- IIpfsEngine
-IIpfsEngine --> "Options" IpfsEngineOptions
-@enduml

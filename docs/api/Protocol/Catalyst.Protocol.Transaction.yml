@@ -1,0 +1,69 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Transaction
+  commentId: N:Catalyst.Protocol.Transaction
+  id: Catalyst.Protocol.Transaction
+  children:
+  - Catalyst.Protocol.Transaction.BaseEntry
+  - Catalyst.Protocol.Transaction.CoinbaseEntry
+  - Catalyst.Protocol.Transaction.ConfidentialEntry
+  - Catalyst.Protocol.Transaction.ContractEntry
+  - Catalyst.Protocol.Transaction.PublicEntry
+  - Catalyst.Protocol.Transaction.TransactionReflection
+  - Catalyst.Protocol.Transaction.TransactionType
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Protocol.Transaction
+  nameWithType: Catalyst.Protocol.Transaction
+  fullName: Catalyst.Protocol.Transaction
+  type: Namespace
+  assemblies:
+  - Catalyst.Protocol
+references:
+- uid: Catalyst.Protocol.Transaction.ConfidentialEntry
+  commentId: T:Catalyst.Protocol.Transaction.ConfidentialEntry
+  parent: Catalyst.Protocol.Transaction
+  name: ConfidentialEntry
+  nameWithType: ConfidentialEntry
+  fullName: Catalyst.Protocol.Transaction.ConfidentialEntry
+- uid: Catalyst.Protocol.Transaction.ContractEntry
+  commentId: T:Catalyst.Protocol.Transaction.ContractEntry
+  parent: Catalyst.Protocol.Transaction
+  name: ContractEntry
+  nameWithType: ContractEntry
+  fullName: Catalyst.Protocol.Transaction.ContractEntry
+- uid: Catalyst.Protocol.Transaction.PublicEntry
+  commentId: T:Catalyst.Protocol.Transaction.PublicEntry
+  parent: Catalyst.Protocol.Transaction
+  name: PublicEntry
+  nameWithType: PublicEntry
+  fullName: Catalyst.Protocol.Transaction.PublicEntry
+- uid: Catalyst.Protocol.Transaction.TransactionReflection
+  commentId: T:Catalyst.Protocol.Transaction.TransactionReflection
+  name: TransactionReflection
+  nameWithType: TransactionReflection
+  fullName: Catalyst.Protocol.Transaction.TransactionReflection
+- uid: Catalyst.Protocol.Transaction.TransactionType
+  commentId: T:Catalyst.Protocol.Transaction.TransactionType
+  parent: Catalyst.Protocol.Transaction
+  name: TransactionType
+  nameWithType: TransactionType
+  fullName: Catalyst.Protocol.Transaction.TransactionType
+- uid: Catalyst.Protocol.Transaction.BaseEntry
+  commentId: T:Catalyst.Protocol.Transaction.BaseEntry
+  parent: Catalyst.Protocol.Transaction
+  name: BaseEntry
+  nameWithType: BaseEntry
+  fullName: Catalyst.Protocol.Transaction.BaseEntry
+- uid: Catalyst.Protocol.Transaction.CoinbaseEntry
+  commentId: T:Catalyst.Protocol.Transaction.CoinbaseEntry
+  parent: Catalyst.Protocol.Transaction
+  name: CoinbaseEntry
+  nameWithType: CoinbaseEntry
+  fullName: Catalyst.Protocol.Transaction.CoinbaseEntry
+- uid: Catalyst.Protocol.Transaction
+  commentId: N:Catalyst.Protocol.Transaction
+  name: Catalyst.Protocol.Transaction
+  nameWithType: Catalyst.Protocol.Transaction
+  fullName: Catalyst.Protocol.Transaction

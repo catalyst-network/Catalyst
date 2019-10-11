@@ -1,0 +1,172 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Kvm.IKvm
+  commentId: T:Catalyst.Abstractions.Kvm.IKvm
+  id: IKvm
+  parent: Catalyst.Abstractions.Kvm
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: IKvm
+  nameWithType: IKvm
+  fullName: Catalyst.Abstractions.Kvm.IKvm
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Kvm/IKvm.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IKvm
+    path: ../src/Catalyst.Abstractions/Kvm/IKvm.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Kvm
+  syntax:
+    content: 'public interface IKvm : IVirtualMachine'
+    content.vb: >-
+      Public Interface IKvm
+
+          Inherits IVirtualMachine
+  inheritedMembers:
+  - Nethermind.Evm.IVirtualMachine.Run(Nethermind.Evm.VmState,Nethermind.Evm.Tracing.ITxTracer)
+  - Nethermind.Evm.IVirtualMachine.GetCachedCodeInfo(Nethermind.Core.Address)
+  - Nethermind.Evm.IVirtualMachine.DisableSimdInstructions
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+references:
+- uid: Catalyst.Abstractions.Kvm
+  commentId: N:Catalyst.Abstractions.Kvm
+  name: Catalyst.Abstractions.Kvm
+  nameWithType: Catalyst.Abstractions.Kvm
+  fullName: Catalyst.Abstractions.Kvm
+- uid: Nethermind.Evm.IVirtualMachine.Run(Nethermind.Evm.VmState,Nethermind.Evm.Tracing.ITxTracer)
+  commentId: M:Nethermind.Evm.IVirtualMachine.Run(Nethermind.Evm.VmState,Nethermind.Evm.Tracing.ITxTracer)
+  parent: Nethermind.Evm.IVirtualMachine
+  name: Run(VmState, ITxTracer)
+  nameWithType: IVirtualMachine.Run(VmState, ITxTracer)
+  fullName: Nethermind.Evm.IVirtualMachine.Run(Nethermind.Evm.VmState, Nethermind.Evm.Tracing.ITxTracer)
+  spec.csharp:
+  - uid: Nethermind.Evm.IVirtualMachine.Run(Nethermind.Evm.VmState,Nethermind.Evm.Tracing.ITxTracer)
+    name: Run
+    nameWithType: IVirtualMachine.Run
+    fullName: Nethermind.Evm.IVirtualMachine.Run
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Nethermind.Evm.VmState
+    name: VmState
+    nameWithType: VmState
+    fullName: Nethermind.Evm.VmState
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Nethermind.Evm.Tracing.ITxTracer
+    name: ITxTracer
+    nameWithType: ITxTracer
+    fullName: Nethermind.Evm.Tracing.ITxTracer
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Nethermind.Evm.IVirtualMachine.Run(Nethermind.Evm.VmState,Nethermind.Evm.Tracing.ITxTracer)
+    name: Run
+    nameWithType: IVirtualMachine.Run
+    fullName: Nethermind.Evm.IVirtualMachine.Run
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Nethermind.Evm.VmState
+    name: VmState
+    nameWithType: VmState
+    fullName: Nethermind.Evm.VmState
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Nethermind.Evm.Tracing.ITxTracer
+    name: ITxTracer
+    nameWithType: ITxTracer
+    fullName: Nethermind.Evm.Tracing.ITxTracer
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Nethermind.Evm.IVirtualMachine.GetCachedCodeInfo(Nethermind.Core.Address)
+  commentId: M:Nethermind.Evm.IVirtualMachine.GetCachedCodeInfo(Nethermind.Core.Address)
+  parent: Nethermind.Evm.IVirtualMachine
+  name: GetCachedCodeInfo(Address)
+  nameWithType: IVirtualMachine.GetCachedCodeInfo(Address)
+  fullName: Nethermind.Evm.IVirtualMachine.GetCachedCodeInfo(Nethermind.Core.Address)
+  spec.csharp:
+  - uid: Nethermind.Evm.IVirtualMachine.GetCachedCodeInfo(Nethermind.Core.Address)
+    name: GetCachedCodeInfo
+    nameWithType: IVirtualMachine.GetCachedCodeInfo
+    fullName: Nethermind.Evm.IVirtualMachine.GetCachedCodeInfo
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Nethermind.Core.Address
+    name: Address
+    nameWithType: Address
+    fullName: Nethermind.Core.Address
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Nethermind.Evm.IVirtualMachine.GetCachedCodeInfo(Nethermind.Core.Address)
+    name: GetCachedCodeInfo
+    nameWithType: IVirtualMachine.GetCachedCodeInfo
+    fullName: Nethermind.Evm.IVirtualMachine.GetCachedCodeInfo
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Nethermind.Core.Address
+    name: Address
+    nameWithType: Address
+    fullName: Nethermind.Core.Address
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Nethermind.Evm.IVirtualMachine.DisableSimdInstructions
+  commentId: M:Nethermind.Evm.IVirtualMachine.DisableSimdInstructions
+  parent: Nethermind.Evm.IVirtualMachine
+  name: DisableSimdInstructions()
+  nameWithType: IVirtualMachine.DisableSimdInstructions()
+  fullName: Nethermind.Evm.IVirtualMachine.DisableSimdInstructions()
+  spec.csharp:
+  - uid: Nethermind.Evm.IVirtualMachine.DisableSimdInstructions
+    name: DisableSimdInstructions
+    nameWithType: IVirtualMachine.DisableSimdInstructions
+    fullName: Nethermind.Evm.IVirtualMachine.DisableSimdInstructions
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Nethermind.Evm.IVirtualMachine.DisableSimdInstructions
+    name: DisableSimdInstructions
+    nameWithType: IVirtualMachine.DisableSimdInstructions
+    fullName: Nethermind.Evm.IVirtualMachine.DisableSimdInstructions
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Nethermind.Evm.IVirtualMachine
+  commentId: T:Nethermind.Evm.IVirtualMachine
+  parent: Nethermind.Evm
+  name: IVirtualMachine
+  nameWithType: IVirtualMachine
+  fullName: Nethermind.Evm.IVirtualMachine
+- uid: Nethermind.Evm
+  commentId: N:Nethermind.Evm
+  name: Nethermind.Evm
+  nameWithType: Nethermind.Evm
+  fullName: Nethermind.Evm

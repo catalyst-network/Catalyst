@@ -1,0 +1,238 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever
+  id: IDeltaTransactionRetriever
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  children:
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.GetMempoolTransactionsByPriority(System.Int32)
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer
+  langs:
+  - csharp
+  - vb
+  name: IDeltaTransactionRetriever
+  nameWithType: IDeltaTransactionRetriever
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Deltas/IDeltaTransactionRetriever.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IDeltaTransactionRetriever
+    path: ../src/Catalyst.Abstractions/Consensus/Deltas/IDeltaTransactionRetriever.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Deltas
+  summary: "\nThe service in charge of finding the transactions that should be included in a ledger update (aka Delta)\nfor a given cycle.\n"
+  example: []
+  syntax:
+    content: public interface IDeltaTransactionRetriever
+    content.vb: Public Interface IDeltaTransactionRetriever
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer
+  commentId: P:Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer
+  id: TransactionComparer
+  parent: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever
+  langs:
+  - csharp
+  - vb
+  name: TransactionComparer
+  nameWithType: IDeltaTransactionRetriever.TransactionComparer
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Deltas/IDeltaTransactionRetriever.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: TransactionComparer
+    path: ../src/Catalyst.Abstractions/Consensus/Deltas/IDeltaTransactionRetriever.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Deltas
+  summary: "\nA comparer used to order transactions, notably in the mempool, by descending order\nof priority. In Catalyst network, all delta producers need to agree on the set of\ntransactions that should be included in the next ledger update. This interface should\nbe used to order transactions and decide whether they should be included or not.\n"
+  example: []
+  syntax:
+    content: ITransactionComparer TransactionComparer { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Consensus.ITransactionComparer
+    content.vb: ReadOnly Property TransactionComparer As ITransactionComparer
+  overload: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.GetMempoolTransactionsByPriority(System.Int32)
+  commentId: M:Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.GetMempoolTransactionsByPriority(System.Int32)
+  id: GetMempoolTransactionsByPriority(System.Int32)
+  parent: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever
+  langs:
+  - csharp
+  - vb
+  name: GetMempoolTransactionsByPriority(Int32)
+  nameWithType: IDeltaTransactionRetriever.GetMempoolTransactionsByPriority(Int32)
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.GetMempoolTransactionsByPriority(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Deltas/IDeltaTransactionRetriever.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetMempoolTransactionsByPriority
+    path: ../src/Catalyst.Abstractions/Consensus/Deltas/IDeltaTransactionRetriever.cs
+    startLine: 49
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Deltas
+  summary: "\nUse this method to retrieve the top <see cref=\"!:maxCount\"></see> transactions in order of\npriority. The priority is the order in which transactions should be included in the\nnext candidate delta, and relies on the implementation of the <xref href=\"Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer\" data-throw-if-not-resolved=\"false\"></xref> \n"
+  example: []
+  syntax:
+    content: IList<TransactionBroadcast> GetMempoolTransactionsByPriority(int maxCount = 2147483647)
+    parameters:
+    - id: maxCount
+      type: System.Int32
+      description: The maximum number of transactions to be returned by the method.
+    return:
+      type: System.Collections.Generic.IList{Catalyst.Protocol.Wire.TransactionBroadcast}
+      description: 'The top <see cref="!:maxCount"></see> transactions in order of '
+    content.vb: Function GetMempoolTransactionsByPriority(maxCount As Integer = 2147483647) As IList(Of TransactionBroadcast)
+  overload: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.GetMempoolTransactionsByPriority*
+references:
+- uid: Catalyst.Abstractions.Consensus.Deltas
+  commentId: N:Catalyst.Abstractions.Consensus.Deltas
+  name: Catalyst.Abstractions.Consensus.Deltas
+  nameWithType: Catalyst.Abstractions.Consensus.Deltas
+  fullName: Catalyst.Abstractions.Consensus.Deltas
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer
+  name: TransactionComparer
+  nameWithType: IDeltaTransactionRetriever.TransactionComparer
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer
+- uid: Catalyst.Abstractions.Consensus.ITransactionComparer
+  commentId: T:Catalyst.Abstractions.Consensus.ITransactionComparer
+  parent: Catalyst.Abstractions.Consensus
+  name: ITransactionComparer
+  nameWithType: ITransactionComparer
+  fullName: Catalyst.Abstractions.Consensus.ITransactionComparer
+- uid: Catalyst.Abstractions.Consensus
+  commentId: N:Catalyst.Abstractions.Consensus
+  name: Catalyst.Abstractions.Consensus
+  nameWithType: Catalyst.Abstractions.Consensus
+  fullName: Catalyst.Abstractions.Consensus
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer
+  commentId: P:Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.TransactionComparer
+  isExternal: true
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.GetMempoolTransactionsByPriority*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.GetMempoolTransactionsByPriority
+  name: GetMempoolTransactionsByPriority
+  nameWithType: IDeltaTransactionRetriever.GetMempoolTransactionsByPriority
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaTransactionRetriever.GetMempoolTransactionsByPriority
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System.Collections.Generic.IList{Catalyst.Protocol.Wire.TransactionBroadcast}
+  commentId: T:System.Collections.Generic.IList{Catalyst.Protocol.Wire.TransactionBroadcast}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IList`1
+  name: IList<TransactionBroadcast>
+  nameWithType: IList<TransactionBroadcast>
+  fullName: System.Collections.Generic.IList<Catalyst.Protocol.Wire.TransactionBroadcast>
+  nameWithType.vb: IList(Of TransactionBroadcast)
+  fullName.vb: System.Collections.Generic.IList(Of Catalyst.Protocol.Wire.TransactionBroadcast)
+  name.vb: IList(Of TransactionBroadcast)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.TransactionBroadcast
+    name: TransactionBroadcast
+    nameWithType: TransactionBroadcast
+    fullName: Catalyst.Protocol.Wire.TransactionBroadcast
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.TransactionBroadcast
+    name: TransactionBroadcast
+    nameWithType: TransactionBroadcast
+    fullName: Catalyst.Protocol.Wire.TransactionBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.IList`1
+  commentId: T:System.Collections.Generic.IList`1
+  isExternal: true
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic

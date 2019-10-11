@@ -1,0 +1,1373 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto
+  commentId: T:Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto
+  id: SignedMessageDto
+  parent: Catalyst.Core.Lib.IO.Messaging.Dto
+  children:
+  - Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto.#ctor(Catalyst.Protocol.Wire.ProtocolMessage,Catalyst.Protocol.Peer.PeerId)
+  langs:
+  - csharp
+  - vb
+  name: SignedMessageDto
+  nameWithType: SignedMessageDto
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Dto/SignedMessageDto.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: SignedMessageDto
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Dto/SignedMessageDto.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Dto
+  syntax:
+    content: 'public sealed class SignedMessageDto : BaseMessageDto<ProtocolMessage>, IMessageDto<ProtocolMessage>, IAddressedEnvelope<ProtocolMessage>, IReferenceCounted'
+    content.vb: >-
+      Public NotInheritable Class SignedMessageDto
+
+          Inherits BaseMessageDto(Of ProtocolMessage)
+
+          Implements IMessageDto(Of ProtocolMessage), IAddressedEnvelope(Of ProtocolMessage), IReferenceCounted
+  inheritance:
+  - System.Object
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  - Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  implements:
+  - Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  - DotNetty.Transport.Channels.IAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  - DotNetty.Common.IReferenceCounted
+  inheritedMembers:
+  - Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}.CorrelationId
+  - Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}.RecipientPeerIdentifier
+  - Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}.SenderPeerIdentifier
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Retain
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Retain(System.Int32)
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Touch
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Touch(System.Object)
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Release
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Release(System.Int32)
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.ToString
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Content
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Sender
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Recipient
+  - DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.ReferenceCount
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto.#ctor(Catalyst.Protocol.Wire.ProtocolMessage,Catalyst.Protocol.Peer.PeerId)
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto.#ctor(Catalyst.Protocol.Wire.ProtocolMessage,Catalyst.Protocol.Peer.PeerId)
+  id: '#ctor(Catalyst.Protocol.Wire.ProtocolMessage,Catalyst.Protocol.Peer.PeerId)'
+  parent: Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto
+  langs:
+  - csharp
+  - vb
+  name: SignedMessageDto(ProtocolMessage, PeerId)
+  nameWithType: SignedMessageDto.SignedMessageDto(ProtocolMessage, PeerId)
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto.SignedMessageDto(Catalyst.Protocol.Wire.ProtocolMessage, Catalyst.Protocol.Peer.PeerId)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Dto/SignedMessageDto.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Dto/SignedMessageDto.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Dto
+  summary: "\nData transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.\n"
+  example: []
+  syntax:
+    content: public SignedMessageDto(ProtocolMessage content, PeerId recipientPeerIdentifier)
+    parameters:
+    - id: content
+      type: Catalyst.Protocol.Wire.ProtocolMessage
+      description: ''
+    - id: recipientPeerIdentifier
+      type: Catalyst.Protocol.Peer.PeerId
+      description: ''
+    content.vb: Public Sub New(content As ProtocolMessage, recipientPeerIdentifier As PeerId)
+  overload: Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto
+  commentId: N:Catalyst.Core.Lib.IO.Messaging.Dto
+  name: Catalyst.Core.Lib.IO.Messaging.Dto
+  nameWithType: Catalyst.Core.Lib.IO.Messaging.Dto
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  commentId: T:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  parent: DotNetty.Transport.Channels
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1
+  name: DefaultAddressedEnvelope<ProtocolMessage>
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage)
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage)
+  name.vb: DefaultAddressedEnvelope(Of ProtocolMessage)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1
+    name: DefaultAddressedEnvelope
+    nameWithType: DefaultAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1
+    name: DefaultAddressedEnvelope
+    nameWithType: DefaultAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  commentId: T:Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  parent: Catalyst.Core.Lib.IO.Messaging.Dto
+  definition: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1
+  name: BaseMessageDto<ProtocolMessage>
+  nameWithType: BaseMessageDto<ProtocolMessage>
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>
+  nameWithType.vb: BaseMessageDto(Of ProtocolMessage)
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage)
+  name.vb: BaseMessageDto(Of ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1
+    name: BaseMessageDto
+    nameWithType: BaseMessageDto
+    fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1
+    name: BaseMessageDto
+    nameWithType: BaseMessageDto
+    fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  parent: Catalyst.Abstractions.IO.Messaging.Dto
+  definition: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  name: IMessageDto<ProtocolMessage>
+  nameWithType: IMessageDto<ProtocolMessage>
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>
+  nameWithType.vb: IMessageDto(Of ProtocolMessage)
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage)
+  name.vb: IMessageDto(Of ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.IAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  commentId: T:DotNetty.Transport.Channels.IAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  parent: DotNetty.Transport.Channels
+  definition: DotNetty.Transport.Channels.IAddressedEnvelope`1
+  name: IAddressedEnvelope<ProtocolMessage>
+  nameWithType: IAddressedEnvelope<ProtocolMessage>
+  fullName: DotNetty.Transport.Channels.IAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>
+  nameWithType.vb: IAddressedEnvelope(Of ProtocolMessage)
+  fullName.vb: DotNetty.Transport.Channels.IAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage)
+  name.vb: IAddressedEnvelope(Of ProtocolMessage)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.IAddressedEnvelope`1
+    name: IAddressedEnvelope
+    nameWithType: IAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.IAddressedEnvelope
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.IAddressedEnvelope`1
+    name: IAddressedEnvelope
+    nameWithType: IAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.IAddressedEnvelope
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Common.IReferenceCounted
+  commentId: T:DotNetty.Common.IReferenceCounted
+  parent: DotNetty.Common
+  isExternal: true
+  name: IReferenceCounted
+  nameWithType: IReferenceCounted
+  fullName: DotNetty.Common.IReferenceCounted
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}.CorrelationId
+  commentId: P:Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}.CorrelationId
+  parent: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1.CorrelationId
+  name: CorrelationId
+  nameWithType: BaseMessageDto<ProtocolMessage>.CorrelationId
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>.CorrelationId
+  nameWithType.vb: BaseMessageDto(Of ProtocolMessage).CorrelationId
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage).CorrelationId
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}.RecipientPeerIdentifier
+  commentId: P:Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}.RecipientPeerIdentifier
+  parent: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1.RecipientPeerIdentifier
+  name: RecipientPeerIdentifier
+  nameWithType: BaseMessageDto<ProtocolMessage>.RecipientPeerIdentifier
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>.RecipientPeerIdentifier
+  nameWithType.vb: BaseMessageDto(Of ProtocolMessage).RecipientPeerIdentifier
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage).RecipientPeerIdentifier
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}.SenderPeerIdentifier
+  commentId: P:Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}.SenderPeerIdentifier
+  parent: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1.SenderPeerIdentifier
+  name: SenderPeerIdentifier
+  nameWithType: BaseMessageDto<ProtocolMessage>.SenderPeerIdentifier
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>.SenderPeerIdentifier
+  nameWithType.vb: BaseMessageDto(Of ProtocolMessage).SenderPeerIdentifier
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage).SenderPeerIdentifier
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Retain
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Retain
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain
+  name: Retain()
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Retain()
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Retain()
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).Retain()
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Retain()
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain
+    name: Retain
+    nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Retain
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain
+    name: Retain
+    nameWithType: DefaultAddressedEnvelope(Of ProtocolMessage).Retain
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Retain(System.Int32)
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Retain(System.Int32)
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain(System.Int32)
+  name: Retain(Int32)
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Retain(Int32)
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Retain(System.Int32)
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).Retain(Int32)
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Retain(System.Int32)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain(System.Int32)
+    name: Retain
+    nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Retain
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain(System.Int32)
+    name: Retain
+    nameWithType: DefaultAddressedEnvelope(Of ProtocolMessage).Retain
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Touch
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Touch
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch
+  name: Touch()
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Touch()
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Touch()
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).Touch()
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Touch()
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch
+    name: Touch
+    nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Touch
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch
+    name: Touch
+    nameWithType: DefaultAddressedEnvelope(Of ProtocolMessage).Touch
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Touch(System.Object)
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Touch(System.Object)
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch(System.Object)
+  name: Touch(Object)
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Touch(Object)
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Touch(System.Object)
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).Touch(Object)
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Touch(System.Object)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch(System.Object)
+    name: Touch
+    nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Touch
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch(System.Object)
+    name: Touch
+    nameWithType: DefaultAddressedEnvelope(Of ProtocolMessage).Touch
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Release
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Release
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release
+  name: Release()
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Release()
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Release()
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).Release()
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Release()
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release
+    name: Release
+    nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Release
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release
+    name: Release
+    nameWithType: DefaultAddressedEnvelope(Of ProtocolMessage).Release
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Release(System.Int32)
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Release(System.Int32)
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release(System.Int32)
+  name: Release(Int32)
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Release(Int32)
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Release(System.Int32)
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).Release(Int32)
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Release(System.Int32)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release(System.Int32)
+    name: Release
+    nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Release
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release(System.Int32)
+    name: Release
+    nameWithType: DefaultAddressedEnvelope(Of ProtocolMessage).Release
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.ToString
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.ToString
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.ToString
+  name: ToString()
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.ToString()
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.ToString()
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).ToString()
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).ToString()
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.ToString
+    name: ToString
+    nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.ToString
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.ToString
+    name: ToString
+    nameWithType: DefaultAddressedEnvelope(Of ProtocolMessage).ToString
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Content
+  commentId: P:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Content
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Content
+  name: Content
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Content
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Content
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).Content
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Content
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Sender
+  commentId: P:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Sender
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Sender
+  name: Sender
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Sender
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Sender
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).Sender
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Sender
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Recipient
+  commentId: P:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.Recipient
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Recipient
+  name: Recipient
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.Recipient
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.Recipient
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).Recipient
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).Recipient
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.ReferenceCount
+  commentId: P:DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}.ReferenceCount
+  parent: DotNetty.Transport.Channels.DefaultAddressedEnvelope{Catalyst.Protocol.Wire.ProtocolMessage}
+  definition: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.ReferenceCount
+  name: ReferenceCount
+  nameWithType: DefaultAddressedEnvelope<ProtocolMessage>.ReferenceCount
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<Catalyst.Protocol.Wire.ProtocolMessage>.ReferenceCount
+  nameWithType.vb: DefaultAddressedEnvelope(Of ProtocolMessage).ReferenceCount
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of Catalyst.Protocol.Wire.ProtocolMessage).ReferenceCount
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1
+  commentId: T:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1
+  isExternal: true
+  name: DefaultAddressedEnvelope<T>
+  nameWithType: DefaultAddressedEnvelope<T>
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>
+  nameWithType.vb: DefaultAddressedEnvelope(Of T)
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T)
+  name.vb: DefaultAddressedEnvelope(Of T)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1
+    name: DefaultAddressedEnvelope
+    nameWithType: DefaultAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1
+    name: DefaultAddressedEnvelope
+    nameWithType: DefaultAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels
+  commentId: N:DotNetty.Transport.Channels
+  isExternal: true
+  name: DotNetty.Transport.Channels
+  nameWithType: DotNetty.Transport.Channels
+  fullName: DotNetty.Transport.Channels
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1
+  commentId: T:Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1
+  name: BaseMessageDto<T>
+  nameWithType: BaseMessageDto<T>
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto<T>
+  nameWithType.vb: BaseMessageDto(Of T)
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto(Of T)
+  name.vb: BaseMessageDto(Of T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1
+    name: BaseMessageDto
+    nameWithType: BaseMessageDto
+    fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1
+    name: BaseMessageDto
+    nameWithType: BaseMessageDto
+    fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  name: IMessageDto<T>
+  nameWithType: IMessageDto<T>
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>
+  nameWithType.vb: IMessageDto(Of T)
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T)
+  name.vb: IMessageDto(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Dto
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Dto
+  name: Catalyst.Abstractions.IO.Messaging.Dto
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Dto
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto
+- uid: DotNetty.Transport.Channels.IAddressedEnvelope`1
+  commentId: T:DotNetty.Transport.Channels.IAddressedEnvelope`1
+  isExternal: true
+  name: IAddressedEnvelope<T>
+  nameWithType: IAddressedEnvelope<T>
+  fullName: DotNetty.Transport.Channels.IAddressedEnvelope<T>
+  nameWithType.vb: IAddressedEnvelope(Of T)
+  fullName.vb: DotNetty.Transport.Channels.IAddressedEnvelope(Of T)
+  name.vb: IAddressedEnvelope(Of T)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.IAddressedEnvelope`1
+    name: IAddressedEnvelope
+    nameWithType: IAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.IAddressedEnvelope
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.IAddressedEnvelope`1
+    name: IAddressedEnvelope
+    nameWithType: IAddressedEnvelope
+    fullName: DotNetty.Transport.Channels.IAddressedEnvelope
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Common
+  commentId: N:DotNetty.Common
+  isExternal: true
+  name: DotNetty.Common
+  nameWithType: DotNetty.Common
+  fullName: DotNetty.Common
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1.CorrelationId
+  commentId: P:Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1.CorrelationId
+  name: CorrelationId
+  nameWithType: BaseMessageDto<T>.CorrelationId
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto<T>.CorrelationId
+  nameWithType.vb: BaseMessageDto(Of T).CorrelationId
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto(Of T).CorrelationId
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1.RecipientPeerIdentifier
+  commentId: P:Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1.RecipientPeerIdentifier
+  name: RecipientPeerIdentifier
+  nameWithType: BaseMessageDto<T>.RecipientPeerIdentifier
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto<T>.RecipientPeerIdentifier
+  nameWithType.vb: BaseMessageDto(Of T).RecipientPeerIdentifier
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto(Of T).RecipientPeerIdentifier
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1.SenderPeerIdentifier
+  commentId: P:Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto`1.SenderPeerIdentifier
+  name: SenderPeerIdentifier
+  nameWithType: BaseMessageDto<T>.SenderPeerIdentifier
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto<T>.SenderPeerIdentifier
+  nameWithType.vb: BaseMessageDto(Of T).SenderPeerIdentifier
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Dto.BaseMessageDto(Of T).SenderPeerIdentifier
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain
+  isExternal: true
+  name: Retain()
+  nameWithType: DefaultAddressedEnvelope<T>.Retain()
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Retain()
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).Retain()
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Retain()
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain
+    name: Retain
+    nameWithType: DefaultAddressedEnvelope<T>.Retain
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain
+    name: Retain
+    nameWithType: DefaultAddressedEnvelope(Of T).Retain
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain(System.Int32)
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain(System.Int32)
+  isExternal: true
+  name: Retain(Int32)
+  nameWithType: DefaultAddressedEnvelope<T>.Retain(Int32)
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Retain(System.Int32)
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).Retain(Int32)
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Retain(System.Int32)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain(System.Int32)
+    name: Retain
+    nameWithType: DefaultAddressedEnvelope<T>.Retain
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Retain(System.Int32)
+    name: Retain
+    nameWithType: DefaultAddressedEnvelope(Of T).Retain
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Retain
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch
+  isExternal: true
+  name: Touch()
+  nameWithType: DefaultAddressedEnvelope<T>.Touch()
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Touch()
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).Touch()
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Touch()
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch
+    name: Touch
+    nameWithType: DefaultAddressedEnvelope<T>.Touch
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch
+    name: Touch
+    nameWithType: DefaultAddressedEnvelope(Of T).Touch
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch(System.Object)
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch(System.Object)
+  isExternal: true
+  name: Touch(Object)
+  nameWithType: DefaultAddressedEnvelope<T>.Touch(Object)
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Touch(System.Object)
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).Touch(Object)
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Touch(System.Object)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch(System.Object)
+    name: Touch
+    nameWithType: DefaultAddressedEnvelope<T>.Touch
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Touch(System.Object)
+    name: Touch
+    nameWithType: DefaultAddressedEnvelope(Of T).Touch
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Touch
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release
+  isExternal: true
+  name: Release()
+  nameWithType: DefaultAddressedEnvelope<T>.Release()
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Release()
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).Release()
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Release()
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release
+    name: Release
+    nameWithType: DefaultAddressedEnvelope<T>.Release
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release
+    name: Release
+    nameWithType: DefaultAddressedEnvelope(Of T).Release
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release(System.Int32)
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release(System.Int32)
+  isExternal: true
+  name: Release(Int32)
+  nameWithType: DefaultAddressedEnvelope<T>.Release(Int32)
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Release(System.Int32)
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).Release(Int32)
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Release(System.Int32)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release(System.Int32)
+    name: Release
+    nameWithType: DefaultAddressedEnvelope<T>.Release
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Release(System.Int32)
+    name: Release
+    nameWithType: DefaultAddressedEnvelope(Of T).Release
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Release
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.ToString
+  commentId: M:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.ToString
+  isExternal: true
+  name: ToString()
+  nameWithType: DefaultAddressedEnvelope<T>.ToString()
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.ToString()
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).ToString()
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).ToString()
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.ToString
+    name: ToString
+    nameWithType: DefaultAddressedEnvelope<T>.ToString
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.ToString
+    name: ToString
+    nameWithType: DefaultAddressedEnvelope(Of T).ToString
+    fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Content
+  commentId: P:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Content
+  isExternal: true
+  name: Content
+  nameWithType: DefaultAddressedEnvelope<T>.Content
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Content
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).Content
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Content
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Sender
+  commentId: P:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Sender
+  isExternal: true
+  name: Sender
+  nameWithType: DefaultAddressedEnvelope<T>.Sender
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Sender
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).Sender
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Sender
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Recipient
+  commentId: P:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.Recipient
+  isExternal: true
+  name: Recipient
+  nameWithType: DefaultAddressedEnvelope<T>.Recipient
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.Recipient
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).Recipient
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).Recipient
+- uid: DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.ReferenceCount
+  commentId: P:DotNetty.Transport.Channels.DefaultAddressedEnvelope`1.ReferenceCount
+  isExternal: true
+  name: ReferenceCount
+  nameWithType: DefaultAddressedEnvelope<T>.ReferenceCount
+  fullName: DotNetty.Transport.Channels.DefaultAddressedEnvelope<T>.ReferenceCount
+  nameWithType.vb: DefaultAddressedEnvelope(Of T).ReferenceCount
+  fullName.vb: DotNetty.Transport.Channels.DefaultAddressedEnvelope(Of T).ReferenceCount
+- uid: Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto.#ctor
+  name: SignedMessageDto
+  nameWithType: SignedMessageDto.SignedMessageDto
+  fullName: Catalyst.Core.Lib.IO.Messaging.Dto.SignedMessageDto.SignedMessageDto
+- uid: Catalyst.Protocol.Wire.ProtocolMessage
+  commentId: T:Catalyst.Protocol.Wire.ProtocolMessage
+  parent: Catalyst.Protocol.Wire
+  name: ProtocolMessage
+  nameWithType: ProtocolMessage
+  fullName: Catalyst.Protocol.Wire.ProtocolMessage
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Wire
+  commentId: N:Catalyst.Protocol.Wire
+  name: Catalyst.Protocol.Wire
+  nameWithType: Catalyst.Protocol.Wire
+  fullName: Catalyst.Protocol.Wire
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer

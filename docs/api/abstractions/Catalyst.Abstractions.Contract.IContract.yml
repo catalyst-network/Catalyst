@@ -1,0 +1,91 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Contract.IContract
+  commentId: T:Catalyst.Abstractions.Contract.IContract
+  id: IContract
+  parent: Catalyst.Abstractions.Contract
+  children:
+  - Catalyst.Abstractions.Contract.IContract.Address
+  langs:
+  - csharp
+  - vb
+  name: IContract
+  nameWithType: IContract
+  fullName: Catalyst.Abstractions.Contract.IContract
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Contract/IContract.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IContract
+    path: ../src/Catalyst.Abstractions/Contract/IContract.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Contract
+  syntax:
+    content: public interface IContract
+    content.vb: Public Interface IContract
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Contract.IContract.Address
+  commentId: P:Catalyst.Abstractions.Contract.IContract.Address
+  id: Address
+  parent: Catalyst.Abstractions.Contract.IContract
+  langs:
+  - csharp
+  - vb
+  name: Address
+  nameWithType: IContract.Address
+  fullName: Catalyst.Abstractions.Contract.IContract.Address
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Contract/IContract.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Address
+    path: ../src/Catalyst.Abstractions/Contract/IContract.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Contract
+  syntax:
+    content: string Address { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property Address As String
+  overload: Catalyst.Abstractions.Contract.IContract.Address*
+  modifiers.csharp:
+  - get
+  - set
+references:
+- uid: Catalyst.Abstractions.Contract
+  commentId: N:Catalyst.Abstractions.Contract
+  name: Catalyst.Abstractions.Contract
+  nameWithType: Catalyst.Abstractions.Contract
+  fullName: Catalyst.Abstractions.Contract
+- uid: Catalyst.Abstractions.Contract.IContract.Address*
+  commentId: Overload:Catalyst.Abstractions.Contract.IContract.Address
+  name: Address
+  nameWithType: IContract.Address
+  fullName: Catalyst.Abstractions.Contract.IContract.Address
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Rpc.IO.Exceptions
+  commentId: N:Catalyst.Core.Lib.Rpc.IO.Exceptions
+  id: Catalyst.Core.Lib.Rpc.IO.Exceptions
+  children:
+  - Catalyst.Core.Lib.Rpc.IO.Exceptions.ResponseHandlerDoesNotExistException
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.Rpc.IO.Exceptions
+  nameWithType: Catalyst.Core.Lib.Rpc.IO.Exceptions
+  fullName: Catalyst.Core.Lib.Rpc.IO.Exceptions
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.Rpc.IO.Exceptions.ResponseHandlerDoesNotExistException
+  commentId: T:Catalyst.Core.Lib.Rpc.IO.Exceptions.ResponseHandlerDoesNotExistException
+  name: ResponseHandlerDoesNotExistException
+  nameWithType: ResponseHandlerDoesNotExistException
+  fullName: Catalyst.Core.Lib.Rpc.IO.Exceptions.ResponseHandlerDoesNotExistException

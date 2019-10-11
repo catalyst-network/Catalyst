@@ -1,0 +1,1084 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Network.DevDnsClient
+  commentId: T:Catalyst.Core.Lib.Network.DevDnsClient
+  id: DevDnsClient
+  parent: Catalyst.Core.Lib.Network
+  children:
+  - Catalyst.Core.Lib.Network.DevDnsClient.#ctor(Catalyst.Abstractions.P2P.IPeerSettings)
+  - Catalyst.Core.Lib.Network.DevDnsClient.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable{System.String})
+  - Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync(System.Collections.Generic.IList{System.String})
+  - Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync(System.String)
+  langs:
+  - csharp
+  - vb
+  name: DevDnsClient
+  nameWithType: DevDnsClient
+  fullName: Catalyst.Core.Lib.Network.DevDnsClient
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsClient.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: DevDnsClient
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsClient.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: 'public sealed class DevDnsClient : IDns'
+    content.vb: >-
+      Public NotInheritable Class DevDnsClient
+
+          Implements IDns
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Network.IDns
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.Network.DevDnsClient.#ctor(Catalyst.Abstractions.P2P.IPeerSettings)
+  commentId: M:Catalyst.Core.Lib.Network.DevDnsClient.#ctor(Catalyst.Abstractions.P2P.IPeerSettings)
+  id: '#ctor(Catalyst.Abstractions.P2P.IPeerSettings)'
+  parent: Catalyst.Core.Lib.Network.DevDnsClient
+  langs:
+  - csharp
+  - vb
+  name: DevDnsClient(IPeerSettings)
+  nameWithType: DevDnsClient.DevDnsClient(IPeerSettings)
+  fullName: Catalyst.Core.Lib.Network.DevDnsClient.DevDnsClient(Catalyst.Abstractions.P2P.IPeerSettings)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsClient.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsClient.cs
+    startLine: 45
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public DevDnsClient(IPeerSettings peerSettings)
+    parameters:
+    - id: peerSettings
+      type: Catalyst.Abstractions.P2P.IPeerSettings
+    content.vb: Public Sub New(peerSettings As IPeerSettings)
+  overload: Catalyst.Core.Lib.Network.DevDnsClient.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync(System.Collections.Generic.IList{System.String})
+  commentId: M:Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync(System.Collections.Generic.IList{System.String})
+  id: GetTxtRecordsAsync(System.Collections.Generic.IList{System.String})
+  parent: Catalyst.Core.Lib.Network.DevDnsClient
+  langs:
+  - csharp
+  - vb
+  name: GetTxtRecordsAsync(IList<String>)
+  nameWithType: DevDnsClient.GetTxtRecordsAsync(IList<String>)
+  fullName: Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync(System.Collections.Generic.IList<System.String>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsClient.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetTxtRecordsAsync
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsClient.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public Task<IList<IDnsQueryResponse>> GetTxtRecordsAsync(IList<string> hostnames = null)
+    parameters:
+    - id: hostnames
+      type: System.Collections.Generic.IList{System.String}
+    return:
+      type: System.Threading.Tasks.Task{System.Collections.Generic.IList{DnsClient.IDnsQueryResponse}}
+    content.vb: Public Function GetTxtRecordsAsync(hostnames As IList(Of String) = Nothing) As Task(Of IList(Of IDnsQueryResponse))
+  overload: Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync*
+  implements:
+  - Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.Collections.Generic.IList{System.String})
+  nameWithType.vb: DevDnsClient.GetTxtRecordsAsync(IList(Of String))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync(System.Collections.Generic.IList(Of System.String))
+  name.vb: GetTxtRecordsAsync(IList(Of String))
+- uid: Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync(System.String)
+  commentId: M:Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync(System.String)
+  id: GetTxtRecordsAsync(System.String)
+  parent: Catalyst.Core.Lib.Network.DevDnsClient
+  langs:
+  - csharp
+  - vb
+  name: GetTxtRecordsAsync(String)
+  nameWithType: DevDnsClient.GetTxtRecordsAsync(String)
+  fullName: Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsClient.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetTxtRecordsAsync
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsClient.cs
+    startLine: 63
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  syntax:
+    content: public Task<IDnsQueryResponse> GetTxtRecordsAsync(string hostname = "seed1.catalystnetwork.io")
+    parameters:
+    - id: hostname
+      type: System.String
+    return:
+      type: System.Threading.Tasks.Task{DnsClient.IDnsQueryResponse}
+    content.vb: Public Function GetTxtRecordsAsync(hostname As String = "seed1.catalystnetwork.io") As Task(Of IDnsQueryResponse)
+  overload: Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync*
+  implements:
+  - Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.String)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Network.DevDnsClient.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable{System.String})
+  commentId: M:Catalyst.Core.Lib.Network.DevDnsClient.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable{System.String})
+  id: GetSeedNodesFromDns(System.Collections.Generic.IEnumerable{System.String})
+  parent: Catalyst.Core.Lib.Network.DevDnsClient
+  langs:
+  - csharp
+  - vb
+  name: GetSeedNodesFromDns(IEnumerable<String>)
+  nameWithType: DevDnsClient.GetSeedNodesFromDns(IEnumerable<String>)
+  fullName: Catalyst.Core.Lib.Network.DevDnsClient.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable<System.String>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Network/DevDnsClient.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetSeedNodesFromDns
+    path: ../src/Catalyst.Core.Lib/Network/DevDnsClient.cs
+    startLine: 73
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Network
+  example: []
+  syntax:
+    content: public IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> seedServers)
+    parameters:
+    - id: seedServers
+      type: System.Collections.Generic.IEnumerable{System.String}
+    return:
+      type: System.Collections.Generic.IEnumerable{Catalyst.Protocol.Peer.PeerId}
+    content.vb: Public Function GetSeedNodesFromDns(seedServers As IEnumerable(Of String)) As IEnumerable(Of PeerId)
+  overload: Catalyst.Core.Lib.Network.DevDnsClient.GetSeedNodesFromDns*
+  implements:
+  - Catalyst.Abstractions.Network.IDns.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable{System.String})
+  nameWithType.vb: DevDnsClient.GetSeedNodesFromDns(IEnumerable(Of String))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Lib.Network.DevDnsClient.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable(Of System.String))
+  name.vb: GetSeedNodesFromDns(IEnumerable(Of String))
+references:
+- uid: Catalyst.Core.Lib.Network
+  commentId: N:Catalyst.Core.Lib.Network
+  name: Catalyst.Core.Lib.Network
+  nameWithType: Catalyst.Core.Lib.Network
+  fullName: Catalyst.Core.Lib.Network
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Network.IDns
+  commentId: T:Catalyst.Abstractions.Network.IDns
+  parent: Catalyst.Abstractions.Network
+  name: IDns
+  nameWithType: IDns
+  fullName: Catalyst.Abstractions.Network.IDns
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Network
+  commentId: N:Catalyst.Abstractions.Network
+  name: Catalyst.Abstractions.Network
+  nameWithType: Catalyst.Abstractions.Network
+  fullName: Catalyst.Abstractions.Network
+- uid: Catalyst.Core.Lib.Network.DevDnsClient.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsClient.#ctor
+  name: DevDnsClient
+  nameWithType: DevDnsClient.DevDnsClient
+  fullName: Catalyst.Core.Lib.Network.DevDnsClient.DevDnsClient
+- uid: Catalyst.Abstractions.P2P.IPeerSettings
+  commentId: T:Catalyst.Abstractions.P2P.IPeerSettings
+  parent: Catalyst.Abstractions.P2P
+  name: IPeerSettings
+  nameWithType: IPeerSettings
+  fullName: Catalyst.Abstractions.P2P.IPeerSettings
+- uid: Catalyst.Abstractions.P2P
+  commentId: N:Catalyst.Abstractions.P2P
+  name: Catalyst.Abstractions.P2P
+  nameWithType: Catalyst.Abstractions.P2P
+  fullName: Catalyst.Abstractions.P2P
+- uid: Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync
+  name: GetTxtRecordsAsync
+  nameWithType: DevDnsClient.GetTxtRecordsAsync
+  fullName: Catalyst.Core.Lib.Network.DevDnsClient.GetTxtRecordsAsync
+- uid: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.Collections.Generic.IList{System.String})
+  commentId: M:Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.Collections.Generic.IList{System.String})
+  parent: Catalyst.Abstractions.Network.IDns
+  isExternal: true
+  name: GetTxtRecordsAsync(IList<String>)
+  nameWithType: IDns.GetTxtRecordsAsync(IList<String>)
+  fullName: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.Collections.Generic.IList<System.String>)
+  nameWithType.vb: IDns.GetTxtRecordsAsync(IList(Of String))
+  fullName.vb: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.Collections.Generic.IList(Of System.String))
+  name.vb: GetTxtRecordsAsync(IList(Of String))
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.Collections.Generic.IList{System.String})
+    name: GetTxtRecordsAsync
+    nameWithType: IDns.GetTxtRecordsAsync
+    fullName: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.Collections.Generic.IList{System.String})
+    name: GetTxtRecordsAsync
+    nameWithType: IDns.GetTxtRecordsAsync
+    fullName: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IList{System.String}
+  commentId: T:System.Collections.Generic.IList{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IList`1
+  name: IList<String>
+  nameWithType: IList<String>
+  fullName: System.Collections.Generic.IList<System.String>
+  nameWithType.vb: IList(Of String)
+  fullName.vb: System.Collections.Generic.IList(Of System.String)
+  name.vb: IList(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks.Task{System.Collections.Generic.IList{DnsClient.IDnsQueryResponse}}
+  commentId: T:System.Threading.Tasks.Task{System.Collections.Generic.IList{DnsClient.IDnsQueryResponse}}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<IList<IDnsQueryResponse>>
+  nameWithType: Task<IList<IDnsQueryResponse>>
+  fullName: System.Threading.Tasks.Task<System.Collections.Generic.IList<DnsClient.IDnsQueryResponse>>
+  nameWithType.vb: Task(Of IList(Of IDnsQueryResponse))
+  fullName.vb: System.Threading.Tasks.Task(Of System.Collections.Generic.IList(Of DnsClient.IDnsQueryResponse))
+  name.vb: Task(Of IList(Of IDnsQueryResponse))
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: DnsClient.IDnsQueryResponse
+    name: IDnsQueryResponse
+    nameWithType: IDnsQueryResponse
+    fullName: DnsClient.IDnsQueryResponse
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: DnsClient.IDnsQueryResponse
+    name: IDnsQueryResponse
+    nameWithType: IDnsQueryResponse
+    fullName: DnsClient.IDnsQueryResponse
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IList`1
+  commentId: T:System.Collections.Generic.IList`1
+  isExternal: true
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+- uid: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.String)
+  commentId: M:Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.String)
+  parent: Catalyst.Abstractions.Network.IDns
+  isExternal: true
+  name: GetTxtRecordsAsync(String)
+  nameWithType: IDns.GetTxtRecordsAsync(String)
+  fullName: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.String)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.String)
+    name: GetTxtRecordsAsync
+    nameWithType: IDns.GetTxtRecordsAsync
+    fullName: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync(System.String)
+    name: GetTxtRecordsAsync
+    nameWithType: IDns.GetTxtRecordsAsync
+    fullName: Catalyst.Abstractions.Network.IDns.GetTxtRecordsAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System.Threading.Tasks.Task{DnsClient.IDnsQueryResponse}
+  commentId: T:System.Threading.Tasks.Task{DnsClient.IDnsQueryResponse}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<IDnsQueryResponse>
+  nameWithType: Task<IDnsQueryResponse>
+  fullName: System.Threading.Tasks.Task<DnsClient.IDnsQueryResponse>
+  nameWithType.vb: Task(Of IDnsQueryResponse)
+  fullName.vb: System.Threading.Tasks.Task(Of DnsClient.IDnsQueryResponse)
+  name.vb: Task(Of IDnsQueryResponse)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: DnsClient.IDnsQueryResponse
+    name: IDnsQueryResponse
+    nameWithType: IDnsQueryResponse
+    fullName: DnsClient.IDnsQueryResponse
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: DnsClient.IDnsQueryResponse
+    name: IDnsQueryResponse
+    nameWithType: IDnsQueryResponse
+    fullName: DnsClient.IDnsQueryResponse
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.Network.DevDnsClient.GetSeedNodesFromDns*
+  commentId: Overload:Catalyst.Core.Lib.Network.DevDnsClient.GetSeedNodesFromDns
+  name: GetSeedNodesFromDns
+  nameWithType: DevDnsClient.GetSeedNodesFromDns
+  fullName: Catalyst.Core.Lib.Network.DevDnsClient.GetSeedNodesFromDns
+- uid: Catalyst.Abstractions.Network.IDns.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable{System.String})
+  commentId: M:Catalyst.Abstractions.Network.IDns.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable{System.String})
+  parent: Catalyst.Abstractions.Network.IDns
+  isExternal: true
+  name: GetSeedNodesFromDns(IEnumerable<String>)
+  nameWithType: IDns.GetSeedNodesFromDns(IEnumerable<String>)
+  fullName: Catalyst.Abstractions.Network.IDns.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable<System.String>)
+  nameWithType.vb: IDns.GetSeedNodesFromDns(IEnumerable(Of String))
+  fullName.vb: Catalyst.Abstractions.Network.IDns.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable(Of System.String))
+  name.vb: GetSeedNodesFromDns(IEnumerable(Of String))
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Network.IDns.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable{System.String})
+    name: GetSeedNodesFromDns
+    nameWithType: IDns.GetSeedNodesFromDns
+    fullName: Catalyst.Abstractions.Network.IDns.GetSeedNodesFromDns
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Network.IDns.GetSeedNodesFromDns(System.Collections.Generic.IEnumerable{System.String})
+    name: GetSeedNodesFromDns
+    nameWithType: IDns.GetSeedNodesFromDns
+    fullName: Catalyst.Abstractions.Network.IDns.GetSeedNodesFromDns
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable{System.String}
+  commentId: T:System.Collections.Generic.IEnumerable{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<String>
+  nameWithType: IEnumerable<String>
+  fullName: System.Collections.Generic.IEnumerable<System.String>
+  nameWithType.vb: IEnumerable(Of String)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of System.String)
+  name.vb: IEnumerable(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Protocol.Peer.PeerId}
+  commentId: T:System.Collections.Generic.IEnumerable{Catalyst.Protocol.Peer.PeerId}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<PeerId>
+  nameWithType: IEnumerable<PeerId>
+  fullName: System.Collections.Generic.IEnumerable<Catalyst.Protocol.Peer.PeerId>
+  nameWithType.vb: IEnumerable(Of PeerId)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Catalyst.Protocol.Peer.PeerId)
+  name.vb: IEnumerable(Of PeerId)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Peer.PeerId
+    name: PeerId
+    nameWithType: PeerId
+    fullName: Catalyst.Protocol.Peer.PeerId
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Peer.PeerId
+    name: PeerId
+    nameWithType: PeerId
+    fullName: Catalyst.Protocol.Peer.PeerId
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

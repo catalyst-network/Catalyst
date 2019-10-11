@@ -1,5 +1,0 @@
-@startuml
-class Consensus {
-}
-IConsensus <|-- Consensus
-@enduml

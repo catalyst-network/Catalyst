@@ -1,8 +1,0 @@
-@startuml
-class RpcCorrelationCacheBase <<sealed>> {
-    + RpcCorrelationCacheBase(cache:IMemoryCache, logger:ILogger, cacheTtl:TimeSpan)
-    # <<override>> GetInheritorDelegate() : PostEvictionDelegate
-    - ChangeReputationOnEviction(key:object, value:object, reason:EvictionReason, state:object) : void
-}
-MessageCorrelationCacheBase <|-- RpcCorrelationCacheBase
-@enduml
