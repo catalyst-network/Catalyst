@@ -38,7 +38,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         private readonly IDeltaElector _deltaElector;
         private readonly IHashProvider _hashProvider;
 
-        public FavouriteDeltaObserver(IDeltaElector deltaElector, IHashProvider hashProvider, ILogger logger) 
+        public FavouriteDeltaObserver(IDeltaElector deltaElector, IHashProvider hashProvider, ILogger logger)
             : base(logger)
         {
             _deltaElector = deltaElector;
@@ -51,16 +51,26 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
-                _hashProvider.CheckHash(deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray());
-                _hashProvider.CheckHash(deserialised.Candidate.Hash.ToByteArray());
+                if (!_hashProvider.IsValidHash(deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray()))
+                {
+                    Logger.Error("PreviousDeltaDfsHash is not a valid hash");
+                    return;
+                }
+
+                if (!_hashProvider.IsValidHash(deserialised.Candidate.Hash.ToByteArray()))
+                {
+                    Logger.Error("Hash is not a valid hash");
+                    return;
+                }
 
                 deserialised.IsValid();
-                
+
                 _deltaElector.OnNext(deserialised);
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, $"Failed to process favourite delta broadcast {messageDto.Payload.ToJsonString()}.");
+                Logger.Error(exception,
+                    $"Failed to process favourite delta broadcast {messageDto.Payload.ToJsonString()}.");
             }
         }
     }

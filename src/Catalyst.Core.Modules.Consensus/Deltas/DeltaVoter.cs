@@ -38,24 +38,29 @@ using Microsoft.Extensions.Primitives;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
     public class DeltaVoter : IDeltaVoter
     {
-        public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate) => 
-            nameof(DeltaVoter) + "-" + candidate.Hash.ToByteArray().ToBase32();
+        public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate)
+        {
+            return nameof(DeltaVoter) + "-" + candidate.Hash.ToByteArray().ToBase32();
+        }
 
-        public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate) => 
-            nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32();
+        public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate)
+        {
+            return nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32();
+        }
 
-        public static string GetCandidateListCacheKey(Cid previousDeltaHash) => 
-            nameof(DeltaVoter) + "-" + previousDeltaHash;
+        public static string GetCandidateListCacheKey(Cid previousDeltaHash)
+        {
+            return nameof(DeltaVoter) + "-" + previousDeltaHash;
+        }
 
         /// <summary>
-        /// This cache is used to maintain the candidates with their scores, and for each previous delta hash we found,
-        /// the list of candidates that we received.
+        ///     This cache is used to maintain the candidates with their scores, and for each previous delta hash we found,
+        ///     the list of candidates that we received.
         /// </summary>
         private readonly IMemoryCache _candidatesCache;
 
@@ -73,14 +78,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _deltaProducersProvider = deltaProducersProvider;
             _localPeerIdentifier = peerSettings.PeerId;
             _cacheEntryOptions = () => new MemoryCacheEntryOptions()
-               .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
+               .AddExpirationToken(
+                    new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
             _logger = logger;
         }
 
-        public void OnCompleted()
-        {
-            _logger.Information("End of {0} stream.", nameof(CandidateDeltaBroadcast));
-        }
+        public void OnCompleted() { _logger.Information("End of {0} stream.", nameof(CandidateDeltaBroadcast)); }
 
         public void OnError(Exception error)
         {
@@ -94,13 +97,15 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 var rankingFactor = GetProducerRankFactor(candidate);
 
                 var candidateCacheKey = GetCandidateCacheKey(candidate);
-                if (_candidatesCache.TryGetValue<IScoredCandidateDelta>(candidateCacheKey, out var retrievedScoredDelta))
+                if (_candidatesCache.TryGetValue<IScoredCandidateDelta>(candidateCacheKey, out var retrievedScoredDelta)
+                )
                 {
                     retrievedScoredDelta.IncreasePopularity(1);
-                    _logger.Debug("Candidate {candidate} increased popularity to {score}", candidate, retrievedScoredDelta.Score);
+                    _logger.Debug("Candidate {candidate} increased popularity to {score}", candidate,
+                        retrievedScoredDelta.Score);
                     return;
                 }
-                
+
                 AddCandidateToCandidateHashLookup(candidate, rankingFactor, candidateCacheKey);
                 AddCandidateToPreviousHashLookup(candidate, candidateCacheKey);
             }
@@ -116,8 +121,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             var scoredDelta = new ScoredCandidateDelta(candidate, 100 * rankingFactor + 1);
             _candidatesCache.Set(candidateCacheKey, scoredDelta, _cacheEntryOptions());
-            _logger.Verbose("Candidate {hash} with previous hash {previousHash} has score {scored}", 
-                candidate.Hash.ToByteArray().ToBase32(), 
+            _logger.Verbose("Candidate {hash} with previous hash {previousHash} has score {scored}",
+                candidate.Hash.ToByteArray().ToBase32(),
                 candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32(),
                 scoredDelta.Score);
         }
@@ -137,9 +142,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         public bool TryGetFavouriteDelta(Cid previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
+
         {
             Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull();
-            _logger.Debug("Retrieving favourite candidate delta for the successor of delta {0}", 
+            _logger.Debug("Retrieving favourite candidate delta for the successor of delta {0}",
                 previousDeltaDfsHash);
 
             var cacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
@@ -185,7 +191,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 throw new KeyNotFoundException(
                     $"Producer {candidate.ProducerId} " +
-                    $"should not be sending candidate deltas with previous hash " +
+                    "should not be sending candidate deltas with previous hash " +
                     $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32()}");
             }
 

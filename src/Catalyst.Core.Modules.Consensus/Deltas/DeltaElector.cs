@@ -86,6 +86,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             try
             {
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
+
                 var cid = _hashProvider.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(cid)
@@ -125,8 +126,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             if (!_candidatesCache.TryGetValue(candidateListCacheKey,
                 out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
             {
-                _logger.Debug("Failed to retrieve any favourite candidate with previous delta {0}",
-                    previousDeltaDfsHash);
+                _logger.Debug("Failed to retrieve any favourite candidate with previous delta {0}", previousDeltaDfsHash);
                 return null;
             }
 

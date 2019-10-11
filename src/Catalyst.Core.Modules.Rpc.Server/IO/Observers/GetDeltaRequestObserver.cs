@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
@@ -40,15 +39,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     public sealed class GetDeltaRequestObserver
         : RequestObserverBase<GetDeltaRequest, GetDeltaResponse>, IRpcRequestObserver
     {
-        private readonly IHashProvider _hashProvider;
         private readonly IDeltaCache _deltaCache;
 
-        public GetDeltaRequestObserver(IHashProvider hashProvider,
-            IDeltaCache deltaCache,
+        public GetDeltaRequestObserver(IDeltaCache deltaCache,
             IPeerSettings peerSettings,
             ILogger logger) : base(logger, peerSettings)
         {
-            _hashProvider = hashProvider;
             _deltaCache = deltaCache;
         }
 
@@ -62,7 +58,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
-            
+
             var cid = Cid.Decode(getDeltaRequest.DeltaDfsHash.ToByteArray().ToBase32());
 
             _deltaCache.TryGetOrAddConfirmedDelta(cid, out var delta);

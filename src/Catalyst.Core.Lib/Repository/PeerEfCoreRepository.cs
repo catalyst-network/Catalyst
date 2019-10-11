@@ -21,15 +21,16 @@
 
 #endregion
 
-namespace Catalyst.TestUtils
+using Catalyst.Core.Lib.DAO;
+using SharpRepository.EfCoreRepository;
+using SharpRepository.Repository.Caching;
+
+namespace Catalyst.Core.Lib.Repository
 {
-    public static class Traits
+    public class PeerEfCoreRepository : EfCoreRepository<PeerDao, string>
     {
-        public const string TestType = "TestType";
-        public const string IntegrationTest = "IntegrationTest";
-        public const string EmbeddedChannelTest = "EmbeddedChannelTest";
-        public const string E2E_MSSQL = "EndToEndTest_MSSQL";
-        public const string E2E_MongoDB = "EndToEndTest_MongoDB";
-        public const string E2E_CosmosDB = "EndToEndTest_CosmosDB";
+        public PeerEfCoreRepository(IDbContext dbContext, ICachingStrategy<PeerDao, string> cachingStrategy = null) :
+            base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy) { }
     }
 }
+

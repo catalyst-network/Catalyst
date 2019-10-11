@@ -40,7 +40,6 @@ using LibP2P;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
@@ -67,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             var peerIdentifier = PeerIdHelper.GetPeerId("responder");
             var peerSettings = peerIdentifier.ToSubstitutedPeerSettings();
             _deltaCache = Substitute.For<IDeltaCache>();
-            _observer = new GetDeltaRequestObserver(_hashProvider, _deltaCache, peerSettings, logger);
+            _observer = new GetDeltaRequestObserver(_deltaCache, peerSettings, logger);
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 

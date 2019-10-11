@@ -32,7 +32,6 @@ using Google.Protobuf.WellKnownTypes;
 using LibP2P;
 using Nito.Comparers;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

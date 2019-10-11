@@ -100,6 +100,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             ExpectDeltaFromDfsAndNotFromCache(cid, deltaFromDfs);
 
             var cacheEntry = Substitute.For<ICacheEntry>();
+
             _memoryCache.CreateEntry(cid).Returns(cacheEntry);
 
             var found = _deltaCache.TryGetOrAddConfirmedDelta(cid, out var delta);

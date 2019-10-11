@@ -88,10 +88,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687
 		Common.Packable.props = Common.Packable.props
 		Common.Projects.props = Common.Projects.props
 		Common.TestProjects.props = Common.TestProjects.props
+		XunitTraitsRegister.cs = XunitTraitsRegister.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"
 	ProjectSection(SolutionItems) = preProject
+		..\mssql-e2e-azure-pipelines.yml = ..\mssql-e2e-azure-pipelines.yml
 		..\nuget-pre-release-azure-pipelines.yml = ..\nuget-pre-release-azure-pipelines.yml
 		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
 	EndProjectSection
@@ -152,8 +154,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{BAB02934
 		..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml = ..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashing", "Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj", "{9474405A-2B4B-41BE-86DA-5BE831203EDD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.Consensus", "Catalyst.Modules.POA.Consensus\Catalyst.Modules.POA.Consensus.csproj", "{BCF86A5A-8BF0-43B1-9D0C-E36108BD0F8A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests", "Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests\Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests.csproj", "{1D5BB576-6C99-4071-89EB-09BADCE09912}"
@@ -162,7 +162,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.Consen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.P2P.Discovery.Consortium", "Catalyst.Modules.POA.P2P.Discovery.Consortium\Catalyst.Modules.POA.P2P.Discovery.Consortium.csproj", "{CDB7C91F-BA03-4BA8-92B0-5EB398DCCA43}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashing.Tests", "Catalyst.Core.Modules.Hashing.Tests\Catalyst.Core.Modules.Hashing.Tests.csproj", "{ABDC2AD6-18F5-4AEE-BBD3-DB8636F87284}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashing", "Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj", "{719343C7-C1C1-4C23-8763-8FB493C33D66}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashing.Tests", "Catalyst.Core.Modules.Hashing.Tests\Catalyst.Core.Modules.Hashing.Tests.csproj", "{2FF077F1-E652-4D17-83D2-C766E385BA5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -342,10 +344,6 @@ Global
 		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9474405A-2B4B-41BE-86DA-5BE831203EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9474405A-2B4B-41BE-86DA-5BE831203EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9474405A-2B4B-41BE-86DA-5BE831203EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9474405A-2B4B-41BE-86DA-5BE831203EDD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BCF86A5A-8BF0-43B1-9D0C-E36108BD0F8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BCF86A5A-8BF0-43B1-9D0C-E36108BD0F8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCF86A5A-8BF0-43B1-9D0C-E36108BD0F8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -362,10 +360,14 @@ Global
 		{CDB7C91F-BA03-4BA8-92B0-5EB398DCCA43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDB7C91F-BA03-4BA8-92B0-5EB398DCCA43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDB7C91F-BA03-4BA8-92B0-5EB398DCCA43}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ABDC2AD6-18F5-4AEE-BBD3-DB8636F87284}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABDC2AD6-18F5-4AEE-BBD3-DB8636F87284}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABDC2AD6-18F5-4AEE-BBD3-DB8636F87284}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABDC2AD6-18F5-4AEE-BBD3-DB8636F87284}.Release|Any CPU.Build.0 = Release|Any CPU
+		{719343C7-C1C1-4C23-8763-8FB493C33D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{719343C7-C1C1-4C23-8763-8FB493C33D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{719343C7-C1C1-4C23-8763-8FB493C33D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{719343C7-C1C1-4C23-8763-8FB493C33D66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FF077F1-E652-4D17-83D2-C766E385BA5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FF077F1-E652-4D17-83D2-C766E385BA5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FF077F1-E652-4D17-83D2-C766E385BA5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FF077F1-E652-4D17-83D2-C766E385BA5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

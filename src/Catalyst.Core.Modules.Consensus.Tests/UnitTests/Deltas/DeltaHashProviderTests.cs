@@ -62,7 +62,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
             _hashProvider = new HashProvider(hashingAlgorithm);
 
-            _deltaCache.GenesisHash.Returns(CidHelper.CreateCid(_hashProvider.ComputeMultiHash(new Delta().ToByteArray())));
+            _deltaCache.GenesisHash.Returns(
+                CidHelper.CreateCid(_hashProvider.ComputeMultiHash(new Delta().ToByteArray())));
         }
 
         [Fact]
