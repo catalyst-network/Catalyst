@@ -1,0 +1,91 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent
+  commentId: T:Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent
+  id: ISocketClientRegistryEvent
+  parent: Catalyst.Abstractions.IO.Events
+  children:
+  - Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent.SocketHashCode
+  langs:
+  - csharp
+  - vb
+  name: ISocketClientRegistryEvent
+  nameWithType: ISocketClientRegistryEvent
+  fullName: Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Events/ISocketClientRegistryEvent.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ISocketClientRegistryEvent
+    path: ../src/Catalyst.Abstractions/IO/Events/ISocketClientRegistryEvent.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Events
+  syntax:
+    content: public interface ISocketClientRegistryEvent
+    content.vb: Public Interface ISocketClientRegistryEvent
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent.SocketHashCode
+  commentId: P:Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent.SocketHashCode
+  id: SocketHashCode
+  parent: Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent
+  langs:
+  - csharp
+  - vb
+  name: SocketHashCode
+  nameWithType: ISocketClientRegistryEvent.SocketHashCode
+  fullName: Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent.SocketHashCode
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Events/ISocketClientRegistryEvent.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: SocketHashCode
+    path: ../src/Catalyst.Abstractions/IO/Events/ISocketClientRegistryEvent.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Events
+  syntax:
+    content: int SocketHashCode { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property SocketHashCode As Integer
+  overload: Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent.SocketHashCode*
+  modifiers.csharp:
+  - get
+  - set
+references:
+- uid: Catalyst.Abstractions.IO.Events
+  commentId: N:Catalyst.Abstractions.IO.Events
+  name: Catalyst.Abstractions.IO.Events
+  nameWithType: Catalyst.Abstractions.IO.Events
+  fullName: Catalyst.Abstractions.IO.Events
+- uid: Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent.SocketHashCode*
+  commentId: Overload:Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent.SocketHashCode
+  name: SocketHashCode
+  nameWithType: ISocketClientRegistryEvent.SocketHashCode
+  fullName: Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent.SocketHashCode
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

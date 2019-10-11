@@ -1,0 +1,134 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom
+  commentId: T:Catalyst.Abstractions.Cryptography.IDeterministicRandom
+  id: IDeterministicRandom
+  parent: Catalyst.Abstractions.Cryptography
+  children:
+  - Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+  - Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+  langs:
+  - csharp
+  - vb
+  name: IDeterministicRandom
+  nameWithType: IDeterministicRandom
+  fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cryptography/IDeterministicRandom.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IDeterministicRandom
+    path: ../src/Catalyst.Abstractions/Cryptography/IDeterministicRandom.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cryptography
+  syntax:
+    content: public interface IDeterministicRandom
+    content.vb: Public Interface IDeterministicRandom
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+  commentId: M:Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+  id: NextInt
+  parent: Catalyst.Abstractions.Cryptography.IDeterministicRandom
+  langs:
+  - csharp
+  - vb
+  name: NextInt()
+  nameWithType: IDeterministicRandom.NextInt()
+  fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cryptography/IDeterministicRandom.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: NextInt
+    path: ../src/Catalyst.Abstractions/Cryptography/IDeterministicRandom.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cryptography
+  summary: Gets the next random 32 bit value.
+  example: []
+  syntax:
+    content: uint NextInt()
+    return:
+      type: System.UInt32
+      description: ''
+    content.vb: Function NextInt As UInteger
+  overload: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt*
+- uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+  commentId: M:Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+  id: NextByte
+  parent: Catalyst.Abstractions.Cryptography.IDeterministicRandom
+  langs:
+  - csharp
+  - vb
+  name: NextByte()
+  nameWithType: IDeterministicRandom.NextByte()
+  fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cryptography/IDeterministicRandom.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: NextByte
+    path: ../src/Catalyst.Abstractions/Cryptography/IDeterministicRandom.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cryptography
+  summary: Gets random char byte.
+  example: []
+  syntax:
+    content: byte NextByte()
+    return:
+      type: System.Byte
+      description: ASCII byte
+    content.vb: Function NextByte As Byte
+  overload: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte*
+references:
+- uid: Catalyst.Abstractions.Cryptography
+  commentId: N:Catalyst.Abstractions.Cryptography
+  name: Catalyst.Abstractions.Cryptography
+  nameWithType: Catalyst.Abstractions.Cryptography
+  fullName: Catalyst.Abstractions.Cryptography
+- uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt*
+  commentId: Overload:Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+  name: NextInt
+  nameWithType: IDeterministicRandom.NextInt
+  fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextInt
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  name: UInt32
+  nameWithType: UInt32
+  fullName: System.UInt32
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte*
+  commentId: Overload:Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+  name: NextByte
+  nameWithType: IDeterministicRandom.NextByte
+  fullName: Catalyst.Abstractions.Cryptography.IDeterministicRandom.NextByte
+- uid: System.Byte
+  commentId: T:System.Byte
+  parent: System
+  isExternal: true
+  name: Byte
+  nameWithType: Byte
+  fullName: System.Byte

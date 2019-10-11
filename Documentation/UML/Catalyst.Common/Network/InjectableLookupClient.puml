@@ -1,6 +1,0 @@
-@startuml
-class InjectableLookupClient {
-    + InjectableLookupClient(configurationRoot:IConfigurationRoot)
-}
-LookupClient <|-- InjectableLookupClient
-@enduml

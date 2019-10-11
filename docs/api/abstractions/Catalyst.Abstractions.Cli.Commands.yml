@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Cli.Commands
+  commentId: N:Catalyst.Abstractions.Cli.Commands
+  id: Catalyst.Abstractions.Cli.Commands
+  children:
+  - Catalyst.Abstractions.Cli.Commands.ICommandContext
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Cli.Commands
+  nameWithType: Catalyst.Abstractions.Cli.Commands
+  fullName: Catalyst.Abstractions.Cli.Commands
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  commentId: T:Catalyst.Abstractions.Cli.Commands.ICommandContext
+  name: ICommandContext
+  nameWithType: ICommandContext
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext

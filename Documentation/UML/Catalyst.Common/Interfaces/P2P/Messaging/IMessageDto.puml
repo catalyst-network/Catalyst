@@ -1,6 +1,0 @@
-@startuml
-interface "IMessageDto`1"<out TMessageType> {
-    Type : TMessageType <<get>>
-}
-"IMessageDto`1" --> "Sender" IPeerIdentifier
-@enduml

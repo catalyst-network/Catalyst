@@ -1,0 +1,34 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Authentication
+  commentId: N:Catalyst.Core.Modules.Authentication
+  id: Catalyst.Core.Modules.Authentication
+  children:
+  - Catalyst.Core.Modules.Authentication.AuthenticationModule
+  - Catalyst.Core.Modules.Authentication.NoAuthenticationStrategy
+  - Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Modules.Authentication
+  nameWithType: Catalyst.Core.Modules.Authentication
+  fullName: Catalyst.Core.Modules.Authentication
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Modules.Authentication
+references:
+- uid: Catalyst.Core.Modules.Authentication.AuthenticationModule
+  commentId: T:Catalyst.Core.Modules.Authentication.AuthenticationModule
+  name: AuthenticationModule
+  nameWithType: AuthenticationModule
+  fullName: Catalyst.Core.Modules.Authentication.AuthenticationModule
+- uid: Catalyst.Core.Modules.Authentication.NoAuthenticationStrategy
+  commentId: T:Catalyst.Core.Modules.Authentication.NoAuthenticationStrategy
+  name: NoAuthenticationStrategy
+  nameWithType: NoAuthenticationStrategy
+  fullName: Catalyst.Core.Modules.Authentication.NoAuthenticationStrategy
+- uid: Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy
+  commentId: T:Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy
+  name: RepositoryAuthenticationStrategy
+  nameWithType: RepositoryAuthenticationStrategy
+  fullName: Catalyst.Core.Modules.Authentication.RepositoryAuthenticationStrategy

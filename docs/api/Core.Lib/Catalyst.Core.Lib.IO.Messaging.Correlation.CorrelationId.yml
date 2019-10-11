@@ -1,0 +1,1135 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  commentId: T:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  id: CorrelationId
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation
+  children:
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor(Google.Protobuf.ByteString)
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor(System.Byte[])
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor(System.Guid)
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals(System.Object)
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateCorrelationId
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateEmptyCorrelationId
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GetHashCode
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GuidByteLength
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Id
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Equality(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId,Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId)
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Inequality(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId,Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId)
+  - Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.ToString
+  langs:
+  - csharp
+  - vb
+  name: CorrelationId
+  nameWithType: CorrelationId
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CorrelationId
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  example: []
+  syntax:
+    content: 'public sealed class CorrelationId : ICorrelationId, IEquatable<ICorrelationId>'
+    content.vb: >-
+      Public NotInheritable Class CorrelationId
+
+          Implements ICorrelationId, IEquatable(Of ICorrelationId)
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - System.IEquatable{Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId}
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Id
+  commentId: P:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Id
+  id: Id
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: CorrelationId.Id
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Id
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Id
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  example: []
+  syntax:
+    content: public Guid Id { get; }
+    parameters: []
+    return:
+      type: System.Guid
+    content.vb: Public ReadOnly Property Id As Guid
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Id*
+  implements:
+  - Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId.Id
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GuidByteLength
+  commentId: F:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GuidByteLength
+  id: GuidByteLength
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: GuidByteLength
+  nameWithType: CorrelationId.GuidByteLength
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GuidByteLength
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GuidByteLength
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  summary: "\nLength of the inner Guid in bytes\n"
+  example: []
+  syntax:
+    content: public static readonly int GuidByteLength
+    return:
+      type: System.Int32
+    content.vb: Public Shared ReadOnly GuidByteLength As Integer
+  modifiers.csharp:
+  - public
+  - static
+  - readonly
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor(System.Guid)
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor(System.Guid)
+  id: '#ctor(System.Guid)'
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: CorrelationId(Guid)
+  nameWithType: CorrelationId.CorrelationId(Guid)
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.CorrelationId(System.Guid)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 43
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  summary: "\nProvide a known correlation Id.\n"
+  example: []
+  syntax:
+    content: public CorrelationId(Guid id)
+    parameters:
+    - id: id
+      type: System.Guid
+    content.vb: Public Sub New(id As Guid)
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor(System.Byte[])
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor(System.Byte[])
+  id: '#ctor(System.Byte[])'
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: CorrelationId(Byte[])
+  nameWithType: CorrelationId.CorrelationId(Byte[])
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.CorrelationId(System.Byte[])
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 48
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  summary: "\nProvides a correlation Id from a byte array.\n"
+  example: []
+  syntax:
+    content: public CorrelationId(byte[] bytes)
+    parameters:
+    - id: bytes
+      type: System.Byte[]
+    content.vb: Public Sub New(bytes As Byte())
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor*
+  nameWithType.vb: CorrelationId.CorrelationId(Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.CorrelationId(System.Byte())
+  name.vb: CorrelationId(Byte())
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor(Google.Protobuf.ByteString)
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor(Google.Protobuf.ByteString)
+  id: '#ctor(Google.Protobuf.ByteString)'
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: CorrelationId(ByteString)
+  nameWithType: CorrelationId.CorrelationId(ByteString)
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.CorrelationId(Google.Protobuf.ByteString)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 53
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  summary: "\nProvides a correlation Id from a protobuf byte string.\n"
+  example: []
+  syntax:
+    content: public CorrelationId(ByteString byteString)
+    parameters:
+    - id: byteString
+      type: Google.Protobuf.ByteString
+    content.vb: Public Sub New(byteString As ByteString)
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateCorrelationId
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateCorrelationId
+  id: GenerateCorrelationId
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: GenerateCorrelationId()
+  nameWithType: CorrelationId.GenerateCorrelationId()
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateCorrelationId()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GenerateCorrelationId
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 58
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  summary: "\nStatic helper to get new CorrelationId.\n"
+  example: []
+  syntax:
+    content: public static ICorrelationId GenerateCorrelationId()
+    return:
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    content.vb: Public Shared Function GenerateCorrelationId As ICorrelationId
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateCorrelationId*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateEmptyCorrelationId
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateEmptyCorrelationId
+  id: GenerateEmptyCorrelationId
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: GenerateEmptyCorrelationId()
+  nameWithType: CorrelationId.GenerateEmptyCorrelationId()
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateEmptyCorrelationId()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GenerateEmptyCorrelationId
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 67
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  summary: "\nStatic helper to get empty correlation id\n"
+  example: []
+  syntax:
+    content: public static ICorrelationId GenerateEmptyCorrelationId()
+    return:
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+      description: ''
+    content.vb: Public Shared Function GenerateEmptyCorrelationId As ICorrelationId
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateEmptyCorrelationId*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.ToString
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.ToString
+  id: ToString
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: CorrelationId.ToString()
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ToString
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 72
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  id: Equals(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: Equals(ICorrelationId)
+  nameWithType: CorrelationId.Equals(ICorrelationId)
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Equals
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 74
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  syntax:
+    content: public bool Equals(ICorrelationId other)
+    parameters:
+    - id: other
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    return:
+      type: System.Boolean
+    content.vb: Public Function Equals(other As ICorrelationId) As Boolean
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals*
+  implements:
+  - System.IEquatable{Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId}.Equals(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals(System.Object)
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: Equals(Object)
+  nameWithType: CorrelationId.Equals(Object)
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals(System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Equals
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 79
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  syntax:
+    content: public override bool Equals(object obj)
+    parameters:
+    - id: obj
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function Equals(obj As Object) As Boolean
+  overridden: System.Object.Equals(System.Object)
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GetHashCode
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GetHashCode
+  id: GetHashCode
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: CorrelationId.GetHashCode()
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetHashCode
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 84
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+    content.vb: Public Overrides Function GetHashCode As Integer
+  overridden: System.Object.GetHashCode
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GetHashCode*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Equality(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId,Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId)
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Equality(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId,Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId)
+  id: op_Equality(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId,Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId)
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: Equality(CorrelationId, CorrelationId)
+  nameWithType: CorrelationId.Equality(CorrelationId, CorrelationId)
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equality(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId, Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId)
+  type: Operator
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: op_Equality
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 89
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  syntax:
+    content: public static bool operator ==(CorrelationId left, CorrelationId right)
+    parameters:
+    - id: left
+      type: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+    - id: right
+      type: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator =(left As CorrelationId, right As CorrelationId) As Boolean
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Equality*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Inequality(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId,Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId)
+  commentId: M:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Inequality(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId,Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId)
+  id: op_Inequality(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId,Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId)
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  langs:
+  - csharp
+  - vb
+  name: Inequality(CorrelationId, CorrelationId)
+  nameWithType: CorrelationId.Inequality(CorrelationId, CorrelationId)
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Inequality(Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId, Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId)
+  type: Operator
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: op_Inequality
+    path: ../src/Catalyst.Core.Lib/IO/Messaging/Correlation/CorrelationId.cs
+    startLine: 90
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Messaging.Correlation
+  syntax:
+    content: public static bool operator !=(CorrelationId left, CorrelationId right)
+    parameters:
+    - id: left
+      type: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+    - id: right
+      type: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator <>(left As CorrelationId, right As CorrelationId) As Boolean
+  overload: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Inequality*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+references:
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation
+  commentId: N:Catalyst.Core.Lib.IO.Messaging.Correlation
+  name: Catalyst.Core.Lib.IO.Messaging.Correlation
+  nameWithType: Catalyst.Core.Lib.IO.Messaging.Correlation
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  name: ICorrelationId
+  nameWithType: ICorrelationId
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+- uid: System.IEquatable{Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId}
+  commentId: T:System.IEquatable{Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId}
+  parent: System
+  definition: System.IEquatable`1
+  name: IEquatable<ICorrelationId>
+  nameWithType: IEquatable<ICorrelationId>
+  fullName: System.IEquatable<Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId>
+  nameWithType.vb: IEquatable(Of ICorrelationId)
+  fullName.vb: System.IEquatable(Of Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  name.vb: IEquatable(Of ICorrelationId)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Id*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Id
+  name: Id
+  nameWithType: CorrelationId.Id
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Id
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId.Id
+  commentId: P:Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId.Id
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  name: Id
+  nameWithType: ICorrelationId.Id
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId.Id
+- uid: System.Guid
+  commentId: T:System.Guid
+  parent: System
+  isExternal: true
+  name: Guid
+  nameWithType: Guid
+  fullName: System.Guid
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.#ctor
+  name: CorrelationId
+  nameWithType: CorrelationId.CorrelationId
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.CorrelationId
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Google.Protobuf.ByteString
+  commentId: T:Google.Protobuf.ByteString
+  parent: Google.Protobuf
+  isExternal: true
+  name: ByteString
+  nameWithType: ByteString
+  fullName: Google.Protobuf.ByteString
+- uid: Google.Protobuf
+  commentId: N:Google.Protobuf
+  isExternal: true
+  name: Google.Protobuf
+  nameWithType: Google.Protobuf
+  fullName: Google.Protobuf
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateCorrelationId*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateCorrelationId
+  name: GenerateCorrelationId
+  nameWithType: CorrelationId.GenerateCorrelationId
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateCorrelationId
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateEmptyCorrelationId*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateEmptyCorrelationId
+  name: GenerateEmptyCorrelationId
+  nameWithType: CorrelationId.GenerateEmptyCorrelationId
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GenerateEmptyCorrelationId
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.ToString*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.ToString
+  name: ToString
+  nameWithType: CorrelationId.ToString
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals
+  name: Equals
+  nameWithType: CorrelationId.Equals
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equals
+- uid: System.IEquatable{Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId}.Equals(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  commentId: M:System.IEquatable{Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId}.Equals(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  parent: System.IEquatable{Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId}
+  definition: System.IEquatable`1.Equals(`0)
+  name: Equals(ICorrelationId)
+  nameWithType: IEquatable<ICorrelationId>.Equals(ICorrelationId)
+  fullName: System.IEquatable<Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId>.Equals(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  nameWithType.vb: IEquatable(Of ICorrelationId).Equals(ICorrelationId)
+  fullName.vb: System.IEquatable(Of Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId).Equals(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<ICorrelationId>.Equals
+    fullName: System.IEquatable<Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of ICorrelationId).Equals
+    fullName: System.IEquatable(Of Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<T>.Equals
+    fullName: System.IEquatable<T>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of T).Equals
+    fullName: System.IEquatable(Of T).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GetHashCode*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GetHashCode
+  name: GetHashCode
+  nameWithType: CorrelationId.GetHashCode
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.GetHashCode
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Equality*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Equality
+  name: Equality
+  nameWithType: CorrelationId.Equality
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Equality
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  commentId: T:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+  parent: Catalyst.Core.Lib.IO.Messaging.Correlation
+  name: CorrelationId
+  nameWithType: CorrelationId
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId
+- uid: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Inequality*
+  commentId: Overload:Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.op_Inequality
+  name: Inequality
+  nameWithType: CorrelationId.Inequality
+  fullName: Catalyst.Core.Lib.IO.Messaging.Correlation.CorrelationId.Inequality

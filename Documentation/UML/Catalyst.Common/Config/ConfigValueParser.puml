@@ -1,6 +1,0 @@
-@startuml
-class ConfigValueParser <<static>> {
-    <<internal>> {static} GetIpEndpointArrValues(configurationRoot:IConfigurationRoot, section:string) : IPEndPoint[]
-    + {static} GetStringArrValues(configurationRoot:IConfigurationRoot, section:string) : string[]
-}
-@enduml

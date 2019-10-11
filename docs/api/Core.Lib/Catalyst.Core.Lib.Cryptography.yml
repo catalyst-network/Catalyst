@@ -1,0 +1,58 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Cryptography
+  commentId: N:Catalyst.Core.Lib.Cryptography
+  id: Catalyst.Core.Lib.Cryptography
+  children:
+  - Catalyst.Core.Lib.Cryptography.CertificateStore
+  - Catalyst.Core.Lib.Cryptography.ConsolePasswordReader
+  - Catalyst.Core.Lib.Cryptography.IsaacRandom
+  - Catalyst.Core.Lib.Cryptography.IsaacRandomFactory
+  - Catalyst.Core.Lib.Cryptography.KeyRegistry
+  - Catalyst.Core.Lib.Cryptography.PasswordManager
+  - Catalyst.Core.Lib.Cryptography.PasswordRegistry
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.Cryptography
+  nameWithType: Catalyst.Core.Lib.Cryptography
+  fullName: Catalyst.Core.Lib.Cryptography
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.Cryptography.CertificateStore
+  commentId: T:Catalyst.Core.Lib.Cryptography.CertificateStore
+  name: CertificateStore
+  nameWithType: CertificateStore
+  fullName: Catalyst.Core.Lib.Cryptography.CertificateStore
+- uid: Catalyst.Core.Lib.Cryptography.ConsolePasswordReader
+  commentId: T:Catalyst.Core.Lib.Cryptography.ConsolePasswordReader
+  name: ConsolePasswordReader
+  nameWithType: ConsolePasswordReader
+  fullName: Catalyst.Core.Lib.Cryptography.ConsolePasswordReader
+- uid: Catalyst.Core.Lib.Cryptography.IsaacRandom
+  commentId: T:Catalyst.Core.Lib.Cryptography.IsaacRandom
+  name: IsaacRandom
+  nameWithType: IsaacRandom
+  fullName: Catalyst.Core.Lib.Cryptography.IsaacRandom
+- uid: Catalyst.Core.Lib.Cryptography.IsaacRandomFactory
+  commentId: T:Catalyst.Core.Lib.Cryptography.IsaacRandomFactory
+  name: IsaacRandomFactory
+  nameWithType: IsaacRandomFactory
+  fullName: Catalyst.Core.Lib.Cryptography.IsaacRandomFactory
+- uid: Catalyst.Core.Lib.Cryptography.KeyRegistry
+  commentId: T:Catalyst.Core.Lib.Cryptography.KeyRegistry
+  name: KeyRegistry
+  nameWithType: KeyRegistry
+  fullName: Catalyst.Core.Lib.Cryptography.KeyRegistry
+- uid: Catalyst.Core.Lib.Cryptography.PasswordManager
+  commentId: T:Catalyst.Core.Lib.Cryptography.PasswordManager
+  name: PasswordManager
+  nameWithType: PasswordManager
+  fullName: Catalyst.Core.Lib.Cryptography.PasswordManager
+- uid: Catalyst.Core.Lib.Cryptography.PasswordRegistry
+  commentId: T:Catalyst.Core.Lib.Cryptography.PasswordRegistry
+  name: PasswordRegistry
+  nameWithType: PasswordRegistry
+  fullName: Catalyst.Core.Lib.Cryptography.PasswordRegistry

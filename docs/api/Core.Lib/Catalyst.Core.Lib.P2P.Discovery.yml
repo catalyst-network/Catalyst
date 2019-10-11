@@ -1,0 +1,34 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.P2P.Discovery
+  commentId: N:Catalyst.Core.Lib.P2P.Discovery
+  id: Catalyst.Core.Lib.P2P.Discovery
+  children:
+  - Catalyst.Core.Lib.P2P.Discovery.HealthChecker
+  - Catalyst.Core.Lib.P2P.Discovery.Neighbour
+  - Catalyst.Core.Lib.P2P.Discovery.Neighbours
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.P2P.Discovery
+  nameWithType: Catalyst.Core.Lib.P2P.Discovery
+  fullName: Catalyst.Core.Lib.P2P.Discovery
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.P2P.Discovery.HealthChecker
+  commentId: T:Catalyst.Core.Lib.P2P.Discovery.HealthChecker
+  name: HealthChecker
+  nameWithType: HealthChecker
+  fullName: Catalyst.Core.Lib.P2P.Discovery.HealthChecker
+- uid: Catalyst.Core.Lib.P2P.Discovery.Neighbour
+  commentId: T:Catalyst.Core.Lib.P2P.Discovery.Neighbour
+  name: Neighbour
+  nameWithType: Neighbour
+  fullName: Catalyst.Core.Lib.P2P.Discovery.Neighbour
+- uid: Catalyst.Core.Lib.P2P.Discovery.Neighbours
+  commentId: T:Catalyst.Core.Lib.P2P.Discovery.Neighbours
+  name: Neighbours
+  nameWithType: Neighbours
+  fullName: Catalyst.Core.Lib.P2P.Discovery.Neighbours

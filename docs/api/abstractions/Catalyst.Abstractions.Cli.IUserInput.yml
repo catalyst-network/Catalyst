@@ -1,0 +1,87 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Cli.IUserInput
+  commentId: T:Catalyst.Abstractions.Cli.IUserInput
+  id: IUserInput
+  parent: Catalyst.Abstractions.Cli
+  children:
+  - Catalyst.Abstractions.Cli.IUserInput.ReadKey
+  langs:
+  - csharp
+  - vb
+  name: IUserInput
+  nameWithType: IUserInput
+  fullName: Catalyst.Abstractions.Cli.IUserInput
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/IUserInput.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IUserInput
+    path: ../src/Catalyst.Abstractions/Cli/IUserInput.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli
+  syntax:
+    content: public interface IUserInput
+    content.vb: Public Interface IUserInput
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Cli.IUserInput.ReadKey
+  commentId: M:Catalyst.Abstractions.Cli.IUserInput.ReadKey
+  id: ReadKey
+  parent: Catalyst.Abstractions.Cli.IUserInput
+  langs:
+  - csharp
+  - vb
+  name: ReadKey()
+  nameWithType: IUserInput.ReadKey()
+  fullName: Catalyst.Abstractions.Cli.IUserInput.ReadKey()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/IUserInput.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ReadKey
+    path: ../src/Catalyst.Abstractions/Cli/IUserInput.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli
+  syntax:
+    content: ConsoleKeyInfo ReadKey()
+    return:
+      type: System.ConsoleKeyInfo
+    content.vb: Function ReadKey As ConsoleKeyInfo
+  overload: Catalyst.Abstractions.Cli.IUserInput.ReadKey*
+references:
+- uid: Catalyst.Abstractions.Cli
+  commentId: N:Catalyst.Abstractions.Cli
+  name: Catalyst.Abstractions.Cli
+  nameWithType: Catalyst.Abstractions.Cli
+  fullName: Catalyst.Abstractions.Cli
+- uid: Catalyst.Abstractions.Cli.IUserInput.ReadKey*
+  commentId: Overload:Catalyst.Abstractions.Cli.IUserInput.ReadKey
+  name: ReadKey
+  nameWithType: IUserInput.ReadKey
+  fullName: Catalyst.Abstractions.Cli.IUserInput.ReadKey
+- uid: System.ConsoleKeyInfo
+  commentId: T:System.ConsoleKeyInfo
+  parent: System
+  isExternal: true
+  name: ConsoleKeyInfo
+  nameWithType: ConsoleKeyInfo
+  fullName: System.ConsoleKeyInfo
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

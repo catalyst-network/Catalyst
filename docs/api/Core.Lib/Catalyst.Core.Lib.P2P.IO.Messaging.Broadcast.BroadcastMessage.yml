@@ -1,0 +1,533 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage
+  commentId: T:Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage
+  id: BroadcastMessage
+  parent: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+  children:
+  - Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.BroadcastCount
+  - Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.IncrementReceivedCount
+  - Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.PeerNetworkSize
+  - Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.ReceivedCount
+  langs:
+  - csharp
+  - vb
+  name: BroadcastMessage
+  nameWithType: BroadcastMessage
+  fullName: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/IO/Messaging/Broadcast/BroadcastMessage.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BroadcastMessage
+    path: ../src/Catalyst.Core.Lib/P2P/IO/Messaging/Broadcast/BroadcastMessage.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+  summary: "\nRepresents a gossip request to the gossip cache\n"
+  example: []
+  syntax:
+    content: public sealed class BroadcastMessage
+    content.vb: Public NotInheritable Class BroadcastMessage
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.BroadcastCount
+  commentId: P:Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.BroadcastCount
+  id: BroadcastCount
+  parent: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage
+  langs:
+  - csharp
+  - vb
+  name: BroadcastCount
+  nameWithType: BroadcastMessage.BroadcastCount
+  fullName: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.BroadcastCount
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/IO/Messaging/Broadcast/BroadcastMessage.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BroadcastCount
+    path: ../src/Catalyst.Core.Lib/P2P/IO/Messaging/Broadcast/BroadcastMessage.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+  summary: Gets or sets the gossip count.
+  example: []
+  syntax:
+    content: public uint BroadcastCount { get; set; }
+    parameters: []
+    return:
+      type: System.UInt32
+      description: The amount of messages sent due to gossiping.
+    content.vb: Public Property BroadcastCount As UInteger
+  overload: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.BroadcastCount*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.ReceivedCount
+  commentId: P:Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.ReceivedCount
+  id: ReceivedCount
+  parent: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage
+  langs:
+  - csharp
+  - vb
+  name: ReceivedCount
+  nameWithType: BroadcastMessage.ReceivedCount
+  fullName: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.ReceivedCount
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/IO/Messaging/Broadcast/BroadcastMessage.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ReceivedCount
+    path: ../src/Catalyst.Core.Lib/P2P/IO/Messaging/Broadcast/BroadcastMessage.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+  summary: Gets or sets the received count.
+  example: []
+  syntax:
+    content: public int ReceivedCount { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: The amount of times the message has been received.
+    content.vb: Public Property ReceivedCount As Integer
+  overload: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.ReceivedCount*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.PeerNetworkSize
+  commentId: P:Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.PeerNetworkSize
+  id: PeerNetworkSize
+  parent: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage
+  langs:
+  - csharp
+  - vb
+  name: PeerNetworkSize
+  nameWithType: BroadcastMessage.PeerNetworkSize
+  fullName: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.PeerNetworkSize
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/IO/Messaging/Broadcast/BroadcastMessage.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PeerNetworkSize
+    path: ../src/Catalyst.Core.Lib/P2P/IO/Messaging/Broadcast/BroadcastMessage.cs
+    startLine: 44
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+  summary: Gets or sets the size of the peer network.
+  example: []
+  syntax:
+    content: public int PeerNetworkSize { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+      description: The size of the peer network at the moment of creating this request.
+    content.vb: Public Property PeerNetworkSize As Integer
+  overload: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.PeerNetworkSize*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.IncrementReceivedCount
+  commentId: M:Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.IncrementReceivedCount
+  id: IncrementReceivedCount
+  parent: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage
+  langs:
+  - csharp
+  - vb
+  name: IncrementReceivedCount()
+  nameWithType: BroadcastMessage.IncrementReceivedCount()
+  fullName: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.IncrementReceivedCount()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/IO/Messaging/Broadcast/BroadcastMessage.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IncrementReceivedCount
+    path: ../src/Catalyst.Core.Lib/P2P/IO/Messaging/Broadcast/BroadcastMessage.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+  summary: Increments the received count safely <xref href="System.Threading.Interlocked" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public void IncrementReceivedCount()
+    content.vb: Public Sub IncrementReceivedCount
+  overload: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.IncrementReceivedCount*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+  commentId: N:Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+  name: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+  nameWithType: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+  fullName: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.BroadcastCount*
+  commentId: Overload:Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.BroadcastCount
+  name: BroadcastCount
+  nameWithType: BroadcastMessage.BroadcastCount
+  fullName: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.BroadcastCount
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  name: UInt32
+  nameWithType: UInt32
+  fullName: System.UInt32
+- uid: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.ReceivedCount*
+  commentId: Overload:Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.ReceivedCount
+  name: ReceivedCount
+  nameWithType: BroadcastMessage.ReceivedCount
+  fullName: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.ReceivedCount
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.PeerNetworkSize*
+  commentId: Overload:Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.PeerNetworkSize
+  name: PeerNetworkSize
+  nameWithType: BroadcastMessage.PeerNetworkSize
+  fullName: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.PeerNetworkSize
+- uid: System.Threading.Interlocked
+  commentId: T:System.Threading.Interlocked
+  isExternal: true
+- uid: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.IncrementReceivedCount*
+  commentId: Overload:Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.IncrementReceivedCount
+  name: IncrementReceivedCount
+  nameWithType: BroadcastMessage.IncrementReceivedCount
+  fullName: Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastMessage.IncrementReceivedCount

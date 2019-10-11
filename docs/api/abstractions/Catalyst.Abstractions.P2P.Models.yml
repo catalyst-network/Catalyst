@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.Models
+  commentId: N:Catalyst.Abstractions.P2P.Models
+  id: Catalyst.Abstractions.P2P.Models
+  children:
+  - Catalyst.Abstractions.P2P.Models.IPeer
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.P2P.Models
+  nameWithType: Catalyst.Abstractions.P2P.Models
+  fullName: Catalyst.Abstractions.P2P.Models
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.P2P.Models.IPeer
+  commentId: T:Catalyst.Abstractions.P2P.Models.IPeer
+  name: IPeer
+  nameWithType: IPeer
+  fullName: Catalyst.Abstractions.P2P.Models.IPeer

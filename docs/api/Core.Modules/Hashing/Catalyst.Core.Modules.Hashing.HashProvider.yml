@@ -1,0 +1,1154 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Hashing.HashProvider
+  commentId: T:Catalyst.Core.Modules.Hashing.HashProvider
+  id: HashProvider
+  parent: Catalyst.Core.Modules.Hashing
+  children:
+  - Catalyst.Core.Modules.Hashing.HashProvider.#ctor(TheDotNetLeague.MultiFormats.MultiHash.HashingAlgorithm)
+  - Catalyst.Core.Modules.Hashing.HashProvider.Cast(System.Byte[])
+  - Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.Byte[])
+  - Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable{System.Byte})
+  - Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.IO.Stream)
+  - Catalyst.Core.Modules.Hashing.HashProvider.ComputeUtf8MultiHash(System.String)
+  - Catalyst.Core.Modules.Hashing.HashProvider.HashingAlgorithm
+  - Catalyst.Core.Modules.Hashing.HashProvider.IsValidHash(System.Byte[])
+  langs:
+  - csharp
+  - vb
+  name: HashProvider
+  nameWithType: HashProvider
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: HashProvider
+    path: ../src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: 'public class HashProvider : IHashProvider'
+    content.vb: >-
+      Public Class HashProvider
+
+          Implements IHashProvider
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Hashing.IHashProvider
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.HashingAlgorithm
+  commentId: P:Catalyst.Core.Modules.Hashing.HashProvider.HashingAlgorithm
+  id: HashingAlgorithm
+  parent: Catalyst.Core.Modules.Hashing.HashProvider
+  langs:
+  - csharp
+  - vb
+  name: HashingAlgorithm
+  nameWithType: HashProvider.HashingAlgorithm
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.HashingAlgorithm
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: HashingAlgorithm
+    path: ../src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: public HashingAlgorithm HashingAlgorithm { get; set; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.MultiFormats.MultiHash.HashingAlgorithm
+    content.vb: Public Property HashingAlgorithm As HashingAlgorithm
+  overload: Catalyst.Core.Modules.Hashing.HashProvider.HashingAlgorithm*
+  implements:
+  - Catalyst.Abstractions.Hashing.IHashProvider.HashingAlgorithm
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.#ctor(TheDotNetLeague.MultiFormats.MultiHash.HashingAlgorithm)
+  commentId: M:Catalyst.Core.Modules.Hashing.HashProvider.#ctor(TheDotNetLeague.MultiFormats.MultiHash.HashingAlgorithm)
+  id: '#ctor(TheDotNetLeague.MultiFormats.MultiHash.HashingAlgorithm)'
+  parent: Catalyst.Core.Modules.Hashing.HashProvider
+  langs:
+  - csharp
+  - vb
+  name: HashProvider(HashingAlgorithm)
+  nameWithType: HashProvider.HashProvider(HashingAlgorithm)
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.HashProvider(TheDotNetLeague.MultiFormats.MultiHash.HashingAlgorithm)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+    startLine: 37
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: public HashProvider(HashingAlgorithm hashingAlgorithm)
+    parameters:
+    - id: hashingAlgorithm
+      type: TheDotNetLeague.MultiFormats.MultiHash.HashingAlgorithm
+    content.vb: Public Sub New(hashingAlgorithm As HashingAlgorithm)
+  overload: Catalyst.Core.Modules.Hashing.HashProvider.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.Cast(System.Byte[])
+  commentId: M:Catalyst.Core.Modules.Hashing.HashProvider.Cast(System.Byte[])
+  id: Cast(System.Byte[])
+  parent: Catalyst.Core.Modules.Hashing.HashProvider
+  langs:
+  - csharp
+  - vb
+  name: Cast(Byte[])
+  nameWithType: HashProvider.Cast(Byte[])
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.Cast(System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Cast
+    path: ../src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: public MultiHash Cast(byte[] data)
+    parameters:
+    - id: data
+      type: System.Byte[]
+    return:
+      type: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+    content.vb: Public Function Cast(data As Byte()) As MultiHash
+  overload: Catalyst.Core.Modules.Hashing.HashProvider.Cast*
+  implements:
+  - Catalyst.Abstractions.Hashing.IHashProvider.Cast(System.Byte[])
+  nameWithType.vb: HashProvider.Cast(Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Hashing.HashProvider.Cast(System.Byte())
+  name.vb: Cast(Byte())
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.IsValidHash(System.Byte[])
+  commentId: M:Catalyst.Core.Modules.Hashing.HashProvider.IsValidHash(System.Byte[])
+  id: IsValidHash(System.Byte[])
+  parent: Catalyst.Core.Modules.Hashing.HashProvider
+  langs:
+  - csharp
+  - vb
+  name: IsValidHash(Byte[])
+  nameWithType: HashProvider.IsValidHash(Byte[])
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.IsValidHash(System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsValidHash
+    path: ../src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: public bool IsValidHash(byte[] data)
+    parameters:
+    - id: data
+      type: System.Byte[]
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsValidHash(data As Byte()) As Boolean
+  overload: Catalyst.Core.Modules.Hashing.HashProvider.IsValidHash*
+  implements:
+  - Catalyst.Abstractions.Hashing.IHashProvider.IsValidHash(System.Byte[])
+  nameWithType.vb: HashProvider.IsValidHash(Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Hashing.HashProvider.IsValidHash(System.Byte())
+  name.vb: IsValidHash(Byte())
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.ComputeUtf8MultiHash(System.String)
+  commentId: M:Catalyst.Core.Modules.Hashing.HashProvider.ComputeUtf8MultiHash(System.String)
+  id: ComputeUtf8MultiHash(System.String)
+  parent: Catalyst.Core.Modules.Hashing.HashProvider
+  langs:
+  - csharp
+  - vb
+  name: ComputeUtf8MultiHash(String)
+  nameWithType: HashProvider.ComputeUtf8MultiHash(String)
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.ComputeUtf8MultiHash(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ComputeUtf8MultiHash
+    path: ../src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+    startLine: 61
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: public MultiHash ComputeUtf8MultiHash(string data)
+    parameters:
+    - id: data
+      type: System.String
+    return:
+      type: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+    content.vb: Public Function ComputeUtf8MultiHash(data As String) As MultiHash
+  overload: Catalyst.Core.Modules.Hashing.HashProvider.ComputeUtf8MultiHash*
+  implements:
+  - Catalyst.Abstractions.Hashing.IHashProvider.ComputeUtf8MultiHash(System.String)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable{System.Byte})
+  commentId: M:Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable{System.Byte})
+  id: ComputeMultiHash(System.Collections.Generic.IEnumerable{System.Byte})
+  parent: Catalyst.Core.Modules.Hashing.HashProvider
+  langs:
+  - csharp
+  - vb
+  name: ComputeMultiHash(IEnumerable<Byte>)
+  nameWithType: HashProvider.ComputeMultiHash(IEnumerable<Byte>)
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable<System.Byte>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ComputeMultiHash
+    path: ../src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+    startLine: 63
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: public MultiHash ComputeMultiHash(IEnumerable<byte> data)
+    parameters:
+    - id: data
+      type: System.Collections.Generic.IEnumerable{System.Byte}
+    return:
+      type: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+    content.vb: Public Function ComputeMultiHash(data As IEnumerable(Of Byte)) As MultiHash
+  overload: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash*
+  implements:
+  - Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable{System.Byte})
+  nameWithType.vb: HashProvider.ComputeMultiHash(IEnumerable(Of Byte))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable(Of System.Byte))
+  name.vb: ComputeMultiHash(IEnumerable(Of Byte))
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.Byte[])
+  commentId: M:Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.Byte[])
+  id: ComputeMultiHash(System.Byte[])
+  parent: Catalyst.Core.Modules.Hashing.HashProvider
+  langs:
+  - csharp
+  - vb
+  name: ComputeMultiHash(Byte[])
+  nameWithType: HashProvider.ComputeMultiHash(Byte[])
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ComputeMultiHash
+    path: ../src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+    startLine: 65
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: public MultiHash ComputeMultiHash(byte[] data)
+    parameters:
+    - id: data
+      type: System.Byte[]
+    return:
+      type: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+    content.vb: Public Function ComputeMultiHash(data As Byte()) As MultiHash
+  overload: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash*
+  implements:
+  - Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Byte[])
+  nameWithType.vb: HashProvider.ComputeMultiHash(Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.Byte())
+  name.vb: ComputeMultiHash(Byte())
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.IO.Stream)
+  commentId: M:Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.IO.Stream)
+  id: ComputeMultiHash(System.IO.Stream)
+  parent: Catalyst.Core.Modules.Hashing.HashProvider
+  langs:
+  - csharp
+  - vb
+  name: ComputeMultiHash(Stream)
+  nameWithType: HashProvider.ComputeMultiHash(Stream)
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash(System.IO.Stream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ComputeMultiHash
+    path: ../src/Catalyst.Core.Modules.Hashing/HashProvider.cs
+    startLine: 67
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: public MultiHash ComputeMultiHash(Stream data)
+    parameters:
+    - id: data
+      type: System.IO.Stream
+    return:
+      type: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+    content.vb: Public Function ComputeMultiHash(data As Stream) As MultiHash
+  overload: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash*
+  implements:
+  - Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.IO.Stream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.Hashing
+  commentId: N:Catalyst.Core.Modules.Hashing
+  name: Catalyst.Core.Modules.Hashing
+  nameWithType: Catalyst.Core.Modules.Hashing
+  fullName: Catalyst.Core.Modules.Hashing
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Hashing.IHashProvider
+  commentId: T:Catalyst.Abstractions.Hashing.IHashProvider
+  parent: Catalyst.Abstractions.Hashing
+  name: IHashProvider
+  nameWithType: IHashProvider
+  fullName: Catalyst.Abstractions.Hashing.IHashProvider
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Hashing
+  commentId: N:Catalyst.Abstractions.Hashing
+  name: Catalyst.Abstractions.Hashing
+  nameWithType: Catalyst.Abstractions.Hashing
+  fullName: Catalyst.Abstractions.Hashing
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.HashingAlgorithm*
+  commentId: Overload:Catalyst.Core.Modules.Hashing.HashProvider.HashingAlgorithm
+  name: HashingAlgorithm
+  nameWithType: HashProvider.HashingAlgorithm
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.HashingAlgorithm
+- uid: Catalyst.Abstractions.Hashing.IHashProvider.HashingAlgorithm
+  commentId: P:Catalyst.Abstractions.Hashing.IHashProvider.HashingAlgorithm
+  parent: Catalyst.Abstractions.Hashing.IHashProvider
+  name: HashingAlgorithm
+  nameWithType: IHashProvider.HashingAlgorithm
+  fullName: Catalyst.Abstractions.Hashing.IHashProvider.HashingAlgorithm
+- uid: TheDotNetLeague.MultiFormats.MultiHash.HashingAlgorithm
+  commentId: T:TheDotNetLeague.MultiFormats.MultiHash.HashingAlgorithm
+  parent: TheDotNetLeague.MultiFormats.MultiHash
+  isExternal: true
+  name: HashingAlgorithm
+  nameWithType: HashingAlgorithm
+  fullName: TheDotNetLeague.MultiFormats.MultiHash.HashingAlgorithm
+- uid: TheDotNetLeague.MultiFormats.MultiHash
+  commentId: N:TheDotNetLeague.MultiFormats.MultiHash
+  isExternal: true
+  name: TheDotNetLeague.MultiFormats.MultiHash
+  nameWithType: TheDotNetLeague.MultiFormats.MultiHash
+  fullName: TheDotNetLeague.MultiFormats.MultiHash
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Hashing.HashProvider.#ctor
+  name: HashProvider
+  nameWithType: HashProvider.HashProvider
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.HashProvider
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.Cast*
+  commentId: Overload:Catalyst.Core.Modules.Hashing.HashProvider.Cast
+  name: Cast
+  nameWithType: HashProvider.Cast
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.Cast
+- uid: Catalyst.Abstractions.Hashing.IHashProvider.Cast(System.Byte[])
+  commentId: M:Catalyst.Abstractions.Hashing.IHashProvider.Cast(System.Byte[])
+  parent: Catalyst.Abstractions.Hashing.IHashProvider
+  isExternal: true
+  name: Cast(Byte[])
+  nameWithType: IHashProvider.Cast(Byte[])
+  fullName: Catalyst.Abstractions.Hashing.IHashProvider.Cast(System.Byte[])
+  nameWithType.vb: IHashProvider.Cast(Byte())
+  fullName.vb: Catalyst.Abstractions.Hashing.IHashProvider.Cast(System.Byte())
+  name.vb: Cast(Byte())
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.Cast(System.Byte[])
+    name: Cast
+    nameWithType: IHashProvider.Cast
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.Cast
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.Cast(System.Byte[])
+    name: Cast
+    nameWithType: IHashProvider.Cast
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.Cast
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+  commentId: T:TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+  parent: TheDotNetLeague.MultiFormats.MultiHash
+  isExternal: true
+  name: MultiHash
+  nameWithType: MultiHash
+  fullName: TheDotNetLeague.MultiFormats.MultiHash.MultiHash
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.IsValidHash*
+  commentId: Overload:Catalyst.Core.Modules.Hashing.HashProvider.IsValidHash
+  name: IsValidHash
+  nameWithType: HashProvider.IsValidHash
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.IsValidHash
+- uid: Catalyst.Abstractions.Hashing.IHashProvider.IsValidHash(System.Byte[])
+  commentId: M:Catalyst.Abstractions.Hashing.IHashProvider.IsValidHash(System.Byte[])
+  parent: Catalyst.Abstractions.Hashing.IHashProvider
+  isExternal: true
+  name: IsValidHash(Byte[])
+  nameWithType: IHashProvider.IsValidHash(Byte[])
+  fullName: Catalyst.Abstractions.Hashing.IHashProvider.IsValidHash(System.Byte[])
+  nameWithType.vb: IHashProvider.IsValidHash(Byte())
+  fullName.vb: Catalyst.Abstractions.Hashing.IHashProvider.IsValidHash(System.Byte())
+  name.vb: IsValidHash(Byte())
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.IsValidHash(System.Byte[])
+    name: IsValidHash
+    nameWithType: IHashProvider.IsValidHash
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.IsValidHash
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.IsValidHash(System.Byte[])
+    name: IsValidHash
+    nameWithType: IHashProvider.IsValidHash
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.IsValidHash
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.ComputeUtf8MultiHash*
+  commentId: Overload:Catalyst.Core.Modules.Hashing.HashProvider.ComputeUtf8MultiHash
+  name: ComputeUtf8MultiHash
+  nameWithType: HashProvider.ComputeUtf8MultiHash
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.ComputeUtf8MultiHash
+- uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeUtf8MultiHash(System.String)
+  commentId: M:Catalyst.Abstractions.Hashing.IHashProvider.ComputeUtf8MultiHash(System.String)
+  parent: Catalyst.Abstractions.Hashing.IHashProvider
+  isExternal: true
+  name: ComputeUtf8MultiHash(String)
+  nameWithType: IHashProvider.ComputeUtf8MultiHash(String)
+  fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeUtf8MultiHash(System.String)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeUtf8MultiHash(System.String)
+    name: ComputeUtf8MultiHash
+    nameWithType: IHashProvider.ComputeUtf8MultiHash
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeUtf8MultiHash
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeUtf8MultiHash(System.String)
+    name: ComputeUtf8MultiHash
+    nameWithType: IHashProvider.ComputeUtf8MultiHash
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeUtf8MultiHash
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash*
+  commentId: Overload:Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash
+  name: ComputeMultiHash
+  nameWithType: HashProvider.ComputeMultiHash
+  fullName: Catalyst.Core.Modules.Hashing.HashProvider.ComputeMultiHash
+- uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable{System.Byte})
+  commentId: M:Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable{System.Byte})
+  parent: Catalyst.Abstractions.Hashing.IHashProvider
+  isExternal: true
+  name: ComputeMultiHash(IEnumerable<Byte>)
+  nameWithType: IHashProvider.ComputeMultiHash(IEnumerable<Byte>)
+  fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable<System.Byte>)
+  nameWithType.vb: IHashProvider.ComputeMultiHash(IEnumerable(Of Byte))
+  fullName.vb: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable(Of System.Byte))
+  name.vb: ComputeMultiHash(IEnumerable(Of Byte))
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable{System.Byte})
+    name: ComputeMultiHash
+    nameWithType: IHashProvider.ComputeMultiHash
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Collections.Generic.IEnumerable{System.Byte})
+    name: ComputeMultiHash
+    nameWithType: IHashProvider.ComputeMultiHash
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable{System.Byte}
+  commentId: T:System.Collections.Generic.IEnumerable{System.Byte}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<Byte>
+  nameWithType: IEnumerable<Byte>
+  fullName: System.Collections.Generic.IEnumerable<System.Byte>
+  nameWithType.vb: IEnumerable(Of Byte)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of System.Byte)
+  name.vb: IEnumerable(Of Byte)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Byte[])
+  commentId: M:Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Byte[])
+  parent: Catalyst.Abstractions.Hashing.IHashProvider
+  isExternal: true
+  name: ComputeMultiHash(Byte[])
+  nameWithType: IHashProvider.ComputeMultiHash(Byte[])
+  fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Byte[])
+  nameWithType.vb: IHashProvider.ComputeMultiHash(Byte())
+  fullName.vb: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Byte())
+  name.vb: ComputeMultiHash(Byte())
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Byte[])
+    name: ComputeMultiHash
+    nameWithType: IHashProvider.ComputeMultiHash
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.Byte[])
+    name: ComputeMultiHash
+    nameWithType: IHashProvider.ComputeMultiHash
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.IO.Stream)
+  commentId: M:Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.IO.Stream)
+  parent: Catalyst.Abstractions.Hashing.IHashProvider
+  isExternal: true
+  name: ComputeMultiHash(Stream)
+  nameWithType: IHashProvider.ComputeMultiHash(Stream)
+  fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.IO.Stream)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.IO.Stream)
+    name: ComputeMultiHash
+    nameWithType: IHashProvider.ComputeMultiHash
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.IO.Stream
+    name: Stream
+    nameWithType: Stream
+    fullName: System.IO.Stream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash(System.IO.Stream)
+    name: ComputeMultiHash
+    nameWithType: IHashProvider.ComputeMultiHash
+    fullName: Catalyst.Abstractions.Hashing.IHashProvider.ComputeMultiHash
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.IO.Stream
+    name: Stream
+    nameWithType: Stream
+    fullName: System.IO.Stream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IO.Stream
+  commentId: T:System.IO.Stream
+  parent: System.IO
+  isExternal: true
+  name: Stream
+  nameWithType: Stream
+  fullName: System.IO.Stream
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO

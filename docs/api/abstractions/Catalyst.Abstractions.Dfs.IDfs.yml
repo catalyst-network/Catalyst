@@ -1,0 +1,449 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Dfs.IDfs
+  commentId: T:Catalyst.Abstractions.Dfs.IDfs
+  id: IDfs
+  parent: Catalyst.Abstractions.Dfs
+  children:
+  - Catalyst.Abstractions.Dfs.IDfs.AddAsync(System.IO.Stream,System.String,System.Threading.CancellationToken)
+  - Catalyst.Abstractions.Dfs.IDfs.AddTextAsync(System.String,System.Threading.CancellationToken)
+  - Catalyst.Abstractions.Dfs.IDfs.ReadAsync(LibP2P.Cid,System.Threading.CancellationToken)
+  - Catalyst.Abstractions.Dfs.IDfs.ReadTextAsync(LibP2P.Cid,System.Threading.CancellationToken)
+  langs:
+  - csharp
+  - vb
+  name: IDfs
+  nameWithType: IDfs
+  fullName: Catalyst.Abstractions.Dfs.IDfs
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IDfs.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IDfs
+    path: ../src/Catalyst.Abstractions/Dfs/IDfs.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  summary: "\nProvides read-write access to a distributed file system.\n"
+  example: []
+  syntax:
+    content: public interface IDfs
+    content.vb: Public Interface IDfs
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Dfs.IDfs.AddTextAsync(System.String,System.Threading.CancellationToken)
+  commentId: M:Catalyst.Abstractions.Dfs.IDfs.AddTextAsync(System.String,System.Threading.CancellationToken)
+  id: AddTextAsync(System.String,System.Threading.CancellationToken)
+  parent: Catalyst.Abstractions.Dfs.IDfs
+  langs:
+  - csharp
+  - vb
+  name: AddTextAsync(String, CancellationToken)
+  nameWithType: IDfs.AddTextAsync(String, CancellationToken)
+  fullName: Catalyst.Abstractions.Dfs.IDfs.AddTextAsync(System.String, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IDfs.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: AddTextAsync
+    path: ../src/Catalyst.Abstractions/Dfs/IDfs.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  summary: "\nAdd some text to the distributed file system.\n"
+  example: []
+  syntax:
+    content: Task<Cid> AddTextAsync(string content, CancellationToken cancellationToken = default(CancellationToken))
+    parameters:
+    - id: content
+      type: System.String
+      description: The text to add to the DFS.
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+      description: A cancellation token that can be used to cancel the work.
+    return:
+      type: System.Threading.Tasks.Task{LibP2P.Cid}
+      description: The unique ID to the content created on the DFS.
+    content.vb: Function AddTextAsync(content As String, cancellationToken As CancellationToken = Nothing) As Task(Of Cid)
+  overload: Catalyst.Abstractions.Dfs.IDfs.AddTextAsync*
+- uid: Catalyst.Abstractions.Dfs.IDfs.ReadTextAsync(LibP2P.Cid,System.Threading.CancellationToken)
+  commentId: M:Catalyst.Abstractions.Dfs.IDfs.ReadTextAsync(LibP2P.Cid,System.Threading.CancellationToken)
+  id: ReadTextAsync(LibP2P.Cid,System.Threading.CancellationToken)
+  parent: Catalyst.Abstractions.Dfs.IDfs
+  langs:
+  - csharp
+  - vb
+  name: ReadTextAsync(Cid, CancellationToken)
+  nameWithType: IDfs.ReadTextAsync(Cid, CancellationToken)
+  fullName: Catalyst.Abstractions.Dfs.IDfs.ReadTextAsync(LibP2P.Cid, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IDfs.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ReadTextAsync
+    path: ../src/Catalyst.Abstractions/Dfs/IDfs.cs
+    startLine: 49
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  summary: "\nReads the content of an existing file on the DFS as a UTF8 string.\n"
+  example: []
+  syntax:
+    content: Task<string> ReadTextAsync(Cid cid, CancellationToken cancellationToken = default(CancellationToken))
+    parameters:
+    - id: cid
+      type: LibP2P.Cid
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+      description: A cancellation token that can be used to cancel the work.
+    return:
+      type: System.Threading.Tasks.Task{System.String}
+      description: The content of the DFS file as a UTF8 encoded string.
+    content.vb: Function ReadTextAsync(cid As Cid, cancellationToken As CancellationToken = Nothing) As Task(Of String)
+  overload: Catalyst.Abstractions.Dfs.IDfs.ReadTextAsync*
+- uid: Catalyst.Abstractions.Dfs.IDfs.AddAsync(System.IO.Stream,System.String,System.Threading.CancellationToken)
+  commentId: M:Catalyst.Abstractions.Dfs.IDfs.AddAsync(System.IO.Stream,System.String,System.Threading.CancellationToken)
+  id: AddAsync(System.IO.Stream,System.String,System.Threading.CancellationToken)
+  parent: Catalyst.Abstractions.Dfs.IDfs
+  langs:
+  - csharp
+  - vb
+  name: AddAsync(Stream, String, CancellationToken)
+  nameWithType: IDfs.AddAsync(Stream, String, CancellationToken)
+  fullName: Catalyst.Abstractions.Dfs.IDfs.AddAsync(System.IO.Stream, System.String, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IDfs.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: AddAsync
+    path: ../src/Catalyst.Abstractions/Dfs/IDfs.cs
+    startLine: 58
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  summary: "\nAdds content from a stream of data to the DFS.\n"
+  example: []
+  syntax:
+    content: Task<Cid> AddAsync(Stream content, string name = "", CancellationToken cancellationToken = default(CancellationToken))
+    parameters:
+    - id: content
+      type: System.IO.Stream
+      description: A stream containing the data to be stored on the DFS.
+    - id: name
+      type: System.String
+      description: A name for the <code data-dev-comment-type="paramref" class="paramref">content</code>
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+      description: A cancellation token that can be used to cancel the work.
+    return:
+      type: System.Threading.Tasks.Task{LibP2P.Cid}
+      description: The unique ID to the newly added content on the DFS.
+    content.vb: Function AddAsync(content As Stream, name As String = "", cancellationToken As CancellationToken = Nothing) As Task(Of Cid)
+  overload: Catalyst.Abstractions.Dfs.IDfs.AddAsync*
+- uid: Catalyst.Abstractions.Dfs.IDfs.ReadAsync(LibP2P.Cid,System.Threading.CancellationToken)
+  commentId: M:Catalyst.Abstractions.Dfs.IDfs.ReadAsync(LibP2P.Cid,System.Threading.CancellationToken)
+  id: ReadAsync(LibP2P.Cid,System.Threading.CancellationToken)
+  parent: Catalyst.Abstractions.Dfs.IDfs
+  langs:
+  - csharp
+  - vb
+  name: ReadAsync(Cid, CancellationToken)
+  nameWithType: IDfs.ReadAsync(Cid, CancellationToken)
+  fullName: Catalyst.Abstractions.Dfs.IDfs.ReadAsync(LibP2P.Cid, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IDfs.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ReadAsync
+    path: ../src/Catalyst.Abstractions/Dfs/IDfs.cs
+    startLine: 69
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  summary: "\nStreams the content of an existing file on the DFS.\n"
+  remarks: "\nThe returned <xref href=\"System.IO.Stream\" data-throw-if-not-resolved=\"false\"></xref> must be disposed.\n"
+  example: []
+  syntax:
+    content: Task<Stream> ReadAsync(Cid cid, CancellationToken cancellationToken = default(CancellationToken))
+    parameters:
+    - id: cid
+      type: LibP2P.Cid
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+      description: A cancellation token that can be used to cancel the work.
+    return:
+      type: System.Threading.Tasks.Task{System.IO.Stream}
+      description: A <xref href="System.IO.Stream" data-throw-if-not-resolved="false"></xref> to the content of the file.
+    content.vb: Function ReadAsync(cid As Cid, cancellationToken As CancellationToken = Nothing) As Task(Of Stream)
+  overload: Catalyst.Abstractions.Dfs.IDfs.ReadAsync*
+references:
+- uid: Catalyst.Abstractions.Dfs
+  commentId: N:Catalyst.Abstractions.Dfs
+  name: Catalyst.Abstractions.Dfs
+  nameWithType: Catalyst.Abstractions.Dfs
+  fullName: Catalyst.Abstractions.Dfs
+- uid: Catalyst.Abstractions.Dfs.IDfs.AddTextAsync*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IDfs.AddTextAsync
+  name: AddTextAsync
+  nameWithType: IDfs.AddTextAsync
+  fullName: Catalyst.Abstractions.Dfs.IDfs.AddTextAsync
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.Task{LibP2P.Cid}
+  commentId: T:System.Threading.Tasks.Task{LibP2P.Cid}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<Cid>
+  nameWithType: Task<Cid>
+  fullName: System.Threading.Tasks.Task<LibP2P.Cid>
+  nameWithType.vb: Task(Of Cid)
+  fullName.vb: System.Threading.Tasks.Task(Of LibP2P.Cid)
+  name.vb: Task(Of Cid)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: LibP2P.Cid
+    name: Cid
+    nameWithType: Cid
+    fullName: LibP2P.Cid
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: LibP2P.Cid
+    name: Cid
+    nameWithType: Cid
+    fullName: LibP2P.Cid
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+- uid: Catalyst.Abstractions.Dfs.IDfs.ReadTextAsync*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IDfs.ReadTextAsync
+  name: ReadTextAsync
+  nameWithType: IDfs.ReadTextAsync
+  fullName: Catalyst.Abstractions.Dfs.IDfs.ReadTextAsync
+- uid: LibP2P.Cid
+  commentId: T:LibP2P.Cid
+  parent: LibP2P
+  isExternal: true
+  name: Cid
+  nameWithType: Cid
+  fullName: LibP2P.Cid
+- uid: System.Threading.Tasks.Task{System.String}
+  commentId: T:System.Threading.Tasks.Task{System.String}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<String>
+  nameWithType: Task<String>
+  fullName: System.Threading.Tasks.Task<System.String>
+  nameWithType.vb: Task(Of String)
+  fullName.vb: System.Threading.Tasks.Task(Of System.String)
+  name.vb: Task(Of String)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: LibP2P
+  commentId: N:LibP2P
+  isExternal: true
+  name: LibP2P
+  nameWithType: LibP2P
+  fullName: LibP2P
+- uid: Catalyst.Abstractions.Dfs.IDfs.AddAsync*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IDfs.AddAsync
+  name: AddAsync
+  nameWithType: IDfs.AddAsync
+  fullName: Catalyst.Abstractions.Dfs.IDfs.AddAsync
+- uid: System.IO.Stream
+  commentId: T:System.IO.Stream
+  parent: System.IO
+  isExternal: true
+  name: Stream
+  nameWithType: Stream
+  fullName: System.IO.Stream
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+- uid: Catalyst.Abstractions.Dfs.IDfs.ReadAsync*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IDfs.ReadAsync
+  name: ReadAsync
+  nameWithType: IDfs.ReadAsync
+  fullName: Catalyst.Abstractions.Dfs.IDfs.ReadAsync
+- uid: System.Threading.Tasks.Task{System.IO.Stream}
+  commentId: T:System.Threading.Tasks.Task{System.IO.Stream}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<Stream>
+  nameWithType: Task<Stream>
+  fullName: System.Threading.Tasks.Task<System.IO.Stream>
+  nameWithType.vb: Task(Of Stream)
+  fullName.vb: System.Threading.Tasks.Task(Of System.IO.Stream)
+  name.vb: Task(Of Stream)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.IO.Stream
+    name: Stream
+    nameWithType: Stream
+    fullName: System.IO.Stream
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.IO.Stream
+    name: Stream
+    nameWithType: Stream
+    fullName: System.IO.Stream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )

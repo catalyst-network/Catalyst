@@ -1,7 +1,0 @@
-@startuml
-class EndpointBuilder <<static>> {
-    + {static} BuildNewEndPoint(endPoint:string) : IPEndPoint
-    + {static} BuildNewEndPoint(ip:string, port:int) : IPEndPoint
-    + {static} BuildNewEndPoint(ip:IPAddress, port:int) : IPEndPoint
-}
-@enduml

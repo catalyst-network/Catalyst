@@ -1,0 +1,1821 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler
+  id: ProtocolMessageSignHandler
+  parent: Catalyst.Core.Lib.IO.Handlers
+  children:
+  - Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.#ctor(Catalyst.Abstractions.KeySigner.IKeySigner,Catalyst.Protocol.Cryptography.SigningContext)
+  - Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage})
+  langs:
+  - csharp
+  - vb
+  name: ProtocolMessageSignHandler
+  nameWithType: ProtocolMessageSignHandler
+  fullName: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/ProtocolMessageSignHandler.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ProtocolMessageSignHandler
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/ProtocolMessageSignHandler.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  syntax:
+    content: 'public sealed class ProtocolMessageSignHandler : OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>, IChannelHandler'
+    content.vb: >-
+      Public NotInheritable Class ProtocolMessageSignHandler
+
+          Inherits OutboundChannelHandlerBase(Of IMessageDto(Of ProtocolMessage))
+
+          Implements IChannelHandler
+  inheritance:
+  - System.Object
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter
+  - Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}
+  implements:
+  - DotNetty.Transport.Channels.IChannelHandler
+  inheritedMembers:
+  - Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRegistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelUnregistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelActive(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelInactive(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRead(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelReadComplete(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelWritabilityChanged(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerAdded(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerRemoved(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.UserEventTriggered(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.Flush(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.BindAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Net.EndPoint)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.ConnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Net.EndPoint,System.Net.EndPoint)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.DisconnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.CloseAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.ExceptionCaught(DotNetty.Transport.Channels.IChannelHandlerContext,System.Exception)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.DeregisterAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.Read(DotNetty.Transport.Channels.IChannelHandlerContext)
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.EnsureNotSharable
+  - DotNetty.Transport.Channels.ChannelHandlerAdapter.IsSharable
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.#ctor(Catalyst.Abstractions.KeySigner.IKeySigner,Catalyst.Protocol.Cryptography.SigningContext)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.#ctor(Catalyst.Abstractions.KeySigner.IKeySigner,Catalyst.Protocol.Cryptography.SigningContext)
+  id: '#ctor(Catalyst.Abstractions.KeySigner.IKeySigner,Catalyst.Protocol.Cryptography.SigningContext)'
+  parent: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler
+  langs:
+  - csharp
+  - vb
+  name: ProtocolMessageSignHandler(IKeySigner, SigningContext)
+  nameWithType: ProtocolMessageSignHandler.ProtocolMessageSignHandler(IKeySigner, SigningContext)
+  fullName: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.ProtocolMessageSignHandler(Catalyst.Abstractions.KeySigner.IKeySigner, Catalyst.Protocol.Cryptography.SigningContext)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/ProtocolMessageSignHandler.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/ProtocolMessageSignHandler.cs
+    startLine: 43
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  syntax:
+    content: public ProtocolMessageSignHandler(IKeySigner keySigner, SigningContext signingContext)
+    parameters:
+    - id: keySigner
+      type: Catalyst.Abstractions.KeySigner.IKeySigner
+    - id: signingContext
+      type: Catalyst.Protocol.Cryptography.SigningContext
+    content.vb: Public Sub New(keySigner As IKeySigner, signingContext As SigningContext)
+  overload: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage})
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage})
+  id: WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage})
+  parent: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler
+  langs:
+  - csharp
+  - vb
+  name: WriteAsync0(IChannelHandlerContext, IMessageDto<ProtocolMessage>)
+  nameWithType: ProtocolMessageSignHandler.WriteAsync0(IChannelHandlerContext, IMessageDto<ProtocolMessage>)
+  fullName: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext, Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/ProtocolMessageSignHandler.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: WriteAsync0
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/ProtocolMessageSignHandler.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  summary: "\nSigns a protocol message, or straight WriteAndFlush non-protocolMessages\n"
+  example: []
+  syntax:
+    content: protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
+    parameters:
+    - id: context
+      type: DotNetty.Transport.Channels.IChannelHandlerContext
+      description: ''
+    - id: message
+      type: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+      description: ''
+    return:
+      type: System.Threading.Tasks.Task
+      description: ''
+    content.vb: Protected Overrides Function WriteAsync0(context As IChannelHandlerContext, message As IMessageDto(Of ProtocolMessage)) As Task
+  overridden: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage})
+  overload: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.WriteAsync0*
+  nameWithType.vb: ProtocolMessageSignHandler.WriteAsync0(IChannelHandlerContext, IMessageDto(Of ProtocolMessage))
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext, Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage))
+  name.vb: WriteAsync0(IChannelHandlerContext, IMessageDto(Of ProtocolMessage))
+references:
+- uid: Catalyst.Core.Lib.IO.Handlers
+  commentId: N:Catalyst.Core.Lib.IO.Handlers
+  name: Catalyst.Core.Lib.IO.Handlers
+  nameWithType: Catalyst.Core.Lib.IO.Handlers
+  fullName: Catalyst.Core.Lib.IO.Handlers
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  commentId: T:DotNetty.Transport.Channels.ChannelHandlerAdapter
+  parent: DotNetty.Transport.Channels
+  isExternal: true
+  name: ChannelHandlerAdapter
+  nameWithType: ChannelHandlerAdapter
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}
+  parent: Catalyst.Core.Lib.IO.Handlers
+  definition: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+  name: OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
+  nameWithType: OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>>
+  nameWithType.vb: OutboundChannelHandlerBase(Of IMessageDto(Of ProtocolMessage))
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage))
+  name.vb: OutboundChannelHandlerBase(Of IMessageDto(Of ProtocolMessage))
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+    name: OutboundChannelHandlerBase
+    nameWithType: OutboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+    name: OutboundChannelHandlerBase
+    nameWithType: OutboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.IChannelHandler
+  commentId: T:DotNetty.Transport.Channels.IChannelHandler
+  parent: DotNetty.Transport.Channels
+  isExternal: true
+  name: IChannelHandler
+  nameWithType: IChannelHandler
+  fullName: DotNetty.Transport.Channels.IChannelHandler
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  parent: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}
+  definition: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  name: WriteAsync(IChannelHandlerContext, Object)
+  nameWithType: OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>.WriteAsync(IChannelHandlerContext, Object)
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>>.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext, System.Object)
+  nameWithType.vb: OutboundChannelHandlerBase(Of IMessageDto(Of ProtocolMessage)).WriteAsync(IChannelHandlerContext, Object)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage)).WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext, System.Object)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+    name: WriteAsync
+    nameWithType: OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>.WriteAsync
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>>.WriteAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+    name: WriteAsync
+    nameWithType: OutboundChannelHandlerBase(Of IMessageDto(Of ProtocolMessage)).WriteAsync
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage)).WriteAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRegistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRegistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: ChannelRegistered(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.ChannelRegistered(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRegistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRegistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelRegistered
+    nameWithType: ChannelHandlerAdapter.ChannelRegistered
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRegistered
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRegistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelRegistered
+    nameWithType: ChannelHandlerAdapter.ChannelRegistered
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRegistered
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelUnregistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelUnregistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: ChannelUnregistered(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.ChannelUnregistered(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelUnregistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelUnregistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelUnregistered
+    nameWithType: ChannelHandlerAdapter.ChannelUnregistered
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelUnregistered
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelUnregistered(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelUnregistered
+    nameWithType: ChannelHandlerAdapter.ChannelUnregistered
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelUnregistered
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelActive(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelActive(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: ChannelActive(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.ChannelActive(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelActive(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelActive(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelActive
+    nameWithType: ChannelHandlerAdapter.ChannelActive
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelActive
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelActive(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelActive
+    nameWithType: ChannelHandlerAdapter.ChannelActive
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelActive
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelInactive(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelInactive(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: ChannelInactive(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.ChannelInactive(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelInactive(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelInactive(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelInactive
+    nameWithType: ChannelHandlerAdapter.ChannelInactive
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelInactive
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelInactive(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelInactive
+    nameWithType: ChannelHandlerAdapter.ChannelInactive
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelInactive
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRead(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRead(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: ChannelRead(IChannelHandlerContext, Object)
+  nameWithType: ChannelHandlerAdapter.ChannelRead(IChannelHandlerContext, Object)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRead(DotNetty.Transport.Channels.IChannelHandlerContext, System.Object)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRead(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+    name: ChannelRead
+    nameWithType: ChannelHandlerAdapter.ChannelRead
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRead
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRead(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+    name: ChannelRead
+    nameWithType: ChannelHandlerAdapter.ChannelRead
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelRead
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelReadComplete(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelReadComplete(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: ChannelReadComplete(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.ChannelReadComplete(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelReadComplete(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelReadComplete(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelReadComplete
+    nameWithType: ChannelHandlerAdapter.ChannelReadComplete
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelReadComplete
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelReadComplete(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelReadComplete
+    nameWithType: ChannelHandlerAdapter.ChannelReadComplete
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelReadComplete
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelWritabilityChanged(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelWritabilityChanged(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: ChannelWritabilityChanged(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.ChannelWritabilityChanged(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelWritabilityChanged(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelWritabilityChanged(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelWritabilityChanged
+    nameWithType: ChannelHandlerAdapter.ChannelWritabilityChanged
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelWritabilityChanged
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelWritabilityChanged(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: ChannelWritabilityChanged
+    nameWithType: ChannelHandlerAdapter.ChannelWritabilityChanged
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ChannelWritabilityChanged
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerAdded(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerAdded(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: HandlerAdded(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.HandlerAdded(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerAdded(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerAdded(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: HandlerAdded
+    nameWithType: ChannelHandlerAdapter.HandlerAdded
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerAdded
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerAdded(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: HandlerAdded
+    nameWithType: ChannelHandlerAdapter.HandlerAdded
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerAdded
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerRemoved(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerRemoved(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: HandlerRemoved(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.HandlerRemoved(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerRemoved(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerRemoved(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: HandlerRemoved
+    nameWithType: ChannelHandlerAdapter.HandlerRemoved
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerRemoved
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerRemoved(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: HandlerRemoved
+    nameWithType: ChannelHandlerAdapter.HandlerRemoved
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.HandlerRemoved
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.UserEventTriggered(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.UserEventTriggered(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: UserEventTriggered(IChannelHandlerContext, Object)
+  nameWithType: ChannelHandlerAdapter.UserEventTriggered(IChannelHandlerContext, Object)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.UserEventTriggered(DotNetty.Transport.Channels.IChannelHandlerContext, System.Object)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.UserEventTriggered(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+    name: UserEventTriggered
+    nameWithType: ChannelHandlerAdapter.UserEventTriggered
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.UserEventTriggered
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.UserEventTriggered(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+    name: UserEventTriggered
+    nameWithType: ChannelHandlerAdapter.UserEventTriggered
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.UserEventTriggered
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.Flush(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.Flush(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: Flush(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.Flush(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.Flush(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.Flush(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: Flush
+    nameWithType: ChannelHandlerAdapter.Flush
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.Flush
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.Flush(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: Flush
+    nameWithType: ChannelHandlerAdapter.Flush
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.Flush
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.BindAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Net.EndPoint)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.BindAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Net.EndPoint)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: BindAsync(IChannelHandlerContext, EndPoint)
+  nameWithType: ChannelHandlerAdapter.BindAsync(IChannelHandlerContext, EndPoint)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.BindAsync(DotNetty.Transport.Channels.IChannelHandlerContext, System.Net.EndPoint)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.BindAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Net.EndPoint)
+    name: BindAsync
+    nameWithType: ChannelHandlerAdapter.BindAsync
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.BindAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.EndPoint
+    name: EndPoint
+    nameWithType: EndPoint
+    fullName: System.Net.EndPoint
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.BindAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Net.EndPoint)
+    name: BindAsync
+    nameWithType: ChannelHandlerAdapter.BindAsync
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.BindAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.EndPoint
+    name: EndPoint
+    nameWithType: EndPoint
+    fullName: System.Net.EndPoint
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ConnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Net.EndPoint,System.Net.EndPoint)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.ConnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Net.EndPoint,System.Net.EndPoint)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: ConnectAsync(IChannelHandlerContext, EndPoint, EndPoint)
+  nameWithType: ChannelHandlerAdapter.ConnectAsync(IChannelHandlerContext, EndPoint, EndPoint)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ConnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext, System.Net.EndPoint, System.Net.EndPoint)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ConnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Net.EndPoint,System.Net.EndPoint)
+    name: ConnectAsync
+    nameWithType: ChannelHandlerAdapter.ConnectAsync
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ConnectAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.EndPoint
+    name: EndPoint
+    nameWithType: EndPoint
+    fullName: System.Net.EndPoint
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.EndPoint
+    name: EndPoint
+    nameWithType: EndPoint
+    fullName: System.Net.EndPoint
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ConnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Net.EndPoint,System.Net.EndPoint)
+    name: ConnectAsync
+    nameWithType: ChannelHandlerAdapter.ConnectAsync
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ConnectAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.EndPoint
+    name: EndPoint
+    nameWithType: EndPoint
+    fullName: System.Net.EndPoint
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.EndPoint
+    name: EndPoint
+    nameWithType: EndPoint
+    fullName: System.Net.EndPoint
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.DisconnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.DisconnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: DisconnectAsync(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.DisconnectAsync(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.DisconnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.DisconnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: DisconnectAsync
+    nameWithType: ChannelHandlerAdapter.DisconnectAsync
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.DisconnectAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.DisconnectAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: DisconnectAsync
+    nameWithType: ChannelHandlerAdapter.DisconnectAsync
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.DisconnectAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.CloseAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.CloseAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: CloseAsync(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.CloseAsync(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.CloseAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.CloseAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: CloseAsync
+    nameWithType: ChannelHandlerAdapter.CloseAsync
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.CloseAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.CloseAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: CloseAsync
+    nameWithType: ChannelHandlerAdapter.CloseAsync
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.CloseAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ExceptionCaught(DotNetty.Transport.Channels.IChannelHandlerContext,System.Exception)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.ExceptionCaught(DotNetty.Transport.Channels.IChannelHandlerContext,System.Exception)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: ExceptionCaught(IChannelHandlerContext, Exception)
+  nameWithType: ChannelHandlerAdapter.ExceptionCaught(IChannelHandlerContext, Exception)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ExceptionCaught(DotNetty.Transport.Channels.IChannelHandlerContext, System.Exception)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ExceptionCaught(DotNetty.Transport.Channels.IChannelHandlerContext,System.Exception)
+    name: ExceptionCaught
+    nameWithType: ChannelHandlerAdapter.ExceptionCaught
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ExceptionCaught
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.ExceptionCaught(DotNetty.Transport.Channels.IChannelHandlerContext,System.Exception)
+    name: ExceptionCaught
+    nameWithType: ChannelHandlerAdapter.ExceptionCaught
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.ExceptionCaught
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.DeregisterAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.DeregisterAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: DeregisterAsync(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.DeregisterAsync(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.DeregisterAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.DeregisterAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: DeregisterAsync
+    nameWithType: ChannelHandlerAdapter.DeregisterAsync
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.DeregisterAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.DeregisterAsync(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: DeregisterAsync
+    nameWithType: ChannelHandlerAdapter.DeregisterAsync
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.DeregisterAsync
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.Read(DotNetty.Transport.Channels.IChannelHandlerContext)
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.Read(DotNetty.Transport.Channels.IChannelHandlerContext)
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: Read(IChannelHandlerContext)
+  nameWithType: ChannelHandlerAdapter.Read(IChannelHandlerContext)
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.Read(DotNetty.Transport.Channels.IChannelHandlerContext)
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.Read(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: Read
+    nameWithType: ChannelHandlerAdapter.Read
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.Read
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.Read(DotNetty.Transport.Channels.IChannelHandlerContext)
+    name: Read
+    nameWithType: ChannelHandlerAdapter.Read
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.Read
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.EnsureNotSharable
+  commentId: M:DotNetty.Transport.Channels.ChannelHandlerAdapter.EnsureNotSharable
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: EnsureNotSharable()
+  nameWithType: ChannelHandlerAdapter.EnsureNotSharable()
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.EnsureNotSharable()
+  spec.csharp:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.EnsureNotSharable
+    name: EnsureNotSharable
+    nameWithType: ChannelHandlerAdapter.EnsureNotSharable
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.EnsureNotSharable
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.EnsureNotSharable
+    name: EnsureNotSharable
+    nameWithType: ChannelHandlerAdapter.EnsureNotSharable
+    fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.EnsureNotSharable
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: DotNetty.Transport.Channels.ChannelHandlerAdapter.IsSharable
+  commentId: P:DotNetty.Transport.Channels.ChannelHandlerAdapter.IsSharable
+  parent: DotNetty.Transport.Channels.ChannelHandlerAdapter
+  isExternal: true
+  name: IsSharable
+  nameWithType: ChannelHandlerAdapter.IsSharable
+  fullName: DotNetty.Transport.Channels.ChannelHandlerAdapter.IsSharable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: DotNetty.Transport.Channels
+  commentId: N:DotNetty.Transport.Channels
+  isExternal: true
+  name: DotNetty.Transport.Channels
+  nameWithType: DotNetty.Transport.Channels
+  fullName: DotNetty.Transport.Channels
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+  name: OutboundChannelHandlerBase<T>
+  nameWithType: OutboundChannelHandlerBase<T>
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<T>
+  nameWithType.vb: OutboundChannelHandlerBase(Of T)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of T)
+  name.vb: OutboundChannelHandlerBase(Of T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+    name: OutboundChannelHandlerBase
+    nameWithType: OutboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+    name: OutboundChannelHandlerBase
+    nameWithType: OutboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+  isExternal: true
+  name: WriteAsync(IChannelHandlerContext, Object)
+  nameWithType: OutboundChannelHandlerBase<T>.WriteAsync(IChannelHandlerContext, Object)
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<T>.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext, System.Object)
+  nameWithType.vb: OutboundChannelHandlerBase(Of T).WriteAsync(IChannelHandlerContext, Object)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of T).WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext, System.Object)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+    name: WriteAsync
+    nameWithType: OutboundChannelHandlerBase<T>.WriteAsync
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<T>.WriteAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)
+    name: WriteAsync
+    nameWithType: OutboundChannelHandlerBase(Of T).WriteAsync
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of T).WriteAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.#ctor
+  name: ProtocolMessageSignHandler
+  nameWithType: ProtocolMessageSignHandler.ProtocolMessageSignHandler
+  fullName: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.ProtocolMessageSignHandler
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner
+  commentId: T:Catalyst.Abstractions.KeySigner.IKeySigner
+  parent: Catalyst.Abstractions.KeySigner
+  name: IKeySigner
+  nameWithType: IKeySigner
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner
+- uid: Catalyst.Protocol.Cryptography.SigningContext
+  commentId: T:Catalyst.Protocol.Cryptography.SigningContext
+  parent: Catalyst.Protocol.Cryptography
+  name: SigningContext
+  nameWithType: SigningContext
+  fullName: Catalyst.Protocol.Cryptography.SigningContext
+- uid: Catalyst.Abstractions.KeySigner
+  commentId: N:Catalyst.Abstractions.KeySigner
+  name: Catalyst.Abstractions.KeySigner
+  nameWithType: Catalyst.Abstractions.KeySigner
+  fullName: Catalyst.Abstractions.KeySigner
+- uid: Catalyst.Protocol.Cryptography
+  commentId: N:Catalyst.Protocol.Cryptography
+  name: Catalyst.Protocol.Cryptography
+  nameWithType: Catalyst.Protocol.Cryptography
+  fullName: Catalyst.Protocol.Cryptography
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage})
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage})
+  parent: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase{Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}}
+  definition: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,`0)
+  name: WriteAsync0(IChannelHandlerContext, IMessageDto<ProtocolMessage>)
+  nameWithType: OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>.WriteAsync0(IChannelHandlerContext, IMessageDto<ProtocolMessage>)
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>>.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext, Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>)
+  nameWithType.vb: OutboundChannelHandlerBase(Of IMessageDto(Of ProtocolMessage)).WriteAsync0(IChannelHandlerContext, IMessageDto(Of ProtocolMessage))
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage)).WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext, Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage))
+  name.vb: WriteAsync0(IChannelHandlerContext, IMessageDto(Of ProtocolMessage))
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,`0)
+    name: WriteAsync0
+    nameWithType: OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>.WriteAsync0
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>>.WriteAsync0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,`0)
+    name: WriteAsync0
+    nameWithType: OutboundChannelHandlerBase(Of IMessageDto(Of ProtocolMessage)).WriteAsync0
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage)).WriteAsync0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.WriteAsync0*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.WriteAsync0
+  name: WriteAsync0
+  nameWithType: ProtocolMessageSignHandler.WriteAsync0
+  fullName: Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler.WriteAsync0
+- uid: DotNetty.Transport.Channels.IChannelHandlerContext
+  commentId: T:DotNetty.Transport.Channels.IChannelHandlerContext
+  parent: DotNetty.Transport.Channels
+  isExternal: true
+  name: IChannelHandlerContext
+  nameWithType: IChannelHandlerContext
+  fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{Catalyst.Protocol.Wire.ProtocolMessage}
+  parent: Catalyst.Abstractions.IO.Messaging.Dto
+  definition: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  name: IMessageDto<ProtocolMessage>
+  nameWithType: IMessageDto<ProtocolMessage>
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<Catalyst.Protocol.Wire.ProtocolMessage>
+  nameWithType.vb: IMessageDto(Of ProtocolMessage)
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of Catalyst.Protocol.Wire.ProtocolMessage)
+  name.vb: IMessageDto(Of ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,`0)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,`0)
+  isExternal: true
+  name: WriteAsync0(IChannelHandlerContext, T)
+  nameWithType: OutboundChannelHandlerBase<T>.WriteAsync0(IChannelHandlerContext, T)
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<T>.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext, T)
+  nameWithType.vb: OutboundChannelHandlerBase(Of T).WriteAsync0(IChannelHandlerContext, T)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of T).WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext, T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,`0)
+    name: WriteAsync0
+    nameWithType: OutboundChannelHandlerBase<T>.WriteAsync0
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<T>.WriteAsync0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0(DotNetty.Transport.Channels.IChannelHandlerContext,`0)
+    name: WriteAsync0
+    nameWithType: OutboundChannelHandlerBase(Of T).WriteAsync0
+    fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of T).WriteAsync0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DotNetty.Transport.Channels.IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: DotNetty.Transport.Channels.IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  name: IMessageDto<T>
+  nameWithType: IMessageDto<T>
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>
+  nameWithType.vb: IMessageDto(Of T)
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T)
+  name.vb: IMessageDto(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Dto
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Dto
+  name: Catalyst.Abstractions.IO.Messaging.Dto
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Dto
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks

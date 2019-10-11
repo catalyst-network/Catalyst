@@ -1,0 +1,588 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader
+  commentId: T:Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader
+  id: DeltaDfsReader
+  parent: Catalyst.Core.Modules.Consensus.Deltas
+  children:
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.#ctor(Catalyst.Abstractions.Dfs.IDfs,Serilog.ILogger)
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid,Catalyst.Protocol.Deltas.Delta@,System.Threading.CancellationToken)
+  langs:
+  - csharp
+  - vb
+  name: DeltaDfsReader
+  nameWithType: DeltaDfsReader
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaDfsReader.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: DeltaDfsReader
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaDfsReader.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  example: []
+  syntax:
+    content: 'public class DeltaDfsReader : IDeltaDfsReader'
+    content.vb: >-
+      Public Class DeltaDfsReader
+
+          Implements IDeltaDfsReader
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.#ctor(Catalyst.Abstractions.Dfs.IDfs,Serilog.ILogger)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.#ctor(Catalyst.Abstractions.Dfs.IDfs,Serilog.ILogger)
+  id: '#ctor(Catalyst.Abstractions.Dfs.IDfs,Serilog.ILogger)'
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader
+  langs:
+  - csharp
+  - vb
+  name: DeltaDfsReader(IDfs, ILogger)
+  nameWithType: DeltaDfsReader.DeltaDfsReader(IDfs, ILogger)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.DeltaDfsReader(Catalyst.Abstractions.Dfs.IDfs, Serilog.ILogger)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaDfsReader.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaDfsReader.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public DeltaDfsReader(IDfs dfs, ILogger logger)
+    parameters:
+    - id: dfs
+      type: Catalyst.Abstractions.Dfs.IDfs
+    - id: logger
+      type: Serilog.ILogger
+    content.vb: Public Sub New(dfs As IDfs, logger As ILogger)
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid,Catalyst.Protocol.Deltas.Delta@,System.Threading.CancellationToken)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid,Catalyst.Protocol.Deltas.Delta@,System.Threading.CancellationToken)
+  id: TryReadDeltaFromDfs(LibP2P.Cid,Catalyst.Protocol.Deltas.Delta@,System.Threading.CancellationToken)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader
+  langs:
+  - csharp
+  - vb
+  name: TryReadDeltaFromDfs(Cid, out Delta, CancellationToken)
+  nameWithType: DeltaDfsReader.TryReadDeltaFromDfs(Cid, out Delta, CancellationToken)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid, out Catalyst.Protocol.Deltas.Delta, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaDfsReader.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: TryReadDeltaFromDfs
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaDfsReader.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  example: []
+  syntax:
+    content: public bool TryReadDeltaFromDfs(Cid cid, out Delta delta, CancellationToken cancellationToken)
+    parameters:
+    - id: cid
+      type: LibP2P.Cid
+    - id: delta
+      type: Catalyst.Protocol.Deltas.Delta
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryReadDeltaFromDfs(cid As Cid, ByRef delta As Delta, cancellationToken As CancellationToken) As Boolean
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.TryReadDeltaFromDfs*
+  implements:
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid,Catalyst.Protocol.Deltas.Delta@,System.Threading.CancellationToken)
+  nameWithType.vb: DeltaDfsReader.TryReadDeltaFromDfs(Cid, ByRef Delta, CancellationToken)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid, ByRef Catalyst.Protocol.Deltas.Delta, System.Threading.CancellationToken)
+  name.vb: TryReadDeltaFromDfs(Cid, ByRef Delta, CancellationToken)
+references:
+- uid: Catalyst.Core.Modules.Consensus.Deltas
+  commentId: N:Catalyst.Core.Modules.Consensus.Deltas
+  name: Catalyst.Core.Modules.Consensus.Deltas
+  nameWithType: Catalyst.Core.Modules.Consensus.Deltas
+  fullName: Catalyst.Core.Modules.Consensus.Deltas
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IDeltaDfsReader
+  nameWithType: IDeltaDfsReader
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus.Deltas
+  commentId: N:Catalyst.Abstractions.Consensus.Deltas
+  name: Catalyst.Abstractions.Consensus.Deltas
+  nameWithType: Catalyst.Abstractions.Consensus.Deltas
+  fullName: Catalyst.Abstractions.Consensus.Deltas
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.#ctor
+  name: DeltaDfsReader
+  nameWithType: DeltaDfsReader.DeltaDfsReader
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.DeltaDfsReader
+- uid: Catalyst.Abstractions.Dfs.IDfs
+  commentId: T:Catalyst.Abstractions.Dfs.IDfs
+  parent: Catalyst.Abstractions.Dfs
+  name: IDfs
+  nameWithType: IDfs
+  fullName: Catalyst.Abstractions.Dfs.IDfs
+- uid: Serilog.ILogger
+  commentId: T:Serilog.ILogger
+  parent: Serilog
+  isExternal: true
+  name: ILogger
+  nameWithType: ILogger
+  fullName: Serilog.ILogger
+- uid: Catalyst.Abstractions.Dfs
+  commentId: N:Catalyst.Abstractions.Dfs
+  name: Catalyst.Abstractions.Dfs
+  nameWithType: Catalyst.Abstractions.Dfs
+  fullName: Catalyst.Abstractions.Dfs
+- uid: Serilog
+  commentId: N:Serilog
+  isExternal: true
+  name: Serilog
+  nameWithType: Serilog
+  fullName: Serilog
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.TryReadDeltaFromDfs*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.TryReadDeltaFromDfs
+  name: TryReadDeltaFromDfs
+  nameWithType: DeltaDfsReader.TryReadDeltaFromDfs
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaDfsReader.TryReadDeltaFromDfs
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid,Catalyst.Protocol.Deltas.Delta@,System.Threading.CancellationToken)
+  commentId: M:Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid,Catalyst.Protocol.Deltas.Delta@,System.Threading.CancellationToken)
+  parent: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader
+  isExternal: true
+  name: TryReadDeltaFromDfs(Cid, Delta, CancellationToken)
+  nameWithType: IDeltaDfsReader.TryReadDeltaFromDfs(Cid, Delta, CancellationToken)
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid, Catalyst.Protocol.Deltas.Delta, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid,Catalyst.Protocol.Deltas.Delta@,System.Threading.CancellationToken)
+    name: TryReadDeltaFromDfs
+    nameWithType: IDeltaDfsReader.TryReadDeltaFromDfs
+    fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader.TryReadDeltaFromDfs
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: LibP2P.Cid
+    name: Cid
+    nameWithType: Cid
+    fullName: LibP2P.Cid
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Protocol.Deltas.Delta
+    name: Delta
+    nameWithType: Delta
+    fullName: Catalyst.Protocol.Deltas.Delta
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader.TryReadDeltaFromDfs(LibP2P.Cid,Catalyst.Protocol.Deltas.Delta@,System.Threading.CancellationToken)
+    name: TryReadDeltaFromDfs
+    nameWithType: IDeltaDfsReader.TryReadDeltaFromDfs
+    fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaDfsReader.TryReadDeltaFromDfs
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: LibP2P.Cid
+    name: Cid
+    nameWithType: Cid
+    fullName: LibP2P.Cid
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Protocol.Deltas.Delta
+    name: Delta
+    nameWithType: Delta
+    fullName: Catalyst.Protocol.Deltas.Delta
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: LibP2P.Cid
+  commentId: T:LibP2P.Cid
+  parent: LibP2P
+  isExternal: true
+  name: Cid
+  nameWithType: Cid
+  fullName: LibP2P.Cid
+- uid: Catalyst.Protocol.Deltas.Delta
+  commentId: T:Catalyst.Protocol.Deltas.Delta
+  parent: Catalyst.Protocol.Deltas
+  name: Delta
+  nameWithType: Delta
+  fullName: Catalyst.Protocol.Deltas.Delta
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: LibP2P
+  commentId: N:LibP2P
+  isExternal: true
+  name: LibP2P
+  nameWithType: LibP2P
+  fullName: LibP2P
+- uid: Catalyst.Protocol.Deltas
+  commentId: N:Catalyst.Protocol.Deltas
+  name: Catalyst.Protocol.Deltas
+  nameWithType: Catalyst.Protocol.Deltas
+  fullName: Catalyst.Protocol.Deltas
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading

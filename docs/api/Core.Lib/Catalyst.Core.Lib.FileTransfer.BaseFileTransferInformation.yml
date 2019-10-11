@@ -1,0 +1,1853 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  commentId: T:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  id: BaseFileTransferInformation
+  parent: Catalyst.Core.Lib.FileTransfer
+  children:
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.#ctor(Catalyst.Protocol.Peer.PeerId,Catalyst.Protocol.Peer.PeerId,DotNetty.Transport.Channels.IChannel,Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.String,System.UInt64)
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CancellationToken
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicators
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicatorsTrue
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CleanUp
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CorrelationId
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Delete
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.DfsHash
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose(System.Boolean)
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Expire
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.FileOutputPath
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.GetPercentage
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Initialised
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsCompleted
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsExpired
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.MaxChunk
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.PeerId
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RandomAccessStream
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientChannel
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientId
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TempPath
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TimeSinceLastChunk
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.UpdateChunkIndicator(System.UInt32,System.Boolean)
+  langs:
+  - csharp
+  - vb
+  name: BaseFileTransferInformation
+  nameWithType: BaseFileTransferInformation
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BaseFileTransferInformation
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  syntax:
+    content: 'public class BaseFileTransferInformation : IFileTransferInformation, IDisposable'
+    content.vb: >-
+      Public Class BaseFileTransferInformation
+
+          Implements IFileTransferInformation, IDisposable
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - Catalyst.Core.Lib.FileTransfer.DownloadFileTransferInformation
+  - Catalyst.Core.Lib.FileTransfer.UploadFileTransferInformation
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TempPath
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TempPath
+  id: TempPath
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: TempPath
+  nameWithType: BaseFileTransferInformation.TempPath
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TempPath
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: TempPath
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public string TempPath { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property TempPath As String
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TempPath*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.TempPath
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.DfsHash
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.DfsHash
+  id: DfsHash
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: DfsHash
+  nameWithType: BaseFileTransferInformation.DfsHash
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.DfsHash
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: DfsHash
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public string DfsHash { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property DfsHash As String
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.DfsHash*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.DfsHash
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CorrelationId
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CorrelationId
+  id: CorrelationId
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: CorrelationId
+  nameWithType: BaseFileTransferInformation.CorrelationId
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CorrelationId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CorrelationId
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 44
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public ICorrelationId CorrelationId { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    content.vb: Public Property CorrelationId As ICorrelationId
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CorrelationId*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CorrelationId
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.FileOutputPath
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.FileOutputPath
+  id: FileOutputPath
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: FileOutputPath
+  nameWithType: BaseFileTransferInformation.FileOutputPath
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.FileOutputPath
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: FileOutputPath
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public string FileOutputPath { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property FileOutputPath As String
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.FileOutputPath*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.FileOutputPath
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.MaxChunk
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.MaxChunk
+  id: MaxChunk
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: MaxChunk
+  nameWithType: BaseFileTransferInformation.MaxChunk
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.MaxChunk
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: MaxChunk
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public uint MaxChunk { get; set; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public Property MaxChunk As UInteger
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.MaxChunk*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.MaxChunk
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientChannel
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientChannel
+  id: RecipientChannel
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: RecipientChannel
+  nameWithType: BaseFileTransferInformation.RecipientChannel
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientChannel
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: RecipientChannel
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 53
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public IChannel RecipientChannel { get; set; }
+    parameters: []
+    return:
+      type: DotNetty.Transport.Channels.IChannel
+    content.vb: Public Property RecipientChannel As IChannel
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientChannel*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientChannel
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientId
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientId
+  id: RecipientId
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: RecipientId
+  nameWithType: BaseFileTransferInformation.RecipientId
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: RecipientId
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 56
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public PeerId RecipientId { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public Property RecipientId As PeerId
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientId*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientId
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.PeerId
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.PeerId
+  id: PeerId
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: PeerId
+  nameWithType: BaseFileTransferInformation.PeerId
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.PeerId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PeerId
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 59
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public PeerId PeerId { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public Property PeerId As PeerId
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.PeerId*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.PeerId
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CancellationToken
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CancellationToken
+  id: CancellationToken
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: CancellationToken
+  nameWithType: BaseFileTransferInformation.CancellationToken
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CancellationToken
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CancellationToken
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 62
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public CancellationToken CancellationToken { get; set; }
+    parameters: []
+    return:
+      type: System.Threading.CancellationToken
+    content.vb: Public Property CancellationToken As CancellationToken
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CancellationToken*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CancellationToken
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Initialised
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Initialised
+  id: Initialised
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: Initialised
+  nameWithType: BaseFileTransferInformation.Initialised
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Initialised
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Initialised
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 65
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public bool Initialised { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property Initialised As Boolean
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Initialised*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Initialised
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RandomAccessStream
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RandomAccessStream
+  id: RandomAccessStream
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: RandomAccessStream
+  nameWithType: BaseFileTransferInformation.RandomAccessStream
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RandomAccessStream
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: RandomAccessStream
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 69
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  summary: Gets or sets the random access stream.
+  example: []
+  syntax:
+    content: protected Stream RandomAccessStream { get; set; }
+    parameters: []
+    return:
+      type: System.IO.Stream
+      description: The random access stream.
+    content.vb: Protected Property RandomAccessStream As Stream
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RandomAccessStream*
+  modifiers.csharp:
+  - protected
+  - get
+  - set
+  modifiers.vb:
+  - Protected
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TimeSinceLastChunk
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TimeSinceLastChunk
+  id: TimeSinceLastChunk
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: TimeSinceLastChunk
+  nameWithType: BaseFileTransferInformation.TimeSinceLastChunk
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TimeSinceLastChunk
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: TimeSinceLastChunk
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 72
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  summary: The time since last chunk
+  example: []
+  syntax:
+    content: protected DateTime TimeSinceLastChunk { get; set; }
+    parameters: []
+    return:
+      type: System.DateTime
+    content.vb: Protected Property TimeSinceLastChunk As Date
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TimeSinceLastChunk*
+  modifiers.csharp:
+  - protected
+  - get
+  - set
+  modifiers.vb:
+  - Protected
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicators
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicators
+  id: ChunkIndicators
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: ChunkIndicators
+  nameWithType: BaseFileTransferInformation.ChunkIndicators
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicators
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ChunkIndicators
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 75
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  summary: The chunk indicators
+  example: []
+  syntax:
+    content: protected bool[] ChunkIndicators { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean[]
+    content.vb: Protected Property ChunkIndicators As Boolean()
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicators*
+  modifiers.csharp:
+  - protected
+  - get
+  - set
+  modifiers.vb:
+  - Protected
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.#ctor(Catalyst.Protocol.Peer.PeerId,Catalyst.Protocol.Peer.PeerId,DotNetty.Transport.Channels.IChannel,Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.String,System.UInt64)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.#ctor(Catalyst.Protocol.Peer.PeerId,Catalyst.Protocol.Peer.PeerId,DotNetty.Transport.Channels.IChannel,Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.String,System.UInt64)
+  id: '#ctor(Catalyst.Protocol.Peer.PeerId,Catalyst.Protocol.Peer.PeerId,DotNetty.Transport.Channels.IChannel,Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.String,System.UInt64)'
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: BaseFileTransferInformation(PeerId, PeerId, IChannel, ICorrelationId, String, UInt64)
+  nameWithType: BaseFileTransferInformation.BaseFileTransferInformation(PeerId, PeerId, IChannel, ICorrelationId, String, UInt64)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.BaseFileTransferInformation(Catalyst.Protocol.Peer.PeerId, Catalyst.Protocol.Peer.PeerId, DotNetty.Transport.Channels.IChannel, Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId, System.String, System.UInt64)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 87
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  summary: Initializes a new instance of the <xref href="Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: protected BaseFileTransferInformation(PeerId peerId, PeerId recipientId, IChannel recipientChannel, ICorrelationId correlationId, string fileName, ulong fileSize)
+    parameters:
+    - id: peerId
+      type: Catalyst.Protocol.Peer.PeerId
+      description: The peer identifier
+    - id: recipientId
+      type: Catalyst.Protocol.Peer.PeerId
+      description: The recipient identifier.
+    - id: recipientChannel
+      type: DotNetty.Transport.Channels.IChannel
+      description: The recipient channel.
+    - id: correlationId
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+      description: The correlation unique identifier.
+    - id: fileName
+      type: System.String
+      description: Name of the file.
+    - id: fileSize
+      type: System.UInt64
+      description: Size of the file.
+    content.vb: Protected Sub New(peerId As PeerId, recipientId As PeerId, recipientChannel As IChannel, correlationId As ICorrelationId, fileName As String, fileSize As ULong)
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.#ctor*
+  modifiers.csharp:
+  - protected
+  modifiers.vb:
+  - Protected
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsExpired
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsExpired
+  id: IsExpired
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: IsExpired()
+  nameWithType: BaseFileTransferInformation.IsExpired()
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsExpired()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsExpired
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 106
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public bool IsExpired()
+    return:
+      type: System.Boolean
+    content.vb: Public Function IsExpired As Boolean
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsExpired*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicatorsTrue
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicatorsTrue
+  id: ChunkIndicatorsTrue
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: ChunkIndicatorsTrue()
+  nameWithType: BaseFileTransferInformation.ChunkIndicatorsTrue()
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicatorsTrue()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ChunkIndicatorsTrue
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 114
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public bool ChunkIndicatorsTrue()
+    return:
+      type: System.Boolean
+    content.vb: Public Function ChunkIndicatorsTrue As Boolean
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicatorsTrue*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CleanUp
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CleanUp
+  id: CleanUp
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: CleanUp()
+  nameWithType: BaseFileTransferInformation.CleanUp()
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CleanUp()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CleanUp
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 120
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public void CleanUp()
+    content.vb: Public Sub CleanUp
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CleanUp*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Delete
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Delete
+  id: Delete
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: Delete()
+  nameWithType: BaseFileTransferInformation.Delete()
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Delete()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Delete
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 127
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public void Delete()
+    content.vb: Public Sub Delete
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Delete*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose
+  id: Dispose
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: BaseFileTransferInformation.Dispose()
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 140
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsCompleted
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsCompleted
+  id: IsCompleted
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: IsCompleted
+  nameWithType: BaseFileTransferInformation.IsCompleted
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsCompleted
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsCompleted
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 145
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  syntax:
+    content: public bool IsCompleted { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property IsCompleted As Boolean
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsCompleted*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsCompleted
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose(System.Boolean)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose(System.Boolean)
+  id: Dispose(System.Boolean)
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: Dispose(Boolean)
+  nameWithType: BaseFileTransferInformation.Dispose(Boolean)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose(System.Boolean)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 147
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  syntax:
+    content: protected virtual void Dispose(bool disposing)
+    parameters:
+    - id: disposing
+      type: System.Boolean
+    content.vb: Protected Overridable Sub Dispose(disposing As Boolean)
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose*
+  modifiers.csharp:
+  - protected
+  - virtual
+  modifiers.vb:
+  - Protected
+  - Overridable
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.UpdateChunkIndicator(System.UInt32,System.Boolean)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.UpdateChunkIndicator(System.UInt32,System.Boolean)
+  id: UpdateChunkIndicator(System.UInt32,System.Boolean)
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: UpdateChunkIndicator(UInt32, Boolean)
+  nameWithType: BaseFileTransferInformation.UpdateChunkIndicator(UInt32, Boolean)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.UpdateChunkIndicator(System.UInt32, System.Boolean)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: UpdateChunkIndicator
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 154
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public void UpdateChunkIndicator(uint chunkId, bool state)
+    parameters:
+    - id: chunkId
+      type: System.UInt32
+    - id: state
+      type: System.Boolean
+    content.vb: Public Sub UpdateChunkIndicator(chunkId As UInteger, state As Boolean)
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.UpdateChunkIndicator*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator(System.UInt32,System.Boolean)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Expire
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Expire
+  id: Expire
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: Expire()
+  nameWithType: BaseFileTransferInformation.Expire()
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Expire()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Expire
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 164
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public void Expire()
+    content.vb: Public Sub Expire
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Expire*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.GetPercentage
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.GetPercentage
+  id: GetPercentage
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: GetPercentage()
+  nameWithType: BaseFileTransferInformation.GetPercentage()
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.GetPercentage()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetPercentage
+    path: ../src/Catalyst.Core.Lib/FileTransfer/BaseFileTransferInformation.cs
+    startLine: 170
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  example: []
+  syntax:
+    content: public int GetPercentage()
+    return:
+      type: System.Int32
+    content.vb: Public Function GetPercentage As Integer
+  overload: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.GetPercentage*
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.FileTransfer
+  commentId: N:Catalyst.Core.Lib.FileTransfer
+  name: Catalyst.Core.Lib.FileTransfer
+  nameWithType: Catalyst.Core.Lib.FileTransfer
+  fullName: Catalyst.Core.Lib.FileTransfer
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  commentId: T:Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  parent: Catalyst.Abstractions.FileTransfer
+  name: IFileTransferInformation
+  nameWithType: IFileTransferInformation
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.FileTransfer
+  commentId: N:Catalyst.Abstractions.FileTransfer
+  name: Catalyst.Abstractions.FileTransfer
+  nameWithType: Catalyst.Abstractions.FileTransfer
+  fullName: Catalyst.Abstractions.FileTransfer
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TempPath*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TempPath
+  name: TempPath
+  nameWithType: BaseFileTransferInformation.TempPath
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TempPath
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.TempPath
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.TempPath
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: TempPath
+  nameWithType: IFileTransferInformation.TempPath
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.TempPath
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.DfsHash*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.DfsHash
+  name: DfsHash
+  nameWithType: BaseFileTransferInformation.DfsHash
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.DfsHash
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.DfsHash
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.DfsHash
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: DfsHash
+  nameWithType: IFileTransferInformation.DfsHash
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.DfsHash
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CorrelationId*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CorrelationId
+  name: CorrelationId
+  nameWithType: BaseFileTransferInformation.CorrelationId
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CorrelationId
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CorrelationId
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CorrelationId
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: CorrelationId
+  nameWithType: IFileTransferInformation.CorrelationId
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  name: ICorrelationId
+  nameWithType: ICorrelationId
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.FileOutputPath*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.FileOutputPath
+  name: FileOutputPath
+  nameWithType: BaseFileTransferInformation.FileOutputPath
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.FileOutputPath
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.FileOutputPath
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.FileOutputPath
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: FileOutputPath
+  nameWithType: IFileTransferInformation.FileOutputPath
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.FileOutputPath
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.MaxChunk*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.MaxChunk
+  name: MaxChunk
+  nameWithType: BaseFileTransferInformation.MaxChunk
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.MaxChunk
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.MaxChunk
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.MaxChunk
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: MaxChunk
+  nameWithType: IFileTransferInformation.MaxChunk
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.MaxChunk
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  name: UInt32
+  nameWithType: UInt32
+  fullName: System.UInt32
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientChannel*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientChannel
+  name: RecipientChannel
+  nameWithType: BaseFileTransferInformation.RecipientChannel
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientChannel
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientChannel
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientChannel
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: RecipientChannel
+  nameWithType: IFileTransferInformation.RecipientChannel
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientChannel
+- uid: DotNetty.Transport.Channels.IChannel
+  commentId: T:DotNetty.Transport.Channels.IChannel
+  parent: DotNetty.Transport.Channels
+  isExternal: true
+  name: IChannel
+  nameWithType: IChannel
+  fullName: DotNetty.Transport.Channels.IChannel
+- uid: DotNetty.Transport.Channels
+  commentId: N:DotNetty.Transport.Channels
+  isExternal: true
+  name: DotNetty.Transport.Channels
+  nameWithType: DotNetty.Transport.Channels
+  fullName: DotNetty.Transport.Channels
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientId*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientId
+  name: RecipientId
+  nameWithType: BaseFileTransferInformation.RecipientId
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RecipientId
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientId
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientId
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: RecipientId
+  nameWithType: IFileTransferInformation.RecipientId
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientId
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.PeerId*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.PeerId
+  name: PeerId
+  nameWithType: BaseFileTransferInformation.PeerId
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.PeerId
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.PeerId
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.PeerId
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: PeerId
+  nameWithType: IFileTransferInformation.PeerId
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.PeerId
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CancellationToken*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CancellationToken
+  name: CancellationToken
+  nameWithType: BaseFileTransferInformation.CancellationToken
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CancellationToken
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CancellationToken
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CancellationToken
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: CancellationToken
+  nameWithType: IFileTransferInformation.CancellationToken
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CancellationToken
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Initialised*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Initialised
+  name: Initialised
+  nameWithType: BaseFileTransferInformation.Initialised
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Initialised
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Initialised
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Initialised
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: Initialised
+  nameWithType: IFileTransferInformation.Initialised
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Initialised
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RandomAccessStream*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RandomAccessStream
+  name: RandomAccessStream
+  nameWithType: BaseFileTransferInformation.RandomAccessStream
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.RandomAccessStream
+- uid: System.IO.Stream
+  commentId: T:System.IO.Stream
+  parent: System.IO
+  isExternal: true
+  name: Stream
+  nameWithType: Stream
+  fullName: System.IO.Stream
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TimeSinceLastChunk*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TimeSinceLastChunk
+  name: TimeSinceLastChunk
+  nameWithType: BaseFileTransferInformation.TimeSinceLastChunk
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.TimeSinceLastChunk
+- uid: System.DateTime
+  commentId: T:System.DateTime
+  parent: System
+  isExternal: true
+  name: DateTime
+  nameWithType: DateTime
+  fullName: System.DateTime
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicators*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicators
+  name: ChunkIndicators
+  nameWithType: BaseFileTransferInformation.ChunkIndicators
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicators
+- uid: System.Boolean[]
+  isExternal: true
+  name: Boolean[]
+  nameWithType: Boolean[]
+  fullName: System.Boolean[]
+  nameWithType.vb: Boolean()
+  fullName.vb: System.Boolean()
+  name.vb: Boolean()
+  spec.csharp:
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  commentId: T:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  parent: Catalyst.Core.Lib.FileTransfer
+  name: BaseFileTransferInformation
+  nameWithType: BaseFileTransferInformation
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.#ctor
+  name: BaseFileTransferInformation
+  nameWithType: BaseFileTransferInformation.BaseFileTransferInformation
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.BaseFileTransferInformation
+- uid: System.UInt64
+  commentId: T:System.UInt64
+  parent: System
+  isExternal: true
+  name: UInt64
+  nameWithType: UInt64
+  fullName: System.UInt64
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsExpired*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsExpired
+  name: IsExpired
+  nameWithType: BaseFileTransferInformation.IsExpired
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsExpired
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired
+  commentId: M:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: IsExpired()
+  nameWithType: IFileTransferInformation.IsExpired()
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired
+    name: IsExpired
+    nameWithType: IFileTransferInformation.IsExpired
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired
+    name: IsExpired
+    nameWithType: IFileTransferInformation.IsExpired
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicatorsTrue*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicatorsTrue
+  name: ChunkIndicatorsTrue
+  nameWithType: BaseFileTransferInformation.ChunkIndicatorsTrue
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.ChunkIndicatorsTrue
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue
+  commentId: M:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: ChunkIndicatorsTrue()
+  nameWithType: IFileTransferInformation.ChunkIndicatorsTrue()
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue
+    name: ChunkIndicatorsTrue
+    nameWithType: IFileTransferInformation.ChunkIndicatorsTrue
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue
+    name: ChunkIndicatorsTrue
+    nameWithType: IFileTransferInformation.ChunkIndicatorsTrue
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CleanUp*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CleanUp
+  name: CleanUp
+  nameWithType: BaseFileTransferInformation.CleanUp
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.CleanUp
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp
+  commentId: M:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: CleanUp()
+  nameWithType: IFileTransferInformation.CleanUp()
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp
+    name: CleanUp
+    nameWithType: IFileTransferInformation.CleanUp
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp
+    name: CleanUp
+    nameWithType: IFileTransferInformation.CleanUp
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Delete*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Delete
+  name: Delete
+  nameWithType: BaseFileTransferInformation.Delete
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Delete
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete
+  commentId: M:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: Delete()
+  nameWithType: IFileTransferInformation.Delete()
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete
+    name: Delete
+    nameWithType: IFileTransferInformation.Delete
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete
+    name: Delete
+    nameWithType: IFileTransferInformation.Delete
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose
+  name: Dispose
+  nameWithType: BaseFileTransferInformation.Dispose
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsCompleted*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsCompleted
+  name: IsCompleted
+  nameWithType: BaseFileTransferInformation.IsCompleted
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.IsCompleted
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsCompleted
+  commentId: P:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsCompleted
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: IsCompleted
+  nameWithType: IFileTransferInformation.IsCompleted
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsCompleted
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.UpdateChunkIndicator*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.UpdateChunkIndicator
+  name: UpdateChunkIndicator
+  nameWithType: BaseFileTransferInformation.UpdateChunkIndicator
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.UpdateChunkIndicator
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator(System.UInt32,System.Boolean)
+  commentId: M:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator(System.UInt32,System.Boolean)
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  isExternal: true
+  name: UpdateChunkIndicator(UInt32, Boolean)
+  nameWithType: IFileTransferInformation.UpdateChunkIndicator(UInt32, Boolean)
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator(System.UInt32, System.Boolean)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator(System.UInt32,System.Boolean)
+    name: UpdateChunkIndicator
+    nameWithType: IFileTransferInformation.UpdateChunkIndicator
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.UInt32
+    name: UInt32
+    nameWithType: UInt32
+    fullName: System.UInt32
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator(System.UInt32,System.Boolean)
+    name: UpdateChunkIndicator
+    nameWithType: IFileTransferInformation.UpdateChunkIndicator
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.UInt32
+    name: UInt32
+    nameWithType: UInt32
+    fullName: System.UInt32
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Expire*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Expire
+  name: Expire
+  nameWithType: BaseFileTransferInformation.Expire
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.Expire
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire
+  commentId: M:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: Expire()
+  nameWithType: IFileTransferInformation.Expire()
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire
+    name: Expire
+    nameWithType: IFileTransferInformation.Expire
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire
+    name: Expire
+    nameWithType: IFileTransferInformation.Expire
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.GetPercentage*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.GetPercentage
+  name: GetPercentage
+  nameWithType: BaseFileTransferInformation.GetPercentage
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation.GetPercentage
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage
+  commentId: M:Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage
+  parent: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  name: GetPercentage()
+  nameWithType: IFileTransferInformation.GetPercentage()
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage
+    name: GetPercentage
+    nameWithType: IFileTransferInformation.GetPercentage
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage
+    name: GetPercentage
+    nameWithType: IFileTransferInformation.GetPercentage
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32

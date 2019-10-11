@@ -1,0 +1,309 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  id: IMessageCorrelationManager
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  children:
+  - Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{Catalyst.Protocol.Wire.ProtocolMessage})
+  - Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)
+  langs:
+  - csharp
+  - vb
+  name: IMessageCorrelationManager
+  nameWithType: IMessageCorrelationManager
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Messaging/Correlation/IMessageCorrelationManager.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IMessageCorrelationManager
+    path: ../src/Catalyst.Abstractions/IO/Messaging/Correlation/IMessageCorrelationManager.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Messaging.Correlation
+  summary: "\nThe message correlation manager is a cached user to store correlation Ids of outgoing requests\nand use them to match incoming responses.\n"
+  example: []
+  syntax:
+    content: 'public interface IMessageCorrelationManager : IDisposable'
+    content.vb: >-
+      Public Interface IMessageCorrelationManager
+
+          Inherits IDisposable
+  inheritedMembers:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{Catalyst.Protocol.Wire.ProtocolMessage})
+  commentId: M:Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{Catalyst.Protocol.Wire.ProtocolMessage})
+  id: AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{Catalyst.Protocol.Wire.ProtocolMessage})
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  langs:
+  - csharp
+  - vb
+  name: AddPendingRequest(ICorrelatableMessage<ProtocolMessage>)
+  nameWithType: IMessageCorrelationManager.AddPendingRequest(ICorrelatableMessage<ProtocolMessage>)
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage<Catalyst.Protocol.Wire.ProtocolMessage>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Messaging/Correlation/IMessageCorrelationManager.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: AddPendingRequest
+    path: ../src/Catalyst.Abstractions/IO/Messaging/Correlation/IMessageCorrelationManager.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Messaging.Correlation
+  summary: "\nAdds a correlatable message to the cache, which can then be matched in\n<xref href=\"Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)\" data-throw-if-not-resolved=\"false\"></xref> upon receiving the response.\nin the cache.\n"
+  example: []
+  syntax:
+    content: void AddPendingRequest(ICorrelatableMessage<ProtocolMessage> correlatableMessage)
+    parameters:
+    - id: correlatableMessage
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{Catalyst.Protocol.Wire.ProtocolMessage}
+      description: The (outgoing) correlatable message to add to the cache.
+    content.vb: Sub AddPendingRequest(correlatableMessage As ICorrelatableMessage(Of ProtocolMessage))
+  overload: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest*
+  nameWithType.vb: IMessageCorrelationManager.AddPendingRequest(ICorrelatableMessage(Of ProtocolMessage))
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage(Of Catalyst.Protocol.Wire.ProtocolMessage))
+  name.vb: AddPendingRequest(ICorrelatableMessage(Of ProtocolMessage))
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)
+  commentId: M:Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)
+  id: TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  langs:
+  - csharp
+  - vb
+  name: TryMatchResponse(ProtocolMessage)
+  nameWithType: IMessageCorrelationManager.TryMatchResponse(ProtocolMessage)
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Messaging/Correlation/IMessageCorrelationManager.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: TryMatchResponse
+    path: ../src/Catalyst.Abstractions/IO/Messaging/Correlation/IMessageCorrelationManager.cs
+    startLine: 56
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Messaging.Correlation
+  summary: "\nTries to match the response by checking its correlation Id is still\nin the cache.\n"
+  example: []
+  syntax:
+    content: bool TryMatchResponse(ProtocolMessage response)
+    parameters:
+    - id: response
+      type: Catalyst.Protocol.Wire.ProtocolMessage
+      description: A response type message received from the network
+    return:
+      type: System.Boolean
+      description: "\n<see>\n<cref>true</cref>\n</see>\nif the response was matched,\n<see>\n<cref>false</cref>\n</see>\notherwise."
+    content.vb: Function TryMatchResponse(response As ProtocolMessage) As Boolean
+  overload: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse*
+references:
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)
+  commentId: M:Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  name: TryMatchResponse(ProtocolMessage)
+  nameWithType: IMessageCorrelationManager.TryMatchResponse(ProtocolMessage)
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)
+    name: TryMatchResponse
+    nameWithType: IMessageCorrelationManager.TryMatchResponse
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(Catalyst.Protocol.Wire.ProtocolMessage)
+    name: TryMatchResponse
+    nameWithType: IMessageCorrelationManager.TryMatchResponse
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest*
+  commentId: Overload:Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest
+  name: AddPendingRequest
+  nameWithType: IMessageCorrelationManager.AddPendingRequest
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{Catalyst.Protocol.Wire.ProtocolMessage}
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{Catalyst.Protocol.Wire.ProtocolMessage}
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  definition: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage`1
+  name: ICorrelatableMessage<ProtocolMessage>
+  nameWithType: ICorrelatableMessage<ProtocolMessage>
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage<Catalyst.Protocol.Wire.ProtocolMessage>
+  nameWithType.vb: ICorrelatableMessage(Of ProtocolMessage)
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage(Of Catalyst.Protocol.Wire.ProtocolMessage)
+  name.vb: ICorrelatableMessage(Of ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage`1
+    name: ICorrelatableMessage
+    nameWithType: ICorrelatableMessage
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage`1
+    name: ICorrelatableMessage
+    nameWithType: ICorrelatableMessage
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  name: IMessageCorrelationManager
+  nameWithType: IMessageCorrelationManager
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage`1
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage`1
+  name: ICorrelatableMessage<T>
+  nameWithType: ICorrelatableMessage<T>
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage<T>
+  nameWithType.vb: ICorrelatableMessage(Of T)
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage(Of T)
+  name.vb: ICorrelatableMessage(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage`1
+    name: ICorrelatableMessage
+    nameWithType: ICorrelatableMessage
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage`1
+    name: ICorrelatableMessage
+    nameWithType: ICorrelatableMessage
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse*
+  commentId: Overload:Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse
+  name: TryMatchResponse
+  nameWithType: IMessageCorrelationManager.TryMatchResponse
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse
+- uid: Catalyst.Protocol.Wire.ProtocolMessage
+  commentId: T:Catalyst.Protocol.Wire.ProtocolMessage
+  parent: Catalyst.Protocol.Wire
+  name: ProtocolMessage
+  nameWithType: ProtocolMessage
+  fullName: Catalyst.Protocol.Wire.ProtocolMessage
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Protocol.Wire
+  commentId: N:Catalyst.Protocol.Wire
+  name: Catalyst.Protocol.Wire
+  nameWithType: Catalyst.Protocol.Wire
+  fullName: Catalyst.Protocol.Wire

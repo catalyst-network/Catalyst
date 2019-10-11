@@ -1,0 +1,72 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  id: Catalyst.Abstractions.P2P.Discovery
+  children:
+  - Catalyst.Abstractions.P2P.Discovery.BaseDiscovery
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  - Catalyst.Abstractions.P2P.Discovery.IHealthChecker
+  - Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - Catalyst.Abstractions.P2P.Discovery.INeighbours
+  - Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.P2P.Discovery.BaseDiscovery
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.BaseDiscovery
+  name: BaseDiscovery
+  nameWithType: BaseDiscovery
+  fullName: Catalyst.Abstractions.P2P.Discovery.BaseDiscovery
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+  name: IHastingsCareTaker
+  nameWithType: IHastingsCareTaker
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: IHastingsMemento
+  nameWithType: IHastingsMemento
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  name: IHastingsOriginator
+  nameWithType: IHastingsOriginator
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+- uid: Catalyst.Abstractions.P2P.Discovery.IHealthChecker
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHealthChecker
+  name: IHealthChecker
+  nameWithType: IHealthChecker
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHealthChecker
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.INeighbour
+  name: INeighbour
+  nameWithType: INeighbour
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbours
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.INeighbours
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: INeighbours
+  nameWithType: INeighbours
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbours
+- uid: Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: IPeerDiscovery
+  nameWithType: IPeerDiscovery
+  fullName: Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery

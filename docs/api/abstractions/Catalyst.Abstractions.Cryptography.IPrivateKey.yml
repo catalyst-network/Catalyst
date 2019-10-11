@@ -1,0 +1,145 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+  commentId: T:Catalyst.Abstractions.Cryptography.IPrivateKey
+  id: IPrivateKey
+  parent: Catalyst.Abstractions.Cryptography
+  children:
+  - Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes
+  - Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+  langs:
+  - csharp
+  - vb
+  name: IPrivateKey
+  nameWithType: IPrivateKey
+  fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cryptography/IPrivateKey.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IPrivateKey
+    path: ../src/Catalyst.Abstractions/Cryptography/IPrivateKey.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cryptography
+  syntax:
+    content: public interface IPrivateKey
+    content.vb: Public Interface IPrivateKey
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes
+  commentId: P:Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes
+  id: Bytes
+  parent: Catalyst.Abstractions.Cryptography.IPrivateKey
+  langs:
+  - csharp
+  - vb
+  name: Bytes
+  nameWithType: IPrivateKey.Bytes
+  fullName: Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cryptography/IPrivateKey.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Bytes
+    path: ../src/Catalyst.Abstractions/Cryptography/IPrivateKey.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cryptography
+  syntax:
+    content: byte[] Bytes { get; }
+    parameters: []
+    return:
+      type: System.Byte[]
+    content.vb: ReadOnly Property Bytes As Byte()
+  overload: Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+  commentId: M:Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+  id: GetPublicKey
+  parent: Catalyst.Abstractions.Cryptography.IPrivateKey
+  langs:
+  - csharp
+  - vb
+  name: GetPublicKey()
+  nameWithType: IPrivateKey.GetPublicKey()
+  fullName: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cryptography/IPrivateKey.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetPublicKey
+    path: ../src/Catalyst.Abstractions/Cryptography/IPrivateKey.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cryptography
+  syntax:
+    content: IPublicKey GetPublicKey()
+    return:
+      type: Catalyst.Abstractions.Cryptography.IPublicKey
+    content.vb: Function GetPublicKey As IPublicKey
+  overload: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey*
+references:
+- uid: Catalyst.Abstractions.Cryptography
+  commentId: N:Catalyst.Abstractions.Cryptography
+  name: Catalyst.Abstractions.Cryptography
+  nameWithType: Catalyst.Abstractions.Cryptography
+  fullName: Catalyst.Abstractions.Cryptography
+- uid: Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes*
+  commentId: Overload:Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes
+  name: Bytes
+  nameWithType: IPrivateKey.Bytes
+  fullName: Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey*
+  commentId: Overload:Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+  name: GetPublicKey
+  nameWithType: IPrivateKey.GetPublicKey
+  fullName: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+- uid: Catalyst.Abstractions.Cryptography.IPublicKey
+  commentId: T:Catalyst.Abstractions.Cryptography.IPublicKey
+  parent: Catalyst.Abstractions.Cryptography
+  name: IPublicKey
+  nameWithType: IPublicKey
+  fullName: Catalyst.Abstractions.Cryptography.IPublicKey

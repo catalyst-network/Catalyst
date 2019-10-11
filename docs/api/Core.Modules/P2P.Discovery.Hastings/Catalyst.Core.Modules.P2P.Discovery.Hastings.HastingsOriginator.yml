@@ -1,0 +1,844 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  commentId: T:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  id: HastingsOriginator
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  children:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.#ctor(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.CreateMemento
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Default
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.HasValidCandidate
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Neighbours
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Peer
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.PnrCorrelationId
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  langs:
+  - csharp
+  - vb
+  name: HastingsOriginator
+  nameWithType: HastingsOriginator
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: HastingsOriginator
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  syntax:
+    content: 'public sealed class HastingsOriginator : IHastingsOriginator'
+    content.vb: >-
+      Public NotInheritable Class HastingsOriginator
+
+          Implements IHastingsOriginator
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Neighbours
+  commentId: P:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Neighbours
+  id: Neighbours
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: Neighbours
+  nameWithType: HastingsOriginator.Neighbours
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Neighbours
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Neighbours
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  syntax:
+    content: public INeighbours Neighbours { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.P2P.Discovery.INeighbours
+    content.vb: Public ReadOnly Property Neighbours As INeighbours
+  overload: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Neighbours*
+  implements:
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.PnrCorrelationId
+  commentId: P:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.PnrCorrelationId
+  id: PnrCorrelationId
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: PnrCorrelationId
+  nameWithType: HastingsOriginator.PnrCorrelationId
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.PnrCorrelationId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PnrCorrelationId
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  syntax:
+    content: public ICorrelationId PnrCorrelationId { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    content.vb: Public ReadOnly Property PnrCorrelationId As ICorrelationId
+  overload: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.PnrCorrelationId*
+  implements:
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Peer
+  commentId: P:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Peer
+  id: Peer
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: Peer
+  nameWithType: HastingsOriginator.Peer
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Peer
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Peer
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+    startLine: 43
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  syntax:
+    content: public PeerId Peer { get; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public ReadOnly Property Peer As PeerId
+  overload: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Peer*
+  implements:
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Default
+  commentId: F:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Default
+  id: Default
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: Default
+  nameWithType: HastingsOriginator.Default
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Default
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Default
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+    startLine: 45
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  syntax:
+    content: public static readonly HastingsOriginator Default
+    return:
+      type: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+    content.vb: Public Shared ReadOnly Default As HastingsOriginator
+  modifiers.csharp:
+  - public
+  - static
+  - readonly
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.#ctor(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  commentId: M:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.#ctor(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  id: '#ctor(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)'
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: HastingsOriginator(IHastingsMemento)
+  nameWithType: HastingsOriginator.HastingsOriginator(IHastingsMemento)
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.HastingsOriginator(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  syntax:
+    content: public HastingsOriginator(IHastingsMemento hastingsMemento)
+    parameters:
+    - id: hastingsMemento
+      type: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+    content.vb: Public Sub New(hastingsMemento As IHastingsMemento)
+  overload: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.CreateMemento
+  commentId: M:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.CreateMemento
+  id: CreateMemento
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: CreateMemento()
+  nameWithType: HastingsOriginator.CreateMemento()
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.CreateMemento()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CreateMemento
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  example: []
+  syntax:
+    content: public IHastingsMemento CreateMemento()
+    return:
+      type: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+    content.vb: Public Function CreateMemento As IHastingsMemento
+  overload: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.CreateMemento*
+  implements:
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  commentId: M:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  id: RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: RestoreMemento(IHastingsMemento)
+  nameWithType: HastingsOriginator.RestoreMemento(IHastingsMemento)
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: RestoreMemento
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+    startLine: 65
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  example: []
+  syntax:
+    content: public void RestoreMemento(IHastingsMemento hastingsMemento)
+    parameters:
+    - id: hastingsMemento
+      type: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+    content.vb: Public Sub RestoreMemento(hastingsMemento As IHastingsMemento)
+  overload: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.RestoreMemento*
+  implements:
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.HasValidCandidate
+  commentId: M:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.HasValidCandidate
+  id: HasValidCandidate
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  langs:
+  - csharp
+  - vb
+  name: HasValidCandidate()
+  nameWithType: HastingsOriginator.HasValidCandidate()
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.HasValidCandidate()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: HasValidCandidate
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsOriginator.cs
+    startLine: 73
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  syntax:
+    content: public bool HasValidCandidate()
+    return:
+      type: System.Boolean
+    content.vb: Public Function HasValidCandidate As Boolean
+  overload: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.HasValidCandidate*
+  implements:
+  - Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  commentId: N:Catalyst.Core.Modules.P2P.Discovery.Hastings
+  name: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  nameWithType: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: IHastingsOriginator
+  nameWithType: IHastingsOriginator
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Neighbours*
+  commentId: Overload:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Neighbours
+  name: Neighbours
+  nameWithType: HastingsOriginator.Neighbours
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Neighbours
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  name: Neighbours
+  nameWithType: IHastingsOriginator.Neighbours
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Neighbours
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbours
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.INeighbours
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: INeighbours
+  nameWithType: INeighbours
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbours
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.PnrCorrelationId*
+  commentId: Overload:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.PnrCorrelationId
+  name: PnrCorrelationId
+  nameWithType: HastingsOriginator.PnrCorrelationId
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.PnrCorrelationId
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  name: PnrCorrelationId
+  nameWithType: IHastingsOriginator.PnrCorrelationId
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.PnrCorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  name: ICorrelationId
+  nameWithType: ICorrelationId
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Peer*
+  commentId: Overload:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Peer
+  name: Peer
+  nameWithType: HastingsOriginator.Peer
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.Peer
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer
+  commentId: P:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  name: Peer
+  nameWithType: IHastingsOriginator.Peer
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.Peer
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  commentId: T:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  name: HastingsOriginator
+  nameWithType: HastingsOriginator
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.#ctor
+  name: HastingsOriginator
+  nameWithType: HastingsOriginator.HastingsOriginator
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.HastingsOriginator
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: IHastingsMemento
+  nameWithType: IHastingsMemento
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.CreateMemento*
+  commentId: Overload:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.CreateMemento
+  name: CreateMemento
+  nameWithType: HastingsOriginator.CreateMemento
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.CreateMemento
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  name: CreateMemento()
+  nameWithType: IHastingsOriginator.CreateMemento()
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+    name: CreateMemento
+    nameWithType: IHastingsOriginator.CreateMemento
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+    name: CreateMemento
+    nameWithType: IHastingsOriginator.CreateMemento
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.CreateMemento
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.RestoreMemento*
+  commentId: Overload:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.RestoreMemento
+  name: RestoreMemento
+  nameWithType: HastingsOriginator.RestoreMemento
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.RestoreMemento
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  name: RestoreMemento(IHastingsMemento)
+  nameWithType: IHastingsOriginator.RestoreMemento(IHastingsMemento)
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+    name: RestoreMemento
+    nameWithType: IHastingsOriginator.RestoreMemento
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+    name: IHastingsMemento
+    nameWithType: IHastingsMemento
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento(Catalyst.Abstractions.P2P.Discovery.IHastingsMemento)
+    name: RestoreMemento
+    nameWithType: IHastingsOriginator.RestoreMemento
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.RestoreMemento
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+    name: IHastingsMemento
+    nameWithType: IHastingsMemento
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsMemento
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.HasValidCandidate*
+  commentId: Overload:Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.HasValidCandidate
+  name: HasValidCandidate
+  nameWithType: HastingsOriginator.HasValidCandidate
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsOriginator.HasValidCandidate
+- uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  parent: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator
+  name: HasValidCandidate()
+  nameWithType: IHastingsOriginator.HasValidCandidate()
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+    name: HasValidCandidate
+    nameWithType: IHastingsOriginator.HasValidCandidate
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+    name: HasValidCandidate
+    nameWithType: IHastingsOriginator.HasValidCandidate
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.HasValidCandidate
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean

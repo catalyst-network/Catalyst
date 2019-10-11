@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Extensions.Protocol.Wire
+  commentId: N:Catalyst.Core.Lib.Extensions.Protocol.Wire
+  id: Catalyst.Core.Lib.Extensions.Protocol.Wire
+  children:
+  - Catalyst.Core.Lib.Extensions.Protocol.Wire.ProtocolMessageExtensions
+  - Catalyst.Core.Lib.Extensions.Protocol.Wire.TransactionBroadcastExtensions
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.Extensions.Protocol.Wire
+  nameWithType: Catalyst.Core.Lib.Extensions.Protocol.Wire
+  fullName: Catalyst.Core.Lib.Extensions.Protocol.Wire
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.Extensions.Protocol.Wire.ProtocolMessageExtensions
+  commentId: T:Catalyst.Core.Lib.Extensions.Protocol.Wire.ProtocolMessageExtensions
+  name: ProtocolMessageExtensions
+  nameWithType: ProtocolMessageExtensions
+  fullName: Catalyst.Core.Lib.Extensions.Protocol.Wire.ProtocolMessageExtensions
+- uid: Catalyst.Core.Lib.Extensions.Protocol.Wire.TransactionBroadcastExtensions
+  commentId: T:Catalyst.Core.Lib.Extensions.Protocol.Wire.TransactionBroadcastExtensions
+  name: TransactionBroadcastExtensions
+  nameWithType: TransactionBroadcastExtensions
+  fullName: Catalyst.Core.Lib.Extensions.Protocol.Wire.TransactionBroadcastExtensions

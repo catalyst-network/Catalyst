@@ -1,0 +1,65 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Cli.CommandTypes
+  commentId: N:Catalyst.Abstractions.Cli.CommandTypes
+  id: Catalyst.Abstractions.Cli.CommandTypes
+  children:
+  - Catalyst.Abstractions.Cli.CommandTypes.ICommand
+  - Catalyst.Abstractions.Cli.CommandTypes.IMessageCommand`1
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Cli.CommandTypes
+  nameWithType: Catalyst.Abstractions.Cli.CommandTypes
+  fullName: Catalyst.Abstractions.Cli.CommandTypes
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Cli.CommandTypes.ICommand
+  commentId: T:Catalyst.Abstractions.Cli.CommandTypes.ICommand
+  parent: Catalyst.Abstractions.Cli.CommandTypes
+  name: ICommand
+  nameWithType: ICommand
+  fullName: Catalyst.Abstractions.Cli.CommandTypes.ICommand
+- uid: Catalyst.Abstractions.Cli.CommandTypes.IMessageCommand`1
+  commentId: T:Catalyst.Abstractions.Cli.CommandTypes.IMessageCommand`1
+  name: IMessageCommand<T>
+  nameWithType: IMessageCommand<T>
+  fullName: Catalyst.Abstractions.Cli.CommandTypes.IMessageCommand<T>
+  nameWithType.vb: IMessageCommand(Of T)
+  fullName.vb: Catalyst.Abstractions.Cli.CommandTypes.IMessageCommand(Of T)
+  name.vb: IMessageCommand(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cli.CommandTypes.IMessageCommand`1
+    name: IMessageCommand
+    nameWithType: IMessageCommand
+    fullName: Catalyst.Abstractions.Cli.CommandTypes.IMessageCommand
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cli.CommandTypes.IMessageCommand`1
+    name: IMessageCommand
+    nameWithType: IMessageCommand
+    fullName: Catalyst.Abstractions.Cli.CommandTypes.IMessageCommand
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Cli.CommandTypes
+  commentId: N:Catalyst.Abstractions.Cli.CommandTypes
+  name: Catalyst.Abstractions.Cli.CommandTypes
+  nameWithType: Catalyst.Abstractions.Cli.CommandTypes
+  fullName: Catalyst.Abstractions.Cli.CommandTypes

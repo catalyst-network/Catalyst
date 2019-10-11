@@ -1,0 +1,540 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  commentId: T:Catalyst.Abstractions.Cli.Commands.ICommandContext
+  id: ICommandContext
+  parent: Catalyst.Abstractions.Cli.Commands
+  children:
+  - Catalyst.Abstractions.Cli.Commands.ICommandContext.CertificateStore
+  - Catalyst.Abstractions.Cli.Commands.ICommandContext.GetConnectedNode(System.String)
+  - Catalyst.Abstractions.Cli.Commands.ICommandContext.GetNodeConfig(System.String)
+  - Catalyst.Abstractions.Cli.Commands.ICommandContext.IsSocketChannelActive(Catalyst.Abstractions.Rpc.IRpcClient)
+  - Catalyst.Abstractions.Cli.Commands.ICommandContext.PeerId
+  - Catalyst.Abstractions.Cli.Commands.ICommandContext.RpcClientFactory
+  - Catalyst.Abstractions.Cli.Commands.ICommandContext.SocketClientRegistry
+  - Catalyst.Abstractions.Cli.Commands.ICommandContext.UserOutput
+  langs:
+  - csharp
+  - vb
+  name: ICommandContext
+  nameWithType: ICommandContext
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ICommandContext
+    path: ../src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Commands
+  syntax:
+    content: public interface ICommandContext
+    content.vb: Public Interface ICommandContext
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.RpcClientFactory
+  commentId: P:Catalyst.Abstractions.Cli.Commands.ICommandContext.RpcClientFactory
+  id: RpcClientFactory
+  parent: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  langs:
+  - csharp
+  - vb
+  name: RpcClientFactory
+  nameWithType: ICommandContext.RpcClientFactory
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.RpcClientFactory
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: RpcClientFactory
+    path: ../src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Commands
+  summary: Gets the node RPC client factory.
+  example: []
+  syntax:
+    content: IRpcClientFactory RpcClientFactory { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Rpc.IRpcClientFactory
+      description: The node RPC client factory.
+    content.vb: ReadOnly Property RpcClientFactory As IRpcClientFactory
+  overload: Catalyst.Abstractions.Cli.Commands.ICommandContext.RpcClientFactory*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.CertificateStore
+  commentId: P:Catalyst.Abstractions.Cli.Commands.ICommandContext.CertificateStore
+  id: CertificateStore
+  parent: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  langs:
+  - csharp
+  - vb
+  name: CertificateStore
+  nameWithType: ICommandContext.CertificateStore
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.CertificateStore
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: CertificateStore
+    path: ../src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Commands
+  summary: Gets the certificate store.
+  example: []
+  syntax:
+    content: ICertificateStore CertificateStore { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Cryptography.ICertificateStore
+      description: The certificate store.
+    content.vb: ReadOnly Property CertificateStore As ICertificateStore
+  overload: Catalyst.Abstractions.Cli.Commands.ICommandContext.CertificateStore*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.UserOutput
+  commentId: P:Catalyst.Abstractions.Cli.Commands.ICommandContext.UserOutput
+  id: UserOutput
+  parent: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  langs:
+  - csharp
+  - vb
+  name: UserOutput
+  nameWithType: ICommandContext.UserOutput
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.UserOutput
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: UserOutput
+    path: ../src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+    startLine: 42
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Commands
+  summary: Gets the user output.
+  example: []
+  syntax:
+    content: IUserOutput UserOutput { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Cli.IUserOutput
+      description: The user output.
+    content.vb: ReadOnly Property UserOutput As IUserOutput
+  overload: Catalyst.Abstractions.Cli.Commands.ICommandContext.UserOutput*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.SocketClientRegistry
+  commentId: P:Catalyst.Abstractions.Cli.Commands.ICommandContext.SocketClientRegistry
+  id: SocketClientRegistry
+  parent: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  langs:
+  - csharp
+  - vb
+  name: SocketClientRegistry
+  nameWithType: ICommandContext.SocketClientRegistry
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.SocketClientRegistry
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: SocketClientRegistry
+    path: ../src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Commands
+  summary: Gets the socket client registry.
+  example: []
+  syntax:
+    content: ISocketClientRegistry<IRpcClient> SocketClientRegistry { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry{Catalyst.Abstractions.Rpc.IRpcClient}
+      description: The socket client registry.
+    content.vb: ReadOnly Property SocketClientRegistry As ISocketClientRegistry(Of IRpcClient)
+  overload: Catalyst.Abstractions.Cli.Commands.ICommandContext.SocketClientRegistry*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.PeerId
+  commentId: P:Catalyst.Abstractions.Cli.Commands.ICommandContext.PeerId
+  id: PeerId
+  parent: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  langs:
+  - csharp
+  - vb
+  name: PeerId
+  nameWithType: ICommandContext.PeerId
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.PeerId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PeerId
+    path: ../src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Commands
+  summary: Gets the peer identifier.
+  example: []
+  syntax:
+    content: PeerId PeerId { get; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+      description: The peer identifier.
+    content.vb: ReadOnly Property PeerId As PeerId
+  overload: Catalyst.Abstractions.Cli.Commands.ICommandContext.PeerId*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.GetConnectedNode(System.String)
+  commentId: M:Catalyst.Abstractions.Cli.Commands.ICommandContext.GetConnectedNode(System.String)
+  id: GetConnectedNode(System.String)
+  parent: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  langs:
+  - csharp
+  - vb
+  name: GetConnectedNode(String)
+  nameWithType: ICommandContext.GetConnectedNode(String)
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.GetConnectedNode(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetConnectedNode
+    path: ../src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Commands
+  summary: Gets the connected node.
+  example: []
+  syntax:
+    content: IRpcClient GetConnectedNode(string nodeId)
+    parameters:
+    - id: nodeId
+      type: System.String
+      description: The node identifier located in configuration.
+    return:
+      type: Catalyst.Abstractions.Rpc.IRpcClient
+      description: ''
+    content.vb: Function GetConnectedNode(nodeId As String) As IRpcClient
+  overload: Catalyst.Abstractions.Cli.Commands.ICommandContext.GetConnectedNode*
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.GetNodeConfig(System.String)
+  commentId: M:Catalyst.Abstractions.Cli.Commands.ICommandContext.GetNodeConfig(System.String)
+  id: GetNodeConfig(System.String)
+  parent: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  langs:
+  - csharp
+  - vb
+  name: GetNodeConfig(String)
+  nameWithType: ICommandContext.GetNodeConfig(String)
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.GetNodeConfig(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: GetNodeConfig
+    path: ../src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+    startLine: 60
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Commands
+  summary: Gets the node configuration.
+  example: []
+  syntax:
+    content: IRpcClientConfig GetNodeConfig(string nodeId)
+    parameters:
+    - id: nodeId
+      type: System.String
+      description: The node identifier located in configuration.
+    return:
+      type: Catalyst.Abstractions.Rpc.IRpcClientConfig
+      description: ''
+    content.vb: Function GetNodeConfig(nodeId As String) As IRpcClientConfig
+  overload: Catalyst.Abstractions.Cli.Commands.ICommandContext.GetNodeConfig*
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.IsSocketChannelActive(Catalyst.Abstractions.Rpc.IRpcClient)
+  commentId: M:Catalyst.Abstractions.Cli.Commands.ICommandContext.IsSocketChannelActive(Catalyst.Abstractions.Rpc.IRpcClient)
+  id: IsSocketChannelActive(Catalyst.Abstractions.Rpc.IRpcClient)
+  parent: Catalyst.Abstractions.Cli.Commands.ICommandContext
+  langs:
+  - csharp
+  - vb
+  name: IsSocketChannelActive(IRpcClient)
+  nameWithType: ICommandContext.IsSocketChannelActive(IRpcClient)
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.IsSocketChannelActive(Catalyst.Abstractions.Rpc.IRpcClient)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IsSocketChannelActive
+    path: ../src/Catalyst.Abstractions/Cli/Commands/ICommandContext.cs
+    startLine: 69
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Commands
+  summary: Determines whether [is socket channel active] [the specified node].
+  example: []
+  syntax:
+    content: bool IsSocketChannelActive(IRpcClient node)
+    parameters:
+    - id: node
+      type: Catalyst.Abstractions.Rpc.IRpcClient
+      description: >-
+        A <see>
+
+        <cref>IRpcNode</cref>
+
+        </see>
+
+        object including node required information.
+    return:
+      type: System.Boolean
+      description: >-
+        <code>true</code> if [is socket channel active] [the specified node]; otherwise,
+
+        <code>false</code> A &quot;Channel inactive ...&quot; message is returned to the console.
+    content.vb: Function IsSocketChannelActive(node As IRpcClient) As Boolean
+  overload: Catalyst.Abstractions.Cli.Commands.ICommandContext.IsSocketChannelActive*
+references:
+- uid: Catalyst.Abstractions.Cli.Commands
+  commentId: N:Catalyst.Abstractions.Cli.Commands
+  name: Catalyst.Abstractions.Cli.Commands
+  nameWithType: Catalyst.Abstractions.Cli.Commands
+  fullName: Catalyst.Abstractions.Cli.Commands
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.RpcClientFactory*
+  commentId: Overload:Catalyst.Abstractions.Cli.Commands.ICommandContext.RpcClientFactory
+  name: RpcClientFactory
+  nameWithType: ICommandContext.RpcClientFactory
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.RpcClientFactory
+- uid: Catalyst.Abstractions.Rpc.IRpcClientFactory
+  commentId: T:Catalyst.Abstractions.Rpc.IRpcClientFactory
+  parent: Catalyst.Abstractions.Rpc
+  name: IRpcClientFactory
+  nameWithType: IRpcClientFactory
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientFactory
+- uid: Catalyst.Abstractions.Rpc
+  commentId: N:Catalyst.Abstractions.Rpc
+  name: Catalyst.Abstractions.Rpc
+  nameWithType: Catalyst.Abstractions.Rpc
+  fullName: Catalyst.Abstractions.Rpc
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.CertificateStore*
+  commentId: Overload:Catalyst.Abstractions.Cli.Commands.ICommandContext.CertificateStore
+  name: CertificateStore
+  nameWithType: ICommandContext.CertificateStore
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.CertificateStore
+- uid: Catalyst.Abstractions.Cryptography.ICertificateStore
+  commentId: T:Catalyst.Abstractions.Cryptography.ICertificateStore
+  parent: Catalyst.Abstractions.Cryptography
+  name: ICertificateStore
+  nameWithType: ICertificateStore
+  fullName: Catalyst.Abstractions.Cryptography.ICertificateStore
+- uid: Catalyst.Abstractions.Cryptography
+  commentId: N:Catalyst.Abstractions.Cryptography
+  name: Catalyst.Abstractions.Cryptography
+  nameWithType: Catalyst.Abstractions.Cryptography
+  fullName: Catalyst.Abstractions.Cryptography
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.UserOutput*
+  commentId: Overload:Catalyst.Abstractions.Cli.Commands.ICommandContext.UserOutput
+  name: UserOutput
+  nameWithType: ICommandContext.UserOutput
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.UserOutput
+- uid: Catalyst.Abstractions.Cli.IUserOutput
+  commentId: T:Catalyst.Abstractions.Cli.IUserOutput
+  parent: Catalyst.Abstractions.Cli
+  name: IUserOutput
+  nameWithType: IUserOutput
+  fullName: Catalyst.Abstractions.Cli.IUserOutput
+- uid: Catalyst.Abstractions.Cli
+  commentId: N:Catalyst.Abstractions.Cli
+  name: Catalyst.Abstractions.Cli
+  nameWithType: Catalyst.Abstractions.Cli
+  fullName: Catalyst.Abstractions.Cli
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.SocketClientRegistry*
+  commentId: Overload:Catalyst.Abstractions.Cli.Commands.ICommandContext.SocketClientRegistry
+  name: SocketClientRegistry
+  nameWithType: ICommandContext.SocketClientRegistry
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.SocketClientRegistry
+- uid: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry{Catalyst.Abstractions.Rpc.IRpcClient}
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocketClientRegistry{Catalyst.Abstractions.Rpc.IRpcClient}
+  parent: Catalyst.Abstractions.IO.Transport
+  definition: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+  name: ISocketClientRegistry<IRpcClient>
+  nameWithType: ISocketClientRegistry<IRpcClient>
+  fullName: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry<Catalyst.Abstractions.Rpc.IRpcClient>
+  nameWithType.vb: ISocketClientRegistry(Of IRpcClient)
+  fullName.vb: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry(Of Catalyst.Abstractions.Rpc.IRpcClient)
+  name.vb: ISocketClientRegistry(Of IRpcClient)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+    name: ISocketClientRegistry
+    nameWithType: ISocketClientRegistry
+    fullName: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.Rpc.IRpcClient
+    name: IRpcClient
+    nameWithType: IRpcClient
+    fullName: Catalyst.Abstractions.Rpc.IRpcClient
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+    name: ISocketClientRegistry
+    nameWithType: ISocketClientRegistry
+    fullName: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.Rpc.IRpcClient
+    name: IRpcClient
+    nameWithType: IRpcClient
+    fullName: Catalyst.Abstractions.Rpc.IRpcClient
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+  name: ISocketClientRegistry<TSocketChannel>
+  nameWithType: ISocketClientRegistry<TSocketChannel>
+  fullName: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry<TSocketChannel>
+  nameWithType.vb: ISocketClientRegistry(Of TSocketChannel)
+  fullName.vb: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry(Of TSocketChannel)
+  name.vb: ISocketClientRegistry(Of TSocketChannel)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+    name: ISocketClientRegistry
+    nameWithType: ISocketClientRegistry
+    fullName: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TSocketChannel
+    nameWithType: TSocketChannel
+    fullName: TSocketChannel
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+    name: ISocketClientRegistry
+    nameWithType: ISocketClientRegistry
+    fullName: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TSocketChannel
+    nameWithType: TSocketChannel
+    fullName: TSocketChannel
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Transport
+  commentId: N:Catalyst.Abstractions.IO.Transport
+  name: Catalyst.Abstractions.IO.Transport
+  nameWithType: Catalyst.Abstractions.IO.Transport
+  fullName: Catalyst.Abstractions.IO.Transport
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.PeerId*
+  commentId: Overload:Catalyst.Abstractions.Cli.Commands.ICommandContext.PeerId
+  name: PeerId
+  nameWithType: ICommandContext.PeerId
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.PeerId
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.GetConnectedNode*
+  commentId: Overload:Catalyst.Abstractions.Cli.Commands.ICommandContext.GetConnectedNode
+  name: GetConnectedNode
+  nameWithType: ICommandContext.GetConnectedNode
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.GetConnectedNode
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Abstractions.Rpc.IRpcClient
+  commentId: T:Catalyst.Abstractions.Rpc.IRpcClient
+  parent: Catalyst.Abstractions.Rpc
+  name: IRpcClient
+  nameWithType: IRpcClient
+  fullName: Catalyst.Abstractions.Rpc.IRpcClient
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.GetNodeConfig*
+  commentId: Overload:Catalyst.Abstractions.Cli.Commands.ICommandContext.GetNodeConfig
+  name: GetNodeConfig
+  nameWithType: ICommandContext.GetNodeConfig
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.GetNodeConfig
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig
+  commentId: T:Catalyst.Abstractions.Rpc.IRpcClientConfig
+  parent: Catalyst.Abstractions.Rpc
+  name: IRpcClientConfig
+  nameWithType: IRpcClientConfig
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig
+- uid: Catalyst.Abstractions.Cli.Commands.ICommandContext.IsSocketChannelActive*
+  commentId: Overload:Catalyst.Abstractions.Cli.Commands.ICommandContext.IsSocketChannelActive
+  name: IsSocketChannelActive
+  nameWithType: ICommandContext.IsSocketChannelActive
+  fullName: Catalyst.Abstractions.Cli.Commands.ICommandContext.IsSocketChannelActive
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean

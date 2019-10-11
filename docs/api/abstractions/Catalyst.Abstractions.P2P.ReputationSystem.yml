@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.ReputationSystem
+  commentId: N:Catalyst.Abstractions.P2P.ReputationSystem
+  id: Catalyst.Abstractions.P2P.ReputationSystem
+  children:
+  - Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.P2P.ReputationSystem
+  nameWithType: Catalyst.Abstractions.P2P.ReputationSystem
+  fullName: Catalyst.Abstractions.P2P.ReputationSystem
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  commentId: T:Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  name: IPeerReputationChange
+  nameWithType: IPeerReputationChange
+  fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange

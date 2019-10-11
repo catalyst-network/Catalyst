@@ -1,0 +1,136 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory
+  commentId: T:Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory
+  id: ITcpClientChannelFactory
+  parent: Catalyst.Abstractions.IO.Transport.Channels
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: ITcpClientChannelFactory
+  nameWithType: ITcpClientChannelFactory
+  fullName: Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Transport/Channels/ITcpClientChannelFactory.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ITcpClientChannelFactory
+    path: ../src/Catalyst.Abstractions/IO/Transport/Channels/ITcpClientChannelFactory.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Transport.Channels
+  syntax:
+    content: 'public interface ITcpClientChannelFactory : IChannelFactory'
+    content.vb: >-
+      Public Interface ITcpClientChannelFactory
+
+          Inherits IChannelFactory
+  inheritedMembers:
+  - Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+references:
+- uid: Catalyst.Abstractions.IO.Transport.Channels
+  commentId: N:Catalyst.Abstractions.IO.Transport.Channels
+  name: Catalyst.Abstractions.IO.Transport.Channels
+  nameWithType: Catalyst.Abstractions.IO.Transport.Channels
+  fullName: Catalyst.Abstractions.IO.Transport.Channels
+- uid: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  commentId: M:Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  parent: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory
+  isExternal: true
+  name: BuildChannel(IEventLoopGroupFactory, IPAddress, Int32, X509Certificate2)
+  nameWithType: IChannelFactory.BuildChannel(IEventLoopGroupFactory, IPAddress, Int32, X509Certificate2)
+  fullName: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory, System.Net.IPAddress, System.Int32, System.Security.Cryptography.X509Certificates.X509Certificate2)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+    name: BuildChannel
+    nameWithType: IChannelFactory.BuildChannel
+    fullName: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory.BuildChannel
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    name: IEventLoopGroupFactory
+    nameWithType: IEventLoopGroupFactory
+    fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Security.Cryptography.X509Certificates.X509Certificate2
+    name: X509Certificate2
+    nameWithType: X509Certificate2
+    fullName: System.Security.Cryptography.X509Certificates.X509Certificate2
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+    name: BuildChannel
+    nameWithType: IChannelFactory.BuildChannel
+    fullName: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory.BuildChannel
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    name: IEventLoopGroupFactory
+    nameWithType: IEventLoopGroupFactory
+    fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Security.Cryptography.X509Certificates.X509Certificate2
+    name: X509Certificate2
+    nameWithType: X509Certificate2
+    fullName: System.Security.Cryptography.X509Certificates.X509Certificate2
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory
+  commentId: T:Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory
+  parent: Catalyst.Abstractions.IO.Transport.Channels
+  name: IChannelFactory
+  nameWithType: IChannelFactory
+  fullName: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory

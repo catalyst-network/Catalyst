@@ -1,0 +1,457 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.P2P.PeerChallengerResponse
+  commentId: T:Catalyst.Core.Lib.P2P.PeerChallengerResponse
+  id: PeerChallengerResponse
+  parent: Catalyst.Core.Lib.P2P
+  children:
+  - Catalyst.Core.Lib.P2P.PeerChallengerResponse.#ctor(Catalyst.Protocol.Peer.PeerId)
+  - Catalyst.Core.Lib.P2P.PeerChallengerResponse.PeerId
+  langs:
+  - csharp
+  - vb
+  name: PeerChallengerResponse
+  nameWithType: PeerChallengerResponse
+  fullName: Catalyst.Core.Lib.P2P.PeerChallengerResponse
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/PeerChallengerResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PeerChallengerResponse
+    path: ../src/Catalyst.Core.Lib/P2P/PeerChallengerResponse.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P
+  syntax:
+    content: 'public class PeerChallengerResponse : IPeerChallengeResponse'
+    content.vb: >-
+      Public Class PeerChallengerResponse
+
+          Implements IPeerChallengeResponse
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.P2P.IPeerChallengeResponse
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.P2P.PeerChallengerResponse.PeerId
+  commentId: P:Catalyst.Core.Lib.P2P.PeerChallengerResponse.PeerId
+  id: PeerId
+  parent: Catalyst.Core.Lib.P2P.PeerChallengerResponse
+  langs:
+  - csharp
+  - vb
+  name: PeerId
+  nameWithType: PeerChallengerResponse.PeerId
+  fullName: Catalyst.Core.Lib.P2P.PeerChallengerResponse.PeerId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/PeerChallengerResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PeerId
+    path: ../src/Catalyst.Core.Lib/P2P/PeerChallengerResponse.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P
+  syntax:
+    content: public PeerId PeerId { get; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public ReadOnly Property PeerId As PeerId
+  overload: Catalyst.Core.Lib.P2P.PeerChallengerResponse.PeerId*
+  implements:
+  - Catalyst.Abstractions.P2P.IPeerChallengeResponse.PeerId
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.P2P.PeerChallengerResponse.#ctor(Catalyst.Protocol.Peer.PeerId)
+  commentId: M:Catalyst.Core.Lib.P2P.PeerChallengerResponse.#ctor(Catalyst.Protocol.Peer.PeerId)
+  id: '#ctor(Catalyst.Protocol.Peer.PeerId)'
+  parent: Catalyst.Core.Lib.P2P.PeerChallengerResponse
+  langs:
+  - csharp
+  - vb
+  name: PeerChallengerResponse(PeerId)
+  nameWithType: PeerChallengerResponse.PeerChallengerResponse(PeerId)
+  fullName: Catalyst.Core.Lib.P2P.PeerChallengerResponse.PeerChallengerResponse(Catalyst.Protocol.Peer.PeerId)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/PeerChallengerResponse.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/P2P/PeerChallengerResponse.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P
+  syntax:
+    content: public PeerChallengerResponse(PeerId peerId)
+    parameters:
+    - id: peerId
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public Sub New(peerId As PeerId)
+  overload: Catalyst.Core.Lib.P2P.PeerChallengerResponse.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.P2P
+  commentId: N:Catalyst.Core.Lib.P2P
+  name: Catalyst.Core.Lib.P2P
+  nameWithType: Catalyst.Core.Lib.P2P
+  fullName: Catalyst.Core.Lib.P2P
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.P2P.IPeerChallengeResponse
+  commentId: T:Catalyst.Abstractions.P2P.IPeerChallengeResponse
+  parent: Catalyst.Abstractions.P2P
+  name: IPeerChallengeResponse
+  nameWithType: IPeerChallengeResponse
+  fullName: Catalyst.Abstractions.P2P.IPeerChallengeResponse
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.P2P
+  commentId: N:Catalyst.Abstractions.P2P
+  name: Catalyst.Abstractions.P2P
+  nameWithType: Catalyst.Abstractions.P2P
+  fullName: Catalyst.Abstractions.P2P
+- uid: Catalyst.Core.Lib.P2P.PeerChallengerResponse.PeerId*
+  commentId: Overload:Catalyst.Core.Lib.P2P.PeerChallengerResponse.PeerId
+  name: PeerId
+  nameWithType: PeerChallengerResponse.PeerId
+  fullName: Catalyst.Core.Lib.P2P.PeerChallengerResponse.PeerId
+- uid: Catalyst.Abstractions.P2P.IPeerChallengeResponse.PeerId
+  commentId: P:Catalyst.Abstractions.P2P.IPeerChallengeResponse.PeerId
+  parent: Catalyst.Abstractions.P2P.IPeerChallengeResponse
+  name: PeerId
+  nameWithType: IPeerChallengeResponse.PeerId
+  fullName: Catalyst.Abstractions.P2P.IPeerChallengeResponse.PeerId
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Core.Lib.P2P.PeerChallengerResponse.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.P2P.PeerChallengerResponse.#ctor
+  name: PeerChallengerResponse
+  nameWithType: PeerChallengerResponse.PeerChallengerResponse
+  fullName: Catalyst.Core.Lib.P2P.PeerChallengerResponse.PeerChallengerResponse

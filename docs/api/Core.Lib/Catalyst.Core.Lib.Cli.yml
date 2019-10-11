@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Cli
+  commentId: N:Catalyst.Core.Lib.Cli
+  id: Catalyst.Core.Lib.Cli
+  children:
+  - Catalyst.Core.Lib.Cli.ConsoleUserInput
+  - Catalyst.Core.Lib.Cli.ConsoleUserOutput
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.Cli
+  nameWithType: Catalyst.Core.Lib.Cli
+  fullName: Catalyst.Core.Lib.Cli
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.Cli.ConsoleUserInput
+  commentId: T:Catalyst.Core.Lib.Cli.ConsoleUserInput
+  name: ConsoleUserInput
+  nameWithType: ConsoleUserInput
+  fullName: Catalyst.Core.Lib.Cli.ConsoleUserInput
+- uid: Catalyst.Core.Lib.Cli.ConsoleUserOutput
+  commentId: T:Catalyst.Core.Lib.Cli.ConsoleUserOutput
+  name: ConsoleUserOutput
+  nameWithType: ConsoleUserOutput
+  fullName: Catalyst.Core.Lib.Cli.ConsoleUserOutput

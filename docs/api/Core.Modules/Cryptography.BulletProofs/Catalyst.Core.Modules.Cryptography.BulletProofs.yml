@@ -1,0 +1,34 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs
+  commentId: N:Catalyst.Core.Modules.Cryptography.BulletProofs
+  id: Catalyst.Core.Modules.Cryptography.BulletProofs
+  children:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.NativeBinding
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Modules.Cryptography.BulletProofs
+  nameWithType: Catalyst.Core.Modules.Cryptography.BulletProofs
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+references:
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule
+  commentId: T:Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule
+  name: BulletProofsModule
+  nameWithType: BulletProofsModule
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  commentId: T:Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+  name: FfiWrapper
+  nameWithType: FfiWrapper
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.FfiWrapper
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.NativeBinding
+  commentId: T:Catalyst.Core.Modules.Cryptography.BulletProofs.NativeBinding
+  name: NativeBinding
+  nameWithType: NativeBinding
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.NativeBinding

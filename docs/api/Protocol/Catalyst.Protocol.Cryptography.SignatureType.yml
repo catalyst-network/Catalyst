@@ -1,0 +1,276 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Cryptography.SignatureType
+  commentId: T:Catalyst.Protocol.Cryptography.SignatureType
+  id: SignatureType
+  parent: Catalyst.Protocol.Cryptography
+  children:
+  - Catalyst.Protocol.Cryptography.SignatureType.ProtocolPeer
+  - Catalyst.Protocol.Cryptography.SignatureType.ProtocolRpc
+  - Catalyst.Protocol.Cryptography.SignatureType.TransactionConfidential
+  - Catalyst.Protocol.Cryptography.SignatureType.TransactionPublic
+  - Catalyst.Protocol.Cryptography.SignatureType.Unknown
+  langs:
+  - csharp
+  - vb
+  name: SignatureType
+  nameWithType: SignatureType
+  fullName: Catalyst.Protocol.Cryptography.SignatureType
+  type: Enum
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: SignatureType
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+    startLine: 48
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Cryptography
+  syntax:
+    content: public enum SignatureType
+    content.vb: Public Enum SignatureType
+  modifiers.csharp:
+  - public
+  - enum
+  modifiers.vb:
+  - Public
+  - Enum
+- uid: Catalyst.Protocol.Cryptography.SignatureType.Unknown
+  commentId: F:Catalyst.Protocol.Cryptography.SignatureType.Unknown
+  id: Unknown
+  parent: Catalyst.Protocol.Cryptography.SignatureType
+  langs:
+  - csharp
+  - vb
+  name: Unknown
+  nameWithType: SignatureType.Unknown
+  fullName: Catalyst.Protocol.Cryptography.SignatureType.Unknown
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Unknown
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+    startLine: 49
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Cryptography
+  syntax:
+    content: >-
+      [OriginalName("SIGNATURE_TYPE_UNKNOWN")]
+
+      Unknown = 0
+    return:
+      type: Catalyst.Protocol.Cryptography.SignatureType
+    content.vb: >-
+      <OriginalName("SIGNATURE_TYPE_UNKNOWN")>
+
+      Unknown = 0
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: SIGNATURE_TYPE_UNKNOWN
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Cryptography.SignatureType.TransactionPublic
+  commentId: F:Catalyst.Protocol.Cryptography.SignatureType.TransactionPublic
+  id: TransactionPublic
+  parent: Catalyst.Protocol.Cryptography.SignatureType
+  langs:
+  - csharp
+  - vb
+  name: TransactionPublic
+  nameWithType: SignatureType.TransactionPublic
+  fullName: Catalyst.Protocol.Cryptography.SignatureType.TransactionPublic
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: TransactionPublic
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Cryptography
+  syntax:
+    content: >-
+      [OriginalName("TRANSACTION_PUBLIC")]
+
+      TransactionPublic = 1
+    return:
+      type: Catalyst.Protocol.Cryptography.SignatureType
+    content.vb: >-
+      <OriginalName("TRANSACTION_PUBLIC")>
+
+      TransactionPublic = 1
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: TRANSACTION_PUBLIC
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Cryptography.SignatureType.TransactionConfidential
+  commentId: F:Catalyst.Protocol.Cryptography.SignatureType.TransactionConfidential
+  id: TransactionConfidential
+  parent: Catalyst.Protocol.Cryptography.SignatureType
+  langs:
+  - csharp
+  - vb
+  name: TransactionConfidential
+  nameWithType: SignatureType.TransactionConfidential
+  fullName: Catalyst.Protocol.Cryptography.SignatureType.TransactionConfidential
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: TransactionConfidential
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+    startLine: 51
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Cryptography
+  syntax:
+    content: >-
+      [OriginalName("TRANSACTION_CONFIDENTIAL")]
+
+      TransactionConfidential = 2
+    return:
+      type: Catalyst.Protocol.Cryptography.SignatureType
+    content.vb: >-
+      <OriginalName("TRANSACTION_CONFIDENTIAL")>
+
+      TransactionConfidential = 2
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: TRANSACTION_CONFIDENTIAL
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Cryptography.SignatureType.ProtocolRpc
+  commentId: F:Catalyst.Protocol.Cryptography.SignatureType.ProtocolRpc
+  id: ProtocolRpc
+  parent: Catalyst.Protocol.Cryptography.SignatureType
+  langs:
+  - csharp
+  - vb
+  name: ProtocolRpc
+  nameWithType: SignatureType.ProtocolRpc
+  fullName: Catalyst.Protocol.Cryptography.SignatureType.ProtocolRpc
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ProtocolRpc
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+    startLine: 52
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Cryptography
+  syntax:
+    content: >-
+      [OriginalName("PROTOCOL_RPC")]
+
+      ProtocolRpc = 3
+    return:
+      type: Catalyst.Protocol.Cryptography.SignatureType
+    content.vb: >-
+      <OriginalName("PROTOCOL_RPC")>
+
+      ProtocolRpc = 3
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: PROTOCOL_RPC
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Cryptography.SignatureType.ProtocolPeer
+  commentId: F:Catalyst.Protocol.Cryptography.SignatureType.ProtocolPeer
+  id: ProtocolPeer
+  parent: Catalyst.Protocol.Cryptography.SignatureType
+  langs:
+  - csharp
+  - vb
+  name: ProtocolPeer
+  nameWithType: SignatureType.ProtocolPeer
+  fullName: Catalyst.Protocol.Cryptography.SignatureType.ProtocolPeer
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: ProtocolPeer
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Cryptography.cs
+    startLine: 53
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Cryptography
+  syntax:
+    content: >-
+      [OriginalName("PROTOCOL_PEER")]
+
+      ProtocolPeer = 4
+    return:
+      type: Catalyst.Protocol.Cryptography.SignatureType
+    content.vb: >-
+      <OriginalName("PROTOCOL_PEER")>
+
+      ProtocolPeer = 4
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: PROTOCOL_PEER
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+references:
+- uid: Catalyst.Protocol.Cryptography
+  commentId: N:Catalyst.Protocol.Cryptography
+  name: Catalyst.Protocol.Cryptography
+  nameWithType: Catalyst.Protocol.Cryptography
+  fullName: Catalyst.Protocol.Cryptography
+- uid: Catalyst.Protocol.Cryptography.SignatureType
+  commentId: T:Catalyst.Protocol.Cryptography.SignatureType
+  parent: Catalyst.Protocol.Cryptography
+  name: SignatureType
+  nameWithType: SignatureType
+  fullName: Catalyst.Protocol.Cryptography.SignatureType

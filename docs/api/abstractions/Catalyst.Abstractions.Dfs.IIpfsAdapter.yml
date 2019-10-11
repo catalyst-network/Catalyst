@@ -1,0 +1,921 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  commentId: T:Catalyst.Abstractions.Dfs.IIpfsAdapter
+  id: IIpfsAdapter
+  parent: Catalyst.Abstractions.Dfs
+  children:
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Bitswap
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Block
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.BlockRepository
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Bootstrap
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Config
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Dag
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Dht
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Dns
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.FileSystem
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Generic
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Key
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Name
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Object
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Options
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Pin
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.PubSub
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Stats
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Swarm
+  langs:
+  - csharp
+  - vb
+  name: IIpfsAdapter
+  nameWithType: IIpfsAdapter
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: IIpfsAdapter
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: 'public interface IIpfsAdapter : ICoreApi, IDisposable'
+    content.vb: >-
+      Public Interface IIpfsAdapter
+
+          Inherits ICoreApi, IDisposable
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Bitswap
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Bitswap
+  id: Bitswap
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Bitswap
+  nameWithType: IIpfsAdapter.Bitswap
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Bitswap
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Bitswap
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IBitswapApi Bitswap { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Abstractions.IBitswapApi
+    content.vb: ReadOnly Property Bitswap As IBitswapApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Bitswap*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Block
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Block
+  id: Block
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Block
+  nameWithType: IIpfsAdapter.Block
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Block
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Block
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IBlockApi Block { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Abstractions.IBlockApi
+    content.vb: ReadOnly Property Block As IBlockApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Block*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.BlockRepository
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.BlockRepository
+  id: BlockRepository
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: BlockRepository
+  nameWithType: IIpfsAdapter.BlockRepository
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.BlockRepository
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: BlockRepository
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IBlockRepositoryApi BlockRepository { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Core.Lib.IBlockRepositoryApi
+    content.vb: ReadOnly Property BlockRepository As IBlockRepositoryApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.BlockRepository*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Bootstrap
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Bootstrap
+  id: Bootstrap
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Bootstrap
+  nameWithType: IIpfsAdapter.Bootstrap
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Bootstrap
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Bootstrap
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IBootstrapApi Bootstrap { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Abstractions.IBootstrapApi
+    content.vb: ReadOnly Property Bootstrap As IBootstrapApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Bootstrap*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Config
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Config
+  id: Config
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Config
+  nameWithType: IIpfsAdapter.Config
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Config
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Config
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IConfigApi Config { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Abstractions.IConfigApi
+    content.vb: ReadOnly Property Config As IConfigApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Config*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Options
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Options
+  id: Options
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Options
+  nameWithType: IIpfsAdapter.Options
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Options
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Options
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 37
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IpfsEngineOptions Options { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Core.Lib.IpfsEngineOptions
+    content.vb: ReadOnly Property Options As IpfsEngineOptions
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Options*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dag
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Dag
+  id: Dag
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Dag
+  nameWithType: IIpfsAdapter.Dag
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dag
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Dag
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IDagApi Dag { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Abstractions.IDagApi
+    content.vb: ReadOnly Property Dag As IDagApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dag*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dht
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Dht
+  id: Dht
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Dht
+  nameWithType: IIpfsAdapter.Dht
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dht
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Dht
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IDhtApi Dht { get; }
+    parameters: []
+    return:
+      type: LibP2P.IDhtApi
+    content.vb: ReadOnly Property Dht As IDhtApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dht*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dns
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Dns
+  id: Dns
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Dns
+  nameWithType: IIpfsAdapter.Dns
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dns
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Dns
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IDnsApi Dns { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Abstractions.IDnsApi
+    content.vb: ReadOnly Property Dns As IDnsApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dns*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.FileSystem
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.FileSystem
+  id: FileSystem
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: FileSystem
+  nameWithType: IIpfsAdapter.FileSystem
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.FileSystem
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: FileSystem
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IFileSystemApi FileSystem { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Core.Lib.IFileSystemApi
+    content.vb: ReadOnly Property FileSystem As IFileSystemApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.FileSystem*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Generic
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Generic
+  id: Generic
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Generic
+  nameWithType: IIpfsAdapter.Generic
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Generic
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Generic
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 42
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IGenericApi Generic { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Abstractions.IGenericApi
+    content.vb: ReadOnly Property Generic As IGenericApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Generic*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Key
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Key
+  id: Key
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Key
+  nameWithType: IIpfsAdapter.Key
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Key
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Key
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 43
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IKeyApi Key { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Abstractions.IKeyApi
+    content.vb: ReadOnly Property Key As IKeyApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Key*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Name
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Name
+  id: Name
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: IIpfsAdapter.Name
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Name
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Name
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 44
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: INameApi Name { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Core.Lib.INameApi
+    content.vb: ReadOnly Property Name As INameApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Name*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Object
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Object
+  id: Object
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Object
+  nameWithType: IIpfsAdapter.Object
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Object
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Object
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 45
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IObjectApi Object { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Core.Lib.IObjectApi
+    content.vb: ReadOnly Property Object As IObjectApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Object*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Pin
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Pin
+  id: Pin
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Pin
+  nameWithType: IIpfsAdapter.Pin
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Pin
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Pin
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IPinApi Pin { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Abstractions.IPinApi
+    content.vb: ReadOnly Property Pin As IPinApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Pin*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.PubSub
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.PubSub
+  id: PubSub
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: PubSub
+  nameWithType: IIpfsAdapter.PubSub
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.PubSub
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: PubSub
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IPubSubApi PubSub { get; }
+    parameters: []
+    return:
+      type: LibP2P.IPubSubApi
+    content.vb: ReadOnly Property PubSub As IPubSubApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.PubSub*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Stats
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Stats
+  id: Stats
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Stats
+  nameWithType: IIpfsAdapter.Stats
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Stats
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Stats
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 48
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: IStatsApi Stats { get; }
+    parameters: []
+    return:
+      type: TheDotNetLeague.Ipfs.Core.Lib.IStatsApi
+    content.vb: ReadOnly Property Stats As IStatsApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Stats*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Swarm
+  commentId: P:Catalyst.Abstractions.Dfs.IIpfsAdapter.Swarm
+  id: Swarm
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Swarm
+  nameWithType: IIpfsAdapter.Swarm
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Swarm
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Swarm
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 49
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: ISwarmApi Swarm { get; }
+    parameters: []
+    return:
+      type: LibP2P.ISwarmApi
+    content.vb: ReadOnly Property Swarm As ISwarmApi
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Swarm*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+  commentId: M:Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+  id: Dispose
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: IIpfsAdapter.Dispose()
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+      branch: develop
+      repo: https://github.com/catalyst-network/Catalyst.Node.git
+    id: Dispose
+    path: ../src/Catalyst.Abstractions/Dfs/IIpfsAdapter.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Dfs
+  syntax:
+    content: void Dispose()
+    content.vb: Sub Dispose
+  overload: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose*
+references:
+- uid: Catalyst.Abstractions.Dfs
+  commentId: N:Catalyst.Abstractions.Dfs
+  name: Catalyst.Abstractions.Dfs
+  nameWithType: Catalyst.Abstractions.Dfs
+  fullName: Catalyst.Abstractions.Dfs
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Bitswap*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Bitswap
+  name: Bitswap
+  nameWithType: IIpfsAdapter.Bitswap
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Bitswap
+- uid: TheDotNetLeague.Ipfs.Abstractions.IBitswapApi
+  commentId: T:TheDotNetLeague.Ipfs.Abstractions.IBitswapApi
+  parent: TheDotNetLeague.Ipfs.Abstractions
+  isExternal: true
+  name: IBitswapApi
+  nameWithType: IBitswapApi
+  fullName: TheDotNetLeague.Ipfs.Abstractions.IBitswapApi
+- uid: TheDotNetLeague.Ipfs.Abstractions
+  commentId: N:TheDotNetLeague.Ipfs.Abstractions
+  isExternal: true
+  name: TheDotNetLeague.Ipfs.Abstractions
+  nameWithType: TheDotNetLeague.Ipfs.Abstractions
+  fullName: TheDotNetLeague.Ipfs.Abstractions
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Block*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Block
+  name: Block
+  nameWithType: IIpfsAdapter.Block
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Block
+- uid: TheDotNetLeague.Ipfs.Abstractions.IBlockApi
+  commentId: T:TheDotNetLeague.Ipfs.Abstractions.IBlockApi
+  parent: TheDotNetLeague.Ipfs.Abstractions
+  isExternal: true
+  name: IBlockApi
+  nameWithType: IBlockApi
+  fullName: TheDotNetLeague.Ipfs.Abstractions.IBlockApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.BlockRepository*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.BlockRepository
+  name: BlockRepository
+  nameWithType: IIpfsAdapter.BlockRepository
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.BlockRepository
+- uid: TheDotNetLeague.Ipfs.Core.Lib.IBlockRepositoryApi
+  commentId: T:TheDotNetLeague.Ipfs.Core.Lib.IBlockRepositoryApi
+  parent: TheDotNetLeague.Ipfs.Core.Lib
+  isExternal: true
+  name: IBlockRepositoryApi
+  nameWithType: IBlockRepositoryApi
+  fullName: TheDotNetLeague.Ipfs.Core.Lib.IBlockRepositoryApi
+- uid: TheDotNetLeague.Ipfs.Core.Lib
+  commentId: N:TheDotNetLeague.Ipfs.Core.Lib
+  isExternal: true
+  name: TheDotNetLeague.Ipfs.Core.Lib
+  nameWithType: TheDotNetLeague.Ipfs.Core.Lib
+  fullName: TheDotNetLeague.Ipfs.Core.Lib
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Bootstrap*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Bootstrap
+  name: Bootstrap
+  nameWithType: IIpfsAdapter.Bootstrap
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Bootstrap
+- uid: TheDotNetLeague.Ipfs.Abstractions.IBootstrapApi
+  commentId: T:TheDotNetLeague.Ipfs.Abstractions.IBootstrapApi
+  parent: TheDotNetLeague.Ipfs.Abstractions
+  isExternal: true
+  name: IBootstrapApi
+  nameWithType: IBootstrapApi
+  fullName: TheDotNetLeague.Ipfs.Abstractions.IBootstrapApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Config*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Config
+  name: Config
+  nameWithType: IIpfsAdapter.Config
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Config
+- uid: TheDotNetLeague.Ipfs.Abstractions.IConfigApi
+  commentId: T:TheDotNetLeague.Ipfs.Abstractions.IConfigApi
+  parent: TheDotNetLeague.Ipfs.Abstractions
+  isExternal: true
+  name: IConfigApi
+  nameWithType: IConfigApi
+  fullName: TheDotNetLeague.Ipfs.Abstractions.IConfigApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Options*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Options
+  name: Options
+  nameWithType: IIpfsAdapter.Options
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Options
+- uid: TheDotNetLeague.Ipfs.Core.Lib.IpfsEngineOptions
+  commentId: T:TheDotNetLeague.Ipfs.Core.Lib.IpfsEngineOptions
+  parent: TheDotNetLeague.Ipfs.Core.Lib
+  isExternal: true
+  name: IpfsEngineOptions
+  nameWithType: IpfsEngineOptions
+  fullName: TheDotNetLeague.Ipfs.Core.Lib.IpfsEngineOptions
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dag*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Dag
+  name: Dag
+  nameWithType: IIpfsAdapter.Dag
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dag
+- uid: TheDotNetLeague.Ipfs.Abstractions.IDagApi
+  commentId: T:TheDotNetLeague.Ipfs.Abstractions.IDagApi
+  parent: TheDotNetLeague.Ipfs.Abstractions
+  isExternal: true
+  name: IDagApi
+  nameWithType: IDagApi
+  fullName: TheDotNetLeague.Ipfs.Abstractions.IDagApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dht*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Dht
+  name: Dht
+  nameWithType: IIpfsAdapter.Dht
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dht
+- uid: LibP2P.IDhtApi
+  commentId: T:LibP2P.IDhtApi
+  parent: LibP2P
+  isExternal: true
+  name: IDhtApi
+  nameWithType: IDhtApi
+  fullName: LibP2P.IDhtApi
+- uid: LibP2P
+  commentId: N:LibP2P
+  isExternal: true
+  name: LibP2P
+  nameWithType: LibP2P
+  fullName: LibP2P
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dns*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Dns
+  name: Dns
+  nameWithType: IIpfsAdapter.Dns
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dns
+- uid: TheDotNetLeague.Ipfs.Abstractions.IDnsApi
+  commentId: T:TheDotNetLeague.Ipfs.Abstractions.IDnsApi
+  parent: TheDotNetLeague.Ipfs.Abstractions
+  isExternal: true
+  name: IDnsApi
+  nameWithType: IDnsApi
+  fullName: TheDotNetLeague.Ipfs.Abstractions.IDnsApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.FileSystem*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.FileSystem
+  name: FileSystem
+  nameWithType: IIpfsAdapter.FileSystem
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.FileSystem
+- uid: TheDotNetLeague.Ipfs.Core.Lib.IFileSystemApi
+  commentId: T:TheDotNetLeague.Ipfs.Core.Lib.IFileSystemApi
+  parent: TheDotNetLeague.Ipfs.Core.Lib
+  isExternal: true
+  name: IFileSystemApi
+  nameWithType: IFileSystemApi
+  fullName: TheDotNetLeague.Ipfs.Core.Lib.IFileSystemApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Generic*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Generic
+  name: Generic
+  nameWithType: IIpfsAdapter.Generic
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Generic
+- uid: TheDotNetLeague.Ipfs.Abstractions.IGenericApi
+  commentId: T:TheDotNetLeague.Ipfs.Abstractions.IGenericApi
+  parent: TheDotNetLeague.Ipfs.Abstractions
+  isExternal: true
+  name: IGenericApi
+  nameWithType: IGenericApi
+  fullName: TheDotNetLeague.Ipfs.Abstractions.IGenericApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Key*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Key
+  name: Key
+  nameWithType: IIpfsAdapter.Key
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Key
+- uid: TheDotNetLeague.Ipfs.Abstractions.IKeyApi
+  commentId: T:TheDotNetLeague.Ipfs.Abstractions.IKeyApi
+  parent: TheDotNetLeague.Ipfs.Abstractions
+  isExternal: true
+  name: IKeyApi
+  nameWithType: IKeyApi
+  fullName: TheDotNetLeague.Ipfs.Abstractions.IKeyApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Name*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Name
+  name: Name
+  nameWithType: IIpfsAdapter.Name
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Name
+- uid: TheDotNetLeague.Ipfs.Core.Lib.INameApi
+  commentId: T:TheDotNetLeague.Ipfs.Core.Lib.INameApi
+  parent: TheDotNetLeague.Ipfs.Core.Lib
+  isExternal: true
+  name: INameApi
+  nameWithType: INameApi
+  fullName: TheDotNetLeague.Ipfs.Core.Lib.INameApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Object*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Object
+  name: Object
+  nameWithType: IIpfsAdapter.Object
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Object
+- uid: TheDotNetLeague.Ipfs.Core.Lib.IObjectApi
+  commentId: T:TheDotNetLeague.Ipfs.Core.Lib.IObjectApi
+  parent: TheDotNetLeague.Ipfs.Core.Lib
+  isExternal: true
+  name: IObjectApi
+  nameWithType: IObjectApi
+  fullName: TheDotNetLeague.Ipfs.Core.Lib.IObjectApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Pin*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Pin
+  name: Pin
+  nameWithType: IIpfsAdapter.Pin
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Pin
+- uid: TheDotNetLeague.Ipfs.Abstractions.IPinApi
+  commentId: T:TheDotNetLeague.Ipfs.Abstractions.IPinApi
+  parent: TheDotNetLeague.Ipfs.Abstractions
+  isExternal: true
+  name: IPinApi
+  nameWithType: IPinApi
+  fullName: TheDotNetLeague.Ipfs.Abstractions.IPinApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.PubSub*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.PubSub
+  name: PubSub
+  nameWithType: IIpfsAdapter.PubSub
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.PubSub
+- uid: LibP2P.IPubSubApi
+  commentId: T:LibP2P.IPubSubApi
+  parent: LibP2P
+  isExternal: true
+  name: IPubSubApi
+  nameWithType: IPubSubApi
+  fullName: LibP2P.IPubSubApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Stats*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Stats
+  name: Stats
+  nameWithType: IIpfsAdapter.Stats
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Stats
+- uid: TheDotNetLeague.Ipfs.Core.Lib.IStatsApi
+  commentId: T:TheDotNetLeague.Ipfs.Core.Lib.IStatsApi
+  parent: TheDotNetLeague.Ipfs.Core.Lib
+  isExternal: true
+  name: IStatsApi
+  nameWithType: IStatsApi
+  fullName: TheDotNetLeague.Ipfs.Core.Lib.IStatsApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Swarm*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Swarm
+  name: Swarm
+  nameWithType: IIpfsAdapter.Swarm
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Swarm
+- uid: LibP2P.ISwarmApi
+  commentId: T:LibP2P.ISwarmApi
+  parent: LibP2P
+  isExternal: true
+  name: ISwarmApi
+  nameWithType: ISwarmApi
+  fullName: LibP2P.ISwarmApi
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose*
+  commentId: Overload:Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+  name: Dispose
+  nameWithType: IIpfsAdapter.Dispose
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose

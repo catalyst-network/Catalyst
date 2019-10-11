@@ -1,0 +1,35 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Kernel
+  commentId: N:Catalyst.Core.Lib.Kernel
+  id: Catalyst.Core.Lib.Kernel
+  children:
+  - Catalyst.Core.Lib.Kernel.Kernel
+  - Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.Kernel
+  nameWithType: Catalyst.Core.Lib.Kernel
+  fullName: Catalyst.Core.Lib.Kernel
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.Kernel.Kernel
+  commentId: T:Catalyst.Core.Lib.Kernel.Kernel
+  parent: Catalyst.Core.Lib.Kernel
+  name: Kernel
+  nameWithType: Kernel
+  fullName: Catalyst.Core.Lib.Kernel.Kernel
+- uid: Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic
+  commentId: T:Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic
+  parent: Catalyst.Core.Lib.Kernel
+  name: Kernel.CustomBootLogic
+  nameWithType: Kernel.CustomBootLogic
+  fullName: Catalyst.Core.Lib.Kernel.Kernel.CustomBootLogic
+- uid: Catalyst.Core.Lib.Kernel
+  commentId: N:Catalyst.Core.Lib.Kernel
+  name: Catalyst.Core.Lib.Kernel
+  nameWithType: Catalyst.Core.Lib.Kernel
+  fullName: Catalyst.Core.Lib.Kernel

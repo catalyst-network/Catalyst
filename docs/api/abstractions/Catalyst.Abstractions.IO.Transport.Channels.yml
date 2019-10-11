@@ -1,0 +1,58 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Transport.Channels
+  commentId: N:Catalyst.Abstractions.IO.Transport.Channels
+  id: Catalyst.Abstractions.IO.Transport.Channels
+  children:
+  - Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory
+  - Catalyst.Abstractions.IO.Transport.Channels.IObservableChannel
+  - Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory
+  - Catalyst.Abstractions.IO.Transport.Channels.ITcpServerChannelFactory
+  - Catalyst.Abstractions.IO.Transport.Channels.IUdpClientChannelFactory
+  - Catalyst.Abstractions.IO.Transport.Channels.IUdpServerChannelFactory
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.IO.Transport.Channels
+  nameWithType: Catalyst.Abstractions.IO.Transport.Channels
+  fullName: Catalyst.Abstractions.IO.Transport.Channels
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory
+  commentId: T:Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory
+  parent: Catalyst.Abstractions.IO.Transport.Channels
+  name: IChannelFactory
+  nameWithType: IChannelFactory
+  fullName: Catalyst.Abstractions.IO.Transport.Channels.IChannelFactory
+- uid: Catalyst.Abstractions.IO.Transport.Channels.IObservableChannel
+  commentId: T:Catalyst.Abstractions.IO.Transport.Channels.IObservableChannel
+  name: IObservableChannel
+  nameWithType: IObservableChannel
+  fullName: Catalyst.Abstractions.IO.Transport.Channels.IObservableChannel
+- uid: Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory
+  commentId: T:Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory
+  name: ITcpClientChannelFactory
+  nameWithType: ITcpClientChannelFactory
+  fullName: Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory
+- uid: Catalyst.Abstractions.IO.Transport.Channels.ITcpServerChannelFactory
+  commentId: T:Catalyst.Abstractions.IO.Transport.Channels.ITcpServerChannelFactory
+  name: ITcpServerChannelFactory
+  nameWithType: ITcpServerChannelFactory
+  fullName: Catalyst.Abstractions.IO.Transport.Channels.ITcpServerChannelFactory
+- uid: Catalyst.Abstractions.IO.Transport.Channels.IUdpClientChannelFactory
+  commentId: T:Catalyst.Abstractions.IO.Transport.Channels.IUdpClientChannelFactory
+  name: IUdpClientChannelFactory
+  nameWithType: IUdpClientChannelFactory
+  fullName: Catalyst.Abstractions.IO.Transport.Channels.IUdpClientChannelFactory
+- uid: Catalyst.Abstractions.IO.Transport.Channels.IUdpServerChannelFactory
+  commentId: T:Catalyst.Abstractions.IO.Transport.Channels.IUdpServerChannelFactory
+  name: IUdpServerChannelFactory
+  nameWithType: IUdpServerChannelFactory
+  fullName: Catalyst.Abstractions.IO.Transport.Channels.IUdpServerChannelFactory
+- uid: Catalyst.Abstractions.IO.Transport.Channels
+  commentId: N:Catalyst.Abstractions.IO.Transport.Channels
+  name: Catalyst.Abstractions.IO.Transport.Channels
+  nameWithType: Catalyst.Abstractions.IO.Transport.Channels
+  fullName: Catalyst.Abstractions.IO.Transport.Channels

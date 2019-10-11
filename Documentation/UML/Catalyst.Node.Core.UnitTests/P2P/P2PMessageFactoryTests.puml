@@ -1,7 +1,0 @@
-@startuml
-class P2PMessageFactoryTests <<sealed>> {
-    + CanProduceAValidPingRequestMessage() : void
-    + CanProduceAValidPingResponseMessage() : void
-    + CanProduceAValidTransactionMessage() : void
-}
-@enduml

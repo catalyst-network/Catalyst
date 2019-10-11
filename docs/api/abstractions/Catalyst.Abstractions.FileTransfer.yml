@@ -1,0 +1,89 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.FileTransfer
+  commentId: N:Catalyst.Abstractions.FileTransfer
+  id: Catalyst.Abstractions.FileTransfer
+  children:
+  - Catalyst.Abstractions.FileTransfer.IDownloadFileInformation
+  - Catalyst.Abstractions.FileTransfer.IDownloadFileTransferFactory
+  - Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+  - Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  - Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.FileTransfer
+  nameWithType: Catalyst.Abstractions.FileTransfer
+  fullName: Catalyst.Abstractions.FileTransfer
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.FileTransfer.IDownloadFileInformation
+  commentId: T:Catalyst.Abstractions.FileTransfer.IDownloadFileInformation
+  name: IDownloadFileInformation
+  nameWithType: IDownloadFileInformation
+  fullName: Catalyst.Abstractions.FileTransfer.IDownloadFileInformation
+- uid: Catalyst.Abstractions.FileTransfer.IDownloadFileTransferFactory
+  commentId: T:Catalyst.Abstractions.FileTransfer.IDownloadFileTransferFactory
+  name: IDownloadFileTransferFactory
+  nameWithType: IDownloadFileTransferFactory
+  fullName: Catalyst.Abstractions.FileTransfer.IDownloadFileTransferFactory
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+  commentId: T:Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+  name: IFileTransferFactory<T>
+  nameWithType: IFileTransferFactory<T>
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferFactory<T>
+  nameWithType.vb: IFileTransferFactory(Of T)
+  fullName.vb: Catalyst.Abstractions.FileTransfer.IFileTransferFactory(Of T)
+  name.vb: IFileTransferFactory(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+    name: IFileTransferFactory
+    nameWithType: IFileTransferFactory
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferFactory
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+    name: IFileTransferFactory
+    nameWithType: IFileTransferFactory
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferFactory
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  commentId: T:Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+  parent: Catalyst.Abstractions.FileTransfer
+  name: IFileTransferInformation
+  nameWithType: IFileTransferInformation
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferInformation
+- uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  commentId: T:Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  name: IUploadFileInformation
+  nameWithType: IUploadFileInformation
+  fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+- uid: Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory
+  commentId: T:Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory
+  name: IUploadFileTransferFactory
+  nameWithType: IUploadFileTransferFactory
+  fullName: Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory
+- uid: Catalyst.Abstractions.FileTransfer
+  commentId: N:Catalyst.Abstractions.FileTransfer
+  name: Catalyst.Abstractions.FileTransfer
+  nameWithType: Catalyst.Abstractions.FileTransfer
+  fullName: Catalyst.Abstractions.FileTransfer
