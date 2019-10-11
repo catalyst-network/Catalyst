@@ -1,9 +1,9 @@
+[submodule "submodules/nethermind"]
+	path = submodules/nethermind
+	url = https://github.com/catalyst-network/nethermind.git
 [submodule "submodules/protocol-protobuffs"]
 	path = submodules/protocol-protobuffs
 	url = https://github.com/catalyst-network/protocol-protobuffs.git
 [submodule "submodules/Cryptography.FFI.Rust"]
 	path = submodules/Cryptography.FFI.Rust
 	url = https://github.com/catalyst-network/Cryptography.FFI.Rust.git
-[submodule "submodules/nethermind"]
-	path = submodules/nethermind
-	url = https://github.com/catalyst-network/nethermind.git

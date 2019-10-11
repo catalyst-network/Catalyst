@@ -13,7 +13,6 @@
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="5.1.1" />
-    <PackageReference Include="Catalyst.Cryptography.BulletProofs.Natives" Version="0.0.1.9649-beta" />
     <PackageReference Include="DnsClient" Version="1.2.0" />
     <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
     <PackageReference Include="Google.Protobuf" Version="3.9.1" />
