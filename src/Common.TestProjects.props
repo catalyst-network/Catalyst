@@ -25,4 +25,9 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
     </ItemGroup>
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)XunitTraitsRegister.cs" Link="DefaultTests\%(Filename)%(Extension)" >
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Compile>
+    </ItemGroup>
 </Project>
