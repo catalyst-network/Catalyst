@@ -48,7 +48,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         }
 
         [Fact(Skip = "https://github.com/catalyst-network/Catalyst.Node/issues/986")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task AddTextAsync_Can_Be_Retrieved_With_ReadTextAsync()
         {
             var content = "Lorem Ipsum or something";
@@ -62,7 +61,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task AddAsync_Can_Be_Retrieved_With_ReadAsync()
         {
             var content = BitConverter.GetBytes(123456);

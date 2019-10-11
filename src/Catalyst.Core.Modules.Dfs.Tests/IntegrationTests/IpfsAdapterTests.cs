@@ -51,7 +51,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Constructor_should_read_seed_servers_addresses_from_peerSettings()
         {
             using (var ipfs = new IpfsAdapter(_passwordManager, FileSystem, _logger))
@@ -71,7 +70,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Constructor_should_use_ipfs_subfolder()
         {
             using (var ipfs = new IpfsAdapter(_passwordManager, FileSystem, _logger))
@@ -82,7 +80,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Constructor_should_use_ipfs_private_network()
         {
             using (var ipfs = new IpfsAdapter(_passwordManager, FileSystem, _logger))

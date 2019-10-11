@@ -88,7 +88,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687
 		Common.Packable.props = Common.Packable.props
 		Common.Projects.props = Common.Projects.props
 		Common.TestProjects.props = Common.TestProjects.props
-		XunitTraitsRegister.cs = XunitTraitsRegister.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"

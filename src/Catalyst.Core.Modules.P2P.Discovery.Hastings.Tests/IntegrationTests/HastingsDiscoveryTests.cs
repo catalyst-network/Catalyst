@@ -70,7 +70,6 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
         private readonly ILogger _logger;
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable_And_Can_RollBack_State()
         {
             var cacheEntriesByRequest = new Dictionary<ByteString, ICacheEntry>();
@@ -181,7 +180,6 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Expected_Ping_Response_From_All_Contacted_Nodes_Produces_Valid_State_Candidate()
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
@@ -246,7 +244,6 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Expected_Ping_Response_Sets_Neighbour_As_Reachable()
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);

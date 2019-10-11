@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using Catalyst.TestUtils;
 using FluentAssertions;
 using Nethermind.Core;
 using Nethermind.Core.Extensions;
@@ -44,7 +43,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         public CatalystVirtualMachineTests(ITestOutputHelper testOutputHelper) { _testOutputHelper = testOutputHelper; }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Run_Smoke_test()
         {
             var code = Bytes.FromHexString("0x600060000100");
@@ -55,7 +53,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Range_Proof_Precompile()
         {
             var code = Bytes.FromHexString("0x60008080806201000062050000F400");
@@ -69,7 +66,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Origin()
         {
             var code = Bytes.FromHexString("0x3200");
@@ -83,7 +79,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Address()
         {
             var code = Bytes.FromHexString("0x3000");
@@ -97,7 +92,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Blockhash()
         {
             var code = Bytes.FromHexString("0x60014000");
@@ -105,7 +99,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Coinbase()
         {
             var code = Bytes.FromHexString("0x4100");
@@ -119,7 +112,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Timestamp()
         {
             var code = Bytes.FromHexString("0x4200");
@@ -133,7 +125,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Number()
         {
             var code = Bytes.FromHexString("0x4300");
@@ -147,7 +138,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Difficulty()
         {
             var code = Bytes.FromHexString("0x4400");
@@ -161,7 +151,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Gas_Limit()
         {
             var code = Bytes.FromHexString("0x4500");
@@ -175,7 +164,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Chain_Id()
         {
             var code = Bytes.FromHexString("0x4600");
