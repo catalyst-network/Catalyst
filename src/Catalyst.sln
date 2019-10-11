@@ -95,6 +95,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-
 		..\mssql-e2e-azure-pipelines.yml = ..\mssql-e2e-azure-pipelines.yml
 		..\nuget-pre-release-azure-pipelines.yml = ..\nuget-pre-release-azure-pipelines.yml
 		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
+		..\docfx-azure-pipeline.yml = ..\docfx-azure-pipeline.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"

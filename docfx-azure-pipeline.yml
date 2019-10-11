@@ -5,14 +5,11 @@ pool:
   vmImage: windows-2019
 
 steps:
+
   - task: DotNetCoreInstaller@0
     displayName: 'Install .NetCore SDK'
     inputs:
       version: 3.0.100
-
-  - bash: |
-      git submodule update --init --force --recursive
-    displayName: 'Clone submodules'
 
   - powershell: |
       choco install docfx -y
