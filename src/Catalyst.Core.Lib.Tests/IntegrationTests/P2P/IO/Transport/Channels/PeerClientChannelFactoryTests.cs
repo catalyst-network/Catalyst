@@ -102,7 +102,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
         }
         
         [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task
             PeerClientChannelFactory_Pipeline_Should_Produce_Request_Object_PeerClientChannelFactory_Can_Process()
         {
