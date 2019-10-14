@@ -35,7 +35,7 @@ The decentralised protocol is designed from engineering first principles and bui
 
 ### What is Catalyst.Node?
 
-Catalyst.Node is the .Net implementation of the Catalyst Network. The spcification of our protocol is outlined in our technical while paper a more indepth implementation orientated document can be found in the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/)
+Catalyst.Node is the .Net implementation of the Catalyst Network. The spcification of our protocol is outlined in our technical while paper a more indepth implementation orientated document can be found in the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/).
 
 Catalyst.Node is developed on dotnet core 3.0 therefore supports Linux, macOS and Windows operating systems.
 
