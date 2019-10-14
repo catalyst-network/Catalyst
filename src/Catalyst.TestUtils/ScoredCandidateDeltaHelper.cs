@@ -25,7 +25,7 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using LibP2P;
 
 namespace Catalyst.TestUtils
 {
@@ -40,8 +40,8 @@ namespace Catalyst.TestUtils
         }
 
         public static ScoredCandidateDelta GetScoredCandidateDelta(IHashProvider hashProvider,
-            MultiHash previousDeltaHash = null,
-            MultiHash hash = null,
+            Cid previousDeltaHash = null,
+            Cid hash = null,
             PeerId producerId = null,
             int score = 0)
         {

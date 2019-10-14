@@ -27,16 +27,16 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Transaction;
 using Dawn;
+using LibP2P;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -49,20 +49,20 @@ namespace Catalyst.Core.Modules.Ledger
     {
         public IAccountRepository Accounts { get; }
         private readonly ILedgerSynchroniser _synchroniser;
-        private readonly IMempool<MempoolDocument> _mempool;
+        private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
         private readonly object _synchronisationLock = new object();
         private readonly ICryptoContext _cryptoContext;
 
-        public MultiHash LatestKnownDelta { get; private set; }
+        public Cid LatestKnownDelta { get; private set; }
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
         public Ledger(IAccountRepository accounts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
-            IMempool<MempoolDocument> mempool,
+            IMempool<TransactionBroadcastDao> mempool,
             ILogger logger)
         {
             Accounts = accounts;
@@ -77,8 +77,8 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void FlushTransactionsFromDelta()
         {
-            var transactionsToFlush = _mempool.Repository.GetAll().Select(d => d.ToString()); //@TODO no get alls
-            _mempool.Repository.DeleteItem(transactionsToFlush.ToArray());
+            var transactionsToFlush = _mempool.Repository.GetAll(); //TOD0 no get alls
+            _mempool.Repository.Delete(transactionsToFlush);
         }
 
         /// <inheritdoc />
@@ -99,7 +99,7 @@ namespace Catalyst.Core.Modules.Ledger
         }
 
         /// <inheritdoc />
-        public void Update(MultiHash deltaHash)
+        public void Update(Cid deltaHash)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace Catalyst.Core.Modules.Ledger
             }
         }
 
-        private void UpdateLedgerFromDelta(MultiHash deltaHash)
+        private void UpdateLedgerFromDelta(Cid deltaHash)
         {
             if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var nextDeltaInChain))
             {

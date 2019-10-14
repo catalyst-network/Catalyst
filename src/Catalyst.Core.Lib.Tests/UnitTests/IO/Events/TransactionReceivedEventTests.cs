@@ -21,15 +21,17 @@
 
 #endregion
 
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
@@ -44,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 {
     public sealed class TransactionReceivedEventTests
     {
-        private readonly IMempool<MempoolDocument> _mempool;
+        private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly ITransactionValidator _transactionValidator;
         private readonly IBroadcastManager _broadcastManager;
         private readonly TransactionReceivedEvent _transactionReceivedEvent;
@@ -52,10 +54,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 
         public TransactionReceivedEventTests()
         {
+            TestMappers.Start();
+
             _peerSettings = Substitute.For<IPeerSettings>();
             _peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            _mempool = Substitute.For<IMempool<MempoolDocument>>();
+            _mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
             _broadcastManager = Substitute.For<IBroadcastManager>();
             _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator,
@@ -80,11 +84,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         public void Can_Send_Error_If_Mempool_Contains_Transaction()
         {
             var transaction = TransactionHelper.GetPublicTransaction();
-            var sig = transaction.Signature.RawBytes;
 
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
                .Returns(true);
-            _mempool.Repository.TryReadItem(sig).Returns(true);
+
+            _mempool.Repository.TryReadItem(Arg.Any<string>()).Returns(true);
 
             _transactionReceivedEvent
                .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
@@ -106,8 +110,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Successful);
 
-            _mempool.Repository.Received(1).CreateItem(Arg.Is<TransactionBroadcast>(
-                savedDoc => savedDoc.Equals(transaction)));
+            _mempool.Repository.Received(1).CreateItem(Arg.Any<TransactionBroadcastDao>());
             _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
                 broadcastedMessage => broadcastedMessage.Value.ToByteArray().SequenceEqual(transaction.ToByteArray())));
         }

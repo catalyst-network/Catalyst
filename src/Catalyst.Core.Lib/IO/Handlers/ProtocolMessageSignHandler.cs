@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
@@ -56,11 +57,8 @@ namespace Catalyst.Core.Lib.IO.Handlers
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             Logger.Verbose("Signing message {message}", message);
-
             var protocolMessageSigned = message.Content.Sign(_keySigner, _signingContext);
-
             var signedDto = new SignedMessageDto(protocolMessageSigned, message.RecipientPeerIdentifier);
-
             return context.WriteAsync(signedDto);
         }
     }

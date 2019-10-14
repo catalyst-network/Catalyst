@@ -39,9 +39,9 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using LibP2P;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiHash;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         ///<inheritdoc />
-        public CandidateDeltaBroadcast BuildCandidateDelta(MultiHash previousDeltaHash)
+        public CandidateDeltaBroadcast BuildCandidateDelta(Cid previousDeltaHash)
         {
             _logger.Debug("Building candidate delta locally");
 
@@ -87,7 +87,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
             var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
-                t => t.PublicEntries.Select(e => new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
+                t => t.PublicEntries.Select(e =>
+                    new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
 
             // (Eα;Oα)
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
@@ -134,7 +135,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
                 CoinbaseEntries = {coinbaseEntry},
-                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries)},
+                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x)},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -145,7 +146,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             return candidate;
         }
 
-        private IEnumerable<byte> GetSaltFromPreviousDelta(MultiHash previousDeltaHash)
+        private IEnumerable<byte> GetSaltFromPreviousDelta(Cid previousDeltaHash)
         {
             var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash.ToArray());
             return BitConverter.GetBytes(isaac.NextInt());
@@ -154,9 +155,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private sealed class RawEntryWithSaltedAndHashedEntry
         {
             public PublicEntry RawEntry { get; }
+
             public byte[] SaltedAndHashedEntry { get; }
 
-            public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry, IEnumerable<byte> salt, IHashProvider hashProvider)
+            public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry,
+                IEnumerable<byte> salt,
+                IHashProvider hashProvider)
             {
                 RawEntry = rawEntry;
                 SaltedAndHashedEntry = hashProvider.ComputeMultiHash(rawEntry.ToByteArray().Concat(salt)).ToArray();
@@ -164,17 +168,19 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <summary>
-        /// Gets the valid transactions for delta.
-        /// This method can be used to extract the collection of transactions that meet the criteria for validating delta.
+        ///     Gets the valid transactions for delta.
+        ///     This method can be used to extract the collection of transactions that meet the criteria for validating delta.
         /// </summary>
         private IList<TransactionBroadcast> GetValidTransactionsForDelta(IList<TransactionBroadcast> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            var validTransactionsForDelta = allTransactions.Where(m => m.IsPublicTransaction && m.HasValidEntries()).ToList();
+            var validTransactionsForDelta =
+                allTransactions.Where(m => m.IsPublicTransaction && m.HasValidEntries()).ToList();
             var rejectedTransactions = allTransactions.Except(validTransactionsForDelta);
-            _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}", rejectedTransactions);
+            _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}",
+                rejectedTransactions);
             return validTransactionsForDelta;
         }
     }

@@ -35,10 +35,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
     {
         private readonly IPeerRepository _peerRepository;
 
-        public PeerController(IPeerRepository peerRepository)
-        {
-            _peerRepository = peerRepository;
-        }
+        public PeerController(IPeerRepository peerRepository) { _peerRepository = peerRepository; }
 
         // GET: api/values
         [HttpGet]

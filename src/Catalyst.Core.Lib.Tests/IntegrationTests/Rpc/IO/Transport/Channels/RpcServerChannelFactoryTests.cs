@@ -100,6 +100,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task
             RpcServerChannelFactory_Pipeline_Should_Produce_Response_Object_RpcClientChannelFactory_Can_Process()
         {

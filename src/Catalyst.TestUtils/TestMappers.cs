@@ -21,21 +21,33 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using Catalyst.Core.Lib.P2P.Repository;
-using Catalyst.Protocol.Peer;
-using LibP2P;
+using Catalyst.Abstractions.DAO;
+using Catalyst.Core.Lib.DAO;
 
-namespace Catalyst.Core.Modules.Consensus.Deltas
+namespace Catalyst.TestUtils
 {
-    public sealed class DeltaProducersProvider : IDeltaProducersProvider
+    public static class TestMappers
     {
-        public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
+        public static void Start()
         {
-            throw new NotImplementedException();
-        }
+            var mappers = new IMapperInitializer[]
+            {
+                new ProtocolMessageDao(),
+                new ConfidentialEntryDao(),
+                new ProtocolErrorMessageSignedDao(),
+                new PeerIdDao(),
+                new SigningContextDao(),
+                new CoinbaseEntryDao(),
+                new PublicEntryDao(),
+                new ConfidentialEntryDao(),
+                new TransactionBroadcastDao(),
+                new ContractEntryDao(),
+                new SignatureDao(),
+                new BaseEntryDao()
+            };
 
-        public IPeerRepository PeerRepository { get; }
+            var map = new MapperProvider(mappers);
+            map.Start();
+        }
     }
 }

@@ -21,24 +21,23 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Abstractions.DAO;
-using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Repository;
-using Catalyst.TestUtils;
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autofac;
+using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Repository;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
+using Catalyst.TestUtils;
 using Catalyst.TestUtils.ProtocolHelpers;
+using Catalyst.TestUtils.Repository;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.TestUtils.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
@@ -51,33 +50,14 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 new object[] {new MongoDbTestModule<TransactionBroadcast, TransactionBroadcastDao>()}
             };
 
-        public TransactionBroadcastRepositoryTests(ITestOutputHelper output) : base(output)
-        {
-            var mappers = new IMapperInitializer[]
-            {
-                new ProtocolMessageDao(),
-                new ConfidentialEntryDao(),
-                new ProtocolErrorMessageSignedDao(),
-                new PeerIdDao(),
-                new SigningContextDao(),
-                new CoinbaseEntryDao(),
-                new PublicEntryDao(),
-                new ConfidentialEntryDao(),
-                new TransactionBroadcastDao(),
-                new ContractEntryDao(),
-                new SignatureDao(),
-                new BaseEntryDao(),
-            };
-
-            var map = new MapperProvider(mappers);
-            map.Start();
-        }
+        public TransactionBroadcastRepositoryTests(ITestOutputHelper output) : base(output) { TestMappers.Start(); }
 
         private void TransactionBroadcastRepo_Can_Save_And_Retrieve()
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId, out var contractEntryDaoList, out var publicEntryDaoList);
+                var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId,
+                    out var contractEntryDaoList, out var publicEntryDaoList);
 
                 transactBroadcastRepo.Get(criteriaId).Id.Should().Be(criteriaId);
 
@@ -89,15 +69,14 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             }
         }
 
-        private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope, 
-            out string Id, 
-            out IEnumerable<ContractEntryDao> contractEntryDaoList, 
+        private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope,
+            out string Id,
+            out IEnumerable<ContractEntryDao> contractEntryDaoList,
             out IEnumerable<PublicEntryDao> publicEntryDaoList)
         {
             var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
 
             var transactionBroadcastDao = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
-            transactionBroadcastDao.Id = Guid.NewGuid().ToString();
             Id = transactionBroadcastDao.Id;
 
             transactionBroadcastDao.ContractEntries = ContractEntryHelper.GetContractEntriesDao(10);
@@ -114,7 +93,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
             transactionBroadcastDao.ConfidentialEntries = ConfidentialEntryHelper.GetConfidentialEntriesDao(10);
 
-            transactionBroadcastDao.Signature = new SignatureDao {RawBytes = "mplwifwfjfw", SigningContext = signingContextDao};
+            transactionBroadcastDao.Signature = new SignatureDao
+                {RawBytes = "mplwifwfjfw", SigningContext = signingContextDao};
 
             transactBroadcastRepo.Add(transactionBroadcastDao);
 
@@ -125,7 +105,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId, out var contractEntryDaoList, out var publicEntryDaoList);
+                var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId,
+                    out var contractEntryDaoList, out var publicEntryDaoList);
 
                 var retievedTransactionDao = transactBroadcastRepo.Get(criteriaId);
                 retievedTransactionDao.TimeStamp = new DateTime(1999, 2, 2);
@@ -163,7 +144,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         public void TransactionBroadcastRepo_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
-               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString")
+               .Value;
 
             RegisterModules(new EfCoreDbTestModule<TransactionBroadcast, TransactionBroadcastDao>(connectionStr));
 
@@ -177,7 +159,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         public void TransactionBroadcastRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
-               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString")
+               .Value;
 
             RegisterModules(new EfCoreDbTestModule<TransactionBroadcast, TransactionBroadcastDao>(connectionStr));
 

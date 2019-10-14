@@ -24,7 +24,7 @@
 using Autofac;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.Mempool.Documents;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
@@ -35,11 +35,12 @@ namespace Catalyst.Core.Modules.Mempool
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new InMemoryRepository<MempoolDocument, string>())
-               .As<IRepository<MempoolDocument, string>>()
+            builder.Register(c => new InMemoryRepository<TransactionBroadcastDao, string>())
+               .As<IRepository<TransactionBroadcastDao, string>>()
                .SingleInstance();
-            builder.RegisterType<MempoolDocumentRepository>().As<IMempoolRepository<MempoolDocument>>().SingleInstance();
-            builder.RegisterType<Mempool>().As<IMempool<MempoolDocument>>().SingleInstance();
-        }  
+            builder.RegisterType<MempoolRepository>().As<IMempoolRepository<TransactionBroadcastDao>>()
+               .SingleInstance();
+            builder.RegisterType<Mempool>().As<IMempool<TransactionBroadcastDao>>().SingleInstance();
+        }
     }
 }

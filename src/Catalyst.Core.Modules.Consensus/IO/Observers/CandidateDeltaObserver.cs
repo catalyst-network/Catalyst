@@ -49,29 +49,30 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         {
             try
             {
-                Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(), 
+                Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(),
                     messageDto.Payload.PeerId.Port);
                 var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
 
                 if (!_hashProvider.IsValidHash(deserialised.PreviousDeltaDfsHash.ToByteArray()))
                 {
-                    Logger.Error($"PreviousDeltaDfsHash is not a valid hash");
+                    Logger.Error("PreviousDeltaDfsHash is not a valid hash");
                     return;
                 }
 
                 if (!_hashProvider.IsValidHash(deserialised.Hash.ToByteArray()))
                 {
-                    Logger.Error($"Hash is not a valid hash");
+                    Logger.Error("Hash is not a valid hash");
                     return;
                 }
 
                 deserialised.IsValid();
-                
+
                 _deltaVoter.OnNext(deserialised);
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, $"Failed to process candidate delta broadcast {messageDto.Payload.ToJsonString()}.");
+                Logger.Error(exception,
+                    $"Failed to process candidate delta broadcast {messageDto.Payload.ToJsonString()}.");
             }
         }
     }

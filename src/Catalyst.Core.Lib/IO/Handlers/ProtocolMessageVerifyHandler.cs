@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
@@ -28,6 +29,7 @@ using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
+using SimpleBase;
 
 namespace Catalyst.Core.Lib.IO.Handlers
 {

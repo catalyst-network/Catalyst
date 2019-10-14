@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.FileTransfer;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
@@ -36,12 +35,14 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using LibP2P;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiBase;
 
@@ -55,8 +56,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         : RequestObserverBase<GetFileFromDfsRequest, GetFileFromDfsResponse>,
             IRpcRequestObserver
     {
-        private readonly IHashProvider _hashProvider;
-
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _fileTransferFactory;
 
@@ -69,12 +68,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="fileTransferFactory">The upload file transfer factory.</param>
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestObserver(IDfs dfs,
-            IHashProvider hashProvider,
             IPeerSettings peerSettings,
             IUploadFileTransferFactory fileTransferFactory,
             ILogger logger) : base(logger, peerSettings)
         {
-            _hashProvider = hashProvider;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
@@ -105,7 +102,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 {
                     responseCodeType = await Task.Run(async () =>
                     {
-                        var stream = await _dfs.ReadAsync(_hashProvider.Cast(getFileFromDfsRequest.DfsHash.FromBase32())).ConfigureAwait(false);
+                        var stream = await _dfs.ReadAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
+                           .ConfigureAwait(false);
                         fileLen = stream.Length;
                         using (var fileTransferInformation = new UploadFileTransferInformation(
                             stream,

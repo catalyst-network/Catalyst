@@ -25,29 +25,46 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.Mempool.Documents;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Repository;
-using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
 {
-    public sealed class TestMempoolDocumentRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository<MempoolDocument>
+    public sealed class TestMempoolRepository : RepositoryWrapper<TransactionBroadcastDao>,
+        IMempoolRepository<TransactionBroadcastDao>
     {
-        public TestMempoolDocumentRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
+        public TestMempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository)
+        {
+        }
 
-        public bool TryReadItem(ByteString key) { throw new NotImplementedException(); }
-        public MempoolDocument ReadItem(ByteString key) { throw new NotImplementedException(); }
-        public bool DeleteItem(params string[] transactionSignatures) { throw new NotImplementedException(); }
-        public bool CreateItem(TransactionBroadcast transactionBroadcast) { throw new NotImplementedException(); }
+        public bool TryReadItem(string key)
+        {
+            throw new NotImplementedException();
+        }
 
-        public new IEnumerable<TransactionBroadcast> GetAll()
+        public TransactionBroadcastDao ReadItem(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteItem(params string[] transactionSignatures)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CreateItem(TransactionBroadcastDao transactionBroadcast)
+        {
+            throw new NotImplementedException();
+        }
+
+        public new IEnumerable<TransactionBroadcastDao> GetAll()
         {
             var utcNow = DateTime.UtcNow;
             var tenSecondSlot = 1 + utcNow.Second / 10;
             var tx = TransactionHelper.GetPublicTransaction(timestamp: (long) utcNow.ToOADate());
-            return Enumerable.Repeat(tx, tenSecondSlot);
+            return Enumerable.Repeat(tx, tenSecondSlot).Select(x => new TransactionBroadcastDao().ToDao(x));
         }
     }
 }
