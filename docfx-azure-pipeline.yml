@@ -1,5 +1,5 @@
 trigger:
-  - gh-pages-build
+  - master
 
 pool:
   vmImage: windows-2019
