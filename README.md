@@ -8,7 +8,7 @@
 
 <hr/>
 
-Join us on our [Discord](https://discord.gg/anTP7xm)) for any questions and discussions.
+Join us on our [Discord](https://discord.gg/anTP7xm) for any questions and discussions.
 
 **Table of Contents**
 
