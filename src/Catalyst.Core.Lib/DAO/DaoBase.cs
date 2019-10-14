@@ -21,36 +21,27 @@
 
 #endregion
 
-using SharpRepository.Repository;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
+using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public abstract class DaoBase<TProto, TDao> : IMapperInitializer, 
+    public abstract class DaoBase<TProto, TDao> : IMapperInitializer,
         IValueConverter<TProto, TDao>
     {
         [RepositoryPrimaryKey(Order = 1)]
         [Key]
         public string Id { get; set; }
 
-        public TProto ToProtoBuff()
-        {
-            return MapperProvider.MasterMapper.Map<TProto>(this);
-        }
+        public TProto ToProtoBuff() { return MapperProvider.MasterMapper.Map<TProto>(this); }
 
-        public TDao ToDao(TProto protoBuff)
-        {
-            return MapperProvider.MasterMapper.Map<TDao>(protoBuff);
-        }
+        public TDao ToDao(TProto protoBuff) { return MapperProvider.MasterMapper.Map<TDao>(protoBuff); }
 
         public abstract void InitMappers(IMapperConfigurationExpression cfg);
 
-        public TDao Convert(TProto sourceMember, ResolutionContext context)
-        {
-            return ToDao(sourceMember);
-        }
+        public TDao Convert(TProto sourceMember, ResolutionContext context) { return ToDao(sourceMember); }
 
         public TProto Convert(TDao sourceMember, ResolutionContext context)
         {

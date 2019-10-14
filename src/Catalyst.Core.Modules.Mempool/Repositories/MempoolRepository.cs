@@ -22,34 +22,31 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.Mempool.Documents;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Repository;
-using Catalyst.Protocol.Wire;
 using Dawn;
-using Google.Protobuf;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Repositories
 {
-    public sealed class MempoolDocumentRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository<MempoolDocument>
+    public class MempoolRepository : RepositoryWrapper<TransactionBroadcastDao>,
+        IMempoolRepository<TransactionBroadcastDao>
     {
-        public MempoolDocumentRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
+        public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository) { }
 
         /// <inheritdoc />
-        public bool TryReadItem(ByteString signature)
+        public bool TryReadItem(string signature)
         {
             Guard.Argument(signature, nameof(signature)).NotNull();
-            return Repository.TryGet(signature.ToBase64(), out _);
+            return Repository.TryGet(signature, out _);
         }
-        
-        public MempoolDocument ReadItem(ByteString signature)
+
+        public TransactionBroadcastDao ReadItem(string signature)
         {
             Guard.Argument(signature, nameof(signature)).NotNull();
-            return Repository.Get(signature.ToBase64());
+            return Repository.Get(signature);
         }
 
         /// <inheritdoc />
@@ -65,17 +62,17 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
                     transactionSignatures);
                 return false;
             }
-            
+
             return true;
         }
-        
-        public bool CreateItem(TransactionBroadcast transactionBroadcast)
+
+        public bool CreateItem(TransactionBroadcastDao transactionBroadcast)
         {
             Guard.Argument(transactionBroadcast.Signature, nameof(transactionBroadcast.Signature)).NotNull();
 
             try
             {
-                Repository.Add(new MempoolDocument {Transaction = transactionBroadcast});
+                Repository.Add(transactionBroadcast);
             }
             catch (Exception e)
             {
@@ -84,11 +81,6 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
             }
 
             return true;
-        }
-
-        public new IEnumerable<TransactionBroadcast> GetAll()
-        {
-            return Repository.GetAll().Select(md => md.Transaction).ToList();
         }
     }
 }

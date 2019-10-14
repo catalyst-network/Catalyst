@@ -27,8 +27,8 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Ledger
     {
         public IAccountRepository Accounts { get; }
         private readonly ILedgerSynchroniser _synchroniser;
-        private readonly IMempool<MempoolDocument> _mempool;
+        private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
@@ -62,7 +62,7 @@ namespace Catalyst.Core.Modules.Ledger
         public Ledger(IAccountRepository accounts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
-            IMempool<MempoolDocument> mempool,
+            IMempool<TransactionBroadcastDao> mempool,
             ILogger logger)
         {
             Accounts = accounts;
@@ -77,8 +77,8 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void FlushTransactionsFromDelta()
         {
-            var transactionsToFlush = _mempool.Repository.GetAll().Select(d => d.ToString()); //@TODO no get alls
-            _mempool.Repository.DeleteItem(transactionsToFlush.ToArray());
+            var transactionsToFlush = _mempool.Repository.GetAll(); //TOD0 no get alls
+            _mempool.Repository.Delete(transactionsToFlush);
         }
 
         /// <inheritdoc />

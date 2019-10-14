@@ -26,11 +26,11 @@ using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -39,7 +39,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers 
+namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class GetMempoolRequestObserverTests
     {
@@ -48,58 +48,63 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
         public GetMempoolRequestObserverTests()
         {
+            TestMappers.Start();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
         }
-        
+
         public static IEnumerable<object[]> MempoolTransactions =>
             new List<object[]>
             {
                 new object[] {CreateTestTransactions()},
-                new object[] {new List<TransactionBroadcast>()}
+                new object[] {new List<TransactionBroadcastDao>()}
             };
 
-        private static List<TransactionBroadcast> CreateTestTransactions()
+        private static List<TransactionBroadcastDao> CreateTestTransactions()
         {
+            TestMappers.Start();
             var txLst = new List<TransactionBroadcast>
             {
                 TransactionHelper.GetPublicTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetPublicTransaction(567, "standardPubKey", "sign2")
-            };
+            }.Select(x => new TransactionBroadcastDao().ToDao(x)).ToList();
 
             return txLst;
         }
 
         [Theory]
         [MemberData(nameof(MempoolTransactions))]
-        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> mempoolTransactions)
+        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(
+            List<TransactionBroadcastDao> mempoolTransactions)
         {
             var testScheduler = new TestScheduler();
-            var mempool = Substitute.For<IMempool<MempoolDocument>>();
+            var mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
             mempool.Repository.GetAll().Returns(mempoolTransactions);
 
             var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender_key"));
-            
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
+
+            var messageStream =
+                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             var handler = new GetMempoolRequestObserver(peerSettings, mempool, _logger);
-            
+
             handler.StartObserving(messageStream);
 
             testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-            
+
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            
+
             var responseContent = sentResponseDto.Content.FromProtocolMessage<GetMempoolResponse>();
 
-            responseContent.Transactions.Should().BeEquivalentTo(mempoolTransactions);
+            responseContent.Transactions.Select(x => new TransactionBroadcastDao().ToDao(x)).Should()
+               .BeEquivalentTo(mempoolTransactions);
         }
     }
 }

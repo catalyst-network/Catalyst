@@ -22,11 +22,10 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Util;
-using Google.Protobuf;
+using Catalyst.Core.Modules.Mempool.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using BaseController = Microsoft.AspNetCore.Mvc.Controller;
@@ -35,39 +34,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public sealed class MempoolController<T> : BaseController where T : class, IMempoolItem
+    public sealed class MempoolController : BaseController
     {
-        private readonly IMempoolRepository<T> _mempoolRepository;
+        private readonly MempoolRepository _mempoolRepository;
 
-        public MempoolController(IMempoolRepository<T> mempoolRepository)
+        public MempoolController(IMempoolRepository<TransactionBroadcastDao> mempoolRepository)
         {
-            _mempoolRepository = mempoolRepository;
-        }
-
-        [HttpGet]
-        public IActionResult GetBalance(string publicKey)
-        {
-            return Ok(_mempoolRepository.GetAll().Where(t =>
-                    t.PublicEntries != null
-                 && t.PublicEntries.Count > 0
-                 && t.PublicEntries.Any(stEntries => stEntries.Base.ReceiverPublicKey.ToByteArray()
-                       .SequenceEqual(ByteString.FromBase64(publicKey).ToByteArray())))
-               .Sum(t => t.PublicEntries.Sum(entries => entries.Amount.ToUInt256())));
-        }
-
-        [HttpGet]
-        public JsonResult GetMempoolTransaction(string publicKey)
-        {
-            var result = _mempoolRepository.GetAll().Where(t =>
-                t.PublicEntries != null
-             && t.PublicEntries.Count > 0
-             && t.PublicEntries.Any(stEntries => stEntries.Base.ReceiverPublicKey.ToByteArray()
-                   .SequenceEqual(ByteString.FromBase64(publicKey).ToByteArray())));
-
-            return Json(result, new JsonSerializerSettings
-            {
-                Converters = JsonConverterProviders.Converters.ToList()
-            });
+            _mempoolRepository = (MempoolRepository) mempoolRepository;
         }
 
         [HttpGet]

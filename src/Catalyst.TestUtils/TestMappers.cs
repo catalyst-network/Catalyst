@@ -21,28 +21,33 @@
 
 #endregion
 
-using System;
-using AutoMapper;
-using Catalyst.Core.Lib.Extensions;
-using Google.Protobuf;
-using Nethermind.Dirichlet.Numerics;
+using Catalyst.Abstractions.DAO;
+using Catalyst.Core.Lib.DAO;
 
-namespace Catalyst.Core.Lib.DAO.Converters
+namespace Catalyst.TestUtils
 {
-    public class ByteStringToUInt256StringConverter : IValueConverter<ByteString, string>
+    public static class TestMappers
     {
-        public string Convert(ByteString sourceMember, ResolutionContext context)
+        public static void Start()
         {
-            return sourceMember.ToUInt256().ToString();
-        }
-    }
+            var mappers = new IMapperInitializer[]
+            {
+                new ProtocolMessageDao(),
+                new ConfidentialEntryDao(),
+                new ProtocolErrorMessageSignedDao(),
+                new PeerIdDao(),
+                new SigningContextDao(),
+                new CoinbaseEntryDao(),
+                new PublicEntryDao(),
+                new ConfidentialEntryDao(),
+                new TransactionBroadcastDao(),
+                new ContractEntryDao(),
+                new SignatureDao(),
+                new BaseEntryDao()
+            };
 
-    public class UInt256StringToByteStringConverter : IValueConverter<string, ByteString>
-    {
-        public ByteString Convert(string sourceMember, ResolutionContext context)
-        {
-            var sourceValue = UInt256.Parse(sourceMember).ToUint256ByteString();
-            return sourceValue; 
+            var map = new MapperProvider(mappers);
+            map.Start();
         }
     }
 }

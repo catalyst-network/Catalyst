@@ -41,6 +41,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using LibP2P;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -86,7 +87,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
             var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
-                t => t.PublicEntries.Select(e => new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
+                t => t.PublicEntries.Select(e =>
+                    new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
 
             // (Eα;Oα)
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
@@ -133,7 +135,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
                 CoinbaseEntries = {coinbaseEntry},
-                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries)},
+                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x)},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -153,6 +155,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private sealed class RawEntryWithSaltedAndHashedEntry
         {
             public PublicEntry RawEntry { get; }
+
             public byte[] SaltedAndHashedEntry { get; }
 
             public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry,

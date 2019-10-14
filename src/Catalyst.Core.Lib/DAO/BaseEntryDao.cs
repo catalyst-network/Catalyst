@@ -22,11 +22,9 @@
 #endregion
 
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Numerics;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
-using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO
 {
@@ -45,14 +43,20 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<BaseEntry, BaseEntryDao>().ReverseMap();
 
             cfg.CreateMap<BaseEntry, BaseEntryDao>()
-               .ForMember(d => d.ReceiverPublicKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
-               .ForMember(d => d.SenderPublicKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.SenderPublicKey))
-               .ForMember(d => d.TransactionFees, opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.TransactionFees));
+               .ForMember(d => d.ReceiverPublicKey,
+                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
+               .ForMember(d => d.SenderPublicKey,
+                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.SenderPublicKey))
+               .ForMember(d => d.TransactionFees,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.TransactionFees));
 
             cfg.CreateMap<BaseEntryDao, BaseEntry>()
-               .ForMember(d => d.ReceiverPublicKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey))
-               .ForMember(d => d.SenderPublicKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.SenderPublicKey))
-               .ForMember(d => d.TransactionFees, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.TransactionFees));
+               .ForMember(d => d.ReceiverPublicKey,
+                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey))
+               .ForMember(d => d.SenderPublicKey,
+                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.SenderPublicKey))
+               .ForMember(d => d.TransactionFees,
+                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.TransactionFees));
         }
     }
 }
