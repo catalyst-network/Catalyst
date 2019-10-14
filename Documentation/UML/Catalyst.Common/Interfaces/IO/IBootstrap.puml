@@ -1,6 +1,0 @@
-@startuml
-interface IBootstrap {
-    ConnectAsync(ipAddress:IPAddress, port:int) : Task<IChannel>
-}
-IServerBootstrap <|-- IBootstrap
-@enduml

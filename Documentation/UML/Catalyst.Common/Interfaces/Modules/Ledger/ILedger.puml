@@ -1,4 +1,0 @@
-@startuml
-interface ILedger {
-}
-@enduml

@@ -1,7 +1,0 @@
-@startuml
-class EnumerableExtensionTests <<static>> {
-    + {static} RandomElementReturnsCorrectTypeOfString() : void
-    + {static} RandomElementReturnsCorrectTypeOfBool() : void
-    + {static} GetARandomElement() : void
-}
-@enduml

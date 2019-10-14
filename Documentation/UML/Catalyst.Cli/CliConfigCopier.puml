@@ -1,6 +1,0 @@
-@startuml
-class CliConfigCopier <<sealed>> {
-    # <<override>> RequiredConfigFiles(network:Network) : IEnumerable<string>
-}
-ConfigCopier <|-- CliConfigCopier
-@enduml
