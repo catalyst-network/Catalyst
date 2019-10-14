@@ -1,0 +1,1033 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  commentId: T:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  id: ReputationManager
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem
+  children:
+  - Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.#ctor(Catalyst.Core.Lib.P2P.Repository.IPeerRepository,ILogger)
+  - Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.Dispose
+  - Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergedEventStream
+  - Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergeReputationStream(System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange})
+  - Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  - Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.PeerRepository
+  - Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEvent
+  - Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEventStream
+  langs:
+  - csharp
+  - vb
+  name: ReputationManager
+  nameWithType: ReputationManager
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ReputationManager
+    path: ../src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.ReputationSystem
+  syntax:
+    content: 'public sealed class ReputationManager : IReputationManager, IDisposable'
+    content.vb: >-
+      Public NotInheritable Class ReputationManager
+
+          Implements IReputationManager, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.PeerRepository
+  commentId: P:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.PeerRepository
+  id: PeerRepository
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  langs:
+  - csharp
+  - vb
+  name: PeerRepository
+  nameWithType: ReputationManager.PeerRepository
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.PeerRepository
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerRepository
+    path: ../src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.ReputationSystem
+  syntax:
+    content: public IPeerRepository PeerRepository { get; }
+    parameters: []
+    return:
+      type: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+    content.vb: Public ReadOnly Property PeerRepository As IPeerRepository
+  overload: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.PeerRepository*
+  implements:
+  - Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.PeerRepository
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEvent
+  commentId: F:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEvent
+  id: ReputationEvent
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  langs:
+  - csharp
+  - vb
+  name: ReputationEvent
+  nameWithType: ReputationManager.ReputationEvent
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEvent
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ReputationEvent
+    path: ../src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.ReputationSystem
+  syntax:
+    content: public readonly ReplaySubject<IPeerReputationChange> ReputationEvent
+    return:
+      type: ReplaySubject{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange}
+    content.vb: Public ReadOnly ReputationEvent As ReplaySubject(Of IPeerReputationChange)
+  modifiers.csharp:
+  - public
+  - readonly
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEventStream
+  commentId: P:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEventStream
+  id: ReputationEventStream
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  langs:
+  - csharp
+  - vb
+  name: ReputationEventStream
+  nameWithType: ReputationManager.ReputationEventStream
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEventStream
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ReputationEventStream
+    path: ../src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.ReputationSystem
+  syntax:
+    content: public IObservable<IPeerReputationChange> ReputationEventStream { get; }
+    parameters: []
+    return:
+      type: System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange}
+    content.vb: Public ReadOnly Property ReputationEventStream As IObservable(Of IPeerReputationChange)
+  overload: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEventStream*
+  implements:
+  - Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.ReputationEventStream
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergedEventStream
+  commentId: P:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergedEventStream
+  id: MergedEventStream
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  langs:
+  - csharp
+  - vb
+  name: MergedEventStream
+  nameWithType: ReputationManager.MergedEventStream
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergedEventStream
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MergedEventStream
+    path: ../src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+    startLine: 42
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.ReputationSystem
+  syntax:
+    content: public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
+    parameters: []
+    return:
+      type: System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange}
+    content.vb: Public Property MergedEventStream As IObservable(Of IPeerReputationChange)
+  overload: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergedEventStream*
+  implements:
+  - Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergedEventStream
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.#ctor(Catalyst.Core.Lib.P2P.Repository.IPeerRepository,ILogger)
+  commentId: M:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.#ctor(Catalyst.Core.Lib.P2P.Repository.IPeerRepository,ILogger)
+  id: '#ctor(Catalyst.Core.Lib.P2P.Repository.IPeerRepository,ILogger)'
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  langs:
+  - csharp
+  - vb
+  name: ReputationManager(IPeerRepository, ILogger)
+  nameWithType: ReputationManager.ReputationManager(IPeerRepository, ILogger)
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationManager(Catalyst.Core.Lib.P2P.Repository.IPeerRepository, ILogger)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+    startLine: 45
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.ReputationSystem
+  syntax:
+    content: public ReputationManager(IPeerRepository peerRepository, ILogger logger)
+    parameters:
+    - id: peerRepository
+      type: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+    - id: logger
+      type: ILogger
+    content.vb: Public Sub New(peerRepository As IPeerRepository, logger As ILogger)
+  overload: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergeReputationStream(System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange})
+  commentId: M:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergeReputationStream(System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange})
+  id: MergeReputationStream(System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange})
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  langs:
+  - csharp
+  - vb
+  name: MergeReputationStream(IObservable<IPeerReputationChange>)
+  nameWithType: ReputationManager.MergeReputationStream(IObservable<IPeerReputationChange>)
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergeReputationStream(System.IObservable<Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MergeReputationStream
+    path: ../src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+    startLine: 61
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.ReputationSystem
+  summary: "\nAllows passing a reputation streams to merge with the MasterReputationEventStream\n"
+  example: []
+  syntax:
+    content: public void MergeReputationStream(IObservable<IPeerReputationChange> reputationChangeStream)
+    parameters:
+    - id: reputationChangeStream
+      type: System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange}
+      description: ''
+    content.vb: Public Sub MergeReputationStream(reputationChangeStream As IObservable(Of IPeerReputationChange))
+  overload: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergeReputationStream*
+  exceptions:
+  - type: System.NotImplementedException
+    commentId: T:System.NotImplementedException
+  implements:
+  - Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergeReputationStream(System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange})
+  nameWithType.vb: ReputationManager.MergeReputationStream(IObservable(Of IPeerReputationChange))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergeReputationStream(System.IObservable(Of Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange))
+  name.vb: MergeReputationStream(IObservable(Of IPeerReputationChange))
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  commentId: M:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  id: OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  langs:
+  - csharp
+  - vb
+  name: OnNext(IPeerReputationChange)
+  nameWithType: ReputationManager.OnNext(IPeerReputationChange)
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: OnNext
+    path: ../src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+    startLine: 76
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.ReputationSystem
+  syntax:
+    content: public void OnNext(IPeerReputationChange peerReputationChange)
+    parameters:
+    - id: peerReputationChange
+      type: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+    content.vb: Public Sub OnNext(peerReputationChange As IPeerReputationChange)
+  overload: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.OnNext*
+  implements:
+  - Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.Dispose
+  commentId: M:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.Dispose
+  id: Dispose
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: ReputationManager.Dispose()
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Lib/P2P/ReputationSystem/ReputationManager.cs
+    startLine: 93
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.ReputationSystem
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose
+  overload: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem
+  commentId: N:Catalyst.Core.Lib.P2P.ReputationSystem
+  name: Catalyst.Core.Lib.P2P.ReputationSystem
+  nameWithType: Catalyst.Core.Lib.P2P.ReputationSystem
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  commentId: T:Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem
+  name: IReputationManager
+  nameWithType: IReputationManager
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.PeerRepository*
+  commentId: Overload:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.PeerRepository
+  name: PeerRepository
+  nameWithType: ReputationManager.PeerRepository
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.PeerRepository
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.PeerRepository
+  commentId: P:Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.PeerRepository
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  name: PeerRepository
+  nameWithType: IReputationManager.PeerRepository
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.PeerRepository
+- uid: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  commentId: T:Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  parent: Catalyst.Core.Lib.P2P.Repository
+  name: IPeerRepository
+  nameWithType: IPeerRepository
+  fullName: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+- uid: Catalyst.Core.Lib.P2P.Repository
+  commentId: N:Catalyst.Core.Lib.P2P.Repository
+  name: Catalyst.Core.Lib.P2P.Repository
+  nameWithType: Catalyst.Core.Lib.P2P.Repository
+  fullName: Catalyst.Core.Lib.P2P.Repository
+- uid: ReplaySubject{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange}
+  commentId: '!:ReplaySubject{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange}'
+  definition: ReplaySubject`1
+  name: ReplaySubject<IPeerReputationChange>
+  nameWithType: ReplaySubject<IPeerReputationChange>
+  fullName: ReplaySubject<Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange>
+  nameWithType.vb: ReplaySubject(Of IPeerReputationChange)
+  fullName.vb: ReplaySubject(Of Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  name.vb: ReplaySubject(Of IPeerReputationChange)
+  spec.csharp:
+  - uid: ReplaySubject`1
+    name: ReplaySubject
+    nameWithType: ReplaySubject
+    fullName: ReplaySubject
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+    name: IPeerReputationChange
+    nameWithType: IPeerReputationChange
+    fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: ReplaySubject`1
+    name: ReplaySubject
+    nameWithType: ReplaySubject
+    fullName: ReplaySubject
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+    name: IPeerReputationChange
+    nameWithType: IPeerReputationChange
+    fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: ReplaySubject`1
+  isExternal: true
+  name: ReplaySubject<>
+  nameWithType: ReplaySubject<>
+  fullName: ReplaySubject<>
+  nameWithType.vb: ReplaySubject(Of )
+  fullName.vb: ReplaySubject(Of )
+  name.vb: ReplaySubject(Of )
+  spec.csharp:
+  - uid: ReplaySubject`1
+    name: ReplaySubject
+    nameWithType: ReplaySubject
+    fullName: ReplaySubject
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: ReplaySubject`1
+    name: ReplaySubject
+    nameWithType: ReplaySubject
+    fullName: ReplaySubject
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEventStream*
+  commentId: Overload:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEventStream
+  name: ReputationEventStream
+  nameWithType: ReputationManager.ReputationEventStream
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationEventStream
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.ReputationEventStream
+  commentId: P:Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.ReputationEventStream
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  name: ReputationEventStream
+  nameWithType: IReputationManager.ReputationEventStream
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.ReputationEventStream
+- uid: System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange}
+  commentId: T:System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange}
+  parent: System
+  definition: System.IObservable`1
+  name: IObservable<IPeerReputationChange>
+  nameWithType: IObservable<IPeerReputationChange>
+  fullName: System.IObservable<Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange>
+  nameWithType.vb: IObservable(Of IPeerReputationChange)
+  fullName.vb: System.IObservable(Of Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  name.vb: IObservable(Of IPeerReputationChange)
+  spec.csharp:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+    name: IPeerReputationChange
+    nameWithType: IPeerReputationChange
+    fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+    name: IPeerReputationChange
+    nameWithType: IPeerReputationChange
+    fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObservable`1
+  commentId: T:System.IObservable`1
+  isExternal: true
+  name: IObservable<T>
+  nameWithType: IObservable<T>
+  fullName: System.IObservable<T>
+  nameWithType.vb: IObservable(Of T)
+  fullName.vb: System.IObservable(Of T)
+  name.vb: IObservable(Of T)
+  spec.csharp:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergedEventStream*
+  commentId: Overload:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergedEventStream
+  name: MergedEventStream
+  nameWithType: ReputationManager.MergedEventStream
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergedEventStream
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergedEventStream
+  commentId: P:Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergedEventStream
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  name: MergedEventStream
+  nameWithType: IReputationManager.MergedEventStream
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergedEventStream
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.#ctor
+  name: ReputationManager
+  nameWithType: ReputationManager.ReputationManager
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.ReputationManager
+- uid: ILogger
+  isExternal: true
+  name: ILogger
+  nameWithType: ILogger
+  fullName: ILogger
+- uid: System.NotImplementedException
+  commentId: T:System.NotImplementedException
+  isExternal: true
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergeReputationStream*
+  commentId: Overload:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergeReputationStream
+  name: MergeReputationStream
+  nameWithType: ReputationManager.MergeReputationStream
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.MergeReputationStream
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergeReputationStream(System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange})
+  commentId: M:Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergeReputationStream(System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange})
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  isExternal: true
+  name: MergeReputationStream(IObservable<IPeerReputationChange>)
+  nameWithType: IReputationManager.MergeReputationStream(IObservable<IPeerReputationChange>)
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergeReputationStream(System.IObservable<Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange>)
+  nameWithType.vb: IReputationManager.MergeReputationStream(IObservable(Of IPeerReputationChange))
+  fullName.vb: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergeReputationStream(System.IObservable(Of Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange))
+  name.vb: MergeReputationStream(IObservable(Of IPeerReputationChange))
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergeReputationStream(System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange})
+    name: MergeReputationStream
+    nameWithType: IReputationManager.MergeReputationStream
+    fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergeReputationStream
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+    name: IPeerReputationChange
+    nameWithType: IPeerReputationChange
+    fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergeReputationStream(System.IObservable{Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange})
+    name: MergeReputationStream
+    nameWithType: IReputationManager.MergeReputationStream
+    fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.MergeReputationStream
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+    name: IPeerReputationChange
+    nameWithType: IPeerReputationChange
+    fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.OnNext*
+  commentId: Overload:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.OnNext
+  name: OnNext
+  nameWithType: ReputationManager.OnNext
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.OnNext
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  commentId: M:Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  parent: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager
+  name: OnNext(IPeerReputationChange)
+  nameWithType: IReputationManager.OnNext(IPeerReputationChange)
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+    name: OnNext
+    nameWithType: IReputationManager.OnNext
+    fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.OnNext
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+    name: IPeerReputationChange
+    nameWithType: IPeerReputationChange
+    fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.OnNext(Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange)
+    name: OnNext
+    nameWithType: IReputationManager.OnNext
+    fullName: Catalyst.Core.Lib.P2P.ReputationSystem.IReputationManager.OnNext
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+    name: IPeerReputationChange
+    nameWithType: IPeerReputationChange
+    fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  commentId: T:Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  parent: Catalyst.Abstractions.P2P.ReputationSystem
+  name: IPeerReputationChange
+  nameWithType: IPeerReputationChange
+  fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+- uid: Catalyst.Abstractions.P2P.ReputationSystem
+  commentId: N:Catalyst.Abstractions.P2P.ReputationSystem
+  name: Catalyst.Abstractions.P2P.ReputationSystem
+  nameWithType: Catalyst.Abstractions.P2P.ReputationSystem
+  fullName: Catalyst.Abstractions.P2P.ReputationSystem
+- uid: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.Dispose*
+  commentId: Overload:Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.Dispose
+  name: Dispose
+  nameWithType: ReputationManager.Dispose
+  fullName: Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )

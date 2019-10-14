@@ -1,0 +1,102 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Transport
+  commentId: N:Catalyst.Abstractions.IO.Transport
+  id: Catalyst.Abstractions.IO.Transport
+  children:
+  - Catalyst.Abstractions.IO.Transport.ISocket
+  - Catalyst.Abstractions.IO.Transport.ISocketClient
+  - Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+  - Catalyst.Abstractions.IO.Transport.ISocketServer
+  - Catalyst.Abstractions.IO.Transport.ITcpClient
+  - Catalyst.Abstractions.IO.Transport.ITcpServer
+  - Catalyst.Abstractions.IO.Transport.IUdpClient
+  - Catalyst.Abstractions.IO.Transport.IUdpServer
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.IO.Transport
+  nameWithType: Catalyst.Abstractions.IO.Transport
+  fullName: Catalyst.Abstractions.IO.Transport
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.IO.Transport.ISocket
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocket
+  parent: Catalyst.Abstractions.IO.Transport
+  name: ISocket
+  nameWithType: ISocket
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket
+- uid: Catalyst.Abstractions.IO.Transport.ISocketClient
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocketClient
+  parent: Catalyst.Abstractions.IO.Transport
+  name: ISocketClient
+  nameWithType: ISocketClient
+  fullName: Catalyst.Abstractions.IO.Transport.ISocketClient
+- uid: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+  name: ISocketClientRegistry<TSocketChannel>
+  nameWithType: ISocketClientRegistry<TSocketChannel>
+  fullName: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry<TSocketChannel>
+  nameWithType.vb: ISocketClientRegistry(Of TSocketChannel)
+  fullName.vb: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry(Of TSocketChannel)
+  name.vb: ISocketClientRegistry(Of TSocketChannel)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+    name: ISocketClientRegistry
+    nameWithType: ISocketClientRegistry
+    fullName: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TSocketChannel
+    nameWithType: TSocketChannel
+    fullName: TSocketChannel
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry`1
+    name: ISocketClientRegistry
+    nameWithType: ISocketClientRegistry
+    fullName: Catalyst.Abstractions.IO.Transport.ISocketClientRegistry
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TSocketChannel
+    nameWithType: TSocketChannel
+    fullName: TSocketChannel
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Transport.ISocketServer
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocketServer
+  name: ISocketServer
+  nameWithType: ISocketServer
+  fullName: Catalyst.Abstractions.IO.Transport.ISocketServer
+- uid: Catalyst.Abstractions.IO.Transport.ITcpClient
+  commentId: T:Catalyst.Abstractions.IO.Transport.ITcpClient
+  name: ITcpClient
+  nameWithType: ITcpClient
+  fullName: Catalyst.Abstractions.IO.Transport.ITcpClient
+- uid: Catalyst.Abstractions.IO.Transport.ITcpServer
+  commentId: T:Catalyst.Abstractions.IO.Transport.ITcpServer
+  name: ITcpServer
+  nameWithType: ITcpServer
+  fullName: Catalyst.Abstractions.IO.Transport.ITcpServer
+- uid: Catalyst.Abstractions.IO.Transport.IUdpClient
+  commentId: T:Catalyst.Abstractions.IO.Transport.IUdpClient
+  name: IUdpClient
+  nameWithType: IUdpClient
+  fullName: Catalyst.Abstractions.IO.Transport.IUdpClient
+- uid: Catalyst.Abstractions.IO.Transport.IUdpServer
+  commentId: T:Catalyst.Abstractions.IO.Transport.IUdpServer
+  name: IUdpServer
+  nameWithType: IUdpServer
+  fullName: Catalyst.Abstractions.IO.Transport.IUdpServer
+- uid: Catalyst.Abstractions.IO.Transport
+  commentId: N:Catalyst.Abstractions.IO.Transport
+  name: Catalyst.Abstractions.IO.Transport
+  nameWithType: Catalyst.Abstractions.IO.Transport
+  fullName: Catalyst.Abstractions.IO.Transport

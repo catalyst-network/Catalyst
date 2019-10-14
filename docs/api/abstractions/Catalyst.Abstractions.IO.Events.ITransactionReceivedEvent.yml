@@ -1,0 +1,88 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent
+  commentId: T:Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent
+  id: ITransactionReceivedEvent
+  parent: Catalyst.Abstractions.IO.Events
+  children:
+  - Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent.OnTransactionReceived(ProtocolMessage)
+  langs:
+  - csharp
+  - vb
+  name: ITransactionReceivedEvent
+  nameWithType: ITransactionReceivedEvent
+  fullName: Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Events/ITransactionReceivedEvent.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ITransactionReceivedEvent
+    path: ../src/Catalyst.Abstractions/IO/Events/ITransactionReceivedEvent.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Events
+  syntax:
+    content: public interface ITransactionReceivedEvent
+    content.vb: Public Interface ITransactionReceivedEvent
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent.OnTransactionReceived(ProtocolMessage)
+  commentId: M:Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent.OnTransactionReceived(ProtocolMessage)
+  id: OnTransactionReceived(ProtocolMessage)
+  parent: Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent
+  langs:
+  - csharp
+  - vb
+  name: OnTransactionReceived(ProtocolMessage)
+  nameWithType: ITransactionReceivedEvent.OnTransactionReceived(ProtocolMessage)
+  fullName: Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent.OnTransactionReceived(ProtocolMessage)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Events/ITransactionReceivedEvent.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: OnTransactionReceived
+    path: ../src/Catalyst.Abstractions/IO/Events/ITransactionReceivedEvent.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Events
+  syntax:
+    content: ResponseCode OnTransactionReceived(ProtocolMessage broadcast)
+    parameters:
+    - id: broadcast
+      type: ProtocolMessage
+    return:
+      type: ResponseCode
+    content.vb: Function OnTransactionReceived(broadcast As ProtocolMessage) As ResponseCode
+  overload: Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent.OnTransactionReceived*
+references:
+- uid: Catalyst.Abstractions.IO.Events
+  commentId: N:Catalyst.Abstractions.IO.Events
+  name: Catalyst.Abstractions.IO.Events
+  nameWithType: Catalyst.Abstractions.IO.Events
+  fullName: Catalyst.Abstractions.IO.Events
+- uid: Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent.OnTransactionReceived*
+  commentId: Overload:Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent.OnTransactionReceived
+  name: OnTransactionReceived
+  nameWithType: ITransactionReceivedEvent.OnTransactionReceived
+  fullName: Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent.OnTransactionReceived
+- uid: ProtocolMessage
+  isExternal: true
+  name: ProtocolMessage
+  nameWithType: ProtocolMessage
+  fullName: ProtocolMessage
+- uid: ResponseCode
+  commentId: '!:ResponseCode'
+  isExternal: true
+  name: ResponseCode
+  nameWithType: ResponseCode
+  fullName: ResponseCode

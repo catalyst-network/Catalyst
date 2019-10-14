@@ -1,0 +1,108 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Network.InjectableLookupClient
+  commentId: T:Catalyst.Abstractions.Network.InjectableLookupClient
+  id: InjectableLookupClient
+  parent: Catalyst.Abstractions.Network
+  children:
+  - Catalyst.Abstractions.Network.InjectableLookupClient.#ctor(Catalyst.Abstractions.P2P.IPeerSettings)
+  langs:
+  - csharp
+  - vb
+  name: InjectableLookupClient
+  nameWithType: InjectableLookupClient
+  fullName: Catalyst.Abstractions.Network.InjectableLookupClient
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Network/InjectableLookupClient.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: InjectableLookupClient
+    path: ../src/Catalyst.Abstractions/Network/InjectableLookupClient.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Network
+  syntax:
+    content: 'public class InjectableLookupClient : LookupClient'
+    content.vb: >-
+      Public Class InjectableLookupClient
+
+          Inherits LookupClient
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Abstractions.Network.InjectableLookupClient.#ctor(Catalyst.Abstractions.P2P.IPeerSettings)
+  commentId: M:Catalyst.Abstractions.Network.InjectableLookupClient.#ctor(Catalyst.Abstractions.P2P.IPeerSettings)
+  id: '#ctor(Catalyst.Abstractions.P2P.IPeerSettings)'
+  parent: Catalyst.Abstractions.Network.InjectableLookupClient
+  langs:
+  - csharp
+  - vb
+  name: InjectableLookupClient(IPeerSettings)
+  nameWithType: InjectableLookupClient.InjectableLookupClient(IPeerSettings)
+  fullName: Catalyst.Abstractions.Network.InjectableLookupClient.InjectableLookupClient(Catalyst.Abstractions.P2P.IPeerSettings)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Network/InjectableLookupClient.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Abstractions/Network/InjectableLookupClient.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Network
+  syntax:
+    content: public InjectableLookupClient(IPeerSettings peerSettings)
+    parameters:
+    - id: peerSettings
+      type: Catalyst.Abstractions.P2P.IPeerSettings
+    content.vb: Public Sub New(peerSettings As IPeerSettings)
+  overload: Catalyst.Abstractions.Network.InjectableLookupClient.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Abstractions.Network
+  commentId: N:Catalyst.Abstractions.Network
+  name: Catalyst.Abstractions.Network
+  nameWithType: Catalyst.Abstractions.Network
+  fullName: Catalyst.Abstractions.Network
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Network.InjectableLookupClient.#ctor*
+  commentId: Overload:Catalyst.Abstractions.Network.InjectableLookupClient.#ctor
+  name: InjectableLookupClient
+  nameWithType: InjectableLookupClient.InjectableLookupClient
+  fullName: Catalyst.Abstractions.Network.InjectableLookupClient.InjectableLookupClient
+- uid: Catalyst.Abstractions.P2P.IPeerSettings
+  commentId: T:Catalyst.Abstractions.P2P.IPeerSettings
+  parent: Catalyst.Abstractions.P2P
+  name: IPeerSettings
+  nameWithType: IPeerSettings
+  fullName: Catalyst.Abstractions.P2P.IPeerSettings
+- uid: Catalyst.Abstractions.P2P
+  commentId: N:Catalyst.Abstractions.P2P
+  name: Catalyst.Abstractions.P2P
+  nameWithType: Catalyst.Abstractions.P2P
+  fullName: Catalyst.Abstractions.P2P

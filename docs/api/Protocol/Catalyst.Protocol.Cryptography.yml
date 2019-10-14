@@ -1,0 +1,48 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Cryptography
+  commentId: N:Catalyst.Protocol.Cryptography
+  id: Catalyst.Protocol.Cryptography
+  children:
+  - Catalyst.Protocol.Cryptography.CryptographyReflection
+  - Catalyst.Protocol.Cryptography.Signature
+  - Catalyst.Protocol.Cryptography.SignatureType
+  - Catalyst.Protocol.Cryptography.SigningContext
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Protocol.Cryptography
+  nameWithType: Catalyst.Protocol.Cryptography
+  fullName: Catalyst.Protocol.Cryptography
+  type: Namespace
+  assemblies:
+  - Catalyst.Protocol
+references:
+- uid: Catalyst.Protocol.Cryptography.Signature
+  commentId: T:Catalyst.Protocol.Cryptography.Signature
+  parent: Catalyst.Protocol.Cryptography
+  name: Signature
+  nameWithType: Signature
+  fullName: Catalyst.Protocol.Cryptography.Signature
+- uid: Catalyst.Protocol.Cryptography.SigningContext
+  commentId: T:Catalyst.Protocol.Cryptography.SigningContext
+  parent: Catalyst.Protocol.Cryptography
+  name: SigningContext
+  nameWithType: SigningContext
+  fullName: Catalyst.Protocol.Cryptography.SigningContext
+- uid: Catalyst.Protocol.Cryptography.CryptographyReflection
+  commentId: T:Catalyst.Protocol.Cryptography.CryptographyReflection
+  name: CryptographyReflection
+  nameWithType: CryptographyReflection
+  fullName: Catalyst.Protocol.Cryptography.CryptographyReflection
+- uid: Catalyst.Protocol.Cryptography.SignatureType
+  commentId: T:Catalyst.Protocol.Cryptography.SignatureType
+  parent: Catalyst.Protocol.Cryptography
+  name: SignatureType
+  nameWithType: SignatureType
+  fullName: Catalyst.Protocol.Cryptography.SignatureType
+- uid: Catalyst.Protocol.Cryptography
+  commentId: N:Catalyst.Protocol.Cryptography
+  name: Catalyst.Protocol.Cryptography
+  nameWithType: Catalyst.Protocol.Cryptography
+  fullName: Catalyst.Protocol.Cryptography

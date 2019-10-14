@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Validators
+  commentId: N:Catalyst.Core.Lib.Validators
+  id: Catalyst.Core.Lib.Validators
+  children:
+  - Catalyst.Core.Lib.Validators.TransactionValidator
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.Validators
+  nameWithType: Catalyst.Core.Lib.Validators
+  fullName: Catalyst.Core.Lib.Validators
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.Validators.TransactionValidator
+  commentId: T:Catalyst.Core.Lib.Validators.TransactionValidator
+  name: TransactionValidator
+  nameWithType: TransactionValidator
+  fullName: Catalyst.Core.Lib.Validators.TransactionValidator

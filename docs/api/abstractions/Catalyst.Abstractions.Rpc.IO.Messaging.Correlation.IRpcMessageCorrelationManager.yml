@@ -1,0 +1,345 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager
+  commentId: T:Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager
+  id: IRpcMessageCorrelationManager
+  parent: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  children:
+  - Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager.EvictionEvents
+  langs:
+  - csharp
+  - vb
+  name: IRpcMessageCorrelationManager
+  nameWithType: IRpcMessageCorrelationManager
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IO/Messaging/Correlation/IRpcMessageCorrelationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IRpcMessageCorrelationManager
+    path: ../src/Catalyst.Abstractions/Rpc/IO/Messaging/Correlation/IRpcMessageCorrelationManager.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  syntax:
+    content: 'public interface IRpcMessageCorrelationManager : IMessageCorrelationManager, IDisposable'
+    content.vb: >-
+      Public Interface IRpcMessageCorrelationManager
+
+          Inherits IMessageCorrelationManager
+  inheritedMembers:
+  - Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{ProtocolMessage})
+  - Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(ProtocolMessage)
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager.EvictionEvents
+  commentId: P:Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager.EvictionEvents
+  id: EvictionEvents
+  parent: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager
+  langs:
+  - csharp
+  - vb
+  name: EvictionEvents
+  nameWithType: IRpcMessageCorrelationManager.EvictionEvents
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager.EvictionEvents
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IO/Messaging/Correlation/IRpcMessageCorrelationManager.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: EvictionEvents
+    path: ../src/Catalyst.Abstractions/Rpc/IO/Messaging/Correlation/IRpcMessageCorrelationManager.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  syntax:
+    content: IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents { get; }
+    parameters: []
+    return:
+      type: System.IObservable{Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{ProtocolMessage}}
+    content.vb: ReadOnly Property EvictionEvents As IObservable(Of ICacheEvictionEvent(Of ProtocolMessage))
+  overload: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager.EvictionEvents*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{ProtocolMessage})
+  commentId: M:Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{ProtocolMessage})
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  isExternal: true
+  name: AddPendingRequest(ICorrelatableMessage<ProtocolMessage>)
+  nameWithType: IMessageCorrelationManager.AddPendingRequest(ICorrelatableMessage<ProtocolMessage>)
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage<ProtocolMessage>)
+  nameWithType.vb: IMessageCorrelationManager.AddPendingRequest(ICorrelatableMessage(Of ProtocolMessage))
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage(Of ProtocolMessage))
+  name.vb: AddPendingRequest(ICorrelatableMessage(Of ProtocolMessage))
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{ProtocolMessage})
+    name: AddPendingRequest
+    nameWithType: IMessageCorrelationManager.AddPendingRequest
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage`1
+    name: ICorrelatableMessage
+    nameWithType: ICorrelatableMessage
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage{ProtocolMessage})
+    name: AddPendingRequest
+    nameWithType: IMessageCorrelationManager.AddPendingRequest
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.AddPendingRequest
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage`1
+    name: ICorrelatableMessage
+    nameWithType: ICorrelatableMessage
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelatableMessage
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(ProtocolMessage)
+  commentId: M:Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(ProtocolMessage)
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  isExternal: true
+  name: TryMatchResponse(ProtocolMessage)
+  nameWithType: IMessageCorrelationManager.TryMatchResponse(ProtocolMessage)
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(ProtocolMessage)
+    name: TryMatchResponse
+    nameWithType: IMessageCorrelationManager.TryMatchResponse
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse(ProtocolMessage)
+    name: TryMatchResponse
+    nameWithType: IMessageCorrelationManager.TryMatchResponse
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager.TryMatchResponse
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  name: IMessageCorrelationManager
+  nameWithType: IMessageCorrelationManager
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.IMessageCorrelationManager
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager.EvictionEvents*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager.EvictionEvents
+  name: EvictionEvents
+  nameWithType: IRpcMessageCorrelationManager.EvictionEvents
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager.EvictionEvents
+- uid: System.IObservable{Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{ProtocolMessage}}
+  commentId: T:System.IObservable{Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent{ProtocolMessage}}
+  parent: System
+  definition: System.IObservable`1
+  name: IObservable<ICacheEvictionEvent<ProtocolMessage>>
+  nameWithType: IObservable<ICacheEvictionEvent<ProtocolMessage>>
+  fullName: System.IObservable<Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent<ProtocolMessage>>
+  nameWithType.vb: IObservable(Of ICacheEvictionEvent(Of ProtocolMessage))
+  fullName.vb: System.IObservable(Of Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent(Of ProtocolMessage))
+  name.vb: IObservable(Of ICacheEvictionEvent(Of ProtocolMessage))
+  spec.csharp:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1
+    name: ICacheEvictionEvent
+    nameWithType: ICacheEvictionEvent
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent`1
+    name: ICacheEvictionEvent
+    nameWithType: ICacheEvictionEvent
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICacheEvictionEvent
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObservable`1
+  commentId: T:System.IObservable`1
+  isExternal: true
+  name: IObservable<T>
+  nameWithType: IObservable<T>
+  fullName: System.IObservable<T>
+  nameWithType.vb: IObservable(Of T)
+  fullName.vb: System.IObservable(Of T)
+  name.vb: IObservable(Of T)
+  spec.csharp:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

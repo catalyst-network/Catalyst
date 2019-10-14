@@ -1,0 +1,129 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository`1
+  commentId: T:Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository`1
+  id: FileSystemAwareXmlRepository`1
+  parent: Catalyst.Core.Lib.Repository
+  children:
+  - Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository`1.#ctor(Catalyst.Abstractions.FileSystem.IFileSystem,System.String)
+  langs:
+  - csharp
+  - vb
+  name: FileSystemAwareXmlRepository<T>
+  nameWithType: FileSystemAwareXmlRepository<T>
+  fullName: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository<T>
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Repository/FileSystemAwareXmlRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: FileSystemAwareXmlRepository
+    path: ../src/Catalyst.Core.Lib/Repository/FileSystemAwareXmlRepository.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Repository
+  summary: "\nXml Repository where base folder is derived from the file system <xref href=\"Catalyst.Abstractions.FileSystem.IFileSystem\" data-throw-if-not-resolved=\"false\"></xref>\n"
+  example: []
+  syntax:
+    content: 'public class FileSystemAwareXmlRepository<T> : XmlRepository<T, string> where T : class, new()'
+    typeParameters:
+    - id: T
+      description: Type of object
+    content.vb: >-
+      Public Class FileSystemAwareXmlRepository(Of T As {Class, New})
+
+          Inherits XmlRepository(Of T, String)
+  inheritance:
+  - System.Object
+  nameWithType.vb: FileSystemAwareXmlRepository(Of T)
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+  fullName.vb: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository(Of T)
+  name.vb: FileSystemAwareXmlRepository(Of T)
+- uid: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository`1.#ctor(Catalyst.Abstractions.FileSystem.IFileSystem,System.String)
+  commentId: M:Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository`1.#ctor(Catalyst.Abstractions.FileSystem.IFileSystem,System.String)
+  id: '#ctor(Catalyst.Abstractions.FileSystem.IFileSystem,System.String)'
+  parent: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository`1
+  langs:
+  - csharp
+  - vb
+  name: FileSystemAwareXmlRepository(IFileSystem, String)
+  nameWithType: FileSystemAwareXmlRepository<T>.FileSystemAwareXmlRepository(IFileSystem, String)
+  fullName: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository<T>.FileSystemAwareXmlRepository(Catalyst.Abstractions.FileSystem.IFileSystem, System.String)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Repository/FileSystemAwareXmlRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/Repository/FileSystemAwareXmlRepository.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Repository
+  syntax:
+    content: public FileSystemAwareXmlRepository(IFileSystem fileSystem, string path = "")
+    parameters:
+    - id: fileSystem
+      type: Catalyst.Abstractions.FileSystem.IFileSystem
+    - id: path
+      type: System.String
+    content.vb: Public Sub New(fileSystem As IFileSystem, path As String = "")
+  overload: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository`1.#ctor*
+  nameWithType.vb: FileSystemAwareXmlRepository(Of T).FileSystemAwareXmlRepository(IFileSystem, String)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository(Of T).FileSystemAwareXmlRepository(Catalyst.Abstractions.FileSystem.IFileSystem, System.String)
+references:
+- uid: Catalyst.Abstractions.FileSystem.IFileSystem
+  commentId: T:Catalyst.Abstractions.FileSystem.IFileSystem
+  parent: Catalyst.Abstractions.FileSystem
+  name: IFileSystem
+  nameWithType: IFileSystem
+  fullName: Catalyst.Abstractions.FileSystem.IFileSystem
+- uid: Catalyst.Core.Lib.Repository
+  commentId: N:Catalyst.Core.Lib.Repository
+  name: Catalyst.Core.Lib.Repository
+  nameWithType: Catalyst.Core.Lib.Repository
+  fullName: Catalyst.Core.Lib.Repository
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.FileSystem
+  commentId: N:Catalyst.Abstractions.FileSystem
+  name: Catalyst.Abstractions.FileSystem
+  nameWithType: Catalyst.Abstractions.FileSystem
+  fullName: Catalyst.Abstractions.FileSystem
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository`1.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository`1.#ctor
+  name: FileSystemAwareXmlRepository
+  nameWithType: FileSystemAwareXmlRepository<T>.FileSystemAwareXmlRepository
+  fullName: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository<T>.FileSystemAwareXmlRepository
+  nameWithType.vb: FileSystemAwareXmlRepository(Of T).FileSystemAwareXmlRepository
+  fullName.vb: Catalyst.Core.Lib.Repository.FileSystemAwareXmlRepository(Of T).FileSystemAwareXmlRepository
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String

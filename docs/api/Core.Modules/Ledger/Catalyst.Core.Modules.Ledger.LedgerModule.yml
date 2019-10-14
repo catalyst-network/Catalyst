@@ -1,0 +1,109 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Ledger.LedgerModule
+  commentId: T:Catalyst.Core.Modules.Ledger.LedgerModule
+  id: LedgerModule
+  parent: Catalyst.Core.Modules.Ledger
+  children:
+  - Catalyst.Core.Modules.Ledger.LedgerModule.Load(ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: LedgerModule
+  nameWithType: LedgerModule
+  fullName: Catalyst.Core.Modules.Ledger.LedgerModule
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/LedgerModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: LedgerModule
+    path: ../src/Catalyst.Core.Modules.Ledger/LedgerModule.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  syntax:
+    content: 'public class LedgerModule : Module'
+    content.vb: >-
+      Public Class LedgerModule
+
+          Inherits
+
+
+
+           Module
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Ledger.LedgerModule.Load(ContainerBuilder)
+  commentId: M:Catalyst.Core.Modules.Ledger.LedgerModule.Load(ContainerBuilder)
+  id: Load(ContainerBuilder)
+  parent: Catalyst.Core.Modules.Ledger.LedgerModule
+  langs:
+  - csharp
+  - vb
+  name: Load(ContainerBuilder)
+  nameWithType: LedgerModule.Load(ContainerBuilder)
+  fullName: Catalyst.Core.Modules.Ledger.LedgerModule.Load(ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/LedgerModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Load
+    path: ../src/Catalyst.Core.Modules.Ledger/LedgerModule.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  syntax:
+    content: protected override void Load(ContainerBuilder builder)
+    parameters:
+    - id: builder
+      type: ContainerBuilder
+    content.vb: Protected Overrides Sub Load(builder As ContainerBuilder)
+  overload: Catalyst.Core.Modules.Ledger.LedgerModule.Load*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Modules.Ledger
+  commentId: N:Catalyst.Core.Modules.Ledger
+  name: Catalyst.Core.Modules.Ledger
+  nameWithType: Catalyst.Core.Modules.Ledger
+  fullName: Catalyst.Core.Modules.Ledger
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Ledger.LedgerModule.Load*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.LedgerModule.Load
+  name: Load
+  nameWithType: LedgerModule.Load
+  fullName: Catalyst.Core.Modules.Ledger.LedgerModule.Load
+- uid: ContainerBuilder
+  commentId: '!:ContainerBuilder'
+  isExternal: true
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: ContainerBuilder

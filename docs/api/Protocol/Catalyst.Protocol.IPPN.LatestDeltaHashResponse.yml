@@ -1,0 +1,1732 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  commentId: T:Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  id: LatestDeltaHashResponse
+  parent: Catalyst.Protocol.IPPN
+  children:
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.#ctor
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.#ctor(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.CalculateSize
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Clone
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHash
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHashFieldNumber
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Descriptor
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals(System.Object)
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.GetHashCode
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Google#Protobuf#IMessage#Descriptor
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom(Google.Protobuf.CodedInputStream)
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Parser
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.ToString
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse.WriteTo(Google.Protobuf.CodedOutputStream)
+  langs:
+  - csharp
+  - vb
+  name: LatestDeltaHashResponse
+  nameWithType: LatestDeltaHashResponse
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: LatestDeltaHashResponse
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 572
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: 'public sealed class LatestDeltaHashResponse : IMessage<LatestDeltaHashResponse>, IMessage, IEquatable<LatestDeltaHashResponse>, IDeepCloneable<LatestDeltaHashResponse>'
+    content.vb: >-
+      Public NotInheritable Class LatestDeltaHashResponse
+          Implements IMessage(Of LatestDeltaHashResponse), IMessage, IEquatable(Of LatestDeltaHashResponse), IDeepCloneable(Of LatestDeltaHashResponse)
+  inheritance:
+  - System.Object
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  - Google.Protobuf.IMessage
+  - System.IEquatable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Parser
+  commentId: P:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Parser
+  id: Parser
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: Parser
+  nameWithType: LatestDeltaHashResponse.Parser
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Parser
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Parser
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 575
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public static MessageParser<LatestDeltaHashResponse> Parser { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.MessageParser{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+    content.vb: Public Shared ReadOnly Property Parser As MessageParser(Of LatestDeltaHashResponse)
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Parser*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Descriptor
+  commentId: P:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Descriptor
+  id: Descriptor
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: Descriptor
+  nameWithType: LatestDeltaHashResponse.Descriptor
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 578
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public static MessageDescriptor Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: Public Shared ReadOnly Property Descriptor As MessageDescriptor
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Descriptor*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Google#Protobuf#IMessage#Descriptor
+  commentId: P:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Google#Protobuf#IMessage#Descriptor
+  id: Google#Protobuf#IMessage#Descriptor
+  isEii: true
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: IMessage.Descriptor
+  nameWithType: LatestDeltaHashResponse.IMessage.Descriptor
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Google.Protobuf.IMessage.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: pb::Google.Protobuf.IMessage.Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 583
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: MessageDescriptor IMessage.Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: ReadOnly WriteOnly Property pb::Google.Protobuf.IMessage.Descriptor As MessageDescriptor Implements IMessage.Descriptor
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Google#Protobuf#IMessage#Descriptor*
+  implements:
+  - Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: LatestDeltaHashResponse.pb::Google.Protobuf.IMessage.Descriptor
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.#ctor
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.#ctor
+  id: '#ctor'
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: LatestDeltaHashResponse()
+  nameWithType: LatestDeltaHashResponse.LatestDeltaHashResponse()
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.LatestDeltaHashResponse()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 588
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public LatestDeltaHashResponse()
+    content.vb: Public Sub New
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.#ctor(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.#ctor(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  id: '#ctor(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)'
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: LatestDeltaHashResponse(LatestDeltaHashResponse)
+  nameWithType: LatestDeltaHashResponse.LatestDeltaHashResponse(LatestDeltaHashResponse)
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.LatestDeltaHashResponse(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 595
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public LatestDeltaHashResponse(LatestDeltaHashResponse other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    content.vb: Public Sub New(other As LatestDeltaHashResponse)
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Clone
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Clone
+  id: Clone
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: Clone()
+  nameWithType: LatestDeltaHashResponse.Clone()
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Clone()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Clone
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 601
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public LatestDeltaHashResponse Clone()
+    return:
+      type: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    content.vb: Public Function Clone As LatestDeltaHashResponse
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Clone*
+  implements:
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}.Clone
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHashFieldNumber
+  commentId: F:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHashFieldNumber
+  id: DeltaHashFieldNumber
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: DeltaHashFieldNumber
+  nameWithType: LatestDeltaHashResponse.DeltaHashFieldNumber
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHashFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DeltaHashFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 607
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  summary: Field number for the &quot;delta_hash&quot; field.
+  example: []
+  syntax:
+    content: public const int DeltaHashFieldNumber = 1
+    return:
+      type: System.Int32
+    content.vb: Public Const DeltaHashFieldNumber As Integer = 1
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHash
+  commentId: P:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHash
+  id: DeltaHash
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: DeltaHash
+  nameWithType: LatestDeltaHashResponse.DeltaHash
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHash
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DeltaHash
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 609
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public ByteString DeltaHash { get; set; }
+    parameters: []
+    return:
+      type: Google.Protobuf.ByteString
+    content.vb: Public Property DeltaHash As ByteString
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHash*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals(System.Object)
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: Equals(Object)
+  nameWithType: LatestDeltaHashResponse.Equals(Object)
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals(System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 617
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public override bool Equals(object other)
+    parameters:
+    - id: other
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function Equals(other As Object) As Boolean
+  overridden: System.Object.Equals(System.Object)
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  id: Equals(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: Equals(LatestDeltaHashResponse)
+  nameWithType: LatestDeltaHashResponse.Equals(LatestDeltaHashResponse)
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 622
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public bool Equals(LatestDeltaHashResponse other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    return:
+      type: System.Boolean
+    content.vb: Public Function Equals(other As LatestDeltaHashResponse) As Boolean
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals*
+  implements:
+  - System.IEquatable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}.Equals(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.GetHashCode
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.GetHashCode
+  id: GetHashCode
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: LatestDeltaHashResponse.GetHashCode()
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetHashCode
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 634
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+    content.vb: Public Overrides Function GetHashCode As Integer
+  overridden: System.Object.GetHashCode
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.GetHashCode*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.ToString
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.ToString
+  id: ToString
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: LatestDeltaHashResponse.ToString()
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToString
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 644
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.WriteTo(Google.Protobuf.CodedOutputStream)
+  id: WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: WriteTo(CodedOutputStream)
+  nameWithType: LatestDeltaHashResponse.WriteTo(CodedOutputStream)
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.WriteTo(Google.Protobuf.CodedOutputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: WriteTo
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 649
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public void WriteTo(CodedOutputStream output)
+    parameters:
+    - id: output
+      type: Google.Protobuf.CodedOutputStream
+    content.vb: Public Sub WriteTo(output As CodedOutputStream)
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.WriteTo*
+  implements:
+  - Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.CalculateSize
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.CalculateSize
+  id: CalculateSize
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: CalculateSize()
+  nameWithType: LatestDeltaHashResponse.CalculateSize()
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.CalculateSize()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CalculateSize
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 660
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public int CalculateSize()
+    return:
+      type: System.Int32
+    content.vb: Public Function CalculateSize As Integer
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.CalculateSize*
+  implements:
+  - Google.Protobuf.IMessage.CalculateSize
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  id: MergeFrom(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(LatestDeltaHashResponse)
+  nameWithType: LatestDeltaHashResponse.MergeFrom(LatestDeltaHashResponse)
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 672
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public void MergeFrom(LatestDeltaHashResponse other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    content.vb: Public Sub MergeFrom(other As LatestDeltaHashResponse)
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}.MergeFrom(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom(Google.Protobuf.CodedInputStream)
+  id: MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(CodedInputStream)
+  nameWithType: LatestDeltaHashResponse.MergeFrom(CodedInputStream)
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom(Google.Protobuf.CodedInputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/IPPN.cs
+    startLine: 683
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.IPPN
+  syntax:
+    content: public void MergeFrom(CodedInputStream input)
+    parameters:
+    - id: input
+      type: Google.Protobuf.CodedInputStream
+    content.vb: Public Sub MergeFrom(input As CodedInputStream)
+  overload: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Protocol.IPPN
+  commentId: N:Catalyst.Protocol.IPPN
+  name: Catalyst.Protocol.IPPN
+  nameWithType: Catalyst.Protocol.IPPN
+  fullName: Catalyst.Protocol.IPPN
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  commentId: T:Google.Protobuf.IMessage{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IMessage`1
+  name: IMessage<LatestDeltaHashResponse>
+  nameWithType: IMessage<LatestDeltaHashResponse>
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.IPPN.LatestDeltaHashResponse>
+  nameWithType.vb: IMessage(Of LatestDeltaHashResponse)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  name.vb: IMessage(Of LatestDeltaHashResponse)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage
+  commentId: T:Google.Protobuf.IMessage
+  parent: Google.Protobuf
+  isExternal: true
+  name: IMessage
+  nameWithType: IMessage
+  fullName: Google.Protobuf.IMessage
+- uid: System.IEquatable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  commentId: T:System.IEquatable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  parent: System
+  definition: System.IEquatable`1
+  name: IEquatable<LatestDeltaHashResponse>
+  nameWithType: IEquatable<LatestDeltaHashResponse>
+  fullName: System.IEquatable<Catalyst.Protocol.IPPN.LatestDeltaHashResponse>
+  nameWithType.vb: IEquatable(Of LatestDeltaHashResponse)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  name.vb: IEquatable(Of LatestDeltaHashResponse)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  commentId: T:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IDeepCloneable`1
+  name: IDeepCloneable<LatestDeltaHashResponse>
+  nameWithType: IDeepCloneable<LatestDeltaHashResponse>
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.IPPN.LatestDeltaHashResponse>
+  nameWithType.vb: IDeepCloneable(Of LatestDeltaHashResponse)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  name.vb: IDeepCloneable(Of LatestDeltaHashResponse)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Google.Protobuf.IMessage`1
+  commentId: T:Google.Protobuf.IMessage`1
+  isExternal: true
+  name: IMessage<T>
+  nameWithType: IMessage<T>
+  fullName: Google.Protobuf.IMessage<T>
+  nameWithType.vb: IMessage(Of T)
+  fullName.vb: Google.Protobuf.IMessage(Of T)
+  name.vb: IMessage(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf
+  commentId: N:Google.Protobuf
+  isExternal: true
+  name: Google.Protobuf
+  nameWithType: Google.Protobuf
+  fullName: Google.Protobuf
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1
+  commentId: T:Google.Protobuf.IDeepCloneable`1
+  isExternal: true
+  name: IDeepCloneable<T>
+  nameWithType: IDeepCloneable<T>
+  fullName: Google.Protobuf.IDeepCloneable<T>
+  nameWithType.vb: IDeepCloneable(Of T)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T)
+  name.vb: IDeepCloneable(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Parser*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Parser
+  name: Parser
+  nameWithType: LatestDeltaHashResponse.Parser
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Parser
+- uid: Google.Protobuf.MessageParser{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  commentId: T:Google.Protobuf.MessageParser{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.MessageParser`1
+  name: MessageParser<LatestDeltaHashResponse>
+  nameWithType: MessageParser<LatestDeltaHashResponse>
+  fullName: Google.Protobuf.MessageParser<Catalyst.Protocol.IPPN.LatestDeltaHashResponse>
+  nameWithType.vb: MessageParser(Of LatestDeltaHashResponse)
+  fullName.vb: Google.Protobuf.MessageParser(Of Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  name.vb: MessageParser(Of LatestDeltaHashResponse)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.MessageParser`1
+  commentId: T:Google.Protobuf.MessageParser`1
+  isExternal: true
+  name: MessageParser<T>
+  nameWithType: MessageParser<T>
+  fullName: Google.Protobuf.MessageParser<T>
+  nameWithType.vb: MessageParser(Of T)
+  fullName.vb: Google.Protobuf.MessageParser(Of T)
+  name.vb: MessageParser(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Descriptor*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Descriptor
+  name: Descriptor
+  nameWithType: LatestDeltaHashResponse.Descriptor
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Descriptor
+- uid: Google.Protobuf.Reflection.MessageDescriptor
+  commentId: T:Google.Protobuf.Reflection.MessageDescriptor
+  parent: Google.Protobuf.Reflection
+  isExternal: true
+  name: MessageDescriptor
+  nameWithType: MessageDescriptor
+  fullName: Google.Protobuf.Reflection.MessageDescriptor
+- uid: Google.Protobuf.Reflection
+  commentId: N:Google.Protobuf.Reflection
+  isExternal: true
+  name: Google.Protobuf.Reflection
+  nameWithType: Google.Protobuf.Reflection
+  fullName: Google.Protobuf.Reflection
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Google#Protobuf#IMessage#Descriptor*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Google#Protobuf#IMessage#Descriptor
+  name: IMessage.Descriptor
+  nameWithType: LatestDeltaHashResponse.IMessage.Descriptor
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: LatestDeltaHashResponse.pb::Google.Protobuf.IMessage.Descriptor
+  fullName.vb: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Google.Protobuf.IMessage.Descriptor
+  commentId: P:Google.Protobuf.IMessage.Descriptor
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: Descriptor
+  nameWithType: IMessage.Descriptor
+  fullName: Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.#ctor*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.#ctor
+  name: LatestDeltaHashResponse
+  nameWithType: LatestDeltaHashResponse.LatestDeltaHashResponse
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.LatestDeltaHashResponse
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  commentId: T:Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  parent: Catalyst.Protocol.IPPN
+  name: LatestDeltaHashResponse
+  nameWithType: LatestDeltaHashResponse
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Clone*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Clone
+  name: Clone
+  nameWithType: LatestDeltaHashResponse.Clone
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Clone
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}.Clone
+  parent: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  definition: Google.Protobuf.IDeepCloneable`1.Clone
+  name: Clone()
+  nameWithType: IDeepCloneable<LatestDeltaHashResponse>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.IPPN.LatestDeltaHashResponse>.Clone()
+  nameWithType.vb: IDeepCloneable(Of LatestDeltaHashResponse).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.IPPN.LatestDeltaHashResponse).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<LatestDeltaHashResponse>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.IPPN.LatestDeltaHashResponse>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of LatestDeltaHashResponse).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.IPPN.LatestDeltaHashResponse).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable`1.Clone
+  isExternal: true
+  name: Clone()
+  nameWithType: IDeepCloneable<T>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<T>.Clone()
+  nameWithType.vb: IDeepCloneable(Of T).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<T>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<T>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of T).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of T).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHash*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHash
+  name: DeltaHash
+  nameWithType: LatestDeltaHashResponse.DeltaHash
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.DeltaHash
+- uid: Google.Protobuf.ByteString
+  commentId: T:Google.Protobuf.ByteString
+  parent: Google.Protobuf
+  isExternal: true
+  name: ByteString
+  nameWithType: ByteString
+  fullName: Google.Protobuf.ByteString
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals
+  name: Equals
+  nameWithType: LatestDeltaHashResponse.Equals
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.Equals
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System.IEquatable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}.Equals(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  commentId: M:System.IEquatable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}.Equals(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  parent: System.IEquatable{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  definition: System.IEquatable`1.Equals(`0)
+  name: Equals(LatestDeltaHashResponse)
+  nameWithType: IEquatable<LatestDeltaHashResponse>.Equals(LatestDeltaHashResponse)
+  fullName: System.IEquatable<Catalyst.Protocol.IPPN.LatestDeltaHashResponse>.Equals(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  nameWithType.vb: IEquatable(Of LatestDeltaHashResponse).Equals(LatestDeltaHashResponse)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.IPPN.LatestDeltaHashResponse).Equals(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<LatestDeltaHashResponse>.Equals
+    fullName: System.IEquatable<Catalyst.Protocol.IPPN.LatestDeltaHashResponse>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of LatestDeltaHashResponse).Equals
+    fullName: System.IEquatable(Of Catalyst.Protocol.IPPN.LatestDeltaHashResponse).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<T>.Equals
+    fullName: System.IEquatable<T>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of T).Equals
+    fullName: System.IEquatable(Of T).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.GetHashCode*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.GetHashCode
+  name: GetHashCode
+  nameWithType: LatestDeltaHashResponse.GetHashCode
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.GetHashCode
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.ToString*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.ToString
+  name: ToString
+  nameWithType: LatestDeltaHashResponse.ToString
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.WriteTo*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.WriteTo
+  name: WriteTo
+  nameWithType: LatestDeltaHashResponse.WriteTo
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.WriteTo
+- uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: WriteTo(CodedOutputStream)
+  nameWithType: IMessage.WriteTo(CodedOutputStream)
+  fullName: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedOutputStream
+  commentId: T:Google.Protobuf.CodedOutputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedOutputStream
+  nameWithType: CodedOutputStream
+  fullName: Google.Protobuf.CodedOutputStream
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.CalculateSize*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.CalculateSize
+  name: CalculateSize
+  nameWithType: LatestDeltaHashResponse.CalculateSize
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.CalculateSize
+- uid: Google.Protobuf.IMessage.CalculateSize
+  commentId: M:Google.Protobuf.IMessage.CalculateSize
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: CalculateSize()
+  nameWithType: IMessage.CalculateSize()
+  fullName: Google.Protobuf.IMessage.CalculateSize()
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom*
+  commentId: Overload:Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom
+  name: MergeFrom
+  nameWithType: LatestDeltaHashResponse.MergeFrom
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse.MergeFrom
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}.MergeFrom(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  commentId: M:Google.Protobuf.IMessage{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}.MergeFrom(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  parent: Google.Protobuf.IMessage{Catalyst.Protocol.IPPN.LatestDeltaHashResponse}
+  definition: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  name: MergeFrom(LatestDeltaHashResponse)
+  nameWithType: IMessage<LatestDeltaHashResponse>.MergeFrom(LatestDeltaHashResponse)
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.IPPN.LatestDeltaHashResponse>.MergeFrom(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  nameWithType.vb: IMessage(Of LatestDeltaHashResponse).MergeFrom(LatestDeltaHashResponse)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.IPPN.LatestDeltaHashResponse).MergeFrom(Catalyst.Protocol.IPPN.LatestDeltaHashResponse)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<LatestDeltaHashResponse>.MergeFrom
+    fullName: Google.Protobuf.IMessage<Catalyst.Protocol.IPPN.LatestDeltaHashResponse>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of LatestDeltaHashResponse).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of Catalyst.Protocol.IPPN.LatestDeltaHashResponse).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+    name: LatestDeltaHashResponse
+    nameWithType: LatestDeltaHashResponse
+    fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  commentId: M:Google.Protobuf.IMessage`1.MergeFrom(`0)
+  isExternal: true
+  name: MergeFrom(T)
+  nameWithType: IMessage<T>.MergeFrom(T)
+  fullName: Google.Protobuf.IMessage<T>.MergeFrom(T)
+  nameWithType.vb: IMessage(Of T).MergeFrom(T)
+  fullName.vb: Google.Protobuf.IMessage(Of T).MergeFrom(T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<T>.MergeFrom
+    fullName: Google.Protobuf.IMessage<T>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of T).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of T).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: MergeFrom(CodedInputStream)
+  nameWithType: IMessage.MergeFrom(CodedInputStream)
+  fullName: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedInputStream
+  commentId: T:Google.Protobuf.CodedInputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedInputStream
+  nameWithType: CodedInputStream
+  fullName: Google.Protobuf.CodedInputStream

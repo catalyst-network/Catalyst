@@ -1,0 +1,194 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+  commentId: T:Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+  id: IServerBootstrap
+  parent: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  children:
+  - Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap.BindAsync(System.Net.IPAddress,System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: IServerBootstrap
+  nameWithType: IServerBootstrap
+  fullName: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Transport/Bootstrapping/IServerBootstrap.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IServerBootstrap
+    path: ../src/Catalyst.Abstractions/IO/Transport/Bootstrapping/IServerBootstrap.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  syntax:
+    content: public interface IServerBootstrap
+    content.vb: Public Interface IServerBootstrap
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap.BindAsync(System.Net.IPAddress,System.Int32)
+  commentId: M:Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap.BindAsync(System.Net.IPAddress,System.Int32)
+  id: BindAsync(System.Net.IPAddress,System.Int32)
+  parent: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+  langs:
+  - csharp
+  - vb
+  name: BindAsync(IPAddress, Int32)
+  nameWithType: IServerBootstrap.BindAsync(IPAddress, Int32)
+  fullName: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap.BindAsync(System.Net.IPAddress, System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Transport/Bootstrapping/IServerBootstrap.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BindAsync
+    path: ../src/Catalyst.Abstractions/IO/Transport/Bootstrapping/IServerBootstrap.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  syntax:
+    content: Task<IChannel> BindAsync(IPAddress ipAddress, int port)
+    parameters:
+    - id: ipAddress
+      type: System.Net.IPAddress
+    - id: port
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task{IChannel}
+    content.vb: Function BindAsync(ipAddress As IPAddress, port As Integer) As Task(Of IChannel)
+  overload: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap.BindAsync*
+references:
+- uid: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  commentId: N:Catalyst.Abstractions.IO.Transport.Bootstrapping
+  name: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  nameWithType: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  fullName: Catalyst.Abstractions.IO.Transport.Bootstrapping
+- uid: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap.BindAsync*
+  commentId: Overload:Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap.BindAsync
+  name: BindAsync
+  nameWithType: IServerBootstrap.BindAsync
+  fullName: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap.BindAsync
+- uid: System.Net.IPAddress
+  commentId: T:System.Net.IPAddress
+  parent: System.Net
+  isExternal: true
+  name: IPAddress
+  nameWithType: IPAddress
+  fullName: System.Net.IPAddress
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System.Threading.Tasks.Task{IChannel}
+  commentId: T:System.Threading.Tasks.Task{IChannel}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<IChannel>
+  nameWithType: Task<IChannel>
+  fullName: System.Threading.Tasks.Task<IChannel>
+  nameWithType.vb: Task(Of IChannel)
+  fullName.vb: System.Threading.Tasks.Task(Of IChannel)
+  name.vb: Task(Of IChannel)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: IChannel
+    name: IChannel
+    nameWithType: IChannel
+    fullName: IChannel
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: IChannel
+    name: IChannel
+    nameWithType: IChannel
+    fullName: IChannel
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Net
+  commentId: N:System.Net
+  isExternal: true
+  name: System.Net
+  nameWithType: System.Net
+  fullName: System.Net
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks

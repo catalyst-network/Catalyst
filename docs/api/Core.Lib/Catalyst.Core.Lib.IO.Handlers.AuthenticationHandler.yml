@@ -1,0 +1,495 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler
+  id: AuthenticationHandler
+  parent: Catalyst.Core.Lib.IO.Handlers
+  children:
+  - Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.#ctor(Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy)
+  - Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  langs:
+  - csharp
+  - vb
+  name: AuthenticationHandler
+  nameWithType: AuthenticationHandler
+  fullName: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/AuthenticationHandler.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: AuthenticationHandler
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/AuthenticationHandler.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  summary: "\nDotNetty Handler in-charge of blocking RPC messages if the node operator is not trusted\n"
+  example: []
+  syntax:
+    content: 'public sealed class AuthenticationHandler : InboundChannelHandlerBase<ProtocolMessage>'
+    content.vb: >-
+      Public NotInheritable Class AuthenticationHandler
+
+          Inherits InboundChannelHandlerBase(Of ProtocolMessage)
+  inheritance:
+  - System.Object
+  - Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  inheritedMembers:
+  - Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.Logger
+  - Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead(IChannelHandlerContext,System.Object)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.#ctor(Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.#ctor(Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy)
+  id: '#ctor(Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy)'
+  parent: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler
+  langs:
+  - csharp
+  - vb
+  name: AuthenticationHandler(IAuthenticationStrategy)
+  nameWithType: AuthenticationHandler.AuthenticationHandler(IAuthenticationStrategy)
+  fullName: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.AuthenticationHandler(Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/AuthenticationHandler.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/AuthenticationHandler.cs
+    startLine: 43
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  summary: Initializes a new instance of the <xref href="Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public AuthenticationHandler(IAuthenticationStrategy authenticationStrategy)
+    parameters:
+    - id: authenticationStrategy
+      type: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+      description: The authentication strategy.
+    content.vb: Public Sub New(authenticationStrategy As IAuthenticationStrategy)
+  overload: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  id: ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  parent: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler
+  langs:
+  - csharp
+  - vb
+  name: ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  nameWithType: AuthenticationHandler.ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  fullName: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/AuthenticationHandler.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ChannelRead0
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/AuthenticationHandler.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  example: []
+  syntax:
+    content: protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
+    parameters:
+    - id: ctx
+      type: IChannelHandlerContext
+    - id: msg
+      type: ProtocolMessage
+    content.vb: Protected Overrides Sub ChannelRead0(ctx As IChannelHandlerContext, msg As ProtocolMessage)
+  overridden: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  overload: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.ChannelRead0*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Lib.IO.Handlers
+  commentId: N:Catalyst.Core.Lib.IO.Handlers
+  name: Catalyst.Core.Lib.IO.Handlers
+  nameWithType: Catalyst.Core.Lib.IO.Handlers
+  fullName: Catalyst.Core.Lib.IO.Handlers
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  parent: Catalyst.Core.Lib.IO.Handlers
+  definition: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  name: InboundChannelHandlerBase<ProtocolMessage>
+  nameWithType: InboundChannelHandlerBase<ProtocolMessage>
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>
+  nameWithType.vb: InboundChannelHandlerBase(Of ProtocolMessage)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage)
+  name.vb: InboundChannelHandlerBase(Of ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+    name: InboundChannelHandlerBase
+    nameWithType: InboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+    name: InboundChannelHandlerBase
+    nameWithType: InboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.Logger
+  commentId: F:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.Logger
+  parent: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  definition: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.Logger
+  name: Logger
+  nameWithType: InboundChannelHandlerBase<ProtocolMessage>.Logger
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>.Logger
+  nameWithType.vb: InboundChannelHandlerBase(Of ProtocolMessage).Logger
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage).Logger
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead(IChannelHandlerContext,System.Object)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead(IChannelHandlerContext,System.Object)
+  parent: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  definition: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+  name: ChannelRead(IChannelHandlerContext, Object)
+  nameWithType: InboundChannelHandlerBase<ProtocolMessage>.ChannelRead(IChannelHandlerContext, Object)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>.ChannelRead(IChannelHandlerContext, System.Object)
+  nameWithType.vb: InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead(IChannelHandlerContext, Object)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead(IChannelHandlerContext, System.Object)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+    name: ChannelRead
+    nameWithType: InboundChannelHandlerBase<ProtocolMessage>.ChannelRead
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>.ChannelRead
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+    name: ChannelRead
+    nameWithType: InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  name: InboundChannelHandlerBase<T>
+  nameWithType: InboundChannelHandlerBase<T>
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>
+  nameWithType.vb: InboundChannelHandlerBase(Of T)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T)
+  name.vb: InboundChannelHandlerBase(Of T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+    name: InboundChannelHandlerBase
+    nameWithType: InboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+    name: InboundChannelHandlerBase
+    nameWithType: InboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.Logger
+  commentId: F:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.Logger
+  name: Logger
+  nameWithType: InboundChannelHandlerBase<T>.Logger
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.Logger
+  nameWithType.vb: InboundChannelHandlerBase(Of T).Logger
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).Logger
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+  isExternal: true
+  name: ChannelRead(IChannelHandlerContext, Object)
+  nameWithType: InboundChannelHandlerBase<T>.ChannelRead(IChannelHandlerContext, Object)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead(IChannelHandlerContext, System.Object)
+  nameWithType.vb: InboundChannelHandlerBase(Of T).ChannelRead(IChannelHandlerContext, Object)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead(IChannelHandlerContext, System.Object)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+    name: ChannelRead
+    nameWithType: InboundChannelHandlerBase<T>.ChannelRead
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+    name: ChannelRead
+    nameWithType: InboundChannelHandlerBase(Of T).ChannelRead
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler
+  name: AuthenticationHandler
+  nameWithType: AuthenticationHandler
+  fullName: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler
+- uid: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.#ctor
+  name: AuthenticationHandler
+  nameWithType: AuthenticationHandler.AuthenticationHandler
+  fullName: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.AuthenticationHandler
+- uid: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+  commentId: T:Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+  parent: Catalyst.Abstractions.Rpc.Authentication
+  name: IAuthenticationStrategy
+  nameWithType: IAuthenticationStrategy
+  fullName: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+- uid: Catalyst.Abstractions.Rpc.Authentication
+  commentId: N:Catalyst.Abstractions.Rpc.Authentication
+  name: Catalyst.Abstractions.Rpc.Authentication
+  nameWithType: Catalyst.Abstractions.Rpc.Authentication
+  fullName: Catalyst.Abstractions.Rpc.Authentication
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  parent: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  definition: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+  name: ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  nameWithType: InboundChannelHandlerBase<ProtocolMessage>.ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>.ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  nameWithType.vb: InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+    name: ChannelRead0
+    nameWithType: InboundChannelHandlerBase<ProtocolMessage>.ChannelRead0
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>.ChannelRead0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+    name: ChannelRead0
+    nameWithType: InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead0
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.ChannelRead0*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.ChannelRead0
+  name: ChannelRead0
+  nameWithType: AuthenticationHandler.ChannelRead0
+  fullName: Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler.ChannelRead0
+- uid: IChannelHandlerContext
+  isExternal: true
+  name: IChannelHandlerContext
+  nameWithType: IChannelHandlerContext
+  fullName: IChannelHandlerContext
+- uid: ProtocolMessage
+  isExternal: true
+  name: ProtocolMessage
+  nameWithType: ProtocolMessage
+  fullName: ProtocolMessage
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+  isExternal: true
+  name: ChannelRead0(IChannelHandlerContext, T)
+  nameWithType: InboundChannelHandlerBase<T>.ChannelRead0(IChannelHandlerContext, T)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead0(IChannelHandlerContext, T)
+  nameWithType.vb: InboundChannelHandlerBase(Of T).ChannelRead0(IChannelHandlerContext, T)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead0(IChannelHandlerContext, T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+    name: ChannelRead0
+    nameWithType: InboundChannelHandlerBase<T>.ChannelRead0
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+    name: ChannelRead0
+    nameWithType: InboundChannelHandlerBase(Of T).ChannelRead0
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

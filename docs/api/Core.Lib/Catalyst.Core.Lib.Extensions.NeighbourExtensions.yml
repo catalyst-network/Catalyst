@@ -1,0 +1,493 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Extensions.NeighbourExtensions
+  commentId: T:Catalyst.Core.Lib.Extensions.NeighbourExtensions
+  id: NeighbourExtensions
+  parent: Catalyst.Core.Lib.Extensions
+  children:
+  - Catalyst.Core.Lib.Extensions.NeighbourExtensions.ToNeighbours(System.Collections.Generic.IEnumerable{PeerId})
+  langs:
+  - csharp
+  - vb
+  name: NeighbourExtensions
+  nameWithType: NeighbourExtensions
+  fullName: Catalyst.Core.Lib.Extensions.NeighbourExtensions
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/NeighbourExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: NeighbourExtensions
+    path: ../src/Catalyst.Core.Lib/Extensions/NeighbourExtensions.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static class NeighbourExtensions
+    content.vb: Public Module NeighbourExtensions
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - static
+  - class
+  modifiers.vb:
+  - Public
+  - Module
+- uid: Catalyst.Core.Lib.Extensions.NeighbourExtensions.ToNeighbours(System.Collections.Generic.IEnumerable{PeerId})
+  commentId: M:Catalyst.Core.Lib.Extensions.NeighbourExtensions.ToNeighbours(System.Collections.Generic.IEnumerable{PeerId})
+  id: ToNeighbours(System.Collections.Generic.IEnumerable{PeerId})
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Extensions.NeighbourExtensions
+  langs:
+  - csharp
+  - vb
+  name: ToNeighbours(IEnumerable<PeerId>)
+  nameWithType: NeighbourExtensions.ToNeighbours(IEnumerable<PeerId>)
+  fullName: Catalyst.Core.Lib.Extensions.NeighbourExtensions.ToNeighbours(System.Collections.Generic.IEnumerable<PeerId>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/NeighbourExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToNeighbours
+    path: ../src/Catalyst.Core.Lib/Extensions/NeighbourExtensions.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static INeighbours ToNeighbours(this IEnumerable<PeerId> peerIdentifier)
+    parameters:
+    - id: peerIdentifier
+      type: System.Collections.Generic.IEnumerable{PeerId}
+    return:
+      type: Catalyst.Abstractions.P2P.Discovery.INeighbours
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function ToNeighbours(peerIdentifier As IEnumerable(Of PeerId)) As INeighbours
+  overload: Catalyst.Core.Lib.Extensions.NeighbourExtensions.ToNeighbours*
+  nameWithType.vb: NeighbourExtensions.ToNeighbours(IEnumerable(Of PeerId))
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Catalyst.Core.Lib.Extensions.NeighbourExtensions.ToNeighbours(System.Collections.Generic.IEnumerable(Of PeerId))
+  name.vb: ToNeighbours(IEnumerable(Of PeerId))
+references:
+- uid: Catalyst.Core.Lib.Extensions
+  commentId: N:Catalyst.Core.Lib.Extensions
+  name: Catalyst.Core.Lib.Extensions
+  nameWithType: Catalyst.Core.Lib.Extensions
+  fullName: Catalyst.Core.Lib.Extensions
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.Extensions.NeighbourExtensions.ToNeighbours*
+  commentId: Overload:Catalyst.Core.Lib.Extensions.NeighbourExtensions.ToNeighbours
+  name: ToNeighbours
+  nameWithType: NeighbourExtensions.ToNeighbours
+  fullName: Catalyst.Core.Lib.Extensions.NeighbourExtensions.ToNeighbours
+- uid: System.Collections.Generic.IEnumerable{PeerId}
+  commentId: T:System.Collections.Generic.IEnumerable{PeerId}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<PeerId>
+  nameWithType: IEnumerable<PeerId>
+  fullName: System.Collections.Generic.IEnumerable<PeerId>
+  nameWithType.vb: IEnumerable(Of PeerId)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of PeerId)
+  name.vb: IEnumerable(Of PeerId)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: PeerId
+    name: PeerId
+    nameWithType: PeerId
+    fullName: PeerId
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: PeerId
+    name: PeerId
+    nameWithType: PeerId
+    fullName: PeerId
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbours
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.INeighbours
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: INeighbours
+  nameWithType: INeighbours
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbours
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery

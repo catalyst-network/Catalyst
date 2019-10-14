@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.P2P.Models
+  commentId: N:Catalyst.Core.Lib.P2P.Models
+  id: Catalyst.Core.Lib.P2P.Models
+  children:
+  - Catalyst.Core.Lib.P2P.Models.Peer
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.P2P.Models
+  nameWithType: Catalyst.Core.Lib.P2P.Models
+  fullName: Catalyst.Core.Lib.P2P.Models
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.P2P.Models.Peer
+  commentId: T:Catalyst.Core.Lib.P2P.Models.Peer
+  name: Peer
+  nameWithType: Peer
+  fullName: Catalyst.Core.Lib.P2P.Models.Peer

@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  id: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  children:
+  - Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager
+  commentId: T:Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager
+  name: IRpcMessageCorrelationManager
+  nameWithType: IRpcMessageCorrelationManager
+  fullName: Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager

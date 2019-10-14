@@ -1,0 +1,35 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Enumerator
+  commentId: N:Catalyst.Abstractions.Enumerator
+  id: Catalyst.Abstractions.Enumerator
+  children:
+  - Catalyst.Abstractions.Enumerator.Enumeration
+  - Catalyst.Abstractions.Enumerator.IEnumeration
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Enumerator
+  nameWithType: Catalyst.Abstractions.Enumerator
+  fullName: Catalyst.Abstractions.Enumerator
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Enumerator.Enumeration
+  commentId: T:Catalyst.Abstractions.Enumerator.Enumeration
+  parent: Catalyst.Abstractions.Enumerator
+  name: Enumeration
+  nameWithType: Enumeration
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration
+  commentId: T:Catalyst.Abstractions.Enumerator.IEnumeration
+  parent: Catalyst.Abstractions.Enumerator
+  name: IEnumeration
+  nameWithType: IEnumeration
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration
+- uid: Catalyst.Abstractions.Enumerator
+  commentId: N:Catalyst.Abstractions.Enumerator
+  name: Catalyst.Abstractions.Enumerator
+  nameWithType: Catalyst.Abstractions.Enumerator
+  fullName: Catalyst.Abstractions.Enumerator

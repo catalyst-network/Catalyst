@@ -1,0 +1,118 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter
+  commentId: T:Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter
+  id: CorrelationIdToByteStringConverter
+  parent: Catalyst.Core.Lib.DAO.Converters
+  children:
+  - Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter.Convert(System.String,ResolutionContext)
+  langs:
+  - csharp
+  - vb
+  name: CorrelationIdToByteStringConverter
+  nameWithType: CorrelationIdToByteStringConverter
+  fullName: Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/Converters/CorrelationIdByteStringConverters.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CorrelationIdToByteStringConverter
+    path: ../src/Catalyst.Core.Lib/DAO/Converters/CorrelationIdByteStringConverters.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO.Converters
+  syntax:
+    content: 'public class CorrelationIdToByteStringConverter : IValueConverter<string, ByteString>'
+    content.vb: >-
+      Public Class CorrelationIdToByteStringConverter
+
+          Inherits IValueConverter(Of String, ByteString)
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter.Convert(System.String,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter.Convert(System.String,ResolutionContext)
+  id: Convert(System.String,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter
+  langs:
+  - csharp
+  - vb
+  name: Convert(String, ResolutionContext)
+  nameWithType: CorrelationIdToByteStringConverter.Convert(String, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter.Convert(System.String, ResolutionContext)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/Converters/CorrelationIdByteStringConverters.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Convert
+    path: ../src/Catalyst.Core.Lib/DAO/Converters/CorrelationIdByteStringConverters.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO.Converters
+  syntax:
+    content: public ByteString Convert(string sourceMember, ResolutionContext context)
+    parameters:
+    - id: sourceMember
+      type: System.String
+    - id: context
+      type: ResolutionContext
+    return:
+      type: ByteString
+    content.vb: Public Function Convert(sourceMember As String, context As ResolutionContext) As ByteString
+  overload: Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter.Convert*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.DAO.Converters
+  commentId: N:Catalyst.Core.Lib.DAO.Converters
+  name: Catalyst.Core.Lib.DAO.Converters
+  nameWithType: Catalyst.Core.Lib.DAO.Converters
+  fullName: Catalyst.Core.Lib.DAO.Converters
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter.Convert*
+  commentId: Overload:Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter.Convert
+  name: Convert
+  nameWithType: CorrelationIdToByteStringConverter.Convert
+  fullName: Catalyst.Core.Lib.DAO.Converters.CorrelationIdToByteStringConverter.Convert
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: ResolutionContext
+  isExternal: true
+  name: ResolutionContext
+  nameWithType: ResolutionContext
+  fullName: ResolutionContext
+- uid: ByteString
+  isExternal: true
+  name: ByteString
+  nameWithType: ByteString
+  fullName: ByteString

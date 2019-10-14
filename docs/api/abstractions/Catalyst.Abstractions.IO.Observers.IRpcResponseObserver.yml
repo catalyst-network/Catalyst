@@ -1,0 +1,572 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Observers.IRpcResponseObserver
+  commentId: T:Catalyst.Abstractions.IO.Observers.IRpcResponseObserver
+  id: IRpcResponseObserver
+  parent: Catalyst.Abstractions.IO.Observers
+  children:
+  - Catalyst.Abstractions.IO.Observers.IRpcResponseObserver.HandleResponseObserver(IMessage,IChannelHandlerContext,Catalyst.Protocol.Peer.PeerId,Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  langs:
+  - csharp
+  - vb
+  name: IRpcResponseObserver
+  nameWithType: IRpcResponseObserver
+  fullName: Catalyst.Abstractions.IO.Observers.IRpcResponseObserver
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Observers/IRpcResponseObserver.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IRpcResponseObserver
+    path: ../src/Catalyst.Abstractions/IO/Observers/IRpcResponseObserver.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Observers
+  syntax:
+    content: 'public interface IRpcResponseObserver : IResponseMessageObserver, IMessageObserver, IObserver<IObserverDto<ProtocolMessage>>'
+    content.vb: >-
+      Public Interface IRpcResponseObserver
+
+          Inherits IResponseMessageObserver
+  inheritedMembers:
+  - Catalyst.Abstractions.IO.Observers.IMessageObserver.StartObserving(System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}})
+  - System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}.OnCompleted
+  - System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}.OnError(System.Exception)
+  - System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}.OnNext(Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage})
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.IO.Observers.IRpcResponseObserver.HandleResponseObserver(IMessage,IChannelHandlerContext,Catalyst.Protocol.Peer.PeerId,Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  commentId: M:Catalyst.Abstractions.IO.Observers.IRpcResponseObserver.HandleResponseObserver(IMessage,IChannelHandlerContext,Catalyst.Protocol.Peer.PeerId,Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  id: HandleResponseObserver(IMessage,IChannelHandlerContext,Catalyst.Protocol.Peer.PeerId,Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  parent: Catalyst.Abstractions.IO.Observers.IRpcResponseObserver
+  langs:
+  - csharp
+  - vb
+  name: HandleResponseObserver(IMessage, IChannelHandlerContext, PeerId, ICorrelationId)
+  nameWithType: IRpcResponseObserver.HandleResponseObserver(IMessage, IChannelHandlerContext, PeerId, ICorrelationId)
+  fullName: Catalyst.Abstractions.IO.Observers.IRpcResponseObserver.HandleResponseObserver(IMessage, IChannelHandlerContext, Catalyst.Protocol.Peer.PeerId, Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Observers/IRpcResponseObserver.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: HandleResponseObserver
+    path: ../src/Catalyst.Abstractions/IO/Observers/IRpcResponseObserver.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Observers
+  syntax:
+    content: void HandleResponseObserver(IMessage messageDto, IChannelHandlerContext channelHandlerContext, PeerId senderPeerIdentifier, ICorrelationId correlationId)
+    parameters:
+    - id: messageDto
+      type: IMessage
+    - id: channelHandlerContext
+      type: IChannelHandlerContext
+    - id: senderPeerIdentifier
+      type: Catalyst.Protocol.Peer.PeerId
+    - id: correlationId
+      type: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    content.vb: Sub HandleResponseObserver(messageDto As IMessage, channelHandlerContext As IChannelHandlerContext, senderPeerIdentifier As PeerId, correlationId As ICorrelationId)
+  overload: Catalyst.Abstractions.IO.Observers.IRpcResponseObserver.HandleResponseObserver*
+references:
+- uid: Catalyst.Abstractions.IO.Observers
+  commentId: N:Catalyst.Abstractions.IO.Observers
+  name: Catalyst.Abstractions.IO.Observers
+  nameWithType: Catalyst.Abstractions.IO.Observers
+  fullName: Catalyst.Abstractions.IO.Observers
+- uid: Catalyst.Abstractions.IO.Observers.IMessageObserver.StartObserving(System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}})
+  commentId: M:Catalyst.Abstractions.IO.Observers.IMessageObserver.StartObserving(System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}})
+  parent: Catalyst.Abstractions.IO.Observers.IMessageObserver
+  isExternal: true
+  name: StartObserving(IObservable<IObserverDto<ProtocolMessage>>)
+  nameWithType: IMessageObserver.StartObserving(IObservable<IObserverDto<ProtocolMessage>>)
+  fullName: Catalyst.Abstractions.IO.Observers.IMessageObserver.StartObserving(System.IObservable<Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<ProtocolMessage>>)
+  nameWithType.vb: IMessageObserver.StartObserving(IObservable(Of IObserverDto(Of ProtocolMessage)))
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IMessageObserver.StartObserving(System.IObservable(Of Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of ProtocolMessage)))
+  name.vb: StartObserving(IObservable(Of IObserverDto(Of ProtocolMessage)))
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Observers.IMessageObserver.StartObserving(System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}})
+    name: StartObserving
+    nameWithType: IMessageObserver.StartObserving
+    fullName: Catalyst.Abstractions.IO.Observers.IMessageObserver.StartObserving
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+    name: IObserverDto
+    nameWithType: IObserverDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Observers.IMessageObserver.StartObserving(System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}})
+    name: StartObserving
+    nameWithType: IMessageObserver.StartObserving
+    fullName: Catalyst.Abstractions.IO.Observers.IMessageObserver.StartObserving
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+    name: IObserverDto
+    nameWithType: IObserverDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}.OnCompleted
+  commentId: M:System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}.OnCompleted
+  parent: System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}
+  definition: System.IObserver`1.OnCompleted
+  name: OnCompleted()
+  nameWithType: IObserver<IObserverDto<ProtocolMessage>>.OnCompleted()
+  fullName: System.IObserver<Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<ProtocolMessage>>.OnCompleted()
+  nameWithType.vb: IObserver(Of IObserverDto(Of ProtocolMessage)).OnCompleted()
+  fullName.vb: System.IObserver(Of Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of ProtocolMessage)).OnCompleted()
+  spec.csharp:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver<IObserverDto<ProtocolMessage>>.OnCompleted
+    fullName: System.IObserver<Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<ProtocolMessage>>.OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver(Of IObserverDto(Of ProtocolMessage)).OnCompleted
+    fullName: System.IObserver(Of Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of ProtocolMessage)).OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}.OnError(System.Exception)
+  commentId: M:System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}.OnError(System.Exception)
+  parent: System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}
+  definition: System.IObserver`1.OnError(System.Exception)
+  name: OnError(Exception)
+  nameWithType: IObserver<IObserverDto<ProtocolMessage>>.OnError(Exception)
+  fullName: System.IObserver<Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<ProtocolMessage>>.OnError(System.Exception)
+  nameWithType.vb: IObserver(Of IObserverDto(Of ProtocolMessage)).OnError(Exception)
+  fullName.vb: System.IObserver(Of Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of ProtocolMessage)).OnError(System.Exception)
+  spec.csharp:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver<IObserverDto<ProtocolMessage>>.OnError
+    fullName: System.IObserver<Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<ProtocolMessage>>.OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver(Of IObserverDto(Of ProtocolMessage)).OnError
+    fullName: System.IObserver(Of Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of ProtocolMessage)).OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}.OnNext(Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage})
+  commentId: M:System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}.OnNext(Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage})
+  parent: System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}
+  definition: System.IObserver`1.OnNext(`0)
+  name: OnNext(IObserverDto<ProtocolMessage>)
+  nameWithType: IObserver<IObserverDto<ProtocolMessage>>.OnNext(IObserverDto<ProtocolMessage>)
+  fullName: System.IObserver<Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<ProtocolMessage>>.OnNext(Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<ProtocolMessage>)
+  nameWithType.vb: IObserver(Of IObserverDto(Of ProtocolMessage)).OnNext(IObserverDto(Of ProtocolMessage))
+  fullName.vb: System.IObserver(Of Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of ProtocolMessage)).OnNext(Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of ProtocolMessage))
+  name.vb: OnNext(IObserverDto(Of ProtocolMessage))
+  spec.csharp:
+  - uid: System.IObserver`1.OnNext(`0)
+    name: OnNext
+    nameWithType: IObserver<IObserverDto<ProtocolMessage>>.OnNext
+    fullName: System.IObserver<Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<ProtocolMessage>>.OnNext
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+    name: IObserverDto
+    nameWithType: IObserverDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnNext(`0)
+    name: OnNext
+    nameWithType: IObserver(Of IObserverDto(Of ProtocolMessage)).OnNext
+    fullName: System.IObserver(Of Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of ProtocolMessage)).OnNext
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+    name: IObserverDto
+    nameWithType: IObserverDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Observers.IMessageObserver
+  commentId: T:Catalyst.Abstractions.IO.Observers.IMessageObserver
+  parent: Catalyst.Abstractions.IO.Observers
+  name: IMessageObserver
+  nameWithType: IMessageObserver
+  fullName: Catalyst.Abstractions.IO.Observers.IMessageObserver
+- uid: System.IObserver`1.OnCompleted
+  commentId: M:System.IObserver`1.OnCompleted
+  isExternal: true
+  name: OnCompleted()
+  nameWithType: IObserver<T>.OnCompleted()
+  fullName: System.IObserver<T>.OnCompleted()
+  nameWithType.vb: IObserver(Of T).OnCompleted()
+  fullName.vb: System.IObserver(Of T).OnCompleted()
+  spec.csharp:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver<T>.OnCompleted
+    fullName: System.IObserver<T>.OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver(Of T).OnCompleted
+    fullName: System.IObserver(Of T).OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}
+  commentId: T:System.IObserver{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}
+  parent: System
+  definition: System.IObserver`1
+  name: IObserver<IObserverDto<ProtocolMessage>>
+  nameWithType: IObserver<IObserverDto<ProtocolMessage>>
+  fullName: System.IObserver<Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<ProtocolMessage>>
+  nameWithType.vb: IObserver(Of IObserverDto(Of ProtocolMessage))
+  fullName.vb: System.IObserver(Of Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of ProtocolMessage))
+  name.vb: IObserver(Of IObserverDto(Of ProtocolMessage))
+  spec.csharp:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+    name: IObserverDto
+    nameWithType: IObserverDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+    name: IObserverDto
+    nameWithType: IObserverDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver`1.OnError(System.Exception)
+  commentId: M:System.IObserver`1.OnError(System.Exception)
+  isExternal: true
+  name: OnError(Exception)
+  nameWithType: IObserver<T>.OnError(Exception)
+  fullName: System.IObserver<T>.OnError(System.Exception)
+  nameWithType.vb: IObserver(Of T).OnError(Exception)
+  fullName.vb: System.IObserver(Of T).OnError(System.Exception)
+  spec.csharp:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver<T>.OnError
+    fullName: System.IObserver<T>.OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver(Of T).OnError
+    fullName: System.IObserver(Of T).OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver`1.OnNext(`0)
+  commentId: M:System.IObserver`1.OnNext(`0)
+  isExternal: true
+  name: OnNext(T)
+  nameWithType: IObserver<T>.OnNext(T)
+  fullName: System.IObserver<T>.OnNext(T)
+  nameWithType.vb: IObserver(Of T).OnNext(T)
+  fullName.vb: System.IObserver(Of T).OnNext(T)
+  spec.csharp:
+  - uid: System.IObserver`1.OnNext(`0)
+    name: OnNext
+    nameWithType: IObserver<T>.OnNext
+    fullName: System.IObserver<T>.OnNext
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnNext(`0)
+    name: OnNext
+    nameWithType: IObserver(Of T).OnNext
+    fullName: System.IObserver(Of T).OnNext
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver`1
+  commentId: T:System.IObserver`1
+  isExternal: true
+  name: IObserver<T>
+  nameWithType: IObserver<T>
+  fullName: System.IObserver<T>
+  nameWithType.vb: IObserver(Of T)
+  fullName.vb: System.IObserver(Of T)
+  name.vb: IObserver(Of T)
+  spec.csharp:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.IO.Observers.IRpcResponseObserver.HandleResponseObserver*
+  commentId: Overload:Catalyst.Abstractions.IO.Observers.IRpcResponseObserver.HandleResponseObserver
+  name: HandleResponseObserver
+  nameWithType: IRpcResponseObserver.HandleResponseObserver
+  fullName: Catalyst.Abstractions.IO.Observers.IRpcResponseObserver.HandleResponseObserver
+- uid: IMessage
+  isExternal: true
+  name: IMessage
+  nameWithType: IMessage
+  fullName: IMessage
+- uid: IChannelHandlerContext
+  isExternal: true
+  name: IChannelHandlerContext
+  nameWithType: IChannelHandlerContext
+  fullName: IChannelHandlerContext
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  parent: Catalyst.Abstractions.IO.Messaging.Correlation
+  name: ICorrelationId
+  nameWithType: ICorrelationId
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Abstractions.IO.Messaging.Correlation
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Correlation
+  name: Catalyst.Abstractions.IO.Messaging.Correlation
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Correlation
+  fullName: Catalyst.Abstractions.IO.Messaging.Correlation

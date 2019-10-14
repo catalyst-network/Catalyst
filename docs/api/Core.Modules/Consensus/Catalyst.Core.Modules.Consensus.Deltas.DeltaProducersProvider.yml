@@ -1,0 +1,591 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider
+  commentId: T:Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider
+  id: DeltaProducersProvider
+  parent: Catalyst.Core.Modules.Consensus.Deltas
+  children:
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.PeerRepository
+  langs:
+  - csharp
+  - vb
+  name: DeltaProducersProvider
+  nameWithType: DeltaProducersProvider
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaProducersProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DeltaProducersProvider
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaProducersProvider.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: 'public sealed class DeltaProducersProvider : IDeltaProducersProvider'
+    content.vb: >-
+      Public NotInheritable Class DeltaProducersProvider
+
+          Implements IDeltaProducersProvider
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  id: GetDeltaProducersFromPreviousDelta(MultiHash)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider
+  langs:
+  - csharp
+  - vb
+  name: GetDeltaProducersFromPreviousDelta(MultiHash)
+  nameWithType: DeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaProducersProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetDeltaProducersFromPreviousDelta
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaProducersProvider.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public IList<PeerId> GetDeltaProducersFromPreviousDelta(MultiHash previousDeltaHash)
+    parameters:
+    - id: previousDeltaHash
+      type: MultiHash
+    return:
+      type: System.Collections.Generic.IList{PeerId}
+    content.vb: Public Function GetDeltaProducersFromPreviousDelta(previousDeltaHash As MultiHash) As IList(Of PeerId)
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.GetDeltaProducersFromPreviousDelta*
+  implements:
+  - Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.PeerRepository
+  commentId: P:Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.PeerRepository
+  id: PeerRepository
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider
+  langs:
+  - csharp
+  - vb
+  name: PeerRepository
+  nameWithType: DeltaProducersProvider.PeerRepository
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.PeerRepository
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaProducersProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerRepository
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaProducersProvider.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public IPeerRepository PeerRepository { get; }
+    parameters: []
+    return:
+      type: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+    content.vb: Public ReadOnly Property PeerRepository As IPeerRepository
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.PeerRepository*
+  implements:
+  - Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+references:
+- uid: Catalyst.Core.Modules.Consensus.Deltas
+  commentId: N:Catalyst.Core.Modules.Consensus.Deltas
+  name: Catalyst.Core.Modules.Consensus.Deltas
+  nameWithType: Catalyst.Core.Modules.Consensus.Deltas
+  fullName: Catalyst.Core.Modules.Consensus.Deltas
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  commentId: T:Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  parent: Catalyst.Core.Modules.Consensus.Deltas
+  name: IDeltaProducersProvider
+  nameWithType: IDeltaProducersProvider
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.GetDeltaProducersFromPreviousDelta*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.GetDeltaProducersFromPreviousDelta
+  name: GetDeltaProducersFromPreviousDelta
+  nameWithType: DeltaProducersProvider.GetDeltaProducersFromPreviousDelta
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.GetDeltaProducersFromPreviousDelta
+- uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  isExternal: true
+  name: GetDeltaProducersFromPreviousDelta(MultiHash)
+  nameWithType: IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  spec.csharp:
+  - uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+    name: GetDeltaProducersFromPreviousDelta
+    nameWithType: IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta
+    fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: MultiHash
+    name: MultiHash
+    nameWithType: MultiHash
+    fullName: MultiHash
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+    name: GetDeltaProducersFromPreviousDelta
+    nameWithType: IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta
+    fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: MultiHash
+    name: MultiHash
+    nameWithType: MultiHash
+    fullName: MultiHash
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: MultiHash
+  isExternal: true
+  name: MultiHash
+  nameWithType: MultiHash
+  fullName: MultiHash
+- uid: System.Collections.Generic.IList{PeerId}
+  commentId: T:System.Collections.Generic.IList{PeerId}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IList`1
+  name: IList<PeerId>
+  nameWithType: IList<PeerId>
+  fullName: System.Collections.Generic.IList<PeerId>
+  nameWithType.vb: IList(Of PeerId)
+  fullName.vb: System.Collections.Generic.IList(Of PeerId)
+  name.vb: IList(Of PeerId)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: PeerId
+    name: PeerId
+    nameWithType: PeerId
+    fullName: PeerId
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: PeerId
+    name: PeerId
+    nameWithType: PeerId
+    fullName: PeerId
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IList`1
+  commentId: T:System.Collections.Generic.IList`1
+  isExternal: true
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.PeerRepository*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.PeerRepository
+  name: PeerRepository
+  nameWithType: DeltaProducersProvider.PeerRepository
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaProducersProvider.PeerRepository
+- uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository
+  commentId: P:Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository
+  parent: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  name: PeerRepository
+  nameWithType: IDeltaProducersProvider.PeerRepository
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository
+- uid: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  commentId: T:Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  parent: Catalyst.Core.Lib.P2P.Repository
+  name: IPeerRepository
+  nameWithType: IPeerRepository
+  fullName: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+- uid: Catalyst.Core.Lib.P2P.Repository
+  commentId: N:Catalyst.Core.Lib.P2P.Repository
+  name: Catalyst.Core.Lib.P2P.Repository
+  nameWithType: Catalyst.Core.Lib.P2P.Repository
+  fullName: Catalyst.Core.Lib.P2P.Repository

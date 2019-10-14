@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Events
+  commentId: N:Catalyst.Abstractions.IO.Events
+  id: Catalyst.Abstractions.IO.Events
+  children:
+  - Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent
+  - Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.IO.Events
+  nameWithType: Catalyst.Abstractions.IO.Events
+  fullName: Catalyst.Abstractions.IO.Events
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent
+  commentId: T:Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent
+  name: ISocketClientRegistryEvent
+  nameWithType: ISocketClientRegistryEvent
+  fullName: Catalyst.Abstractions.IO.Events.ISocketClientRegistryEvent
+- uid: Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent
+  commentId: T:Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent
+  name: ITransactionReceivedEvent
+  nameWithType: ITransactionReceivedEvent
+  fullName: Catalyst.Abstractions.IO.Events.ITransactionReceivedEvent

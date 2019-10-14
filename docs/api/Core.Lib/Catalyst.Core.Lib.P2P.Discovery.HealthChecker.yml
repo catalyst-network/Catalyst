@@ -1,0 +1,502 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.P2P.Discovery.HealthChecker
+  commentId: T:Catalyst.Core.Lib.P2P.Discovery.HealthChecker
+  id: HealthChecker
+  parent: Catalyst.Core.Lib.P2P.Discovery
+  children:
+  - Catalyst.Core.Lib.P2P.Discovery.HealthChecker.Run
+  - Catalyst.Core.Lib.P2P.Discovery.HealthChecker.System#IDisposable#Dispose
+  langs:
+  - csharp
+  - vb
+  name: HealthChecker
+  nameWithType: HealthChecker
+  fullName: Catalyst.Core.Lib.P2P.Discovery.HealthChecker
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/Discovery/HealthChecker.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: HealthChecker
+    path: ../src/Catalyst.Core.Lib/P2P/Discovery/HealthChecker.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.Discovery
+  syntax:
+    content: 'public class HealthChecker : IHealthChecker, IDisposable'
+    content.vb: >-
+      Public Class HealthChecker
+
+          Implements IHealthChecker, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.P2P.Discovery.IHealthChecker
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.P2P.Discovery.HealthChecker.System#IDisposable#Dispose
+  commentId: M:Catalyst.Core.Lib.P2P.Discovery.HealthChecker.System#IDisposable#Dispose
+  id: System#IDisposable#Dispose
+  isEii: true
+  parent: Catalyst.Core.Lib.P2P.Discovery.HealthChecker
+  langs:
+  - csharp
+  - vb
+  name: IDisposable.Dispose()
+  nameWithType: HealthChecker.IDisposable.Dispose()
+  fullName: Catalyst.Core.Lib.P2P.Discovery.HealthChecker.System.IDisposable.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/Discovery/HealthChecker.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: System.IDisposable.Dispose
+    path: ../src/Catalyst.Core.Lib/P2P/Discovery/HealthChecker.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.Discovery
+  syntax:
+    content: void IDisposable.Dispose()
+    content.vb: Sub System.IDisposable.Dispose Implements IDisposable.Dispose
+  overload: Catalyst.Core.Lib.P2P.Discovery.HealthChecker.System#IDisposable#Dispose*
+  implements:
+  - System.IDisposable.Dispose
+  nameWithType.vb: HealthChecker.System.IDisposable.Dispose()
+  name.vb: System.IDisposable.Dispose()
+- uid: Catalyst.Core.Lib.P2P.Discovery.HealthChecker.Run
+  commentId: M:Catalyst.Core.Lib.P2P.Discovery.HealthChecker.Run
+  id: Run
+  parent: Catalyst.Core.Lib.P2P.Discovery.HealthChecker
+  langs:
+  - csharp
+  - vb
+  name: Run()
+  nameWithType: HealthChecker.Run()
+  fullName: Catalyst.Core.Lib.P2P.Discovery.HealthChecker.Run()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/Discovery/HealthChecker.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Run
+    path: ../src/Catalyst.Core.Lib/P2P/Discovery/HealthChecker.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.Discovery
+  syntax:
+    content: public void Run()
+    content.vb: Public Sub Run
+  overload: Catalyst.Core.Lib.P2P.Discovery.HealthChecker.Run*
+  implements:
+  - Catalyst.Abstractions.P2P.Discovery.IHealthChecker.Run
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.P2P.Discovery
+  commentId: N:Catalyst.Core.Lib.P2P.Discovery
+  name: Catalyst.Core.Lib.P2P.Discovery
+  nameWithType: Catalyst.Core.Lib.P2P.Discovery
+  fullName: Catalyst.Core.Lib.P2P.Discovery
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.P2P.Discovery.IHealthChecker
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IHealthChecker
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: IHealthChecker
+  nameWithType: IHealthChecker
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHealthChecker
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery
+- uid: Catalyst.Core.Lib.P2P.Discovery.HealthChecker.System#IDisposable#Dispose*
+  commentId: Overload:Catalyst.Core.Lib.P2P.Discovery.HealthChecker.System#IDisposable#Dispose
+  name: IDisposable.Dispose
+  nameWithType: HealthChecker.IDisposable.Dispose
+  fullName: Catalyst.Core.Lib.P2P.Discovery.HealthChecker.System.IDisposable.Dispose
+  nameWithType.vb: HealthChecker.System.IDisposable.Dispose
+  name.vb: System.IDisposable.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.P2P.Discovery.HealthChecker.Run*
+  commentId: Overload:Catalyst.Core.Lib.P2P.Discovery.HealthChecker.Run
+  name: Run
+  nameWithType: HealthChecker.Run
+  fullName: Catalyst.Core.Lib.P2P.Discovery.HealthChecker.Run
+- uid: Catalyst.Abstractions.P2P.Discovery.IHealthChecker.Run
+  commentId: M:Catalyst.Abstractions.P2P.Discovery.IHealthChecker.Run
+  parent: Catalyst.Abstractions.P2P.Discovery.IHealthChecker
+  name: Run()
+  nameWithType: IHealthChecker.Run()
+  fullName: Catalyst.Abstractions.P2P.Discovery.IHealthChecker.Run()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHealthChecker.Run
+    name: Run
+    nameWithType: IHealthChecker.Run
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHealthChecker.Run
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.P2P.Discovery.IHealthChecker.Run
+    name: Run
+    nameWithType: IHealthChecker.Run
+    fullName: Catalyst.Abstractions.P2P.Discovery.IHealthChecker.Run
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )

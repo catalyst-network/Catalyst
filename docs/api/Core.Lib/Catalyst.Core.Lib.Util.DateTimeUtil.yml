@@ -1,0 +1,603 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil
+  commentId: T:Catalyst.Core.Lib.Util.DateTimeUtil
+  id: DateTimeUtil
+  parent: Catalyst.Core.Lib.Util
+  children:
+  - Catalyst.Core.Lib.Util.DateTimeUtil.GetExponentialTimeSpan(System.Int32)
+  - Catalyst.Core.Lib.Util.DateTimeUtil.Milliseconds(System.Int32)
+  - Catalyst.Core.Lib.Util.DateTimeUtil.Minutes(System.Int32)
+  - Catalyst.Core.Lib.Util.DateTimeUtil.Seconds(System.Int32)
+  - Catalyst.Core.Lib.Util.DateTimeUtil.UtcNow
+  langs:
+  - csharp
+  - vb
+  name: DateTimeUtil
+  nameWithType: DateTimeUtil
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DateTimeUtil
+    path: ../src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: public static class DateTimeUtil
+    content.vb: Public Module DateTimeUtil
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - static
+  - class
+  modifiers.vb:
+  - Public
+  - Module
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil.UtcNow
+  commentId: P:Catalyst.Core.Lib.Util.DateTimeUtil.UtcNow
+  id: UtcNow
+  parent: Catalyst.Core.Lib.Util.DateTimeUtil
+  langs:
+  - csharp
+  - vb
+  name: UtcNow
+  nameWithType: DateTimeUtil.UtcNow
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil.UtcNow
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: UtcNow
+    path: ../src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: public static DateTime UtcNow { get; }
+    parameters: []
+    return:
+      type: System.DateTime
+    content.vb: Public Shared ReadOnly Property UtcNow As Date
+  overload: Catalyst.Core.Lib.Util.DateTimeUtil.UtcNow*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil.Minutes(System.Int32)
+  commentId: M:Catalyst.Core.Lib.Util.DateTimeUtil.Minutes(System.Int32)
+  id: Minutes(System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Util.DateTimeUtil
+  langs:
+  - csharp
+  - vb
+  name: Minutes(Int32)
+  nameWithType: DateTimeUtil.Minutes(Int32)
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil.Minutes(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Minutes
+    path: ../src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+    startLine: 37
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  summary: "\n"
+  example: []
+  syntax:
+    content: public static TimeSpan Minutes(this int mins)
+    parameters:
+    - id: mins
+      type: System.Int32
+      description: ''
+    return:
+      type: System.TimeSpan
+      description: ''
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function Minutes(mins As Integer) As TimeSpan
+  overload: Catalyst.Core.Lib.Util.DateTimeUtil.Minutes*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil.Seconds(System.Int32)
+  commentId: M:Catalyst.Core.Lib.Util.DateTimeUtil.Seconds(System.Int32)
+  id: Seconds(System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Util.DateTimeUtil
+  langs:
+  - csharp
+  - vb
+  name: Seconds(Int32)
+  nameWithType: DateTimeUtil.Seconds(Int32)
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil.Seconds(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Seconds
+    path: ../src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  summary: "\n"
+  example: []
+  syntax:
+    content: public static TimeSpan Seconds(this int secs)
+    parameters:
+    - id: secs
+      type: System.Int32
+      description: ''
+    return:
+      type: System.TimeSpan
+      description: ''
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function Seconds(secs As Integer) As TimeSpan
+  overload: Catalyst.Core.Lib.Util.DateTimeUtil.Seconds*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil.Milliseconds(System.Int32)
+  commentId: M:Catalyst.Core.Lib.Util.DateTimeUtil.Milliseconds(System.Int32)
+  id: Milliseconds(System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Util.DateTimeUtil
+  langs:
+  - csharp
+  - vb
+  name: Milliseconds(Int32)
+  nameWithType: DateTimeUtil.Milliseconds(Int32)
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil.Milliseconds(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Milliseconds
+    path: ../src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+    startLine: 57
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  summary: "\n"
+  example: []
+  syntax:
+    content: public static TimeSpan Milliseconds(this int milliSecs)
+    parameters:
+    - id: milliSecs
+      type: System.Int32
+      description: ''
+    return:
+      type: System.TimeSpan
+      description: ''
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function Milliseconds(milliSecs As Integer) As TimeSpan
+  overload: Catalyst.Core.Lib.Util.DateTimeUtil.Milliseconds*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil.GetExponentialTimeSpan(System.Int32)
+  commentId: M:Catalyst.Core.Lib.Util.DateTimeUtil.GetExponentialTimeSpan(System.Int32)
+  id: GetExponentialTimeSpan(System.Int32)
+  parent: Catalyst.Core.Lib.Util.DateTimeUtil
+  langs:
+  - csharp
+  - vb
+  name: GetExponentialTimeSpan(Int32)
+  nameWithType: DateTimeUtil.GetExponentialTimeSpan(Int32)
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil.GetExponentialTimeSpan(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetExponentialTimeSpan
+    path: ../src/Catalyst.Core.Lib/Util/DateTimeUtil.cs
+    startLine: 63
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: public static TimeSpan GetExponentialTimeSpan(int seed)
+    parameters:
+    - id: seed
+      type: System.Int32
+    return:
+      type: System.TimeSpan
+    content.vb: Public Shared Function GetExponentialTimeSpan(seed As Integer) As TimeSpan
+  overload: Catalyst.Core.Lib.Util.DateTimeUtil.GetExponentialTimeSpan*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+references:
+- uid: Catalyst.Core.Lib.Util
+  commentId: N:Catalyst.Core.Lib.Util
+  name: Catalyst.Core.Lib.Util
+  nameWithType: Catalyst.Core.Lib.Util
+  fullName: Catalyst.Core.Lib.Util
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil.UtcNow*
+  commentId: Overload:Catalyst.Core.Lib.Util.DateTimeUtil.UtcNow
+  name: UtcNow
+  nameWithType: DateTimeUtil.UtcNow
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil.UtcNow
+- uid: System.DateTime
+  commentId: T:System.DateTime
+  parent: System
+  isExternal: true
+  name: DateTime
+  nameWithType: DateTime
+  fullName: System.DateTime
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil.Minutes*
+  commentId: Overload:Catalyst.Core.Lib.Util.DateTimeUtil.Minutes
+  name: Minutes
+  nameWithType: DateTimeUtil.Minutes
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil.Minutes
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System.TimeSpan
+  commentId: T:System.TimeSpan
+  parent: System
+  isExternal: true
+  name: TimeSpan
+  nameWithType: TimeSpan
+  fullName: System.TimeSpan
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil.Seconds*
+  commentId: Overload:Catalyst.Core.Lib.Util.DateTimeUtil.Seconds
+  name: Seconds
+  nameWithType: DateTimeUtil.Seconds
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil.Seconds
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil.Milliseconds*
+  commentId: Overload:Catalyst.Core.Lib.Util.DateTimeUtil.Milliseconds
+  name: Milliseconds
+  nameWithType: DateTimeUtil.Milliseconds
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil.Milliseconds
+- uid: Catalyst.Core.Lib.Util.DateTimeUtil.GetExponentialTimeSpan*
+  commentId: Overload:Catalyst.Core.Lib.Util.DateTimeUtil.GetExponentialTimeSpan
+  name: GetExponentialTimeSpan
+  nameWithType: DateTimeUtil.GetExponentialTimeSpan
+  fullName: Catalyst.Core.Lib.Util.DateTimeUtil.GetExponentialTimeSpan

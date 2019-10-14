@@ -1,0 +1,111 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule
+  commentId: T:Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule
+  id: BulletProofsModule
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs
+  children:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule.Load(ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: BulletProofsModule
+  nameWithType: BulletProofsModule
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/BulletProofsModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BulletProofsModule
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/BulletProofsModule.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: 'public sealed class BulletProofsModule : Module'
+    content.vb: >-
+      Public NotInheritable Class BulletProofsModule
+
+          Inherits
+
+
+
+           Module
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule.Load(ContainerBuilder)
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule.Load(ContainerBuilder)
+  id: Load(ContainerBuilder)
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule
+  langs:
+  - csharp
+  - vb
+  name: Load(ContainerBuilder)
+  nameWithType: BulletProofsModule.Load(ContainerBuilder)
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule.Load(ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/BulletProofsModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Load
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/BulletProofsModule.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs
+  syntax:
+    content: protected override void Load(ContainerBuilder builder)
+    parameters:
+    - id: builder
+      type: ContainerBuilder
+    content.vb: Protected Overrides Sub Load(builder As ContainerBuilder)
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule.Load*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs
+  commentId: N:Catalyst.Core.Modules.Cryptography.BulletProofs
+  name: Catalyst.Core.Modules.Cryptography.BulletProofs
+  nameWithType: Catalyst.Core.Modules.Cryptography.BulletProofs
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule.Load*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule.Load
+  name: Load
+  nameWithType: BulletProofsModule.Load
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.BulletProofsModule.Load
+- uid: ContainerBuilder
+  commentId: '!:ContainerBuilder'
+  isExternal: true
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: ContainerBuilder

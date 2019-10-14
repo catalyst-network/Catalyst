@@ -1,0 +1,627 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Consensus.Consensus
+  commentId: T:Catalyst.Core.Modules.Consensus.Consensus
+  id: Consensus
+  parent: Catalyst.Core.Modules.Consensus
+  children:
+  - Catalyst.Core.Modules.Consensus.Consensus.#ctor(Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder,Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter,Catalyst.Abstractions.Consensus.Deltas.IDeltaElector,Catalyst.Abstractions.Consensus.Deltas.IDeltaCache,Catalyst.Abstractions.Consensus.Deltas.IDeltaHub,Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Catalyst.Abstractions.Hashing.IHashProvider,ILogger)
+  - Catalyst.Core.Modules.Consensus.Consensus.Dispose
+  - Catalyst.Core.Modules.Consensus.Consensus.StartProducing
+  langs:
+  - csharp
+  - vb
+  name: Consensus
+  nameWithType: Consensus
+  fullName: Catalyst.Core.Modules.Consensus.Consensus
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Consensus.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Consensus
+    path: ../src/Catalyst.Core.Modules.Consensus/Consensus.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus
+  example: []
+  syntax:
+    content: 'public sealed class Consensus : IConsensus, IDisposable'
+    content.vb: >-
+      Public NotInheritable Class Consensus
+
+          Implements IConsensus, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Consensus.IConsensus
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Consensus.Consensus.#ctor(Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder,Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter,Catalyst.Abstractions.Consensus.Deltas.IDeltaElector,Catalyst.Abstractions.Consensus.Deltas.IDeltaCache,Catalyst.Abstractions.Consensus.Deltas.IDeltaHub,Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Catalyst.Abstractions.Hashing.IHashProvider,ILogger)
+  commentId: M:Catalyst.Core.Modules.Consensus.Consensus.#ctor(Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder,Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter,Catalyst.Abstractions.Consensus.Deltas.IDeltaElector,Catalyst.Abstractions.Consensus.Deltas.IDeltaCache,Catalyst.Abstractions.Consensus.Deltas.IDeltaHub,Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Catalyst.Abstractions.Hashing.IHashProvider,ILogger)
+  id: '#ctor(Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder,Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter,Catalyst.Abstractions.Consensus.Deltas.IDeltaElector,Catalyst.Abstractions.Consensus.Deltas.IDeltaCache,Catalyst.Abstractions.Consensus.Deltas.IDeltaHub,Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Catalyst.Abstractions.Hashing.IHashProvider,ILogger)'
+  parent: Catalyst.Core.Modules.Consensus.Consensus
+  langs:
+  - csharp
+  - vb
+  name: Consensus(IDeltaBuilder, IDeltaVoter, IDeltaElector, IDeltaCache, IDeltaHub, ICycleEventsProvider, IDeltaHashProvider, IHashProvider, ILogger)
+  nameWithType: Consensus.Consensus(IDeltaBuilder, IDeltaVoter, IDeltaElector, IDeltaCache, IDeltaHub, ICycleEventsProvider, IDeltaHashProvider, IHashProvider, ILogger)
+  fullName: Catalyst.Core.Modules.Consensus.Consensus.Consensus(Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder, Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter, Catalyst.Abstractions.Consensus.Deltas.IDeltaElector, Catalyst.Abstractions.Consensus.Deltas.IDeltaCache, Catalyst.Abstractions.Consensus.Deltas.IDeltaHub, Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider, Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider, Catalyst.Abstractions.Hashing.IHashProvider, ILogger)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Consensus.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Consensus/Consensus.cs
+    startLine: 52
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus
+  syntax:
+    content: public Consensus(IDeltaBuilder deltaBuilder, IDeltaVoter deltaVoter, IDeltaElector deltaElector, IDeltaCache deltaCache, IDeltaHub deltaHub, ICycleEventsProvider cycleEventsProvider, IDeltaHashProvider deltaHashProvider, IHashProvider hashProvider, ILogger logger)
+    parameters:
+    - id: deltaBuilder
+      type: Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder
+    - id: deltaVoter
+      type: Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+    - id: deltaElector
+      type: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+    - id: deltaCache
+      type: Catalyst.Abstractions.Consensus.Deltas.IDeltaCache
+    - id: deltaHub
+      type: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+    - id: cycleEventsProvider
+      type: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+    - id: deltaHashProvider
+      type: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+    - id: hashProvider
+      type: Catalyst.Abstractions.Hashing.IHashProvider
+    - id: logger
+      type: ILogger
+    content.vb: Public Sub New(deltaBuilder As IDeltaBuilder, deltaVoter As IDeltaVoter, deltaElector As IDeltaElector, deltaCache As IDeltaCache, deltaHub As IDeltaHub, cycleEventsProvider As ICycleEventsProvider, deltaHashProvider As IDeltaHashProvider, hashProvider As IHashProvider, logger As ILogger)
+  overload: Catalyst.Core.Modules.Consensus.Consensus.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Consensus.StartProducing
+  commentId: M:Catalyst.Core.Modules.Consensus.Consensus.StartProducing
+  id: StartProducing
+  parent: Catalyst.Core.Modules.Consensus.Consensus
+  langs:
+  - csharp
+  - vb
+  name: StartProducing()
+  nameWithType: Consensus.StartProducing()
+  fullName: Catalyst.Core.Modules.Consensus.Consensus.StartProducing()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Consensus.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: StartProducing
+    path: ../src/Catalyst.Core.Modules.Consensus/Consensus.cs
+    startLine: 74
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus
+  syntax:
+    content: public void StartProducing()
+    content.vb: Public Sub StartProducing
+  overload: Catalyst.Core.Modules.Consensus.Consensus.StartProducing*
+  implements:
+  - Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Consensus.Dispose
+  commentId: M:Catalyst.Core.Modules.Consensus.Consensus.Dispose
+  id: Dispose
+  parent: Catalyst.Core.Modules.Consensus.Consensus
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: Consensus.Dispose()
+  fullName: Catalyst.Core.Modules.Consensus.Consensus.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Consensus.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Modules.Consensus/Consensus.cs
+    startLine: 122
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose
+  overload: Catalyst.Core.Modules.Consensus.Consensus.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.Consensus
+  commentId: N:Catalyst.Core.Modules.Consensus
+  name: Catalyst.Core.Modules.Consensus
+  nameWithType: Catalyst.Core.Modules.Consensus
+  fullName: Catalyst.Core.Modules.Consensus
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Consensus.IConsensus
+  commentId: T:Catalyst.Abstractions.Consensus.IConsensus
+  parent: Catalyst.Abstractions.Consensus
+  name: IConsensus
+  nameWithType: IConsensus
+  fullName: Catalyst.Abstractions.Consensus.IConsensus
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus
+  commentId: N:Catalyst.Abstractions.Consensus
+  name: Catalyst.Abstractions.Consensus
+  nameWithType: Catalyst.Abstractions.Consensus
+  fullName: Catalyst.Abstractions.Consensus
+- uid: Catalyst.Core.Modules.Consensus.Consensus.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Consensus.#ctor
+  name: Consensus
+  nameWithType: Consensus.Consensus
+  fullName: Catalyst.Core.Modules.Consensus.Consensus.Consensus
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IDeltaBuilder
+  nameWithType: IDeltaBuilder
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaBuilder
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IDeltaVoter
+  nameWithType: IDeltaVoter
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IDeltaElector
+  nameWithType: IDeltaElector
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaCache
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaCache
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IDeltaCache
+  nameWithType: IDeltaCache
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaCache
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IDeltaHub
+  nameWithType: IDeltaHub
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: ICycleEventsProvider
+  nameWithType: ICycleEventsProvider
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IDeltaHashProvider
+  nameWithType: IDeltaHashProvider
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+- uid: Catalyst.Abstractions.Hashing.IHashProvider
+  commentId: T:Catalyst.Abstractions.Hashing.IHashProvider
+  parent: Catalyst.Abstractions.Hashing
+  name: IHashProvider
+  nameWithType: IHashProvider
+  fullName: Catalyst.Abstractions.Hashing.IHashProvider
+- uid: ILogger
+  isExternal: true
+  name: ILogger
+  nameWithType: ILogger
+  fullName: ILogger
+- uid: Catalyst.Abstractions.Consensus.Deltas
+  commentId: N:Catalyst.Abstractions.Consensus.Deltas
+  name: Catalyst.Abstractions.Consensus.Deltas
+  nameWithType: Catalyst.Abstractions.Consensus.Deltas
+  fullName: Catalyst.Abstractions.Consensus.Deltas
+- uid: Catalyst.Abstractions.Consensus.Cycle
+  commentId: N:Catalyst.Abstractions.Consensus.Cycle
+  name: Catalyst.Abstractions.Consensus.Cycle
+  nameWithType: Catalyst.Abstractions.Consensus.Cycle
+  fullName: Catalyst.Abstractions.Consensus.Cycle
+- uid: Catalyst.Abstractions.Hashing
+  commentId: N:Catalyst.Abstractions.Hashing
+  name: Catalyst.Abstractions.Hashing
+  nameWithType: Catalyst.Abstractions.Hashing
+  fullName: Catalyst.Abstractions.Hashing
+- uid: Catalyst.Core.Modules.Consensus.Consensus.StartProducing*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Consensus.StartProducing
+  name: StartProducing
+  nameWithType: Consensus.StartProducing
+  fullName: Catalyst.Core.Modules.Consensus.Consensus.StartProducing
+- uid: Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+  commentId: M:Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+  parent: Catalyst.Abstractions.Consensus.IConsensus
+  name: StartProducing()
+  nameWithType: IConsensus.StartProducing()
+  fullName: Catalyst.Abstractions.Consensus.IConsensus.StartProducing()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+    name: StartProducing
+    nameWithType: IConsensus.StartProducing
+    fullName: Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+    name: StartProducing
+    nameWithType: IConsensus.StartProducing
+    fullName: Catalyst.Abstractions.Consensus.IConsensus.StartProducing
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Consensus.Consensus.Dispose*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Consensus.Dispose
+  name: Dispose
+  nameWithType: Consensus.Dispose
+  fullName: Catalyst.Core.Modules.Consensus.Consensus.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )

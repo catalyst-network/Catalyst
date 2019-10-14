@@ -1,0 +1,433 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  id: ICycleConfiguration
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  children:
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.CycleDuration
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.TimingsByName
+  - Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting
+  langs:
+  - csharp
+  - vb
+  name: ICycleConfiguration
+  nameWithType: ICycleConfiguration
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ICycleConfiguration
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nThis can be thought of as a sort of configuration used by the <xref href=\"Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider\" data-throw-if-not-resolved=\"false\"></xref>\nto set the durations of the different phases in a cycle. A given cycle has 4 distinct phases\noccuring in the following order: <xref href=\"Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction\" data-throw-if-not-resolved=\"false\"></xref>, <xref href=\"Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning\" data-throw-if-not-resolved=\"false\"></xref>,\n<xref href=\"Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation\" data-throw-if-not-resolved=\"false\"></xref>.\n"
+  example: []
+  syntax:
+    content: public interface ICycleConfiguration
+    content.vb: Public Interface ICycleConfiguration
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction
+  id: Construction
+  parent: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  langs:
+  - csharp
+  - vb
+  name: Construction
+  nameWithType: ICycleConfiguration.Construction
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Construction
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  example: []
+  syntax:
+    content: IPhaseTimings Construction { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+    content.vb: ReadOnly Property Construction As IPhaseTimings
+  overload: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning
+  id: Campaigning
+  parent: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  langs:
+  - csharp
+  - vb
+  name: Campaigning
+  nameWithType: ICycleConfiguration.Campaigning
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Campaigning
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  example: []
+  syntax:
+    content: IPhaseTimings Campaigning { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+    content.vb: ReadOnly Property Campaigning As IPhaseTimings
+  overload: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting
+  id: Voting
+  parent: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  langs:
+  - csharp
+  - vb
+  name: Voting
+  nameWithType: ICycleConfiguration.Voting
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Voting
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+    startLine: 52
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  example: []
+  syntax:
+    content: IPhaseTimings Voting { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+    content.vb: ReadOnly Property Voting As IPhaseTimings
+  overload: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation
+  id: Synchronisation
+  parent: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  langs:
+  - csharp
+  - vb
+  name: Synchronisation
+  nameWithType: ICycleConfiguration.Synchronisation
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Synchronisation
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+    startLine: 58
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  example: []
+  syntax:
+    content: IPhaseTimings Synchronisation { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+    content.vb: ReadOnly Property Synchronisation As IPhaseTimings
+  overload: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.CycleDuration
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.CycleDuration
+  id: CycleDuration
+  parent: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  langs:
+  - csharp
+  - vb
+  name: CycleDuration
+  nameWithType: ICycleConfiguration.CycleDuration
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.CycleDuration
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CycleDuration
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+    startLine: 64
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nThe total duration of a cycle composed of the 4 phases <xref href=\"Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction\" data-throw-if-not-resolved=\"false\"></xref>,\n<xref href=\"Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning\" data-throw-if-not-resolved=\"false\"></xref>, <xref href=\"Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation\" data-throw-if-not-resolved=\"false\"></xref>\n"
+  example: []
+  syntax:
+    content: TimeSpan CycleDuration { get; }
+    parameters: []
+    return:
+      type: System.TimeSpan
+    content.vb: ReadOnly Property CycleDuration As TimeSpan
+  overload: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.CycleDuration*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.TimingsByName
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.TimingsByName
+  id: TimingsByName
+  parent: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration
+  langs:
+  - csharp
+  - vb
+  name: TimingsByName
+  nameWithType: ICycleConfiguration.TimingsByName
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.TimingsByName
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: TimingsByName
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/ICycleConfiguration.cs
+    startLine: 75
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  summary: "\nThis dictionary can be used to retrieve the <see>\n<cref>PhaseTimings</cref>\n</see>\nfor a\ngive <see>\n<cref>PhaseName</cref>\n</see>\n"
+  example: []
+  syntax:
+    content: IReadOnlyDictionary<IPhaseName, IPhaseTimings> TimingsByName { get; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.IReadOnlyDictionary{Catalyst.Abstractions.Consensus.Cycle.IPhaseName,Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings}
+    content.vb: ReadOnly Property TimingsByName As IReadOnlyDictionary(Of IPhaseName, IPhaseTimings)
+  overload: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.TimingsByName*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+  name: ICycleEventsProvider
+  nameWithType: ICycleEventsProvider
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleEventsProvider
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction
+  isExternal: true
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning
+  isExternal: true
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting
+  isExternal: true
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation
+  isExternal: true
+- uid: Catalyst.Abstractions.Consensus.Cycle
+  commentId: N:Catalyst.Abstractions.Consensus.Cycle
+  name: Catalyst.Abstractions.Consensus.Cycle
+  nameWithType: Catalyst.Abstractions.Consensus.Cycle
+  fullName: Catalyst.Abstractions.Consensus.Cycle
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction
+  name: Construction
+  nameWithType: ICycleConfiguration.Construction
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Construction
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: IPhaseTimings
+  nameWithType: IPhaseTimings
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning
+  name: Campaigning
+  nameWithType: ICycleConfiguration.Campaigning
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Campaigning
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting
+  name: Voting
+  nameWithType: ICycleConfiguration.Voting
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Voting
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation
+  name: Synchronisation
+  nameWithType: ICycleConfiguration.Synchronisation
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.Synchronisation
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.CycleDuration*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.CycleDuration
+  name: CycleDuration
+  nameWithType: ICycleConfiguration.CycleDuration
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.CycleDuration
+- uid: System.TimeSpan
+  commentId: T:System.TimeSpan
+  parent: System
+  isExternal: true
+  name: TimeSpan
+  nameWithType: TimeSpan
+  fullName: System.TimeSpan
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.TimingsByName*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.TimingsByName
+  name: TimingsByName
+  nameWithType: ICycleConfiguration.TimingsByName
+  fullName: Catalyst.Abstractions.Consensus.Cycle.ICycleConfiguration.TimingsByName
+- uid: System.Collections.Generic.IReadOnlyDictionary{Catalyst.Abstractions.Consensus.Cycle.IPhaseName,Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings}
+  commentId: T:System.Collections.Generic.IReadOnlyDictionary{Catalyst.Abstractions.Consensus.Cycle.IPhaseName,Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyDictionary`2
+  name: IReadOnlyDictionary<IPhaseName, IPhaseTimings>
+  nameWithType: IReadOnlyDictionary<IPhaseName, IPhaseTimings>
+  fullName: System.Collections.Generic.IReadOnlyDictionary<Catalyst.Abstractions.Consensus.Cycle.IPhaseName, Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings>
+  nameWithType.vb: IReadOnlyDictionary(Of IPhaseName, IPhaseTimings)
+  fullName.vb: System.Collections.Generic.IReadOnlyDictionary(Of Catalyst.Abstractions.Consensus.Cycle.IPhaseName, Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings)
+  name.vb: IReadOnlyDictionary(Of IPhaseName, IPhaseTimings)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    nameWithType: IReadOnlyDictionary
+    fullName: System.Collections.Generic.IReadOnlyDictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+    name: IPhaseName
+    nameWithType: IPhaseName
+    fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+    name: IPhaseTimings
+    nameWithType: IPhaseTimings
+    fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    nameWithType: IReadOnlyDictionary
+    fullName: System.Collections.Generic.IReadOnlyDictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+    name: IPhaseName
+    nameWithType: IPhaseName
+    fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+    name: IPhaseTimings
+    nameWithType: IPhaseTimings
+    fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseTimings
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IReadOnlyDictionary`2
+  commentId: T:System.Collections.Generic.IReadOnlyDictionary`2
+  isExternal: true
+  name: IReadOnlyDictionary<TKey, TValue>
+  nameWithType: IReadOnlyDictionary<TKey, TValue>
+  fullName: System.Collections.Generic.IReadOnlyDictionary<TKey, TValue>
+  nameWithType.vb: IReadOnlyDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.IReadOnlyDictionary(Of TKey, TValue)
+  name.vb: IReadOnlyDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    nameWithType: IReadOnlyDictionary
+    fullName: System.Collections.Generic.IReadOnlyDictionary
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyDictionary`2
+    name: IReadOnlyDictionary
+    nameWithType: IReadOnlyDictionary
+    fullName: System.Collections.Generic.IReadOnlyDictionary
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TKey
+    nameWithType: TKey
+    fullName: TKey
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TValue
+    nameWithType: TValue
+    fullName: TValue
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic

@@ -1,0 +1,138 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+  id: IPhaseStatus
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  children:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Id
+  - Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Name
+  langs:
+  - csharp
+  - vb
+  name: IPhaseStatus
+  nameWithType: IPhaseStatus
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhaseStatus.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IPhaseStatus
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhaseStatus.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  syntax:
+    content: public interface IPhaseStatus
+    content.vb: Public Interface IPhaseStatus
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Name
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Name
+  id: Name
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: IPhaseStatus.Name
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Name
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhaseStatus.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Name
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhaseStatus.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  syntax:
+    content: string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property Name As String
+  overload: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Name*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Id
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Id
+  id: Id
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: IPhaseStatus.Id
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Id
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Cycle/IPhaseStatus.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Id
+    path: ../src/Catalyst.Abstractions/Consensus/Cycle/IPhaseStatus.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Cycle
+  syntax:
+    content: int Id { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property Id As Integer
+  overload: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Id*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.Consensus.Cycle
+  commentId: N:Catalyst.Abstractions.Consensus.Cycle
+  name: Catalyst.Abstractions.Consensus.Cycle
+  nameWithType: Catalyst.Abstractions.Consensus.Cycle
+  fullName: Catalyst.Abstractions.Consensus.Cycle
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Name*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Name
+  name: Name
+  nameWithType: IPhaseStatus.Name
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Id*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Id
+  name: Id
+  nameWithType: IPhaseStatus.Id
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus.Id
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32

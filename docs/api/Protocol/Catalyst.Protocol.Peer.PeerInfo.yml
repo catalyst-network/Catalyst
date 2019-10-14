@@ -1,0 +1,2306 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Peer.PeerInfo
+  commentId: T:Catalyst.Protocol.Peer.PeerInfo
+  id: PeerInfo
+  parent: Catalyst.Protocol.Peer
+  children:
+  - Catalyst.Protocol.Peer.PeerInfo.#ctor
+  - Catalyst.Protocol.Peer.PeerInfo.#ctor(Catalyst.Protocol.Peer.PeerInfo)
+  - Catalyst.Protocol.Peer.PeerInfo.CalculateSize
+  - Catalyst.Protocol.Peer.PeerInfo.Clone
+  - Catalyst.Protocol.Peer.PeerInfo.Created
+  - Catalyst.Protocol.Peer.PeerInfo.CreatedFieldNumber
+  - Catalyst.Protocol.Peer.PeerInfo.Descriptor
+  - Catalyst.Protocol.Peer.PeerInfo.Equals(Catalyst.Protocol.Peer.PeerInfo)
+  - Catalyst.Protocol.Peer.PeerInfo.Equals(System.Object)
+  - Catalyst.Protocol.Peer.PeerInfo.GetHashCode
+  - Catalyst.Protocol.Peer.PeerInfo.Google#Protobuf#IMessage#Descriptor
+  - Catalyst.Protocol.Peer.PeerInfo.InactiveFor
+  - Catalyst.Protocol.Peer.PeerInfo.InactiveForFieldNumber
+  - Catalyst.Protocol.Peer.PeerInfo.IsBlacklisted
+  - Catalyst.Protocol.Peer.PeerInfo.IsBlacklistedFieldNumber
+  - Catalyst.Protocol.Peer.PeerInfo.IsUnreachable
+  - Catalyst.Protocol.Peer.PeerInfo.IsUnreachableFieldNumber
+  - Catalyst.Protocol.Peer.PeerInfo.LastSeen
+  - Catalyst.Protocol.Peer.PeerInfo.LastSeenFieldNumber
+  - Catalyst.Protocol.Peer.PeerInfo.MergeFrom(Catalyst.Protocol.Peer.PeerInfo)
+  - Catalyst.Protocol.Peer.PeerInfo.MergeFrom(Google.Protobuf.CodedInputStream)
+  - Catalyst.Protocol.Peer.PeerInfo.Modified
+  - Catalyst.Protocol.Peer.PeerInfo.ModifiedFieldNumber
+  - Catalyst.Protocol.Peer.PeerInfo.Parser
+  - Catalyst.Protocol.Peer.PeerInfo.PeerId
+  - Catalyst.Protocol.Peer.PeerInfo.PeerIdFieldNumber
+  - Catalyst.Protocol.Peer.PeerInfo.Reputation
+  - Catalyst.Protocol.Peer.PeerInfo.ReputationFieldNumber
+  - Catalyst.Protocol.Peer.PeerInfo.ToString
+  - Catalyst.Protocol.Peer.PeerInfo.WriteTo(Google.Protobuf.CodedOutputStream)
+  langs:
+  - csharp
+  - vb
+  name: PeerInfo
+  nameWithType: PeerInfo
+  fullName: Catalyst.Protocol.Peer.PeerInfo
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerInfo
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 247
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: 'public sealed class PeerInfo : IMessage<PeerInfo>, IMessage, IEquatable<PeerInfo>, IDeepCloneable<PeerInfo>'
+    content.vb: >-
+      Public NotInheritable Class PeerInfo
+          Implements IMessage(Of PeerInfo), IMessage, IEquatable(Of PeerInfo), IDeepCloneable(Of PeerInfo)
+  inheritance:
+  - System.Object
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.Peer.PeerInfo}
+  - Google.Protobuf.IMessage
+  - System.IEquatable{Catalyst.Protocol.Peer.PeerInfo}
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Peer.PeerInfo}
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Protocol.Peer.PeerInfo.Parser
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.Parser
+  id: Parser
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: Parser
+  nameWithType: PeerInfo.Parser
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Parser
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Parser
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 250
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public static MessageParser<PeerInfo> Parser { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.MessageParser{Catalyst.Protocol.Peer.PeerInfo}
+    content.vb: Public Shared ReadOnly Property Parser As MessageParser(Of PeerInfo)
+  overload: Catalyst.Protocol.Peer.PeerInfo.Parser*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.Peer.PeerInfo.Descriptor
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.Descriptor
+  id: Descriptor
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: Descriptor
+  nameWithType: PeerInfo.Descriptor
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 253
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public static MessageDescriptor Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: Public Shared ReadOnly Property Descriptor As MessageDescriptor
+  overload: Catalyst.Protocol.Peer.PeerInfo.Descriptor*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.Peer.PeerInfo.Google#Protobuf#IMessage#Descriptor
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.Google#Protobuf#IMessage#Descriptor
+  id: Google#Protobuf#IMessage#Descriptor
+  isEii: true
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: IMessage.Descriptor
+  nameWithType: PeerInfo.IMessage.Descriptor
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Google.Protobuf.IMessage.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: pb::Google.Protobuf.IMessage.Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 258
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: MessageDescriptor IMessage.Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: ReadOnly WriteOnly Property pb::Google.Protobuf.IMessage.Descriptor As MessageDescriptor Implements IMessage.Descriptor
+  overload: Catalyst.Protocol.Peer.PeerInfo.Google#Protobuf#IMessage#Descriptor*
+  implements:
+  - Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: PeerInfo.pb::Google.Protobuf.IMessage.Descriptor
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Protocol.Peer.PeerInfo.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.Peer.PeerInfo.#ctor
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.#ctor
+  id: '#ctor'
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: PeerInfo()
+  nameWithType: PeerInfo.PeerInfo()
+  fullName: Catalyst.Protocol.Peer.PeerInfo.PeerInfo()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 263
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public PeerInfo()
+    content.vb: Public Sub New
+  overload: Catalyst.Protocol.Peer.PeerInfo.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.#ctor(Catalyst.Protocol.Peer.PeerInfo)
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.#ctor(Catalyst.Protocol.Peer.PeerInfo)
+  id: '#ctor(Catalyst.Protocol.Peer.PeerInfo)'
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: PeerInfo(PeerInfo)
+  nameWithType: PeerInfo.PeerInfo(PeerInfo)
+  fullName: Catalyst.Protocol.Peer.PeerInfo.PeerInfo(Catalyst.Protocol.Peer.PeerInfo)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 270
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public PeerInfo(PeerInfo other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Peer.PeerInfo
+    content.vb: Public Sub New(other As PeerInfo)
+  overload: Catalyst.Protocol.Peer.PeerInfo.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.Clone
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.Clone
+  id: Clone
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: Clone()
+  nameWithType: PeerInfo.Clone()
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Clone()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Clone
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 283
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public PeerInfo Clone()
+    return:
+      type: Catalyst.Protocol.Peer.PeerInfo
+    content.vb: Public Function Clone As PeerInfo
+  overload: Catalyst.Protocol.Peer.PeerInfo.Clone*
+  implements:
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Peer.PeerInfo}.Clone
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.PeerIdFieldNumber
+  commentId: F:Catalyst.Protocol.Peer.PeerInfo.PeerIdFieldNumber
+  id: PeerIdFieldNumber
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: PeerIdFieldNumber
+  nameWithType: PeerInfo.PeerIdFieldNumber
+  fullName: Catalyst.Protocol.Peer.PeerInfo.PeerIdFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerIdFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 289
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: Field number for the &quot;peer_id&quot; field.
+  example: []
+  syntax:
+    content: public const int PeerIdFieldNumber = 1
+    return:
+      type: System.Int32
+    content.vb: Public Const PeerIdFieldNumber As Integer = 1
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Peer.PeerInfo.PeerId
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.PeerId
+  id: PeerId
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: PeerId
+  nameWithType: PeerInfo.PeerId
+  fullName: Catalyst.Protocol.Peer.PeerInfo.PeerId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerId
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 294
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: "\nis peerId of network\n"
+  example: []
+  syntax:
+    content: public PeerId PeerId { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public Property PeerId As PeerId
+  overload: Catalyst.Protocol.Peer.PeerInfo.PeerId*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.ReputationFieldNumber
+  commentId: F:Catalyst.Protocol.Peer.PeerInfo.ReputationFieldNumber
+  id: ReputationFieldNumber
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: ReputationFieldNumber
+  nameWithType: PeerInfo.ReputationFieldNumber
+  fullName: Catalyst.Protocol.Peer.PeerInfo.ReputationFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ReputationFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 303
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: Field number for the &quot;reputation&quot; field.
+  example: []
+  syntax:
+    content: public const int ReputationFieldNumber = 2
+    return:
+      type: System.Int32
+    content.vb: Public Const ReputationFieldNumber As Integer = 2
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Peer.PeerInfo.Reputation
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.Reputation
+  id: Reputation
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: Reputation
+  nameWithType: PeerInfo.Reputation
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Reputation
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Reputation
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 308
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: "\nreputation of peer\n"
+  example: []
+  syntax:
+    content: public int Reputation { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property Reputation As Integer
+  overload: Catalyst.Protocol.Peer.PeerInfo.Reputation*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.IsBlacklistedFieldNumber
+  commentId: F:Catalyst.Protocol.Peer.PeerInfo.IsBlacklistedFieldNumber
+  id: IsBlacklistedFieldNumber
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: IsBlacklistedFieldNumber
+  nameWithType: PeerInfo.IsBlacklistedFieldNumber
+  fullName: Catalyst.Protocol.Peer.PeerInfo.IsBlacklistedFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IsBlacklistedFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 317
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: Field number for the &quot;is_blacklisted&quot; field.
+  example: []
+  syntax:
+    content: public const int IsBlacklistedFieldNumber = 3
+    return:
+      type: System.Int32
+    content.vb: Public Const IsBlacklistedFieldNumber As Integer = 3
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Peer.PeerInfo.IsBlacklisted
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.IsBlacklisted
+  id: IsBlacklisted
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: IsBlacklisted
+  nameWithType: PeerInfo.IsBlacklisted
+  fullName: Catalyst.Protocol.Peer.PeerInfo.IsBlacklisted
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IsBlacklisted
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 322
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: "\nis to check if the peer is blackListed\n"
+  example: []
+  syntax:
+    content: public bool IsBlacklisted { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property IsBlacklisted As Boolean
+  overload: Catalyst.Protocol.Peer.PeerInfo.IsBlacklisted*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.IsUnreachableFieldNumber
+  commentId: F:Catalyst.Protocol.Peer.PeerInfo.IsUnreachableFieldNumber
+  id: IsUnreachableFieldNumber
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: IsUnreachableFieldNumber
+  nameWithType: PeerInfo.IsUnreachableFieldNumber
+  fullName: Catalyst.Protocol.Peer.PeerInfo.IsUnreachableFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IsUnreachableFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 331
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: Field number for the &quot;is_unreachable&quot; field.
+  example: []
+  syntax:
+    content: public const int IsUnreachableFieldNumber = 4
+    return:
+      type: System.Int32
+    content.vb: Public Const IsUnreachableFieldNumber As Integer = 4
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Peer.PeerInfo.IsUnreachable
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.IsUnreachable
+  id: IsUnreachable
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: IsUnreachable
+  nameWithType: PeerInfo.IsUnreachable
+  fullName: Catalyst.Protocol.Peer.PeerInfo.IsUnreachable
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IsUnreachable
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 336
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: "\nis when the peer cannot be reached on the network\n"
+  example: []
+  syntax:
+    content: public bool IsUnreachable { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property IsUnreachable As Boolean
+  overload: Catalyst.Protocol.Peer.PeerInfo.IsUnreachable*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.InactiveForFieldNumber
+  commentId: F:Catalyst.Protocol.Peer.PeerInfo.InactiveForFieldNumber
+  id: InactiveForFieldNumber
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: InactiveForFieldNumber
+  nameWithType: PeerInfo.InactiveForFieldNumber
+  fullName: Catalyst.Protocol.Peer.PeerInfo.InactiveForFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: InactiveForFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 345
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: Field number for the &quot;inactive_for&quot; field.
+  example: []
+  syntax:
+    content: public const int InactiveForFieldNumber = 5
+    return:
+      type: System.Int32
+    content.vb: Public Const InactiveForFieldNumber As Integer = 5
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Peer.PeerInfo.InactiveFor
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.InactiveFor
+  id: InactiveFor
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: InactiveFor
+  nameWithType: PeerInfo.InactiveFor
+  fullName: Catalyst.Protocol.Peer.PeerInfo.InactiveFor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: InactiveFor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 350
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: "\nis how long the peer has beekn inactive for\n"
+  example: []
+  syntax:
+    content: public Duration InactiveFor { get; set; }
+    parameters: []
+    return:
+      type: Google.Protobuf.WellKnownTypes.Duration
+    content.vb: Public Property InactiveFor As Duration
+  overload: Catalyst.Protocol.Peer.PeerInfo.InactiveFor*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.LastSeenFieldNumber
+  commentId: F:Catalyst.Protocol.Peer.PeerInfo.LastSeenFieldNumber
+  id: LastSeenFieldNumber
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: LastSeenFieldNumber
+  nameWithType: PeerInfo.LastSeenFieldNumber
+  fullName: Catalyst.Protocol.Peer.PeerInfo.LastSeenFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: LastSeenFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 359
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: Field number for the &quot;last_seen&quot; field.
+  example: []
+  syntax:
+    content: public const int LastSeenFieldNumber = 6
+    return:
+      type: System.Int32
+    content.vb: Public Const LastSeenFieldNumber As Integer = 6
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Peer.PeerInfo.LastSeen
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.LastSeen
+  id: LastSeen
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: LastSeen
+  nameWithType: PeerInfo.LastSeen
+  fullName: Catalyst.Protocol.Peer.PeerInfo.LastSeen
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: LastSeen
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 364
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: "\nis when the peer was last seen\n"
+  example: []
+  syntax:
+    content: public Timestamp LastSeen { get; set; }
+    parameters: []
+    return:
+      type: Google.Protobuf.WellKnownTypes.Timestamp
+    content.vb: Public Property LastSeen As Timestamp
+  overload: Catalyst.Protocol.Peer.PeerInfo.LastSeen*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.ModifiedFieldNumber
+  commentId: F:Catalyst.Protocol.Peer.PeerInfo.ModifiedFieldNumber
+  id: ModifiedFieldNumber
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: ModifiedFieldNumber
+  nameWithType: PeerInfo.ModifiedFieldNumber
+  fullName: Catalyst.Protocol.Peer.PeerInfo.ModifiedFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ModifiedFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 373
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: Field number for the &quot;modified&quot; field.
+  example: []
+  syntax:
+    content: public const int ModifiedFieldNumber = 7
+    return:
+      type: System.Int32
+    content.vb: Public Const ModifiedFieldNumber As Integer = 7
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Peer.PeerInfo.Modified
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.Modified
+  id: Modified
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: Modified
+  nameWithType: PeerInfo.Modified
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Modified
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Modified
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 378
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: "\nmodified is when the peer was last modified\n"
+  example: []
+  syntax:
+    content: public Timestamp Modified { get; set; }
+    parameters: []
+    return:
+      type: Google.Protobuf.WellKnownTypes.Timestamp
+    content.vb: Public Property Modified As Timestamp
+  overload: Catalyst.Protocol.Peer.PeerInfo.Modified*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.CreatedFieldNumber
+  commentId: F:Catalyst.Protocol.Peer.PeerInfo.CreatedFieldNumber
+  id: CreatedFieldNumber
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: CreatedFieldNumber
+  nameWithType: PeerInfo.CreatedFieldNumber
+  fullName: Catalyst.Protocol.Peer.PeerInfo.CreatedFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CreatedFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 387
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: Field number for the &quot;created&quot; field.
+  example: []
+  syntax:
+    content: public const int CreatedFieldNumber = 8
+    return:
+      type: System.Int32
+    content.vb: Public Const CreatedFieldNumber As Integer = 8
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Peer.PeerInfo.Created
+  commentId: P:Catalyst.Protocol.Peer.PeerInfo.Created
+  id: Created
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: Created
+  nameWithType: PeerInfo.Created
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Created
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Created
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 392
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  summary: "\ncreated is when the peer was created\n"
+  example: []
+  syntax:
+    content: public Timestamp Created { get; set; }
+    parameters: []
+    return:
+      type: Google.Protobuf.WellKnownTypes.Timestamp
+    content.vb: Public Property Created As Timestamp
+  overload: Catalyst.Protocol.Peer.PeerInfo.Created*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.Equals(System.Object)
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: Equals(Object)
+  nameWithType: PeerInfo.Equals(Object)
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Equals(System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 400
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public override bool Equals(object other)
+    parameters:
+    - id: other
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function Equals(other As Object) As Boolean
+  overridden: System.Object.Equals(System.Object)
+  overload: Catalyst.Protocol.Peer.PeerInfo.Equals*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Peer.PeerInfo.Equals(Catalyst.Protocol.Peer.PeerInfo)
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.Equals(Catalyst.Protocol.Peer.PeerInfo)
+  id: Equals(Catalyst.Protocol.Peer.PeerInfo)
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: Equals(PeerInfo)
+  nameWithType: PeerInfo.Equals(PeerInfo)
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Equals(Catalyst.Protocol.Peer.PeerInfo)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 405
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public bool Equals(PeerInfo other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Peer.PeerInfo
+    return:
+      type: System.Boolean
+    content.vb: Public Function Equals(other As PeerInfo) As Boolean
+  overload: Catalyst.Protocol.Peer.PeerInfo.Equals*
+  implements:
+  - System.IEquatable{Catalyst.Protocol.Peer.PeerInfo}.Equals(Catalyst.Protocol.Peer.PeerInfo)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.GetHashCode
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.GetHashCode
+  id: GetHashCode
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: PeerInfo.GetHashCode()
+  fullName: Catalyst.Protocol.Peer.PeerInfo.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetHashCode
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 424
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+    content.vb: Public Overrides Function GetHashCode As Integer
+  overridden: System.Object.GetHashCode
+  overload: Catalyst.Protocol.Peer.PeerInfo.GetHashCode*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Peer.PeerInfo.ToString
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.ToString
+  id: ToString
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: PeerInfo.ToString()
+  fullName: Catalyst.Protocol.Peer.PeerInfo.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToString
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 441
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Catalyst.Protocol.Peer.PeerInfo.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Peer.PeerInfo.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.WriteTo(Google.Protobuf.CodedOutputStream)
+  id: WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: WriteTo(CodedOutputStream)
+  nameWithType: PeerInfo.WriteTo(CodedOutputStream)
+  fullName: Catalyst.Protocol.Peer.PeerInfo.WriteTo(Google.Protobuf.CodedOutputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: WriteTo
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 446
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public void WriteTo(CodedOutputStream output)
+    parameters:
+    - id: output
+      type: Google.Protobuf.CodedOutputStream
+    content.vb: Public Sub WriteTo(output As CodedOutputStream)
+  overload: Catalyst.Protocol.Peer.PeerInfo.WriteTo*
+  implements:
+  - Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.CalculateSize
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.CalculateSize
+  id: CalculateSize
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: CalculateSize()
+  nameWithType: PeerInfo.CalculateSize()
+  fullName: Catalyst.Protocol.Peer.PeerInfo.CalculateSize()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CalculateSize
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 485
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public int CalculateSize()
+    return:
+      type: System.Int32
+    content.vb: Public Function CalculateSize As Integer
+  overload: Catalyst.Protocol.Peer.PeerInfo.CalculateSize*
+  implements:
+  - Google.Protobuf.IMessage.CalculateSize
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.MergeFrom(Catalyst.Protocol.Peer.PeerInfo)
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.MergeFrom(Catalyst.Protocol.Peer.PeerInfo)
+  id: MergeFrom(Catalyst.Protocol.Peer.PeerInfo)
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(PeerInfo)
+  nameWithType: PeerInfo.MergeFrom(PeerInfo)
+  fullName: Catalyst.Protocol.Peer.PeerInfo.MergeFrom(Catalyst.Protocol.Peer.PeerInfo)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 518
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public void MergeFrom(PeerInfo other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Peer.PeerInfo
+    content.vb: Public Sub MergeFrom(other As PeerInfo)
+  overload: Catalyst.Protocol.Peer.PeerInfo.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.Peer.PeerInfo}.MergeFrom(Catalyst.Protocol.Peer.PeerInfo)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Peer.PeerInfo.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Catalyst.Protocol.Peer.PeerInfo.MergeFrom(Google.Protobuf.CodedInputStream)
+  id: MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Catalyst.Protocol.Peer.PeerInfo
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(CodedInputStream)
+  nameWithType: PeerInfo.MergeFrom(CodedInputStream)
+  fullName: Catalyst.Protocol.Peer.PeerInfo.MergeFrom(Google.Protobuf.CodedInputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Peer.cs
+    startLine: 565
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Peer
+  syntax:
+    content: public void MergeFrom(CodedInputStream input)
+    parameters:
+    - id: input
+      type: Google.Protobuf.CodedInputStream
+    content.vb: Public Sub MergeFrom(input As CodedInputStream)
+  overload: Catalyst.Protocol.Peer.PeerInfo.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.Peer.PeerInfo}
+  commentId: T:Google.Protobuf.IMessage{Catalyst.Protocol.Peer.PeerInfo}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IMessage`1
+  name: IMessage<PeerInfo>
+  nameWithType: IMessage<PeerInfo>
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Peer.PeerInfo>
+  nameWithType.vb: IMessage(Of PeerInfo)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.Peer.PeerInfo)
+  name.vb: IMessage(Of PeerInfo)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage
+  commentId: T:Google.Protobuf.IMessage
+  parent: Google.Protobuf
+  isExternal: true
+  name: IMessage
+  nameWithType: IMessage
+  fullName: Google.Protobuf.IMessage
+- uid: System.IEquatable{Catalyst.Protocol.Peer.PeerInfo}
+  commentId: T:System.IEquatable{Catalyst.Protocol.Peer.PeerInfo}
+  parent: System
+  definition: System.IEquatable`1
+  name: IEquatable<PeerInfo>
+  nameWithType: IEquatable<PeerInfo>
+  fullName: System.IEquatable<Catalyst.Protocol.Peer.PeerInfo>
+  nameWithType.vb: IEquatable(Of PeerInfo)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.Peer.PeerInfo)
+  name.vb: IEquatable(Of PeerInfo)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Peer.PeerInfo}
+  commentId: T:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Peer.PeerInfo}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IDeepCloneable`1
+  name: IDeepCloneable<PeerInfo>
+  nameWithType: IDeepCloneable<PeerInfo>
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Peer.PeerInfo>
+  nameWithType.vb: IDeepCloneable(Of PeerInfo)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Peer.PeerInfo)
+  name.vb: IDeepCloneable(Of PeerInfo)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Google.Protobuf.IMessage`1
+  commentId: T:Google.Protobuf.IMessage`1
+  isExternal: true
+  name: IMessage<T>
+  nameWithType: IMessage<T>
+  fullName: Google.Protobuf.IMessage<T>
+  nameWithType.vb: IMessage(Of T)
+  fullName.vb: Google.Protobuf.IMessage(Of T)
+  name.vb: IMessage(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf
+  commentId: N:Google.Protobuf
+  isExternal: true
+  name: Google.Protobuf
+  nameWithType: Google.Protobuf
+  fullName: Google.Protobuf
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1
+  commentId: T:Google.Protobuf.IDeepCloneable`1
+  isExternal: true
+  name: IDeepCloneable<T>
+  nameWithType: IDeepCloneable<T>
+  fullName: Google.Protobuf.IDeepCloneable<T>
+  nameWithType.vb: IDeepCloneable(Of T)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T)
+  name.vb: IDeepCloneable(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Peer.PeerInfo.Parser*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.Parser
+  name: Parser
+  nameWithType: PeerInfo.Parser
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Parser
+- uid: Google.Protobuf.MessageParser{Catalyst.Protocol.Peer.PeerInfo}
+  commentId: T:Google.Protobuf.MessageParser{Catalyst.Protocol.Peer.PeerInfo}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.MessageParser`1
+  name: MessageParser<PeerInfo>
+  nameWithType: MessageParser<PeerInfo>
+  fullName: Google.Protobuf.MessageParser<Catalyst.Protocol.Peer.PeerInfo>
+  nameWithType.vb: MessageParser(Of PeerInfo)
+  fullName.vb: Google.Protobuf.MessageParser(Of Catalyst.Protocol.Peer.PeerInfo)
+  name.vb: MessageParser(Of PeerInfo)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.MessageParser`1
+  commentId: T:Google.Protobuf.MessageParser`1
+  isExternal: true
+  name: MessageParser<T>
+  nameWithType: MessageParser<T>
+  fullName: Google.Protobuf.MessageParser<T>
+  nameWithType.vb: MessageParser(Of T)
+  fullName.vb: Google.Protobuf.MessageParser(Of T)
+  name.vb: MessageParser(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Peer.PeerInfo.Descriptor*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.Descriptor
+  name: Descriptor
+  nameWithType: PeerInfo.Descriptor
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Descriptor
+- uid: Google.Protobuf.Reflection.MessageDescriptor
+  commentId: T:Google.Protobuf.Reflection.MessageDescriptor
+  parent: Google.Protobuf.Reflection
+  isExternal: true
+  name: MessageDescriptor
+  nameWithType: MessageDescriptor
+  fullName: Google.Protobuf.Reflection.MessageDescriptor
+- uid: Google.Protobuf.Reflection
+  commentId: N:Google.Protobuf.Reflection
+  isExternal: true
+  name: Google.Protobuf.Reflection
+  nameWithType: Google.Protobuf.Reflection
+  fullName: Google.Protobuf.Reflection
+- uid: Catalyst.Protocol.Peer.PeerInfo.Google#Protobuf#IMessage#Descriptor*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.Google#Protobuf#IMessage#Descriptor
+  name: IMessage.Descriptor
+  nameWithType: PeerInfo.IMessage.Descriptor
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: PeerInfo.pb::Google.Protobuf.IMessage.Descriptor
+  fullName.vb: Catalyst.Protocol.Peer.PeerInfo.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Google.Protobuf.IMessage.Descriptor
+  commentId: P:Google.Protobuf.IMessage.Descriptor
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: Descriptor
+  nameWithType: IMessage.Descriptor
+  fullName: Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.Peer.PeerInfo.#ctor*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.#ctor
+  name: PeerInfo
+  nameWithType: PeerInfo.PeerInfo
+  fullName: Catalyst.Protocol.Peer.PeerInfo.PeerInfo
+- uid: Catalyst.Protocol.Peer.PeerInfo
+  commentId: T:Catalyst.Protocol.Peer.PeerInfo
+  parent: Catalyst.Protocol.Peer
+  name: PeerInfo
+  nameWithType: PeerInfo
+  fullName: Catalyst.Protocol.Peer.PeerInfo
+- uid: Catalyst.Protocol.Peer.PeerInfo.Clone*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.Clone
+  name: Clone
+  nameWithType: PeerInfo.Clone
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Clone
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Peer.PeerInfo}.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Peer.PeerInfo}.Clone
+  parent: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Peer.PeerInfo}
+  definition: Google.Protobuf.IDeepCloneable`1.Clone
+  name: Clone()
+  nameWithType: IDeepCloneable<PeerInfo>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Peer.PeerInfo>.Clone()
+  nameWithType.vb: IDeepCloneable(Of PeerInfo).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Peer.PeerInfo).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<PeerInfo>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Peer.PeerInfo>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of PeerInfo).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Peer.PeerInfo).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable`1.Clone
+  isExternal: true
+  name: Clone()
+  nameWithType: IDeepCloneable<T>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<T>.Clone()
+  nameWithType.vb: IDeepCloneable(Of T).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<T>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<T>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of T).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of T).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Protocol.Peer.PeerInfo.PeerId*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.PeerId
+  name: PeerId
+  nameWithType: PeerInfo.PeerId
+  fullName: Catalyst.Protocol.Peer.PeerInfo.PeerId
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer.PeerInfo.Reputation*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.Reputation
+  name: Reputation
+  nameWithType: PeerInfo.Reputation
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Reputation
+- uid: Catalyst.Protocol.Peer.PeerInfo.IsBlacklisted*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.IsBlacklisted
+  name: IsBlacklisted
+  nameWithType: PeerInfo.IsBlacklisted
+  fullName: Catalyst.Protocol.Peer.PeerInfo.IsBlacklisted
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Protocol.Peer.PeerInfo.IsUnreachable*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.IsUnreachable
+  name: IsUnreachable
+  nameWithType: PeerInfo.IsUnreachable
+  fullName: Catalyst.Protocol.Peer.PeerInfo.IsUnreachable
+- uid: Catalyst.Protocol.Peer.PeerInfo.InactiveFor*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.InactiveFor
+  name: InactiveFor
+  nameWithType: PeerInfo.InactiveFor
+  fullName: Catalyst.Protocol.Peer.PeerInfo.InactiveFor
+- uid: Google.Protobuf.WellKnownTypes.Duration
+  commentId: T:Google.Protobuf.WellKnownTypes.Duration
+  parent: Google.Protobuf.WellKnownTypes
+  isExternal: true
+  name: Duration
+  nameWithType: Duration
+  fullName: Google.Protobuf.WellKnownTypes.Duration
+- uid: Google.Protobuf.WellKnownTypes
+  commentId: N:Google.Protobuf.WellKnownTypes
+  isExternal: true
+  name: Google.Protobuf.WellKnownTypes
+  nameWithType: Google.Protobuf.WellKnownTypes
+  fullName: Google.Protobuf.WellKnownTypes
+- uid: Catalyst.Protocol.Peer.PeerInfo.LastSeen*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.LastSeen
+  name: LastSeen
+  nameWithType: PeerInfo.LastSeen
+  fullName: Catalyst.Protocol.Peer.PeerInfo.LastSeen
+- uid: Google.Protobuf.WellKnownTypes.Timestamp
+  commentId: T:Google.Protobuf.WellKnownTypes.Timestamp
+  parent: Google.Protobuf.WellKnownTypes
+  isExternal: true
+  name: Timestamp
+  nameWithType: Timestamp
+  fullName: Google.Protobuf.WellKnownTypes.Timestamp
+- uid: Catalyst.Protocol.Peer.PeerInfo.Modified*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.Modified
+  name: Modified
+  nameWithType: PeerInfo.Modified
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Modified
+- uid: Catalyst.Protocol.Peer.PeerInfo.Created*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.Created
+  name: Created
+  nameWithType: PeerInfo.Created
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Created
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Peer.PeerInfo.Equals*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.Equals
+  name: Equals
+  nameWithType: PeerInfo.Equals
+  fullName: Catalyst.Protocol.Peer.PeerInfo.Equals
+- uid: System.IEquatable{Catalyst.Protocol.Peer.PeerInfo}.Equals(Catalyst.Protocol.Peer.PeerInfo)
+  commentId: M:System.IEquatable{Catalyst.Protocol.Peer.PeerInfo}.Equals(Catalyst.Protocol.Peer.PeerInfo)
+  parent: System.IEquatable{Catalyst.Protocol.Peer.PeerInfo}
+  definition: System.IEquatable`1.Equals(`0)
+  name: Equals(PeerInfo)
+  nameWithType: IEquatable<PeerInfo>.Equals(PeerInfo)
+  fullName: System.IEquatable<Catalyst.Protocol.Peer.PeerInfo>.Equals(Catalyst.Protocol.Peer.PeerInfo)
+  nameWithType.vb: IEquatable(Of PeerInfo).Equals(PeerInfo)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.Peer.PeerInfo).Equals(Catalyst.Protocol.Peer.PeerInfo)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<PeerInfo>.Equals
+    fullName: System.IEquatable<Catalyst.Protocol.Peer.PeerInfo>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of PeerInfo).Equals
+    fullName: System.IEquatable(Of Catalyst.Protocol.Peer.PeerInfo).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<T>.Equals
+    fullName: System.IEquatable<T>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of T).Equals
+    fullName: System.IEquatable(Of T).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Peer.PeerInfo.GetHashCode*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.GetHashCode
+  name: GetHashCode
+  nameWithType: PeerInfo.GetHashCode
+  fullName: Catalyst.Protocol.Peer.PeerInfo.GetHashCode
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Peer.PeerInfo.ToString*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.ToString
+  name: ToString
+  nameWithType: PeerInfo.ToString
+  fullName: Catalyst.Protocol.Peer.PeerInfo.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Protocol.Peer.PeerInfo.WriteTo*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.WriteTo
+  name: WriteTo
+  nameWithType: PeerInfo.WriteTo
+  fullName: Catalyst.Protocol.Peer.PeerInfo.WriteTo
+- uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: WriteTo(CodedOutputStream)
+  nameWithType: IMessage.WriteTo(CodedOutputStream)
+  fullName: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedOutputStream
+  commentId: T:Google.Protobuf.CodedOutputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedOutputStream
+  nameWithType: CodedOutputStream
+  fullName: Google.Protobuf.CodedOutputStream
+- uid: Catalyst.Protocol.Peer.PeerInfo.CalculateSize*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.CalculateSize
+  name: CalculateSize
+  nameWithType: PeerInfo.CalculateSize
+  fullName: Catalyst.Protocol.Peer.PeerInfo.CalculateSize
+- uid: Google.Protobuf.IMessage.CalculateSize
+  commentId: M:Google.Protobuf.IMessage.CalculateSize
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: CalculateSize()
+  nameWithType: IMessage.CalculateSize()
+  fullName: Google.Protobuf.IMessage.CalculateSize()
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Peer.PeerInfo.MergeFrom*
+  commentId: Overload:Catalyst.Protocol.Peer.PeerInfo.MergeFrom
+  name: MergeFrom
+  nameWithType: PeerInfo.MergeFrom
+  fullName: Catalyst.Protocol.Peer.PeerInfo.MergeFrom
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.Peer.PeerInfo}.MergeFrom(Catalyst.Protocol.Peer.PeerInfo)
+  commentId: M:Google.Protobuf.IMessage{Catalyst.Protocol.Peer.PeerInfo}.MergeFrom(Catalyst.Protocol.Peer.PeerInfo)
+  parent: Google.Protobuf.IMessage{Catalyst.Protocol.Peer.PeerInfo}
+  definition: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  name: MergeFrom(PeerInfo)
+  nameWithType: IMessage<PeerInfo>.MergeFrom(PeerInfo)
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Peer.PeerInfo>.MergeFrom(Catalyst.Protocol.Peer.PeerInfo)
+  nameWithType.vb: IMessage(Of PeerInfo).MergeFrom(PeerInfo)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.Peer.PeerInfo).MergeFrom(Catalyst.Protocol.Peer.PeerInfo)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<PeerInfo>.MergeFrom
+    fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Peer.PeerInfo>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of PeerInfo).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of Catalyst.Protocol.Peer.PeerInfo).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Peer.PeerInfo
+    name: PeerInfo
+    nameWithType: PeerInfo
+    fullName: Catalyst.Protocol.Peer.PeerInfo
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  commentId: M:Google.Protobuf.IMessage`1.MergeFrom(`0)
+  isExternal: true
+  name: MergeFrom(T)
+  nameWithType: IMessage<T>.MergeFrom(T)
+  fullName: Google.Protobuf.IMessage<T>.MergeFrom(T)
+  nameWithType.vb: IMessage(Of T).MergeFrom(T)
+  fullName.vb: Google.Protobuf.IMessage(Of T).MergeFrom(T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<T>.MergeFrom
+    fullName: Google.Protobuf.IMessage<T>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of T).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of T).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: MergeFrom(CodedInputStream)
+  nameWithType: IMessage.MergeFrom(CodedInputStream)
+  fullName: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedInputStream
+  commentId: T:Google.Protobuf.CodedInputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedInputStream
+  nameWithType: CodedInputStream
+  fullName: Google.Protobuf.CodedInputStream

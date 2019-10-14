@@ -1,0 +1,285 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder
+  commentId: T:Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder
+  id: AddressedEnvelopeToIMessageEncoder
+  parent: Catalyst.Core.Lib.IO.Codecs
+  children:
+  - Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder.Encode(IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{ProtocolMessage},System.Collections.Generic.List{System.Object})
+  langs:
+  - csharp
+  - vb
+  name: AddressedEnvelopeToIMessageEncoder
+  nameWithType: AddressedEnvelopeToIMessageEncoder
+  fullName: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Codecs/AddressedEnvelopeToIMessageEncoder.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: AddressedEnvelopeToIMessageEncoder
+    path: ../src/Catalyst.Core.Lib/IO/Codecs/AddressedEnvelopeToIMessageEncoder.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Codecs
+  syntax:
+    content: 'public sealed class AddressedEnvelopeToIMessageEncoder : MessageToMessageEncoder<IMessageDto<ProtocolMessage>>'
+    content.vb: >-
+      Public NotInheritable Class AddressedEnvelopeToIMessageEncoder
+
+          Inherits MessageToMessageEncoder(Of IMessageDto(Of ProtocolMessage))
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder.Encode(IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{ProtocolMessage},System.Collections.Generic.List{System.Object})
+  commentId: M:Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder.Encode(IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{ProtocolMessage},System.Collections.Generic.List{System.Object})
+  id: Encode(IChannelHandlerContext,Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{ProtocolMessage},System.Collections.Generic.List{System.Object})
+  parent: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder
+  langs:
+  - csharp
+  - vb
+  name: Encode(IChannelHandlerContext, IMessageDto<ProtocolMessage>, List<Object>)
+  nameWithType: AddressedEnvelopeToIMessageEncoder.Encode(IChannelHandlerContext, IMessageDto<ProtocolMessage>, List<Object>)
+  fullName: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder.Encode(IChannelHandlerContext, Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<ProtocolMessage>, System.Collections.Generic.List<System.Object>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Codecs/AddressedEnvelopeToIMessageEncoder.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Encode
+    path: ../src/Catalyst.Core.Lib/IO/Codecs/AddressedEnvelopeToIMessageEncoder.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Codecs
+  syntax:
+    content: protected override void Encode(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message, List<object> output)
+    parameters:
+    - id: context
+      type: IChannelHandlerContext
+    - id: message
+      type: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{ProtocolMessage}
+    - id: output
+      type: System.Collections.Generic.List{System.Object}
+    content.vb: Protected Overrides Sub Encode(context As IChannelHandlerContext, message As IMessageDto(Of ProtocolMessage), output As List(Of Object))
+  overload: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder.Encode*
+  nameWithType.vb: AddressedEnvelopeToIMessageEncoder.Encode(IChannelHandlerContext, IMessageDto(Of ProtocolMessage), List(Of Object))
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+  fullName.vb: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder.Encode(IChannelHandlerContext, Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of ProtocolMessage), System.Collections.Generic.List(Of System.Object))
+  name.vb: Encode(IChannelHandlerContext, IMessageDto(Of ProtocolMessage), List(Of Object))
+references:
+- uid: Catalyst.Core.Lib.IO.Codecs
+  commentId: N:Catalyst.Core.Lib.IO.Codecs
+  name: Catalyst.Core.Lib.IO.Codecs
+  nameWithType: Catalyst.Core.Lib.IO.Codecs
+  fullName: Catalyst.Core.Lib.IO.Codecs
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder.Encode*
+  commentId: Overload:Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder.Encode
+  name: Encode
+  nameWithType: AddressedEnvelopeToIMessageEncoder.Encode
+  fullName: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder.Encode
+- uid: IChannelHandlerContext
+  isExternal: true
+  name: IChannelHandlerContext
+  nameWithType: IChannelHandlerContext
+  fullName: IChannelHandlerContext
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{ProtocolMessage}
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto{ProtocolMessage}
+  parent: Catalyst.Abstractions.IO.Messaging.Dto
+  definition: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  name: IMessageDto<ProtocolMessage>
+  nameWithType: IMessageDto<ProtocolMessage>
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<ProtocolMessage>
+  nameWithType.vb: IMessageDto(Of ProtocolMessage)
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of ProtocolMessage)
+  name.vb: IMessageDto(Of ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.List{System.Object}
+  commentId: T:System.Collections.Generic.List{System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Object>
+  nameWithType: List<Object>
+  fullName: System.Collections.Generic.List<System.Object>
+  nameWithType.vb: List(Of Object)
+  fullName.vb: System.Collections.Generic.List(Of System.Object)
+  name.vb: List(Of Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+  name: IMessageDto<T>
+  nameWithType: IMessageDto<T>
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto<T>
+  nameWithType.vb: IMessageDto(Of T)
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto(Of T)
+  name.vb: IMessageDto(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto`1
+    name: IMessageDto
+    nameWithType: IMessageDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IMessageDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Messaging.Dto
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Dto
+  name: Catalyst.Abstractions.IO.Messaging.Dto
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Dto
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic

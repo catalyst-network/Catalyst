@@ -323,7 +323,8 @@
         ],
         "exclude": [
           "obj/**",
-          "_site/**"
+          "_site/**",
+          "articles/_*.md"
         ]
       }
     ],

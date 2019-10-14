@@ -1,0 +1,371 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1
+  commentId: T:Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1
+  id: ChannelInitializerBase`1
+  parent: Catalyst.Core.Lib.IO.Transport.Channels
+  children:
+  - Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.#ctor(System.Func{System.Collections.Generic.IList{IChannelHandler}},Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Security.Cryptography.X509Certificates.X509Certificate)
+  - Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.InitChannel(`0)
+  - Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.NewTlsHandler(System.Net.IPAddress,System.Security.Cryptography.X509Certificates.X509Certificate)
+  langs:
+  - csharp
+  - vb
+  name: ChannelInitializerBase<T>
+  nameWithType: ChannelInitializerBase<T>
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase<T>
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Transport/Channels/ChannelInitializerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ChannelInitializerBase
+    path: ../src/Catalyst.Core.Lib/IO/Transport/Channels/ChannelInitializerBase.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Transport.Channels
+  syntax:
+    content: 'public abstract class ChannelInitializerBase<T> : ChannelInitializer<T> where T : IChannel'
+    typeParameters:
+    - id: T
+    content.vb: >-
+      Public MustInherit Class ChannelInitializerBase(Of T As IChannel)
+
+          Inherits ChannelInitializer(Of T)
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - Catalyst.Core.Lib.IO.Transport.Channels.ClientChannelInitializerBase`1
+  nameWithType.vb: ChannelInitializerBase(Of T)
+  modifiers.csharp:
+  - public
+  - abstract
+  - class
+  modifiers.vb:
+  - Public
+  - MustInherit
+  - Class
+  fullName.vb: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase(Of T)
+  name.vb: ChannelInitializerBase(Of T)
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.#ctor(System.Func{System.Collections.Generic.IList{IChannelHandler}},Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Security.Cryptography.X509Certificates.X509Certificate)
+  commentId: M:Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.#ctor(System.Func{System.Collections.Generic.IList{IChannelHandler}},Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Security.Cryptography.X509Certificates.X509Certificate)
+  id: '#ctor(System.Func{System.Collections.Generic.IList{IChannelHandler}},Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Security.Cryptography.X509Certificates.X509Certificate)'
+  parent: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1
+  langs:
+  - csharp
+  - vb
+  name: ChannelInitializerBase(Func<IList<IChannelHandler>>, IEventLoopGroupFactory, IPAddress, X509Certificate)
+  nameWithType: ChannelInitializerBase<T>.ChannelInitializerBase(Func<IList<IChannelHandler>>, IEventLoopGroupFactory, IPAddress, X509Certificate)
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase<T>.ChannelInitializerBase(System.Func<System.Collections.Generic.IList<IChannelHandler>>, Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory, System.Net.IPAddress, System.Security.Cryptography.X509Certificates.X509Certificate)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Transport/Channels/ChannelInitializerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Transport/Channels/ChannelInitializerBase.cs
+    startLine: 45
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Transport.Channels
+  syntax:
+    content: protected ChannelInitializerBase(Func<IList<IChannelHandler>> handlerGenerationFunction, IEventLoopGroupFactory eventLoopGroupFactory, IPAddress targetHost = null, X509Certificate certificate = null)
+    parameters:
+    - id: handlerGenerationFunction
+      type: System.Func{System.Collections.Generic.IList{IChannelHandler}}
+    - id: eventLoopGroupFactory
+      type: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    - id: targetHost
+      type: System.Net.IPAddress
+    - id: certificate
+      type: System.Security.Cryptography.X509Certificates.X509Certificate
+    content.vb: Protected Sub New(handlerGenerationFunction As Func(Of IList(Of IChannelHandler)), eventLoopGroupFactory As IEventLoopGroupFactory, targetHost As IPAddress = Nothing, certificate As X509Certificate = Nothing)
+  overload: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.#ctor*
+  nameWithType.vb: ChannelInitializerBase(Of T).ChannelInitializerBase(Func(Of IList(Of IChannelHandler)), IEventLoopGroupFactory, IPAddress, X509Certificate)
+  modifiers.csharp:
+  - protected
+  modifiers.vb:
+  - Protected
+  fullName.vb: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase(Of T).ChannelInitializerBase(System.Func(Of System.Collections.Generic.IList(Of IChannelHandler)), Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory, System.Net.IPAddress, System.Security.Cryptography.X509Certificates.X509Certificate)
+  name.vb: ChannelInitializerBase(Func(Of IList(Of IChannelHandler)), IEventLoopGroupFactory, IPAddress, X509Certificate)
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.InitChannel(`0)
+  commentId: M:Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.InitChannel(`0)
+  id: InitChannel(`0)
+  parent: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1
+  langs:
+  - csharp
+  - vb
+  name: InitChannel(T)
+  nameWithType: ChannelInitializerBase<T>.InitChannel(T)
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase<T>.InitChannel(T)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Transport/Channels/ChannelInitializerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: InitChannel
+    path: ../src/Catalyst.Core.Lib/IO/Transport/Channels/ChannelInitializerBase.cs
+    startLine: 57
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Transport.Channels
+  syntax:
+    content: protected override void InitChannel(T channel)
+    parameters:
+    - id: channel
+      type: '{T}'
+    content.vb: Protected Overrides Sub InitChannel(channel As T)
+  overload: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.InitChannel*
+  nameWithType.vb: ChannelInitializerBase(Of T).InitChannel(T)
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+  fullName.vb: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase(Of T).InitChannel(T)
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.NewTlsHandler(System.Net.IPAddress,System.Security.Cryptography.X509Certificates.X509Certificate)
+  commentId: M:Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.NewTlsHandler(System.Net.IPAddress,System.Security.Cryptography.X509Certificates.X509Certificate)
+  id: NewTlsHandler(System.Net.IPAddress,System.Security.Cryptography.X509Certificates.X509Certificate)
+  parent: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1
+  langs:
+  - csharp
+  - vb
+  name: NewTlsHandler(IPAddress, X509Certificate)
+  nameWithType: ChannelInitializerBase<T>.NewTlsHandler(IPAddress, X509Certificate)
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase<T>.NewTlsHandler(System.Net.IPAddress, System.Security.Cryptography.X509Certificates.X509Certificate)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Transport/Channels/ChannelInitializerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: NewTlsHandler
+    path: ../src/Catalyst.Core.Lib/IO/Transport/Channels/ChannelInitializerBase.cs
+    startLine: 74
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Transport.Channels
+  summary: Creates a new TlsHandler.
+  example: []
+  syntax:
+    content: public abstract TlsHandler NewTlsHandler(IPAddress targetHost, X509Certificate certificate)
+    parameters:
+    - id: targetHost
+      type: System.Net.IPAddress
+    - id: certificate
+      type: System.Security.Cryptography.X509Certificates.X509Certificate
+    return:
+      type: TlsHandler
+      description: <see cref="!:DotNetty.Handlers.Tls.TlsHandler"></see>
+    content.vb: Public MustOverride Function NewTlsHandler(targetHost As IPAddress, certificate As X509Certificate) As TlsHandler
+  overload: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.NewTlsHandler*
+  nameWithType.vb: ChannelInitializerBase(Of T).NewTlsHandler(IPAddress, X509Certificate)
+  modifiers.csharp:
+  - public
+  - abstract
+  modifiers.vb:
+  - Public
+  - MustOverride
+  fullName.vb: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase(Of T).NewTlsHandler(System.Net.IPAddress, System.Security.Cryptography.X509Certificates.X509Certificate)
+references:
+- uid: Catalyst.Core.Lib.IO.Transport.Channels
+  commentId: N:Catalyst.Core.Lib.IO.Transport.Channels
+  name: Catalyst.Core.Lib.IO.Transport.Channels
+  nameWithType: Catalyst.Core.Lib.IO.Transport.Channels
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.#ctor
+  name: ChannelInitializerBase
+  nameWithType: ChannelInitializerBase<T>.ChannelInitializerBase
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase<T>.ChannelInitializerBase
+  nameWithType.vb: ChannelInitializerBase(Of T).ChannelInitializerBase
+  fullName.vb: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase(Of T).ChannelInitializerBase
+- uid: System.Func{System.Collections.Generic.IList{IChannelHandler}}
+  commentId: T:System.Func{System.Collections.Generic.IList{IChannelHandler}}
+  parent: System
+  definition: System.Func`1
+  name: Func<IList<IChannelHandler>>
+  nameWithType: Func<IList<IChannelHandler>>
+  fullName: System.Func<System.Collections.Generic.IList<IChannelHandler>>
+  nameWithType.vb: Func(Of IList(Of IChannelHandler))
+  fullName.vb: System.Func(Of System.Collections.Generic.IList(Of IChannelHandler))
+  name.vb: Func(Of IList(Of IChannelHandler))
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: IChannelHandler
+    name: IChannelHandler
+    nameWithType: IChannelHandler
+    fullName: IChannelHandler
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: IChannelHandler
+    name: IChannelHandler
+    nameWithType: IChannelHandler
+    fullName: IChannelHandler
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+  commentId: T:Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+  parent: Catalyst.Abstractions.IO.EventLoop
+  name: IEventLoopGroupFactory
+  nameWithType: IEventLoopGroupFactory
+  fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+- uid: System.Net.IPAddress
+  commentId: T:System.Net.IPAddress
+  parent: System.Net
+  isExternal: true
+  name: IPAddress
+  nameWithType: IPAddress
+  fullName: System.Net.IPAddress
+- uid: System.Security.Cryptography.X509Certificates.X509Certificate
+  commentId: T:System.Security.Cryptography.X509Certificates.X509Certificate
+  parent: System.Security.Cryptography.X509Certificates
+  isExternal: true
+  name: X509Certificate
+  nameWithType: X509Certificate
+  fullName: System.Security.Cryptography.X509Certificates.X509Certificate
+- uid: System.Func`1
+  commentId: T:System.Func`1
+  isExternal: true
+  name: Func<TResult>
+  nameWithType: Func<TResult>
+  fullName: System.Func<TResult>
+  nameWithType.vb: Func(Of TResult)
+  fullName.vb: System.Func(Of TResult)
+  name.vb: Func(Of TResult)
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.EventLoop
+  commentId: N:Catalyst.Abstractions.IO.EventLoop
+  name: Catalyst.Abstractions.IO.EventLoop
+  nameWithType: Catalyst.Abstractions.IO.EventLoop
+  fullName: Catalyst.Abstractions.IO.EventLoop
+- uid: System.Net
+  commentId: N:System.Net
+  isExternal: true
+  name: System.Net
+  nameWithType: System.Net
+  fullName: System.Net
+- uid: System.Security.Cryptography.X509Certificates
+  commentId: N:System.Security.Cryptography.X509Certificates
+  isExternal: true
+  name: System.Security.Cryptography.X509Certificates
+  nameWithType: System.Security.Cryptography.X509Certificates
+  fullName: System.Security.Cryptography.X509Certificates
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.InitChannel*
+  commentId: Overload:Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.InitChannel
+  name: InitChannel
+  nameWithType: ChannelInitializerBase<T>.InitChannel
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase<T>.InitChannel
+  nameWithType.vb: ChannelInitializerBase(Of T).InitChannel
+  fullName.vb: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase(Of T).InitChannel
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.NewTlsHandler*
+  commentId: Overload:Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase`1.NewTlsHandler
+  name: NewTlsHandler
+  nameWithType: ChannelInitializerBase<T>.NewTlsHandler
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase<T>.NewTlsHandler
+  nameWithType.vb: ChannelInitializerBase(Of T).NewTlsHandler
+  fullName.vb: Catalyst.Core.Lib.IO.Transport.Channels.ChannelInitializerBase(Of T).NewTlsHandler
+- uid: TlsHandler
+  isExternal: true
+  name: TlsHandler
+  nameWithType: TlsHandler
+  fullName: TlsHandler

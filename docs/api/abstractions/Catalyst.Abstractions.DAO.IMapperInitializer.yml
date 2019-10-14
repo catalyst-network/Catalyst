@@ -1,0 +1,81 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.DAO.IMapperInitializer
+  commentId: T:Catalyst.Abstractions.DAO.IMapperInitializer
+  id: IMapperInitializer
+  parent: Catalyst.Abstractions.DAO
+  children:
+  - Catalyst.Abstractions.DAO.IMapperInitializer.InitMappers(IMapperConfigurationExpression)
+  langs:
+  - csharp
+  - vb
+  name: IMapperInitializer
+  nameWithType: IMapperInitializer
+  fullName: Catalyst.Abstractions.DAO.IMapperInitializer
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/DAO/IMapperInitializer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IMapperInitializer
+    path: ../src/Catalyst.Abstractions/DAO/IMapperInitializer.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.DAO
+  syntax:
+    content: public interface IMapperInitializer
+    content.vb: Public Interface IMapperInitializer
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.DAO.IMapperInitializer.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Abstractions.DAO.IMapperInitializer.InitMappers(IMapperConfigurationExpression)
+  id: InitMappers(IMapperConfigurationExpression)
+  parent: Catalyst.Abstractions.DAO.IMapperInitializer
+  langs:
+  - csharp
+  - vb
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: IMapperInitializer.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Abstractions.DAO.IMapperInitializer.InitMappers(IMapperConfigurationExpression)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/DAO/IMapperInitializer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: InitMappers
+    path: ../src/Catalyst.Abstractions/DAO/IMapperInitializer.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.DAO
+  syntax:
+    content: void InitMappers(IMapperConfigurationExpression cfg)
+    parameters:
+    - id: cfg
+      type: IMapperConfigurationExpression
+    content.vb: Sub InitMappers(cfg As IMapperConfigurationExpression)
+  overload: Catalyst.Abstractions.DAO.IMapperInitializer.InitMappers*
+references:
+- uid: Catalyst.Abstractions.DAO
+  commentId: N:Catalyst.Abstractions.DAO
+  name: Catalyst.Abstractions.DAO
+  nameWithType: Catalyst.Abstractions.DAO
+  fullName: Catalyst.Abstractions.DAO
+- uid: Catalyst.Abstractions.DAO.IMapperInitializer.InitMappers*
+  commentId: Overload:Catalyst.Abstractions.DAO.IMapperInitializer.InitMappers
+  name: InitMappers
+  nameWithType: IMapperInitializer.InitMappers
+  fullName: Catalyst.Abstractions.DAO.IMapperInitializer.InitMappers
+- uid: IMapperConfigurationExpression
+  commentId: '!:IMapperConfigurationExpression'
+  isExternal: true
+  name: IMapperConfigurationExpression
+  nameWithType: IMapperConfigurationExpression
+  fullName: IMapperConfigurationExpression

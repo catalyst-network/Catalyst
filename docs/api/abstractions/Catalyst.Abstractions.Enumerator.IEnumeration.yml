@@ -1,0 +1,422 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration
+  commentId: T:Catalyst.Abstractions.Enumerator.IEnumeration
+  id: IEnumeration
+  parent: Catalyst.Abstractions.Enumerator
+  children:
+  - Catalyst.Abstractions.Enumerator.IEnumeration.Equals(System.Object)
+  - Catalyst.Abstractions.Enumerator.IEnumeration.GetHashCode
+  - Catalyst.Abstractions.Enumerator.IEnumeration.Id
+  - Catalyst.Abstractions.Enumerator.IEnumeration.Name
+  - Catalyst.Abstractions.Enumerator.IEnumeration.ToString
+  langs:
+  - csharp
+  - vb
+  name: IEnumeration
+  nameWithType: IEnumeration
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IEnumeration
+    path: ../src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Enumerator
+  syntax:
+    content: 'public interface IEnumeration : IEquatable<Enumeration>'
+    content.vb: >-
+      Public Interface IEnumeration
+
+          Inherits IEquatable(Of Enumeration)
+  inheritedMembers:
+  - System.IEquatable{Catalyst.Abstractions.Enumerator.Enumeration}.Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration.Name
+  commentId: P:Catalyst.Abstractions.Enumerator.IEnumeration.Name
+  id: Name
+  parent: Catalyst.Abstractions.Enumerator.IEnumeration
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: IEnumeration.Name
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration.Name
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Name
+    path: ../src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Enumerator
+  syntax:
+    content: string Name { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property Name As String
+  overload: Catalyst.Abstractions.Enumerator.IEnumeration.Name*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration.Id
+  commentId: P:Catalyst.Abstractions.Enumerator.IEnumeration.Id
+  id: Id
+  parent: Catalyst.Abstractions.Enumerator.IEnumeration
+  langs:
+  - csharp
+  - vb
+  name: Id
+  nameWithType: IEnumeration.Id
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration.Id
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Id
+    path: ../src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Enumerator
+  syntax:
+    content: int Id { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property Id As Integer
+  overload: Catalyst.Abstractions.Enumerator.IEnumeration.Id*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration.ToString
+  commentId: M:Catalyst.Abstractions.Enumerator.IEnumeration.ToString
+  id: ToString
+  parent: Catalyst.Abstractions.Enumerator.IEnumeration
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: IEnumeration.ToString()
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToString
+    path: ../src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Enumerator
+  syntax:
+    content: string ToString()
+    return:
+      type: System.String
+    content.vb: Function ToString As String
+  overload: Catalyst.Abstractions.Enumerator.IEnumeration.ToString*
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration.Equals(System.Object)
+  commentId: M:Catalyst.Abstractions.Enumerator.IEnumeration.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: Catalyst.Abstractions.Enumerator.IEnumeration
+  langs:
+  - csharp
+  - vb
+  name: Equals(Object)
+  nameWithType: IEnumeration.Equals(Object)
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration.Equals(System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Equals
+    path: ../src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Enumerator
+  syntax:
+    content: bool Equals(object obj)
+    parameters:
+    - id: obj
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Function Equals(obj As Object) As Boolean
+  overload: Catalyst.Abstractions.Enumerator.IEnumeration.Equals*
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration.GetHashCode
+  commentId: M:Catalyst.Abstractions.Enumerator.IEnumeration.GetHashCode
+  id: GetHashCode
+  parent: Catalyst.Abstractions.Enumerator.IEnumeration
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: IEnumeration.GetHashCode()
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetHashCode
+    path: ../src/Catalyst.Abstractions/Enumerator/IEnumeration.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Enumerator
+  syntax:
+    content: int GetHashCode()
+    return:
+      type: System.Int32
+    content.vb: Function GetHashCode As Integer
+  overload: Catalyst.Abstractions.Enumerator.IEnumeration.GetHashCode*
+references:
+- uid: Catalyst.Abstractions.Enumerator
+  commentId: N:Catalyst.Abstractions.Enumerator
+  name: Catalyst.Abstractions.Enumerator
+  nameWithType: Catalyst.Abstractions.Enumerator
+  fullName: Catalyst.Abstractions.Enumerator
+- uid: System.IEquatable{Catalyst.Abstractions.Enumerator.Enumeration}.Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+  commentId: M:System.IEquatable{Catalyst.Abstractions.Enumerator.Enumeration}.Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+  parent: System.IEquatable{Catalyst.Abstractions.Enumerator.Enumeration}
+  definition: System.IEquatable`1.Equals(`0)
+  name: Equals(Enumeration)
+  nameWithType: IEquatable<Enumeration>.Equals(Enumeration)
+  fullName: System.IEquatable<Catalyst.Abstractions.Enumerator.Enumeration>.Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+  nameWithType.vb: IEquatable(Of Enumeration).Equals(Enumeration)
+  fullName.vb: System.IEquatable(Of Catalyst.Abstractions.Enumerator.Enumeration).Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<Enumeration>.Equals
+    fullName: System.IEquatable<Catalyst.Abstractions.Enumerator.Enumeration>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration
+    name: Enumeration
+    nameWithType: Enumeration
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of Enumeration).Equals
+    fullName: System.IEquatable(Of Catalyst.Abstractions.Enumerator.Enumeration).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration
+    name: Enumeration
+    nameWithType: Enumeration
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<T>.Equals
+    fullName: System.IEquatable<T>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of T).Equals
+    fullName: System.IEquatable(Of T).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IEquatable{Catalyst.Abstractions.Enumerator.Enumeration}
+  commentId: T:System.IEquatable{Catalyst.Abstractions.Enumerator.Enumeration}
+  parent: System
+  definition: System.IEquatable`1
+  name: IEquatable<Enumeration>
+  nameWithType: IEquatable<Enumeration>
+  fullName: System.IEquatable<Catalyst.Abstractions.Enumerator.Enumeration>
+  nameWithType.vb: IEquatable(Of Enumeration)
+  fullName.vb: System.IEquatable(Of Catalyst.Abstractions.Enumerator.Enumeration)
+  name.vb: IEquatable(Of Enumeration)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration
+    name: Enumeration
+    nameWithType: Enumeration
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration
+    name: Enumeration
+    nameWithType: Enumeration
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration.Name*
+  commentId: Overload:Catalyst.Abstractions.Enumerator.IEnumeration.Name
+  name: Name
+  nameWithType: IEnumeration.Name
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration.Id*
+  commentId: Overload:Catalyst.Abstractions.Enumerator.IEnumeration.Id
+  name: Id
+  nameWithType: IEnumeration.Id
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration.Id
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration.ToString*
+  commentId: Overload:Catalyst.Abstractions.Enumerator.IEnumeration.ToString
+  name: ToString
+  nameWithType: IEnumeration.ToString
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration.ToString
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration.Equals*
+  commentId: Overload:Catalyst.Abstractions.Enumerator.IEnumeration.Equals
+  name: Equals
+  nameWithType: IEnumeration.Equals
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration.Equals
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration.GetHashCode*
+  commentId: Overload:Catalyst.Abstractions.Enumerator.IEnumeration.GetHashCode
+  name: GetHashCode
+  nameWithType: IEnumeration.GetHashCode
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration.GetHashCode

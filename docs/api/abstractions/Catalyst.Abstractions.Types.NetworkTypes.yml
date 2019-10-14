@@ -1,0 +1,837 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Types.NetworkTypes
+  commentId: T:Catalyst.Abstractions.Types.NetworkTypes
+  id: NetworkTypes
+  parent: Catalyst.Abstractions.Types
+  children:
+  - Catalyst.Abstractions.Types.NetworkTypes.Dev
+  - Catalyst.Abstractions.Types.NetworkTypes.Main
+  - Catalyst.Abstractions.Types.NetworkTypes.Test
+  langs:
+  - csharp
+  - vb
+  name: NetworkTypes
+  nameWithType: NetworkTypes
+  fullName: Catalyst.Abstractions.Types.NetworkTypes
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Types/NetworkTypes.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: NetworkTypes
+    path: ../src/Catalyst.Abstractions/Types/NetworkTypes.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Types
+  syntax:
+    content: 'public class NetworkTypes : Enumeration, IEnumeration, IEquatable<Enumeration>'
+    content.vb: >-
+      Public Class NetworkTypes
+
+          Inherits Enumeration
+
+          Implements IEnumeration, IEquatable(Of Enumeration)
+  inheritance:
+  - System.Object
+  - Catalyst.Abstractions.Enumerator.Enumeration
+  implements:
+  - Catalyst.Abstractions.Enumerator.IEnumeration
+  - System.IEquatable{Catalyst.Abstractions.Enumerator.Enumeration}
+  inheritedMembers:
+  - Catalyst.Abstractions.Enumerator.Enumeration.Name
+  - Catalyst.Abstractions.Enumerator.Enumeration.Id
+  - Catalyst.Abstractions.Enumerator.Enumeration.ToString
+  - Catalyst.Abstractions.Enumerator.Enumeration.TryParse``1(System.String,{T}@,System.StringComparison)
+  - Catalyst.Abstractions.Enumerator.Enumeration.Parse``1(System.String,System.StringComparison)
+  - Catalyst.Abstractions.Enumerator.Enumeration.GetAll``1
+  - Catalyst.Abstractions.Enumerator.Enumeration.Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+  - Catalyst.Abstractions.Enumerator.Enumeration.Equals(System.Object)
+  - Catalyst.Abstractions.Enumerator.Enumeration.GetHashCode
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Abstractions.Types.NetworkTypes.Main
+  commentId: F:Catalyst.Abstractions.Types.NetworkTypes.Main
+  id: Main
+  parent: Catalyst.Abstractions.Types.NetworkTypes
+  langs:
+  - csharp
+  - vb
+  name: Main
+  nameWithType: NetworkTypes.Main
+  fullName: Catalyst.Abstractions.Types.NetworkTypes.Main
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Types/NetworkTypes.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Main
+    path: ../src/Catalyst.Abstractions/Types/NetworkTypes.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Types
+  syntax:
+    content: public static readonly NetworkTypes Main
+    return:
+      type: Catalyst.Abstractions.Types.NetworkTypes
+    content.vb: Public Shared ReadOnly Main As NetworkTypes
+  modifiers.csharp:
+  - public
+  - static
+  - readonly
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Abstractions.Types.NetworkTypes.Test
+  commentId: F:Catalyst.Abstractions.Types.NetworkTypes.Test
+  id: Test
+  parent: Catalyst.Abstractions.Types.NetworkTypes
+  langs:
+  - csharp
+  - vb
+  name: Test
+  nameWithType: NetworkTypes.Test
+  fullName: Catalyst.Abstractions.Types.NetworkTypes.Test
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Types/NetworkTypes.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Test
+    path: ../src/Catalyst.Abstractions/Types/NetworkTypes.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Types
+  syntax:
+    content: public static readonly NetworkTypes Test
+    return:
+      type: Catalyst.Abstractions.Types.NetworkTypes
+    content.vb: Public Shared ReadOnly Test As NetworkTypes
+  modifiers.csharp:
+  - public
+  - static
+  - readonly
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Abstractions.Types.NetworkTypes.Dev
+  commentId: F:Catalyst.Abstractions.Types.NetworkTypes.Dev
+  id: Dev
+  parent: Catalyst.Abstractions.Types.NetworkTypes
+  langs:
+  - csharp
+  - vb
+  name: Dev
+  nameWithType: NetworkTypes.Dev
+  fullName: Catalyst.Abstractions.Types.NetworkTypes.Dev
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Types/NetworkTypes.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dev
+    path: ../src/Catalyst.Abstractions/Types/NetworkTypes.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Types
+  syntax:
+    content: public static readonly NetworkTypes Dev
+    return:
+      type: Catalyst.Abstractions.Types.NetworkTypes
+    content.vb: Public Shared ReadOnly Dev As NetworkTypes
+  modifiers.csharp:
+  - public
+  - static
+  - readonly
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.Types
+  commentId: N:Catalyst.Abstractions.Types
+  name: Catalyst.Abstractions.Types
+  nameWithType: Catalyst.Abstractions.Types
+  fullName: Catalyst.Abstractions.Types
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Enumerator.Enumeration
+  commentId: T:Catalyst.Abstractions.Enumerator.Enumeration
+  parent: Catalyst.Abstractions.Enumerator
+  name: Enumeration
+  nameWithType: Enumeration
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration
+- uid: Catalyst.Abstractions.Enumerator.IEnumeration
+  commentId: T:Catalyst.Abstractions.Enumerator.IEnumeration
+  parent: Catalyst.Abstractions.Enumerator
+  name: IEnumeration
+  nameWithType: IEnumeration
+  fullName: Catalyst.Abstractions.Enumerator.IEnumeration
+- uid: System.IEquatable{Catalyst.Abstractions.Enumerator.Enumeration}
+  commentId: T:System.IEquatable{Catalyst.Abstractions.Enumerator.Enumeration}
+  parent: System
+  definition: System.IEquatable`1
+  name: IEquatable<Enumeration>
+  nameWithType: IEquatable<Enumeration>
+  fullName: System.IEquatable<Catalyst.Abstractions.Enumerator.Enumeration>
+  nameWithType.vb: IEquatable(Of Enumeration)
+  fullName.vb: System.IEquatable(Of Catalyst.Abstractions.Enumerator.Enumeration)
+  name.vb: IEquatable(Of Enumeration)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration
+    name: Enumeration
+    nameWithType: Enumeration
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration
+    name: Enumeration
+    nameWithType: Enumeration
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Enumerator.Enumeration.Name
+  commentId: P:Catalyst.Abstractions.Enumerator.Enumeration.Name
+  parent: Catalyst.Abstractions.Enumerator.Enumeration
+  name: Name
+  nameWithType: Enumeration.Name
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration.Name
+- uid: Catalyst.Abstractions.Enumerator.Enumeration.Id
+  commentId: P:Catalyst.Abstractions.Enumerator.Enumeration.Id
+  parent: Catalyst.Abstractions.Enumerator.Enumeration
+  name: Id
+  nameWithType: Enumeration.Id
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration.Id
+- uid: Catalyst.Abstractions.Enumerator.Enumeration.ToString
+  commentId: M:Catalyst.Abstractions.Enumerator.Enumeration.ToString
+  parent: Catalyst.Abstractions.Enumerator.Enumeration
+  name: ToString()
+  nameWithType: Enumeration.ToString()
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration.ToString()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.ToString
+    name: ToString
+    nameWithType: Enumeration.ToString
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.ToString
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.ToString
+    name: ToString
+    nameWithType: Enumeration.ToString
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.ToString
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Enumerator.Enumeration.TryParse``1(System.String,{T}@,System.StringComparison)
+  commentId: M:Catalyst.Abstractions.Enumerator.Enumeration.TryParse``1(System.String,``0@,System.StringComparison)
+  parent: Catalyst.Abstractions.Enumerator.Enumeration
+  definition: Catalyst.Abstractions.Enumerator.Enumeration.TryParse``1(System.String,``0@,System.StringComparison)
+  name: TryParse<T>(String, T, StringComparison)
+  nameWithType: Enumeration.TryParse<T>(String, T, StringComparison)
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration.TryParse<T>(System.String, T, System.StringComparison)
+  nameWithType.vb: Enumeration.TryParse(Of T)(String, T, StringComparison)
+  fullName.vb: Catalyst.Abstractions.Enumerator.Enumeration.TryParse(Of T)(System.String, T, System.StringComparison)
+  name.vb: TryParse(Of T)(String, T, StringComparison)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.TryParse``1(System.String,``0@,System.StringComparison)
+    name: TryParse<T>
+    nameWithType: Enumeration.TryParse<T>
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.TryParse<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.StringComparison
+    name: StringComparison
+    nameWithType: StringComparison
+    fullName: System.StringComparison
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.TryParse``1(System.String,``0@,System.StringComparison)
+    name: TryParse(Of T)
+    nameWithType: Enumeration.TryParse(Of T)
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.TryParse(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.StringComparison
+    name: StringComparison
+    nameWithType: StringComparison
+    fullName: System.StringComparison
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Enumerator.Enumeration.Parse``1(System.String,System.StringComparison)
+  commentId: M:Catalyst.Abstractions.Enumerator.Enumeration.Parse``1(System.String,System.StringComparison)
+  parent: Catalyst.Abstractions.Enumerator.Enumeration
+  isExternal: true
+  name: Parse<T>(String, StringComparison)
+  nameWithType: Enumeration.Parse<T>(String, StringComparison)
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration.Parse<T>(System.String, System.StringComparison)
+  nameWithType.vb: Enumeration.Parse(Of T)(String, StringComparison)
+  fullName.vb: Catalyst.Abstractions.Enumerator.Enumeration.Parse(Of T)(System.String, System.StringComparison)
+  name.vb: Parse(Of T)(String, StringComparison)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.Parse``1(System.String,System.StringComparison)
+    name: Parse<T>
+    nameWithType: Enumeration.Parse<T>
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.Parse<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.StringComparison
+    name: StringComparison
+    nameWithType: StringComparison
+    fullName: System.StringComparison
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.Parse``1(System.String,System.StringComparison)
+    name: Parse(Of T)
+    nameWithType: Enumeration.Parse(Of T)
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.Parse(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.StringComparison
+    name: StringComparison
+    nameWithType: StringComparison
+    fullName: System.StringComparison
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Enumerator.Enumeration.GetAll``1
+  commentId: M:Catalyst.Abstractions.Enumerator.Enumeration.GetAll``1
+  parent: Catalyst.Abstractions.Enumerator.Enumeration
+  name: GetAll<T>()
+  nameWithType: Enumeration.GetAll<T>()
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration.GetAll<T>()
+  nameWithType.vb: Enumeration.GetAll(Of T)()
+  fullName.vb: Catalyst.Abstractions.Enumerator.Enumeration.GetAll(Of T)()
+  name.vb: GetAll(Of T)()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.GetAll``1
+    name: GetAll<T>
+    nameWithType: Enumeration.GetAll<T>
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.GetAll<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.GetAll``1
+    name: GetAll(Of T)
+    nameWithType: Enumeration.GetAll(Of T)
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.GetAll(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Enumerator.Enumeration.Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+  commentId: M:Catalyst.Abstractions.Enumerator.Enumeration.Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+  parent: Catalyst.Abstractions.Enumerator.Enumeration
+  name: Equals(Enumeration)
+  nameWithType: Enumeration.Equals(Enumeration)
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration.Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+    name: Equals
+    nameWithType: Enumeration.Equals
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.Equals
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration
+    name: Enumeration
+    nameWithType: Enumeration
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.Equals(Catalyst.Abstractions.Enumerator.Enumeration)
+    name: Equals
+    nameWithType: Enumeration.Equals
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.Equals
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration
+    name: Enumeration
+    nameWithType: Enumeration
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Enumerator.Enumeration.Equals(System.Object)
+  commentId: M:Catalyst.Abstractions.Enumerator.Enumeration.Equals(System.Object)
+  parent: Catalyst.Abstractions.Enumerator.Enumeration
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Enumeration.Equals(Object)
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration.Equals(System.Object)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.Equals(System.Object)
+    name: Equals
+    nameWithType: Enumeration.Equals
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.Equals
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.Equals(System.Object)
+    name: Equals
+    nameWithType: Enumeration.Equals
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.Equals
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Enumerator.Enumeration.GetHashCode
+  commentId: M:Catalyst.Abstractions.Enumerator.Enumeration.GetHashCode
+  parent: Catalyst.Abstractions.Enumerator.Enumeration
+  name: GetHashCode()
+  nameWithType: Enumeration.GetHashCode()
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration.GetHashCode()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.GetHashCode
+    name: GetHashCode
+    nameWithType: Enumeration.GetHashCode
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.GetHashCode
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.GetHashCode
+    name: GetHashCode
+    nameWithType: Enumeration.GetHashCode
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.GetHashCode
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Enumerator
+  commentId: N:Catalyst.Abstractions.Enumerator
+  name: Catalyst.Abstractions.Enumerator
+  nameWithType: Catalyst.Abstractions.Enumerator
+  fullName: Catalyst.Abstractions.Enumerator
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Enumerator.Enumeration.TryParse``1(System.String,``0@,System.StringComparison)
+  commentId: M:Catalyst.Abstractions.Enumerator.Enumeration.TryParse``1(System.String,``0@,System.StringComparison)
+  isExternal: true
+  name: TryParse<T>(String, T, StringComparison)
+  nameWithType: Enumeration.TryParse<T>(String, T, StringComparison)
+  fullName: Catalyst.Abstractions.Enumerator.Enumeration.TryParse<T>(System.String, T, System.StringComparison)
+  nameWithType.vb: Enumeration.TryParse(Of T)(String, T, StringComparison)
+  fullName.vb: Catalyst.Abstractions.Enumerator.Enumeration.TryParse(Of T)(System.String, T, System.StringComparison)
+  name.vb: TryParse(Of T)(String, T, StringComparison)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.TryParse``1(System.String,``0@,System.StringComparison)
+    name: TryParse<T>
+    nameWithType: Enumeration.TryParse<T>
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.TryParse<T>
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.StringComparison
+    name: StringComparison
+    nameWithType: StringComparison
+    fullName: System.StringComparison
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Enumerator.Enumeration.TryParse``1(System.String,``0@,System.StringComparison)
+    name: TryParse(Of T)
+    nameWithType: Enumeration.TryParse(Of T)
+    fullName: Catalyst.Abstractions.Enumerator.Enumeration.TryParse(Of T)
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.StringComparison
+    name: StringComparison
+    nameWithType: StringComparison
+    fullName: System.StringComparison
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Types.NetworkTypes
+  commentId: T:Catalyst.Abstractions.Types.NetworkTypes
+  parent: Catalyst.Abstractions.Types
+  name: NetworkTypes
+  nameWithType: NetworkTypes
+  fullName: Catalyst.Abstractions.Types.NetworkTypes

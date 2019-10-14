@@ -1,0 +1,668 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Types.Byte64
+  commentId: T:Catalyst.Abstractions.Types.Byte64
+  id: Byte64
+  parent: Catalyst.Abstractions.Types
+  children:
+  - Catalyst.Abstractions.Types.Byte64.#ctor
+  - Catalyst.Abstractions.Types.Byte64.#ctor(System.Byte[])
+  - Catalyst.Abstractions.Types.Byte64.Size
+  langs:
+  - csharp
+  - vb
+  name: Byte64
+  nameWithType: Byte64
+  fullName: Catalyst.Abstractions.Types.Byte64
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Types/Byte64.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Byte64
+    path: ../src/Catalyst.Abstractions/Types/Byte64.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Types
+  syntax:
+    content: 'public class Byte64 : FixedSizeBytes<Byte64>'
+    content.vb: >-
+      Public Class Byte64
+
+          Inherits FixedSizeBytes(Of Byte64)
+  inheritance:
+  - System.Object
+  - Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}
+  inheritedMembers:
+  - Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}.RawBytes
+  - Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}.RandomBytes
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Abstractions.Types.Byte64.Size
+  commentId: P:Catalyst.Abstractions.Types.Byte64.Size
+  id: Size
+  parent: Catalyst.Abstractions.Types.Byte64
+  langs:
+  - csharp
+  - vb
+  name: Size
+  nameWithType: Byte64.Size
+  fullName: Catalyst.Abstractions.Types.Byte64.Size
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Types/Byte64.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Size
+    path: ../src/Catalyst.Abstractions/Types/Byte64.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Types
+  syntax:
+    content: protected override sealed int Size { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Protected NotOverridable Overrides ReadOnly Property Size As Integer
+  overridden: Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}.Size
+  overload: Catalyst.Abstractions.Types.Byte64.Size*
+  modifiers.csharp:
+  - protected
+  - override
+  - sealed
+  - get
+  modifiers.vb:
+  - Protected
+  - Overrides
+  - NotOverridable
+  - ReadOnly
+- uid: Catalyst.Abstractions.Types.Byte64.#ctor
+  commentId: M:Catalyst.Abstractions.Types.Byte64.#ctor
+  id: '#ctor'
+  parent: Catalyst.Abstractions.Types.Byte64
+  langs:
+  - csharp
+  - vb
+  name: Byte64()
+  nameWithType: Byte64.Byte64()
+  fullName: Catalyst.Abstractions.Types.Byte64.Byte64()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Types/Byte64.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Abstractions/Types/Byte64.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Types
+  syntax:
+    content: public Byte64()
+    content.vb: Public Sub New
+  overload: Catalyst.Abstractions.Types.Byte64.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Abstractions.Types.Byte64.#ctor(System.Byte[])
+  commentId: M:Catalyst.Abstractions.Types.Byte64.#ctor(System.Byte[])
+  id: '#ctor(System.Byte[])'
+  parent: Catalyst.Abstractions.Types.Byte64
+  langs:
+  - csharp
+  - vb
+  name: Byte64(Byte[])
+  nameWithType: Byte64.Byte64(Byte[])
+  fullName: Catalyst.Abstractions.Types.Byte64.Byte64(System.Byte[])
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Types/Byte64.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Abstractions/Types/Byte64.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Types
+  syntax:
+    content: public Byte64(byte[] rawBytes)
+    parameters:
+    - id: rawBytes
+      type: System.Byte[]
+    content.vb: Public Sub New(rawBytes As Byte())
+  overload: Catalyst.Abstractions.Types.Byte64.#ctor*
+  nameWithType.vb: Byte64.Byte64(Byte())
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Abstractions.Types.Byte64.Byte64(System.Byte())
+  name.vb: Byte64(Byte())
+references:
+- uid: Catalyst.Abstractions.Types
+  commentId: N:Catalyst.Abstractions.Types
+  name: Catalyst.Abstractions.Types
+  nameWithType: Catalyst.Abstractions.Types
+  fullName: Catalyst.Abstractions.Types
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}
+  commentId: T:Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}
+  parent: Catalyst.Abstractions.Types
+  definition: Catalyst.Abstractions.Types.FixedSizeBytes`1
+  name: FixedSizeBytes<Byte64>
+  nameWithType: FixedSizeBytes<Byte64>
+  fullName: Catalyst.Abstractions.Types.FixedSizeBytes<Catalyst.Abstractions.Types.Byte64>
+  nameWithType.vb: FixedSizeBytes(Of Byte64)
+  fullName.vb: Catalyst.Abstractions.Types.FixedSizeBytes(Of Catalyst.Abstractions.Types.Byte64)
+  name.vb: FixedSizeBytes(Of Byte64)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Types.FixedSizeBytes`1
+    name: FixedSizeBytes
+    nameWithType: FixedSizeBytes
+    fullName: Catalyst.Abstractions.Types.FixedSizeBytes
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.Types.Byte64
+    name: Byte64
+    nameWithType: Byte64
+    fullName: Catalyst.Abstractions.Types.Byte64
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Types.FixedSizeBytes`1
+    name: FixedSizeBytes
+    nameWithType: FixedSizeBytes
+    fullName: Catalyst.Abstractions.Types.FixedSizeBytes
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.Types.Byte64
+    name: Byte64
+    nameWithType: Byte64
+    fullName: Catalyst.Abstractions.Types.Byte64
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}.RawBytes
+  commentId: P:Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}.RawBytes
+  parent: Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}
+  definition: Catalyst.Abstractions.Types.FixedSizeBytes`1.RawBytes
+  name: RawBytes
+  nameWithType: FixedSizeBytes<Byte64>.RawBytes
+  fullName: Catalyst.Abstractions.Types.FixedSizeBytes<Catalyst.Abstractions.Types.Byte64>.RawBytes
+  nameWithType.vb: FixedSizeBytes(Of Byte64).RawBytes
+  fullName.vb: Catalyst.Abstractions.Types.FixedSizeBytes(Of Catalyst.Abstractions.Types.Byte64).RawBytes
+- uid: Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}.RandomBytes
+  commentId: M:Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}.RandomBytes
+  parent: Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}
+  definition: Catalyst.Abstractions.Types.FixedSizeBytes`1.RandomBytes
+  name: RandomBytes()
+  nameWithType: FixedSizeBytes<Byte64>.RandomBytes()
+  fullName: Catalyst.Abstractions.Types.FixedSizeBytes<Catalyst.Abstractions.Types.Byte64>.RandomBytes()
+  nameWithType.vb: FixedSizeBytes(Of Byte64).RandomBytes()
+  fullName.vb: Catalyst.Abstractions.Types.FixedSizeBytes(Of Catalyst.Abstractions.Types.Byte64).RandomBytes()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Types.FixedSizeBytes`1.RandomBytes
+    name: RandomBytes
+    nameWithType: FixedSizeBytes<Byte64>.RandomBytes
+    fullName: Catalyst.Abstractions.Types.FixedSizeBytes<Catalyst.Abstractions.Types.Byte64>.RandomBytes
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Types.FixedSizeBytes`1.RandomBytes
+    name: RandomBytes
+    nameWithType: FixedSizeBytes(Of Byte64).RandomBytes
+    fullName: Catalyst.Abstractions.Types.FixedSizeBytes(Of Catalyst.Abstractions.Types.Byte64).RandomBytes
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Types.FixedSizeBytes`1
+  commentId: T:Catalyst.Abstractions.Types.FixedSizeBytes`1
+  name: FixedSizeBytes<T>
+  nameWithType: FixedSizeBytes<T>
+  fullName: Catalyst.Abstractions.Types.FixedSizeBytes<T>
+  nameWithType.vb: FixedSizeBytes(Of T)
+  fullName.vb: Catalyst.Abstractions.Types.FixedSizeBytes(Of T)
+  name.vb: FixedSizeBytes(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Types.FixedSizeBytes`1
+    name: FixedSizeBytes
+    nameWithType: FixedSizeBytes
+    fullName: Catalyst.Abstractions.Types.FixedSizeBytes
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Types.FixedSizeBytes`1
+    name: FixedSizeBytes
+    nameWithType: FixedSizeBytes
+    fullName: Catalyst.Abstractions.Types.FixedSizeBytes
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Types.FixedSizeBytes`1.RawBytes
+  commentId: P:Catalyst.Abstractions.Types.FixedSizeBytes`1.RawBytes
+  name: RawBytes
+  nameWithType: FixedSizeBytes<T>.RawBytes
+  fullName: Catalyst.Abstractions.Types.FixedSizeBytes<T>.RawBytes
+  nameWithType.vb: FixedSizeBytes(Of T).RawBytes
+  fullName.vb: Catalyst.Abstractions.Types.FixedSizeBytes(Of T).RawBytes
+- uid: Catalyst.Abstractions.Types.FixedSizeBytes`1.RandomBytes
+  commentId: M:Catalyst.Abstractions.Types.FixedSizeBytes`1.RandomBytes
+  name: RandomBytes()
+  nameWithType: FixedSizeBytes<T>.RandomBytes()
+  fullName: Catalyst.Abstractions.Types.FixedSizeBytes<T>.RandomBytes()
+  nameWithType.vb: FixedSizeBytes(Of T).RandomBytes()
+  fullName.vb: Catalyst.Abstractions.Types.FixedSizeBytes(Of T).RandomBytes()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Types.FixedSizeBytes`1.RandomBytes
+    name: RandomBytes
+    nameWithType: FixedSizeBytes<T>.RandomBytes
+    fullName: Catalyst.Abstractions.Types.FixedSizeBytes<T>.RandomBytes
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Types.FixedSizeBytes`1.RandomBytes
+    name: RandomBytes
+    nameWithType: FixedSizeBytes(Of T).RandomBytes
+    fullName: Catalyst.Abstractions.Types.FixedSizeBytes(Of T).RandomBytes
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}.Size
+  commentId: P:Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}.Size
+  parent: Catalyst.Abstractions.Types.FixedSizeBytes{Catalyst.Abstractions.Types.Byte64}
+  definition: Catalyst.Abstractions.Types.FixedSizeBytes`1.Size
+  name: Size
+  nameWithType: FixedSizeBytes<Byte64>.Size
+  fullName: Catalyst.Abstractions.Types.FixedSizeBytes<Catalyst.Abstractions.Types.Byte64>.Size
+  nameWithType.vb: FixedSizeBytes(Of Byte64).Size
+  fullName.vb: Catalyst.Abstractions.Types.FixedSizeBytes(Of Catalyst.Abstractions.Types.Byte64).Size
+- uid: Catalyst.Abstractions.Types.Byte64.Size*
+  commentId: Overload:Catalyst.Abstractions.Types.Byte64.Size
+  name: Size
+  nameWithType: Byte64.Size
+  fullName: Catalyst.Abstractions.Types.Byte64.Size
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Abstractions.Types.FixedSizeBytes`1.Size
+  commentId: P:Catalyst.Abstractions.Types.FixedSizeBytes`1.Size
+  name: Size
+  nameWithType: FixedSizeBytes<T>.Size
+  fullName: Catalyst.Abstractions.Types.FixedSizeBytes<T>.Size
+  nameWithType.vb: FixedSizeBytes(Of T).Size
+  fullName.vb: Catalyst.Abstractions.Types.FixedSizeBytes(Of T).Size
+- uid: Catalyst.Abstractions.Types.Byte64.#ctor*
+  commentId: Overload:Catalyst.Abstractions.Types.Byte64.#ctor
+  name: Byte64
+  nameWithType: Byte64.Byte64
+  fullName: Catalyst.Abstractions.Types.Byte64.Byte64
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()

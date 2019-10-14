@@ -1,0 +1,109 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Hashing.HashingModule
+  commentId: T:Catalyst.Core.Modules.Hashing.HashingModule
+  id: HashingModule
+  parent: Catalyst.Core.Modules.Hashing
+  children:
+  - Catalyst.Core.Modules.Hashing.HashingModule.Load(ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: HashingModule
+  nameWithType: HashingModule
+  fullName: Catalyst.Core.Modules.Hashing.HashingModule
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashingModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: HashingModule
+    path: ../src/Catalyst.Core.Modules.Hashing/HashingModule.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: 'public class HashingModule : Module'
+    content.vb: >-
+      Public Class HashingModule
+
+          Inherits
+
+
+
+           Module
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Hashing.HashingModule.Load(ContainerBuilder)
+  commentId: M:Catalyst.Core.Modules.Hashing.HashingModule.Load(ContainerBuilder)
+  id: Load(ContainerBuilder)
+  parent: Catalyst.Core.Modules.Hashing.HashingModule
+  langs:
+  - csharp
+  - vb
+  name: Load(ContainerBuilder)
+  nameWithType: HashingModule.Load(ContainerBuilder)
+  fullName: Catalyst.Core.Modules.Hashing.HashingModule.Load(ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Hashing/HashingModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Load
+    path: ../src/Catalyst.Core.Modules.Hashing/HashingModule.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Modules.Hashing
+  namespace: Catalyst.Core.Modules.Hashing
+  syntax:
+    content: protected override void Load(ContainerBuilder builder)
+    parameters:
+    - id: builder
+      type: ContainerBuilder
+    content.vb: Protected Overrides Sub Load(builder As ContainerBuilder)
+  overload: Catalyst.Core.Modules.Hashing.HashingModule.Load*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Modules.Hashing
+  commentId: N:Catalyst.Core.Modules.Hashing
+  name: Catalyst.Core.Modules.Hashing
+  nameWithType: Catalyst.Core.Modules.Hashing
+  fullName: Catalyst.Core.Modules.Hashing
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Hashing.HashingModule.Load*
+  commentId: Overload:Catalyst.Core.Modules.Hashing.HashingModule.Load
+  name: Load
+  nameWithType: HashingModule.Load
+  fullName: Catalyst.Core.Modules.Hashing.HashingModule.Load
+- uid: ContainerBuilder
+  commentId: '!:ContainerBuilder'
+  isExternal: true
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: ContainerBuilder

@@ -1,0 +1,507 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey
+  commentId: T:Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey
+  id: PrivateKey
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+  children:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.Bytes
+  - Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.GetPublicKey
+  langs:
+  - csharp
+  - vb
+  name: PrivateKey
+  nameWithType: PrivateKey
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/Types/PrivateKey.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PrivateKey
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/Types/PrivateKey.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+  syntax:
+    content: 'public class PrivateKey : IPrivateKey'
+    content.vb: >-
+      Public Class PrivateKey
+
+          Implements IPrivateKey
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Cryptography.IPrivateKey
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.Bytes
+  commentId: P:Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.Bytes
+  id: Bytes
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey
+  langs:
+  - csharp
+  - vb
+  name: Bytes
+  nameWithType: PrivateKey.Bytes
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.Bytes
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/Types/PrivateKey.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Bytes
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/Types/PrivateKey.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+  syntax:
+    content: public byte[] Bytes { get; }
+    parameters: []
+    return:
+      type: System.Byte[]
+    content.vb: Public ReadOnly Property Bytes As Byte()
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.Bytes*
+  implements:
+  - Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.GetPublicKey
+  commentId: M:Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.GetPublicKey
+  id: GetPublicKey
+  parent: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey
+  langs:
+  - csharp
+  - vb
+  name: GetPublicKey()
+  nameWithType: PrivateKey.GetPublicKey()
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.GetPublicKey()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Cryptography.BulletProofs/Types/PrivateKey.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetPublicKey
+    path: ../src/Catalyst.Core.Modules.Cryptography.BulletProofs/Types/PrivateKey.cs
+    startLine: 42
+  assemblies:
+  - Catalyst.Core.Modules.Cryptography.BulletProofs
+  namespace: Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+  syntax:
+    content: public IPublicKey GetPublicKey()
+    return:
+      type: Catalyst.Abstractions.Cryptography.IPublicKey
+    content.vb: Public Function GetPublicKey As IPublicKey
+  overload: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.GetPublicKey*
+  implements:
+  - Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+  commentId: N:Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+  name: Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+  nameWithType: Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Cryptography.IPrivateKey
+  commentId: T:Catalyst.Abstractions.Cryptography.IPrivateKey
+  parent: Catalyst.Abstractions.Cryptography
+  name: IPrivateKey
+  nameWithType: IPrivateKey
+  fullName: Catalyst.Abstractions.Cryptography.IPrivateKey
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Cryptography
+  commentId: N:Catalyst.Abstractions.Cryptography
+  name: Catalyst.Abstractions.Cryptography
+  nameWithType: Catalyst.Abstractions.Cryptography
+  fullName: Catalyst.Abstractions.Cryptography
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.Bytes*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.Bytes
+  name: Bytes
+  nameWithType: PrivateKey.Bytes
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.Bytes
+- uid: Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes
+  commentId: P:Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes
+  parent: Catalyst.Abstractions.Cryptography.IPrivateKey
+  name: Bytes
+  nameWithType: IPrivateKey.Bytes
+  fullName: Catalyst.Abstractions.Cryptography.IPrivateKey.Bytes
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.GetPublicKey*
+  commentId: Overload:Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.GetPublicKey
+  name: GetPublicKey
+  nameWithType: PrivateKey.GetPublicKey
+  fullName: Catalyst.Core.Modules.Cryptography.BulletProofs.Types.PrivateKey.GetPublicKey
+- uid: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+  commentId: M:Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+  parent: Catalyst.Abstractions.Cryptography.IPrivateKey
+  name: GetPublicKey()
+  nameWithType: IPrivateKey.GetPublicKey()
+  fullName: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+    name: GetPublicKey
+    nameWithType: IPrivateKey.GetPublicKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+    name: GetPublicKey
+    nameWithType: IPrivateKey.GetPublicKey
+    fullName: Catalyst.Abstractions.Cryptography.IPrivateKey.GetPublicKey
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Cryptography.IPublicKey
+  commentId: T:Catalyst.Abstractions.Cryptography.IPublicKey
+  parent: Catalyst.Abstractions.Cryptography
+  name: IPublicKey
+  nameWithType: IPublicKey
+  fullName: Catalyst.Abstractions.Cryptography.IPublicKey

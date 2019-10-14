@@ -1,0 +1,34 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Util
+  commentId: N:Catalyst.Abstractions.Util
+  id: Catalyst.Abstractions.Util
+  children:
+  - Catalyst.Abstractions.Util.ICancellationTokenProvider
+  - Catalyst.Abstractions.Util.IChangeTokenProvider
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Util
+  nameWithType: Catalyst.Abstractions.Util
+  fullName: Catalyst.Abstractions.Util
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Util.ICancellationTokenProvider
+  commentId: T:Catalyst.Abstractions.Util.ICancellationTokenProvider
+  name: ICancellationTokenProvider
+  nameWithType: ICancellationTokenProvider
+  fullName: Catalyst.Abstractions.Util.ICancellationTokenProvider
+- uid: Catalyst.Abstractions.Util.IChangeTokenProvider
+  commentId: T:Catalyst.Abstractions.Util.IChangeTokenProvider
+  parent: Catalyst.Abstractions.Util
+  name: IChangeTokenProvider
+  nameWithType: IChangeTokenProvider
+  fullName: Catalyst.Abstractions.Util.IChangeTokenProvider
+- uid: Catalyst.Abstractions.Util
+  commentId: N:Catalyst.Abstractions.Util
+  name: Catalyst.Abstractions.Util
+  nameWithType: Catalyst.Abstractions.Util
+  fullName: Catalyst.Abstractions.Util

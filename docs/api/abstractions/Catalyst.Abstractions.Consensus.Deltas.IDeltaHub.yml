@@ -1,0 +1,296 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  id: IDeltaHub
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  children:
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastCandidate(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastFavouriteCandidateDelta(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(Catalyst.Protocol.Deltas.Delta,System.Threading.CancellationToken)
+  langs:
+  - csharp
+  - vb
+  name: IDeltaHub
+  nameWithType: IDeltaHub
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Deltas/IDeltaHub.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IDeltaHub
+    path: ../src/Catalyst.Abstractions/Consensus/Deltas/IDeltaHub.cs
+    startLine: 37
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Deltas
+  summary: "\nFor lack of a better name, this <xref href=\"Catalyst.Abstractions.Consensus.Deltas.IDeltaHub\" data-throw-if-not-resolved=\"false\"></xref> is meant to be the service used to\npublish new candidate deltas, favourite deltas, or publish newly elected deltas\non the Dfs, etc. It is basically the outbound interface between the node and the rest of the\nnetwork, through which all delta building related messages should be broadcast.\n"
+  example: []
+  syntax:
+    content: public interface IDeltaHub
+    content.vb: Public Interface IDeltaHub
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastCandidate(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  commentId: M:Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastCandidate(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  id: BroadcastCandidate(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  parent: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  langs:
+  - csharp
+  - vb
+  name: BroadcastCandidate(CandidateDeltaBroadcast)
+  nameWithType: IDeltaHub.BroadcastCandidate(CandidateDeltaBroadcast)
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastCandidate(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Deltas/IDeltaHub.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BroadcastCandidate
+    path: ../src/Catalyst.Abstractions/Consensus/Deltas/IDeltaHub.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Deltas
+  summary: "\nWhen the node produces a new candidate delta, it should then use this method to trigger\nthe gossiping of the candidate through the network. This should only be called once,\nafter a new candidate has been created, the gossiping functionality is then handled\nby network specific classes.\n"
+  example: []
+  syntax:
+    content: void BroadcastCandidate(CandidateDeltaBroadcast candidate)
+    parameters:
+    - id: candidate
+      type: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+      description: The newly produced candidate.
+    content.vb: Sub BroadcastCandidate(candidate As CandidateDeltaBroadcast)
+  overload: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastCandidate*
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastFavouriteCandidateDelta(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  commentId: M:Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastFavouriteCandidateDelta(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  id: BroadcastFavouriteCandidateDelta(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  parent: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  langs:
+  - csharp
+  - vb
+  name: BroadcastFavouriteCandidateDelta(FavouriteDeltaBroadcast)
+  nameWithType: IDeltaHub.BroadcastFavouriteCandidateDelta(FavouriteDeltaBroadcast)
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastFavouriteCandidateDelta(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Deltas/IDeltaHub.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BroadcastFavouriteCandidateDelta
+    path: ../src/Catalyst.Abstractions/Consensus/Deltas/IDeltaHub.cs
+    startLine: 58
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Deltas
+  summary: "\nWhen the election of the best delta for a given cycle ends, each producer is required to\nsubmit its favourite candidate to the rest of the participants in order for consensus to\nemerge. This function should be called to trigger the broadcasting of the elected best\ncandidate delta for a given cycle.\n"
+  example: []
+  syntax:
+    content: void BroadcastFavouriteCandidateDelta(FavouriteDeltaBroadcast favourite)
+    parameters:
+    - id: favourite
+      type: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+      description: The favourite delta, as produced by this node.
+    content.vb: Sub BroadcastFavouriteCandidateDelta(favourite As FavouriteDeltaBroadcast)
+  overload: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastFavouriteCandidateDelta*
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(Catalyst.Protocol.Deltas.Delta,System.Threading.CancellationToken)
+  commentId: M:Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(Catalyst.Protocol.Deltas.Delta,System.Threading.CancellationToken)
+  id: PublishDeltaToDfsAndBroadcastAddressAsync(Catalyst.Protocol.Deltas.Delta,System.Threading.CancellationToken)
+  parent: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  langs:
+  - csharp
+  - vb
+  name: PublishDeltaToDfsAndBroadcastAddressAsync(Delta, CancellationToken)
+  nameWithType: IDeltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(Delta, CancellationToken)
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(Catalyst.Protocol.Deltas.Delta, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Deltas/IDeltaHub.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PublishDeltaToDfsAndBroadcastAddressAsync
+    path: ../src/Catalyst.Abstractions/Consensus/Deltas/IDeltaHub.cs
+    startLine: 67
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Deltas
+  summary: "\nOnce a delta has been elected, if the node possesses the full content for the elected delta,\nit should then post it on the DFS (if it can&apos;t find it there already) so that the rest of the\nnetwork can retrieve and apply it.\n"
+  example: []
+  syntax:
+    content: Task<Cid> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta, CancellationToken cancellationToken = default(CancellationToken))
+    parameters:
+    - id: delta
+      type: Catalyst.Protocol.Deltas.Delta
+      description: The delta which has been elected for this cycle.
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+      description: A cancellation token allowing to abort the tasks.
+    return:
+      type: System.Threading.Tasks.Task{Cid}
+    content.vb: Function PublishDeltaToDfsAndBroadcastAddressAsync(delta As Delta, cancellationToken As CancellationToken = Nothing) As Task(Of Cid)
+  overload: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.PublishDeltaToDfsAndBroadcastAddressAsync*
+references:
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+  name: IDeltaHub
+  nameWithType: IDeltaHub
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub
+- uid: Catalyst.Abstractions.Consensus.Deltas
+  commentId: N:Catalyst.Abstractions.Consensus.Deltas
+  name: Catalyst.Abstractions.Consensus.Deltas
+  nameWithType: Catalyst.Abstractions.Consensus.Deltas
+  fullName: Catalyst.Abstractions.Consensus.Deltas
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastCandidate*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastCandidate
+  name: BroadcastCandidate
+  nameWithType: IDeltaHub.BroadcastCandidate
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastCandidate
+- uid: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+  commentId: T:Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+  parent: Catalyst.Protocol.Wire
+  name: CandidateDeltaBroadcast
+  nameWithType: CandidateDeltaBroadcast
+  fullName: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+- uid: Catalyst.Protocol.Wire
+  commentId: N:Catalyst.Protocol.Wire
+  name: Catalyst.Protocol.Wire
+  nameWithType: Catalyst.Protocol.Wire
+  fullName: Catalyst.Protocol.Wire
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastFavouriteCandidateDelta*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastFavouriteCandidateDelta
+  name: BroadcastFavouriteCandidateDelta
+  nameWithType: IDeltaHub.BroadcastFavouriteCandidateDelta
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.BroadcastFavouriteCandidateDelta
+- uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  commentId: T:Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  parent: Catalyst.Protocol.Wire
+  name: FavouriteDeltaBroadcast
+  nameWithType: FavouriteDeltaBroadcast
+  fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.PublishDeltaToDfsAndBroadcastAddressAsync*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.PublishDeltaToDfsAndBroadcastAddressAsync
+  name: PublishDeltaToDfsAndBroadcastAddressAsync
+  nameWithType: IDeltaHub.PublishDeltaToDfsAndBroadcastAddressAsync
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHub.PublishDeltaToDfsAndBroadcastAddressAsync
+- uid: Catalyst.Protocol.Deltas.Delta
+  commentId: T:Catalyst.Protocol.Deltas.Delta
+  parent: Catalyst.Protocol.Deltas
+  name: Delta
+  nameWithType: Delta
+  fullName: Catalyst.Protocol.Deltas.Delta
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.Task{Cid}
+  commentId: T:System.Threading.Tasks.Task{Cid}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<Cid>
+  nameWithType: Task<Cid>
+  fullName: System.Threading.Tasks.Task<Cid>
+  nameWithType.vb: Task(Of Cid)
+  fullName.vb: System.Threading.Tasks.Task(Of Cid)
+  name.vb: Task(Of Cid)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Cid
+    name: Cid
+    nameWithType: Cid
+    fullName: Cid
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Cid
+    name: Cid
+    nameWithType: Cid
+    fullName: Cid
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Deltas
+  commentId: N:Catalyst.Protocol.Deltas
+  name: Catalyst.Protocol.Deltas
+  nameWithType: Catalyst.Protocol.Deltas
+  fullName: Catalyst.Protocol.Deltas
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks

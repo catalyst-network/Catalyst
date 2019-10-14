@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Network
+  commentId: N:Catalyst.Abstractions.Network
+  id: Catalyst.Abstractions.Network
+  children:
+  - Catalyst.Abstractions.Network.IDns
+  - Catalyst.Abstractions.Network.InjectableLookupClient
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Network
+  nameWithType: Catalyst.Abstractions.Network
+  fullName: Catalyst.Abstractions.Network
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Network.IDns
+  commentId: T:Catalyst.Abstractions.Network.IDns
+  name: IDns
+  nameWithType: IDns
+  fullName: Catalyst.Abstractions.Network.IDns
+- uid: Catalyst.Abstractions.Network.InjectableLookupClient
+  commentId: T:Catalyst.Abstractions.Network.InjectableLookupClient
+  name: InjectableLookupClient
+  nameWithType: InjectableLookupClient
+  fullName: Catalyst.Abstractions.Network.InjectableLookupClient

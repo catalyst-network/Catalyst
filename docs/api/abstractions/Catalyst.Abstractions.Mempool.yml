@@ -1,0 +1,53 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Mempool
+  commentId: N:Catalyst.Abstractions.Mempool
+  id: Catalyst.Abstractions.Mempool
+  children:
+  - Catalyst.Abstractions.Mempool.IMempool`1
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Mempool
+  nameWithType: Catalyst.Abstractions.Mempool
+  fullName: Catalyst.Abstractions.Mempool
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Mempool.IMempool`1
+  commentId: T:Catalyst.Abstractions.Mempool.IMempool`1
+  name: IMempool<T>
+  nameWithType: IMempool<T>
+  fullName: Catalyst.Abstractions.Mempool.IMempool<T>
+  nameWithType.vb: IMempool(Of T)
+  fullName.vb: Catalyst.Abstractions.Mempool.IMempool(Of T)
+  name.vb: IMempool(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.IMempool`1
+    name: IMempool
+    nameWithType: IMempool
+    fullName: Catalyst.Abstractions.Mempool.IMempool
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.IMempool`1
+    name: IMempool
+    nameWithType: IMempool
+    fullName: Catalyst.Abstractions.Mempool.IMempool
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

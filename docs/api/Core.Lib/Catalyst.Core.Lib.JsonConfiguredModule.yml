@@ -1,0 +1,195 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.JsonConfiguredModule
+  commentId: T:Catalyst.Core.Lib.JsonConfiguredModule
+  id: JsonConfiguredModule
+  parent: Catalyst.Core.Lib
+  children:
+  - Catalyst.Core.Lib.JsonConfiguredModule.#ctor(System.String)
+  - Catalyst.Core.Lib.JsonConfiguredModule.ConfigurationModule
+  - Catalyst.Core.Lib.JsonConfiguredModule.Load(ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: JsonConfiguredModule
+  nameWithType: JsonConfiguredModule
+  fullName: Catalyst.Core.Lib.JsonConfiguredModule
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/JsonConfiguredModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: JsonConfiguredModule
+    path: ../src/Catalyst.Core.Lib/JsonConfiguredModule.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib
+  syntax:
+    content: 'public class JsonConfiguredModule : Module'
+    content.vb: >-
+      Public Class JsonConfiguredModule
+
+          Inherits
+
+
+
+           Module
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.JsonConfiguredModule.ConfigurationModule
+  commentId: F:Catalyst.Core.Lib.JsonConfiguredModule.ConfigurationModule
+  id: ConfigurationModule
+  parent: Catalyst.Core.Lib.JsonConfiguredModule
+  langs:
+  - csharp
+  - vb
+  name: ConfigurationModule
+  nameWithType: JsonConfiguredModule.ConfigurationModule
+  fullName: Catalyst.Core.Lib.JsonConfiguredModule.ConfigurationModule
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/JsonConfiguredModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ConfigurationModule
+    path: ../src/Catalyst.Core.Lib/JsonConfiguredModule.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib
+  syntax:
+    content: protected readonly ConfigurationModule ConfigurationModule
+    return:
+      type: ConfigurationModule
+    content.vb: Protected ReadOnly ConfigurationModule As ConfigurationModule
+  modifiers.csharp:
+  - protected
+  - readonly
+  modifiers.vb:
+  - Protected
+  - ReadOnly
+- uid: Catalyst.Core.Lib.JsonConfiguredModule.#ctor(System.String)
+  commentId: M:Catalyst.Core.Lib.JsonConfiguredModule.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: Catalyst.Core.Lib.JsonConfiguredModule
+  langs:
+  - csharp
+  - vb
+  name: JsonConfiguredModule(String)
+  nameWithType: JsonConfiguredModule.JsonConfiguredModule(String)
+  fullName: Catalyst.Core.Lib.JsonConfiguredModule.JsonConfiguredModule(System.String)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/JsonConfiguredModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/JsonConfiguredModule.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib
+  syntax:
+    content: public JsonConfiguredModule(string configFilePath)
+    parameters:
+    - id: configFilePath
+      type: System.String
+    content.vb: Public Sub New(configFilePath As String)
+  overload: Catalyst.Core.Lib.JsonConfiguredModule.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.JsonConfiguredModule.Load(ContainerBuilder)
+  commentId: M:Catalyst.Core.Lib.JsonConfiguredModule.Load(ContainerBuilder)
+  id: Load(ContainerBuilder)
+  parent: Catalyst.Core.Lib.JsonConfiguredModule
+  langs:
+  - csharp
+  - vb
+  name: Load(ContainerBuilder)
+  nameWithType: JsonConfiguredModule.Load(ContainerBuilder)
+  fullName: Catalyst.Core.Lib.JsonConfiguredModule.Load(ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/JsonConfiguredModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Load
+    path: ../src/Catalyst.Core.Lib/JsonConfiguredModule.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib
+  example: []
+  syntax:
+    content: protected override void Load(ContainerBuilder builder)
+    parameters:
+    - id: builder
+      type: ContainerBuilder
+    content.vb: Protected Overrides Sub Load(builder As ContainerBuilder)
+  overload: Catalyst.Core.Lib.JsonConfiguredModule.Load*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Lib
+  commentId: N:Catalyst.Core.Lib
+  name: Catalyst.Core.Lib
+  nameWithType: Catalyst.Core.Lib
+  fullName: Catalyst.Core.Lib
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ConfigurationModule
+  commentId: '!:ConfigurationModule'
+  isExternal: true
+  name: ConfigurationModule
+  nameWithType: ConfigurationModule
+  fullName: ConfigurationModule
+- uid: Catalyst.Core.Lib.JsonConfiguredModule.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.JsonConfiguredModule.#ctor
+  name: JsonConfiguredModule
+  nameWithType: JsonConfiguredModule.JsonConfiguredModule
+  fullName: Catalyst.Core.Lib.JsonConfiguredModule.JsonConfiguredModule
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.JsonConfiguredModule.Load*
+  commentId: Overload:Catalyst.Core.Lib.JsonConfiguredModule.Load
+  name: Load
+  nameWithType: JsonConfiguredModule.Load
+  fullName: Catalyst.Core.Lib.JsonConfiguredModule.Load
+- uid: ContainerBuilder
+  isExternal: true
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: ContainerBuilder

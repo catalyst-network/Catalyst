@@ -1,0 +1,955 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Ledger.Ledger
+  commentId: T:Catalyst.Core.Modules.Ledger.Ledger
+  id: Ledger
+  parent: Catalyst.Core.Modules.Ledger
+  children:
+  - Catalyst.Core.Modules.Ledger.Ledger.#ctor(Catalyst.Core.Modules.Ledger.Repository.IAccountRepository,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Catalyst.Core.Modules.Ledger.ILedgerSynchroniser,Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument},ILogger)
+  - Catalyst.Core.Modules.Ledger.Ledger.Accounts
+  - Catalyst.Core.Modules.Ledger.Ledger.Dispose
+  - Catalyst.Core.Modules.Ledger.Ledger.Dispose(System.Boolean)
+  - Catalyst.Core.Modules.Ledger.Ledger.IsSynchonising
+  - Catalyst.Core.Modules.Ledger.Ledger.LatestKnownDelta
+  - Catalyst.Core.Modules.Ledger.Ledger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  - Catalyst.Core.Modules.Ledger.Ledger.Update(MultiHash)
+  langs:
+  - csharp
+  - vb
+  name: Ledger
+  nameWithType: Ledger
+  fullName: Catalyst.Core.Modules.Ledger.Ledger
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Ledger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Ledger
+    path: ../src/Catalyst.Core.Modules.Ledger/Ledger.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  summary: "\nThis class represents a ledger and is a collection of accounts and data store.\n"
+  example: []
+  syntax:
+    content: 'public class Ledger : ILedger, IDisposable'
+    content.vb: >-
+      Public Class Ledger
+
+          Implements ILedger, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Core.Modules.Ledger.ILedger
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Ledger.Ledger.Accounts
+  commentId: P:Catalyst.Core.Modules.Ledger.Ledger.Accounts
+  id: Accounts
+  parent: Catalyst.Core.Modules.Ledger.Ledger
+  langs:
+  - csharp
+  - vb
+  name: Accounts
+  nameWithType: Ledger.Accounts
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.Accounts
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Ledger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Accounts
+    path: ../src/Catalyst.Core.Modules.Ledger/Ledger.cs
+    startLine: 49
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  syntax:
+    content: public IAccountRepository Accounts { get; }
+    parameters: []
+    return:
+      type: Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+    content.vb: Public ReadOnly Property Accounts As IAccountRepository
+  overload: Catalyst.Core.Modules.Ledger.Ledger.Accounts*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Ledger.Ledger.LatestKnownDelta
+  commentId: P:Catalyst.Core.Modules.Ledger.Ledger.LatestKnownDelta
+  id: LatestKnownDelta
+  parent: Catalyst.Core.Modules.Ledger.Ledger
+  langs:
+  - csharp
+  - vb
+  name: LatestKnownDelta
+  nameWithType: Ledger.LatestKnownDelta
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.LatestKnownDelta
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Ledger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: LatestKnownDelta
+    path: ../src/Catalyst.Core.Modules.Ledger/Ledger.cs
+    startLine: 58
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  syntax:
+    content: public MultiHash LatestKnownDelta { get; }
+    parameters: []
+    return:
+      type: MultiHash
+    content.vb: Public ReadOnly Property LatestKnownDelta As MultiHash
+  overload: Catalyst.Core.Modules.Ledger.Ledger.LatestKnownDelta*
+  implements:
+  - Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Ledger.Ledger.IsSynchonising
+  commentId: P:Catalyst.Core.Modules.Ledger.Ledger.IsSynchonising
+  id: IsSynchonising
+  parent: Catalyst.Core.Modules.Ledger.Ledger
+  langs:
+  - csharp
+  - vb
+  name: IsSynchonising
+  nameWithType: Ledger.IsSynchonising
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.IsSynchonising
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Ledger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IsSynchonising
+    path: ../src/Catalyst.Core.Modules.Ledger/Ledger.cs
+    startLine: 59
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  syntax:
+    content: public bool IsSynchonising { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsSynchonising As Boolean
+  overload: Catalyst.Core.Modules.Ledger.Ledger.IsSynchonising*
+  implements:
+  - Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Ledger.Ledger.#ctor(Catalyst.Core.Modules.Ledger.Repository.IAccountRepository,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Catalyst.Core.Modules.Ledger.ILedgerSynchroniser,Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument},ILogger)
+  commentId: M:Catalyst.Core.Modules.Ledger.Ledger.#ctor(Catalyst.Core.Modules.Ledger.Repository.IAccountRepository,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Catalyst.Core.Modules.Ledger.ILedgerSynchroniser,Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument},ILogger)
+  id: '#ctor(Catalyst.Core.Modules.Ledger.Repository.IAccountRepository,Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Catalyst.Core.Modules.Ledger.ILedgerSynchroniser,Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument},ILogger)'
+  parent: Catalyst.Core.Modules.Ledger.Ledger
+  langs:
+  - csharp
+  - vb
+  name: Ledger(IAccountRepository, IDeltaHashProvider, ILedgerSynchroniser, IMempool<MempoolDocument>, ILogger)
+  nameWithType: Ledger.Ledger(IAccountRepository, IDeltaHashProvider, ILedgerSynchroniser, IMempool<MempoolDocument>, ILogger)
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.Ledger(Catalyst.Core.Modules.Ledger.Repository.IAccountRepository, Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider, Catalyst.Core.Modules.Ledger.ILedgerSynchroniser, Catalyst.Abstractions.Mempool.IMempool<Catalyst.Core.Lib.Mempool.Documents.MempoolDocument>, ILogger)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Ledger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Ledger/Ledger.cs
+    startLine: 61
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  syntax:
+    content: public Ledger(IAccountRepository accounts, IDeltaHashProvider deltaHashProvider, ILedgerSynchroniser synchroniser, IMempool<MempoolDocument> mempool, ILogger logger)
+    parameters:
+    - id: accounts
+      type: Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+    - id: deltaHashProvider
+      type: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+    - id: synchroniser
+      type: Catalyst.Core.Modules.Ledger.ILedgerSynchroniser
+    - id: mempool
+      type: Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+    - id: logger
+      type: ILogger
+    content.vb: Public Sub New(accounts As IAccountRepository, deltaHashProvider As IDeltaHashProvider, synchroniser As ILedgerSynchroniser, mempool As IMempool(Of MempoolDocument), logger As ILogger)
+  overload: Catalyst.Core.Modules.Ledger.Ledger.#ctor*
+  nameWithType.vb: Ledger.Ledger(IAccountRepository, IDeltaHashProvider, ILedgerSynchroniser, IMempool(Of MempoolDocument), ILogger)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Ledger.Ledger.Ledger(Catalyst.Core.Modules.Ledger.Repository.IAccountRepository, Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider, Catalyst.Core.Modules.Ledger.ILedgerSynchroniser, Catalyst.Abstractions.Mempool.IMempool(Of Catalyst.Core.Lib.Mempool.Documents.MempoolDocument), ILogger)
+  name.vb: Ledger(IAccountRepository, IDeltaHashProvider, ILedgerSynchroniser, IMempool(Of MempoolDocument), ILogger)
+- uid: Catalyst.Core.Modules.Ledger.Ledger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  commentId: M:Catalyst.Core.Modules.Ledger.Ledger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  id: SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  parent: Catalyst.Core.Modules.Ledger.Ledger
+  langs:
+  - csharp
+  - vb
+  name: SaveAccountState(Account)
+  nameWithType: Ledger.SaveAccountState(Account)
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Ledger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: SaveAccountState
+    path: ../src/Catalyst.Core.Modules.Ledger/Ledger.cs
+    startLine: 84
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  example: []
+  syntax:
+    content: public bool SaveAccountState(Account account)
+    parameters:
+    - id: account
+      type: Catalyst.Core.Modules.Ledger.Models.Account
+    return:
+      type: System.Boolean
+    content.vb: Public Function SaveAccountState(account As Account) As Boolean
+  overload: Catalyst.Core.Modules.Ledger.Ledger.SaveAccountState*
+  implements:
+  - Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Ledger.Ledger.Update(MultiHash)
+  commentId: M:Catalyst.Core.Modules.Ledger.Ledger.Update(MultiHash)
+  id: Update(MultiHash)
+  parent: Catalyst.Core.Modules.Ledger.Ledger
+  langs:
+  - csharp
+  - vb
+  name: Update(MultiHash)
+  nameWithType: Ledger.Update(MultiHash)
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.Update(MultiHash)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Ledger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Update
+    path: ../src/Catalyst.Core.Modules.Ledger/Ledger.cs
+    startLine: 101
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  example: []
+  syntax:
+    content: public void Update(MultiHash deltaHash)
+    parameters:
+    - id: deltaHash
+      type: MultiHash
+    content.vb: Public Sub Update(deltaHash As MultiHash)
+  overload: Catalyst.Core.Modules.Ledger.Ledger.Update*
+  implements:
+  - Catalyst.Core.Modules.Ledger.ILedger.Update(MultiHash)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Ledger.Ledger.Dispose(System.Boolean)
+  commentId: M:Catalyst.Core.Modules.Ledger.Ledger.Dispose(System.Boolean)
+  id: Dispose(System.Boolean)
+  parent: Catalyst.Core.Modules.Ledger.Ledger
+  langs:
+  - csharp
+  - vb
+  name: Dispose(Boolean)
+  nameWithType: Ledger.Dispose(Boolean)
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.Dispose(System.Boolean)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Ledger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Modules.Ledger/Ledger.cs
+    startLine: 164
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  syntax:
+    content: protected virtual void Dispose(bool disposing)
+    parameters:
+    - id: disposing
+      type: System.Boolean
+    content.vb: Protected Overridable Sub Dispose(disposing As Boolean)
+  overload: Catalyst.Core.Modules.Ledger.Ledger.Dispose*
+  modifiers.csharp:
+  - protected
+  - virtual
+  modifiers.vb:
+  - Protected
+  - Overridable
+- uid: Catalyst.Core.Modules.Ledger.Ledger.Dispose
+  commentId: M:Catalyst.Core.Modules.Ledger.Ledger.Dispose
+  id: Dispose
+  parent: Catalyst.Core.Modules.Ledger.Ledger
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: Ledger.Dispose()
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Ledger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Modules.Ledger/Ledger.cs
+    startLine: 175
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose
+  overload: Catalyst.Core.Modules.Ledger.Ledger.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.Ledger
+  commentId: N:Catalyst.Core.Modules.Ledger
+  name: Catalyst.Core.Modules.Ledger
+  nameWithType: Catalyst.Core.Modules.Ledger
+  fullName: Catalyst.Core.Modules.Ledger
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Modules.Ledger.ILedger
+  commentId: T:Catalyst.Core.Modules.Ledger.ILedger
+  parent: Catalyst.Core.Modules.Ledger
+  name: ILedger
+  nameWithType: ILedger
+  fullName: Catalyst.Core.Modules.Ledger.ILedger
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Ledger.Ledger.Accounts*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Ledger.Accounts
+  name: Accounts
+  nameWithType: Ledger.Accounts
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.Accounts
+- uid: Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+  commentId: T:Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+  parent: Catalyst.Core.Modules.Ledger.Repository
+  name: IAccountRepository
+  nameWithType: IAccountRepository
+  fullName: Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+- uid: Catalyst.Core.Modules.Ledger.Repository
+  commentId: N:Catalyst.Core.Modules.Ledger.Repository
+  name: Catalyst.Core.Modules.Ledger.Repository
+  nameWithType: Catalyst.Core.Modules.Ledger.Repository
+  fullName: Catalyst.Core.Modules.Ledger.Repository
+- uid: Catalyst.Core.Modules.Ledger.Ledger.LatestKnownDelta*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Ledger.LatestKnownDelta
+  name: LatestKnownDelta
+  nameWithType: Ledger.LatestKnownDelta
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.LatestKnownDelta
+- uid: Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+  commentId: P:Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+  parent: Catalyst.Core.Modules.Ledger.ILedger
+  name: LatestKnownDelta
+  nameWithType: ILedger.LatestKnownDelta
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.LatestKnownDelta
+- uid: MultiHash
+  isExternal: true
+  name: MultiHash
+  nameWithType: MultiHash
+  fullName: MultiHash
+- uid: Catalyst.Core.Modules.Ledger.Ledger.IsSynchonising*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Ledger.IsSynchonising
+  name: IsSynchonising
+  nameWithType: Ledger.IsSynchonising
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.IsSynchonising
+- uid: Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising
+  commentId: P:Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising
+  parent: Catalyst.Core.Modules.Ledger.ILedger
+  name: IsSynchonising
+  nameWithType: ILedger.IsSynchonising
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.IsSynchonising
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Core.Modules.Ledger.Ledger.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Ledger.#ctor
+  name: Ledger
+  nameWithType: Ledger.Ledger
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.Ledger
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IDeltaHashProvider
+  nameWithType: IDeltaHashProvider
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider
+- uid: Catalyst.Core.Modules.Ledger.ILedgerSynchroniser
+  commentId: T:Catalyst.Core.Modules.Ledger.ILedgerSynchroniser
+  parent: Catalyst.Core.Modules.Ledger
+  name: ILedgerSynchroniser
+  nameWithType: ILedgerSynchroniser
+  fullName: Catalyst.Core.Modules.Ledger.ILedgerSynchroniser
+- uid: Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+  commentId: T:Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+  parent: Catalyst.Abstractions.Mempool
+  definition: Catalyst.Abstractions.Mempool.IMempool`1
+  name: IMempool<MempoolDocument>
+  nameWithType: IMempool<MempoolDocument>
+  fullName: Catalyst.Abstractions.Mempool.IMempool<Catalyst.Core.Lib.Mempool.Documents.MempoolDocument>
+  nameWithType.vb: IMempool(Of MempoolDocument)
+  fullName.vb: Catalyst.Abstractions.Mempool.IMempool(Of Catalyst.Core.Lib.Mempool.Documents.MempoolDocument)
+  name.vb: IMempool(Of MempoolDocument)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.IMempool`1
+    name: IMempool
+    nameWithType: IMempool
+    fullName: Catalyst.Abstractions.Mempool.IMempool
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+    name: MempoolDocument
+    nameWithType: MempoolDocument
+    fullName: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.IMempool`1
+    name: IMempool
+    nameWithType: IMempool
+    fullName: Catalyst.Abstractions.Mempool.IMempool
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+    name: MempoolDocument
+    nameWithType: MempoolDocument
+    fullName: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: ILogger
+  isExternal: true
+  name: ILogger
+  nameWithType: ILogger
+  fullName: ILogger
+- uid: Catalyst.Abstractions.Consensus.Deltas
+  commentId: N:Catalyst.Abstractions.Consensus.Deltas
+  name: Catalyst.Abstractions.Consensus.Deltas
+  nameWithType: Catalyst.Abstractions.Consensus.Deltas
+  fullName: Catalyst.Abstractions.Consensus.Deltas
+- uid: Catalyst.Abstractions.Mempool.IMempool`1
+  commentId: T:Catalyst.Abstractions.Mempool.IMempool`1
+  name: IMempool<T>
+  nameWithType: IMempool<T>
+  fullName: Catalyst.Abstractions.Mempool.IMempool<T>
+  nameWithType.vb: IMempool(Of T)
+  fullName.vb: Catalyst.Abstractions.Mempool.IMempool(Of T)
+  name.vb: IMempool(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.IMempool`1
+    name: IMempool
+    nameWithType: IMempool
+    fullName: Catalyst.Abstractions.Mempool.IMempool
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.IMempool`1
+    name: IMempool
+    nameWithType: IMempool
+    fullName: Catalyst.Abstractions.Mempool.IMempool
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Mempool
+  commentId: N:Catalyst.Abstractions.Mempool
+  name: Catalyst.Abstractions.Mempool
+  nameWithType: Catalyst.Abstractions.Mempool
+  fullName: Catalyst.Abstractions.Mempool
+- uid: Catalyst.Core.Modules.Ledger.Ledger.SaveAccountState*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Ledger.SaveAccountState
+  name: SaveAccountState
+  nameWithType: Ledger.SaveAccountState
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.SaveAccountState
+- uid: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  commentId: M:Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  parent: Catalyst.Core.Modules.Ledger.ILedger
+  name: SaveAccountState(Account)
+  nameWithType: ILedger.SaveAccountState(Account)
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+  spec.csharp:
+  - uid: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+    name: SaveAccountState
+    nameWithType: ILedger.SaveAccountState
+    fullName: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Core.Modules.Ledger.Models.Account
+    name: Account
+    nameWithType: Account
+    fullName: Catalyst.Core.Modules.Ledger.Models.Account
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState(Catalyst.Core.Modules.Ledger.Models.Account)
+    name: SaveAccountState
+    nameWithType: ILedger.SaveAccountState
+    fullName: Catalyst.Core.Modules.Ledger.ILedger.SaveAccountState
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Core.Modules.Ledger.Models.Account
+    name: Account
+    nameWithType: Account
+    fullName: Catalyst.Core.Modules.Ledger.Models.Account
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Ledger.Models.Account
+  commentId: T:Catalyst.Core.Modules.Ledger.Models.Account
+  parent: Catalyst.Core.Modules.Ledger.Models
+  name: Account
+  nameWithType: Account
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account
+- uid: Catalyst.Core.Modules.Ledger.Models
+  commentId: N:Catalyst.Core.Modules.Ledger.Models
+  name: Catalyst.Core.Modules.Ledger.Models
+  nameWithType: Catalyst.Core.Modules.Ledger.Models
+  fullName: Catalyst.Core.Modules.Ledger.Models
+- uid: Catalyst.Core.Modules.Ledger.Ledger.Update*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Ledger.Update
+  name: Update
+  nameWithType: Ledger.Update
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.Update
+- uid: Catalyst.Core.Modules.Ledger.ILedger.Update(MultiHash)
+  commentId: M:Catalyst.Core.Modules.Ledger.ILedger.Update(MultiHash)
+  parent: Catalyst.Core.Modules.Ledger.ILedger
+  isExternal: true
+  name: Update(MultiHash)
+  nameWithType: ILedger.Update(MultiHash)
+  fullName: Catalyst.Core.Modules.Ledger.ILedger.Update(MultiHash)
+  spec.csharp:
+  - uid: Catalyst.Core.Modules.Ledger.ILedger.Update(MultiHash)
+    name: Update
+    nameWithType: ILedger.Update
+    fullName: Catalyst.Core.Modules.Ledger.ILedger.Update
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: MultiHash
+    name: MultiHash
+    nameWithType: MultiHash
+    fullName: MultiHash
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Modules.Ledger.ILedger.Update(MultiHash)
+    name: Update
+    nameWithType: ILedger.Update
+    fullName: Catalyst.Core.Modules.Ledger.ILedger.Update
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: MultiHash
+    name: MultiHash
+    nameWithType: MultiHash
+    fullName: MultiHash
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Ledger.Ledger.Dispose*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Ledger.Dispose
+  name: Dispose
+  nameWithType: Ledger.Dispose
+  fullName: Catalyst.Core.Modules.Ledger.Ledger.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )

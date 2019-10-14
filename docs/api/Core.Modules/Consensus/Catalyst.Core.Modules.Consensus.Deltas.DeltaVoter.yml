@@ -1,0 +1,988 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  commentId: T:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  id: DeltaVoter
+  parent: Catalyst.Core.Modules.Consensus.Deltas
+  children:
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.#ctor(IMemoryCache,Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider,Catalyst.Abstractions.P2P.IPeerSettings,ILogger)
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateCacheKey(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey(MultiHash)
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnCompleted
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnError(System.Exception)
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnNext(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  - Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.TryGetFavouriteDelta(MultiHash,FavouriteDeltaBroadcast@)
+  langs:
+  - csharp
+  - vb
+  name: DeltaVoter
+  nameWithType: DeltaVoter
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DeltaVoter
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+    startLine: 43
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: 'public class DeltaVoter : IDeltaVoter, IObserver<CandidateDeltaBroadcast>'
+    content.vb: >-
+      Public Class DeltaVoter
+
+          Implements IDeltaVoter, IObserver(Of CandidateDeltaBroadcast)
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+  - System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateCacheKey(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateCacheKey(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  id: GetCandidateCacheKey(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  langs:
+  - csharp
+  - vb
+  name: GetCandidateCacheKey(Protocol.Wire.CandidateDeltaBroadcast)
+  nameWithType: DeltaVoter.GetCandidateCacheKey(Protocol.Wire.CandidateDeltaBroadcast)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateCacheKey(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetCandidateCacheKey
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+    startLine: 45
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public static string GetCandidateCacheKey(Protocol.Wire.CandidateDeltaBroadcast candidate)
+    parameters:
+    - id: candidate
+      type: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+    return:
+      type: System.String
+    content.vb: Public Shared Function GetCandidateCacheKey(candidate As Protocol.Wire.CandidateDeltaBroadcast) As String
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateCacheKey*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  id: GetCandidateListCacheKey(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  langs:
+  - csharp
+  - vb
+  name: GetCandidateListCacheKey(Protocol.Wire.CandidateDeltaBroadcast)
+  nameWithType: DeltaVoter.GetCandidateListCacheKey(Protocol.Wire.CandidateDeltaBroadcast)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetCandidateListCacheKey
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+    startLine: 48
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public static string GetCandidateListCacheKey(Protocol.Wire.CandidateDeltaBroadcast candidate)
+    parameters:
+    - id: candidate
+      type: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+    return:
+      type: System.String
+    content.vb: Public Shared Function GetCandidateListCacheKey(candidate As Protocol.Wire.CandidateDeltaBroadcast) As String
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey(MultiHash)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey(MultiHash)
+  id: GetCandidateListCacheKey(MultiHash)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  langs:
+  - csharp
+  - vb
+  name: GetCandidateListCacheKey(MultiHash)
+  nameWithType: DeltaVoter.GetCandidateListCacheKey(MultiHash)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey(MultiHash)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetCandidateListCacheKey
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+    startLine: 51
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public static string GetCandidateListCacheKey(MultiHash previousDeltaHash)
+    parameters:
+    - id: previousDeltaHash
+      type: MultiHash
+    return:
+      type: System.String
+    content.vb: Public Shared Function GetCandidateListCacheKey(previousDeltaHash As MultiHash) As String
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.#ctor(IMemoryCache,Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider,Catalyst.Abstractions.P2P.IPeerSettings,ILogger)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.#ctor(IMemoryCache,Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider,Catalyst.Abstractions.P2P.IPeerSettings,ILogger)
+  id: '#ctor(IMemoryCache,Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider,Catalyst.Abstractions.P2P.IPeerSettings,ILogger)'
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  langs:
+  - csharp
+  - vb
+  name: DeltaVoter(IMemoryCache, IDeltaProducersProvider, IPeerSettings, ILogger)
+  nameWithType: DeltaVoter.DeltaVoter(IMemoryCache, IDeltaProducersProvider, IPeerSettings, ILogger)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.DeltaVoter(IMemoryCache, Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider, Catalyst.Abstractions.P2P.IPeerSettings, ILogger)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+    startLine: 65
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public DeltaVoter(IMemoryCache candidatesCache, IDeltaProducersProvider deltaProducersProvider, IPeerSettings peerSettings, ILogger logger)
+    parameters:
+    - id: candidatesCache
+      type: IMemoryCache
+    - id: deltaProducersProvider
+      type: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+    - id: peerSettings
+      type: Catalyst.Abstractions.P2P.IPeerSettings
+    - id: logger
+      type: ILogger
+    content.vb: Public Sub New(candidatesCache As IMemoryCache, deltaProducersProvider As IDeltaProducersProvider, peerSettings As IPeerSettings, logger As ILogger)
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnCompleted
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnCompleted
+  id: OnCompleted
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  langs:
+  - csharp
+  - vb
+  name: OnCompleted()
+  nameWithType: DeltaVoter.OnCompleted()
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnCompleted()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: OnCompleted
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+    startLine: 78
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public void OnCompleted()
+    content.vb: Public Sub OnCompleted
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnCompleted*
+  implements:
+  - System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}.OnCompleted
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnError(System.Exception)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnError(System.Exception)
+  id: OnError(System.Exception)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  langs:
+  - csharp
+  - vb
+  name: OnError(Exception)
+  nameWithType: DeltaVoter.OnError(Exception)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnError(System.Exception)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: OnError
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+    startLine: 83
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public void OnError(Exception error)
+    parameters:
+    - id: error
+      type: System.Exception
+    content.vb: Public Sub OnError(error As Exception)
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnError*
+  implements:
+  - System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}.OnError(System.Exception)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnNext(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnNext(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  id: OnNext(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  langs:
+  - csharp
+  - vb
+  name: OnNext(Protocol.Wire.CandidateDeltaBroadcast)
+  nameWithType: DeltaVoter.OnNext(Protocol.Wire.CandidateDeltaBroadcast)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnNext(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: OnNext
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+    startLine: 88
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public void OnNext(Protocol.Wire.CandidateDeltaBroadcast candidate)
+    parameters:
+    - id: candidate
+      type: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+    content.vb: Public Sub OnNext(candidate As Protocol.Wire.CandidateDeltaBroadcast)
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnNext*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.TryGetFavouriteDelta(MultiHash,FavouriteDeltaBroadcast@)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.TryGetFavouriteDelta(MultiHash,FavouriteDeltaBroadcast@)
+  id: TryGetFavouriteDelta(MultiHash,FavouriteDeltaBroadcast@)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter
+  langs:
+  - csharp
+  - vb
+  name: TryGetFavouriteDelta(MultiHash, out FavouriteDeltaBroadcast)
+  nameWithType: DeltaVoter.TryGetFavouriteDelta(MultiHash, out FavouriteDeltaBroadcast)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.TryGetFavouriteDelta(MultiHash, out FavouriteDeltaBroadcast)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: TryGetFavouriteDelta
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/DeltaVoter.cs
+    startLine: 137
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public bool TryGetFavouriteDelta(MultiHash previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
+    parameters:
+    - id: previousDeltaDfsHash
+      type: MultiHash
+    - id: favourite
+      type: FavouriteDeltaBroadcast
+    return:
+      type: System.Boolean
+    content.vb: Public Function TryGetFavouriteDelta(previousDeltaDfsHash As MultiHash, ByRef favourite As FavouriteDeltaBroadcast) As Boolean
+  overload: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.TryGetFavouriteDelta*
+  nameWithType.vb: DeltaVoter.TryGetFavouriteDelta(MultiHash, ByRef FavouriteDeltaBroadcast)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.TryGetFavouriteDelta(MultiHash, ByRef FavouriteDeltaBroadcast)
+  name.vb: TryGetFavouriteDelta(MultiHash, ByRef FavouriteDeltaBroadcast)
+references:
+- uid: Catalyst.Core.Modules.Consensus.Deltas
+  commentId: N:Catalyst.Core.Modules.Consensus.Deltas
+  name: Catalyst.Core.Modules.Consensus.Deltas
+  nameWithType: Catalyst.Core.Modules.Consensus.Deltas
+  fullName: Catalyst.Core.Modules.Consensus.Deltas
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IDeltaVoter
+  nameWithType: IDeltaVoter
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaVoter
+- uid: System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}
+  commentId: T:System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}
+  parent: System
+  definition: System.IObserver`1
+  name: IObserver<CandidateDeltaBroadcast>
+  nameWithType: IObserver<CandidateDeltaBroadcast>
+  fullName: System.IObserver<Catalyst.Protocol.Wire.CandidateDeltaBroadcast>
+  nameWithType.vb: IObserver(Of CandidateDeltaBroadcast)
+  fullName.vb: System.IObserver(Of Catalyst.Protocol.Wire.CandidateDeltaBroadcast)
+  name.vb: IObserver(Of CandidateDeltaBroadcast)
+  spec.csharp:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+    name: CandidateDeltaBroadcast
+    nameWithType: CandidateDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+    name: CandidateDeltaBroadcast
+    nameWithType: CandidateDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus.Deltas
+  commentId: N:Catalyst.Abstractions.Consensus.Deltas
+  name: Catalyst.Abstractions.Consensus.Deltas
+  nameWithType: Catalyst.Abstractions.Consensus.Deltas
+  fullName: Catalyst.Abstractions.Consensus.Deltas
+- uid: System.IObserver`1
+  commentId: T:System.IObserver`1
+  isExternal: true
+  name: IObserver<T>
+  nameWithType: IObserver<T>
+  fullName: System.IObserver<T>
+  nameWithType.vb: IObserver(Of T)
+  fullName.vb: System.IObserver(Of T)
+  name.vb: IObserver(Of T)
+  spec.csharp:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateCacheKey*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateCacheKey
+  name: GetCandidateCacheKey
+  nameWithType: DeltaVoter.GetCandidateCacheKey
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateCacheKey
+- uid: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+  isExternal: true
+  name: Protocol.Wire.CandidateDeltaBroadcast
+  nameWithType: Protocol.Wire.CandidateDeltaBroadcast
+  fullName: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey
+  name: GetCandidateListCacheKey
+  nameWithType: DeltaVoter.GetCandidateListCacheKey
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.GetCandidateListCacheKey
+- uid: MultiHash
+  isExternal: true
+  name: MultiHash
+  nameWithType: MultiHash
+  fullName: MultiHash
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.#ctor
+  name: DeltaVoter
+  nameWithType: DeltaVoter.DeltaVoter
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.DeltaVoter
+- uid: IMemoryCache
+  isExternal: true
+  name: IMemoryCache
+  nameWithType: IMemoryCache
+  fullName: IMemoryCache
+- uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  commentId: T:Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  parent: Catalyst.Core.Modules.Consensus.Deltas
+  name: IDeltaProducersProvider
+  nameWithType: IDeltaProducersProvider
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+- uid: Catalyst.Abstractions.P2P.IPeerSettings
+  commentId: T:Catalyst.Abstractions.P2P.IPeerSettings
+  parent: Catalyst.Abstractions.P2P
+  name: IPeerSettings
+  nameWithType: IPeerSettings
+  fullName: Catalyst.Abstractions.P2P.IPeerSettings
+- uid: ILogger
+  isExternal: true
+  name: ILogger
+  nameWithType: ILogger
+  fullName: ILogger
+- uid: Catalyst.Abstractions.P2P
+  commentId: N:Catalyst.Abstractions.P2P
+  name: Catalyst.Abstractions.P2P
+  nameWithType: Catalyst.Abstractions.P2P
+  fullName: Catalyst.Abstractions.P2P
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnCompleted*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnCompleted
+  name: OnCompleted
+  nameWithType: DeltaVoter.OnCompleted
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnCompleted
+- uid: System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}.OnCompleted
+  commentId: M:System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}.OnCompleted
+  parent: System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}
+  definition: System.IObserver`1.OnCompleted
+  name: OnCompleted()
+  nameWithType: IObserver<CandidateDeltaBroadcast>.OnCompleted()
+  fullName: System.IObserver<Catalyst.Protocol.Wire.CandidateDeltaBroadcast>.OnCompleted()
+  nameWithType.vb: IObserver(Of CandidateDeltaBroadcast).OnCompleted()
+  fullName.vb: System.IObserver(Of Catalyst.Protocol.Wire.CandidateDeltaBroadcast).OnCompleted()
+  spec.csharp:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver<CandidateDeltaBroadcast>.OnCompleted
+    fullName: System.IObserver<Catalyst.Protocol.Wire.CandidateDeltaBroadcast>.OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver(Of CandidateDeltaBroadcast).OnCompleted
+    fullName: System.IObserver(Of Catalyst.Protocol.Wire.CandidateDeltaBroadcast).OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver`1.OnCompleted
+  commentId: M:System.IObserver`1.OnCompleted
+  isExternal: true
+  name: OnCompleted()
+  nameWithType: IObserver<T>.OnCompleted()
+  fullName: System.IObserver<T>.OnCompleted()
+  nameWithType.vb: IObserver(Of T).OnCompleted()
+  fullName.vb: System.IObserver(Of T).OnCompleted()
+  spec.csharp:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver<T>.OnCompleted
+    fullName: System.IObserver<T>.OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver(Of T).OnCompleted
+    fullName: System.IObserver(Of T).OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnError*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnError
+  name: OnError
+  nameWithType: DeltaVoter.OnError
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnError
+- uid: System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}.OnError(System.Exception)
+  commentId: M:System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}.OnError(System.Exception)
+  parent: System.IObserver{Catalyst.Protocol.Wire.CandidateDeltaBroadcast}
+  definition: System.IObserver`1.OnError(System.Exception)
+  name: OnError(Exception)
+  nameWithType: IObserver<CandidateDeltaBroadcast>.OnError(Exception)
+  fullName: System.IObserver<Catalyst.Protocol.Wire.CandidateDeltaBroadcast>.OnError(System.Exception)
+  nameWithType.vb: IObserver(Of CandidateDeltaBroadcast).OnError(Exception)
+  fullName.vb: System.IObserver(Of Catalyst.Protocol.Wire.CandidateDeltaBroadcast).OnError(System.Exception)
+  spec.csharp:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver<CandidateDeltaBroadcast>.OnError
+    fullName: System.IObserver<Catalyst.Protocol.Wire.CandidateDeltaBroadcast>.OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver(Of CandidateDeltaBroadcast).OnError
+    fullName: System.IObserver(Of Catalyst.Protocol.Wire.CandidateDeltaBroadcast).OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Exception
+  commentId: T:System.Exception
+  parent: System
+  isExternal: true
+  name: Exception
+  nameWithType: Exception
+  fullName: System.Exception
+- uid: System.IObserver`1.OnError(System.Exception)
+  commentId: M:System.IObserver`1.OnError(System.Exception)
+  isExternal: true
+  name: OnError(Exception)
+  nameWithType: IObserver<T>.OnError(Exception)
+  fullName: System.IObserver<T>.OnError(System.Exception)
+  nameWithType.vb: IObserver(Of T).OnError(Exception)
+  fullName.vb: System.IObserver(Of T).OnError(System.Exception)
+  spec.csharp:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver<T>.OnError
+    fullName: System.IObserver<T>.OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver(Of T).OnError
+    fullName: System.IObserver(Of T).OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnNext*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnNext
+  name: OnNext
+  nameWithType: DeltaVoter.OnNext
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.OnNext
+- uid: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.TryGetFavouriteDelta*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.TryGetFavouriteDelta
+  name: TryGetFavouriteDelta
+  nameWithType: DeltaVoter.TryGetFavouriteDelta
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.DeltaVoter.TryGetFavouriteDelta
+- uid: FavouriteDeltaBroadcast
+  isExternal: true
+  name: FavouriteDeltaBroadcast
+  nameWithType: FavouriteDeltaBroadcast
+  fullName: FavouriteDeltaBroadcast
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean

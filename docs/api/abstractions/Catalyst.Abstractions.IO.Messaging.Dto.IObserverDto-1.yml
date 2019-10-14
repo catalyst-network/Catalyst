@@ -1,0 +1,149 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+  commentId: T:Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+  id: IObserverDto`1
+  parent: Catalyst.Abstractions.IO.Messaging.Dto
+  children:
+  - Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Context
+  - Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Payload
+  langs:
+  - csharp
+  - vb
+  name: IObserverDto<T>
+  nameWithType: IObserverDto<T>
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<T>
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Messaging/Dto/IObserverDto.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IObserverDto
+    path: ../src/Catalyst.Abstractions/IO/Messaging/Dto/IObserverDto.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Messaging.Dto
+  syntax:
+    content: >-
+      public interface IObserverDto<out T>
+
+          where T : IMessage
+    typeParameters:
+    - id: T
+    content.vb: Public Interface IObserverDto(Of Out T As IMessage)
+  nameWithType.vb: IObserverDto(Of T)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of T)
+  name.vb: IObserverDto(Of T)
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Payload
+  commentId: P:Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Payload
+  id: Payload
+  parent: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+  langs:
+  - csharp
+  - vb
+  name: Payload
+  nameWithType: IObserverDto<T>.Payload
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<T>.Payload
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Messaging/Dto/IObserverDto.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Payload
+    path: ../src/Catalyst.Abstractions/IO/Messaging/Dto/IObserverDto.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Messaging.Dto
+  syntax:
+    content: T Payload { get; }
+    parameters: []
+    return:
+      type: '{T}'
+    content.vb: ReadOnly Property Payload As T
+  overload: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Payload*
+  nameWithType.vb: IObserverDto(Of T).Payload
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of T).Payload
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Context
+  commentId: P:Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Context
+  id: Context
+  parent: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+  langs:
+  - csharp
+  - vb
+  name: Context
+  nameWithType: IObserverDto<T>.Context
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<T>.Context
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Messaging/Dto/IObserverDto.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Context
+    path: ../src/Catalyst.Abstractions/IO/Messaging/Dto/IObserverDto.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Messaging.Dto
+  syntax:
+    content: IChannelHandlerContext Context { get; }
+    parameters: []
+    return:
+      type: IChannelHandlerContext
+    content.vb: ReadOnly Property Context As IChannelHandlerContext
+  overload: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Context*
+  nameWithType.vb: IObserverDto(Of T).Context
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of T).Context
+references:
+- uid: Catalyst.Abstractions.IO.Messaging.Dto
+  commentId: N:Catalyst.Abstractions.IO.Messaging.Dto
+  name: Catalyst.Abstractions.IO.Messaging.Dto
+  nameWithType: Catalyst.Abstractions.IO.Messaging.Dto
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Payload*
+  commentId: Overload:Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Payload
+  name: Payload
+  nameWithType: IObserverDto<T>.Payload
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<T>.Payload
+  nameWithType.vb: IObserverDto(Of T).Payload
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of T).Payload
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Context*
+  commentId: Overload:Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1.Context
+  name: Context
+  nameWithType: IObserverDto<T>.Context
+  fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<T>.Context
+  nameWithType.vb: IObserverDto(Of T).Context
+  fullName.vb: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of T).Context
+- uid: IChannelHandlerContext
+  isExternal: true
+  name: IChannelHandlerContext
+  nameWithType: IChannelHandlerContext
+  fullName: IChannelHandlerContext

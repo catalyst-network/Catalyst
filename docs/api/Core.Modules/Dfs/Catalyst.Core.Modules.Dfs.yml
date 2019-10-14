@@ -1,0 +1,40 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Dfs
+  commentId: N:Catalyst.Core.Modules.Dfs
+  id: Catalyst.Core.Modules.Dfs
+  children:
+  - Catalyst.Core.Modules.Dfs.DevDfs
+  - Catalyst.Core.Modules.Dfs.Dfs
+  - Catalyst.Core.Modules.Dfs.DfsModule
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Modules.Dfs
+  nameWithType: Catalyst.Core.Modules.Dfs
+  fullName: Catalyst.Core.Modules.Dfs
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+references:
+- uid: Catalyst.Core.Modules.Dfs.DevDfs
+  commentId: T:Catalyst.Core.Modules.Dfs.DevDfs
+  name: DevDfs
+  nameWithType: DevDfs
+  fullName: Catalyst.Core.Modules.Dfs.DevDfs
+- uid: Catalyst.Core.Modules.Dfs.Dfs
+  commentId: T:Catalyst.Core.Modules.Dfs.Dfs
+  name: Dfs
+  nameWithType: Dfs
+  fullName: Catalyst.Core.Modules.Dfs.Dfs
+- uid: Catalyst.Core.Modules.Dfs.DfsModule
+  commentId: T:Catalyst.Core.Modules.Dfs.DfsModule
+  name: DfsModule
+  nameWithType: DfsModule
+  fullName: Catalyst.Core.Modules.Dfs.DfsModule
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  commentId: T:Catalyst.Core.Modules.Dfs.IpfsAdapter
+  name: IpfsAdapter
+  nameWithType: IpfsAdapter
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter

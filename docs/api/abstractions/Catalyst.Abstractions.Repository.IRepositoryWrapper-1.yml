@@ -1,0 +1,48 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Repository.IRepositoryWrapper`1
+  commentId: T:Catalyst.Abstractions.Repository.IRepositoryWrapper`1
+  id: IRepositoryWrapper`1
+  parent: Catalyst.Abstractions.Repository
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: IRepositoryWrapper<T>
+  nameWithType: IRepositoryWrapper<T>
+  fullName: Catalyst.Abstractions.Repository.IRepositoryWrapper<T>
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Repository/IRepositoryWrapper.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IRepositoryWrapper
+    path: ../src/Catalyst.Abstractions/Repository/IRepositoryWrapper.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Repository
+  syntax:
+    content: 'public interface IRepositoryWrapper<T> : IRepository<T, string> where T : class'
+    typeParameters:
+    - id: T
+    content.vb: >-
+      Public Interface IRepositoryWrapper(Of T As Class)
+
+          Inherits IRepository(Of T, String)
+  nameWithType.vb: IRepositoryWrapper(Of T)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+  fullName.vb: Catalyst.Abstractions.Repository.IRepositoryWrapper(Of T)
+  name.vb: IRepositoryWrapper(Of T)
+references:
+- uid: Catalyst.Abstractions.Repository
+  commentId: N:Catalyst.Abstractions.Repository
+  name: Catalyst.Abstractions.Repository
+  nameWithType: Catalyst.Abstractions.Repository
+  fullName: Catalyst.Abstractions.Repository

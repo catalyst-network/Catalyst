@@ -1,0 +1,948 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions
+  commentId: T:Catalyst.Core.Lib.Extensions.BytesExtensions
+  id: BytesExtensions
+  parent: Catalyst.Core.Lib.Extensions
+  children:
+  - Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey(System.Byte[],System.Net.IPAddress,System.Int32)
+  - Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey(System.Byte[],System.Net.IPEndPoint)
+  - Catalyst.Core.Lib.Extensions.BytesExtensions.ToByteString(System.Collections.Generic.IEnumerable{System.Byte})
+  - Catalyst.Core.Lib.Extensions.BytesExtensions.ToMemoryStream(System.Byte[])
+  - Catalyst.Core.Lib.Extensions.BytesExtensions.ToUInt256(ByteString)
+  - Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.Int32)
+  - Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.UInt32)
+  - Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.UInt64)
+  - Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(UInt256)
+  langs:
+  - csharp
+  - vb
+  name: BytesExtensions
+  nameWithType: BytesExtensions
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BytesExtensions
+    path: ../src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static class BytesExtensions
+    content.vb: Public Module BytesExtensions
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - static
+  - class
+  modifiers.vb:
+  - Public
+  - Module
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToMemoryStream(System.Byte[])
+  commentId: M:Catalyst.Core.Lib.Extensions.BytesExtensions.ToMemoryStream(System.Byte[])
+  id: ToMemoryStream(System.Byte[])
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Extensions.BytesExtensions
+  langs:
+  - csharp
+  - vb
+  name: ToMemoryStream(Byte[])
+  nameWithType: BytesExtensions.ToMemoryStream(Byte[])
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToMemoryStream(System.Byte[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToMemoryStream
+    path: ../src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static MemoryStream ToMemoryStream(this byte[] content)
+    parameters:
+    - id: content
+      type: System.Byte[]
+    return:
+      type: System.IO.MemoryStream
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function ToMemoryStream(content As Byte()) As MemoryStream
+  overload: Catalyst.Core.Lib.Extensions.BytesExtensions.ToMemoryStream*
+  nameWithType.vb: BytesExtensions.ToMemoryStream(Byte())
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Catalyst.Core.Lib.Extensions.BytesExtensions.ToMemoryStream(System.Byte())
+  name.vb: ToMemoryStream(Byte())
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToByteString(System.Collections.Generic.IEnumerable{System.Byte})
+  commentId: M:Catalyst.Core.Lib.Extensions.BytesExtensions.ToByteString(System.Collections.Generic.IEnumerable{System.Byte})
+  id: ToByteString(System.Collections.Generic.IEnumerable{System.Byte})
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Extensions.BytesExtensions
+  langs:
+  - csharp
+  - vb
+  name: ToByteString(IEnumerable<Byte>)
+  nameWithType: BytesExtensions.ToByteString(IEnumerable<Byte>)
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToByteString(System.Collections.Generic.IEnumerable<System.Byte>)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToByteString
+    path: ../src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static ByteString ToByteString(this IEnumerable<byte> bytes)
+    parameters:
+    - id: bytes
+      type: System.Collections.Generic.IEnumerable{System.Byte}
+    return:
+      type: ByteString
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function ToByteString(bytes As IEnumerable(Of Byte)) As ByteString
+  overload: Catalyst.Core.Lib.Extensions.BytesExtensions.ToByteString*
+  nameWithType.vb: BytesExtensions.ToByteString(IEnumerable(Of Byte))
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Catalyst.Core.Lib.Extensions.BytesExtensions.ToByteString(System.Collections.Generic.IEnumerable(Of System.Byte))
+  name.vb: ToByteString(IEnumerable(Of Byte))
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUInt256(ByteString)
+  commentId: M:Catalyst.Core.Lib.Extensions.BytesExtensions.ToUInt256(ByteString)
+  id: ToUInt256(ByteString)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Extensions.BytesExtensions
+  langs:
+  - csharp
+  - vb
+  name: ToUInt256(ByteString)
+  nameWithType: BytesExtensions.ToUInt256(ByteString)
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUInt256(ByteString)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToUInt256
+    path: ../src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+    startLine: 52
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static UInt256 ToUInt256(this ByteString byteString)
+    parameters:
+    - id: byteString
+      type: ByteString
+    return:
+      type: UInt256
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function ToUInt256(byteString As ByteString) As UInt256
+  overload: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUInt256*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(UInt256)
+  commentId: M:Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(UInt256)
+  id: ToUint256ByteString(UInt256)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Extensions.BytesExtensions
+  langs:
+  - csharp
+  - vb
+  name: ToUint256ByteString(UInt256)
+  nameWithType: BytesExtensions.ToUint256ByteString(UInt256)
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(UInt256)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToUint256ByteString
+    path: ../src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+    startLine: 58
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static ByteString ToUint256ByteString(this UInt256 uInt256)
+    parameters:
+    - id: uInt256
+      type: UInt256
+    return:
+      type: ByteString
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function ToUint256ByteString(uInt256 As UInt256) As ByteString
+  overload: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.UInt64)
+  commentId: M:Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.UInt64)
+  id: ToUint256ByteString(System.UInt64)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Extensions.BytesExtensions
+  langs:
+  - csharp
+  - vb
+  name: ToUint256ByteString(UInt64)
+  nameWithType: BytesExtensions.ToUint256ByteString(UInt64)
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.UInt64)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToUint256ByteString
+    path: ../src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+    startLine: 63
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static ByteString ToUint256ByteString(this ulong uLong)
+    parameters:
+    - id: uLong
+      type: System.UInt64
+    return:
+      type: ByteString
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function ToUint256ByteString(uLong As ULong) As ByteString
+  overload: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.UInt32)
+  commentId: M:Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.UInt32)
+  id: ToUint256ByteString(System.UInt32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Extensions.BytesExtensions
+  langs:
+  - csharp
+  - vb
+  name: ToUint256ByteString(UInt32)
+  nameWithType: BytesExtensions.ToUint256ByteString(UInt32)
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.UInt32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToUint256ByteString
+    path: ../src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+    startLine: 68
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static ByteString ToUint256ByteString(this uint uInt)
+    parameters:
+    - id: uInt
+      type: System.UInt32
+    return:
+      type: ByteString
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function ToUint256ByteString(uInt As UInteger) As ByteString
+  overload: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.Int32)
+  commentId: M:Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.Int32)
+  id: ToUint256ByteString(System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Extensions.BytesExtensions
+  langs:
+  - csharp
+  - vb
+  name: ToUint256ByteString(Int32)
+  nameWithType: BytesExtensions.ToUint256ByteString(Int32)
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToUint256ByteString
+    path: ../src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+    startLine: 73
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static ByteString ToUint256ByteString(this int int)
+    parameters:
+    - id: int
+      type: System.Int32
+    return:
+      type: ByteString
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function ToUint256ByteString(int As Integer) As ByteString
+  overload: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey(System.Byte[],System.Net.IPEndPoint)
+  commentId: M:Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey(System.Byte[],System.Net.IPEndPoint)
+  id: BuildPeerIdFromPublicKey(System.Byte[],System.Net.IPEndPoint)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Extensions.BytesExtensions
+  langs:
+  - csharp
+  - vb
+  name: BuildPeerIdFromPublicKey(Byte[], IPEndPoint)
+  nameWithType: BytesExtensions.BuildPeerIdFromPublicKey(Byte[], IPEndPoint)
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey(System.Byte[], System.Net.IPEndPoint)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BuildPeerIdFromPublicKey
+    path: ../src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+    startLine: 78
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static PeerId BuildPeerIdFromPublicKey(this byte[] publicKey, IPEndPoint ipEndPoint)
+    parameters:
+    - id: publicKey
+      type: System.Byte[]
+    - id: ipEndPoint
+      type: System.Net.IPEndPoint
+    return:
+      type: PeerId
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function BuildPeerIdFromPublicKey(publicKey As Byte(), ipEndPoint As IPEndPoint) As PeerId
+  overload: Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey*
+  nameWithType.vb: BytesExtensions.BuildPeerIdFromPublicKey(Byte(), IPEndPoint)
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey(System.Byte(), System.Net.IPEndPoint)
+  name.vb: BuildPeerIdFromPublicKey(Byte(), IPEndPoint)
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey(System.Byte[],System.Net.IPAddress,System.Int32)
+  commentId: M:Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey(System.Byte[],System.Net.IPAddress,System.Int32)
+  id: BuildPeerIdFromPublicKey(System.Byte[],System.Net.IPAddress,System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Lib.Extensions.BytesExtensions
+  langs:
+  - csharp
+  - vb
+  name: BuildPeerIdFromPublicKey(Byte[], IPAddress, Int32)
+  nameWithType: BytesExtensions.BuildPeerIdFromPublicKey(Byte[], IPAddress, Int32)
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey(System.Byte[], System.Net.IPAddress, System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BuildPeerIdFromPublicKey
+    path: ../src/Catalyst.Core.Lib/Extensions/BytesExtensions.cs
+    startLine: 83
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Extensions
+  syntax:
+    content: public static PeerId BuildPeerIdFromPublicKey(this byte[] publicKey, IPAddress ipAddress, int port)
+    parameters:
+    - id: publicKey
+      type: System.Byte[]
+    - id: ipAddress
+      type: System.Net.IPAddress
+    - id: port
+      type: System.Int32
+    return:
+      type: PeerId
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function BuildPeerIdFromPublicKey(publicKey As Byte(), ipAddress As IPAddress, port As Integer) As PeerId
+  overload: Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey*
+  nameWithType.vb: BytesExtensions.BuildPeerIdFromPublicKey(Byte(), IPAddress, Int32)
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+  fullName.vb: Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey(System.Byte(), System.Net.IPAddress, System.Int32)
+  name.vb: BuildPeerIdFromPublicKey(Byte(), IPAddress, Int32)
+references:
+- uid: Catalyst.Core.Lib.Extensions
+  commentId: N:Catalyst.Core.Lib.Extensions
+  name: Catalyst.Core.Lib.Extensions
+  nameWithType: Catalyst.Core.Lib.Extensions
+  fullName: Catalyst.Core.Lib.Extensions
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToMemoryStream*
+  commentId: Overload:Catalyst.Core.Lib.Extensions.BytesExtensions.ToMemoryStream
+  name: ToMemoryStream
+  nameWithType: BytesExtensions.ToMemoryStream
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToMemoryStream
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: System.IO.MemoryStream
+  commentId: T:System.IO.MemoryStream
+  parent: System.IO
+  isExternal: true
+  name: MemoryStream
+  nameWithType: MemoryStream
+  fullName: System.IO.MemoryStream
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToByteString*
+  commentId: Overload:Catalyst.Core.Lib.Extensions.BytesExtensions.ToByteString
+  name: ToByteString
+  nameWithType: BytesExtensions.ToByteString
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToByteString
+- uid: System.Collections.Generic.IEnumerable{System.Byte}
+  commentId: T:System.Collections.Generic.IEnumerable{System.Byte}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<Byte>
+  nameWithType: IEnumerable<Byte>
+  fullName: System.Collections.Generic.IEnumerable<System.Byte>
+  nameWithType.vb: IEnumerable(Of Byte)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of System.Byte)
+  name.vb: IEnumerable(Of Byte)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: ByteString
+  isExternal: true
+  name: ByteString
+  nameWithType: ByteString
+  fullName: ByteString
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUInt256*
+  commentId: Overload:Catalyst.Core.Lib.Extensions.BytesExtensions.ToUInt256
+  name: ToUInt256
+  nameWithType: BytesExtensions.ToUInt256
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUInt256
+- uid: UInt256
+  isExternal: true
+  name: UInt256
+  nameWithType: UInt256
+  fullName: UInt256
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString*
+  commentId: Overload:Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString
+  name: ToUint256ByteString
+  nameWithType: BytesExtensions.ToUint256ByteString
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.ToUint256ByteString
+- uid: System.UInt64
+  commentId: T:System.UInt64
+  parent: System
+  isExternal: true
+  name: UInt64
+  nameWithType: UInt64
+  fullName: System.UInt64
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  name: UInt32
+  nameWithType: UInt32
+  fullName: System.UInt32
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey*
+  commentId: Overload:Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey
+  name: BuildPeerIdFromPublicKey
+  nameWithType: BytesExtensions.BuildPeerIdFromPublicKey
+  fullName: Catalyst.Core.Lib.Extensions.BytesExtensions.BuildPeerIdFromPublicKey
+- uid: System.Net.IPEndPoint
+  commentId: T:System.Net.IPEndPoint
+  parent: System.Net
+  isExternal: true
+  name: IPEndPoint
+  nameWithType: IPEndPoint
+  fullName: System.Net.IPEndPoint
+- uid: PeerId
+  isExternal: true
+  name: PeerId
+  nameWithType: PeerId
+  fullName: PeerId
+- uid: System.Net
+  commentId: N:System.Net
+  isExternal: true
+  name: System.Net
+  nameWithType: System.Net
+  fullName: System.Net
+- uid: System.Net.IPAddress
+  commentId: T:System.Net.IPAddress
+  parent: System.Net
+  isExternal: true
+  name: IPAddress
+  nameWithType: IPAddress
+  fullName: System.Net.IPAddress

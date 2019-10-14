@@ -1,0 +1,610 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Util.CancellationTokenProvider
+  commentId: T:Catalyst.Core.Lib.Util.CancellationTokenProvider
+  id: CancellationTokenProvider
+  parent: Catalyst.Core.Lib.Util
+  children:
+  - Catalyst.Core.Lib.Util.CancellationTokenProvider.#ctor
+  - Catalyst.Core.Lib.Util.CancellationTokenProvider.CancellationTokenSource
+  - Catalyst.Core.Lib.Util.CancellationTokenProvider.Dispose
+  - Catalyst.Core.Lib.Util.CancellationTokenProvider.HasTokenCancelled
+  langs:
+  - csharp
+  - vb
+  name: CancellationTokenProvider
+  nameWithType: CancellationTokenProvider
+  fullName: Catalyst.Core.Lib.Util.CancellationTokenProvider
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/CancellationTokenProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CancellationTokenProvider
+    path: ../src/Catalyst.Core.Lib/Util/CancellationTokenProvider.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: 'public sealed class CancellationTokenProvider : ICancellationTokenProvider, IDisposable'
+    content.vb: >-
+      Public NotInheritable Class CancellationTokenProvider
+
+          Implements ICancellationTokenProvider, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Util.ICancellationTokenProvider
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.Util.CancellationTokenProvider.CancellationTokenSource
+  commentId: P:Catalyst.Core.Lib.Util.CancellationTokenProvider.CancellationTokenSource
+  id: CancellationTokenSource
+  parent: Catalyst.Core.Lib.Util.CancellationTokenProvider
+  langs:
+  - csharp
+  - vb
+  name: CancellationTokenSource
+  nameWithType: CancellationTokenProvider.CancellationTokenSource
+  fullName: Catalyst.Core.Lib.Util.CancellationTokenProvider.CancellationTokenSource
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/CancellationTokenProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CancellationTokenSource
+    path: ../src/Catalyst.Core.Lib/Util/CancellationTokenProvider.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: public CancellationTokenSource CancellationTokenSource { get; set; }
+    parameters: []
+    return:
+      type: System.Threading.CancellationTokenSource
+    content.vb: Public Property CancellationTokenSource As CancellationTokenSource
+  overload: Catalyst.Core.Lib.Util.CancellationTokenProvider.CancellationTokenSource*
+  implements:
+  - Catalyst.Abstractions.Util.ICancellationTokenProvider.CancellationTokenSource
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Util.CancellationTokenProvider.#ctor
+  commentId: M:Catalyst.Core.Lib.Util.CancellationTokenProvider.#ctor
+  id: '#ctor'
+  parent: Catalyst.Core.Lib.Util.CancellationTokenProvider
+  langs:
+  - csharp
+  - vb
+  name: CancellationTokenProvider()
+  nameWithType: CancellationTokenProvider.CancellationTokenProvider()
+  fullName: Catalyst.Core.Lib.Util.CancellationTokenProvider.CancellationTokenProvider()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/CancellationTokenProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/Util/CancellationTokenProvider.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: public CancellationTokenProvider()
+    content.vb: Public Sub New
+  overload: Catalyst.Core.Lib.Util.CancellationTokenProvider.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Util.CancellationTokenProvider.HasTokenCancelled
+  commentId: M:Catalyst.Core.Lib.Util.CancellationTokenProvider.HasTokenCancelled
+  id: HasTokenCancelled
+  parent: Catalyst.Core.Lib.Util.CancellationTokenProvider
+  langs:
+  - csharp
+  - vb
+  name: HasTokenCancelled()
+  nameWithType: CancellationTokenProvider.HasTokenCancelled()
+  fullName: Catalyst.Core.Lib.Util.CancellationTokenProvider.HasTokenCancelled()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/CancellationTokenProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: HasTokenCancelled
+    path: ../src/Catalyst.Core.Lib/Util/CancellationTokenProvider.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: public bool HasTokenCancelled()
+    return:
+      type: System.Boolean
+    content.vb: Public Function HasTokenCancelled As Boolean
+  overload: Catalyst.Core.Lib.Util.CancellationTokenProvider.HasTokenCancelled*
+  implements:
+  - Catalyst.Abstractions.Util.ICancellationTokenProvider.HasTokenCancelled
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Util.CancellationTokenProvider.Dispose
+  commentId: M:Catalyst.Core.Lib.Util.CancellationTokenProvider.Dispose
+  id: Dispose
+  parent: Catalyst.Core.Lib.Util.CancellationTokenProvider
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: CancellationTokenProvider.Dispose()
+  fullName: Catalyst.Core.Lib.Util.CancellationTokenProvider.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/CancellationTokenProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Lib/Util/CancellationTokenProvider.cs
+    startLine: 43
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose
+  overload: Catalyst.Core.Lib.Util.CancellationTokenProvider.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.Util
+  commentId: N:Catalyst.Core.Lib.Util
+  name: Catalyst.Core.Lib.Util
+  nameWithType: Catalyst.Core.Lib.Util
+  fullName: Catalyst.Core.Lib.Util
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Util.ICancellationTokenProvider
+  commentId: T:Catalyst.Abstractions.Util.ICancellationTokenProvider
+  parent: Catalyst.Abstractions.Util
+  name: ICancellationTokenProvider
+  nameWithType: ICancellationTokenProvider
+  fullName: Catalyst.Abstractions.Util.ICancellationTokenProvider
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Util
+  commentId: N:Catalyst.Abstractions.Util
+  name: Catalyst.Abstractions.Util
+  nameWithType: Catalyst.Abstractions.Util
+  fullName: Catalyst.Abstractions.Util
+- uid: Catalyst.Core.Lib.Util.CancellationTokenProvider.CancellationTokenSource*
+  commentId: Overload:Catalyst.Core.Lib.Util.CancellationTokenProvider.CancellationTokenSource
+  name: CancellationTokenSource
+  nameWithType: CancellationTokenProvider.CancellationTokenSource
+  fullName: Catalyst.Core.Lib.Util.CancellationTokenProvider.CancellationTokenSource
+- uid: Catalyst.Abstractions.Util.ICancellationTokenProvider.CancellationTokenSource
+  commentId: P:Catalyst.Abstractions.Util.ICancellationTokenProvider.CancellationTokenSource
+  parent: Catalyst.Abstractions.Util.ICancellationTokenProvider
+  name: CancellationTokenSource
+  nameWithType: ICancellationTokenProvider.CancellationTokenSource
+  fullName: Catalyst.Abstractions.Util.ICancellationTokenProvider.CancellationTokenSource
+- uid: System.Threading.CancellationTokenSource
+  commentId: T:System.Threading.CancellationTokenSource
+  parent: System.Threading
+  isExternal: true
+  name: CancellationTokenSource
+  nameWithType: CancellationTokenSource
+  fullName: System.Threading.CancellationTokenSource
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+- uid: Catalyst.Core.Lib.Util.CancellationTokenProvider.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.Util.CancellationTokenProvider.#ctor
+  name: CancellationTokenProvider
+  nameWithType: CancellationTokenProvider.CancellationTokenProvider
+  fullName: Catalyst.Core.Lib.Util.CancellationTokenProvider.CancellationTokenProvider
+- uid: Catalyst.Core.Lib.Util.CancellationTokenProvider.HasTokenCancelled*
+  commentId: Overload:Catalyst.Core.Lib.Util.CancellationTokenProvider.HasTokenCancelled
+  name: HasTokenCancelled
+  nameWithType: CancellationTokenProvider.HasTokenCancelled
+  fullName: Catalyst.Core.Lib.Util.CancellationTokenProvider.HasTokenCancelled
+- uid: Catalyst.Abstractions.Util.ICancellationTokenProvider.HasTokenCancelled
+  commentId: M:Catalyst.Abstractions.Util.ICancellationTokenProvider.HasTokenCancelled
+  parent: Catalyst.Abstractions.Util.ICancellationTokenProvider
+  name: HasTokenCancelled()
+  nameWithType: ICancellationTokenProvider.HasTokenCancelled()
+  fullName: Catalyst.Abstractions.Util.ICancellationTokenProvider.HasTokenCancelled()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Util.ICancellationTokenProvider.HasTokenCancelled
+    name: HasTokenCancelled
+    nameWithType: ICancellationTokenProvider.HasTokenCancelled
+    fullName: Catalyst.Abstractions.Util.ICancellationTokenProvider.HasTokenCancelled
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Util.ICancellationTokenProvider.HasTokenCancelled
+    name: HasTokenCancelled
+    nameWithType: ICancellationTokenProvider.HasTokenCancelled
+    fullName: Catalyst.Abstractions.Util.ICancellationTokenProvider.HasTokenCancelled
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Core.Lib.Util.CancellationTokenProvider.Dispose*
+  commentId: Overload:Catalyst.Core.Lib.Util.CancellationTokenProvider.Dispose
+  name: Dispose
+  nameWithType: CancellationTokenProvider.Dispose
+  fullName: Catalyst.Core.Lib.Util.CancellationTokenProvider.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )

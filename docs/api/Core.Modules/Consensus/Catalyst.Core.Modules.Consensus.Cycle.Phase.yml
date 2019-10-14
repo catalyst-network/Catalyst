@@ -1,0 +1,668 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase
+  commentId: T:Catalyst.Core.Modules.Consensus.Cycle.Phase
+  id: Phase
+  parent: Catalyst.Core.Modules.Consensus.Cycle
+  children:
+  - Catalyst.Core.Modules.Consensus.Cycle.Phase.#ctor(MultiHash,Catalyst.Abstractions.Consensus.Cycle.IPhaseName,Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus,System.DateTime)
+  - Catalyst.Core.Modules.Consensus.Cycle.Phase.Name
+  - Catalyst.Core.Modules.Consensus.Cycle.Phase.PreviousDeltaDfsHash
+  - Catalyst.Core.Modules.Consensus.Cycle.Phase.Status
+  - Catalyst.Core.Modules.Consensus.Cycle.Phase.ToString
+  - Catalyst.Core.Modules.Consensus.Cycle.Phase.UtcStartTime
+  langs:
+  - csharp
+  - vb
+  name: Phase
+  nameWithType: Phase
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Phase
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: 'public class Phase : IPhase'
+    content.vb: >-
+      Public Class Phase
+
+          Implements IPhase
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhase
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.#ctor(MultiHash,Catalyst.Abstractions.Consensus.Cycle.IPhaseName,Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus,System.DateTime)
+  commentId: M:Catalyst.Core.Modules.Consensus.Cycle.Phase.#ctor(MultiHash,Catalyst.Abstractions.Consensus.Cycle.IPhaseName,Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus,System.DateTime)
+  id: '#ctor(MultiHash,Catalyst.Abstractions.Consensus.Cycle.IPhaseName,Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus,System.DateTime)'
+  parent: Catalyst.Core.Modules.Consensus.Cycle.Phase
+  langs:
+  - csharp
+  - vb
+  name: Phase(MultiHash, IPhaseName, IPhaseStatus, DateTime)
+  nameWithType: Phase.Phase(MultiHash, IPhaseName, IPhaseStatus, DateTime)
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.Phase(MultiHash, Catalyst.Abstractions.Consensus.Cycle.IPhaseName, Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus, System.DateTime)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  syntax:
+    content: public Phase(MultiHash previousDeltaDfsHash, IPhaseName phaseName, IPhaseStatus phaseStatus, DateTime utcStartTime)
+    parameters:
+    - id: previousDeltaDfsHash
+      type: MultiHash
+    - id: phaseName
+      type: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+    - id: phaseStatus
+      type: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+    - id: utcStartTime
+      type: System.DateTime
+    content.vb: Public Sub New(previousDeltaDfsHash As MultiHash, phaseName As IPhaseName, phaseStatus As IPhaseStatus, utcStartTime As Date)
+  overload: Catalyst.Core.Modules.Consensus.Cycle.Phase.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.PreviousDeltaDfsHash
+  commentId: P:Catalyst.Core.Modules.Consensus.Cycle.Phase.PreviousDeltaDfsHash
+  id: PreviousDeltaDfsHash
+  parent: Catalyst.Core.Modules.Consensus.Cycle.Phase
+  langs:
+  - csharp
+  - vb
+  name: PreviousDeltaDfsHash
+  nameWithType: Phase.PreviousDeltaDfsHash
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.PreviousDeltaDfsHash
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PreviousDeltaDfsHash
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+    startLine: 44
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: public MultiHash PreviousDeltaDfsHash { get; }
+    parameters: []
+    return:
+      type: MultiHash
+    content.vb: Public ReadOnly Property PreviousDeltaDfsHash As MultiHash
+  overload: Catalyst.Core.Modules.Consensus.Cycle.Phase.PreviousDeltaDfsHash*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.Name
+  commentId: P:Catalyst.Core.Modules.Consensus.Cycle.Phase.Name
+  id: Name
+  parent: Catalyst.Core.Modules.Consensus.Cycle.Phase
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: Phase.Name
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.Name
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Name
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: public IPhaseName Name { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+    content.vb: Public ReadOnly Property Name As IPhaseName
+  overload: Catalyst.Core.Modules.Consensus.Cycle.Phase.Name*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhase.Name
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.Status
+  commentId: P:Catalyst.Core.Modules.Consensus.Cycle.Phase.Status
+  id: Status
+  parent: Catalyst.Core.Modules.Consensus.Cycle.Phase
+  langs:
+  - csharp
+  - vb
+  name: Status
+  nameWithType: Phase.Status
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.Status
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Status
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: public IPhaseStatus Status { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+    content.vb: Public ReadOnly Property Status As IPhaseStatus
+  overload: Catalyst.Core.Modules.Consensus.Cycle.Phase.Status*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhase.Status
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.UtcStartTime
+  commentId: P:Catalyst.Core.Modules.Consensus.Cycle.Phase.UtcStartTime
+  id: UtcStartTime
+  parent: Catalyst.Core.Modules.Consensus.Cycle.Phase
+  langs:
+  - csharp
+  - vb
+  name: UtcStartTime
+  nameWithType: Phase.UtcStartTime
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.UtcStartTime
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: UtcStartTime
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+    startLine: 53
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: public DateTime UtcStartTime { get; }
+    parameters: []
+    return:
+      type: System.DateTime
+    content.vb: Public ReadOnly Property UtcStartTime As Date
+  overload: Catalyst.Core.Modules.Consensus.Cycle.Phase.UtcStartTime*
+  implements:
+  - Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.ToString
+  commentId: M:Catalyst.Core.Modules.Consensus.Cycle.Phase.ToString
+  id: ToString
+  parent: Catalyst.Core.Modules.Consensus.Cycle.Phase
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: Phase.ToString()
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToString
+    path: ../src/Catalyst.Core.Modules.Consensus/Cycle/Phase.cs
+    startLine: 56
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Cycle
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Catalyst.Core.Modules.Consensus.Cycle.Phase.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: Catalyst.Core.Modules.Consensus.Cycle
+  commentId: N:Catalyst.Core.Modules.Consensus.Cycle
+  name: Catalyst.Core.Modules.Consensus.Cycle
+  nameWithType: Catalyst.Core.Modules.Consensus.Cycle
+  fullName: Catalyst.Core.Modules.Consensus.Cycle
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.IPhase
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: IPhase
+  nameWithType: IPhase
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus.Cycle
+  commentId: N:Catalyst.Abstractions.Consensus.Cycle
+  name: Catalyst.Abstractions.Consensus.Cycle
+  nameWithType: Catalyst.Abstractions.Consensus.Cycle
+  fullName: Catalyst.Abstractions.Consensus.Cycle
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.Phase.#ctor
+  name: Phase
+  nameWithType: Phase.Phase
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.Phase
+- uid: MultiHash
+  isExternal: true
+  name: MultiHash
+  nameWithType: MultiHash
+  fullName: MultiHash
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: IPhaseName
+  nameWithType: IPhaseName
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseName
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+  commentId: T:Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+  parent: Catalyst.Abstractions.Consensus.Cycle
+  name: IPhaseStatus
+  nameWithType: IPhaseStatus
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhaseStatus
+- uid: System.DateTime
+  commentId: T:System.DateTime
+  parent: System
+  isExternal: true
+  name: DateTime
+  nameWithType: DateTime
+  fullName: System.DateTime
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.PreviousDeltaDfsHash*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.Phase.PreviousDeltaDfsHash
+  name: PreviousDeltaDfsHash
+  nameWithType: Phase.PreviousDeltaDfsHash
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.PreviousDeltaDfsHash
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.Name*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.Phase.Name
+  name: Name
+  nameWithType: Phase.Name
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.Name
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.Name
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhase.Name
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  name: Name
+  nameWithType: IPhase.Name
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.Name
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.Status*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.Phase.Status
+  name: Status
+  nameWithType: Phase.Status
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.Status
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.Status
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhase.Status
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  name: Status
+  nameWithType: IPhase.Status
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.Status
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.UtcStartTime*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.Phase.UtcStartTime
+  name: UtcStartTime
+  nameWithType: Phase.UtcStartTime
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.UtcStartTime
+- uid: Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime
+  commentId: P:Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime
+  parent: Catalyst.Abstractions.Consensus.Cycle.IPhase
+  name: UtcStartTime
+  nameWithType: IPhase.UtcStartTime
+  fullName: Catalyst.Abstractions.Consensus.Cycle.IPhase.UtcStartTime
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Consensus.Cycle.Phase.ToString*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Cycle.Phase.ToString
+  name: ToString
+  nameWithType: Phase.ToString
+  fullName: Catalyst.Core.Modules.Consensus.Cycle.Phase.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String

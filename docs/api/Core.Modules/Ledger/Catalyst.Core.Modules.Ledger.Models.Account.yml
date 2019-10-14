@@ -1,0 +1,664 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Ledger.Models.Account
+  commentId: T:Catalyst.Core.Modules.Ledger.Models.Account
+  id: Account
+  parent: Catalyst.Core.Modules.Ledger.Models
+  children:
+  - Catalyst.Core.Modules.Ledger.Models.Account.#ctor
+  - Catalyst.Core.Modules.Ledger.Models.Account.#ctor(System.String,Catalyst.Abstractions.Types.AccountTypes,UInt256)
+  - Catalyst.Core.Modules.Ledger.Models.Account.AccountType
+  - Catalyst.Core.Modules.Ledger.Models.Account.Balance
+  - Catalyst.Core.Modules.Ledger.Models.Account.DocumentId
+  - Catalyst.Core.Modules.Ledger.Models.Account.PublicAddress
+  langs:
+  - csharp
+  - vb
+  name: Account
+  nameWithType: Account
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Account
+    path: ../src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger.Models
+  example: []
+  syntax:
+    content: 'public sealed class Account : IAccount, IDocument'
+    content.vb: >-
+      Public NotInheritable Class Account
+
+          Implements IAccount, IDocument
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Core.Modules.Ledger.Models.IAccount
+  - Catalyst.Abstractions.Repository.IDocument
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.#ctor
+  commentId: M:Catalyst.Core.Modules.Ledger.Models.Account.#ctor
+  id: '#ctor'
+  parent: Catalyst.Core.Modules.Ledger.Models.Account
+  langs:
+  - csharp
+  - vb
+  name: Account()
+  nameWithType: Account.Account()
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.Account()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger.Models
+  syntax:
+    content: public Account()
+    content.vb: Public Sub New
+  overload: Catalyst.Core.Modules.Ledger.Models.Account.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.#ctor(System.String,Catalyst.Abstractions.Types.AccountTypes,UInt256)
+  commentId: M:Catalyst.Core.Modules.Ledger.Models.Account.#ctor(System.String,Catalyst.Abstractions.Types.AccountTypes,UInt256)
+  id: '#ctor(System.String,Catalyst.Abstractions.Types.AccountTypes,UInt256)'
+  parent: Catalyst.Core.Modules.Ledger.Models.Account
+  langs:
+  - csharp
+  - vb
+  name: Account(String, AccountTypes, UInt256)
+  nameWithType: Account.Account(String, AccountTypes, UInt256)
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.Account(System.String, Catalyst.Abstractions.Types.AccountTypes, UInt256)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger.Models
+  syntax:
+    content: public Account(string publicAddress, AccountTypes accountType, UInt256 balance = null)
+    parameters:
+    - id: publicAddress
+      type: System.String
+    - id: accountType
+      type: Catalyst.Abstractions.Types.AccountTypes
+    - id: balance
+      type: UInt256
+    content.vb: Public Sub New(publicAddress As String, accountType As AccountTypes, balance As UInt256 = Nothing)
+  overload: Catalyst.Core.Modules.Ledger.Models.Account.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.PublicAddress
+  commentId: P:Catalyst.Core.Modules.Ledger.Models.Account.PublicAddress
+  id: PublicAddress
+  parent: Catalyst.Core.Modules.Ledger.Models.Account
+  langs:
+  - csharp
+  - vb
+  name: PublicAddress
+  nameWithType: Account.PublicAddress
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.PublicAddress
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PublicAddress
+    path: ../src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+    startLine: 51
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger.Models
+  example: []
+  syntax:
+    content: public string PublicAddress { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property PublicAddress As String
+  overload: Catalyst.Core.Modules.Ledger.Models.Account.PublicAddress*
+  implements:
+  - Catalyst.Core.Modules.Ledger.Models.IAccount.PublicAddress
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.AccountType
+  commentId: P:Catalyst.Core.Modules.Ledger.Models.Account.AccountType
+  id: AccountType
+  parent: Catalyst.Core.Modules.Ledger.Models.Account
+  langs:
+  - csharp
+  - vb
+  name: AccountType
+  nameWithType: Account.AccountType
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.AccountType
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: AccountType
+    path: ../src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+    startLine: 54
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger.Models
+  example: []
+  syntax:
+    content: public AccountTypes AccountType { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Types.AccountTypes
+    content.vb: Public ReadOnly Property AccountType As AccountTypes
+  overload: Catalyst.Core.Modules.Ledger.Models.Account.AccountType*
+  implements:
+  - Catalyst.Core.Modules.Ledger.Models.IAccount.AccountType
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.Balance
+  commentId: P:Catalyst.Core.Modules.Ledger.Models.Account.Balance
+  id: Balance
+  parent: Catalyst.Core.Modules.Ledger.Models.Account
+  langs:
+  - csharp
+  - vb
+  name: Balance
+  nameWithType: Account.Balance
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.Balance
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Balance
+    path: ../src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+    startLine: 57
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger.Models
+  example: []
+  syntax:
+    content: public UInt256 Balance { get; set; }
+    parameters: []
+    return:
+      type: UInt256
+    content.vb: Public Property Balance As UInt256
+  overload: Catalyst.Core.Modules.Ledger.Models.Account.Balance*
+  implements:
+  - Catalyst.Core.Modules.Ledger.Models.IAccount.Balance
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.DocumentId
+  commentId: P:Catalyst.Core.Modules.Ledger.Models.Account.DocumentId
+  id: DocumentId
+  parent: Catalyst.Core.Modules.Ledger.Models.Account
+  langs:
+  - csharp
+  - vb
+  name: DocumentId
+  nameWithType: Account.DocumentId
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.DocumentId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DocumentId
+    path: ../src/Catalyst.Core.Modules.Ledger/Models/Account.cs
+    startLine: 59
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger.Models
+  syntax:
+    content: public string DocumentId { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public ReadOnly Property DocumentId As String
+  overload: Catalyst.Core.Modules.Ledger.Models.Account.DocumentId*
+  implements:
+  - Catalyst.Abstractions.Repository.IDocument.DocumentId
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+references:
+- uid: Catalyst.Core.Modules.Ledger.Models
+  commentId: N:Catalyst.Core.Modules.Ledger.Models
+  name: Catalyst.Core.Modules.Ledger.Models
+  nameWithType: Catalyst.Core.Modules.Ledger.Models
+  fullName: Catalyst.Core.Modules.Ledger.Models
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Modules.Ledger.Models.IAccount
+  commentId: T:Catalyst.Core.Modules.Ledger.Models.IAccount
+  parent: Catalyst.Core.Modules.Ledger.Models
+  name: IAccount
+  nameWithType: IAccount
+  fullName: Catalyst.Core.Modules.Ledger.Models.IAccount
+- uid: Catalyst.Abstractions.Repository.IDocument
+  commentId: T:Catalyst.Abstractions.Repository.IDocument
+  parent: Catalyst.Abstractions.Repository
+  name: IDocument
+  nameWithType: IDocument
+  fullName: Catalyst.Abstractions.Repository.IDocument
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Repository
+  commentId: N:Catalyst.Abstractions.Repository
+  name: Catalyst.Abstractions.Repository
+  nameWithType: Catalyst.Abstractions.Repository
+  fullName: Catalyst.Abstractions.Repository
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Models.Account.#ctor
+  name: Account
+  nameWithType: Account.Account
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.Account
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Abstractions.Types.AccountTypes
+  commentId: T:Catalyst.Abstractions.Types.AccountTypes
+  parent: Catalyst.Abstractions.Types
+  name: AccountTypes
+  nameWithType: AccountTypes
+  fullName: Catalyst.Abstractions.Types.AccountTypes
+- uid: UInt256
+  isExternal: true
+  name: UInt256
+  nameWithType: UInt256
+  fullName: UInt256
+- uid: Catalyst.Abstractions.Types
+  commentId: N:Catalyst.Abstractions.Types
+  name: Catalyst.Abstractions.Types
+  nameWithType: Catalyst.Abstractions.Types
+  fullName: Catalyst.Abstractions.Types
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.PublicAddress*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Models.Account.PublicAddress
+  name: PublicAddress
+  nameWithType: Account.PublicAddress
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.PublicAddress
+- uid: Catalyst.Core.Modules.Ledger.Models.IAccount.PublicAddress
+  commentId: P:Catalyst.Core.Modules.Ledger.Models.IAccount.PublicAddress
+  parent: Catalyst.Core.Modules.Ledger.Models.IAccount
+  name: PublicAddress
+  nameWithType: IAccount.PublicAddress
+  fullName: Catalyst.Core.Modules.Ledger.Models.IAccount.PublicAddress
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.AccountType*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Models.Account.AccountType
+  name: AccountType
+  nameWithType: Account.AccountType
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.AccountType
+- uid: Catalyst.Core.Modules.Ledger.Models.IAccount.AccountType
+  commentId: P:Catalyst.Core.Modules.Ledger.Models.IAccount.AccountType
+  parent: Catalyst.Core.Modules.Ledger.Models.IAccount
+  name: AccountType
+  nameWithType: IAccount.AccountType
+  fullName: Catalyst.Core.Modules.Ledger.Models.IAccount.AccountType
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.Balance*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Models.Account.Balance
+  name: Balance
+  nameWithType: Account.Balance
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.Balance
+- uid: Catalyst.Core.Modules.Ledger.Models.IAccount.Balance
+  commentId: P:Catalyst.Core.Modules.Ledger.Models.IAccount.Balance
+  parent: Catalyst.Core.Modules.Ledger.Models.IAccount
+  name: Balance
+  nameWithType: IAccount.Balance
+  fullName: Catalyst.Core.Modules.Ledger.Models.IAccount.Balance
+- uid: Catalyst.Core.Modules.Ledger.Models.Account.DocumentId*
+  commentId: Overload:Catalyst.Core.Modules.Ledger.Models.Account.DocumentId
+  name: DocumentId
+  nameWithType: Account.DocumentId
+  fullName: Catalyst.Core.Modules.Ledger.Models.Account.DocumentId
+- uid: Catalyst.Abstractions.Repository.IDocument.DocumentId
+  commentId: P:Catalyst.Abstractions.Repository.IDocument.DocumentId
+  parent: Catalyst.Abstractions.Repository.IDocument
+  name: DocumentId
+  nameWithType: IDocument.DocumentId
+  fullName: Catalyst.Abstractions.Repository.IDocument.DocumentId

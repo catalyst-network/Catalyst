@@ -1,0 +1,288 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.IPeerService
+  commentId: T:Catalyst.Abstractions.P2P.IPeerService
+  id: IPeerService
+  parent: Catalyst.Abstractions.P2P
+  children:
+  - Catalyst.Abstractions.P2P.IPeerService.Discovery
+  langs:
+  - csharp
+  - vb
+  name: IPeerService
+  nameWithType: IPeerService
+  fullName: Catalyst.Abstractions.P2P.IPeerService
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/IPeerService.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IPeerService
+    path: ../src/Catalyst.Abstractions/P2P/IPeerService.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P
+  syntax:
+    content: 'public interface IPeerService : IObservableMessageStreamer<ProtocolMessage>, ISocket, IDisposable'
+    content.vb: >-
+      Public Interface IPeerService
+
+          Inherits IObservableMessageStreamer(Of ProtocolMessage), ISocket
+  inheritedMembers:
+  - Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{ProtocolMessage}.MessageStream
+  - Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  - Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.P2P.IPeerService.Discovery
+  commentId: P:Catalyst.Abstractions.P2P.IPeerService.Discovery
+  id: Discovery
+  parent: Catalyst.Abstractions.P2P.IPeerService
+  langs:
+  - csharp
+  - vb
+  name: Discovery
+  nameWithType: IPeerService.Discovery
+  fullName: Catalyst.Abstractions.P2P.IPeerService.Discovery
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/IPeerService.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Discovery
+    path: ../src/Catalyst.Abstractions/P2P/IPeerService.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P
+  summary: "\nThe discovery mechanism for the peer network.\n"
+  example: []
+  syntax:
+    content: IPeerDiscovery Discovery { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery
+    content.vb: ReadOnly Property Discovery As IPeerDiscovery
+  overload: Catalyst.Abstractions.P2P.IPeerService.Discovery*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.P2P
+  commentId: N:Catalyst.Abstractions.P2P
+  name: Catalyst.Abstractions.P2P
+  nameWithType: Catalyst.Abstractions.P2P
+  fullName: Catalyst.Abstractions.P2P
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{ProtocolMessage}.MessageStream
+  commentId: P:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{ProtocolMessage}.MessageStream
+  parent: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{ProtocolMessage}
+  definition: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream
+  name: MessageStream
+  nameWithType: IObservableMessageStreamer<ProtocolMessage>.MessageStream
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<ProtocolMessage>.MessageStream
+  nameWithType.vb: IObservableMessageStreamer(Of ProtocolMessage).MessageStream
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of ProtocolMessage).MessageStream
+- uid: Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  commentId: P:Catalyst.Abstractions.IO.Transport.ISocket.Channel
+  parent: Catalyst.Abstractions.IO.Transport.ISocket
+  name: Channel
+  nameWithType: ISocket.Channel
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket.Channel
+- uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  commentId: M:Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  parent: Catalyst.Abstractions.IO.Transport.ISocket
+  name: StartAsync()
+  nameWithType: ISocket.StartAsync()
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+    name: StartAsync
+    nameWithType: ISocket.StartAsync
+    fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+    name: StartAsync
+    nameWithType: ISocket.StartAsync
+    fullName: Catalyst.Abstractions.IO.Transport.ISocket.StartAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream
+  commentId: P:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream
+  name: MessageStream
+  nameWithType: IObservableMessageStreamer<T>.MessageStream
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<T>.MessageStream
+  nameWithType.vb: IObservableMessageStreamer(Of T).MessageStream
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of T).MessageStream
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{ProtocolMessage}
+  commentId: T:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{ProtocolMessage}
+  parent: Catalyst.Abstractions.IO.Observers
+  definition: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  name: IObservableMessageStreamer<ProtocolMessage>
+  nameWithType: IObservableMessageStreamer<ProtocolMessage>
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<ProtocolMessage>
+  nameWithType.vb: IObservableMessageStreamer(Of ProtocolMessage)
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of ProtocolMessage)
+  name.vb: IObservableMessageStreamer(Of ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Transport.ISocket
+  commentId: T:Catalyst.Abstractions.IO.Transport.ISocket
+  parent: Catalyst.Abstractions.IO.Transport
+  name: ISocket
+  nameWithType: ISocket
+  fullName: Catalyst.Abstractions.IO.Transport.ISocket
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  commentId: T:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  name: IObservableMessageStreamer<T>
+  nameWithType: IObservableMessageStreamer<T>
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<T>
+  nameWithType.vb: IObservableMessageStreamer(Of T)
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of T)
+  name.vb: IObservableMessageStreamer(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Observers
+  commentId: N:Catalyst.Abstractions.IO.Observers
+  name: Catalyst.Abstractions.IO.Observers
+  nameWithType: Catalyst.Abstractions.IO.Observers
+  fullName: Catalyst.Abstractions.IO.Observers
+- uid: Catalyst.Abstractions.IO.Transport
+  commentId: N:Catalyst.Abstractions.IO.Transport
+  name: Catalyst.Abstractions.IO.Transport
+  nameWithType: Catalyst.Abstractions.IO.Transport
+  fullName: Catalyst.Abstractions.IO.Transport
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.P2P.IPeerService.Discovery*
+  commentId: Overload:Catalyst.Abstractions.P2P.IPeerService.Discovery
+  name: Discovery
+  nameWithType: IPeerService.Discovery
+  fullName: Catalyst.Abstractions.P2P.IPeerService.Discovery
+- uid: Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery
+  parent: Catalyst.Abstractions.P2P.Discovery
+  name: IPeerDiscovery
+  nameWithType: IPeerDiscovery
+  fullName: Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery

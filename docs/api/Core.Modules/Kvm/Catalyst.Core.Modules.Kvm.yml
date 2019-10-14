@@ -1,0 +1,70 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Kvm
+  commentId: N:Catalyst.Core.Modules.Kvm
+  id: Catalyst.Core.Modules.Kvm
+  children:
+  - Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  - Catalyst.Core.Modules.Kvm.CatalystSpecProvider
+  - Catalyst.Core.Modules.Kvm.CatalystUnit
+  - Catalyst.Core.Modules.Kvm.KatVirtualMachine
+  - Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  - Catalyst.Core.Modules.Kvm.KvmModule
+  - Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  - Catalyst.Core.Modules.Kvm.StateUpdateHashProvider
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Modules.Kvm
+  nameWithType: Catalyst.Core.Modules.Kvm
+  fullName: Catalyst.Core.Modules.Kvm
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+references:
+- uid: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  commentId: T:Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+  parent: Catalyst.Core.Modules.Kvm
+  name: CatalystGenesisSpec
+  nameWithType: CatalystGenesisSpec
+  fullName: Catalyst.Core.Modules.Kvm.CatalystGenesisSpec
+- uid: Catalyst.Core.Modules.Kvm.CatalystSpecProvider
+  commentId: T:Catalyst.Core.Modules.Kvm.CatalystSpecProvider
+  name: CatalystSpecProvider
+  nameWithType: CatalystSpecProvider
+  fullName: Catalyst.Core.Modules.Kvm.CatalystSpecProvider
+- uid: Catalyst.Core.Modules.Kvm.CatalystUnit
+  commentId: T:Catalyst.Core.Modules.Kvm.CatalystUnit
+  name: CatalystUnit
+  nameWithType: CatalystUnit
+  fullName: Catalyst.Core.Modules.Kvm.CatalystUnit
+- uid: Catalyst.Core.Modules.Kvm.KatVirtualMachine
+  commentId: T:Catalyst.Core.Modules.Kvm.KatVirtualMachine
+  name: KatVirtualMachine
+  nameWithType: KatVirtualMachine
+  fullName: Catalyst.Core.Modules.Kvm.KatVirtualMachine
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  commentId: T:Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  name: KvmIntExtensions
+  nameWithType: KvmIntExtensions
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions
+- uid: Catalyst.Core.Modules.Kvm.KvmModule
+  commentId: T:Catalyst.Core.Modules.Kvm.KvmModule
+  name: KvmModule
+  nameWithType: KvmModule
+  fullName: Catalyst.Core.Modules.Kvm.KvmModule
+- uid: Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  commentId: T:Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+  name: RangeProofPrecompile
+  nameWithType: RangeProofPrecompile
+  fullName: Catalyst.Core.Modules.Kvm.RangeProofPrecompile
+- uid: Catalyst.Core.Modules.Kvm.StateUpdateHashProvider
+  commentId: T:Catalyst.Core.Modules.Kvm.StateUpdateHashProvider
+  name: StateUpdateHashProvider
+  nameWithType: StateUpdateHashProvider
+  fullName: Catalyst.Core.Modules.Kvm.StateUpdateHashProvider
+- uid: Catalyst.Core.Modules.Kvm
+  commentId: N:Catalyst.Core.Modules.Kvm
+  name: Catalyst.Core.Modules.Kvm
+  nameWithType: Catalyst.Core.Modules.Kvm
+  fullName: Catalyst.Core.Modules.Kvm

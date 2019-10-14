@@ -1,0 +1,208 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+  id: OutboundChannelHandlerBase`1
+  parent: Catalyst.Core.Lib.IO.Handlers
+  children:
+  - Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync(IChannelHandlerContext,System.Object)
+  - Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0(IChannelHandlerContext,`0)
+  langs:
+  - csharp
+  - vb
+  name: OutboundChannelHandlerBase<T>
+  nameWithType: OutboundChannelHandlerBase<T>
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<T>
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/OutboundChannelHandlerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: OutboundChannelHandlerBase
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/OutboundChannelHandlerBase.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  summary: "\nOutboundChannel Handler is similar to Dot Netty&apos;s simple inbound channel handler, except it removes some redundant double cast operations.\n"
+  example: []
+  syntax:
+    content: 'public abstract class OutboundChannelHandlerBase<T> : ChannelHandlerAdapter'
+    typeParameters:
+    - id: T
+      description: ''
+    content.vb: >-
+      Public MustInherit Class OutboundChannelHandlerBase(Of T)
+
+          Inherits ChannelHandlerAdapter
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - Catalyst.Core.Lib.IO.Handlers.CorrelatableHandler`1
+  - Catalyst.Core.Lib.IO.Handlers.FlushPipelineHandler`1
+  - Catalyst.Core.Lib.IO.Handlers.ProtocolMessageSignHandler
+  nameWithType.vb: OutboundChannelHandlerBase(Of T)
+  modifiers.csharp:
+  - public
+  - abstract
+  - class
+  modifiers.vb:
+  - Public
+  - MustInherit
+  - Class
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of T)
+  name.vb: OutboundChannelHandlerBase(Of T)
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync(IChannelHandlerContext,System.Object)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync(IChannelHandlerContext,System.Object)
+  id: WriteAsync(IChannelHandlerContext,System.Object)
+  parent: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+  langs:
+  - csharp
+  - vb
+  name: WriteAsync(IChannelHandlerContext, Object)
+  nameWithType: OutboundChannelHandlerBase<T>.WriteAsync(IChannelHandlerContext, Object)
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<T>.WriteAsync(IChannelHandlerContext, System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/OutboundChannelHandlerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: WriteAsync
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/OutboundChannelHandlerBase.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  summary: "\nDoes check to see if it can process the msg, if object is T thn it fires the inheritor WriteAsync0\n"
+  example: []
+  syntax:
+    content: public override Task WriteAsync(IChannelHandlerContext ctx, object msg)
+    parameters:
+    - id: ctx
+      type: IChannelHandlerContext
+      description: ''
+    - id: msg
+      type: System.Object
+      description: ''
+    return:
+      type: System.Threading.Tasks.Task
+      description: ''
+    content.vb: Public Overrides Function WriteAsync(ctx As IChannelHandlerContext, msg As Object) As Task
+  overload: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync*
+  nameWithType.vb: OutboundChannelHandlerBase(Of T).WriteAsync(IChannelHandlerContext, Object)
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of T).WriteAsync(IChannelHandlerContext, System.Object)
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0(IChannelHandlerContext,`0)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0(IChannelHandlerContext,`0)
+  id: WriteAsync0(IChannelHandlerContext,`0)
+  parent: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1
+  langs:
+  - csharp
+  - vb
+  name: WriteAsync0(IChannelHandlerContext, T)
+  nameWithType: OutboundChannelHandlerBase<T>.WriteAsync0(IChannelHandlerContext, T)
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<T>.WriteAsync0(IChannelHandlerContext, T)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/OutboundChannelHandlerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: WriteAsync0
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/OutboundChannelHandlerBase.cs
+    startLine: 70
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  summary: "\nOnly fires if the msg if is the same as the classes generic T, should be implemented by inherited concrete classes.\n"
+  example: []
+  syntax:
+    content: protected abstract Task WriteAsync0(IChannelHandlerContext ctx, T msg)
+    parameters:
+    - id: ctx
+      type: IChannelHandlerContext
+      description: ''
+    - id: msg
+      type: '{T}'
+      description: ''
+    return:
+      type: System.Threading.Tasks.Task
+      description: ''
+    content.vb: Protected MustOverride Function WriteAsync0(ctx As IChannelHandlerContext, msg As T) As Task
+  overload: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0*
+  nameWithType.vb: OutboundChannelHandlerBase(Of T).WriteAsync0(IChannelHandlerContext, T)
+  modifiers.csharp:
+  - protected
+  - abstract
+  modifiers.vb:
+  - Protected
+  - MustOverride
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of T).WriteAsync0(IChannelHandlerContext, T)
+references:
+- uid: Catalyst.Core.Lib.IO.Handlers
+  commentId: N:Catalyst.Core.Lib.IO.Handlers
+  name: Catalyst.Core.Lib.IO.Handlers
+  nameWithType: Catalyst.Core.Lib.IO.Handlers
+  fullName: Catalyst.Core.Lib.IO.Handlers
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync
+  name: WriteAsync
+  nameWithType: OutboundChannelHandlerBase<T>.WriteAsync
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<T>.WriteAsync
+  nameWithType.vb: OutboundChannelHandlerBase(Of T).WriteAsync
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of T).WriteAsync
+- uid: IChannelHandlerContext
+  isExternal: true
+  name: IChannelHandlerContext
+  nameWithType: IChannelHandlerContext
+  fullName: IChannelHandlerContext
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+- uid: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase`1.WriteAsync0
+  name: WriteAsync0
+  nameWithType: OutboundChannelHandlerBase<T>.WriteAsync0
+  fullName: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase<T>.WriteAsync0
+  nameWithType.vb: OutboundChannelHandlerBase(Of T).WriteAsync0
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.OutboundChannelHandlerBase(Of T).WriteAsync0
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T

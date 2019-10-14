@@ -1,0 +1,263 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap
+  commentId: T:Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap
+  id: Bootstrap
+  parent: Catalyst.Core.Lib.IO.Transport.Bootstrapping
+  children:
+  - Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.#ctor
+  - Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.BindAsync(System.Net.IPAddress,System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: Bootstrap
+  nameWithType: Bootstrap
+  fullName: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Transport/Bootstrapping/Bootstrap.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Bootstrap
+    path: ../src/Catalyst.Core.Lib/IO/Transport/Bootstrapping/Bootstrap.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Transport.Bootstrapping
+  syntax:
+    content: 'public sealed class Bootstrap : DotNetty.Transport.Bootstrapping.Bootstrap, IServerBootstrap'
+    content.vb: >-
+      Public NotInheritable Class Bootstrap
+
+          Inherits DotNetty.Transport.Bootstrapping.Bootstrap
+
+          Implements IServerBootstrap
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.#ctor
+  commentId: M:Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.#ctor
+  id: '#ctor'
+  parent: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap
+  langs:
+  - csharp
+  - vb
+  name: Bootstrap()
+  nameWithType: Bootstrap.Bootstrap()
+  fullName: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.Bootstrap()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Transport/Bootstrapping/Bootstrap.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Transport/Bootstrapping/Bootstrap.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Transport.Bootstrapping
+  syntax:
+    content: public Bootstrap()
+    content.vb: Public Sub New
+  overload: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.BindAsync(System.Net.IPAddress,System.Int32)
+  commentId: M:Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.BindAsync(System.Net.IPAddress,System.Int32)
+  id: BindAsync(System.Net.IPAddress,System.Int32)
+  parent: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap
+  langs:
+  - csharp
+  - vb
+  name: BindAsync(IPAddress, Int32)
+  nameWithType: Bootstrap.BindAsync(IPAddress, Int32)
+  fullName: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.BindAsync(System.Net.IPAddress, System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Transport/Bootstrapping/Bootstrap.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BindAsync
+    path: ../src/Catalyst.Core.Lib/IO/Transport/Bootstrapping/Bootstrap.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Transport.Bootstrapping
+  syntax:
+    content: public Task<IChannel> BindAsync(IPAddress ipAddress, int port)
+    parameters:
+    - id: ipAddress
+      type: System.Net.IPAddress
+    - id: port
+      type: System.Int32
+    return:
+      type: System.Threading.Tasks.Task{IChannel}
+    content.vb: Public Function BindAsync(ipAddress As IPAddress, port As Integer) As Task(Of IChannel)
+  overload: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.BindAsync*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.IO.Transport.Bootstrapping
+  commentId: N:Catalyst.Core.Lib.IO.Transport.Bootstrapping
+  name: Catalyst.Core.Lib.IO.Transport.Bootstrapping
+  nameWithType: Catalyst.Core.Lib.IO.Transport.Bootstrapping
+  fullName: Catalyst.Core.Lib.IO.Transport.Bootstrapping
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+  commentId: T:Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+  parent: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  name: IServerBootstrap
+  nameWithType: IServerBootstrap
+  fullName: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  commentId: N:Catalyst.Abstractions.IO.Transport.Bootstrapping
+  name: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  nameWithType: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  fullName: Catalyst.Abstractions.IO.Transport.Bootstrapping
+- uid: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.#ctor
+  name: Bootstrap
+  nameWithType: Bootstrap.Bootstrap
+  fullName: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.Bootstrap
+- uid: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.BindAsync*
+  commentId: Overload:Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.BindAsync
+  name: BindAsync
+  nameWithType: Bootstrap.BindAsync
+  fullName: Catalyst.Core.Lib.IO.Transport.Bootstrapping.Bootstrap.BindAsync
+- uid: System.Net.IPAddress
+  commentId: T:System.Net.IPAddress
+  parent: System.Net
+  isExternal: true
+  name: IPAddress
+  nameWithType: IPAddress
+  fullName: System.Net.IPAddress
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System.Threading.Tasks.Task{IChannel}
+  commentId: T:System.Threading.Tasks.Task{IChannel}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<IChannel>
+  nameWithType: Task<IChannel>
+  fullName: System.Threading.Tasks.Task<IChannel>
+  nameWithType.vb: Task(Of IChannel)
+  fullName.vb: System.Threading.Tasks.Task(Of IChannel)
+  name.vb: Task(Of IChannel)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: IChannel
+    name: IChannel
+    nameWithType: IChannel
+    fullName: IChannel
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: IChannel
+    name: IChannel
+    nameWithType: IChannel
+    fullName: IChannel
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Net
+  commentId: N:System.Net
+  isExternal: true
+  name: System.Net
+  nameWithType: System.Net
+  fullName: System.Net
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks

@@ -1,0 +1,644 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  commentId: T:Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  id: KvmIntExtensions
+  parent: Catalyst.Core.Modules.Kvm
+  children:
+  - Catalyst.Core.Modules.Kvm.KvmIntExtensions.Ful(System.Int32)
+  - Catalyst.Core.Modules.Kvm.KvmIntExtensions.GFul(System.Int32)
+  - Catalyst.Core.Modules.Kvm.KvmIntExtensions.Gm(System.Int32)
+  - Catalyst.Core.Modules.Kvm.KvmIntExtensions.Kat(System.Int32)
+  - Catalyst.Core.Modules.Kvm.KvmIntExtensions.Km(System.Int32)
+  - Catalyst.Core.Modules.Kvm.KvmIntExtensions.Mm(System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: KvmIntExtensions
+  nameWithType: KvmIntExtensions
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: KvmIntExtensions
+    path: ../src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  syntax:
+    content: public static class KvmIntExtensions
+    content.vb: Public Module KvmIntExtensions
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - static
+  - class
+  modifiers.vb:
+  - Public
+  - Module
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Gm(System.Int32)
+  commentId: M:Catalyst.Core.Modules.Kvm.KvmIntExtensions.Gm(System.Int32)
+  id: Gm(System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  langs:
+  - csharp
+  - vb
+  name: Gm(Int32)
+  nameWithType: KvmIntExtensions.Gm(Int32)
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Gm(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Gm
+    path: ../src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  syntax:
+    content: public static ulong Gm(this int this)
+    parameters:
+    - id: this
+      type: System.Int32
+    return:
+      type: System.UInt64
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function Gm(this As Integer) As ULong
+  overload: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Gm*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Mm(System.Int32)
+  commentId: M:Catalyst.Core.Modules.Kvm.KvmIntExtensions.Mm(System.Int32)
+  id: Mm(System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  langs:
+  - csharp
+  - vb
+  name: Mm(Int32)
+  nameWithType: KvmIntExtensions.Mm(Int32)
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Mm(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Mm
+    path: ../src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  syntax:
+    content: public static ulong Mm(this int this)
+    parameters:
+    - id: this
+      type: System.Int32
+    return:
+      type: System.UInt64
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function Mm(this As Integer) As ULong
+  overload: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Mm*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Km(System.Int32)
+  commentId: M:Catalyst.Core.Modules.Kvm.KvmIntExtensions.Km(System.Int32)
+  id: Km(System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  langs:
+  - csharp
+  - vb
+  name: Km(Int32)
+  nameWithType: KvmIntExtensions.Km(Int32)
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Km(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Km
+    path: ../src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  syntax:
+    content: public static ulong Km(this int this)
+    parameters:
+    - id: this
+      type: System.Int32
+    return:
+      type: System.UInt64
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function Km(this As Integer) As ULong
+  overload: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Km*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Kat(System.Int32)
+  commentId: M:Catalyst.Core.Modules.Kvm.KvmIntExtensions.Kat(System.Int32)
+  id: Kat(System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  langs:
+  - csharp
+  - vb
+  name: Kat(Int32)
+  nameWithType: KvmIntExtensions.Kat(Int32)
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Kat(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Kat
+    path: ../src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  syntax:
+    content: public static UInt256 Kat(this int this)
+    parameters:
+    - id: this
+      type: System.Int32
+    return:
+      type: UInt256
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function Kat(this As Integer) As UInt256
+  overload: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Kat*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Ful(System.Int32)
+  commentId: M:Catalyst.Core.Modules.Kvm.KvmIntExtensions.Ful(System.Int32)
+  id: Ful(System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  langs:
+  - csharp
+  - vb
+  name: Ful(Int32)
+  nameWithType: KvmIntExtensions.Ful(Int32)
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Ful(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Ful
+    path: ../src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+    startLine: 37
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  syntax:
+    content: public static UInt256 Ful(this int this)
+    parameters:
+    - id: this
+      type: System.Int32
+    return:
+      type: UInt256
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function Ful(this As Integer) As UInt256
+  overload: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Ful*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.GFul(System.Int32)
+  commentId: M:Catalyst.Core.Modules.Kvm.KvmIntExtensions.GFul(System.Int32)
+  id: GFul(System.Int32)
+  isExtensionMethod: true
+  parent: Catalyst.Core.Modules.Kvm.KvmIntExtensions
+  langs:
+  - csharp
+  - vb
+  name: GFul(Int32)
+  nameWithType: KvmIntExtensions.GFul(Int32)
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.GFul(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GFul
+    path: ../src/Catalyst.Core.Modules.Kvm/KvmIntExtensions.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Modules.Kvm
+  namespace: Catalyst.Core.Modules.Kvm
+  syntax:
+    content: public static UInt256 GFul(this int this)
+    parameters:
+    - id: this
+      type: System.Int32
+    return:
+      type: UInt256
+    content.vb: >-
+      <ExtensionAttribute>
+
+      Public Shared Function GFul(this As Integer) As UInt256
+  overload: Catalyst.Core.Modules.Kvm.KvmIntExtensions.GFul*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+references:
+- uid: Catalyst.Core.Modules.Kvm
+  commentId: N:Catalyst.Core.Modules.Kvm
+  name: Catalyst.Core.Modules.Kvm
+  nameWithType: Catalyst.Core.Modules.Kvm
+  fullName: Catalyst.Core.Modules.Kvm
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Gm*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.KvmIntExtensions.Gm
+  name: Gm
+  nameWithType: KvmIntExtensions.Gm
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Gm
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System.UInt64
+  commentId: T:System.UInt64
+  parent: System
+  isExternal: true
+  name: UInt64
+  nameWithType: UInt64
+  fullName: System.UInt64
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Mm*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.KvmIntExtensions.Mm
+  name: Mm
+  nameWithType: KvmIntExtensions.Mm
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Mm
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Km*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.KvmIntExtensions.Km
+  name: Km
+  nameWithType: KvmIntExtensions.Km
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Km
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Kat*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.KvmIntExtensions.Kat
+  name: Kat
+  nameWithType: KvmIntExtensions.Kat
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Kat
+- uid: UInt256
+  isExternal: true
+  name: UInt256
+  nameWithType: UInt256
+  fullName: UInt256
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Ful*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.KvmIntExtensions.Ful
+  name: Ful
+  nameWithType: KvmIntExtensions.Ful
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.Ful
+- uid: Catalyst.Core.Modules.Kvm.KvmIntExtensions.GFul*
+  commentId: Overload:Catalyst.Core.Modules.Kvm.KvmIntExtensions.GFul
+  name: GFul
+  nameWithType: KvmIntExtensions.GFul
+  fullName: Catalyst.Core.Modules.Kvm.KvmIntExtensions.GFul

@@ -1,0 +1,198 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  commentId: T:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  id: IObservableMessageStreamer`1
+  parent: Catalyst.Abstractions.IO.Observers
+  children:
+  - Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream
+  langs:
+  - csharp
+  - vb
+  name: IObservableMessageStreamer<T>
+  nameWithType: IObservableMessageStreamer<T>
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<T>
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Observers/IObservableMessageStreamer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IObservableMessageStreamer
+    path: ../src/Catalyst.Abstractions/IO/Observers/IObservableMessageStreamer.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Observers
+  syntax:
+    content: >-
+      public interface IObservableMessageStreamer<out T>
+
+          where T : IMessage<T>
+    typeParameters:
+    - id: T
+    content.vb: Public Interface IObservableMessageStreamer(Of Out T As IMessage(Of T))
+  nameWithType.vb: IObservableMessageStreamer(Of T)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of T)
+  name.vb: IObservableMessageStreamer(Of T)
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream
+  commentId: P:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream
+  id: MessageStream
+  parent: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  langs:
+  - csharp
+  - vb
+  name: MessageStream
+  nameWithType: IObservableMessageStreamer<T>.MessageStream
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<T>.MessageStream
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/Observers/IObservableMessageStreamer.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MessageStream
+    path: ../src/Catalyst.Abstractions/IO/Observers/IObservableMessageStreamer.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.Observers
+  summary: "\nMessage stream\n"
+  example: []
+  syntax:
+    content: IObservable<IObserverDto<T>> MessageStream { get; }
+    parameters: []
+    return:
+      type: System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{{T}}}
+    content.vb: ReadOnly Property MessageStream As IObservable(Of IObserverDto(Of T))
+  overload: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream*
+  nameWithType.vb: IObservableMessageStreamer(Of T).MessageStream
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of T).MessageStream
+references:
+- uid: Catalyst.Abstractions.IO.Observers
+  commentId: N:Catalyst.Abstractions.IO.Observers
+  name: Catalyst.Abstractions.IO.Observers
+  nameWithType: Catalyst.Abstractions.IO.Observers
+  fullName: Catalyst.Abstractions.IO.Observers
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream*
+  commentId: Overload:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1.MessageStream
+  name: MessageStream
+  nameWithType: IObservableMessageStreamer<T>.MessageStream
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<T>.MessageStream
+  nameWithType.vb: IObservableMessageStreamer(Of T).MessageStream
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of T).MessageStream
+- uid: System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{{T}}}
+  commentId: T:System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{`0}}
+  parent: System
+  definition: System.IObservable`1
+  name: IObservable<IObserverDto<T>>
+  nameWithType: IObservable<IObserverDto<T>>
+  fullName: System.IObservable<Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<T>>
+  nameWithType.vb: IObservable(Of IObserverDto(Of T))
+  fullName.vb: System.IObservable(Of Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of T))
+  name.vb: IObservable(Of IObserverDto(Of T))
+  spec.csharp:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+    name: IObserverDto
+    nameWithType: IObserverDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+    name: IObserverDto
+    nameWithType: IObserverDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObservable`1
+  commentId: T:System.IObservable`1
+  isExternal: true
+  name: IObservable<T>
+  nameWithType: IObservable<T>
+  fullName: System.IObservable<T>
+  nameWithType.vb: IObservable(Of T)
+  fullName.vb: System.IObservable(Of T)
+  name.vb: IObservable(Of T)
+  spec.csharp:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

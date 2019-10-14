@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.IO.Messaging.Broadcast
+  commentId: N:Catalyst.Abstractions.P2P.IO.Messaging.Broadcast
+  id: Catalyst.Abstractions.P2P.IO.Messaging.Broadcast
+  children:
+  - Catalyst.Abstractions.P2P.IO.Messaging.Broadcast.IBroadcastManager
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.P2P.IO.Messaging.Broadcast
+  nameWithType: Catalyst.Abstractions.P2P.IO.Messaging.Broadcast
+  fullName: Catalyst.Abstractions.P2P.IO.Messaging.Broadcast
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.P2P.IO.Messaging.Broadcast.IBroadcastManager
+  commentId: T:Catalyst.Abstractions.P2P.IO.Messaging.Broadcast.IBroadcastManager
+  name: IBroadcastManager
+  nameWithType: IBroadcastManager
+  fullName: Catalyst.Abstractions.P2P.IO.Messaging.Broadcast.IBroadcastManager

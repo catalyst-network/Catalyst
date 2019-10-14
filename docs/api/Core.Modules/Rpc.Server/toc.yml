@@ -1,0 +1,52 @@
+### YamlMime:TableOfContent
+- uid: Catalyst.Core.Modules.Rpc.Server
+  name: Catalyst.Core.Modules.Rpc.Server
+  items:
+  - uid: Catalyst.Core.Modules.Rpc.Server.RpcServer
+    name: RpcServer
+  - uid: Catalyst.Core.Modules.Rpc.Server.RpcServerModule
+    name: RpcServerModule
+  - uid: Catalyst.Core.Modules.Rpc.Server.RpcServerSettings
+    name: RpcServerSettings
+- uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers
+  name: Catalyst.Core.Modules.Rpc.Server.IO.Observers
+  items:
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.AddFileToDfsRequestObserver
+    name: AddFileToDfsRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.BroadcastRawTransactionRequestObserver
+    name: BroadcastRawTransactionRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.ChangeDataFolderRequestObserver
+    name: ChangeDataFolderRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.GetDeltaRequestObserver
+    name: GetDeltaRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.GetFileFromDfsRequestObserver
+    name: GetFileFromDfsRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.GetInfoRequestObserver
+    name: GetInfoRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.GetMempoolRequestObserver
+    name: GetMempoolRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.GetPeerInfoRequestObserver
+    name: GetPeerInfoRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.GetVersionRequestObserver
+    name: GetVersionRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.PeerBlackListingRequestObserver
+    name: PeerBlackListingRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.PeerCountRequestObserver
+    name: PeerCountRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.PeerListRequestObserver
+    name: PeerListRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.PeerReputationRequestObserver
+    name: PeerReputationRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.RemovePeerRequestObserver
+    name: RemovePeerRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.SignMessageRequestObserver
+    name: SignMessageRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.TransferFileBytesRequestObserver
+    name: TransferFileBytesRequestObserver
+  - uid: Catalyst.Core.Modules.Rpc.Server.IO.Observers.VerifyMessageRequestObserver
+    name: VerifyMessageRequestObserver
+- uid: Catalyst.Core.Modules.Rpc.Server.Transport.Channels
+  name: Catalyst.Core.Modules.Rpc.Server.Transport.Channels
+  items:
+  - uid: Catalyst.Core.Modules.Rpc.Server.Transport.Channels.RpcServerChannelFactory
+    name: RpcServerChannelFactory

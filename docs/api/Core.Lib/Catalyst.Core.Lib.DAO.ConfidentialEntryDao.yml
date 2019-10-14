@@ -1,0 +1,1211 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  commentId: T:Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  id: ConfidentialEntryDao
+  parent: Catalyst.Core.Lib.DAO
+  children:
+  - Catalyst.Core.Lib.DAO.ConfidentialEntryDao.Base
+  - Catalyst.Core.Lib.DAO.ConfidentialEntryDao.InitMappers(IMapperConfigurationExpression)
+  - Catalyst.Core.Lib.DAO.ConfidentialEntryDao.PedersenCommitment
+  - Catalyst.Core.Lib.DAO.ConfidentialEntryDao.RangeProof
+  langs:
+  - csharp
+  - vb
+  name: ConfidentialEntryDao
+  nameWithType: ConfidentialEntryDao
+  fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ConfidentialEntryDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ConfidentialEntryDao
+    path: ../src/Catalyst.Core.Lib/DAO/ConfidentialEntryDao.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: 'public class ConfidentialEntryDao : DaoBase<ConfidentialEntry, ConfidentialEntryDao>, IMapperInitializer, IValueConverter<ConfidentialEntry, ConfidentialEntryDao>'
+    content.vb: >-
+      Public Class ConfidentialEntryDao
+
+          Inherits DaoBase(Of ConfidentialEntry, ConfidentialEntryDao)
+
+          Implements IMapperInitializer, IValueConverter(Of ConfidentialEntry, ConfidentialEntryDao)
+  inheritance:
+  - System.Object
+  - Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  implements:
+  - Catalyst.Abstractions.DAO.IMapperInitializer
+  - IValueConverter{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  inheritedMembers:
+  - Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.Id
+  - Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.ToProtoBuff
+  - Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.ToDao(ConfidentialEntry)
+  - Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.InitMappers(IMapperConfigurationExpression)
+  - Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.Convert(ConfidentialEntry,ResolutionContext)
+  - Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.Convert(Catalyst.Core.Lib.DAO.ConfidentialEntryDao,ResolutionContext)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.Base
+  commentId: P:Catalyst.Core.Lib.DAO.ConfidentialEntryDao.Base
+  id: Base
+  parent: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  langs:
+  - csharp
+  - vb
+  name: Base
+  nameWithType: ConfidentialEntryDao.Base
+  fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.Base
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ConfidentialEntryDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Base
+    path: ../src/Catalyst.Core.Lib/DAO/ConfidentialEntryDao.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public BaseEntryDao Base { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Core.Lib.DAO.BaseEntryDao
+    content.vb: Public Property Base As BaseEntryDao
+  overload: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.Base*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.PedersenCommitment
+  commentId: P:Catalyst.Core.Lib.DAO.ConfidentialEntryDao.PedersenCommitment
+  id: PedersenCommitment
+  parent: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  langs:
+  - csharp
+  - vb
+  name: PedersenCommitment
+  nameWithType: ConfidentialEntryDao.PedersenCommitment
+  fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.PedersenCommitment
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ConfidentialEntryDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PedersenCommitment
+    path: ../src/Catalyst.Core.Lib/DAO/ConfidentialEntryDao.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public string PedersenCommitment { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property PedersenCommitment As String
+  overload: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.PedersenCommitment*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.RangeProof
+  commentId: P:Catalyst.Core.Lib.DAO.ConfidentialEntryDao.RangeProof
+  id: RangeProof
+  parent: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  langs:
+  - csharp
+  - vb
+  name: RangeProof
+  nameWithType: ConfidentialEntryDao.RangeProof
+  fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.RangeProof
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ConfidentialEntryDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: RangeProof
+    path: ../src/Catalyst.Core.Lib/DAO/ConfidentialEntryDao.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public string RangeProof { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property RangeProof As String
+  overload: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.RangeProof*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.ConfidentialEntryDao.InitMappers(IMapperConfigurationExpression)
+  id: InitMappers(IMapperConfigurationExpression)
+  parent: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  langs:
+  - csharp
+  - vb
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: ConfidentialEntryDao.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.InitMappers(IMapperConfigurationExpression)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ConfidentialEntryDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: InitMappers
+    path: ../src/Catalyst.Core.Lib/DAO/ConfidentialEntryDao.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public override void InitMappers(IMapperConfigurationExpression cfg)
+    parameters:
+    - id: cfg
+      type: IMapperConfigurationExpression
+    content.vb: Public Overrides Sub InitMappers(cfg As IMapperConfigurationExpression)
+  overridden: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.InitMappers(IMapperConfigurationExpression)
+  overload: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.InitMappers*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: Catalyst.Core.Lib.DAO
+  commentId: N:Catalyst.Core.Lib.DAO
+  name: Catalyst.Core.Lib.DAO
+  nameWithType: Catalyst.Core.Lib.DAO
+  fullName: Catalyst.Core.Lib.DAO
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  commentId: T:Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  parent: Catalyst.Core.Lib.DAO
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2
+  name: DaoBase<ConfidentialEntry, ConfidentialEntryDao>
+  nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>
+  nameWithType.vb: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao)
+  name.vb: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ConfidentialEntry
+    name: ConfidentialEntry
+    nameWithType: ConfidentialEntry
+    fullName: ConfidentialEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+    name: ConfidentialEntryDao
+    nameWithType: ConfidentialEntryDao
+    fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ConfidentialEntry
+    name: ConfidentialEntry
+    nameWithType: ConfidentialEntry
+    fullName: ConfidentialEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+    name: ConfidentialEntryDao
+    nameWithType: ConfidentialEntryDao
+    fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.DAO.IMapperInitializer
+  commentId: T:Catalyst.Abstractions.DAO.IMapperInitializer
+  parent: Catalyst.Abstractions.DAO
+  name: IMapperInitializer
+  nameWithType: IMapperInitializer
+  fullName: Catalyst.Abstractions.DAO.IMapperInitializer
+- uid: IValueConverter{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  commentId: '!:IValueConverter{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}'
+  definition: IValueConverter`2
+  name: IValueConverter<ConfidentialEntry, ConfidentialEntryDao>
+  nameWithType: IValueConverter<ConfidentialEntry, ConfidentialEntryDao>
+  fullName: IValueConverter<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>
+  nameWithType.vb: IValueConverter(Of ConfidentialEntry, ConfidentialEntryDao)
+  fullName.vb: IValueConverter(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao)
+  name.vb: IValueConverter(Of ConfidentialEntry, ConfidentialEntryDao)
+  spec.csharp:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ConfidentialEntry
+    name: ConfidentialEntry
+    nameWithType: ConfidentialEntry
+    fullName: ConfidentialEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+    name: ConfidentialEntryDao
+    nameWithType: ConfidentialEntryDao
+    fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ConfidentialEntry
+    name: ConfidentialEntry
+    nameWithType: ConfidentialEntry
+    fullName: ConfidentialEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+    name: ConfidentialEntryDao
+    nameWithType: ConfidentialEntryDao
+    fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.Id
+  commentId: P:Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.Id
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  name: Id
+  nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.Id
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.Id
+  nameWithType.vb: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).Id
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).Id
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.ToProtoBuff
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.ToProtoBuff
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  name: ToProtoBuff()
+  nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.ToProtoBuff()
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.ToProtoBuff()
+  nameWithType.vb: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).ToProtoBuff()
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).ToProtoBuff()
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.ToDao(ConfidentialEntry)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.ToDao(ConfidentialEntry)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  name: ToDao(ConfidentialEntry)
+  nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.ToDao(ConfidentialEntry)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.ToDao(ConfidentialEntry)
+  nameWithType.vb: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).ToDao(ConfidentialEntry)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).ToDao(ConfidentialEntry)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: ConfidentialEntry
+    name: ConfidentialEntry
+    nameWithType: ConfidentialEntry
+    fullName: ConfidentialEntry
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: ConfidentialEntry
+    name: ConfidentialEntry
+    nameWithType: ConfidentialEntry
+    fullName: ConfidentialEntry
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.InitMappers(IMapperConfigurationExpression)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.InitMappers(IMapperConfigurationExpression)
+  nameWithType.vb: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).InitMappers(IMapperConfigurationExpression)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).InitMappers(IMapperConfigurationExpression)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.Convert(ConfidentialEntry,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.Convert(ConfidentialEntry,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  name: Convert(ConfidentialEntry, ResolutionContext)
+  nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.Convert(ConfidentialEntry, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.Convert(ConfidentialEntry, ResolutionContext)
+  nameWithType.vb: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).Convert(ConfidentialEntry, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).Convert(ConfidentialEntry, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: ConfidentialEntry
+    name: ConfidentialEntry
+    nameWithType: ConfidentialEntry
+    fullName: ConfidentialEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: ConfidentialEntry
+    name: ConfidentialEntry
+    nameWithType: ConfidentialEntry
+    fullName: ConfidentialEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.Convert(Catalyst.Core.Lib.DAO.ConfidentialEntryDao,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}.Convert(Catalyst.Core.Lib.DAO.ConfidentialEntryDao,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ConfidentialEntry,Catalyst.Core.Lib.DAO.ConfidentialEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  name: Convert(ConfidentialEntryDao, ResolutionContext)
+  nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.Convert(ConfidentialEntryDao, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.Convert(Catalyst.Core.Lib.DAO.ConfidentialEntryDao, ResolutionContext)
+  nameWithType.vb: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).Convert(ConfidentialEntryDao, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).Convert(Catalyst.Core.Lib.DAO.ConfidentialEntryDao, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<ConfidentialEntry, ConfidentialEntryDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+    name: ConfidentialEntryDao
+    nameWithType: ConfidentialEntryDao
+    fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of ConfidentialEntry, ConfidentialEntryDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of ConfidentialEntry, Catalyst.Core.Lib.DAO.ConfidentialEntryDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+    name: ConfidentialEntryDao
+    nameWithType: ConfidentialEntryDao
+    fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2
+  commentId: T:Catalyst.Core.Lib.DAO.DaoBase`2
+  name: DaoBase<TProto, TDao>
+  nameWithType: DaoBase<TProto, TDao>
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>
+  nameWithType.vb: DaoBase(Of TProto, TDao)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao)
+  name.vb: DaoBase(Of TProto, TDao)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.DAO
+  commentId: N:Catalyst.Abstractions.DAO
+  name: Catalyst.Abstractions.DAO
+  nameWithType: Catalyst.Abstractions.DAO
+  fullName: Catalyst.Abstractions.DAO
+- uid: IValueConverter`2
+  isExternal: true
+  name: IValueConverter<, >
+  nameWithType: IValueConverter<, >
+  fullName: IValueConverter<, >
+  nameWithType.vb: IValueConverter(Of , )
+  fullName.vb: IValueConverter(Of , )
+  name.vb: IValueConverter(Of , )
+  spec.csharp:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  commentId: P:Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  name: Id
+  nameWithType: DaoBase<TProto, TDao>.Id
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Id
+  nameWithType.vb: DaoBase(Of TProto, TDao).Id
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Id
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  name: ToProtoBuff()
+  nameWithType: DaoBase<TProto, TDao>.ToProtoBuff()
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToProtoBuff()
+  nameWithType.vb: DaoBase(Of TProto, TDao).ToProtoBuff()
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToProtoBuff()
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase<TProto, TDao>.ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase(Of TProto, TDao).ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  name: ToDao(TProto)
+  nameWithType: DaoBase<TProto, TDao>.ToDao(TProto)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToDao(TProto)
+  nameWithType.vb: DaoBase(Of TProto, TDao).ToDao(TProto)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToDao(TProto)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase<TProto, TDao>.ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase(Of TProto, TDao).ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  isExternal: true
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: DaoBase<TProto, TDao>.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.InitMappers(IMapperConfigurationExpression)
+  nameWithType.vb: DaoBase(Of TProto, TDao).InitMappers(IMapperConfigurationExpression)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).InitMappers(IMapperConfigurationExpression)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase<TProto, TDao>.InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase(Of TProto, TDao).InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  isExternal: true
+  name: Convert(TProto, ResolutionContext)
+  nameWithType: DaoBase<TProto, TDao>.Convert(TProto, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert(TProto, ResolutionContext)
+  nameWithType.vb: DaoBase(Of TProto, TDao).Convert(TProto, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert(TProto, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<TProto, TDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of TProto, TDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  isExternal: true
+  name: Convert(TDao, ResolutionContext)
+  nameWithType: DaoBase<TProto, TDao>.Convert(TDao, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert(TDao, ResolutionContext)
+  nameWithType.vb: DaoBase(Of TProto, TDao).Convert(TDao, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert(TDao, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<TProto, TDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of TProto, TDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.Base*
+  commentId: Overload:Catalyst.Core.Lib.DAO.ConfidentialEntryDao.Base
+  name: Base
+  nameWithType: ConfidentialEntryDao.Base
+  fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.Base
+- uid: Catalyst.Core.Lib.DAO.BaseEntryDao
+  commentId: T:Catalyst.Core.Lib.DAO.BaseEntryDao
+  parent: Catalyst.Core.Lib.DAO
+  name: BaseEntryDao
+  nameWithType: BaseEntryDao
+  fullName: Catalyst.Core.Lib.DAO.BaseEntryDao
+- uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.PedersenCommitment*
+  commentId: Overload:Catalyst.Core.Lib.DAO.ConfidentialEntryDao.PedersenCommitment
+  name: PedersenCommitment
+  nameWithType: ConfidentialEntryDao.PedersenCommitment
+  fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.PedersenCommitment
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.RangeProof*
+  commentId: Overload:Catalyst.Core.Lib.DAO.ConfidentialEntryDao.RangeProof
+  name: RangeProof
+  nameWithType: ConfidentialEntryDao.RangeProof
+  fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.RangeProof
+- uid: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.InitMappers*
+  commentId: Overload:Catalyst.Core.Lib.DAO.ConfidentialEntryDao.InitMappers
+  name: InitMappers
+  nameWithType: ConfidentialEntryDao.InitMappers
+  fullName: Catalyst.Core.Lib.DAO.ConfidentialEntryDao.InitMappers
+- uid: IMapperConfigurationExpression
+  isExternal: true
+  name: IMapperConfigurationExpression
+  nameWithType: IMapperConfigurationExpression
+  fullName: IMapperConfigurationExpression

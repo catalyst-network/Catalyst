@@ -1,0 +1,1725 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  commentId: T:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  id: SignRawTransactionResponse
+  parent: Catalyst.Protocol.Rpc.Node
+  children:
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.#ctor
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.#ctor(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.CalculateSize
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Clone
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Descriptor
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals(System.Object)
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.GetHashCode
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Google#Protobuf#IMessage#Descriptor
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom(Google.Protobuf.CodedInputStream)
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Parser
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Query
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.QueryFieldNumber
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.ToString
+  - Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.WriteTo(Google.Protobuf.CodedOutputStream)
+  langs:
+  - csharp
+  - vb
+  name: SignRawTransactionResponse
+  nameWithType: SignRawTransactionResponse
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: SignRawTransactionResponse
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2906
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: 'public sealed class SignRawTransactionResponse : IMessage<SignRawTransactionResponse>, IMessage, IEquatable<SignRawTransactionResponse>, IDeepCloneable<SignRawTransactionResponse>'
+    content.vb: >-
+      Public NotInheritable Class SignRawTransactionResponse
+          Implements IMessage(Of SignRawTransactionResponse), IMessage, IEquatable(Of SignRawTransactionResponse), IDeepCloneable(Of SignRawTransactionResponse)
+  inheritance:
+  - System.Object
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  - Google.Protobuf.IMessage
+  - System.IEquatable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Parser
+  commentId: P:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Parser
+  id: Parser
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: Parser
+  nameWithType: SignRawTransactionResponse.Parser
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Parser
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Parser
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2909
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public static MessageParser<SignRawTransactionResponse> Parser { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.MessageParser{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+    content.vb: Public Shared ReadOnly Property Parser As MessageParser(Of SignRawTransactionResponse)
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Parser*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Descriptor
+  commentId: P:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Descriptor
+  id: Descriptor
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: Descriptor
+  nameWithType: SignRawTransactionResponse.Descriptor
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2912
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public static MessageDescriptor Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: Public Shared ReadOnly Property Descriptor As MessageDescriptor
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Descriptor*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Google#Protobuf#IMessage#Descriptor
+  commentId: P:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Google#Protobuf#IMessage#Descriptor
+  id: Google#Protobuf#IMessage#Descriptor
+  isEii: true
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: IMessage.Descriptor
+  nameWithType: SignRawTransactionResponse.IMessage.Descriptor
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Google.Protobuf.IMessage.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: pb::Google.Protobuf.IMessage.Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2917
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: MessageDescriptor IMessage.Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: ReadOnly WriteOnly Property pb::Google.Protobuf.IMessage.Descriptor As MessageDescriptor Implements IMessage.Descriptor
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Google#Protobuf#IMessage#Descriptor*
+  implements:
+  - Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: SignRawTransactionResponse.pb::Google.Protobuf.IMessage.Descriptor
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.#ctor
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.#ctor
+  id: '#ctor'
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: SignRawTransactionResponse()
+  nameWithType: SignRawTransactionResponse.SignRawTransactionResponse()
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.SignRawTransactionResponse()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2922
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public SignRawTransactionResponse()
+    content.vb: Public Sub New
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.#ctor(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.#ctor(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  id: '#ctor(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)'
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: SignRawTransactionResponse(SignRawTransactionResponse)
+  nameWithType: SignRawTransactionResponse.SignRawTransactionResponse(SignRawTransactionResponse)
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.SignRawTransactionResponse(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2929
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public SignRawTransactionResponse(SignRawTransactionResponse other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    content.vb: Public Sub New(other As SignRawTransactionResponse)
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Clone
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Clone
+  id: Clone
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: Clone()
+  nameWithType: SignRawTransactionResponse.Clone()
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Clone()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Clone
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2935
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public SignRawTransactionResponse Clone()
+    return:
+      type: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    content.vb: Public Function Clone As SignRawTransactionResponse
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Clone*
+  implements:
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}.Clone
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.QueryFieldNumber
+  commentId: F:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.QueryFieldNumber
+  id: QueryFieldNumber
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: QueryFieldNumber
+  nameWithType: SignRawTransactionResponse.QueryFieldNumber
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.QueryFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: QueryFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2941
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  summary: Field number for the &quot;query&quot; field.
+  example: []
+  syntax:
+    content: public const int QueryFieldNumber = 1
+    return:
+      type: System.Int32
+    content.vb: Public Const QueryFieldNumber As Integer = 1
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Query
+  commentId: P:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Query
+  id: Query
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: Query
+  nameWithType: SignRawTransactionResponse.Query
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Query
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Query
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2943
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public string Query { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Query As String
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Query*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals(System.Object)
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: Equals(Object)
+  nameWithType: SignRawTransactionResponse.Equals(Object)
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals(System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2951
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public override bool Equals(object other)
+    parameters:
+    - id: other
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function Equals(other As Object) As Boolean
+  overridden: System.Object.Equals(System.Object)
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  id: Equals(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: Equals(SignRawTransactionResponse)
+  nameWithType: SignRawTransactionResponse.Equals(SignRawTransactionResponse)
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2956
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public bool Equals(SignRawTransactionResponse other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    return:
+      type: System.Boolean
+    content.vb: Public Function Equals(other As SignRawTransactionResponse) As Boolean
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals*
+  implements:
+  - System.IEquatable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}.Equals(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.GetHashCode
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.GetHashCode
+  id: GetHashCode
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: SignRawTransactionResponse.GetHashCode()
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetHashCode
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2968
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+    content.vb: Public Overrides Function GetHashCode As Integer
+  overridden: System.Object.GetHashCode
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.GetHashCode*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.ToString
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.ToString
+  id: ToString
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: SignRawTransactionResponse.ToString()
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToString
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2978
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.WriteTo(Google.Protobuf.CodedOutputStream)
+  id: WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: WriteTo(CodedOutputStream)
+  nameWithType: SignRawTransactionResponse.WriteTo(CodedOutputStream)
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.WriteTo(Google.Protobuf.CodedOutputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: WriteTo
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2983
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public void WriteTo(CodedOutputStream output)
+    parameters:
+    - id: output
+      type: Google.Protobuf.CodedOutputStream
+    content.vb: Public Sub WriteTo(output As CodedOutputStream)
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.WriteTo*
+  implements:
+  - Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.CalculateSize
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.CalculateSize
+  id: CalculateSize
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: CalculateSize()
+  nameWithType: SignRawTransactionResponse.CalculateSize()
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.CalculateSize()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CalculateSize
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 2994
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public int CalculateSize()
+    return:
+      type: System.Int32
+    content.vb: Public Function CalculateSize As Integer
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.CalculateSize*
+  implements:
+  - Google.Protobuf.IMessage.CalculateSize
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  id: MergeFrom(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(SignRawTransactionResponse)
+  nameWithType: SignRawTransactionResponse.MergeFrom(SignRawTransactionResponse)
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 3006
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public void MergeFrom(SignRawTransactionResponse other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    content.vb: Public Sub MergeFrom(other As SignRawTransactionResponse)
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}.MergeFrom(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom(Google.Protobuf.CodedInputStream)
+  id: MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(CodedInputStream)
+  nameWithType: SignRawTransactionResponse.MergeFrom(CodedInputStream)
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom(Google.Protobuf.CodedInputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs
+    startLine: 3017
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Rpc.Node
+  syntax:
+    content: public void MergeFrom(CodedInputStream input)
+    parameters:
+    - id: input
+      type: Google.Protobuf.CodedInputStream
+    content.vb: Public Sub MergeFrom(input As CodedInputStream)
+  overload: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Protocol.Rpc.Node
+  commentId: N:Catalyst.Protocol.Rpc.Node
+  name: Catalyst.Protocol.Rpc.Node
+  nameWithType: Catalyst.Protocol.Rpc.Node
+  fullName: Catalyst.Protocol.Rpc.Node
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  commentId: T:Google.Protobuf.IMessage{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IMessage`1
+  name: IMessage<SignRawTransactionResponse>
+  nameWithType: IMessage<SignRawTransactionResponse>
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse>
+  nameWithType.vb: IMessage(Of SignRawTransactionResponse)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  name.vb: IMessage(Of SignRawTransactionResponse)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage
+  commentId: T:Google.Protobuf.IMessage
+  parent: Google.Protobuf
+  isExternal: true
+  name: IMessage
+  nameWithType: IMessage
+  fullName: Google.Protobuf.IMessage
+- uid: System.IEquatable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  commentId: T:System.IEquatable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  parent: System
+  definition: System.IEquatable`1
+  name: IEquatable<SignRawTransactionResponse>
+  nameWithType: IEquatable<SignRawTransactionResponse>
+  fullName: System.IEquatable<Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse>
+  nameWithType.vb: IEquatable(Of SignRawTransactionResponse)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  name.vb: IEquatable(Of SignRawTransactionResponse)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  commentId: T:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IDeepCloneable`1
+  name: IDeepCloneable<SignRawTransactionResponse>
+  nameWithType: IDeepCloneable<SignRawTransactionResponse>
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse>
+  nameWithType.vb: IDeepCloneable(Of SignRawTransactionResponse)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  name.vb: IDeepCloneable(Of SignRawTransactionResponse)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Google.Protobuf.IMessage`1
+  commentId: T:Google.Protobuf.IMessage`1
+  isExternal: true
+  name: IMessage<T>
+  nameWithType: IMessage<T>
+  fullName: Google.Protobuf.IMessage<T>
+  nameWithType.vb: IMessage(Of T)
+  fullName.vb: Google.Protobuf.IMessage(Of T)
+  name.vb: IMessage(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf
+  commentId: N:Google.Protobuf
+  isExternal: true
+  name: Google.Protobuf
+  nameWithType: Google.Protobuf
+  fullName: Google.Protobuf
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1
+  commentId: T:Google.Protobuf.IDeepCloneable`1
+  isExternal: true
+  name: IDeepCloneable<T>
+  nameWithType: IDeepCloneable<T>
+  fullName: Google.Protobuf.IDeepCloneable<T>
+  nameWithType.vb: IDeepCloneable(Of T)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T)
+  name.vb: IDeepCloneable(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Parser*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Parser
+  name: Parser
+  nameWithType: SignRawTransactionResponse.Parser
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Parser
+- uid: Google.Protobuf.MessageParser{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  commentId: T:Google.Protobuf.MessageParser{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.MessageParser`1
+  name: MessageParser<SignRawTransactionResponse>
+  nameWithType: MessageParser<SignRawTransactionResponse>
+  fullName: Google.Protobuf.MessageParser<Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse>
+  nameWithType.vb: MessageParser(Of SignRawTransactionResponse)
+  fullName.vb: Google.Protobuf.MessageParser(Of Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  name.vb: MessageParser(Of SignRawTransactionResponse)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.MessageParser`1
+  commentId: T:Google.Protobuf.MessageParser`1
+  isExternal: true
+  name: MessageParser<T>
+  nameWithType: MessageParser<T>
+  fullName: Google.Protobuf.MessageParser<T>
+  nameWithType.vb: MessageParser(Of T)
+  fullName.vb: Google.Protobuf.MessageParser(Of T)
+  name.vb: MessageParser(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Descriptor*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Descriptor
+  name: Descriptor
+  nameWithType: SignRawTransactionResponse.Descriptor
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Descriptor
+- uid: Google.Protobuf.Reflection.MessageDescriptor
+  commentId: T:Google.Protobuf.Reflection.MessageDescriptor
+  parent: Google.Protobuf.Reflection
+  isExternal: true
+  name: MessageDescriptor
+  nameWithType: MessageDescriptor
+  fullName: Google.Protobuf.Reflection.MessageDescriptor
+- uid: Google.Protobuf.Reflection
+  commentId: N:Google.Protobuf.Reflection
+  isExternal: true
+  name: Google.Protobuf.Reflection
+  nameWithType: Google.Protobuf.Reflection
+  fullName: Google.Protobuf.Reflection
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Google#Protobuf#IMessage#Descriptor*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Google#Protobuf#IMessage#Descriptor
+  name: IMessage.Descriptor
+  nameWithType: SignRawTransactionResponse.IMessage.Descriptor
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: SignRawTransactionResponse.pb::Google.Protobuf.IMessage.Descriptor
+  fullName.vb: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Google.Protobuf.IMessage.Descriptor
+  commentId: P:Google.Protobuf.IMessage.Descriptor
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: Descriptor
+  nameWithType: IMessage.Descriptor
+  fullName: Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.#ctor*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.#ctor
+  name: SignRawTransactionResponse
+  nameWithType: SignRawTransactionResponse.SignRawTransactionResponse
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.SignRawTransactionResponse
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  commentId: T:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  parent: Catalyst.Protocol.Rpc.Node
+  name: SignRawTransactionResponse
+  nameWithType: SignRawTransactionResponse
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Clone*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Clone
+  name: Clone
+  nameWithType: SignRawTransactionResponse.Clone
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Clone
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}.Clone
+  parent: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  definition: Google.Protobuf.IDeepCloneable`1.Clone
+  name: Clone()
+  nameWithType: IDeepCloneable<SignRawTransactionResponse>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse>.Clone()
+  nameWithType.vb: IDeepCloneable(Of SignRawTransactionResponse).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<SignRawTransactionResponse>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of SignRawTransactionResponse).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable`1.Clone
+  isExternal: true
+  name: Clone()
+  nameWithType: IDeepCloneable<T>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<T>.Clone()
+  nameWithType.vb: IDeepCloneable(Of T).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<T>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<T>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of T).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of T).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Query*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Query
+  name: Query
+  nameWithType: SignRawTransactionResponse.Query
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Query
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals
+  name: Equals
+  nameWithType: SignRawTransactionResponse.Equals
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.Equals
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System.IEquatable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}.Equals(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  commentId: M:System.IEquatable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}.Equals(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  parent: System.IEquatable{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  definition: System.IEquatable`1.Equals(`0)
+  name: Equals(SignRawTransactionResponse)
+  nameWithType: IEquatable<SignRawTransactionResponse>.Equals(SignRawTransactionResponse)
+  fullName: System.IEquatable<Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse>.Equals(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  nameWithType.vb: IEquatable(Of SignRawTransactionResponse).Equals(SignRawTransactionResponse)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse).Equals(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<SignRawTransactionResponse>.Equals
+    fullName: System.IEquatable<Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of SignRawTransactionResponse).Equals
+    fullName: System.IEquatable(Of Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<T>.Equals
+    fullName: System.IEquatable<T>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of T).Equals
+    fullName: System.IEquatable(Of T).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.GetHashCode*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.GetHashCode
+  name: GetHashCode
+  nameWithType: SignRawTransactionResponse.GetHashCode
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.GetHashCode
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.ToString*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.ToString
+  name: ToString
+  nameWithType: SignRawTransactionResponse.ToString
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.ToString
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.WriteTo*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.WriteTo
+  name: WriteTo
+  nameWithType: SignRawTransactionResponse.WriteTo
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.WriteTo
+- uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: WriteTo(CodedOutputStream)
+  nameWithType: IMessage.WriteTo(CodedOutputStream)
+  fullName: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedOutputStream
+  commentId: T:Google.Protobuf.CodedOutputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedOutputStream
+  nameWithType: CodedOutputStream
+  fullName: Google.Protobuf.CodedOutputStream
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.CalculateSize*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.CalculateSize
+  name: CalculateSize
+  nameWithType: SignRawTransactionResponse.CalculateSize
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.CalculateSize
+- uid: Google.Protobuf.IMessage.CalculateSize
+  commentId: M:Google.Protobuf.IMessage.CalculateSize
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: CalculateSize()
+  nameWithType: IMessage.CalculateSize()
+  fullName: Google.Protobuf.IMessage.CalculateSize()
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom*
+  commentId: Overload:Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom
+  name: MergeFrom
+  nameWithType: SignRawTransactionResponse.MergeFrom
+  fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse.MergeFrom
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}.MergeFrom(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  commentId: M:Google.Protobuf.IMessage{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}.MergeFrom(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  parent: Google.Protobuf.IMessage{Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse}
+  definition: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  name: MergeFrom(SignRawTransactionResponse)
+  nameWithType: IMessage<SignRawTransactionResponse>.MergeFrom(SignRawTransactionResponse)
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse>.MergeFrom(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  nameWithType.vb: IMessage(Of SignRawTransactionResponse).MergeFrom(SignRawTransactionResponse)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse).MergeFrom(Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<SignRawTransactionResponse>.MergeFrom
+    fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of SignRawTransactionResponse).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+    name: SignRawTransactionResponse
+    nameWithType: SignRawTransactionResponse
+    fullName: Catalyst.Protocol.Rpc.Node.SignRawTransactionResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  commentId: M:Google.Protobuf.IMessage`1.MergeFrom(`0)
+  isExternal: true
+  name: MergeFrom(T)
+  nameWithType: IMessage<T>.MergeFrom(T)
+  fullName: Google.Protobuf.IMessage<T>.MergeFrom(T)
+  nameWithType.vb: IMessage(Of T).MergeFrom(T)
+  fullName.vb: Google.Protobuf.IMessage(Of T).MergeFrom(T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<T>.MergeFrom
+    fullName: Google.Protobuf.IMessage<T>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of T).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of T).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: MergeFrom(CodedInputStream)
+  nameWithType: IMessage.MergeFrom(CodedInputStream)
+  fullName: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedInputStream
+  commentId: T:Google.Protobuf.CodedInputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedInputStream
+  nameWithType: CodedInputStream
+  fullName: Google.Protobuf.CodedInputStream

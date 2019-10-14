@@ -1,0 +1,109 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Dfs.DfsModule
+  commentId: T:Catalyst.Core.Modules.Dfs.DfsModule
+  id: DfsModule
+  parent: Catalyst.Core.Modules.Dfs
+  children:
+  - Catalyst.Core.Modules.Dfs.DfsModule.Load(ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: DfsModule
+  nameWithType: DfsModule
+  fullName: Catalyst.Core.Modules.Dfs.DfsModule
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/DfsModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DfsModule
+    path: ../src/Catalyst.Core.Modules.Dfs/DfsModule.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: 'public class DfsModule : Module'
+    content.vb: >-
+      Public Class DfsModule
+
+          Inherits
+
+
+
+           Module
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Dfs.DfsModule.Load(ContainerBuilder)
+  commentId: M:Catalyst.Core.Modules.Dfs.DfsModule.Load(ContainerBuilder)
+  id: Load(ContainerBuilder)
+  parent: Catalyst.Core.Modules.Dfs.DfsModule
+  langs:
+  - csharp
+  - vb
+  name: Load(ContainerBuilder)
+  nameWithType: DfsModule.Load(ContainerBuilder)
+  fullName: Catalyst.Core.Modules.Dfs.DfsModule.Load(ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/DfsModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Load
+    path: ../src/Catalyst.Core.Modules.Dfs/DfsModule.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: protected override void Load(ContainerBuilder builder)
+    parameters:
+    - id: builder
+      type: ContainerBuilder
+    content.vb: Protected Overrides Sub Load(builder As ContainerBuilder)
+  overload: Catalyst.Core.Modules.Dfs.DfsModule.Load*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Modules.Dfs
+  commentId: N:Catalyst.Core.Modules.Dfs
+  name: Catalyst.Core.Modules.Dfs
+  nameWithType: Catalyst.Core.Modules.Dfs
+  fullName: Catalyst.Core.Modules.Dfs
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Dfs.DfsModule.Load*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.DfsModule.Load
+  name: Load
+  nameWithType: DfsModule.Load
+  fullName: Catalyst.Core.Modules.Dfs.DfsModule.Load
+- uid: ContainerBuilder
+  commentId: '!:ContainerBuilder'
+  isExternal: true
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: ContainerBuilder

@@ -1,0 +1,41 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  id: Catalyst.Protocol.Peer
+  children:
+  - Catalyst.Protocol.Peer.PeerId
+  - Catalyst.Protocol.Peer.PeerInfo
+  - Catalyst.Protocol.Peer.PeerReflection
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+  type: Namespace
+  assemblies:
+  - Catalyst.Protocol
+references:
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer.PeerReflection
+  commentId: T:Catalyst.Protocol.Peer.PeerReflection
+  name: PeerReflection
+  nameWithType: PeerReflection
+  fullName: Catalyst.Protocol.Peer.PeerReflection
+- uid: Catalyst.Protocol.Peer.PeerInfo
+  commentId: T:Catalyst.Protocol.Peer.PeerInfo
+  parent: Catalyst.Protocol.Peer
+  name: PeerInfo
+  nameWithType: PeerInfo
+  fullName: Catalyst.Protocol.Peer.PeerInfo
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer

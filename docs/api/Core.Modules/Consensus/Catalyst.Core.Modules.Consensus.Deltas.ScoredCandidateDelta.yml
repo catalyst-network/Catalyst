@@ -1,0 +1,583 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta
+  commentId: T:Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta
+  id: ScoredCandidateDelta
+  parent: Catalyst.Core.Modules.Consensus.Deltas
+  children:
+  - Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.#ctor(CandidateDeltaBroadcast,System.Int32)
+  - Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Candidate
+  - Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.IncreasePopularity(System.Int32)
+  - Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Score
+  langs:
+  - csharp
+  - vb
+  name: ScoredCandidateDelta
+  nameWithType: ScoredCandidateDelta
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/ScoredCandidateDelta.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ScoredCandidateDelta
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/ScoredCandidateDelta.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: 'public class ScoredCandidateDelta : IScoredCandidateDelta'
+    content.vb: >-
+      Public Class ScoredCandidateDelta
+
+          Implements IScoredCandidateDelta
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.#ctor(CandidateDeltaBroadcast,System.Int32)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.#ctor(CandidateDeltaBroadcast,System.Int32)
+  id: '#ctor(CandidateDeltaBroadcast,System.Int32)'
+  parent: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta
+  langs:
+  - csharp
+  - vb
+  name: ScoredCandidateDelta(CandidateDeltaBroadcast, Int32)
+  nameWithType: ScoredCandidateDelta.ScoredCandidateDelta(CandidateDeltaBroadcast, Int32)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.ScoredCandidateDelta(CandidateDeltaBroadcast, System.Int32)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/ScoredCandidateDelta.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/ScoredCandidateDelta.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public ScoredCandidateDelta(CandidateDeltaBroadcast candidate, int score)
+    parameters:
+    - id: candidate
+      type: CandidateDeltaBroadcast
+    - id: score
+      type: System.Int32
+    content.vb: Public Sub New(candidate As CandidateDeltaBroadcast, score As Integer)
+  overload: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Candidate
+  commentId: P:Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Candidate
+  id: Candidate
+  parent: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta
+  langs:
+  - csharp
+  - vb
+  name: Candidate
+  nameWithType: ScoredCandidateDelta.Candidate
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Candidate
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/ScoredCandidateDelta.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Candidate
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/ScoredCandidateDelta.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public CandidateDeltaBroadcast Candidate { get; }
+    parameters: []
+    return:
+      type: CandidateDeltaBroadcast
+    content.vb: Public ReadOnly Property Candidate As CandidateDeltaBroadcast
+  overload: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Candidate*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Score
+  commentId: P:Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Score
+  id: Score
+  parent: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta
+  langs:
+  - csharp
+  - vb
+  name: Score
+  nameWithType: ScoredCandidateDelta.Score
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Score
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/ScoredCandidateDelta.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Score
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/ScoredCandidateDelta.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public int Score { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Score As Integer
+  overload: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Score*
+  implements:
+  - Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.Score
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.IncreasePopularity(System.Int32)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.IncreasePopularity(System.Int32)
+  id: IncreasePopularity(System.Int32)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta
+  langs:
+  - csharp
+  - vb
+  name: IncreasePopularity(Int32)
+  nameWithType: ScoredCandidateDelta.IncreasePopularity(Int32)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.IncreasePopularity(System.Int32)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/ScoredCandidateDelta.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IncreasePopularity
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/ScoredCandidateDelta.cs
+    startLine: 42
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  syntax:
+    content: public int IncreasePopularity(int voteCount)
+    parameters:
+    - id: voteCount
+      type: System.Int32
+    return:
+      type: System.Int32
+    content.vb: Public Function IncreasePopularity(voteCount As Integer) As Integer
+  overload: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.IncreasePopularity*
+  implements:
+  - Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.IncreasePopularity(System.Int32)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.Consensus.Deltas
+  commentId: N:Catalyst.Core.Modules.Consensus.Deltas
+  name: Catalyst.Core.Modules.Consensus.Deltas
+  nameWithType: Catalyst.Core.Modules.Consensus.Deltas
+  fullName: Catalyst.Core.Modules.Consensus.Deltas
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  name: IScoredCandidateDelta
+  nameWithType: IScoredCandidateDelta
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus.Deltas
+  commentId: N:Catalyst.Abstractions.Consensus.Deltas
+  name: Catalyst.Abstractions.Consensus.Deltas
+  nameWithType: Catalyst.Abstractions.Consensus.Deltas
+  fullName: Catalyst.Abstractions.Consensus.Deltas
+- uid: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.#ctor
+  name: ScoredCandidateDelta
+  nameWithType: ScoredCandidateDelta.ScoredCandidateDelta
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.ScoredCandidateDelta
+- uid: CandidateDeltaBroadcast
+  isExternal: true
+  name: CandidateDeltaBroadcast
+  nameWithType: CandidateDeltaBroadcast
+  fullName: CandidateDeltaBroadcast
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Candidate*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Candidate
+  name: Candidate
+  nameWithType: ScoredCandidateDelta.Candidate
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Candidate
+- uid: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Score*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Score
+  name: Score
+  nameWithType: ScoredCandidateDelta.Score
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.Score
+- uid: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.Score
+  commentId: P:Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.Score
+  parent: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta
+  name: Score
+  nameWithType: IScoredCandidateDelta.Score
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.Score
+- uid: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.IncreasePopularity*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.IncreasePopularity
+  name: IncreasePopularity
+  nameWithType: ScoredCandidateDelta.IncreasePopularity
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.ScoredCandidateDelta.IncreasePopularity
+- uid: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.IncreasePopularity(System.Int32)
+  commentId: M:Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.IncreasePopularity(System.Int32)
+  parent: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta
+  isExternal: true
+  name: IncreasePopularity(Int32)
+  nameWithType: IScoredCandidateDelta.IncreasePopularity(Int32)
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.IncreasePopularity(System.Int32)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.IncreasePopularity(System.Int32)
+    name: IncreasePopularity
+    nameWithType: IScoredCandidateDelta.IncreasePopularity
+    fullName: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.IncreasePopularity
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.IncreasePopularity(System.Int32)
+    name: IncreasePopularity
+    nameWithType: IScoredCandidateDelta.IncreasePopularity
+    fullName: Catalyst.Abstractions.Consensus.Deltas.IScoredCandidateDelta.IncreasePopularity
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )

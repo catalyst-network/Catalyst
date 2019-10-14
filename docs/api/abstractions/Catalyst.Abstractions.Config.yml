@@ -1,0 +1,34 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Config
+  commentId: N:Catalyst.Abstractions.Config
+  id: Catalyst.Abstractions.Config
+  children:
+  - Catalyst.Abstractions.Config.IConfigCopier
+  - Catalyst.Abstractions.Config.IReputationEvents
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Config
+  nameWithType: Catalyst.Abstractions.Config
+  fullName: Catalyst.Abstractions.Config
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Config.IConfigCopier
+  commentId: T:Catalyst.Abstractions.Config.IConfigCopier
+  name: IConfigCopier
+  nameWithType: IConfigCopier
+  fullName: Catalyst.Abstractions.Config.IConfigCopier
+- uid: Catalyst.Abstractions.Config.IReputationEvents
+  commentId: T:Catalyst.Abstractions.Config.IReputationEvents
+  parent: Catalyst.Abstractions.Config
+  name: IReputationEvents
+  nameWithType: IReputationEvents
+  fullName: Catalyst.Abstractions.Config.IReputationEvents
+- uid: Catalyst.Abstractions.Config
+  commentId: N:Catalyst.Abstractions.Config
+  name: Catalyst.Abstractions.Config
+  nameWithType: Catalyst.Abstractions.Config
+  fullName: Catalyst.Abstractions.Config

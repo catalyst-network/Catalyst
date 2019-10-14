@@ -1,0 +1,424 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+  commentId: T:Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+  id: IDeltaElector
+  parent: Catalyst.Abstractions.Consensus.Deltas
+  children:
+  - Catalyst.Abstractions.Consensus.Deltas.IDeltaElector.GetMostPopularCandidateDelta(MultiHash)
+  langs:
+  - csharp
+  - vb
+  name: IDeltaElector
+  nameWithType: IDeltaElector
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Deltas/IDeltaElector.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IDeltaElector
+    path: ../src/Catalyst.Abstractions/Consensus/Deltas/IDeltaElector.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Deltas
+  syntax:
+    content: 'public interface IDeltaElector : IObserver<FavouriteDeltaBroadcast>'
+    content.vb: >-
+      Public Interface IDeltaElector
+
+          Inherits IObserver(Of FavouriteDeltaBroadcast)
+  inheritedMembers:
+  - System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.OnCompleted
+  - System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.OnError(System.Exception)
+  - System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.OnNext(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector.GetMostPopularCandidateDelta(MultiHash)
+  commentId: M:Catalyst.Abstractions.Consensus.Deltas.IDeltaElector.GetMostPopularCandidateDelta(MultiHash)
+  id: GetMostPopularCandidateDelta(MultiHash)
+  parent: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector
+  langs:
+  - csharp
+  - vb
+  name: GetMostPopularCandidateDelta(MultiHash)
+  nameWithType: IDeltaElector.GetMostPopularCandidateDelta(MultiHash)
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector.GetMostPopularCandidateDelta(MultiHash)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Consensus/Deltas/IDeltaElector.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetMostPopularCandidateDelta
+    path: ../src/Catalyst.Abstractions/Consensus/Deltas/IDeltaElector.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Consensus.Deltas
+  summary: "\nWhen the election phase is over, this method can be called to retrieve which candidate\nhas been the most popular for a given cycle. If the candidate is popular enough, it\nwill then be appointed as the next official delta.\n"
+  remarks: This function will be called at the beginning of a Voting cycle.
+  example: []
+  syntax:
+    content: CandidateDeltaBroadcast GetMostPopularCandidateDelta(MultiHash previousDeltaDfsHash)
+    parameters:
+    - id: previousDeltaDfsHash
+      type: MultiHash
+      description: >-
+        The DFS hash of the delta for which we are
+
+        trying to produce a successor.
+    return:
+      type: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+      description: The most popular candidate for a given cycle.
+    content.vb: Function GetMostPopularCandidateDelta(previousDeltaDfsHash As MultiHash) As CandidateDeltaBroadcast
+  overload: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector.GetMostPopularCandidateDelta*
+references:
+- uid: Catalyst.Abstractions.Consensus.Deltas
+  commentId: N:Catalyst.Abstractions.Consensus.Deltas
+  name: Catalyst.Abstractions.Consensus.Deltas
+  nameWithType: Catalyst.Abstractions.Consensus.Deltas
+  fullName: Catalyst.Abstractions.Consensus.Deltas
+- uid: System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.OnCompleted
+  commentId: M:System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.OnCompleted
+  parent: System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  definition: System.IObserver`1.OnCompleted
+  name: OnCompleted()
+  nameWithType: IObserver<FavouriteDeltaBroadcast>.OnCompleted()
+  fullName: System.IObserver<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.OnCompleted()
+  nameWithType.vb: IObserver(Of FavouriteDeltaBroadcast).OnCompleted()
+  fullName.vb: System.IObserver(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).OnCompleted()
+  spec.csharp:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver<FavouriteDeltaBroadcast>.OnCompleted
+    fullName: System.IObserver<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver(Of FavouriteDeltaBroadcast).OnCompleted
+    fullName: System.IObserver(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.OnError(System.Exception)
+  commentId: M:System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.OnError(System.Exception)
+  parent: System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  definition: System.IObserver`1.OnError(System.Exception)
+  name: OnError(Exception)
+  nameWithType: IObserver<FavouriteDeltaBroadcast>.OnError(Exception)
+  fullName: System.IObserver<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.OnError(System.Exception)
+  nameWithType.vb: IObserver(Of FavouriteDeltaBroadcast).OnError(Exception)
+  fullName.vb: System.IObserver(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).OnError(System.Exception)
+  spec.csharp:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver<FavouriteDeltaBroadcast>.OnError
+    fullName: System.IObserver<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver(Of FavouriteDeltaBroadcast).OnError
+    fullName: System.IObserver(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.OnNext(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  commentId: M:System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}.OnNext(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  parent: System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  definition: System.IObserver`1.OnNext(`0)
+  name: OnNext(FavouriteDeltaBroadcast)
+  nameWithType: IObserver<FavouriteDeltaBroadcast>.OnNext(FavouriteDeltaBroadcast)
+  fullName: System.IObserver<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.OnNext(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  nameWithType.vb: IObserver(Of FavouriteDeltaBroadcast).OnNext(FavouriteDeltaBroadcast)
+  fullName.vb: System.IObserver(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).OnNext(Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  spec.csharp:
+  - uid: System.IObserver`1.OnNext(`0)
+    name: OnNext
+    nameWithType: IObserver<FavouriteDeltaBroadcast>.OnNext
+    fullName: System.IObserver<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>.OnNext
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnNext(`0)
+    name: OnNext
+    nameWithType: IObserver(Of FavouriteDeltaBroadcast).OnNext
+    fullName: System.IObserver(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast).OnNext
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver`1.OnCompleted
+  commentId: M:System.IObserver`1.OnCompleted
+  isExternal: true
+  name: OnCompleted()
+  nameWithType: IObserver<T>.OnCompleted()
+  fullName: System.IObserver<T>.OnCompleted()
+  nameWithType.vb: IObserver(Of T).OnCompleted()
+  fullName.vb: System.IObserver(Of T).OnCompleted()
+  spec.csharp:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver<T>.OnCompleted
+    fullName: System.IObserver<T>.OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnCompleted
+    name: OnCompleted
+    nameWithType: IObserver(Of T).OnCompleted
+    fullName: System.IObserver(Of T).OnCompleted
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  commentId: T:System.IObserver{Catalyst.Protocol.Wire.FavouriteDeltaBroadcast}
+  parent: System
+  definition: System.IObserver`1
+  name: IObserver<FavouriteDeltaBroadcast>
+  nameWithType: IObserver<FavouriteDeltaBroadcast>
+  fullName: System.IObserver<Catalyst.Protocol.Wire.FavouriteDeltaBroadcast>
+  nameWithType.vb: IObserver(Of FavouriteDeltaBroadcast)
+  fullName.vb: System.IObserver(Of Catalyst.Protocol.Wire.FavouriteDeltaBroadcast)
+  name.vb: IObserver(Of FavouriteDeltaBroadcast)
+  spec.csharp:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+    name: FavouriteDeltaBroadcast
+    nameWithType: FavouriteDeltaBroadcast
+    fullName: Catalyst.Protocol.Wire.FavouriteDeltaBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver`1.OnError(System.Exception)
+  commentId: M:System.IObserver`1.OnError(System.Exception)
+  isExternal: true
+  name: OnError(Exception)
+  nameWithType: IObserver<T>.OnError(Exception)
+  fullName: System.IObserver<T>.OnError(System.Exception)
+  nameWithType.vb: IObserver(Of T).OnError(Exception)
+  fullName.vb: System.IObserver(Of T).OnError(System.Exception)
+  spec.csharp:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver<T>.OnError
+    fullName: System.IObserver<T>.OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnError(System.Exception)
+    name: OnError
+    nameWithType: IObserver(Of T).OnError
+    fullName: System.IObserver(Of T).OnError
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Exception
+    name: Exception
+    nameWithType: Exception
+    fullName: System.Exception
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver`1.OnNext(`0)
+  commentId: M:System.IObserver`1.OnNext(`0)
+  isExternal: true
+  name: OnNext(T)
+  nameWithType: IObserver<T>.OnNext(T)
+  fullName: System.IObserver<T>.OnNext(T)
+  nameWithType.vb: IObserver(Of T).OnNext(T)
+  fullName.vb: System.IObserver(Of T).OnNext(T)
+  spec.csharp:
+  - uid: System.IObserver`1.OnNext(`0)
+    name: OnNext
+    nameWithType: IObserver<T>.OnNext
+    fullName: System.IObserver<T>.OnNext
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IObserver`1.OnNext(`0)
+    name: OnNext
+    nameWithType: IObserver(Of T).OnNext
+    fullName: System.IObserver(Of T).OnNext
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObserver`1
+  commentId: T:System.IObserver`1
+  isExternal: true
+  name: IObserver<T>
+  nameWithType: IObserver<T>
+  fullName: System.IObserver<T>
+  nameWithType.vb: IObserver(Of T)
+  fullName.vb: System.IObserver(Of T)
+  name.vb: IObserver(Of T)
+  spec.csharp:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObserver`1
+    name: IObserver
+    nameWithType: IObserver
+    fullName: System.IObserver
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector.GetMostPopularCandidateDelta*
+  commentId: Overload:Catalyst.Abstractions.Consensus.Deltas.IDeltaElector.GetMostPopularCandidateDelta
+  name: GetMostPopularCandidateDelta
+  nameWithType: IDeltaElector.GetMostPopularCandidateDelta
+  fullName: Catalyst.Abstractions.Consensus.Deltas.IDeltaElector.GetMostPopularCandidateDelta
+- uid: MultiHash
+  isExternal: true
+  name: MultiHash
+  nameWithType: MultiHash
+  fullName: MultiHash
+- uid: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+  commentId: T:Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+  parent: Catalyst.Protocol.Wire
+  name: CandidateDeltaBroadcast
+  nameWithType: CandidateDeltaBroadcast
+  fullName: Catalyst.Protocol.Wire.CandidateDeltaBroadcast
+- uid: Catalyst.Protocol.Wire
+  commentId: N:Catalyst.Protocol.Wire
+  name: Catalyst.Protocol.Wire
+  nameWithType: Catalyst.Protocol.Wire
+  fullName: Catalyst.Protocol.Wire

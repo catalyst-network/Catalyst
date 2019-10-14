@@ -1,0 +1,1189 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory
+  commentId: T:Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory
+  id: UploadFileTransferFactory
+  parent: Catalyst.Core.Lib.FileTransfer
+  children:
+  - Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.#ctor(ILogger)
+  - Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.DoTransferAsync(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  langs:
+  - csharp
+  - vb
+  name: UploadFileTransferFactory
+  nameWithType: UploadFileTransferFactory
+  fullName: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/UploadFileTransferFactory.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: UploadFileTransferFactory
+    path: ../src/Catalyst.Core.Lib/FileTransfer/UploadFileTransferFactory.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  summary: "\nHandles and stores the upload file transfers\n"
+  example: []
+  syntax:
+    content: 'public sealed class UploadFileTransferFactory : BaseFileTransferFactory<IUploadFileInformation>, IUploadFileTransferFactory, IFileTransferFactory<IUploadFileInformation>'
+    content.vb: >-
+      Public NotInheritable Class UploadFileTransferFactory
+
+          Inherits BaseFileTransferFactory(Of IUploadFileInformation)
+
+          Implements IUploadFileTransferFactory, IFileTransferFactory(Of IUploadFileInformation)
+  seealso:
+  - linkId: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+    commentId: T:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+  - linkId: Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory
+    commentId: T:Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory
+  inheritance:
+  - System.Object
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  implements:
+  - Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory
+  - Catalyst.Abstractions.FileTransfer.IFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  inheritedMembers:
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.Logger
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.Keys
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.RegisterTransfer(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.Threading.CancellationToken)
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.Remove(Catalyst.Abstractions.FileTransfer.IUploadFileInformation,System.Boolean)
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.#ctor(ILogger)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.#ctor(ILogger)
+  id: '#ctor(ILogger)'
+  parent: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory
+  langs:
+  - csharp
+  - vb
+  name: UploadFileTransferFactory(ILogger)
+  nameWithType: UploadFileTransferFactory.UploadFileTransferFactory(ILogger)
+  fullName: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.UploadFileTransferFactory(ILogger)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/UploadFileTransferFactory.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/FileTransfer/UploadFileTransferFactory.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  syntax:
+    content: public UploadFileTransferFactory(ILogger logger)
+    parameters:
+    - id: logger
+      type: ILogger
+    content.vb: Public Sub New(logger As ILogger)
+  overload: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.DoTransferAsync(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.DoTransferAsync(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  id: DoTransferAsync(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  parent: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory
+  langs:
+  - csharp
+  - vb
+  name: DoTransferAsync(IUploadFileInformation)
+  nameWithType: UploadFileTransferFactory.DoTransferAsync(IUploadFileInformation)
+  fullName: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.DoTransferAsync(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/FileTransfer/UploadFileTransferFactory.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DoTransferAsync
+    path: ../src/Catalyst.Core.Lib/FileTransfer/UploadFileTransferFactory.cs
+    startLine: 56
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.FileTransfer
+  summary: Does the transfer.
+  example: []
+  syntax:
+    content: protected override Task DoTransferAsync(IUploadFileInformation fileTransferInformation)
+    parameters:
+    - id: fileTransferInformation
+      type: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+      description: The file transfer information.
+    return:
+      type: System.Threading.Tasks.Task
+      description: ''
+    content.vb: Protected Overrides Function DoTransferAsync(fileTransferInformation As IUploadFileInformation) As Task
+  overridden: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.DoTransferAsync(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  overload: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.DoTransferAsync*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+  commentId: T:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+  name: BaseFileTransferFactory<T>
+  nameWithType: BaseFileTransferFactory<T>
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>
+  nameWithType.vb: BaseFileTransferFactory(Of T)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T)
+  name.vb: BaseFileTransferFactory(Of T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+    name: BaseFileTransferFactory
+    nameWithType: BaseFileTransferFactory
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+    name: BaseFileTransferFactory
+    nameWithType: BaseFileTransferFactory
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory
+  commentId: T:Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory
+  parent: Catalyst.Abstractions.FileTransfer
+  name: IUploadFileTransferFactory
+  nameWithType: IUploadFileTransferFactory
+  fullName: Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory
+- uid: Catalyst.Core.Lib.FileTransfer
+  commentId: N:Catalyst.Core.Lib.FileTransfer
+  name: Catalyst.Core.Lib.FileTransfer
+  nameWithType: Catalyst.Core.Lib.FileTransfer
+  fullName: Catalyst.Core.Lib.FileTransfer
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  commentId: T:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  parent: Catalyst.Core.Lib.FileTransfer
+  definition: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+  name: BaseFileTransferFactory<IUploadFileInformation>
+  nameWithType: BaseFileTransferFactory<IUploadFileInformation>
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>
+  nameWithType.vb: BaseFileTransferFactory(Of IUploadFileInformation)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  name.vb: BaseFileTransferFactory(Of IUploadFileInformation)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+    name: BaseFileTransferFactory
+    nameWithType: BaseFileTransferFactory
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+    name: IUploadFileInformation
+    nameWithType: IUploadFileInformation
+    fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+    name: BaseFileTransferFactory
+    nameWithType: BaseFileTransferFactory
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+    name: IUploadFileInformation
+    nameWithType: IUploadFileInformation
+    fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  commentId: T:Catalyst.Abstractions.FileTransfer.IFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  parent: Catalyst.Abstractions.FileTransfer
+  definition: Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+  name: IFileTransferFactory<IUploadFileInformation>
+  nameWithType: IFileTransferFactory<IUploadFileInformation>
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>
+  nameWithType.vb: IFileTransferFactory(Of IUploadFileInformation)
+  fullName.vb: Catalyst.Abstractions.FileTransfer.IFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  name.vb: IFileTransferFactory(Of IUploadFileInformation)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+    name: IFileTransferFactory
+    nameWithType: IFileTransferFactory
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferFactory
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+    name: IUploadFileInformation
+    nameWithType: IUploadFileInformation
+    fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+    name: IFileTransferFactory
+    nameWithType: IFileTransferFactory
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferFactory
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+    name: IUploadFileInformation
+    nameWithType: IUploadFileInformation
+    fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.Logger
+  commentId: F:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.Logger
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  definition: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Logger
+  name: Logger
+  nameWithType: BaseFileTransferFactory<IUploadFileInformation>.Logger
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.Logger
+  nameWithType.vb: BaseFileTransferFactory(Of IUploadFileInformation).Logger
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).Logger
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.Keys
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.Keys
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  definition: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Keys
+  name: Keys
+  nameWithType: BaseFileTransferFactory<IUploadFileInformation>.Keys
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.Keys
+  nameWithType.vb: BaseFileTransferFactory(Of IUploadFileInformation).Keys
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).Keys
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.RegisterTransfer(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.RegisterTransfer(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  definition: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.RegisterTransfer(`0)
+  name: RegisterTransfer(IUploadFileInformation)
+  nameWithType: BaseFileTransferFactory<IUploadFileInformation>.RegisterTransfer(IUploadFileInformation)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.RegisterTransfer(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  nameWithType.vb: BaseFileTransferFactory(Of IUploadFileInformation).RegisterTransfer(IUploadFileInformation)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).RegisterTransfer(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.RegisterTransfer(`0)
+    name: RegisterTransfer
+    nameWithType: BaseFileTransferFactory<IUploadFileInformation>.RegisterTransfer
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.RegisterTransfer
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+    name: IUploadFileInformation
+    nameWithType: IUploadFileInformation
+    fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.RegisterTransfer(`0)
+    name: RegisterTransfer
+    nameWithType: BaseFileTransferFactory(Of IUploadFileInformation).RegisterTransfer
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).RegisterTransfer
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+    name: IUploadFileInformation
+    nameWithType: IUploadFileInformation
+    fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.Threading.CancellationToken)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.Threading.CancellationToken)
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  definition: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.Threading.CancellationToken)
+  name: FileTransferAsync(ICorrelationId, CancellationToken)
+  nameWithType: BaseFileTransferFactory<IUploadFileInformation>.FileTransferAsync(ICorrelationId, CancellationToken)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId, System.Threading.CancellationToken)
+  nameWithType.vb: BaseFileTransferFactory(Of IUploadFileInformation).FileTransferAsync(ICorrelationId, CancellationToken)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.Threading.CancellationToken)
+    name: FileTransferAsync
+    nameWithType: BaseFileTransferFactory<IUploadFileInformation>.FileTransferAsync
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.FileTransferAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.Threading.CancellationToken)
+    name: FileTransferAsync
+    nameWithType: BaseFileTransferFactory(Of IUploadFileInformation).FileTransferAsync
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).FileTransferAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  definition: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  name: GetFileTransferInformation(ICorrelationId)
+  nameWithType: BaseFileTransferFactory<IUploadFileInformation>.GetFileTransferInformation(ICorrelationId)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  nameWithType.vb: BaseFileTransferFactory(Of IUploadFileInformation).GetFileTransferInformation(ICorrelationId)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+    name: GetFileTransferInformation
+    nameWithType: BaseFileTransferFactory<IUploadFileInformation>.GetFileTransferInformation
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.GetFileTransferInformation
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+    name: GetFileTransferInformation
+    nameWithType: BaseFileTransferFactory(Of IUploadFileInformation).GetFileTransferInformation
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).GetFileTransferInformation
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.Remove(Catalyst.Abstractions.FileTransfer.IUploadFileInformation,System.Boolean)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.Remove(Catalyst.Abstractions.FileTransfer.IUploadFileInformation,System.Boolean)
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  definition: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Remove(`0,System.Boolean)
+  name: Remove(IUploadFileInformation, Boolean)
+  nameWithType: BaseFileTransferFactory<IUploadFileInformation>.Remove(IUploadFileInformation, Boolean)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.Remove(Catalyst.Abstractions.FileTransfer.IUploadFileInformation, System.Boolean)
+  nameWithType.vb: BaseFileTransferFactory(Of IUploadFileInformation).Remove(IUploadFileInformation, Boolean)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).Remove(Catalyst.Abstractions.FileTransfer.IUploadFileInformation, System.Boolean)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Remove(`0,System.Boolean)
+    name: Remove
+    nameWithType: BaseFileTransferFactory<IUploadFileInformation>.Remove
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.Remove
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+    name: IUploadFileInformation
+    nameWithType: IUploadFileInformation
+    fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Remove(`0,System.Boolean)
+    name: Remove
+    nameWithType: BaseFileTransferFactory(Of IUploadFileInformation).Remove
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).Remove
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+    name: IUploadFileInformation
+    nameWithType: IUploadFileInformation
+    fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  definition: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  name: EnsureKeyExists(ICorrelationId)
+  nameWithType: BaseFileTransferFactory<IUploadFileInformation>.EnsureKeyExists(ICorrelationId)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  nameWithType.vb: BaseFileTransferFactory(Of IUploadFileInformation).EnsureKeyExists(ICorrelationId)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+    name: EnsureKeyExists
+    nameWithType: BaseFileTransferFactory<IUploadFileInformation>.EnsureKeyExists
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.EnsureKeyExists
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+    name: EnsureKeyExists
+    nameWithType: BaseFileTransferFactory(Of IUploadFileInformation).EnsureKeyExists
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).EnsureKeyExists
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.FileTransfer
+  commentId: N:Catalyst.Abstractions.FileTransfer
+  name: Catalyst.Abstractions.FileTransfer
+  nameWithType: Catalyst.Abstractions.FileTransfer
+  fullName: Catalyst.Abstractions.FileTransfer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+  commentId: T:Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+  name: IFileTransferFactory<T>
+  nameWithType: IFileTransferFactory<T>
+  fullName: Catalyst.Abstractions.FileTransfer.IFileTransferFactory<T>
+  nameWithType.vb: IFileTransferFactory(Of T)
+  fullName.vb: Catalyst.Abstractions.FileTransfer.IFileTransferFactory(Of T)
+  name.vb: IFileTransferFactory(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+    name: IFileTransferFactory
+    nameWithType: IFileTransferFactory
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferFactory
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.FileTransfer.IFileTransferFactory`1
+    name: IFileTransferFactory
+    nameWithType: IFileTransferFactory
+    fullName: Catalyst.Abstractions.FileTransfer.IFileTransferFactory
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Logger
+  commentId: F:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Logger
+  name: Logger
+  nameWithType: BaseFileTransferFactory<T>.Logger
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.Logger
+  nameWithType.vb: BaseFileTransferFactory(Of T).Logger
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).Logger
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Keys
+  commentId: P:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Keys
+  name: Keys
+  nameWithType: BaseFileTransferFactory<T>.Keys
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.Keys
+  nameWithType.vb: BaseFileTransferFactory(Of T).Keys
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).Keys
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.RegisterTransfer(`0)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.RegisterTransfer(`0)
+  name: RegisterTransfer(T)
+  nameWithType: BaseFileTransferFactory<T>.RegisterTransfer(T)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.RegisterTransfer(T)
+  nameWithType.vb: BaseFileTransferFactory(Of T).RegisterTransfer(T)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).RegisterTransfer(T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.RegisterTransfer(`0)
+    name: RegisterTransfer
+    nameWithType: BaseFileTransferFactory<T>.RegisterTransfer
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.RegisterTransfer
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.RegisterTransfer(`0)
+    name: RegisterTransfer
+    nameWithType: BaseFileTransferFactory(Of T).RegisterTransfer
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).RegisterTransfer
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.Threading.CancellationToken)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.Threading.CancellationToken)
+  isExternal: true
+  name: FileTransferAsync(ICorrelationId, CancellationToken)
+  nameWithType: BaseFileTransferFactory<T>.FileTransferAsync(ICorrelationId, CancellationToken)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId, System.Threading.CancellationToken)
+  nameWithType.vb: BaseFileTransferFactory(Of T).FileTransferAsync(ICorrelationId, CancellationToken)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.Threading.CancellationToken)
+    name: FileTransferAsync
+    nameWithType: BaseFileTransferFactory<T>.FileTransferAsync
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.FileTransferAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.FileTransferAsync(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId,System.Threading.CancellationToken)
+    name: FileTransferAsync
+    nameWithType: BaseFileTransferFactory(Of T).FileTransferAsync
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).FileTransferAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    nameWithType: CancellationToken
+    fullName: System.Threading.CancellationToken
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  name: GetFileTransferInformation(ICorrelationId)
+  nameWithType: BaseFileTransferFactory<T>.GetFileTransferInformation(ICorrelationId)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  nameWithType.vb: BaseFileTransferFactory(Of T).GetFileTransferInformation(ICorrelationId)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+    name: GetFileTransferInformation
+    nameWithType: BaseFileTransferFactory<T>.GetFileTransferInformation
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.GetFileTransferInformation
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.GetFileTransferInformation(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+    name: GetFileTransferInformation
+    nameWithType: BaseFileTransferFactory(Of T).GetFileTransferInformation
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).GetFileTransferInformation
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Remove(`0,System.Boolean)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Remove(`0,System.Boolean)
+  isExternal: true
+  name: Remove(T, Boolean)
+  nameWithType: BaseFileTransferFactory<T>.Remove(T, Boolean)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.Remove(T, System.Boolean)
+  nameWithType.vb: BaseFileTransferFactory(Of T).Remove(T, Boolean)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).Remove(T, System.Boolean)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Remove(`0,System.Boolean)
+    name: Remove
+    nameWithType: BaseFileTransferFactory<T>.Remove
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.Remove
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.Remove(`0,System.Boolean)
+    name: Remove
+    nameWithType: BaseFileTransferFactory(Of T).Remove
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).Remove
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  name: EnsureKeyExists(ICorrelationId)
+  nameWithType: BaseFileTransferFactory<T>.EnsureKeyExists(ICorrelationId)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  nameWithType.vb: BaseFileTransferFactory(Of T).EnsureKeyExists(ICorrelationId)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+    name: EnsureKeyExists
+    nameWithType: BaseFileTransferFactory<T>.EnsureKeyExists
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.EnsureKeyExists
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.EnsureKeyExists(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)
+    name: EnsureKeyExists
+    nameWithType: BaseFileTransferFactory(Of T).EnsureKeyExists
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).EnsureKeyExists
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+    name: ICorrelationId
+    nameWithType: ICorrelationId
+    fullName: Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.#ctor
+  name: UploadFileTransferFactory
+  nameWithType: UploadFileTransferFactory.UploadFileTransferFactory
+  fullName: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.UploadFileTransferFactory
+- uid: ILogger
+  isExternal: true
+  name: ILogger
+  nameWithType: ILogger
+  fullName: ILogger
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.DoTransferAsync(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}.DoTransferAsync(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  parent: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory{Catalyst.Abstractions.FileTransfer.IUploadFileInformation}
+  definition: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.DoTransferAsync(`0)
+  name: DoTransferAsync(IUploadFileInformation)
+  nameWithType: BaseFileTransferFactory<IUploadFileInformation>.DoTransferAsync(IUploadFileInformation)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.DoTransferAsync(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  nameWithType.vb: BaseFileTransferFactory(Of IUploadFileInformation).DoTransferAsync(IUploadFileInformation)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).DoTransferAsync(Catalyst.Abstractions.FileTransfer.IUploadFileInformation)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.DoTransferAsync(`0)
+    name: DoTransferAsync
+    nameWithType: BaseFileTransferFactory<IUploadFileInformation>.DoTransferAsync
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<Catalyst.Abstractions.FileTransfer.IUploadFileInformation>.DoTransferAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+    name: IUploadFileInformation
+    nameWithType: IUploadFileInformation
+    fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.DoTransferAsync(`0)
+    name: DoTransferAsync
+    nameWithType: BaseFileTransferFactory(Of IUploadFileInformation).DoTransferAsync
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of Catalyst.Abstractions.FileTransfer.IUploadFileInformation).DoTransferAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+    name: IUploadFileInformation
+    nameWithType: IUploadFileInformation
+    fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.DoTransferAsync*
+  commentId: Overload:Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.DoTransferAsync
+  name: DoTransferAsync
+  nameWithType: UploadFileTransferFactory.DoTransferAsync
+  fullName: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory.DoTransferAsync
+- uid: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  commentId: T:Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+  parent: Catalyst.Abstractions.FileTransfer
+  name: IUploadFileInformation
+  nameWithType: IUploadFileInformation
+  fullName: Catalyst.Abstractions.FileTransfer.IUploadFileInformation
+- uid: System.Threading.Tasks.Task
+  commentId: T:System.Threading.Tasks.Task
+  parent: System.Threading.Tasks
+  isExternal: true
+  name: Task
+  nameWithType: Task
+  fullName: System.Threading.Tasks.Task
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.DoTransferAsync(`0)
+  commentId: M:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.DoTransferAsync(`0)
+  name: DoTransferAsync(T)
+  nameWithType: BaseFileTransferFactory<T>.DoTransferAsync(T)
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.DoTransferAsync(T)
+  nameWithType.vb: BaseFileTransferFactory(Of T).DoTransferAsync(T)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).DoTransferAsync(T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.DoTransferAsync(`0)
+    name: DoTransferAsync
+    nameWithType: BaseFileTransferFactory<T>.DoTransferAsync
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>.DoTransferAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1.DoTransferAsync(`0)
+    name: DoTransferAsync
+    nameWithType: BaseFileTransferFactory(Of T).DoTransferAsync
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T).DoTransferAsync
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
