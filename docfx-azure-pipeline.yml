@@ -47,5 +47,5 @@ steps:
         git add . --all
         git commit -m "publish gh-pages"
         git remote set-url --push origin git@github.com:catalyst-network/Catalyst.Framework.git
-        git push origin HEAD:gh-pages
+        git push origin --force HEAD:gh-pages
       displayName: 'Build and commit pages'
