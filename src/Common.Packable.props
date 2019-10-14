@@ -1,6 +1,0 @@
-<Project>
-    <PropertyGroup>
-        <IsTestProject>false</IsTestProject>
-        <IsPackable>true</IsPackable>
-    </PropertyGroup>
-</Project>

@@ -1,7 +1,0 @@
-### YamlMime:TableOfContent
-- uid: Catalyst.Modules.Repository.CosmosDb
-  name: Catalyst.Modules.Repository.CosmosDb
-  items:
-  - uid: Catalyst.Modules.Repository.CosmosDb.CosmosDbRepository`1
-    name: CosmosDbRepository<T>
-    name.vb: CosmosDbRepository(Of T)

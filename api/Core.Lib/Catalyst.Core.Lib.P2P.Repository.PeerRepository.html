@@ -1,0 +1,697 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class PeerRepository
+   | Catalyst Framework Documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class PeerRepository
+   | Catalyst Framework Documentation ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Catalyst.Core.Lib.P2P.Repository.PeerRepository">
+  
+  
+  <h1 id="Catalyst_Core_Lib_P2P_Repository_PeerRepository" data-uid="Catalyst.Core.Lib.P2P.Repository.PeerRepository" class="text-break">Class PeerRepository
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html">RepositoryWrapper</a>&lt;<a class="xref" href="Catalyst.Core.Lib.P2P.Models.Peer.html">Peer</a>&gt;</div>
+    <div class="level2"><span class="xref">PeerRepository</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Catalyst.Core.Lib.P2P.Repository.IPeerRepository.html">IPeerRepository</a></div>
+    <div><a class="xref" href="../abstractions/Catalyst.Abstractions.Repository.IRepositoryWrapper-1.html">IRepositoryWrapper</a>&lt;<a class="xref" href="Catalyst.Core.Lib.P2P.Models.Peer.html">Peer</a>&gt;</div>
+    <div><span class="xref">IRepository</span>&lt;<a class="xref" href="Catalyst.Core.Lib.P2P.Models.Peer.html">Peer</a>, <span class="xref">System.String</span>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Repository">RepositoryWrapper&lt;Peer&gt;.Repository</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Conventions">RepositoryWrapper&lt;Peer&gt;.Conventions</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_EntityType">RepositoryWrapper&lt;Peer&gt;.EntityType</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_KeyType">RepositoryWrapper&lt;Peer&gt;.KeyType</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_CachingStrategy">RepositoryWrapper&lt;Peer&gt;.CachingStrategy</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_CachingEnabled">RepositoryWrapper&lt;Peer&gt;.CachingEnabled</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_CacheUsed">RepositoryWrapper&lt;Peer&gt;.CacheUsed</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TraceInfo">RepositoryWrapper&lt;Peer&gt;.TraceInfo</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GenerateKeyOnAdd">RepositoryWrapper&lt;Peer&gt;.GenerateKeyOnAdd</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Add__0_">RepositoryWrapper&lt;Peer&gt;.Add(Peer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Add_System_Collections_Generic_IEnumerable__0__">RepositoryWrapper&lt;Peer&gt;.Add(IEnumerable&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_AsQueryable">RepositoryWrapper&lt;Peer&gt;.AsQueryable()</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Peer&gt;.Average(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Peer&gt;.Average(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Peer&gt;.Average(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Peer&gt;.Average(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Peer&gt;.Average(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Peer&gt;.Average(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Peer&gt;.Average(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Peer&gt;.Average(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Peer&gt;.Average(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Peer&gt;.Average(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Peer&gt;.Average(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_BeginBatch">RepositoryWrapper&lt;Peer&gt;.BeginBatch()</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_ClearCache">RepositoryWrapper&lt;Peer&gt;.ClearCache()</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Count">RepositoryWrapper&lt;Peer&gt;.Count()</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Count_ISpecification__0__">RepositoryWrapper&lt;Peer&gt;.Count(ISpecification&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Count_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">RepositoryWrapper&lt;Peer&gt;.Count(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_System_String_">RepositoryWrapper&lt;Peer&gt;.Delete(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_System_Collections_Generic_IEnumerable_System_String__">RepositoryWrapper&lt;Peer&gt;.Delete(IEnumerable&lt;String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_System_String___">RepositoryWrapper&lt;Peer&gt;.Delete(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete__0_">RepositoryWrapper&lt;Peer&gt;.Delete(Peer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_System_Collections_Generic_IEnumerable__0__">RepositoryWrapper&lt;Peer&gt;.Delete(IEnumerable&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">RepositoryWrapper&lt;Peer&gt;.Delete(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_ISpecification__0__">RepositoryWrapper&lt;Peer&gt;.Delete(ISpecification&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_DisableCaching">RepositoryWrapper&lt;Peer&gt;.DisableCaching()</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Dispose">RepositoryWrapper&lt;Peer&gt;.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Exists_System_String_">RepositoryWrapper&lt;Peer&gt;.Exists(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Exists_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">RepositoryWrapper&lt;Peer&gt;.Exists(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Exists_ISpecification__0__">RepositoryWrapper&lt;Peer&gt;.Exists(ISpecification&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Find_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___IQueryOptions__0__">RepositoryWrapper&lt;Peer&gt;.Find(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, IQueryOptions&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Find__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__">RepositoryWrapper&lt;Peer&gt;.Find&lt;TResult&gt;(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IQueryOptions&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Find_ISpecification__0__IQueryOptions__0__">RepositoryWrapper&lt;Peer&gt;.Find(ISpecification&lt;Peer&gt;, IQueryOptions&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Find__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__">RepositoryWrapper&lt;Peer&gt;.Find&lt;TResult&gt;(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IQueryOptions&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_FindAll_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___IQueryOptions__0__">RepositoryWrapper&lt;Peer&gt;.FindAll(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, IQueryOptions&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_FindAll__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__">RepositoryWrapper&lt;Peer&gt;.FindAll&lt;TResult&gt;(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IQueryOptions&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_FindAll_ISpecification__0__IQueryOptions__0__">RepositoryWrapper&lt;Peer&gt;.FindAll(ISpecification&lt;Peer&gt;, IQueryOptions&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_FindAll__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__">RepositoryWrapper&lt;Peer&gt;.FindAll&lt;TResult&gt;(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IQueryOptions&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get_System_String_">RepositoryWrapper&lt;Peer&gt;.Get(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get_System_String_IFetchStrategy__0__">RepositoryWrapper&lt;Peer&gt;.Get(String, IFetchStrategy&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get_System_String_System_String___">RepositoryWrapper&lt;Peer&gt;.Get(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get_System_String_System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Peer&gt;.Get(String, Expression&lt;Func&lt;Peer, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get__1_System_String_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.Get&lt;TResult&gt;(String, Expression&lt;Func&lt;Peer, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get__1_System_String_System_Linq_Expressions_Expression_System_Func__0___0___IFetchStrategy__0__">RepositoryWrapper&lt;Peer&gt;.Get&lt;TResult&gt;(String, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IFetchStrategy&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get__1_System_String_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Peer&gt;.Get&lt;TResult&gt;(String, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, Expression&lt;Func&lt;Peer, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get__1_System_String_System_Linq_Expressions_Expression_System_Func__0___0___System_String___">RepositoryWrapper&lt;Peer&gt;.Get&lt;TResult&gt;(String, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll">RepositoryWrapper&lt;Peer&gt;.GetAll()</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_IFetchStrategy__0__">RepositoryWrapper&lt;Peer&gt;.GetAll(IFetchStrategy&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_System_String___">RepositoryWrapper&lt;Peer&gt;.GetAll(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Peer&gt;.GetAll(Expression&lt;Func&lt;Peer, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_IQueryOptions__0__">RepositoryWrapper&lt;Peer&gt;.GetAll(IQueryOptions&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_IQueryOptions__0__IFetchStrategy__0__">RepositoryWrapper&lt;Peer&gt;.GetAll(IQueryOptions&lt;Peer&gt;, IFetchStrategy&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_IQueryOptions__0__System_String___">RepositoryWrapper&lt;Peer&gt;.GetAll(IQueryOptions&lt;Peer&gt;, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_IQueryOptions__0__System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Peer&gt;.GetAll(IQueryOptions&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__">RepositoryWrapper&lt;Peer&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IQueryOptions&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___IFetchStrategy__0__">RepositoryWrapper&lt;Peer&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IFetchStrategy&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___System_String___">RepositoryWrapper&lt;Peer&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Peer&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;, Expression&lt;Func&lt;Peer, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__IFetchStrategy__0__">RepositoryWrapper&lt;Peer&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IQueryOptions&lt;Peer&gt;, IFetchStrategy&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__System_String___">RepositoryWrapper&lt;Peer&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IQueryOptions&lt;Peer&gt;, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Peer&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IQueryOptions&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetMany_System_String___">RepositoryWrapper&lt;Peer&gt;.GetMany(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetMany_System_Collections_Generic_IEnumerable_System_String__">RepositoryWrapper&lt;Peer&gt;.GetMany(IEnumerable&lt;String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetMany_System_Collections_Generic_IEnumerable_System_String__IFetchStrategy__0__">RepositoryWrapper&lt;Peer&gt;.GetMany(IEnumerable&lt;String&gt;, IFetchStrategy&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetMany__1_System_Linq_Expressions_Expression_System_Func__0___0___System_String___">RepositoryWrapper&lt;Peer&gt;.GetMany&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetMany__1_System_Collections_Generic_IEnumerable_System_String__System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.GetMany&lt;TResult&gt;(IEnumerable&lt;String&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetManyAsDictionary_System_String___">RepositoryWrapper&lt;Peer&gt;.GetManyAsDictionary(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetManyAsDictionary_System_Collections_Generic_IEnumerable_System_String__">RepositoryWrapper&lt;Peer&gt;.GetManyAsDictionary(IEnumerable&lt;String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetManyAsDictionary_System_Collections_Generic_IEnumerable_System_String__IFetchStrategy__0__">RepositoryWrapper&lt;Peer&gt;.GetManyAsDictionary(IEnumerable&lt;String&gt;, IFetchStrategy&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetPrimaryKey__0_">RepositoryWrapper&lt;Peer&gt;.GetPrimaryKey(Peer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupBy__2_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func_System_Linq_IGrouping___0__0____1___">RepositoryWrapper&lt;Peer&gt;.GroupBy&lt;TGroupKey, TResult&gt;(Expression&lt;Func&lt;Peer, TGroupKey&gt;&gt;, Expression&lt;Func&lt;IGrouping&lt;TGroupKey, Peer&gt;, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupBy__2_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func_System_Linq_IGrouping___0__0____1___">RepositoryWrapper&lt;Peer&gt;.GroupBy&lt;TGroupKey, TResult&gt;(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, TGroupKey&gt;&gt;, Expression&lt;Func&lt;IGrouping&lt;TGroupKey, Peer&gt;, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupBy__2_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func_System_Linq_IGrouping___0__0____1___">RepositoryWrapper&lt;Peer&gt;.GroupBy&lt;TGroupKey, TResult&gt;(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, TGroupKey&gt;&gt;, Expression&lt;Func&lt;IGrouping&lt;TGroupKey, Peer&gt;, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupCount__1_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.GroupCount&lt;TGroupKey&gt;(Expression&lt;Func&lt;Peer, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupCount__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.GroupCount&lt;TGroupKey&gt;(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupCount__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.GroupCount&lt;TGroupKey&gt;(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupLongCount__1_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.GroupLongCount&lt;TGroupKey&gt;(Expression&lt;Func&lt;Peer, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupLongCount__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.GroupLongCount&lt;TGroupKey&gt;(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupLongCount__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.GroupLongCount&lt;TGroupKey&gt;(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Join__3_IRepositoryQueryable___1__System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func___1___0___System_Linq_Expressions_Expression_System_Func__0___1___2___">RepositoryWrapper&lt;Peer&gt;.Join&lt;TJoinKey, TInner, TResult&gt;(IRepositoryQueryable&lt;TInner&gt;, Expression&lt;Func&lt;Peer, TJoinKey&gt;&gt;, Expression&lt;Func&lt;TInner, TJoinKey&gt;&gt;, Expression&lt;Func&lt;Peer, TInner, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_LongCount">RepositoryWrapper&lt;Peer&gt;.LongCount()</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_LongCount_ISpecification__0__">RepositoryWrapper&lt;Peer&gt;.LongCount(ISpecification&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_LongCount_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">RepositoryWrapper&lt;Peer&gt;.LongCount(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Max__1_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.Max&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Max__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.Max&lt;TResult&gt;(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Max__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.Max&lt;TResult&gt;(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Min__1_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.Min&lt;TResult&gt;(Expression&lt;Func&lt;Peer, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Min__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.Min&lt;TResult&gt;(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Min__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Peer&gt;.Min&lt;TResult&gt;(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Peer&gt;.Sum(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Peer&gt;.Sum(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Peer&gt;.Sum(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Peer&gt;.Sum(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Peer&gt;.Sum(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Peer&gt;.Sum(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Peer&gt;.Sum(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Peer&gt;.Sum(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Peer&gt;.Sum(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Peer&gt;.Sum(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Peer&gt;.Sum(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind_System_Linq_Expressions_Expression_System_Func__0_System_Boolean____0__">RepositoryWrapper&lt;Peer&gt;.TryFind(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Peer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___IQueryOptions__0___0__">RepositoryWrapper&lt;Peer&gt;.TryFind(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, IQueryOptions&lt;Peer&gt;, Peer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0_____0__">RepositoryWrapper&lt;Peer&gt;.TryFind&lt;TResult&gt;(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, TResult)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0____0__">RepositoryWrapper&lt;Peer&gt;.TryFind&lt;TResult&gt;(Expression&lt;Func&lt;Peer, Boolean&gt;&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IQueryOptions&lt;Peer&gt;, TResult)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind_ISpecification__0___0__">RepositoryWrapper&lt;Peer&gt;.TryFind(ISpecification&lt;Peer&gt;, Peer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind_ISpecification__0__IQueryOptions__0___0__">RepositoryWrapper&lt;Peer&gt;.TryFind(ISpecification&lt;Peer&gt;, IQueryOptions&lt;Peer&gt;, Peer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0_____0__">RepositoryWrapper&lt;Peer&gt;.TryFind&lt;TResult&gt;(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, TResult)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0____0__">RepositoryWrapper&lt;Peer&gt;.TryFind&lt;TResult&gt;(ISpecification&lt;Peer&gt;, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, IQueryOptions&lt;Peer&gt;, TResult)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryGet_System_String__0__">RepositoryWrapper&lt;Peer&gt;.TryGet(String, Peer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryGet__1_System_String_System_Linq_Expressions_Expression_System_Func__0___0_____0__">RepositoryWrapper&lt;Peer&gt;.TryGet&lt;TResult&gt;(String, Expression&lt;Func&lt;Peer, TResult&gt;&gt;, TResult)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Update__0_">RepositoryWrapper&lt;Peer&gt;.Update(Peer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Update_System_Collections_Generic_IEnumerable__0__">RepositoryWrapper&lt;Peer&gt;.Update(IEnumerable&lt;Peer&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Catalyst.Core.Lib.P2P.Repository.html">Catalyst.Core.Lib.P2P.Repository</a></h6>
+  <h6><strong>Assembly</strong>: Catalyst.Core.Lib.dll</h6>
+  <h5 id="Catalyst_Core_Lib_P2P_Repository_PeerRepository_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class PeerRepository : RepositoryWrapper&lt;Peer&gt;, IPeerRepository, IRepositoryWrapper&lt;Peer&gt;, IRepository&lt;Peer, string&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_P2P_Repository_PeerRepository__ctor_IRepository_Catalyst_Core_Lib_P2P_Models_Peer_System_String__.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.P2P.Repository.PeerRepository.%23ctor(IRepository%7BCatalyst.Core.Lib.P2P.Models.Peer%2CSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/P2P/Repository/PeerRepository.cs/#L32">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_P2P_Repository_PeerRepository__ctor_" data-uid="Catalyst.Core.Lib.P2P.Repository.PeerRepository.#ctor*"></a>
+  <h4 id="Catalyst_Core_Lib_P2P_Repository_PeerRepository__ctor_IRepository_Catalyst_Core_Lib_P2P_Models_Peer_System_String__" data-uid="Catalyst.Core.Lib.P2P.Repository.PeerRepository.#ctor(IRepository{Catalyst.Core.Lib.P2P.Models.Peer,System.String})">PeerRepository(IRepository&lt;Peer, String&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PeerRepository(IRepository&lt;Peer, string&gt; repository)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IRepository</span>&lt;<a class="xref" href="Catalyst.Core.Lib.P2P.Models.Peer.html">Peer</a>, <span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">repository</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Catalyst.Core.Lib.P2P.Repository.IPeerRepository.html">IPeerRepository</a>
+  </div>
+  <div>
+      <a class="xref" href="../abstractions/Catalyst.Abstractions.Repository.IRepositoryWrapper-1.html">IRepositoryWrapper&lt;T&gt;</a>
+  </div>
+  <div>
+      <span class="xref">IRepository&lt;, &gt;</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_P2P_Repository_PeerRepository.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.P2P.Repository.PeerRepository%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/P2P/Repository/PeerRepository.cs/#L30" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>
+            
+          </span></div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

@@ -1,8 +1,0 @@
-- name: Wiki
-  href: articles/
-  topicHref: articles/Home.md
-- name: Api Documentation
-  href: api/
-  topicHref: api/index.md
-- name: Github
-  href: https://github.com/richardschneider/net-ipfs-core

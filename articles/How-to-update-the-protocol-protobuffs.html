@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>This page is out of date, please refer to this guide for up to date information | Catalyst Framework Documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="This page is out of date, please refer to this guide for up to date information | Catalyst Framework Documentation ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="this-page-is-out-of-date-please-refer-to-this-guide-for-up-to-date-information">This page is out of date, please refer to this guide for up to date information</h1>
+
+<hr>
+<p><a href="https://github.com/catalyst-network/protobuffs-protocol-sdk-csharp/wiki/Publish-a-new-Catalyst.Protocol-nuget-package">Publish a new Catalyst.Protocol nuget package</a></p>
+<h2 id="how-to-update-the-protocol-protobuffs">How to update the protocol-protobuffs</h2>
+<p>The Catalyst.Node uses protobuffs for its wire message format. You can read why <a href="https://github.com/catalyst-network/protocol-protobuffs#why-protobuffs">here</a></p>
+<p>The <a href="https://github.com/catalyst-network/protocol-protobuffs">protocol-protobuffs</a> project is included in the <a href="https://github.com/catalyst-network/Catalyst.Node">Catalyst.Node</a> project via a git sub-module, to install them you can read the instructions in the <a href="https://github.com/catalyst-network/Catalyst.Node/wiki/Quick-Start-Guide#3-clone-git-sub-modules">quick start guide</a>.</p>
+<p>The protobuffs are built by the <a href="https://github.com/catalyst-network/Catalyst.Node/blob/develop/src/Catalyst.Common/Catalyst.Common.csproj">Catalyst.Common project solution</a> on every build. You will see the raw files in </p>
+<blockquote><p>Catalyst.Common/Protocol/Protobuffs </p>
+</blockquote>
+<p>with the compiled C# files in </p>
+<blockquote><p>Catalyst.Common/Protocol</p>
+</blockquote>
+<h2 id="how-to-work-with-them">How to work with them</h2>
+<p>So this is just one method of working with them files. Feel free to work any other way if you find it easier</p>
+<p>Assuming you Catalyst.Node code lives in</p>
+<blockquote><p>~/Catalyst.Node</p>
+</blockquote>
+<p>git clone the protocol-protobuffs to </p>
+<blockquote><p>~/protocol-protobuffs</p>
+</blockquote>
+<p>Make you changes in a new branch within that protobuffs repository</p>
+<blockquote><p>cd ~/protocol-protobuffs
+git branch my-cool-new-feature
+do some work
+git add --all; git commit --all -m&quot;some meaningful message&quot;; git push origin my-cool-new-feature
+To receive these updates in your Catalyst.Node code base, you need to tell the sub-module to track the branch in protocol-protobuffs &quot;my-cool-new-feature&quot;</p>
+<p>cd ~/Catalyst.Node/submodules/protocol-protobuffs
+git checkout origin my-cool-new-feature</p>
+</blockquote>
+<p>you can then rebuild the solution to see your changes. Every time you change your protobuff in the separate project you will need to push it to you &quot;my-new-cool-feature&quot; branch and pull it down in Catalyst.Node. But it&#39;s not so cumbersome if you use a GUI. <a href="https://www.gitkraken.com/">Git Kraken</a> is my choice here as it has native support for sub-modules as well as more advanced git features.</p>
+<h2 id="how-to-merge">How to merge</h2>
+<p>How to prepare your pull request is important. If you make a PR first for Catalyst.Node with out merging the protocol-protobuffs what will happen is Catalyst.Node develop will start tracking &quot;my-cool-new-feature&quot; in the protocol-protobuffs project. This is not desirable as what can happen is that branch can get deleted once fully merged in the protobuffs project then develop will fail to build</p>
+<p><strong>ALWAYS MERGE PROTOCOL-PROTOBUFFS FIRST</strong></p>
+<p>Always push and make a PR on protocol-protobuffs first. Once these changes make their way into develop, you now need to tell you Catalyst.Node branch submodule for protobuffs to follow develop again. This way when you do a PR in Catalyst.Node and it merges into develop, it will still track develop</p>
+<blockquote><p>cd ~/Catalyst.Node/submodules/protocol-protobuffs
+git checkout origin develop
+git pull origin develop</p>
+</blockquote>
+<p>now commit your work in Catalyst.Node and push up.</p>
+<h3 id="cant-i-make-a-pr-on-catalystnode-and-protocol-protobuffs-at-the-same-time">Can&#39;t I make a PR on Catalyst.Node and protocol-protobuffs at the same time?</h3>
+<p>Yes you could, but you shouldn&#39;t. Reviewers should never approve a PR going to develop that has changes done to the protocol without seeing them on develop. For two reasons.</p>
+<ol>
+<li>It&#39;s inefficient as you will have to update your PR and take time on the build pipeline to rebuild your PR just for a sub-module update</li>
+<li>The <a href="https://github.com/orgs/catalyst-network/teams/protocol-team">Protocol Team</a> need to approve the changes as well. Since this is the protocol and it is a common message format that can effect many projects. The protocol team must be consulted on all the changes and give approval from all stakeholders</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/catalyst-network/catalyst.node/blob/merge/How-to-update-the-protocol-protobuffs.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>
+            
+          </span></div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

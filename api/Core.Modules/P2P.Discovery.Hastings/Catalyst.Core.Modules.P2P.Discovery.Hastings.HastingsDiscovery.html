@@ -1,0 +1,678 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class HastingsDiscovery
+   | Catalyst Framework Documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class HastingsDiscovery
+   | Catalyst Framework Documentation ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    <meta property="docfx:rel" content="../../../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery">
+  
+  
+  <h1 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery" class="text-break">Class HastingsDiscovery
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">HastingsDiscovery</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery.html">IPeerDiscovery</a></div>
+    <div><span class="xref">System.IDisposable</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Catalyst.Core.Modules.P2P.Discovery.Hastings.html">Catalyst.Core.Modules.P2P.Discovery.Hastings</a></h6>
+  <h6><strong>Assembly</strong>: Catalyst.Core.Modules.P2P.Discovery.Hastings.dll</h6>
+  <h5 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class HastingsDiscovery : IPeerDiscovery, IDisposable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery__ctor_ILogger_Catalyst_Core_Lib_P2P_Repository_IPeerRepository_Catalyst_Abstractions_Network_IDns_Catalyst_Abstractions_P2P_IPeerSettings_Catalyst_Abstractions_P2P_IPeerClient_Catalyst_Abstractions_P2P_IO_Messaging_Correlation_IPeerMessageCorrelationManager_Catalyst_Abstractions_Util_ICancellationTokenProvider_System_Collections_Generic_IEnumerable_Catalyst_Abstractions_P2P_IO_IPeerClientObservable__System_Boolean_System_Int32_Catalyst_Abstractions_P2P_Discovery_IHastingsOriginator_Catalyst_Abstractions_P2P_Discovery_IHastingsCareTaker_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.%23ctor(ILogger%2CCatalyst.Core.Lib.P2P.Repository.IPeerRepository%2CCatalyst.Abstractions.Network.IDns%2CCatalyst.Abstractions.P2P.IPeerSettings%2CCatalyst.Abstractions.P2P.IPeerClient%2CCatalyst.Abstractions.P2P.IO.Messaging.Correlation.IPeerMessageCorrelationManager%2CCatalyst.Abstractions.Util.ICancellationTokenProvider%2CSystem.Collections.Generic.IEnumerable%7BCatalyst.Abstractions.P2P.IO.IPeerClientObservable%7D%2CSystem.Boolean%2CSystem.Int32%2CCatalyst.Abstractions.P2P.Discovery.IHastingsOriginator%2CCatalyst.Abstractions.P2P.Discovery.IHastingsCareTaker%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L68">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery__ctor_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.#ctor*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery__ctor_ILogger_Catalyst_Core_Lib_P2P_Repository_IPeerRepository_Catalyst_Abstractions_Network_IDns_Catalyst_Abstractions_P2P_IPeerSettings_Catalyst_Abstractions_P2P_IPeerClient_Catalyst_Abstractions_P2P_IO_Messaging_Correlation_IPeerMessageCorrelationManager_Catalyst_Abstractions_Util_ICancellationTokenProvider_System_Collections_Generic_IEnumerable_Catalyst_Abstractions_P2P_IO_IPeerClientObservable__System_Boolean_System_Int32_Catalyst_Abstractions_P2P_Discovery_IHastingsOriginator_Catalyst_Abstractions_P2P_Discovery_IHastingsCareTaker_System_Int32_System_Int32_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.#ctor(ILogger,Catalyst.Core.Lib.P2P.Repository.IPeerRepository,Catalyst.Abstractions.Network.IDns,Catalyst.Abstractions.P2P.IPeerSettings,Catalyst.Abstractions.P2P.IPeerClient,Catalyst.Abstractions.P2P.IO.Messaging.Correlation.IPeerMessageCorrelationManager,Catalyst.Abstractions.Util.ICancellationTokenProvider,System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.IO.IPeerClientObservable},System.Boolean,System.Int32,Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator,Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker,System.Int32,System.Int32)">HastingsDiscovery(ILogger, IPeerRepository, IDns, IPeerSettings, IPeerClient, IPeerMessageCorrelationManager, ICancellationTokenProvider, IEnumerable&lt;IPeerClientObservable&gt;, Boolean, Int32, IHastingsOriginator, IHastingsCareTaker, Int32, Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HastingsDiscovery(ILogger logger, IPeerRepository peerRepository, IDns dns, IPeerSettings peerSettings, IPeerClient peerClient, IPeerMessageCorrelationManager peerMessageCorrelationManager, ICancellationTokenProvider cancellationTokenProvider, IEnumerable&lt;IPeerClientObservable&gt; peerClientObservables, bool autoStart = true, int peerDiscoveryBurnIn = 10, IHastingsOriginator stepProposal = null, IHastingsCareTaker hastingsCareTaker = null, int millisecondsTimeout = 10000, int hasValidCandidatesCheckMillisecondsFrequency = 1000)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">ILogger</span></td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.P2P.Repository.IPeerRepository.html">IPeerRepository</a></td>
+        <td><span class="parametername">peerRepository</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.Network.IDns.html">IDns</a></td>
+        <td><span class="parametername">dns</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.IPeerSettings.html">IPeerSettings</a></td>
+        <td><span class="parametername">peerSettings</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.IPeerClient.html">IPeerClient</a></td>
+        <td><span class="parametername">peerClient</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.IO.Messaging.Correlation.IPeerMessageCorrelationManager.html">IPeerMessageCorrelationManager</a></td>
+        <td><span class="parametername">peerMessageCorrelationManager</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.Util.ICancellationTokenProvider.html">ICancellationTokenProvider</a></td>
+        <td><span class="parametername">cancellationTokenProvider</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.IO.IPeerClientObservable.html">IPeerClientObservable</a>&gt;</td>
+        <td><span class="parametername">peerClientObservables</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">autoStart</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">peerDiscoveryBurnIn</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.html">IHastingsOriginator</a></td>
+        <td><span class="parametername">stepProposal</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.html">IHastingsCareTaker</a></td>
+        <td><span class="parametername">hastingsCareTaker</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">millisecondsTimeout</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">hasValidCandidatesCheckMillisecondsFrequency</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_PeerDiscoveryBurnIn.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.PeerDiscoveryBurnIn%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L62">View Source</a>
+  </span>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_PeerDiscoveryBurnIn" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.PeerDiscoveryBurnIn">PeerDiscoveryBurnIn</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected readonly int PeerDiscoveryBurnIn</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_PeerRepository.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.PeerRepository%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L63">View Source</a>
+  </span>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_PeerRepository" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.PeerRepository">PeerRepository</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly IPeerRepository PeerRepository</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.P2P.Repository.IPeerRepository.html">IPeerRepository</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_CurrentStep.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.CurrentStep%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L159">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_CurrentStep_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.CurrentStep*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_CurrentStep" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.CurrentStep">CurrentStep</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IHastingsMemento CurrentStep { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.Discovery.IHastingsMemento.html">IHastingsMemento</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_DiscoveryStream.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.DiscoveryStream%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L165">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_DiscoveryStream_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.DiscoveryStream*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_DiscoveryStream" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.DiscoveryStream">DiscoveryStream</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IObservable&lt;IPeerClientMessageDto&gt; DiscoveryStream { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IObservable</span>&lt;<a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.IO.Messaging.Dto.IPeerClientMessageDto.html">IPeerClientMessageDto</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_HastingsCareTaker.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.HastingsCareTaker%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L162">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_HastingsCareTaker_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.HastingsCareTaker*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_HastingsCareTaker" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.HastingsCareTaker">HastingsCareTaker</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IHastingsCareTaker HastingsCareTaker { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.Discovery.IHastingsCareTaker.html">IHastingsCareTaker</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_PeerClient.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.PeerClient%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L164">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_PeerClient_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.PeerClient*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_PeerClient" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.PeerClient">PeerClient</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IPeerClient PeerClient { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.IPeerClient.html">IPeerClient</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_StepProposal.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.StepProposal%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L160">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_StepProposal_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.StepProposal*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_StepProposal" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.StepProposal">StepProposal</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IHastingsOriginator StepProposal { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.Discovery.IHastingsOriginator.html">IHastingsOriginator</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_DiscoveryAsync.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.DiscoveryAsync%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L184">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_DiscoveryAsync_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.DiscoveryAsync*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_DiscoveryAsync" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.DiscoveryAsync">DiscoveryAsync()</h4>
+  <div class="markdown level1 summary"><p>Discovery mechanism for Hasting metropolis walk.
+method loops until we can build up a valid next state,
+a valid next state is when we see a sum of events on our Discovery stream that
+equal to the number of peers we tried to discover. The discovery streams is merged from
+PeerCorrelation cache where we listen for evicted pingResponses (the ones we sen to try discover the peer),
+and PingResponses. Expected PingResponse messages indicate a potential neighbour has responded to our ping,
+so we assume it is reachable, so we add this to the StepProposal.CurrentNeighbours.
+Once the sum of StepProposal.CurrentNeighbours and EvictedPingResponses equals the total expected responses,
+At this point we received all the potential messages we could, if we have potential peers for the next step, then
+we can walk forward.
+if not the condition has not been met within a timeout then we walk back by taking the last known state from the
+IHastingCaretaker.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Task DiscoveryAsync()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_Dispose.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L167">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_Dispose_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.Dispose*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_Dispose" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.Dispose">Dispose()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_Dispose_System_Boolean_.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.Dispose(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L488">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_Dispose_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.Dispose*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_Dispose_System_Boolean_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.Dispose(System.Boolean)">Dispose(Boolean)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void Dispose(bool disposing)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">disposing</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_EvictionCallback_Catalyst_Abstractions_IO_Messaging_Correlation_ICorrelationId_.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.EvictionCallback(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L324">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_EvictionCallback_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.EvictionCallback*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_EvictionCallback_Catalyst_Abstractions_IO_Messaging_Correlation_ICorrelationId_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.EvictionCallback(Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)">EvictionCallback(ICorrelationId)</h4>
+  <div class="markdown level1 summary"><p>OnNext method for _evictionSubscription
+handles the discovery messages to see if there of interest to us.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void EvictionCallback(ICorrelationId requestCorrelationId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId.html">ICorrelationId</a></td>
+        <td><span class="parametername">requestCorrelationId</span></td>
+        <td><p>Correlation Id for the request getting evicted.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_StorePeer_Catalyst_Abstractions_P2P_Discovery_INeighbour_.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.StorePeer(Catalyst.Abstractions.P2P.Discovery.INeighbour)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L469">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_StorePeer_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.StorePeer*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_StorePeer_Catalyst_Abstractions_P2P_Discovery_INeighbour_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.StorePeer(Catalyst.Abstractions.P2P.Discovery.INeighbour)">StorePeer(INeighbour)</h4>
+  <div class="markdown level1 summary"><p>Stores a peer in the database unless we are in the burn-in phase.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void StorePeer(INeighbour neighbour)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.Discovery.INeighbour.html">INeighbour</a></td>
+        <td><span class="parametername">neighbour</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_WalkBack.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.WalkBack%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L282">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_WalkBack_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.WalkBack*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_WalkBack" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.WalkBack">WalkBack()</h4>
+  <div class="markdown level1 summary"><p>Transition back to last state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void WalkBack()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_WalkForward.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.WalkForward%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L245">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_WalkForward_" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.WalkForward*"></a>
+  <h4 id="Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery_WalkForward" data-uid="Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery.WalkForward">WalkForward()</h4>
+  <div class="markdown level1 summary"><p>Transitions StepProposal to state,
+then start to try building next StepProposal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void WalkForward()</code></pre>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="../../abstractions/Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery.html">IPeerDiscovery</a>
+  </div>
+  <div>
+      <span class="xref">System.IDisposable</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_P2P_Discovery_Hastings_HastingsDiscovery.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.P2P.Discovery.Hastings.HastingsDiscovery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.P2P.Discovery.Hastings/HastingsDiscovery.cs/#L50" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>
+            
+          </span></div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

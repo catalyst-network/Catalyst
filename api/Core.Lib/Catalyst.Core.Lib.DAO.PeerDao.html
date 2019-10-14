@@ -1,0 +1,488 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class PeerDao
+   | Catalyst Framework Documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class PeerDao
+   | Catalyst Framework Documentation ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Catalyst.Core.Lib.DAO.PeerDao">
+  
+  
+  <h1 id="Catalyst_Core_Lib_DAO_PeerDao" data-uid="Catalyst.Core.Lib.DAO.PeerDao" class="text-break">Class PeerDao
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Catalyst.Core.Lib.DAO.DaoBase-2.html">DaoBase</a>&lt;<a class="xref" href="Catalyst.Core.Lib.P2P.Models.Peer.html">Peer</a>, <a class="xref" href="Catalyst.Core.Lib.DAO.PeerDao.html">PeerDao</a>&gt;</div>
+    <div class="level2"><span class="xref">PeerDao</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="../abstractions/Catalyst.Abstractions.DAO.IMapperInitializer.html">IMapperInitializer</a></div>
+    <div><span class="xref">IValueConverter</span>&lt;<a class="xref" href="Catalyst.Core.Lib.P2P.Models.Peer.html">Peer</a>, <a class="xref" href="Catalyst.Core.Lib.DAO.PeerDao.html">PeerDao</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.DAO.DaoBase-2.html#Catalyst_Core_Lib_DAO_DaoBase_2_Id">DaoBase&lt;Peer, PeerDao&gt;.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.DAO.DaoBase-2.html#Catalyst_Core_Lib_DAO_DaoBase_2_ToProtoBuff">DaoBase&lt;Peer, PeerDao&gt;.ToProtoBuff()</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.DAO.DaoBase-2.html#Catalyst_Core_Lib_DAO_DaoBase_2_ToDao__0_">DaoBase&lt;Peer, PeerDao&gt;.ToDao(Peer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.DAO.DaoBase-2.html#Catalyst_Core_Lib_DAO_DaoBase_2_InitMappers_IMapperConfigurationExpression_">DaoBase&lt;Peer, PeerDao&gt;.InitMappers(IMapperConfigurationExpression)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.DAO.DaoBase-2.html#Catalyst_Core_Lib_DAO_DaoBase_2_Convert__0_ResolutionContext_">DaoBase&lt;Peer, PeerDao&gt;.Convert(Peer, ResolutionContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.DAO.DaoBase-2.html#Catalyst_Core_Lib_DAO_DaoBase_2_Convert__1_ResolutionContext_">DaoBase&lt;Peer, PeerDao&gt;.Convert(PeerDao, ResolutionContext)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Catalyst.Core.Lib.DAO.html">Catalyst.Core.Lib.DAO</a></h6>
+  <h6><strong>Assembly</strong>: Catalyst.Core.Lib.dll</h6>
+  <h5 id="Catalyst_Core_Lib_DAO_PeerDao_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class PeerDao : DaoBase&lt;Peer, PeerDao&gt;, IMapperInitializer, IValueConverter&lt;Peer, PeerDao&gt;</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao_BlackListed.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao.BlackListed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L39">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_DAO_PeerDao_BlackListed_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.BlackListed*"></a>
+  <h4 id="Catalyst_Core_Lib_DAO_PeerDao_BlackListed" data-uid="Catalyst.Core.Lib.DAO.PeerDao.BlackListed">BlackListed</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool BlackListed { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao_Created.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao.Created%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L44">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_DAO_PeerDao_Created_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.Created*"></a>
+  <h4 id="Catalyst_Core_Lib_DAO_PeerDao_Created" data-uid="Catalyst.Core.Lib.DAO.PeerDao.Created">Created</h4>
+  <div class="markdown level1 summary"><p>When peer was first seen by the peer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTime Created { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.DateTime</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao_InactiveFor.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao.InactiveFor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L52">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_DAO_PeerDao_InactiveFor_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.InactiveFor*"></a>
+  <h4 id="Catalyst_Core_Lib_DAO_PeerDao_InactiveFor" data-uid="Catalyst.Core.Lib.DAO.PeerDao.InactiveFor">InactiveFor</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan InactiveFor { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao_IsAwolPeer.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao.IsAwolPeer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L50">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_DAO_PeerDao_IsAwolPeer_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.IsAwolPeer*"></a>
+  <h4 id="Catalyst_Core_Lib_DAO_PeerDao_IsAwolPeer" data-uid="Catalyst.Core.Lib.DAO.PeerDao.IsAwolPeer">IsAwolPeer</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsAwolPeer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao_LastSeen.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao.LastSeen%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L48">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_DAO_PeerDao_LastSeen_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.LastSeen*"></a>
+  <h4 id="Catalyst_Core_Lib_DAO_PeerDao_LastSeen" data-uid="Catalyst.Core.Lib.DAO.PeerDao.LastSeen">LastSeen</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTime LastSeen { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.DateTime</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao_Modified.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao.Modified%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L46">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_DAO_PeerDao_Modified_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.Modified*"></a>
+  <h4 id="Catalyst_Core_Lib_DAO_PeerDao_Modified" data-uid="Catalyst.Core.Lib.DAO.PeerDao.Modified">Modified</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTime? Modified { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.DateTime</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao_PeerIdentifier.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao.PeerIdentifier%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L35">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_DAO_PeerDao_PeerIdentifier_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.PeerIdentifier*"></a>
+  <h4 id="Catalyst_Core_Lib_DAO_PeerDao_PeerIdentifier" data-uid="Catalyst.Core.Lib.DAO.PeerDao.PeerIdentifier">PeerIdentifier</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PeerIdDao PeerIdentifier { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Core.Lib.DAO.PeerIdDao.html">PeerIdDao</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao_Reputation.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao.Reputation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L37">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_DAO_PeerDao_Reputation_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.Reputation*"></a>
+  <h4 id="Catalyst_Core_Lib_DAO_PeerDao_Reputation" data-uid="Catalyst.Core.Lib.DAO.PeerDao.Reputation">Reputation</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Reputation { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao_InitMappers_IMapperConfigurationExpression_.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao.InitMappers(IMapperConfigurationExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L56">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_DAO_PeerDao_InitMappers_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.InitMappers*"></a>
+  <h4 id="Catalyst_Core_Lib_DAO_PeerDao_InitMappers_IMapperConfigurationExpression_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.InitMappers(IMapperConfigurationExpression)">InitMappers(IMapperConfigurationExpression)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void InitMappers(IMapperConfigurationExpression cfg)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IMapperConfigurationExpression</span></td>
+        <td><span class="parametername">cfg</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">Catalyst.Core.Lib.DAO.DaoBase&lt;Catalyst.Core.Lib.P2P.Models.Peer, Catalyst.Core.Lib.DAO.PeerDao&gt;.InitMappers(IMapperConfigurationExpression)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao_Touch.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao.Touch%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L54">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_DAO_PeerDao_Touch_" data-uid="Catalyst.Core.Lib.DAO.PeerDao.Touch*"></a>
+  <h4 id="Catalyst_Core_Lib_DAO_PeerDao_Touch" data-uid="Catalyst.Core.Lib.DAO.PeerDao.Touch">Touch()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Touch()</code></pre>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="../abstractions/Catalyst.Abstractions.DAO.IMapperInitializer.html">IMapperInitializer</a>
+  </div>
+  <div>
+      <span class="xref">IValueConverter&lt;, &gt;</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_DAO_PeerDao.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.DAO.PeerDao%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/DAO/PeerDao.cs/#L32" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>
+            
+          </span></div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

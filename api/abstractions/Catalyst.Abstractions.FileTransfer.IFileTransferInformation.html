@@ -1,0 +1,678 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IFileTransferInformation
+   | Catalyst Framework Documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IFileTransferInformation
+   | Catalyst Framework Documentation ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation">
+  
+  
+  <h1 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation" class="text-break">Interface IFileTransferInformation
+  </h1>
+  <div class="markdown level0 summary"><p>The File transfer interface</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.IDisposable.Dispose()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Catalyst.Abstractions.FileTransfer.html">Catalyst.Abstractions.FileTransfer</a></h6>
+  <h6><strong>Assembly</strong>: Catalyst.Abstractions.dll</h6>
+  <h5 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IFileTransferInformation : IDisposable</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_CancellationToken.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CancellationToken%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L91">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_CancellationToken_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CancellationToken*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_CancellationToken" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CancellationToken">CancellationToken</h4>
+  <div class="markdown level1 summary"><p>The cancellation token</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">CancellationToken CancellationToken { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.CancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_CorrelationId.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CorrelationId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L68">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_CorrelationId_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CorrelationId*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_CorrelationId" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CorrelationId">CorrelationId</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the name of the unique file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICorrelationId CorrelationId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId.html">ICorrelationId</a></td>
+        <td><p>The name of the unique file.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_DfsHash.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.DfsHash%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L60">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_DfsHash_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.DfsHash*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_DfsHash" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.DfsHash">DfsHash</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the DFS hash.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string DfsHash { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p>The DFS hash.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_FileOutputPath.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.FileOutputPath%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L76">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_FileOutputPath_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.FileOutputPath*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_FileOutputPath" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.FileOutputPath">FileOutputPath</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the file output path.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string FileOutputPath { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p>The file output path.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_Initialised.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Initialised%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L95">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_Initialised_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Initialised*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_Initialised" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Initialised">Initialised</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether this <a class="xref" href="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.html">IFileTransferInformation</a> is initialised.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool Initialised { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p><code>true</code> if initialised; otherwise, <code>false</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_IsCompleted.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsCompleted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L56">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_IsCompleted_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsCompleted*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_IsCompleted" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsCompleted">IsCompleted</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether this instance is completed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsCompleted { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p><code>true</code> if this instance is completed; otherwise, <code>false</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_MaxChunk.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.MaxChunk%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L64">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_MaxChunk_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.MaxChunk*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_MaxChunk" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.MaxChunk">MaxChunk</h4>
+  <div class="markdown level1 summary"><p>Gets the maximum chunk.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">uint MaxChunk { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><p>The maximum chunk.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_PeerId.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.PeerId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L88">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_PeerId_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.PeerId*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_PeerId" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.PeerId">PeerId</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the peer identifier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">PeerId PeerId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../Protocol/Catalyst.Protocol.Peer.PeerId.html">PeerId</a></td>
+        <td><p>The peer identifier.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_RecipientChannel.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientChannel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L80">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_RecipientChannel_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientChannel*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_RecipientChannel" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientChannel">RecipientChannel</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the recipient channel.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IChannel RecipientChannel { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IChannel</span></td>
+        <td><p>The recipient channel.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_RecipientId.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L84">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_RecipientId_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientId*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_RecipientId" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.RecipientId">RecipientId</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the recipient identifier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">PeerId RecipientId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="../Protocol/Catalyst.Protocol.Peer.PeerId.html">PeerId</a></td>
+        <td><p>The recipient identifier.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_TempPath.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.TempPath%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L72">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_TempPath_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.TempPath*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_TempPath" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.TempPath">TempPath</h4>
+  <div class="markdown level1 summary"><p>Gets the temporary path.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string TempPath { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p>The temporary path.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_ChunkIndicatorsTrue.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L46">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_ChunkIndicatorsTrue_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_ChunkIndicatorsTrue" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.ChunkIndicatorsTrue">ChunkIndicatorsTrue()</h4>
+  <div class="markdown level1 summary"><p>Chunks the indicators true.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ChunkIndicatorsTrue()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_CleanUp.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L49">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_CleanUp_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_CleanUp" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.CleanUp">CleanUp()</h4>
+  <div class="markdown level1 summary"><p>Cleans up.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void CleanUp()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_Delete.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L52">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_Delete_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_Delete" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Delete">Delete()</h4>
+  <div class="markdown level1 summary"><p>Deletes the file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Delete()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_Expire.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L103">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_Expire_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_Expire" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.Expire">Expire()</h4>
+  <div class="markdown level1 summary"><p>Expires this instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Expire()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_GetPercentage.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L38">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_GetPercentage_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_GetPercentage" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.GetPercentage">GetPercentage()</h4>
+  <div class="markdown level1 summary"><p>Gets the percentage.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int GetPercentage()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_IsExpired.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L42">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_IsExpired_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_IsExpired" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.IsExpired">IsExpired()</h4>
+  <div class="markdown level1 summary"><p>Determines whether this instance is expired.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsExpired()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p><code>true</code> if this instance is expired; otherwise, <code>false</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation_UpdateChunkIndicator_System_UInt32_System_Boolean_.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator(System.UInt32%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L100">View Source</a>
+  </span>
+  <a id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_UpdateChunkIndicator_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator*"></a>
+  <h4 id="Catalyst_Abstractions_FileTransfer_IFileTransferInformation_UpdateChunkIndicator_System_UInt32_System_Boolean_" data-uid="Catalyst.Abstractions.FileTransfer.IFileTransferInformation.UpdateChunkIndicator(System.UInt32,System.Boolean)">UpdateChunkIndicator(UInt32, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Updates the chunk indicator.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void UpdateChunkIndicator(uint chunkId, bool state)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">chunkId</span></td>
+        <td><p>The chunk identifier.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">state</span></td>
+        <td><p>if set to <code>true</code> [state].</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Abstractions_FileTransfer_IFileTransferInformation.md&amp;value=---%0Auid%3A%20Catalyst.Abstractions.FileTransfer.IFileTransferInformation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Abstractions/FileTransfer/IFileTransferInformation.cs/#L35" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>
+            
+          </span></div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

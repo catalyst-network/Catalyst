@@ -1,0 +1,697 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class AccountRepository
+   | Catalyst Framework Documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class AccountRepository
+   | Catalyst Framework Documentation ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../../styles/docfx.css">
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../../toc.html">
+    <meta property="docfx:tocrel" content="../../toc.html">
+    
+    <meta property="docfx:rel" content="../../../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../../index.html">
+                <img id="logo" class="svg" src="../../../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Catalyst.Core.Modules.Ledger.Repository.AccountRepository">
+  
+  
+  <h1 id="Catalyst_Core_Modules_Ledger_Repository_AccountRepository" data-uid="Catalyst.Core.Modules.Ledger.Repository.AccountRepository" class="text-break">Class AccountRepository
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html">RepositoryWrapper</a>&lt;<a class="xref" href="Catalyst.Core.Modules.Ledger.Models.Account.html">Account</a>&gt;</div>
+    <div class="level2"><span class="xref">AccountRepository</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Catalyst.Core.Modules.Ledger.Repository.IAccountRepository.html">IAccountRepository</a></div>
+    <div><a class="xref" href="../../abstractions/Catalyst.Abstractions.Repository.IRepositoryWrapper-1.html">IRepositoryWrapper</a>&lt;<a class="xref" href="Catalyst.Core.Modules.Ledger.Models.Account.html">Account</a>&gt;</div>
+    <div><span class="xref">IRepository</span>&lt;<a class="xref" href="Catalyst.Core.Modules.Ledger.Models.Account.html">Account</a>, <span class="xref">System.String</span>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Repository">RepositoryWrapper&lt;Account&gt;.Repository</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Conventions">RepositoryWrapper&lt;Account&gt;.Conventions</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_EntityType">RepositoryWrapper&lt;Account&gt;.EntityType</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_KeyType">RepositoryWrapper&lt;Account&gt;.KeyType</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_CachingStrategy">RepositoryWrapper&lt;Account&gt;.CachingStrategy</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_CachingEnabled">RepositoryWrapper&lt;Account&gt;.CachingEnabled</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_CacheUsed">RepositoryWrapper&lt;Account&gt;.CacheUsed</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TraceInfo">RepositoryWrapper&lt;Account&gt;.TraceInfo</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GenerateKeyOnAdd">RepositoryWrapper&lt;Account&gt;.GenerateKeyOnAdd</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Add__0_">RepositoryWrapper&lt;Account&gt;.Add(Account)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Add_System_Collections_Generic_IEnumerable__0__">RepositoryWrapper&lt;Account&gt;.Add(IEnumerable&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_AsQueryable">RepositoryWrapper&lt;Account&gt;.AsQueryable()</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Account&gt;.Average(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Account&gt;.Average(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Account&gt;.Average(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Account&gt;.Average(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Account&gt;.Average(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Account&gt;.Average(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Account&gt;.Average(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Account&gt;.Average(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Account&gt;.Average(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Account&gt;.Average(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Average_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Account&gt;.Average(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_BeginBatch">RepositoryWrapper&lt;Account&gt;.BeginBatch()</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_ClearCache">RepositoryWrapper&lt;Account&gt;.ClearCache()</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Count">RepositoryWrapper&lt;Account&gt;.Count()</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Count_ISpecification__0__">RepositoryWrapper&lt;Account&gt;.Count(ISpecification&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Count_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">RepositoryWrapper&lt;Account&gt;.Count(Expression&lt;Func&lt;Account, Boolean&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_System_String_">RepositoryWrapper&lt;Account&gt;.Delete(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_System_Collections_Generic_IEnumerable_System_String__">RepositoryWrapper&lt;Account&gt;.Delete(IEnumerable&lt;String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_System_String___">RepositoryWrapper&lt;Account&gt;.Delete(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete__0_">RepositoryWrapper&lt;Account&gt;.Delete(Account)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_System_Collections_Generic_IEnumerable__0__">RepositoryWrapper&lt;Account&gt;.Delete(IEnumerable&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">RepositoryWrapper&lt;Account&gt;.Delete(Expression&lt;Func&lt;Account, Boolean&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Delete_ISpecification__0__">RepositoryWrapper&lt;Account&gt;.Delete(ISpecification&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_DisableCaching">RepositoryWrapper&lt;Account&gt;.DisableCaching()</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Dispose">RepositoryWrapper&lt;Account&gt;.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Exists_System_String_">RepositoryWrapper&lt;Account&gt;.Exists(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Exists_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">RepositoryWrapper&lt;Account&gt;.Exists(Expression&lt;Func&lt;Account, Boolean&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Exists_ISpecification__0__">RepositoryWrapper&lt;Account&gt;.Exists(ISpecification&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Find_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___IQueryOptions__0__">RepositoryWrapper&lt;Account&gt;.Find(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, IQueryOptions&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Find__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__">RepositoryWrapper&lt;Account&gt;.Find&lt;TResult&gt;(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;, IQueryOptions&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Find_ISpecification__0__IQueryOptions__0__">RepositoryWrapper&lt;Account&gt;.Find(ISpecification&lt;Account&gt;, IQueryOptions&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Find__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__">RepositoryWrapper&lt;Account&gt;.Find&lt;TResult&gt;(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;, IQueryOptions&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_FindAll_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___IQueryOptions__0__">RepositoryWrapper&lt;Account&gt;.FindAll(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, IQueryOptions&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_FindAll__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__">RepositoryWrapper&lt;Account&gt;.FindAll&lt;TResult&gt;(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;, IQueryOptions&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_FindAll_ISpecification__0__IQueryOptions__0__">RepositoryWrapper&lt;Account&gt;.FindAll(ISpecification&lt;Account&gt;, IQueryOptions&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_FindAll__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__">RepositoryWrapper&lt;Account&gt;.FindAll&lt;TResult&gt;(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;, IQueryOptions&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get_System_String_">RepositoryWrapper&lt;Account&gt;.Get(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get_System_String_IFetchStrategy__0__">RepositoryWrapper&lt;Account&gt;.Get(String, IFetchStrategy&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get_System_String_System_String___">RepositoryWrapper&lt;Account&gt;.Get(String, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get_System_String_System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Account&gt;.Get(String, Expression&lt;Func&lt;Account, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get__1_System_String_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.Get&lt;TResult&gt;(String, Expression&lt;Func&lt;Account, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get__1_System_String_System_Linq_Expressions_Expression_System_Func__0___0___IFetchStrategy__0__">RepositoryWrapper&lt;Account&gt;.Get&lt;TResult&gt;(String, Expression&lt;Func&lt;Account, TResult&gt;&gt;, IFetchStrategy&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get__1_System_String_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Account&gt;.Get&lt;TResult&gt;(String, Expression&lt;Func&lt;Account, TResult&gt;&gt;, Expression&lt;Func&lt;Account, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Get__1_System_String_System_Linq_Expressions_Expression_System_Func__0___0___System_String___">RepositoryWrapper&lt;Account&gt;.Get&lt;TResult&gt;(String, Expression&lt;Func&lt;Account, TResult&gt;&gt;, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll">RepositoryWrapper&lt;Account&gt;.GetAll()</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_IFetchStrategy__0__">RepositoryWrapper&lt;Account&gt;.GetAll(IFetchStrategy&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_System_String___">RepositoryWrapper&lt;Account&gt;.GetAll(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Account&gt;.GetAll(Expression&lt;Func&lt;Account, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_IQueryOptions__0__">RepositoryWrapper&lt;Account&gt;.GetAll(IQueryOptions&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_IQueryOptions__0__IFetchStrategy__0__">RepositoryWrapper&lt;Account&gt;.GetAll(IQueryOptions&lt;Account&gt;, IFetchStrategy&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_IQueryOptions__0__System_String___">RepositoryWrapper&lt;Account&gt;.GetAll(IQueryOptions&lt;Account&gt;, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll_IQueryOptions__0__System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Account&gt;.GetAll(IQueryOptions&lt;Account&gt;, Expression&lt;Func&lt;Account, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__">RepositoryWrapper&lt;Account&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;, IQueryOptions&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___IFetchStrategy__0__">RepositoryWrapper&lt;Account&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;, IFetchStrategy&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___System_String___">RepositoryWrapper&lt;Account&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Account&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;, Expression&lt;Func&lt;Account, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__IFetchStrategy__0__">RepositoryWrapper&lt;Account&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;, IQueryOptions&lt;Account&gt;, IFetchStrategy&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__System_String___">RepositoryWrapper&lt;Account&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;, IQueryOptions&lt;Account&gt;, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetAll__1_System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0__System_Linq_Expressions_Expression_System_Func__0_System_Object_____">RepositoryWrapper&lt;Account&gt;.GetAll&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;, IQueryOptions&lt;Account&gt;, Expression&lt;Func&lt;Account, Object&gt;&gt;[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetMany_System_String___">RepositoryWrapper&lt;Account&gt;.GetMany(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetMany_System_Collections_Generic_IEnumerable_System_String__">RepositoryWrapper&lt;Account&gt;.GetMany(IEnumerable&lt;String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetMany_System_Collections_Generic_IEnumerable_System_String__IFetchStrategy__0__">RepositoryWrapper&lt;Account&gt;.GetMany(IEnumerable&lt;String&gt;, IFetchStrategy&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetMany__1_System_Linq_Expressions_Expression_System_Func__0___0___System_String___">RepositoryWrapper&lt;Account&gt;.GetMany&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;, String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetMany__1_System_Collections_Generic_IEnumerable_System_String__System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.GetMany&lt;TResult&gt;(IEnumerable&lt;String&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetManyAsDictionary_System_String___">RepositoryWrapper&lt;Account&gt;.GetManyAsDictionary(String[])</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetManyAsDictionary_System_Collections_Generic_IEnumerable_System_String__">RepositoryWrapper&lt;Account&gt;.GetManyAsDictionary(IEnumerable&lt;String&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetManyAsDictionary_System_Collections_Generic_IEnumerable_System_String__IFetchStrategy__0__">RepositoryWrapper&lt;Account&gt;.GetManyAsDictionary(IEnumerable&lt;String&gt;, IFetchStrategy&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GetPrimaryKey__0_">RepositoryWrapper&lt;Account&gt;.GetPrimaryKey(Account)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupBy__2_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func_System_Linq_IGrouping___0__0____1___">RepositoryWrapper&lt;Account&gt;.GroupBy&lt;TGroupKey, TResult&gt;(Expression&lt;Func&lt;Account, TGroupKey&gt;&gt;, Expression&lt;Func&lt;IGrouping&lt;TGroupKey, Account&gt;, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupBy__2_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func_System_Linq_IGrouping___0__0____1___">RepositoryWrapper&lt;Account&gt;.GroupBy&lt;TGroupKey, TResult&gt;(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, TGroupKey&gt;&gt;, Expression&lt;Func&lt;IGrouping&lt;TGroupKey, Account&gt;, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupBy__2_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func_System_Linq_IGrouping___0__0____1___">RepositoryWrapper&lt;Account&gt;.GroupBy&lt;TGroupKey, TResult&gt;(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, TGroupKey&gt;&gt;, Expression&lt;Func&lt;IGrouping&lt;TGroupKey, Account&gt;, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupCount__1_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.GroupCount&lt;TGroupKey&gt;(Expression&lt;Func&lt;Account, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupCount__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.GroupCount&lt;TGroupKey&gt;(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupCount__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.GroupCount&lt;TGroupKey&gt;(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupLongCount__1_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.GroupLongCount&lt;TGroupKey&gt;(Expression&lt;Func&lt;Account, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupLongCount__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.GroupLongCount&lt;TGroupKey&gt;(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_GroupLongCount__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.GroupLongCount&lt;TGroupKey&gt;(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, TGroupKey&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Join__3_IRepositoryQueryable___1__System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func___1___0___System_Linq_Expressions_Expression_System_Func__0___1___2___">RepositoryWrapper&lt;Account&gt;.Join&lt;TJoinKey, TInner, TResult&gt;(IRepositoryQueryable&lt;TInner&gt;, Expression&lt;Func&lt;Account, TJoinKey&gt;&gt;, Expression&lt;Func&lt;TInner, TJoinKey&gt;&gt;, Expression&lt;Func&lt;Account, TInner, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_LongCount">RepositoryWrapper&lt;Account&gt;.LongCount()</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_LongCount_ISpecification__0__">RepositoryWrapper&lt;Account&gt;.LongCount(ISpecification&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_LongCount_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">RepositoryWrapper&lt;Account&gt;.LongCount(Expression&lt;Func&lt;Account, Boolean&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Max__1_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.Max&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Max__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.Max&lt;TResult&gt;(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Max__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.Max&lt;TResult&gt;(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Min__1_System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.Min&lt;TResult&gt;(Expression&lt;Func&lt;Account, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Min__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.Min&lt;TResult&gt;(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Min__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___">RepositoryWrapper&lt;Account&gt;.Min&lt;TResult&gt;(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Account&gt;.Sum(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Int32___">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Int32&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Account&gt;.Sum(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int32____">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Int32&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Account&gt;.Sum(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Int64___">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Int64&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Account&gt;.Sum(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Int64____">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Int64&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Account&gt;.Sum(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Decimal___">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Decimal&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Account&gt;.Sum(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Decimal____">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Decimal&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Account&gt;.Sum(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Double___">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Double&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Account&gt;.Sum(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Double____">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Double&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Account&gt;.Sum(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Single___">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Single&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Account&gt;.Sum(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Sum_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0_System_Nullable_System_Single____">RepositoryWrapper&lt;Account&gt;.Sum(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, Nullable&lt;Single&gt;&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind_System_Linq_Expressions_Expression_System_Func__0_System_Boolean____0__">RepositoryWrapper&lt;Account&gt;.TryFind(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Account)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___IQueryOptions__0___0__">RepositoryWrapper&lt;Account&gt;.TryFind(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, IQueryOptions&lt;Account&gt;, Account)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0_____0__">RepositoryWrapper&lt;Account&gt;.TryFind&lt;TResult&gt;(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;, TResult)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0____0__">RepositoryWrapper&lt;Account&gt;.TryFind&lt;TResult&gt;(Expression&lt;Func&lt;Account, Boolean&gt;&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;, IQueryOptions&lt;Account&gt;, TResult)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind_ISpecification__0___0__">RepositoryWrapper&lt;Account&gt;.TryFind(ISpecification&lt;Account&gt;, Account)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind_ISpecification__0__IQueryOptions__0___0__">RepositoryWrapper&lt;Account&gt;.TryFind(ISpecification&lt;Account&gt;, IQueryOptions&lt;Account&gt;, Account)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0_____0__">RepositoryWrapper&lt;Account&gt;.TryFind&lt;TResult&gt;(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;, TResult)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryFind__1_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___IQueryOptions__0____0__">RepositoryWrapper&lt;Account&gt;.TryFind&lt;TResult&gt;(ISpecification&lt;Account&gt;, Expression&lt;Func&lt;Account, TResult&gt;&gt;, IQueryOptions&lt;Account&gt;, TResult)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryGet_System_String__0__">RepositoryWrapper&lt;Account&gt;.TryGet(String, Account)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_TryGet__1_System_String_System_Linq_Expressions_Expression_System_Func__0___0_____0__">RepositoryWrapper&lt;Account&gt;.TryGet&lt;TResult&gt;(String, Expression&lt;Func&lt;Account, TResult&gt;&gt;, TResult)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Update__0_">RepositoryWrapper&lt;Account&gt;.Update(Account)</a>
+    </div>
+    <div>
+      <a class="xref" href="../../Core.Lib/Catalyst.Core.Lib.Repository.RepositoryWrapper-1.html#Catalyst_Core_Lib_Repository_RepositoryWrapper_1_Update_System_Collections_Generic_IEnumerable__0__">RepositoryWrapper&lt;Account&gt;.Update(IEnumerable&lt;Account&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Catalyst.Core.Modules.Ledger.Repository.html">Catalyst.Core.Modules.Ledger.Repository</a></h6>
+  <h6><strong>Assembly</strong>: Catalyst.Core.Modules.Ledger.dll</h6>
+  <h5 id="Catalyst_Core_Modules_Ledger_Repository_AccountRepository_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class AccountRepository : RepositoryWrapper&lt;Account&gt;, IAccountRepository, IRepositoryWrapper&lt;Account&gt;, IRepository&lt;Account, string&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_Ledger_Repository_AccountRepository__ctor_IRepository_Catalyst_Core_Modules_Ledger_Models_Account_System_String__.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.Ledger.Repository.AccountRepository.%23ctor(IRepository%7BCatalyst.Core.Modules.Ledger.Models.Account%2CSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.Ledger/Repository/AccountRepository.cs/#L32">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Modules_Ledger_Repository_AccountRepository__ctor_" data-uid="Catalyst.Core.Modules.Ledger.Repository.AccountRepository.#ctor*"></a>
+  <h4 id="Catalyst_Core_Modules_Ledger_Repository_AccountRepository__ctor_IRepository_Catalyst_Core_Modules_Ledger_Models_Account_System_String__" data-uid="Catalyst.Core.Modules.Ledger.Repository.AccountRepository.#ctor(IRepository{Catalyst.Core.Modules.Ledger.Models.Account,System.String})">AccountRepository(IRepository&lt;Account, String&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AccountRepository(IRepository&lt;Account, string&gt; repository)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IRepository</span>&lt;<a class="xref" href="Catalyst.Core.Modules.Ledger.Models.Account.html">Account</a>, <span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">repository</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Catalyst.Core.Modules.Ledger.Repository.IAccountRepository.html">IAccountRepository</a>
+  </div>
+  <div>
+      <a class="xref" href="../../abstractions/Catalyst.Abstractions.Repository.IRepositoryWrapper-1.html">IRepositoryWrapper&lt;T&gt;</a>
+  </div>
+  <div>
+      <span class="xref">IRepository&lt;, &gt;</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Modules_Ledger_Repository_AccountRepository.md&amp;value=---%0Auid%3A%20Catalyst.Core.Modules.Ledger.Repository.AccountRepository%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Modules.Ledger/Repository/AccountRepository.cs/#L30" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>
+            
+          </span></div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../../styles/main.js"></script>
+  </body>
+</html>

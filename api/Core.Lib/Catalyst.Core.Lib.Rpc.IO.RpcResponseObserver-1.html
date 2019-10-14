@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class RpcResponseObserver&lt;TProto&gt;
+   | Catalyst Framework Documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class RpcResponseObserver&lt;TProto&gt;
+   | Catalyst Framework Documentation ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver`1">
+  
+  
+  <h1 id="Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1" data-uid="Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver`1" class="text-break">Class RpcResponseObserver&lt;TProto&gt;
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Catalyst.Core.Lib.IO.Observers.MessageObserverBase.html">MessageObserverBase</a></div>
+    <div class="level2"><a class="xref" href="Catalyst.Core.Lib.IO.Observers.ResponseObserverBase-1.html">ResponseObserverBase</a>&lt;TProto&gt;</div>
+    <div class="level3"><span class="xref">RpcResponseObserver&lt;TProto&gt;</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IDisposable</span></div>
+    <div><a class="xref" href="../abstractions/Catalyst.Abstractions.IO.Observers.IRpcResponseObserver.html">IRpcResponseObserver</a></div>
+    <div><a class="xref" href="../abstractions/Catalyst.Abstractions.IO.Observers.IResponseMessageObserver.html">IResponseMessageObserver</a></div>
+    <div><a class="xref" href="../abstractions/Catalyst.Abstractions.IO.Observers.IMessageObserver.html">IMessageObserver</a></div>
+    <div><span class="xref">System.IObserver</span>&lt;<a class="xref" href="../abstractions/Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto-1.html">IObserverDto</a>&lt;<span class="xref">ProtocolMessage</span>&gt;&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.IO.Observers.ResponseObserverBase-1.html#Catalyst_Core_Lib_IO_Observers_ResponseObserverBase_1_OnNext_Catalyst_Abstractions_IO_Messaging_Dto_IObserverDto_ProtocolMessage__">ResponseObserverBase&lt;TProto&gt;.OnNext(IObserverDto&lt;ProtocolMessage&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.IO.Observers.MessageObserverBase.html#Catalyst_Core_Lib_IO_Observers_MessageObserverBase_Logger">MessageObserverBase.Logger</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.IO.Observers.MessageObserverBase.html#Catalyst_Core_Lib_IO_Observers_MessageObserverBase_MessageSubscription">MessageObserverBase.MessageSubscription</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.IO.Observers.MessageObserverBase.html#Catalyst_Core_Lib_IO_Observers_MessageObserverBase_StartObserving_System_IObservable_Catalyst_Abstractions_IO_Messaging_Dto_IObserverDto_ProtocolMessage___">MessageObserverBase.StartObserving(IObservable&lt;IObserverDto&lt;ProtocolMessage&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.IO.Observers.MessageObserverBase.html#Catalyst_Core_Lib_IO_Observers_MessageObserverBase_OnCompleted">MessageObserverBase.OnCompleted()</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.IO.Observers.MessageObserverBase.html#Catalyst_Core_Lib_IO_Observers_MessageObserverBase_OnError_System_Exception_">MessageObserverBase.OnError(Exception)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.IO.Observers.MessageObserverBase.html#Catalyst_Core_Lib_IO_Observers_MessageObserverBase_Dispose_System_Boolean_">MessageObserverBase.Dispose(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="Catalyst.Core.Lib.IO.Observers.MessageObserverBase.html#Catalyst_Core_Lib_IO_Observers_MessageObserverBase_Dispose">MessageObserverBase.Dispose()</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Catalyst.Core.Lib.Rpc.IO.html">Catalyst.Core.Lib.Rpc.IO</a></h6>
+  <h6><strong>Assembly</strong>: Catalyst.Core.Lib.dll</h6>
+  <h5 id="Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class RpcResponseObserver&lt;TProto&gt; : ResponseObserverBase&lt;TProto&gt;, IDisposable, IRpcResponseObserver, IResponseMessageObserver, IMessageObserver, IObserver&lt;IObserverDto&lt;ProtocolMessage&gt;&gt; where TProto : IMessage&lt;TProto&gt;</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TProto</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1__ctor_ILogger_System_Boolean_.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver%601.%23ctor(ILogger%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/Rpc/IO/RpcResponseObserver.cs/#L38">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1__ctor_" data-uid="Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver`1.#ctor*"></a>
+  <h4 id="Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1__ctor_ILogger_System_Boolean_" data-uid="Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver`1.#ctor(ILogger,System.Boolean)">RpcResponseObserver(ILogger, Boolean)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected RpcResponseObserver(ILogger logger, bool assertMessageNameCheck = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">ILogger</span></td>
+        <td><span class="parametername">logger</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">assertMessageNameCheck</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1_HandleResponse__0_IChannelHandlerContext_PeerId_Catalyst_Abstractions_IO_Messaging_Correlation_ICorrelationId_.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver%601.HandleResponse(%600%2CIChannelHandlerContext%2CPeerId%2CCatalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/Rpc/IO/RpcResponseObserver.cs/#L41">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1_HandleResponse_" data-uid="Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver`1.HandleResponse*"></a>
+  <h4 id="Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1_HandleResponse__0_IChannelHandlerContext_PeerId_Catalyst_Abstractions_IO_Messaging_Correlation_ICorrelationId_" data-uid="Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver`1.HandleResponse(`0,IChannelHandlerContext,PeerId,Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)">HandleResponse(TProto, IChannelHandlerContext, PeerId, ICorrelationId)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract override void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TProto</span></td>
+        <td><span class="parametername">messageDto</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">IChannelHandlerContext</span></td>
+        <td><span class="parametername">channelHandlerContext</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">PeerId</span></td>
+        <td><span class="parametername">senderPeerId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="../abstractions/Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId.html">ICorrelationId</a></td>
+        <td><span class="parametername">correlationId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">Catalyst.Core.Lib.IO.Observers.ResponseObserverBase&lt;TProto&gt;.HandleResponse(TProto, IChannelHandlerContext, PeerId, Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1_HandleResponseObserver_IMessage_IChannelHandlerContext_PeerId_Catalyst_Abstractions_IO_Messaging_Correlation_ICorrelationId_.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver%601.HandleResponseObserver(IMessage%2CIChannelHandlerContext%2CPeerId%2CCatalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/Rpc/IO/RpcResponseObserver.cs/#L43">View Source</a>
+  </span>
+  <a id="Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1_HandleResponseObserver_" data-uid="Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver`1.HandleResponseObserver*"></a>
+  <h4 id="Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1_HandleResponseObserver_IMessage_IChannelHandlerContext_PeerId_Catalyst_Abstractions_IO_Messaging_Correlation_ICorrelationId_" data-uid="Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver`1.HandleResponseObserver(IMessage,IChannelHandlerContext,PeerId,Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId)">HandleResponseObserver(IMessage, IChannelHandlerContext, PeerId, ICorrelationId)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void HandleResponseObserver(IMessage message, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IMessage</span></td>
+        <td><span class="parametername">message</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">IChannelHandlerContext</span></td>
+        <td><span class="parametername">channelHandlerContext</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">PeerId</span></td>
+        <td><span class="parametername">senderPeerId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="../abstractions/Catalyst.Abstractions.IO.Messaging.Correlation.ICorrelationId.html">ICorrelationId</a></td>
+        <td><span class="parametername">correlationId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IDisposable</span>
+  </div>
+  <div>
+      <a class="xref" href="../abstractions/Catalyst.Abstractions.IO.Observers.IRpcResponseObserver.html">IRpcResponseObserver</a>
+  </div>
+  <div>
+      <a class="xref" href="../abstractions/Catalyst.Abstractions.IO.Observers.IResponseMessageObserver.html">IResponseMessageObserver</a>
+  </div>
+  <div>
+      <a class="xref" href="../abstractions/Catalyst.Abstractions.IO.Observers.IMessageObserver.html">IMessageObserver</a>
+  </div>
+  <div>
+      <span class="xref">System.IObserver&lt;T&gt;</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Core_Lib_Rpc_IO_RpcResponseObserver_1.md&amp;value=---%0Auid%3A%20Catalyst.Core.Lib.Rpc.IO.RpcResponseObserver%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Core.Lib/Rpc/IO/RpcResponseObserver.cs/#L35" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>
+            
+          </span></div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

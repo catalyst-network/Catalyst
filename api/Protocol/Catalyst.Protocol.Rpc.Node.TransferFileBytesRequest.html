@@ -1,0 +1,817 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class TransferFileBytesRequest
+   | Catalyst Framework Documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class TransferFileBytesRequest
+   | Catalyst Framework Documentation ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest">
+  
+  
+  <h1 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest" class="text-break">Class TransferFileBytesRequest
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">TransferFileBytesRequest</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">Google.Protobuf.IMessage</span>&lt;<a class="xref" href="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.html">TransferFileBytesRequest</a>&gt;</div>
+    <div><span class="xref">Google.Protobuf.IMessage</span></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.html">TransferFileBytesRequest</a>&gt;</div>
+    <div><span class="xref">Google.Protobuf.IDeepCloneable</span>&lt;<a class="xref" href="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.html">TransferFileBytesRequest</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Catalyst.Protocol.Rpc.Node.html">Catalyst.Protocol.Rpc.Node</a></h6>
+  <h6><strong>Assembly</strong>: Catalyst.Protocol.dll</h6>
+  <h5 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class TransferFileBytesRequest : IMessage&lt;TransferFileBytesRequest&gt;, IMessage, IEquatable&lt;TransferFileBytesRequest&gt;, IDeepCloneable&lt;TransferFileBytesRequest&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest__ctor.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8116">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest__ctor_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.#ctor*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest__ctor" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.#ctor">TransferFileBytesRequest()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransferFileBytesRequest()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest__ctor_Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.%23ctor(Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8123">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest__ctor_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.#ctor*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest__ctor_Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.#ctor(Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest)">TransferFileBytesRequest(TransferFileBytesRequest)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransferFileBytesRequest(TransferFileBytesRequest other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.html">TransferFileBytesRequest</a></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ChunkBytesFieldNumber.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ChunkBytesFieldNumber%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8148">View Source</a>
+  </span>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ChunkBytesFieldNumber" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ChunkBytesFieldNumber">ChunkBytesFieldNumber</h4>
+  <div class="markdown level1 summary"><p>Field number for the &quot;chunk_bytes&quot; field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int ChunkBytesFieldNumber = 2</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ChunkIdFieldNumber.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ChunkIdFieldNumber%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8137">View Source</a>
+  </span>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ChunkIdFieldNumber" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ChunkIdFieldNumber">ChunkIdFieldNumber</h4>
+  <div class="markdown level1 summary"><p>Field number for the &quot;chunk_id&quot; field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int ChunkIdFieldNumber = 1</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_CorrelationFileNameFieldNumber.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.CorrelationFileNameFieldNumber%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8159">View Source</a>
+  </span>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_CorrelationFileNameFieldNumber" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.CorrelationFileNameFieldNumber">CorrelationFileNameFieldNumber</h4>
+  <div class="markdown level1 summary"><p>Field number for the &quot;correlation_file_name&quot; field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int CorrelationFileNameFieldNumber = 3</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ChunkBytes.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ChunkBytes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8150">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ChunkBytes_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ChunkBytes*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ChunkBytes" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ChunkBytes">ChunkBytes</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ByteString ChunkBytes { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.ByteString</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ChunkId.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ChunkId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8139">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ChunkId_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ChunkId*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ChunkId" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ChunkId">ChunkId</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public uint ChunkId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_CorrelationFileName.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.CorrelationFileName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8161">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_CorrelationFileName_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.CorrelationFileName*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_CorrelationFileName" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.CorrelationFileName">CorrelationFileName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ByteString CorrelationFileName { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.ByteString</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Descriptor.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Descriptor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8106">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Descriptor_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Descriptor*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Descriptor" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Descriptor">Descriptor</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static MessageDescriptor Descriptor { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.Reflection.MessageDescriptor</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Parser.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Parser%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8103">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Parser_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Parser*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Parser" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Parser">Parser</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static MessageParser&lt;TransferFileBytesRequest&gt; Parser { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.MessageParser</span>&lt;<a class="xref" href="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.html">TransferFileBytesRequest</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_CalculateSize.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.CalculateSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8224">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_CalculateSize_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.CalculateSize*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_CalculateSize" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.CalculateSize">CalculateSize()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CalculateSize()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Clone.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8131">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Clone_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Clone*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Clone" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Clone">Clone()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransferFileBytesRequest Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.html">TransferFileBytesRequest</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Equals_Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Equals(Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8174">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Equals_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Equals*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Equals_Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Equals(Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest)">Equals(TransferFileBytesRequest)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(TransferFileBytesRequest other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.html">TransferFileBytesRequest</a></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Equals_System_Object_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8169">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Equals_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Equals*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Equals_System_Object_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_GetHashCode.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8188">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_GetHashCode_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.GetHashCode*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_GetHashCode" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_MergeFrom_Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.MergeFrom(Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8242">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_MergeFrom_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.MergeFrom*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_MergeFrom_Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.MergeFrom(Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest)">MergeFrom(TransferFileBytesRequest)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void MergeFrom(TransferFileBytesRequest other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.html">TransferFileBytesRequest</a></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_MergeFrom_Google_Protobuf_CodedInputStream_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.MergeFrom(Google.Protobuf.CodedInputStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8259">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_MergeFrom_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.MergeFrom*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_MergeFrom_Google_Protobuf_CodedInputStream_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.MergeFrom(Google.Protobuf.CodedInputStream)">MergeFrom(CodedInputStream)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void MergeFrom(CodedInputStream input)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.CodedInputStream</span></td>
+        <td><span class="parametername">input</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ToString.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8200">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ToString_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ToString*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_ToString" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.ToString">ToString()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.ToString()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_WriteTo_Google_Protobuf_CodedOutputStream_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.WriteTo(Google.Protobuf.CodedOutputStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8205">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_WriteTo_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.WriteTo*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_WriteTo_Google_Protobuf_CodedOutputStream_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.WriteTo(Google.Protobuf.CodedOutputStream)">WriteTo(CodedOutputStream)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void WriteTo(CodedOutputStream output)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.CodedOutputStream</span></td>
+        <td><span class="parametername">output</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Google_Protobuf_IMessage_Descriptor.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Google%23Protobuf%23IMessage%23Descriptor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8111">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Google_Protobuf_IMessage_Descriptor_" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Google#Protobuf#IMessage#Descriptor*"></a>
+  <h4 id="Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest_Google_Protobuf_IMessage_Descriptor" data-uid="Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest.Google#Protobuf#IMessage#Descriptor">IMessage.Descriptor</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">MessageDescriptor IMessage.Descriptor { get; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.Reflection.MessageDescriptor</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">Google.Protobuf.IMessage&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">Google.Protobuf.IMessage</span>
+  </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">Google.Protobuf.IDeepCloneable&lt;T&gt;</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Rpc_Node_TransferFileBytesRequest.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Rpc.Node.TransferFileBytesRequest%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Rpc.cs/#L8100" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>
+            
+          </span></div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

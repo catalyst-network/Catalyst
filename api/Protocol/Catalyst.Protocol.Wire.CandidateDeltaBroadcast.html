@@ -1,0 +1,850 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class CandidateDeltaBroadcast
+   | Catalyst Framework Documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class CandidateDeltaBroadcast
+   | Catalyst Framework Documentation ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    <meta property="docfx:rel" content="../../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast">
+  
+  
+  <h1 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast" class="text-break">Class CandidateDeltaBroadcast
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">CandidateDeltaBroadcast</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">Google.Protobuf.IMessage</span>&lt;<a class="xref" href="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.html">CandidateDeltaBroadcast</a>&gt;</div>
+    <div><span class="xref">Google.Protobuf.IMessage</span></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.html">CandidateDeltaBroadcast</a>&gt;</div>
+    <div><span class="xref">Google.Protobuf.IDeepCloneable</span>&lt;<a class="xref" href="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.html">CandidateDeltaBroadcast</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Catalyst.Protocol.Wire.html">Catalyst.Protocol.Wire</a></h6>
+  <h6><strong>Assembly</strong>: Catalyst.Protocol.dll</h6>
+  <h5 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class CandidateDeltaBroadcast : IMessage&lt;CandidateDeltaBroadcast&gt;, IMessage, IEquatable&lt;CandidateDeltaBroadcast&gt;, IDeepCloneable&lt;CandidateDeltaBroadcast&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast__ctor.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L827">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast__ctor_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.#ctor*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast__ctor" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.#ctor">CandidateDeltaBroadcast()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CandidateDeltaBroadcast()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast__ctor_Catalyst_Protocol_Wire_CandidateDeltaBroadcast_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.%23ctor(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L834">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast__ctor_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.#ctor*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast__ctor_Catalyst_Protocol_Wire_CandidateDeltaBroadcast_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.#ctor(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)">CandidateDeltaBroadcast(CandidateDeltaBroadcast)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CandidateDeltaBroadcast(CandidateDeltaBroadcast other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.html">CandidateDeltaBroadcast</a></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_HashFieldNumber.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.HashFieldNumber%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L848">View Source</a>
+  </span>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_HashFieldNumber" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.HashFieldNumber">HashFieldNumber</h4>
+  <div class="markdown level1 summary"><p>Field number for the &quot;hash&quot; field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int HashFieldNumber = 1</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_PreviousDeltaDfsHashFieldNumber.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.PreviousDeltaDfsHashFieldNumber%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L876">View Source</a>
+  </span>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_PreviousDeltaDfsHashFieldNumber" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.PreviousDeltaDfsHashFieldNumber">PreviousDeltaDfsHashFieldNumber</h4>
+  <div class="markdown level1 summary"><p>Field number for the &quot;previous_delta_dfs_hash&quot; field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int PreviousDeltaDfsHashFieldNumber = 3</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_ProducerIdFieldNumber.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.ProducerIdFieldNumber%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L862">View Source</a>
+  </span>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_ProducerIdFieldNumber" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.ProducerIdFieldNumber">ProducerIdFieldNumber</h4>
+  <div class="markdown level1 summary"><p>Field number for the &quot;producer_id&quot; field.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int ProducerIdFieldNumber = 2</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Descriptor.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Descriptor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L817">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Descriptor_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Descriptor*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Descriptor" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Descriptor">Descriptor</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static MessageDescriptor Descriptor { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.Reflection.MessageDescriptor</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Hash.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Hash%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L853">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Hash_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Hash*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Hash" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Hash">Hash</h4>
+  <div class="markdown level1 summary"><p>The hash computed for the current delta produced by ProducerId. This is meant to be used when voting for most popular hashes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ByteString Hash { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.ByteString</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Parser.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Parser%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L814">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Parser_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Parser*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Parser" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Parser">Parser</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static MessageParser&lt;CandidateDeltaBroadcast&gt; Parser { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.MessageParser</span>&lt;<a class="xref" href="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.html">CandidateDeltaBroadcast</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_PreviousDeltaDfsHash.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.PreviousDeltaDfsHash%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L881">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_PreviousDeltaDfsHash_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.PreviousDeltaDfsHash*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_PreviousDeltaDfsHash" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.PreviousDeltaDfsHash">PreviousDeltaDfsHash</h4>
+  <div class="markdown level1 summary"><p>The DFS address for the content of the delta preceding this candidate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ByteString PreviousDeltaDfsHash { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.ByteString</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_ProducerId.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.ProducerId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L867">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_ProducerId_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.ProducerId*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_ProducerId" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.ProducerId">ProducerId</h4>
+  <div class="markdown level1 summary"><p>Identifier of the producer of the candidate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PeerId ProducerId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Protocol.Peer.PeerId.html">PeerId</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_CalculateSize.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.CalculateSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L944">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_CalculateSize_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.CalculateSize*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_CalculateSize" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.CalculateSize">CalculateSize()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CalculateSize()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Clone.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L842">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Clone_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Clone*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Clone" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Clone">Clone()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CandidateDeltaBroadcast Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.html">CandidateDeltaBroadcast</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Equals_Catalyst_Protocol_Wire_CandidateDeltaBroadcast_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Equals(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L894">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Equals_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Equals*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Equals_Catalyst_Protocol_Wire_CandidateDeltaBroadcast_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Equals(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)">Equals(CandidateDeltaBroadcast)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(CandidateDeltaBroadcast other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.html">CandidateDeltaBroadcast</a></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Equals_System_Object_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L889">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Equals_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Equals*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Equals_System_Object_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_GetHashCode.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L908">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_GetHashCode_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.GetHashCode*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_GetHashCode" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_IsValid.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.IsValid%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/Wire/CandidateDeltaBroadcast.cs/#L33">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_IsValid_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.IsValid*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_IsValid" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.IsValid">IsValid()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsValid()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_MergeFrom_Catalyst_Protocol_Wire_CandidateDeltaBroadcast_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.MergeFrom(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L962">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_MergeFrom_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.MergeFrom*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_MergeFrom_Catalyst_Protocol_Wire_CandidateDeltaBroadcast_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.MergeFrom(Catalyst.Protocol.Wire.CandidateDeltaBroadcast)">MergeFrom(CandidateDeltaBroadcast)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void MergeFrom(CandidateDeltaBroadcast other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.html">CandidateDeltaBroadcast</a></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_MergeFrom_Google_Protobuf_CodedInputStream_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.MergeFrom(Google.Protobuf.CodedInputStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L982">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_MergeFrom_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.MergeFrom*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_MergeFrom_Google_Protobuf_CodedInputStream_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.MergeFrom(Google.Protobuf.CodedInputStream)">MergeFrom(CodedInputStream)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void MergeFrom(CodedInputStream input)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.CodedInputStream</span></td>
+        <td><span class="parametername">input</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_ToString.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L920">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_ToString_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.ToString*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_ToString" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.ToString">ToString()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.ToString()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_WriteTo_Google_Protobuf_CodedOutputStream_.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.WriteTo(Google.Protobuf.CodedOutputStream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L925">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_WriteTo_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.WriteTo*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_WriteTo_Google_Protobuf_CodedOutputStream_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.WriteTo(Google.Protobuf.CodedOutputStream)">WriteTo(CodedOutputStream)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void WriteTo(CodedOutputStream output)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.CodedOutputStream</span></td>
+        <td><span class="parametername">output</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Google_Protobuf_IMessage_Descriptor.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Google%23Protobuf%23IMessage%23Descriptor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L822">View Source</a>
+  </span>
+  <a id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Google_Protobuf_IMessage_Descriptor_" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Google#Protobuf#IMessage#Descriptor*"></a>
+  <h4 id="Catalyst_Protocol_Wire_CandidateDeltaBroadcast_Google_Protobuf_IMessage_Descriptor" data-uid="Catalyst.Protocol.Wire.CandidateDeltaBroadcast.Google#Protobuf#IMessage#Descriptor">IMessage.Descriptor</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">MessageDescriptor IMessage.Descriptor { get; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Google.Protobuf.Reflection.MessageDescriptor</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">Google.Protobuf.IMessage&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">Google.Protobuf.IMessage</span>
+  </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">Google.Protobuf.IDeepCloneable&lt;T&gt;</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/catalyst-network/catalyst.node/new/gh-pages/apiSpec/new?filename=Catalyst_Protocol_Wire_CandidateDeltaBroadcast.md&amp;value=---%0Auid%3A%20Catalyst.Protocol.Wire.CandidateDeltaBroadcast%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/catalyst-network/Catalyst.Framework/blob/gh-pages/src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs/#L811" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>
+            
+          </span></div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

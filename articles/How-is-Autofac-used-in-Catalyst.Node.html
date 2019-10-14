@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Dependency injection (DI) | Catalyst Framework Documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Dependency injection (DI) | Catalyst Framework Documentation ">
+    <meta name="generator" content="docfx 2.46.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h2 id="dependency-injection-di">Dependency injection (<em>DI</em>)</h2>
+
+<p>Dependency injection is a very common way to introduce inversion of control in the architecture of a piece of software. Although it might appear overly complicated at first, inversion of control tends to result in architectures that are more modular, extensible, and easier to test than their procedural counterparts... Well, at least that is what we read on the web:</p>
+<p><a href="https://en.wikipedia.org/wiki/Inversion_of_control">https://en.wikipedia.org/wiki/Inversion_of_control</a><br><a href="https://martinfowler.com/articles/injection.html">https://martinfowler.com/articles/injection.html</a></p>
+<p>Throughout the <em>Catalyst.Node</em> solution, the popular Autofac for .Net framework is used to provide dependency injection.</p>
+<h2 id="how-is-it-done-in-catalystnode">How is it done in Catalyst.Node</h2>
+<p>Catalyst.Node is composed of a bunch of mandatory components without which the node would basically be unable to function, as well as a bunch of <em>modules</em>, which are meant to be replaceable depending on your particular needs. 
+For instance, it makes sense to think of a node running with a local file system versus an interplanetary one, with an in-memory mempool or with an SQL based one, but it is much harder to think of it with many different but compatible messaging protocols.<br>These <em>modules</em> are therefore treated as independent services and rely on their own separate configuration files.</p>
+<h3 id="main-mandatory-components">Main (mandatory) components</h3>
+<p>Most of the DI configuration for mandatory components can be found in the <em><code>components.json</code></em> file. Here is how a basic configuration looks like:</p>
+<pre><code class="lang-json">&quot;defaultAssembly&quot;: &quot;Catalyst.Node.Core&quot;,
+&quot;components&quot;: [
+{
+   &quot;type&quot;: &quot;Catalyst.Node.Core.CatalystNode&quot;,
+   &quot;services&quot;: [
+   {
+       &quot;type&quot;: &quot;Catalyst.Node.Common.Interfaces.ICatalystNode, Catalyst.Node.Common&quot;
+   }]
+},
+</code></pre><blockquote><p><code>components -&gt; type</code> : refers to the name of the type that should be used to satisfy the implementation of the various <code>services</code>.<br><code>services</code> : this represents the list of interfaces that should be resolved using the concrete type defined above.<br><code>defaultAssembly</code> : can be used to avoid having to explicitly specify the assembly in which a type should be found. in the example above, the type <em>Catalyst.Node.Core.CatalystNode</em> should be found in the <em>Catalyst.Node.Core</em> assembly. However <em>Catalyst.Node.Common.Interfaces.ICatalystNode</em> should be found in <em>Catalyst.Node.Common</em>.  </p>
+</blockquote>
+<p>A lot more information about Autofac configuration can be found <a href="https://autofaccn.readthedocs.io/en/latest/configuration/xml.html#components">here</a>.</p>
+<p>It is in that same <em><code>components.json</code></em> file that we can find links to the individual module configuration.</p>
+<pre><code class="lang-json">&quot;modules&quot;: [
+   {
+     &quot;type&quot;: &quot;Catalyst.Node.Core.Modules.JsonConfiguredModule&quot;,
+     &quot;parameters&quot;: {
+       &quot;configFilePath&quot;: &quot;Config/Modules/dfs.json&quot;
+     }
+   },
+</code></pre><blockquote><p><code>module</code> : groups a set of dependencies that only make sense in the context of a higher level functionality. For instance, a <em>Dfs</em> (Distributed File System) module might need an <em>INetworkConnector</em> that is not needed by, and might not even make sense to, a <em>Cryptography</em> module only supposed to group a bunch of mathematical functions used to encrypt messages.<br><code>type</code> : is a type inheriting from <em>Autofac.Module</em> which defines how the module registers its dependencies. In our case, a JsonConfiguredModule has been implemented to allow a given module to read its own configuration, from a separate JSON file found at <em>configFilePath</em></p>
+</blockquote>
+<p>More information about Autofac modules configuration can be found <a href="https://autofaccn.readthedocs.io/en/latest/configuration/xml.html#modules">here</a>.</p>
+<h3 id="modules-configuration">Modules configuration</h3>
+<p>As explained above, modules are meant to represent isolate and interchangeable sets of related functionalities. In Catalyst.Node, they rely on a given configuration file, which is read through the <em>JsonConfiguredModule</em> class. This is not mandatory and different modules could be implemented and configured differently. However, we decided to use this mechanism to allow different users of the node to swap the implementation of a given module simply by changing its configuration.</p>
+<p>The source code contains an example of such a configuration change in the class <em>MempoolIntegrationTests</em> where a first mempool is configured to use an in-memory storage mechanism, while a second one is configured to use an XML file based store. </p>
+<pre><code class="lang-csharp">[Fact]
+[Trait(Traits.TestType, Traits.IntegrationTest)]
+public async Task Mempool_with_InMemoryRepo_can_save_and_retrieve()
+{
+    var fi = new FileInfo(Path.Combine(Constants.ConfigSubFolder, Constants.ModulesSubFolder,
+        &quot;mempool.inmemory.json&quot;));
+    await Mempool_can_save_and_retrieve(fi);
+}
+
+[Fact]
+[Trait(Traits.TestType, Traits.IntegrationTest)]
+public async Task Mempool_with_XmlRepo_can_save_and_retrieve()
+{
+    var mempoolConfigFile = &quot;mempool.xml.json&quot;;
+    var resultFile = await PointXmlConfigToLocalTestFolder(mempoolConfigFile);
+    await Mempool_can_save_and_retrieve(new FileInfo(resultFile));
+}
+</code></pre><h2 id="autofac-documentation">Autofac documentation</h2>
+<p>This article is only meant to explain briefly how Autofac is used in the Catalyst.Node solution, but it is advised to read the <a href="https://autofaccn.readthedocs.io/en/latest/index.html">Autofac documentation</a> which contains more in-depth information and helpful examples.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/catalyst-network/catalyst.node/blob/merge/How-is-Autofac-used-in-Catalyst.Node.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>
+            
+          </span></div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
