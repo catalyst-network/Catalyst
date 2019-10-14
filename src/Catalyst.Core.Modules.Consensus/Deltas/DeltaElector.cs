@@ -27,14 +27,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Dawn;
+using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -43,28 +42,26 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private readonly IMemoryCache _candidatesCache;
         private readonly IDeltaProducersProvider _deltaProducersProvider;
-        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
-        public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate, IHashProvider hashProvider)
+        public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate)
         {
-            return nameof(DeltaElector) + "-" + hashProvider.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
+            return nameof(DeltaElector) + "-" +
+                CidHelper.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
         }
 
-        public string GetCandidateListCacheKey(MultiHash previousDeltaHash)
+        public string GetCandidateListCacheKey(Cid previousDeltaHash)
         {
             return nameof(DeltaElector) + "-" + previousDeltaHash;
         }
 
         public DeltaElector(IMemoryCache candidatesCache,
             IDeltaProducersProvider deltaProducersProvider,
-            IHashProvider hashProvider,
             ILogger logger)
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
-            _hashProvider = hashProvider;
             _cacheEntryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(
                     new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
@@ -85,9 +82,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             try
             {
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
-                var multiHash = new MultiHash(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
+
+                var cid = CidHelper.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
                 if (!_deltaProducersProvider
-                   .GetDeltaProducersFromPreviousDelta(multiHash)
+                   .GetDeltaProducersFromPreviousDelta(cid)
                    .Any(p => p.Equals(candidate.VoterId)))
                 {
                     //https://github.com/catalyst-network/Catalyst.Node/issues/827
@@ -97,7 +95,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     return;
                 }
 
-                var candidateListKey = GetCandidateListCacheKey(candidate, _hashProvider);
+                var candidateListKey = GetCandidateListCacheKey(candidate);
 
                 if (_candidatesCache.TryGetValue(candidateListKey,
                     out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
@@ -118,14 +116,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public CandidateDeltaBroadcast GetMostPopularCandidateDelta(MultiHash previousDeltaDfsHash)
+        public CandidateDeltaBroadcast GetMostPopularCandidateDelta(Cid previousDeltaDfsHash)
         {
             var candidateListCacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
             if (!_candidatesCache.TryGetValue(candidateListCacheKey,
                 out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
             {
                 _logger.Debug("Failed to retrieve any favourite candidate with previous delta {0}",
-                    previousDeltaDfsHash.ToBase32());
+                    previousDeltaDfsHash);
                 return null;
             }
 

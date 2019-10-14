@@ -23,11 +23,11 @@
 
 using System;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Serilog;
 
@@ -36,13 +36,11 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public class DeltaDfsHashObserver : BroadcastObserverBase<DeltaDfsHashBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly IHashProvider _hashProvider;
 
-        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, IHashProvider hashProvider, ILogger logger)
+        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, ILogger logger)
             : base(logger)
         {
             _deltaHashProvider = deltaHashProvider;
-            _hashProvider = hashProvider;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
@@ -51,17 +49,17 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
 
-                var previousHash = _hashProvider.Cast(deserialised.PreviousDeltaDfsHash.ToByteArray());
+                var previousHash = CidHelper.Cast(deserialised.PreviousDeltaDfsHash.ToByteArray());
                 if (previousHash == null)
                 {
-                    Logger.Error($"PreviousDeltaDfsHash is not a valid hash");
+                    Logger.Error("PreviousDeltaDfsHash is not a valid hash");
                     return;
                 }
 
-                var newHash = _hashProvider.Cast(deserialised.DeltaDfsHash.ToByteArray());
+                var newHash = CidHelper.Cast(deserialised.DeltaDfsHash.ToByteArray());
                 if (newHash == null)
                 {
-                    Logger.Error($"DeltaDfsHash is not a valid hash");
+                    Logger.Error("DeltaDfsHash is not a valid hash");
                     return;
                 }
 

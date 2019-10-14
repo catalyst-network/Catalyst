@@ -29,9 +29,9 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -43,8 +43,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IDeltaDfsReader _dfsReader;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
-        public MultiHash GenesisHash { get; set; }
-        public string GenesisAddress { get; }
+        public Cid GenesisHash { get; set; }
 
         public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate)
         {
@@ -60,7 +59,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
 
             GenesisHash = hashProvider.ComputeMultiHash(new Delta().ToByteArray());
-            GenesisAddress = GenesisHash.ToBase32();
 
             _dfsReader = dfsReader;
             _logger = logger;
@@ -69,7 +67,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                .RegisterPostEvictionCallback(EvictionCallback);
 
             _memoryCache = memoryCache;
-            _memoryCache.Set(GenesisAddress, genesisDelta);
+            _memoryCache.Set(GenesisHash, genesisDelta);
         }
 
         private void EvictionCallback(object key, object value, EvictionReason reason, object state)
@@ -78,22 +76,22 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public bool TryGetOrAddConfirmedDelta(MultiHash hash,
+        public bool TryGetOrAddConfirmedDelta(Cid cid,
             out Delta delta,
             CancellationToken cancellationToken = default)
         {
             //this calls for a TryGetOrCreate IMemoryCache extension function
-            if (_memoryCache.TryGetValue(hash, out delta))
+            if (_memoryCache.TryGetValue(cid, out delta))
             {
                 return true;
             }
 
-            if (!_dfsReader.TryReadDeltaFromDfs(hash, out delta, cancellationToken))
+            if (!_dfsReader.TryReadDeltaFromDfs(cid, out delta, cancellationToken))
             {
                 return false;
             }
 
-            _memoryCache.Set(hash, delta, _entryOptions());
+            _memoryCache.Set(cid, delta, _entryOptions());
             return true;
         }
 

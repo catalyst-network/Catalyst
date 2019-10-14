@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -53,7 +52,7 @@ namespace Catalyst.Core.Modules.Hashing
 
                 return null;
             }
-            catch (Exception exc)
+            catch (System.Exception exc)
             {
                 return null;
             }

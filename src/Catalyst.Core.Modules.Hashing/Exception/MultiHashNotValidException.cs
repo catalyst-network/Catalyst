@@ -21,21 +21,22 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using Catalyst.Core.Lib.P2P.Repository;
-using Catalyst.Protocol.Peer;
-using LibP2P;
+using System.Runtime.Serialization;
 
-namespace Catalyst.Core.Modules.Consensus.Deltas
+namespace Catalyst.Core.Modules.Hashing.Exception
 {
-    public sealed class DeltaProducersProvider : IDeltaProducersProvider
-    {
-        public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
-        {
-            throw new NotImplementedException();
-        }
+    using System;
 
-        public IPeerRepository PeerRepository { get; }
+    [Serializable]
+    public class MultiHashNotValidException : Exception
+    {
+        public MultiHashNotValidException() { }
+        public MultiHashNotValidException(string message) : base(message) { }
+
+        public MultiHashNotValidException(string message, Exception innerException)
+            : base(message, innerException) { }
+
+        protected MultiHashNotValidException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 }

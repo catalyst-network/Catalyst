@@ -34,9 +34,9 @@ using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Transaction;
 using Dawn;
+using LibP2P;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly object _synchronisationLock = new object();
         private readonly ICryptoContext _cryptoContext;
 
-        public MultiHash LatestKnownDelta { get; private set; }
+        public Cid LatestKnownDelta { get; private set; }
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
         public Ledger(IAccountRepository accounts,
@@ -99,7 +99,7 @@ namespace Catalyst.Core.Modules.Ledger
         }
 
         /// <inheritdoc />
-        public void Update(MultiHash deltaHash)
+        public void Update(Cid deltaHash)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace Catalyst.Core.Modules.Ledger
             }
         }
 
-        private void UpdateLedgerFromDelta(MultiHash deltaHash)
+        private void UpdateLedgerFromDelta(Cid deltaHash)
         {
             if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var nextDeltaInChain))
             {

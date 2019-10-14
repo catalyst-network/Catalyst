@@ -22,34 +22,34 @@
 #endregion
 
 using System;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using LibP2P;
 
 namespace Catalyst.Abstractions.Consensus.Cycle
 {
     /// <summary>
-    /// Represents a given phaseDetails of the ledger update cycle, namely,
-    /// Construction, Campaigning, Voting and Synchronisation.
+    ///     Represents a given phaseDetails of the ledger update cycle, namely,
+    ///     Construction, Campaigning, Voting and Synchronisation.
     /// </summary>
     public interface IPhase
     {
         /// <summary>
-        /// Address on the DFS of the delta elected on the previous cycle, here used as
-        /// a unique identifier for this phase.
+        ///     Address on the DFS of the delta elected on the previous cycle, here used as
+        ///     a unique identifier for this phase.
         /// </summary>
-        MultiHash PreviousDeltaDfsHash { get; }
+        Cid PreviousDeltaDfsHash { get; }
 
         /// <summary>
-        /// The name of the phase represented by this instance.
+        ///     The name of the phase represented by this instance.
         /// </summary>
         IPhaseName Name { get; }
 
         /// <summary>
-        /// Status in which our Phase is.
+        ///     Status in which our Phase is.
         /// </summary>
         IPhaseStatus Status { get; }
 
         /// <summary>
-        /// The time at which the phase was started.
+        ///     The time at which the phase was started.
         /// </summary>
         DateTime UtcStartTime { get; }
     }

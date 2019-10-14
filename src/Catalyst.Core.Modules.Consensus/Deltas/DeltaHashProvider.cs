@@ -29,9 +29,9 @@ using System.Reactive.Subjects;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf.WellKnownTypes;
+using LibP2P;
 using Nito.Comparers;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -41,11 +41,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IDeltaCache _deltaCache;
         private readonly ILogger _logger;
 
-        private readonly ReplaySubject<MultiHash> _deltaHashUpdatesSubject;
-        private readonly SortedList<Timestamp, MultiHash> _hashesByTimeDescending;
+        private readonly ReplaySubject<Cid> _deltaHashUpdatesSubject;
+        private readonly SortedList<Timestamp, Cid> _hashesByTimeDescending;
         private readonly int _capacity;
 
-        public IObservable<MultiHash> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
+        public IObservable<Cid> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
 
         public DeltaHashProvider(IDeltaCache deltaCache,
             ILogger logger,
@@ -53,10 +53,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             _deltaCache = deltaCache;
             _logger = logger;
-            _deltaHashUpdatesSubject = new ReplaySubject<MultiHash>(0);
+            _deltaHashUpdatesSubject = new ReplaySubject<Cid>(0);
             var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, descending: true);
             _capacity = capacity;
-            _hashesByTimeDescending = new SortedList<Timestamp, MultiHash>(comparer)
+            _hashesByTimeDescending = new SortedList<Timestamp, Cid>(comparer)
             {
                 Capacity = _capacity
             };
@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public bool TryUpdateLatestHash(MultiHash previousHash, MultiHash newHash)
+        public bool TryUpdateLatestHash(Cid previousHash, Cid newHash)
         {
             var newAddress = newHash;
             var previousAddress = previousHash;
@@ -103,7 +103,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public MultiHash GetLatestDeltaHash(DateTime? asOf = null)
+        public Cid GetLatestDeltaHash(DateTime? asOf = null)
         {
             _logger.Verbose("Trying to retrieve latest delta as of {asOf}", asOf);
             if (!asOf.HasValue)
