@@ -1,0 +1,272 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  id: InboundChannelHandlerBase`1
+  parent: Catalyst.Core.Lib.IO.Handlers
+  children:
+  - Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.#ctor(ILogger)
+  - Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+  - Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+  - Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.Logger
+  langs:
+  - csharp
+  - vb
+  name: InboundChannelHandlerBase<T>
+  nameWithType: InboundChannelHandlerBase<T>
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/InboundChannelHandlerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: InboundChannelHandlerBase
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/InboundChannelHandlerBase.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  syntax:
+    content: 'public abstract class InboundChannelHandlerBase<T> : ChannelHandlerAdapter'
+    typeParameters:
+    - id: T
+    content.vb: >-
+      Public MustInherit Class InboundChannelHandlerBase(Of T)
+
+          Inherits ChannelHandlerAdapter
+  inheritance:
+  - System.Object
+  derivedClasses:
+  - Catalyst.Core.Lib.IO.Handlers.AuthenticationHandler
+  - Catalyst.Core.Lib.IO.Handlers.BroadcastCleanupHandler
+  - Catalyst.Core.Lib.IO.Handlers.BroadcastHandler
+  - Catalyst.Core.Lib.IO.Handlers.CorrelationHandler`1
+  - Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler
+  - Catalyst.Core.Lib.IO.Handlers.ProtocolMessageVerifyHandler
+  nameWithType.vb: InboundChannelHandlerBase(Of T)
+  modifiers.csharp:
+  - public
+  - abstract
+  - class
+  modifiers.vb:
+  - Public
+  - MustInherit
+  - Class
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T)
+  name.vb: InboundChannelHandlerBase(Of T)
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.Logger
+  commentId: F:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.Logger
+  id: Logger
+  parent: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  langs:
+  - csharp
+  - vb
+  name: Logger
+  nameWithType: InboundChannelHandlerBase<T>.Logger
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.Logger
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/InboundChannelHandlerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Logger
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/InboundChannelHandlerBase.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  syntax:
+    content: protected readonly ILogger Logger
+    return:
+      type: ILogger
+    content.vb: Protected ReadOnly Logger As ILogger
+  nameWithType.vb: InboundChannelHandlerBase(Of T).Logger
+  modifiers.csharp:
+  - protected
+  - readonly
+  modifiers.vb:
+  - Protected
+  - ReadOnly
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).Logger
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.#ctor(ILogger)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.#ctor(ILogger)
+  id: '#ctor(ILogger)'
+  parent: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  langs:
+  - csharp
+  - vb
+  name: InboundChannelHandlerBase(ILogger)
+  nameWithType: InboundChannelHandlerBase<T>.InboundChannelHandlerBase(ILogger)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.InboundChannelHandlerBase(ILogger)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/InboundChannelHandlerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/InboundChannelHandlerBase.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  syntax:
+    content: protected InboundChannelHandlerBase(ILogger logger)
+    parameters:
+    - id: logger
+      type: ILogger
+    content.vb: Protected Sub New(logger As ILogger)
+  overload: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.#ctor*
+  nameWithType.vb: InboundChannelHandlerBase(Of T).InboundChannelHandlerBase(ILogger)
+  modifiers.csharp:
+  - protected
+  modifiers.vb:
+  - Protected
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).InboundChannelHandlerBase(ILogger)
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+  id: ChannelRead(IChannelHandlerContext,System.Object)
+  parent: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  langs:
+  - csharp
+  - vb
+  name: ChannelRead(IChannelHandlerContext, Object)
+  nameWithType: InboundChannelHandlerBase<T>.ChannelRead(IChannelHandlerContext, Object)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead(IChannelHandlerContext, System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/InboundChannelHandlerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ChannelRead
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/InboundChannelHandlerBase.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  example: []
+  syntax:
+    content: public override void ChannelRead(IChannelHandlerContext ctx, object msg)
+    parameters:
+    - id: ctx
+      type: IChannelHandlerContext
+      description: ''
+    - id: msg
+      type: System.Object
+      description: ''
+    content.vb: Public Overrides Sub ChannelRead(ctx As IChannelHandlerContext, msg As Object)
+  overload: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead*
+  nameWithType.vb: InboundChannelHandlerBase(Of T).ChannelRead(IChannelHandlerContext, Object)
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead(IChannelHandlerContext, System.Object)
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+  id: ChannelRead0(IChannelHandlerContext,`0)
+  parent: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  langs:
+  - csharp
+  - vb
+  name: ChannelRead0(IChannelHandlerContext, T)
+  nameWithType: InboundChannelHandlerBase<T>.ChannelRead0(IChannelHandlerContext, T)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead0(IChannelHandlerContext, T)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/InboundChannelHandlerBase.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ChannelRead0
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/InboundChannelHandlerBase.cs
+    startLine: 80
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  summary: "\n\n"
+  example: []
+  syntax:
+    content: protected abstract void ChannelRead0(IChannelHandlerContext ctx, T msg)
+    parameters:
+    - id: ctx
+      type: IChannelHandlerContext
+      description: ''
+    - id: msg
+      type: '{T}'
+      description: ''
+    content.vb: Protected MustOverride Sub ChannelRead0(ctx As IChannelHandlerContext, msg As T)
+  overload: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0*
+  nameWithType.vb: InboundChannelHandlerBase(Of T).ChannelRead0(IChannelHandlerContext, T)
+  modifiers.csharp:
+  - protected
+  - abstract
+  modifiers.vb:
+  - Protected
+  - MustOverride
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead0(IChannelHandlerContext, T)
+references:
+- uid: Catalyst.Core.Lib.IO.Handlers
+  commentId: N:Catalyst.Core.Lib.IO.Handlers
+  name: Catalyst.Core.Lib.IO.Handlers
+  nameWithType: Catalyst.Core.Lib.IO.Handlers
+  fullName: Catalyst.Core.Lib.IO.Handlers
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: ILogger
+  isExternal: true
+  name: ILogger
+  nameWithType: ILogger
+  fullName: ILogger
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.#ctor
+  name: InboundChannelHandlerBase
+  nameWithType: InboundChannelHandlerBase<T>.InboundChannelHandlerBase
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.InboundChannelHandlerBase
+  nameWithType.vb: InboundChannelHandlerBase(Of T).InboundChannelHandlerBase
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).InboundChannelHandlerBase
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead
+  name: ChannelRead
+  nameWithType: InboundChannelHandlerBase<T>.ChannelRead
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead
+  nameWithType.vb: InboundChannelHandlerBase(Of T).ChannelRead
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead
+- uid: IChannelHandlerContext
+  isExternal: true
+  name: IChannelHandlerContext
+  nameWithType: IChannelHandlerContext
+  fullName: IChannelHandlerContext
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0
+  name: ChannelRead0
+  nameWithType: InboundChannelHandlerBase<T>.ChannelRead0
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead0
+  nameWithType.vb: InboundChannelHandlerBase(Of T).ChannelRead0
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead0
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T

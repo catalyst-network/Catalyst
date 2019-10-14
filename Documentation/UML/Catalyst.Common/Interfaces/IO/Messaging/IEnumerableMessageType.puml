@@ -1,8 +1,0 @@
-@startuml
-interface IEnumerableMessageType {
-    Name : string <<get>>
-}
-class "IEquatable`1"<T> {
-}
-"IEquatable`1" "<Enumeration>" <|-- IEnumerableMessageType
-@enduml

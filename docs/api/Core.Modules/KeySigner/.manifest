@@ -1,0 +1,12 @@
+{
+  "Catalyst.Core.Modules.KeySigner": "Catalyst.Core.Modules.KeySigner.yml",
+  "Catalyst.Core.Modules.KeySigner.KeySigner": "Catalyst.Core.Modules.KeySigner.KeySigner.yml",
+  "Catalyst.Core.Modules.KeySigner.KeySigner.#ctor(Catalyst.Abstractions.Keystore.IKeyStore,Catalyst.Abstractions.Cryptography.ICryptoContext,Catalyst.Abstractions.Keystore.IKeyRegistry)": "Catalyst.Core.Modules.KeySigner.KeySigner.yml",
+  "Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#CryptoContext": "Catalyst.Core.Modules.KeySigner.KeySigner.yml",
+  "Catalyst.Core.Modules.KeySigner.KeySigner.Catalyst#Abstractions#KeySigner#IKeySigner#KeyStore": "Catalyst.Core.Modules.KeySigner.KeySigner.yml",
+  "Catalyst.Core.Modules.KeySigner.KeySigner.ExportKey": "Catalyst.Core.Modules.KeySigner.KeySigner.yml",
+  "Catalyst.Core.Modules.KeySigner.KeySigner.Sign(System.Byte[],SigningContext)": "Catalyst.Core.Modules.KeySigner.KeySigner.yml",
+  "Catalyst.Core.Modules.KeySigner.KeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],SigningContext)": "Catalyst.Core.Modules.KeySigner.KeySigner.yml",
+  "Catalyst.Core.Modules.KeySigner.KeySignerModule": "Catalyst.Core.Modules.KeySigner.KeySignerModule.yml",
+  "Catalyst.Core.Modules.KeySigner.KeySignerModule.Load(ContainerBuilder)": "Catalyst.Core.Modules.KeySigner.KeySignerModule.yml"
+}

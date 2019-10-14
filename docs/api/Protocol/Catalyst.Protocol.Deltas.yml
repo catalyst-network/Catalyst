@@ -1,0 +1,34 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Deltas
+  commentId: N:Catalyst.Protocol.Deltas
+  id: Catalyst.Protocol.Deltas
+  children:
+  - Catalyst.Protocol.Deltas.Delta
+  - Catalyst.Protocol.Deltas.DeltasReflection
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Protocol.Deltas
+  nameWithType: Catalyst.Protocol.Deltas
+  fullName: Catalyst.Protocol.Deltas
+  type: Namespace
+  assemblies:
+  - Catalyst.Protocol
+references:
+- uid: Catalyst.Protocol.Deltas.Delta
+  commentId: T:Catalyst.Protocol.Deltas.Delta
+  parent: Catalyst.Protocol.Deltas
+  name: Delta
+  nameWithType: Delta
+  fullName: Catalyst.Protocol.Deltas.Delta
+- uid: Catalyst.Protocol.Deltas.DeltasReflection
+  commentId: T:Catalyst.Protocol.Deltas.DeltasReflection
+  name: DeltasReflection
+  nameWithType: DeltasReflection
+  fullName: Catalyst.Protocol.Deltas.DeltasReflection
+- uid: Catalyst.Protocol.Deltas
+  commentId: N:Catalyst.Protocol.Deltas
+  name: Catalyst.Protocol.Deltas
+  nameWithType: Catalyst.Protocol.Deltas
+  fullName: Catalyst.Protocol.Deltas

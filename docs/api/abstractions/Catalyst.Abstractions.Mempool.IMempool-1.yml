@@ -1,0 +1,170 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Mempool.IMempool`1
+  commentId: T:Catalyst.Abstractions.Mempool.IMempool`1
+  id: IMempool`1
+  parent: Catalyst.Abstractions.Mempool
+  children:
+  - Catalyst.Abstractions.Mempool.IMempool`1.Repository
+  langs:
+  - csharp
+  - vb
+  name: IMempool<T>
+  nameWithType: IMempool<T>
+  fullName: Catalyst.Abstractions.Mempool.IMempool<T>
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Mempool/IMempool.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IMempool
+    path: ../src/Catalyst.Abstractions/Mempool/IMempool.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Mempool
+  syntax:
+    content: >-
+      public interface IMempool<T>
+
+          where T : class, IMempoolItem
+    typeParameters:
+    - id: T
+    content.vb: Public Interface IMempool(Of T As {Class, IMempoolItem})
+  nameWithType.vb: IMempool(Of T)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+  fullName.vb: Catalyst.Abstractions.Mempool.IMempool(Of T)
+  name.vb: IMempool(Of T)
+- uid: Catalyst.Abstractions.Mempool.IMempool`1.Repository
+  commentId: P:Catalyst.Abstractions.Mempool.IMempool`1.Repository
+  id: Repository
+  parent: Catalyst.Abstractions.Mempool.IMempool`1
+  langs:
+  - csharp
+  - vb
+  name: Repository
+  nameWithType: IMempool<T>.Repository
+  fullName: Catalyst.Abstractions.Mempool.IMempool<T>.Repository
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Mempool/IMempool.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Repository
+    path: ../src/Catalyst.Abstractions/Mempool/IMempool.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Mempool
+  syntax:
+    content: IMempoolRepository<T> Repository { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{{T}}
+    content.vb: ReadOnly Property Repository As IMempoolRepository(Of T)
+  overload: Catalyst.Abstractions.Mempool.IMempool`1.Repository*
+  nameWithType.vb: IMempool(Of T).Repository
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Abstractions.Mempool.IMempool(Of T).Repository
+references:
+- uid: Catalyst.Abstractions.Mempool
+  commentId: N:Catalyst.Abstractions.Mempool
+  name: Catalyst.Abstractions.Mempool
+  nameWithType: Catalyst.Abstractions.Mempool
+  fullName: Catalyst.Abstractions.Mempool
+- uid: Catalyst.Abstractions.Mempool.IMempool`1.Repository*
+  commentId: Overload:Catalyst.Abstractions.Mempool.IMempool`1.Repository
+  name: Repository
+  nameWithType: IMempool<T>.Repository
+  fullName: Catalyst.Abstractions.Mempool.IMempool<T>.Repository
+  nameWithType.vb: IMempool(Of T).Repository
+  fullName.vb: Catalyst.Abstractions.Mempool.IMempool(Of T).Repository
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{{T}}
+  commentId: T:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{`0}
+  parent: Catalyst.Abstractions.Mempool.Repositories
+  definition: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  name: IMempoolRepository<T>
+  nameWithType: IMempoolRepository<T>
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>
+  nameWithType.vb: IMempoolRepository(Of T)
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T)
+  name.vb: IMempoolRepository(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  commentId: T:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  name: IMempoolRepository<T>
+  nameWithType: IMempoolRepository<T>
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>
+  nameWithType.vb: IMempoolRepository(Of T)
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T)
+  name.vb: IMempoolRepository(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Mempool.Repositories
+  commentId: N:Catalyst.Abstractions.Mempool.Repositories
+  name: Catalyst.Abstractions.Mempool.Repositories
+  nameWithType: Catalyst.Abstractions.Mempool.Repositories
+  fullName: Catalyst.Abstractions.Mempool.Repositories

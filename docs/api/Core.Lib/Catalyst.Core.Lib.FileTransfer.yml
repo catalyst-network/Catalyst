@@ -1,0 +1,89 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.FileTransfer
+  commentId: N:Catalyst.Core.Lib.FileTransfer
+  id: Catalyst.Core.Lib.FileTransfer
+  children:
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+  - Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  - Catalyst.Core.Lib.FileTransfer.DownloadFileTransferFactory
+  - Catalyst.Core.Lib.FileTransfer.DownloadFileTransferInformation
+  - Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory
+  - Catalyst.Core.Lib.FileTransfer.UploadFileTransferInformation
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.FileTransfer
+  nameWithType: Catalyst.Core.Lib.FileTransfer
+  fullName: Catalyst.Core.Lib.FileTransfer
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+  commentId: T:Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+  name: BaseFileTransferFactory<T>
+  nameWithType: BaseFileTransferFactory<T>
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory<T>
+  nameWithType.vb: BaseFileTransferFactory(Of T)
+  fullName.vb: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory(Of T)
+  name.vb: BaseFileTransferFactory(Of T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+    name: BaseFileTransferFactory
+    nameWithType: BaseFileTransferFactory
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory`1
+    name: BaseFileTransferFactory
+    nameWithType: BaseFileTransferFactory
+    fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferFactory
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  commentId: T:Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+  parent: Catalyst.Core.Lib.FileTransfer
+  name: BaseFileTransferInformation
+  nameWithType: BaseFileTransferInformation
+  fullName: Catalyst.Core.Lib.FileTransfer.BaseFileTransferInformation
+- uid: Catalyst.Core.Lib.FileTransfer.DownloadFileTransferFactory
+  commentId: T:Catalyst.Core.Lib.FileTransfer.DownloadFileTransferFactory
+  name: DownloadFileTransferFactory
+  nameWithType: DownloadFileTransferFactory
+  fullName: Catalyst.Core.Lib.FileTransfer.DownloadFileTransferFactory
+- uid: Catalyst.Core.Lib.FileTransfer.DownloadFileTransferInformation
+  commentId: T:Catalyst.Core.Lib.FileTransfer.DownloadFileTransferInformation
+  name: DownloadFileTransferInformation
+  nameWithType: DownloadFileTransferInformation
+  fullName: Catalyst.Core.Lib.FileTransfer.DownloadFileTransferInformation
+- uid: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory
+  commentId: T:Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory
+  name: UploadFileTransferFactory
+  nameWithType: UploadFileTransferFactory
+  fullName: Catalyst.Core.Lib.FileTransfer.UploadFileTransferFactory
+- uid: Catalyst.Core.Lib.FileTransfer.UploadFileTransferInformation
+  commentId: T:Catalyst.Core.Lib.FileTransfer.UploadFileTransferInformation
+  name: UploadFileTransferInformation
+  nameWithType: UploadFileTransferInformation
+  fullName: Catalyst.Core.Lib.FileTransfer.UploadFileTransferInformation
+- uid: Catalyst.Core.Lib.FileTransfer
+  commentId: N:Catalyst.Core.Lib.FileTransfer
+  name: Catalyst.Core.Lib.FileTransfer
+  nameWithType: Catalyst.Core.Lib.FileTransfer
+  fullName: Catalyst.Core.Lib.FileTransfer

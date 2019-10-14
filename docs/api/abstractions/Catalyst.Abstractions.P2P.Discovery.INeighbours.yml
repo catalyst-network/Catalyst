@@ -1,0 +1,296 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.Discovery.INeighbours
+  commentId: T:Catalyst.Abstractions.P2P.Discovery.INeighbours
+  id: INeighbours
+  parent: Catalyst.Abstractions.P2P.Discovery
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: INeighbours
+  nameWithType: INeighbours
+  fullName: Catalyst.Abstractions.P2P.Discovery.INeighbours
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/Discovery/INeighbours.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: INeighbours
+    path: ../src/Catalyst.Abstractions/P2P/Discovery/INeighbours.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.Discovery
+  syntax:
+    content: 'public interface INeighbours : IReadOnlyCollection<INeighbour>, IEnumerable<INeighbour>, IEnumerable'
+    content.vb: >-
+      Public Interface INeighbours
+
+          Inherits IReadOnlyCollection(Of INeighbour)
+  inheritedMembers:
+  - System.Collections.Generic.IReadOnlyCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Count
+  - System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.GetEnumerator
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+references:
+- uid: Catalyst.Abstractions.P2P.Discovery
+  commentId: N:Catalyst.Abstractions.P2P.Discovery
+  name: Catalyst.Abstractions.P2P.Discovery
+  nameWithType: Catalyst.Abstractions.P2P.Discovery
+  fullName: Catalyst.Abstractions.P2P.Discovery
+- uid: System.Collections.Generic.IReadOnlyCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Count
+  commentId: P:System.Collections.Generic.IReadOnlyCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}.Count
+  parent: System.Collections.Generic.IReadOnlyCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Generic.IReadOnlyCollection`1.Count
+  name: Count
+  nameWithType: IReadOnlyCollection<INeighbour>.Count
+  fullName: System.Collections.Generic.IReadOnlyCollection<Catalyst.Abstractions.P2P.Discovery.INeighbour>.Count
+  nameWithType.vb: IReadOnlyCollection(Of INeighbour).Count
+  fullName.vb: System.Collections.Generic.IReadOnlyCollection(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).Count
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}.GetEnumerator
+  parent: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  definition: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  name: GetEnumerator()
+  nameWithType: IEnumerable<INeighbour>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<Catalyst.Abstractions.P2P.Discovery.INeighbour>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of INeighbour).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    nameWithType: IEnumerable<INeighbour>.GetEnumerator
+    fullName: System.Collections.Generic.IEnumerable<Catalyst.Abstractions.P2P.Discovery.INeighbour>.GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    nameWithType: IEnumerable(Of INeighbour).GetEnumerator
+    fullName: System.Collections.Generic.IEnumerable(Of Catalyst.Abstractions.P2P.Discovery.INeighbour).GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IReadOnlyCollection`1.Count
+  commentId: P:System.Collections.Generic.IReadOnlyCollection`1.Count
+  isExternal: true
+  name: Count
+  nameWithType: IReadOnlyCollection<T>.Count
+  fullName: System.Collections.Generic.IReadOnlyCollection<T>.Count
+  nameWithType.vb: IReadOnlyCollection(Of T).Count
+  fullName.vb: System.Collections.Generic.IReadOnlyCollection(Of T).Count
+- uid: System.Collections.Generic.IReadOnlyCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  commentId: T:System.Collections.Generic.IReadOnlyCollection{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IReadOnlyCollection`1
+  name: IReadOnlyCollection<INeighbour>
+  nameWithType: IReadOnlyCollection<INeighbour>
+  fullName: System.Collections.Generic.IReadOnlyCollection<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  nameWithType.vb: IReadOnlyCollection(Of INeighbour)
+  fullName.vb: System.Collections.Generic.IReadOnlyCollection(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  name.vb: IReadOnlyCollection(Of INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+  commentId: M:System.Collections.Generic.IEnumerable`1.GetEnumerator
+  isExternal: true
+  name: GetEnumerator()
+  nameWithType: IEnumerable<T>.GetEnumerator()
+  fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+  nameWithType.vb: IEnumerable(Of T).GetEnumerator()
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T).GetEnumerator()
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    nameWithType: IEnumerable<T>.GetEnumerator
+    fullName: System.Collections.Generic.IEnumerable<T>.GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1.GetEnumerator
+    name: GetEnumerator
+    nameWithType: IEnumerable(Of T).GetEnumerator
+    fullName: System.Collections.Generic.IEnumerable(Of T).GetEnumerator
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  commentId: T:System.Collections.Generic.IEnumerable{Catalyst.Abstractions.P2P.Discovery.INeighbour}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<INeighbour>
+  nameWithType: IEnumerable<INeighbour>
+  fullName: System.Collections.Generic.IEnumerable<Catalyst.Abstractions.P2P.Discovery.INeighbour>
+  nameWithType.vb: IEnumerable(Of INeighbour)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Catalyst.Abstractions.P2P.Discovery.INeighbour)
+  name.vb: IEnumerable(Of INeighbour)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.Discovery.INeighbour
+    name: INeighbour
+    nameWithType: INeighbour
+    fullName: Catalyst.Abstractions.P2P.Discovery.INeighbour
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IReadOnlyCollection`1
+  commentId: T:System.Collections.Generic.IReadOnlyCollection`1
+  isExternal: true
+  name: IReadOnlyCollection<T>
+  nameWithType: IReadOnlyCollection<T>
+  fullName: System.Collections.Generic.IReadOnlyCollection<T>
+  nameWithType.vb: IReadOnlyCollection(Of T)
+  fullName.vb: System.Collections.Generic.IReadOnlyCollection(Of T)
+  name.vb: IReadOnlyCollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IReadOnlyCollection`1
+    name: IReadOnlyCollection
+    nameWithType: IReadOnlyCollection
+    fullName: System.Collections.Generic.IReadOnlyCollection
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

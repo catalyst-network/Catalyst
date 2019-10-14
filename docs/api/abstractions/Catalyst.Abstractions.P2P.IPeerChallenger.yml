@@ -1,0 +1,304 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.IPeerChallenger
+  commentId: T:Catalyst.Abstractions.P2P.IPeerChallenger
+  id: IPeerChallenger
+  parent: Catalyst.Abstractions.P2P
+  children:
+  - Catalyst.Abstractions.P2P.IPeerChallenger.ChallengePeerAsync(Catalyst.Protocol.Peer.PeerId)
+  - Catalyst.Abstractions.P2P.IPeerChallenger.ChallengeResponseMessageStreamer
+  langs:
+  - csharp
+  - vb
+  name: IPeerChallenger
+  nameWithType: IPeerChallenger
+  fullName: Catalyst.Abstractions.P2P.IPeerChallenger
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/IPeerChallenger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IPeerChallenger
+    path: ../src/Catalyst.Abstractions/P2P/IPeerChallenger.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P
+  summary: "\nThis class is used to validate peers by carrying out a peer challenge response\n"
+  example: []
+  syntax:
+    content: public interface IPeerChallenger
+    content.vb: Public Interface IPeerChallenger
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.P2P.IPeerChallenger.ChallengePeerAsync(Catalyst.Protocol.Peer.PeerId)
+  commentId: M:Catalyst.Abstractions.P2P.IPeerChallenger.ChallengePeerAsync(Catalyst.Protocol.Peer.PeerId)
+  id: ChallengePeerAsync(Catalyst.Protocol.Peer.PeerId)
+  parent: Catalyst.Abstractions.P2P.IPeerChallenger
+  langs:
+  - csharp
+  - vb
+  name: ChallengePeerAsync(PeerId)
+  nameWithType: IPeerChallenger.ChallengePeerAsync(PeerId)
+  fullName: Catalyst.Abstractions.P2P.IPeerChallenger.ChallengePeerAsync(Catalyst.Protocol.Peer.PeerId)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/IPeerChallenger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ChallengePeerAsync
+    path: ../src/Catalyst.Abstractions/P2P/IPeerChallenger.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P
+  summary: "\nUsed to challenge a peer for a response based on the provided public key, ip and port chunks \n"
+  example: []
+  syntax:
+    content: Task<bool> ChallengePeerAsync(PeerId recipientPeerIdentifier)
+    parameters:
+    - id: recipientPeerIdentifier
+      type: Catalyst.Protocol.Peer.PeerId
+      description: >-
+        The recipient peer identifier.
+
+        PeerId holds the chunks we want to validate.
+    return:
+      type: System.Threading.Tasks.Task{System.Boolean}
+      description: bool true means valid and false means not valid
+    content.vb: Function ChallengePeerAsync(recipientPeerIdentifier As PeerId) As Task(Of Boolean)
+  overload: Catalyst.Abstractions.P2P.IPeerChallenger.ChallengePeerAsync*
+- uid: Catalyst.Abstractions.P2P.IPeerChallenger.ChallengeResponseMessageStreamer
+  commentId: P:Catalyst.Abstractions.P2P.IPeerChallenger.ChallengeResponseMessageStreamer
+  id: ChallengeResponseMessageStreamer
+  parent: Catalyst.Abstractions.P2P.IPeerChallenger
+  langs:
+  - csharp
+  - vb
+  name: ChallengeResponseMessageStreamer
+  nameWithType: IPeerChallenger.ChallengeResponseMessageStreamer
+  fullName: Catalyst.Abstractions.P2P.IPeerChallenger.ChallengeResponseMessageStreamer
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/IPeerChallenger.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ChallengeResponseMessageStreamer
+    path: ../src/Catalyst.Abstractions/P2P/IPeerChallenger.cs
+    startLine: 42
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P
+  syntax:
+    content: ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
+    parameters: []
+    return:
+      type: ReplaySubject{Catalyst.Abstractions.P2P.IPeerChallengeResponse}
+    content.vb: ReadOnly Property ChallengeResponseMessageStreamer As ReplaySubject(Of IPeerChallengeResponse)
+  overload: Catalyst.Abstractions.P2P.IPeerChallenger.ChallengeResponseMessageStreamer*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.P2P
+  commentId: N:Catalyst.Abstractions.P2P
+  name: Catalyst.Abstractions.P2P
+  nameWithType: Catalyst.Abstractions.P2P
+  fullName: Catalyst.Abstractions.P2P
+- uid: Catalyst.Abstractions.P2P.IPeerChallenger.ChallengePeerAsync*
+  commentId: Overload:Catalyst.Abstractions.P2P.IPeerChallenger.ChallengePeerAsync
+  name: ChallengePeerAsync
+  nameWithType: IPeerChallenger.ChallengePeerAsync
+  fullName: Catalyst.Abstractions.P2P.IPeerChallenger.ChallengePeerAsync
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: System.Threading.Tasks.Task{System.Boolean}
+  commentId: T:System.Threading.Tasks.Task{System.Boolean}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<Boolean>
+  nameWithType: Task<Boolean>
+  fullName: System.Threading.Tasks.Task<System.Boolean>
+  nameWithType.vb: Task(Of Boolean)
+  fullName.vb: System.Threading.Tasks.Task(Of System.Boolean)
+  name.vb: Task(Of Boolean)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Boolean
+    name: Boolean
+    nameWithType: Boolean
+    fullName: System.Boolean
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+- uid: Catalyst.Abstractions.P2P.IPeerChallenger.ChallengeResponseMessageStreamer*
+  commentId: Overload:Catalyst.Abstractions.P2P.IPeerChallenger.ChallengeResponseMessageStreamer
+  name: ChallengeResponseMessageStreamer
+  nameWithType: IPeerChallenger.ChallengeResponseMessageStreamer
+  fullName: Catalyst.Abstractions.P2P.IPeerChallenger.ChallengeResponseMessageStreamer
+- uid: ReplaySubject{Catalyst.Abstractions.P2P.IPeerChallengeResponse}
+  commentId: '!:ReplaySubject{Catalyst.Abstractions.P2P.IPeerChallengeResponse}'
+  definition: ReplaySubject`1
+  name: ReplaySubject<IPeerChallengeResponse>
+  nameWithType: ReplaySubject<IPeerChallengeResponse>
+  fullName: ReplaySubject<Catalyst.Abstractions.P2P.IPeerChallengeResponse>
+  nameWithType.vb: ReplaySubject(Of IPeerChallengeResponse)
+  fullName.vb: ReplaySubject(Of Catalyst.Abstractions.P2P.IPeerChallengeResponse)
+  name.vb: ReplaySubject(Of IPeerChallengeResponse)
+  spec.csharp:
+  - uid: ReplaySubject`1
+    name: ReplaySubject
+    nameWithType: ReplaySubject
+    fullName: ReplaySubject
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.P2P.IPeerChallengeResponse
+    name: IPeerChallengeResponse
+    nameWithType: IPeerChallengeResponse
+    fullName: Catalyst.Abstractions.P2P.IPeerChallengeResponse
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: ReplaySubject`1
+    name: ReplaySubject
+    nameWithType: ReplaySubject
+    fullName: ReplaySubject
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.P2P.IPeerChallengeResponse
+    name: IPeerChallengeResponse
+    nameWithType: IPeerChallengeResponse
+    fullName: Catalyst.Abstractions.P2P.IPeerChallengeResponse
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: ReplaySubject`1
+  isExternal: true
+  name: ReplaySubject<>
+  nameWithType: ReplaySubject<>
+  fullName: ReplaySubject<>
+  nameWithType.vb: ReplaySubject(Of )
+  fullName.vb: ReplaySubject(Of )
+  name.vb: ReplaySubject(Of )
+  spec.csharp:
+  - uid: ReplaySubject`1
+    name: ReplaySubject
+    nameWithType: ReplaySubject
+    fullName: ReplaySubject
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: ReplaySubject`1
+    name: ReplaySubject
+    nameWithType: ReplaySubject
+    fullName: ReplaySubject
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: )
+    nameWithType: )
+    fullName: )

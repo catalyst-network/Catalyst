@@ -1,0 +1,144 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Cryptography.ISignature
+  commentId: T:Catalyst.Abstractions.Cryptography.ISignature
+  id: ISignature
+  parent: Catalyst.Abstractions.Cryptography
+  children:
+  - Catalyst.Abstractions.Cryptography.ISignature.PublicKeyBytes
+  - Catalyst.Abstractions.Cryptography.ISignature.SignatureBytes
+  langs:
+  - csharp
+  - vb
+  name: ISignature
+  nameWithType: ISignature
+  fullName: Catalyst.Abstractions.Cryptography.ISignature
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cryptography/ISignature.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ISignature
+    path: ../src/Catalyst.Abstractions/Cryptography/ISignature.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cryptography
+  syntax:
+    content: public interface ISignature
+    content.vb: Public Interface ISignature
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Cryptography.ISignature.SignatureBytes
+  commentId: P:Catalyst.Abstractions.Cryptography.ISignature.SignatureBytes
+  id: SignatureBytes
+  parent: Catalyst.Abstractions.Cryptography.ISignature
+  langs:
+  - csharp
+  - vb
+  name: SignatureBytes
+  nameWithType: ISignature.SignatureBytes
+  fullName: Catalyst.Abstractions.Cryptography.ISignature.SignatureBytes
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cryptography/ISignature.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: SignatureBytes
+    path: ../src/Catalyst.Abstractions/Cryptography/ISignature.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cryptography
+  syntax:
+    content: byte[] SignatureBytes { get; }
+    parameters: []
+    return:
+      type: System.Byte[]
+    content.vb: ReadOnly Property SignatureBytes As Byte()
+  overload: Catalyst.Abstractions.Cryptography.ISignature.SignatureBytes*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Cryptography.ISignature.PublicKeyBytes
+  commentId: P:Catalyst.Abstractions.Cryptography.ISignature.PublicKeyBytes
+  id: PublicKeyBytes
+  parent: Catalyst.Abstractions.Cryptography.ISignature
+  langs:
+  - csharp
+  - vb
+  name: PublicKeyBytes
+  nameWithType: ISignature.PublicKeyBytes
+  fullName: Catalyst.Abstractions.Cryptography.ISignature.PublicKeyBytes
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cryptography/ISignature.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PublicKeyBytes
+    path: ../src/Catalyst.Abstractions/Cryptography/ISignature.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cryptography
+  syntax:
+    content: byte[] PublicKeyBytes { get; }
+    parameters: []
+    return:
+      type: System.Byte[]
+    content.vb: ReadOnly Property PublicKeyBytes As Byte()
+  overload: Catalyst.Abstractions.Cryptography.ISignature.PublicKeyBytes*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.Cryptography
+  commentId: N:Catalyst.Abstractions.Cryptography
+  name: Catalyst.Abstractions.Cryptography
+  nameWithType: Catalyst.Abstractions.Cryptography
+  fullName: Catalyst.Abstractions.Cryptography
+- uid: Catalyst.Abstractions.Cryptography.ISignature.SignatureBytes*
+  commentId: Overload:Catalyst.Abstractions.Cryptography.ISignature.SignatureBytes
+  name: SignatureBytes
+  nameWithType: ISignature.SignatureBytes
+  fullName: Catalyst.Abstractions.Cryptography.ISignature.SignatureBytes
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Catalyst.Abstractions.Cryptography.ISignature.PublicKeyBytes*
+  commentId: Overload:Catalyst.Abstractions.Cryptography.ISignature.PublicKeyBytes
+  name: PublicKeyBytes
+  nameWithType: ISignature.PublicKeyBytes
+  fullName: Catalyst.Abstractions.Cryptography.ISignature.PublicKeyBytes

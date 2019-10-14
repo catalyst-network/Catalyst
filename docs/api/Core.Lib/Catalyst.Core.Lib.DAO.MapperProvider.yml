@@ -1,0 +1,272 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.DAO.MapperProvider
+  commentId: T:Catalyst.Core.Lib.DAO.MapperProvider
+  id: MapperProvider
+  parent: Catalyst.Core.Lib.DAO
+  children:
+  - Catalyst.Core.Lib.DAO.MapperProvider.#ctor(System.Collections.Generic.IEnumerable{Catalyst.Abstractions.DAO.IMapperInitializer})
+  - Catalyst.Core.Lib.DAO.MapperProvider.MasterMapper
+  - Catalyst.Core.Lib.DAO.MapperProvider.Start
+  langs:
+  - csharp
+  - vb
+  name: MapperProvider
+  nameWithType: MapperProvider
+  fullName: Catalyst.Core.Lib.DAO.MapperProvider
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/MapperProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MapperProvider
+    path: ../src/Catalyst.Core.Lib/DAO/MapperProvider.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: 'public class MapperProvider : IStartable'
+    content.vb: >-
+      Public Class MapperProvider
+
+          Inherits IStartable
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.DAO.MapperProvider.MasterMapper
+  commentId: P:Catalyst.Core.Lib.DAO.MapperProvider.MasterMapper
+  id: MasterMapper
+  parent: Catalyst.Core.Lib.DAO.MapperProvider
+  langs:
+  - csharp
+  - vb
+  name: MasterMapper
+  nameWithType: MapperProvider.MasterMapper
+  fullName: Catalyst.Core.Lib.DAO.MapperProvider.MasterMapper
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/MapperProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MasterMapper
+    path: ../src/Catalyst.Core.Lib/DAO/MapperProvider.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public static IMapper MasterMapper { get; set; }
+    parameters: []
+    return:
+      type: IMapper
+    content.vb: Public Shared Property MasterMapper As IMapper
+  overload: Catalyst.Core.Lib.DAO.MapperProvider.MasterMapper*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  - set
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Lib.DAO.MapperProvider.#ctor(System.Collections.Generic.IEnumerable{Catalyst.Abstractions.DAO.IMapperInitializer})
+  commentId: M:Catalyst.Core.Lib.DAO.MapperProvider.#ctor(System.Collections.Generic.IEnumerable{Catalyst.Abstractions.DAO.IMapperInitializer})
+  id: '#ctor(System.Collections.Generic.IEnumerable{Catalyst.Abstractions.DAO.IMapperInitializer})'
+  parent: Catalyst.Core.Lib.DAO.MapperProvider
+  langs:
+  - csharp
+  - vb
+  name: MapperProvider(IEnumerable<IMapperInitializer>)
+  nameWithType: MapperProvider.MapperProvider(IEnumerable<IMapperInitializer>)
+  fullName: Catalyst.Core.Lib.DAO.MapperProvider.MapperProvider(System.Collections.Generic.IEnumerable<Catalyst.Abstractions.DAO.IMapperInitializer>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/MapperProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/DAO/MapperProvider.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public MapperProvider(IEnumerable<IMapperInitializer> mapperConfigurations)
+    parameters:
+    - id: mapperConfigurations
+      type: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.DAO.IMapperInitializer}
+    content.vb: Public Sub New(mapperConfigurations As IEnumerable(Of IMapperInitializer))
+  overload: Catalyst.Core.Lib.DAO.MapperProvider.#ctor*
+  nameWithType.vb: MapperProvider.MapperProvider(IEnumerable(Of IMapperInitializer))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Lib.DAO.MapperProvider.MapperProvider(System.Collections.Generic.IEnumerable(Of Catalyst.Abstractions.DAO.IMapperInitializer))
+  name.vb: MapperProvider(IEnumerable(Of IMapperInitializer))
+- uid: Catalyst.Core.Lib.DAO.MapperProvider.Start
+  commentId: M:Catalyst.Core.Lib.DAO.MapperProvider.Start
+  id: Start
+  parent: Catalyst.Core.Lib.DAO.MapperProvider
+  langs:
+  - csharp
+  - vb
+  name: Start()
+  nameWithType: MapperProvider.Start()
+  fullName: Catalyst.Core.Lib.DAO.MapperProvider.Start()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/MapperProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Start
+    path: ../src/Catalyst.Core.Lib/DAO/MapperProvider.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public void Start()
+    content.vb: Public Sub Start
+  overload: Catalyst.Core.Lib.DAO.MapperProvider.Start*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.DAO
+  commentId: N:Catalyst.Core.Lib.DAO
+  name: Catalyst.Core.Lib.DAO
+  nameWithType: Catalyst.Core.Lib.DAO
+  fullName: Catalyst.Core.Lib.DAO
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.DAO.MapperProvider.MasterMapper*
+  commentId: Overload:Catalyst.Core.Lib.DAO.MapperProvider.MasterMapper
+  name: MasterMapper
+  nameWithType: MapperProvider.MasterMapper
+  fullName: Catalyst.Core.Lib.DAO.MapperProvider.MasterMapper
+- uid: IMapper
+  commentId: '!:IMapper'
+  isExternal: true
+  name: IMapper
+  nameWithType: IMapper
+  fullName: IMapper
+- uid: Catalyst.Core.Lib.DAO.MapperProvider.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.DAO.MapperProvider.#ctor
+  name: MapperProvider
+  nameWithType: MapperProvider.MapperProvider
+  fullName: Catalyst.Core.Lib.DAO.MapperProvider.MapperProvider
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Abstractions.DAO.IMapperInitializer}
+  commentId: T:System.Collections.Generic.IEnumerable{Catalyst.Abstractions.DAO.IMapperInitializer}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<IMapperInitializer>
+  nameWithType: IEnumerable<IMapperInitializer>
+  fullName: System.Collections.Generic.IEnumerable<Catalyst.Abstractions.DAO.IMapperInitializer>
+  nameWithType.vb: IEnumerable(Of IMapperInitializer)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Catalyst.Abstractions.DAO.IMapperInitializer)
+  name.vb: IEnumerable(Of IMapperInitializer)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.DAO.IMapperInitializer
+    name: IMapperInitializer
+    nameWithType: IMapperInitializer
+    fullName: Catalyst.Abstractions.DAO.IMapperInitializer
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.DAO.IMapperInitializer
+    name: IMapperInitializer
+    nameWithType: IMapperInitializer
+    fullName: Catalyst.Abstractions.DAO.IMapperInitializer
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Core.Lib.DAO.MapperProvider.Start*
+  commentId: Overload:Catalyst.Core.Lib.DAO.MapperProvider.Start
+  name: Start
+  nameWithType: MapperProvider.Start
+  fullName: Catalyst.Core.Lib.DAO.MapperProvider.Start

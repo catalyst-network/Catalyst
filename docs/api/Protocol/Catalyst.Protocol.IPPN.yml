@@ -1,0 +1,69 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.IPPN
+  commentId: N:Catalyst.Protocol.IPPN
+  id: Catalyst.Protocol.IPPN
+  children:
+  - Catalyst.Protocol.IPPN.IPPNReflection
+  - Catalyst.Protocol.IPPN.LatestDeltaHashRequest
+  - Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  - Catalyst.Protocol.IPPN.PeerNeighborsRequest
+  - Catalyst.Protocol.IPPN.PeerNeighborsResponse
+  - Catalyst.Protocol.IPPN.PingRequest
+  - Catalyst.Protocol.IPPN.PingResponse
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Protocol.IPPN
+  nameWithType: Catalyst.Protocol.IPPN
+  fullName: Catalyst.Protocol.IPPN
+  type: Namespace
+  assemblies:
+  - Catalyst.Protocol
+references:
+- uid: Catalyst.Protocol.IPPN.IPPNReflection
+  commentId: T:Catalyst.Protocol.IPPN.IPPNReflection
+  name: IPPNReflection
+  nameWithType: IPPNReflection
+  fullName: Catalyst.Protocol.IPPN.IPPNReflection
+- uid: Catalyst.Protocol.IPPN.PeerNeighborsRequest
+  commentId: T:Catalyst.Protocol.IPPN.PeerNeighborsRequest
+  parent: Catalyst.Protocol.IPPN
+  name: PeerNeighborsRequest
+  nameWithType: PeerNeighborsRequest
+  fullName: Catalyst.Protocol.IPPN.PeerNeighborsRequest
+- uid: Catalyst.Protocol.IPPN.PeerNeighborsResponse
+  commentId: T:Catalyst.Protocol.IPPN.PeerNeighborsResponse
+  parent: Catalyst.Protocol.IPPN
+  name: PeerNeighborsResponse
+  nameWithType: PeerNeighborsResponse
+  fullName: Catalyst.Protocol.IPPN.PeerNeighborsResponse
+- uid: Catalyst.Protocol.IPPN.PingRequest
+  commentId: T:Catalyst.Protocol.IPPN.PingRequest
+  parent: Catalyst.Protocol.IPPN
+  name: PingRequest
+  nameWithType: PingRequest
+  fullName: Catalyst.Protocol.IPPN.PingRequest
+- uid: Catalyst.Protocol.IPPN.PingResponse
+  commentId: T:Catalyst.Protocol.IPPN.PingResponse
+  parent: Catalyst.Protocol.IPPN
+  name: PingResponse
+  nameWithType: PingResponse
+  fullName: Catalyst.Protocol.IPPN.PingResponse
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashRequest
+  commentId: T:Catalyst.Protocol.IPPN.LatestDeltaHashRequest
+  parent: Catalyst.Protocol.IPPN
+  name: LatestDeltaHashRequest
+  nameWithType: LatestDeltaHashRequest
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashRequest
+- uid: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  commentId: T:Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+  parent: Catalyst.Protocol.IPPN
+  name: LatestDeltaHashResponse
+  nameWithType: LatestDeltaHashResponse
+  fullName: Catalyst.Protocol.IPPN.LatestDeltaHashResponse
+- uid: Catalyst.Protocol.IPPN
+  commentId: N:Catalyst.Protocol.IPPN
+  name: Catalyst.Protocol.IPPN
+  nameWithType: Catalyst.Protocol.IPPN
+  fullName: Catalyst.Protocol.IPPN

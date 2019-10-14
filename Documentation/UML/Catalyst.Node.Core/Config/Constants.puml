@@ -1,5 +1,0 @@
-@startuml
-class Constants <<static>> {
-    + {static} IpfsSubFolder : string <<get>>
-}
-@enduml

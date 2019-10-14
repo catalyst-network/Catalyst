@@ -1,0 +1,403 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  commentId: T:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  id: IMempoolRepository`1
+  parent: Catalyst.Abstractions.Mempool.Repositories
+  children:
+  - Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.CreateItem(Catalyst.Protocol.Wire.TransactionBroadcast)
+  - Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.DeleteItem(System.String[])
+  - Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.GetAll
+  - Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.ReadItem(ByteString)
+  - Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.TryReadItem(ByteString)
+  langs:
+  - csharp
+  - vb
+  name: IMempoolRepository<T>
+  nameWithType: IMempoolRepository<T>
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IMempoolRepository
+    path: ../src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Mempool.Repositories
+  syntax:
+    content: 'public interface IMempoolRepository<T> : IRepositoryWrapper<T>, IRepository<T, string> where T : class, IMempoolItem'
+    typeParameters:
+    - id: T
+    content.vb: >-
+      Public Interface IMempoolRepository(Of T As {Class, IMempoolItem})
+
+          Inherits IRepositoryWrapper(Of T)
+  nameWithType.vb: IMempoolRepository(Of T)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T)
+  name.vb: IMempoolRepository(Of T)
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.TryReadItem(ByteString)
+  commentId: M:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.TryReadItem(ByteString)
+  id: TryReadItem(ByteString)
+  parent: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  langs:
+  - csharp
+  - vb
+  name: TryReadItem(ByteString)
+  nameWithType: IMempoolRepository<T>.TryReadItem(ByteString)
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>.TryReadItem(ByteString)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: TryReadItem
+    path: ../src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Mempool.Repositories
+  syntax:
+    content: bool TryReadItem(ByteString signature)
+    parameters:
+    - id: signature
+      type: ByteString
+    return:
+      type: System.Boolean
+    content.vb: Function TryReadItem(signature As ByteString) As Boolean
+  overload: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.TryReadItem*
+  nameWithType.vb: IMempoolRepository(Of T).TryReadItem(ByteString)
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T).TryReadItem(ByteString)
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.ReadItem(ByteString)
+  commentId: M:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.ReadItem(ByteString)
+  id: ReadItem(ByteString)
+  parent: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  langs:
+  - csharp
+  - vb
+  name: ReadItem(ByteString)
+  nameWithType: IMempoolRepository<T>.ReadItem(ByteString)
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>.ReadItem(ByteString)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ReadItem
+    path: ../src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Mempool.Repositories
+  syntax:
+    content: T ReadItem(ByteString signature)
+    parameters:
+    - id: signature
+      type: ByteString
+    return:
+      type: '{T}'
+    content.vb: Function ReadItem(signature As ByteString) As T
+  overload: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.ReadItem*
+  nameWithType.vb: IMempoolRepository(Of T).ReadItem(ByteString)
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T).ReadItem(ByteString)
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.DeleteItem(System.String[])
+  commentId: M:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.DeleteItem(System.String[])
+  id: DeleteItem(System.String[])
+  parent: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  langs:
+  - csharp
+  - vb
+  name: DeleteItem(String[])
+  nameWithType: IMempoolRepository<T>.DeleteItem(String[])
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>.DeleteItem(System.String[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DeleteItem
+    path: ../src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+    startLine: 37
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Mempool.Repositories
+  syntax:
+    content: bool DeleteItem(params string[] transactionSignatures)
+    parameters:
+    - id: transactionSignatures
+      type: System.String[]
+    return:
+      type: System.Boolean
+    content.vb: Function DeleteItem(ParamArray transactionSignatures As String()) As Boolean
+  overload: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.DeleteItem*
+  nameWithType.vb: IMempoolRepository(Of T).DeleteItem(String())
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T).DeleteItem(System.String())
+  name.vb: DeleteItem(String())
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.CreateItem(Catalyst.Protocol.Wire.TransactionBroadcast)
+  commentId: M:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.CreateItem(Catalyst.Protocol.Wire.TransactionBroadcast)
+  id: CreateItem(Catalyst.Protocol.Wire.TransactionBroadcast)
+  parent: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  langs:
+  - csharp
+  - vb
+  name: CreateItem(TransactionBroadcast)
+  nameWithType: IMempoolRepository<T>.CreateItem(TransactionBroadcast)
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>.CreateItem(Catalyst.Protocol.Wire.TransactionBroadcast)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CreateItem
+    path: ../src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Mempool.Repositories
+  syntax:
+    content: bool CreateItem(TransactionBroadcast transactionBroadcast)
+    parameters:
+    - id: transactionBroadcast
+      type: Catalyst.Protocol.Wire.TransactionBroadcast
+    return:
+      type: System.Boolean
+    content.vb: Function CreateItem(transactionBroadcast As TransactionBroadcast) As Boolean
+  overload: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.CreateItem*
+  nameWithType.vb: IMempoolRepository(Of T).CreateItem(TransactionBroadcast)
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T).CreateItem(Catalyst.Protocol.Wire.TransactionBroadcast)
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.GetAll
+  commentId: M:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.GetAll
+  id: GetAll
+  parent: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  langs:
+  - csharp
+  - vb
+  name: GetAll()
+  nameWithType: IMempoolRepository<T>.GetAll()
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>.GetAll()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetAll
+    path: ../src/Catalyst.Abstractions/Mempool/Repositories/IMempoolRepository.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Mempool.Repositories
+  syntax:
+    content: IEnumerable<TransactionBroadcast> GetAll()
+    return:
+      type: System.Collections.Generic.IEnumerable{Catalyst.Protocol.Wire.TransactionBroadcast}
+    content.vb: Function GetAll As IEnumerable(Of TransactionBroadcast)
+  overload: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.GetAll*
+  nameWithType.vb: IMempoolRepository(Of T).GetAll()
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T).GetAll()
+references:
+- uid: Catalyst.Abstractions.Mempool.Repositories
+  commentId: N:Catalyst.Abstractions.Mempool.Repositories
+  name: Catalyst.Abstractions.Mempool.Repositories
+  nameWithType: Catalyst.Abstractions.Mempool.Repositories
+  fullName: Catalyst.Abstractions.Mempool.Repositories
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.TryReadItem*
+  commentId: Overload:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.TryReadItem
+  name: TryReadItem
+  nameWithType: IMempoolRepository<T>.TryReadItem
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>.TryReadItem
+  nameWithType.vb: IMempoolRepository(Of T).TryReadItem
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T).TryReadItem
+- uid: ByteString
+  isExternal: true
+  name: ByteString
+  nameWithType: ByteString
+  fullName: ByteString
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.ReadItem*
+  commentId: Overload:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.ReadItem
+  name: ReadItem
+  nameWithType: IMempoolRepository<T>.ReadItem
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>.ReadItem
+  nameWithType.vb: IMempoolRepository(Of T).ReadItem
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T).ReadItem
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.DeleteItem*
+  commentId: Overload:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.DeleteItem
+  name: DeleteItem
+  nameWithType: IMempoolRepository<T>.DeleteItem
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>.DeleteItem
+  nameWithType.vb: IMempoolRepository(Of T).DeleteItem
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T).DeleteItem
+- uid: System.String[]
+  isExternal: true
+  name: String[]
+  nameWithType: String[]
+  fullName: System.String[]
+  nameWithType.vb: String()
+  fullName.vb: System.String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.CreateItem*
+  commentId: Overload:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.CreateItem
+  name: CreateItem
+  nameWithType: IMempoolRepository<T>.CreateItem
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>.CreateItem
+  nameWithType.vb: IMempoolRepository(Of T).CreateItem
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T).CreateItem
+- uid: Catalyst.Protocol.Wire.TransactionBroadcast
+  commentId: T:Catalyst.Protocol.Wire.TransactionBroadcast
+  parent: Catalyst.Protocol.Wire
+  name: TransactionBroadcast
+  nameWithType: TransactionBroadcast
+  fullName: Catalyst.Protocol.Wire.TransactionBroadcast
+- uid: Catalyst.Protocol.Wire
+  commentId: N:Catalyst.Protocol.Wire
+  name: Catalyst.Protocol.Wire
+  nameWithType: Catalyst.Protocol.Wire
+  fullName: Catalyst.Protocol.Wire
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.GetAll*
+  commentId: Overload:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1.GetAll
+  name: GetAll
+  nameWithType: IMempoolRepository<T>.GetAll
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>.GetAll
+  nameWithType.vb: IMempoolRepository(Of T).GetAll
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T).GetAll
+- uid: System.Collections.Generic.IEnumerable{Catalyst.Protocol.Wire.TransactionBroadcast}
+  commentId: T:System.Collections.Generic.IEnumerable{Catalyst.Protocol.Wire.TransactionBroadcast}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<TransactionBroadcast>
+  nameWithType: IEnumerable<TransactionBroadcast>
+  fullName: System.Collections.Generic.IEnumerable<Catalyst.Protocol.Wire.TransactionBroadcast>
+  nameWithType.vb: IEnumerable(Of TransactionBroadcast)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of Catalyst.Protocol.Wire.TransactionBroadcast)
+  name.vb: IEnumerable(Of TransactionBroadcast)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.TransactionBroadcast
+    name: TransactionBroadcast
+    nameWithType: TransactionBroadcast
+    fullName: Catalyst.Protocol.Wire.TransactionBroadcast
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.TransactionBroadcast
+    name: TransactionBroadcast
+    nameWithType: TransactionBroadcast
+    fullName: Catalyst.Protocol.Wire.TransactionBroadcast
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic

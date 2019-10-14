@@ -1,0 +1,1169 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  commentId: T:Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  id: DeltaDfsHashBroadcastDao
+  parent: Catalyst.Core.Lib.DAO.Deltas
+  children:
+  - Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.DeltaDfsHash
+  - Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.InitMappers(IMapperConfigurationExpression)
+  - Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.PreviousDeltaDfsHash
+  langs:
+  - csharp
+  - vb
+  name: DeltaDfsHashBroadcastDao
+  nameWithType: DeltaDfsHashBroadcastDao
+  fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/Deltas/DeltaDfsHashBroadcastDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DeltaDfsHashBroadcastDao
+    path: ../src/Catalyst.Core.Lib/DAO/Deltas/DeltaDfsHashBroadcastDao.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO.Deltas
+  syntax:
+    content: 'public class DeltaDfsHashBroadcastDao : DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>, IMapperInitializer, IValueConverter<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>'
+    content.vb: >-
+      Public Class DeltaDfsHashBroadcastDao
+
+          Inherits DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao)
+
+          Implements IMapperInitializer, IValueConverter(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao)
+  inheritance:
+  - System.Object
+  - Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  implements:
+  - Catalyst.Abstractions.DAO.IMapperInitializer
+  - IValueConverter{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  inheritedMembers:
+  - Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.Id
+  - Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.ToProtoBuff
+  - Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.ToDao(DeltaDfsHashBroadcast)
+  - Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.InitMappers(IMapperConfigurationExpression)
+  - Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.Convert(DeltaDfsHashBroadcast,ResolutionContext)
+  - Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.Convert(Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao,ResolutionContext)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.DeltaDfsHash
+  commentId: P:Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.DeltaDfsHash
+  id: DeltaDfsHash
+  parent: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  langs:
+  - csharp
+  - vb
+  name: DeltaDfsHash
+  nameWithType: DeltaDfsHashBroadcastDao.DeltaDfsHash
+  fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.DeltaDfsHash
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/Deltas/DeltaDfsHashBroadcastDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DeltaDfsHash
+    path: ../src/Catalyst.Core.Lib/DAO/Deltas/DeltaDfsHashBroadcastDao.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO.Deltas
+  syntax:
+    content: public string DeltaDfsHash { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property DeltaDfsHash As String
+  overload: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.DeltaDfsHash*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.PreviousDeltaDfsHash
+  commentId: P:Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.PreviousDeltaDfsHash
+  id: PreviousDeltaDfsHash
+  parent: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  langs:
+  - csharp
+  - vb
+  name: PreviousDeltaDfsHash
+  nameWithType: DeltaDfsHashBroadcastDao.PreviousDeltaDfsHash
+  fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.PreviousDeltaDfsHash
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/Deltas/DeltaDfsHashBroadcastDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PreviousDeltaDfsHash
+    path: ../src/Catalyst.Core.Lib/DAO/Deltas/DeltaDfsHashBroadcastDao.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO.Deltas
+  syntax:
+    content: public string PreviousDeltaDfsHash { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property PreviousDeltaDfsHash As String
+  overload: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.PreviousDeltaDfsHash*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.InitMappers(IMapperConfigurationExpression)
+  id: InitMappers(IMapperConfigurationExpression)
+  parent: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  langs:
+  - csharp
+  - vb
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: DeltaDfsHashBroadcastDao.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.InitMappers(IMapperConfigurationExpression)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/Deltas/DeltaDfsHashBroadcastDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: InitMappers
+    path: ../src/Catalyst.Core.Lib/DAO/Deltas/DeltaDfsHashBroadcastDao.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO.Deltas
+  syntax:
+    content: public override void InitMappers(IMapperConfigurationExpression cfg)
+    parameters:
+    - id: cfg
+      type: IMapperConfigurationExpression
+    content.vb: Public Overrides Sub InitMappers(cfg As IMapperConfigurationExpression)
+  overridden: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.InitMappers(IMapperConfigurationExpression)
+  overload: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.InitMappers*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: Catalyst.Core.Lib.DAO.Deltas
+  commentId: N:Catalyst.Core.Lib.DAO.Deltas
+  name: Catalyst.Core.Lib.DAO.Deltas
+  nameWithType: Catalyst.Core.Lib.DAO.Deltas
+  fullName: Catalyst.Core.Lib.DAO.Deltas
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  commentId: T:Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  parent: Catalyst.Core.Lib.DAO
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2
+  name: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>
+  nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>
+  nameWithType.vb: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao)
+  name.vb: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: DeltaDfsHashBroadcast
+    name: DeltaDfsHashBroadcast
+    nameWithType: DeltaDfsHashBroadcast
+    fullName: DeltaDfsHashBroadcast
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+    name: DeltaDfsHashBroadcastDao
+    nameWithType: DeltaDfsHashBroadcastDao
+    fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: DeltaDfsHashBroadcast
+    name: DeltaDfsHashBroadcast
+    nameWithType: DeltaDfsHashBroadcast
+    fullName: DeltaDfsHashBroadcast
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+    name: DeltaDfsHashBroadcastDao
+    nameWithType: DeltaDfsHashBroadcastDao
+    fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.DAO.IMapperInitializer
+  commentId: T:Catalyst.Abstractions.DAO.IMapperInitializer
+  parent: Catalyst.Abstractions.DAO
+  name: IMapperInitializer
+  nameWithType: IMapperInitializer
+  fullName: Catalyst.Abstractions.DAO.IMapperInitializer
+- uid: IValueConverter{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  commentId: '!:IValueConverter{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}'
+  definition: IValueConverter`2
+  name: IValueConverter<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>
+  nameWithType: IValueConverter<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>
+  fullName: IValueConverter<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>
+  nameWithType.vb: IValueConverter(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao)
+  fullName.vb: IValueConverter(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao)
+  name.vb: IValueConverter(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao)
+  spec.csharp:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: DeltaDfsHashBroadcast
+    name: DeltaDfsHashBroadcast
+    nameWithType: DeltaDfsHashBroadcast
+    fullName: DeltaDfsHashBroadcast
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+    name: DeltaDfsHashBroadcastDao
+    nameWithType: DeltaDfsHashBroadcastDao
+    fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: DeltaDfsHashBroadcast
+    name: DeltaDfsHashBroadcast
+    nameWithType: DeltaDfsHashBroadcast
+    fullName: DeltaDfsHashBroadcast
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+    name: DeltaDfsHashBroadcastDao
+    nameWithType: DeltaDfsHashBroadcastDao
+    fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.Id
+  commentId: P:Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.Id
+  parent: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  name: Id
+  nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.Id
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.Id
+  nameWithType.vb: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).Id
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).Id
+- uid: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.ToProtoBuff
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.ToProtoBuff
+  parent: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  name: ToProtoBuff()
+  nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.ToProtoBuff()
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.ToProtoBuff()
+  nameWithType.vb: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).ToProtoBuff()
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).ToProtoBuff()
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.ToDao(DeltaDfsHashBroadcast)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.ToDao(DeltaDfsHashBroadcast)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  name: ToDao(DeltaDfsHashBroadcast)
+  nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.ToDao(DeltaDfsHashBroadcast)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.ToDao(DeltaDfsHashBroadcast)
+  nameWithType.vb: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).ToDao(DeltaDfsHashBroadcast)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).ToDao(DeltaDfsHashBroadcast)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DeltaDfsHashBroadcast
+    name: DeltaDfsHashBroadcast
+    nameWithType: DeltaDfsHashBroadcast
+    fullName: DeltaDfsHashBroadcast
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DeltaDfsHashBroadcast
+    name: DeltaDfsHashBroadcast
+    nameWithType: DeltaDfsHashBroadcast
+    fullName: DeltaDfsHashBroadcast
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.InitMappers(IMapperConfigurationExpression)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.InitMappers(IMapperConfigurationExpression)
+  nameWithType.vb: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).InitMappers(IMapperConfigurationExpression)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).InitMappers(IMapperConfigurationExpression)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.Convert(DeltaDfsHashBroadcast,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.Convert(DeltaDfsHashBroadcast,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  name: Convert(DeltaDfsHashBroadcast, ResolutionContext)
+  nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.Convert(DeltaDfsHashBroadcast, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.Convert(DeltaDfsHashBroadcast, ResolutionContext)
+  nameWithType.vb: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).Convert(DeltaDfsHashBroadcast, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).Convert(DeltaDfsHashBroadcast, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DeltaDfsHashBroadcast
+    name: DeltaDfsHashBroadcast
+    nameWithType: DeltaDfsHashBroadcast
+    fullName: DeltaDfsHashBroadcast
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: DeltaDfsHashBroadcast
+    name: DeltaDfsHashBroadcast
+    nameWithType: DeltaDfsHashBroadcast
+    fullName: DeltaDfsHashBroadcast
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.Convert(Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}.Convert(Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{DeltaDfsHashBroadcast,Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  name: Convert(DeltaDfsHashBroadcastDao, ResolutionContext)
+  nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.Convert(DeltaDfsHashBroadcastDao, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.Convert(Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao, ResolutionContext)
+  nameWithType.vb: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).Convert(DeltaDfsHashBroadcastDao, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).Convert(Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+    name: DeltaDfsHashBroadcastDao
+    nameWithType: DeltaDfsHashBroadcastDao
+    fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of DeltaDfsHashBroadcast, Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+    name: DeltaDfsHashBroadcastDao
+    nameWithType: DeltaDfsHashBroadcastDao
+    fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2
+  commentId: T:Catalyst.Core.Lib.DAO.DaoBase`2
+  name: DaoBase<TProto, TDao>
+  nameWithType: DaoBase<TProto, TDao>
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>
+  nameWithType.vb: DaoBase(Of TProto, TDao)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao)
+  name.vb: DaoBase(Of TProto, TDao)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO
+  commentId: N:Catalyst.Core.Lib.DAO
+  name: Catalyst.Core.Lib.DAO
+  nameWithType: Catalyst.Core.Lib.DAO
+  fullName: Catalyst.Core.Lib.DAO
+- uid: Catalyst.Abstractions.DAO
+  commentId: N:Catalyst.Abstractions.DAO
+  name: Catalyst.Abstractions.DAO
+  nameWithType: Catalyst.Abstractions.DAO
+  fullName: Catalyst.Abstractions.DAO
+- uid: IValueConverter`2
+  isExternal: true
+  name: IValueConverter<, >
+  nameWithType: IValueConverter<, >
+  fullName: IValueConverter<, >
+  nameWithType.vb: IValueConverter(Of , )
+  fullName.vb: IValueConverter(Of , )
+  name.vb: IValueConverter(Of , )
+  spec.csharp:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  commentId: P:Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  name: Id
+  nameWithType: DaoBase<TProto, TDao>.Id
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Id
+  nameWithType.vb: DaoBase(Of TProto, TDao).Id
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Id
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  name: ToProtoBuff()
+  nameWithType: DaoBase<TProto, TDao>.ToProtoBuff()
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToProtoBuff()
+  nameWithType.vb: DaoBase(Of TProto, TDao).ToProtoBuff()
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToProtoBuff()
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase<TProto, TDao>.ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase(Of TProto, TDao).ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  name: ToDao(TProto)
+  nameWithType: DaoBase<TProto, TDao>.ToDao(TProto)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToDao(TProto)
+  nameWithType.vb: DaoBase(Of TProto, TDao).ToDao(TProto)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToDao(TProto)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase<TProto, TDao>.ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase(Of TProto, TDao).ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  isExternal: true
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: DaoBase<TProto, TDao>.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.InitMappers(IMapperConfigurationExpression)
+  nameWithType.vb: DaoBase(Of TProto, TDao).InitMappers(IMapperConfigurationExpression)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).InitMappers(IMapperConfigurationExpression)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase<TProto, TDao>.InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase(Of TProto, TDao).InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  isExternal: true
+  name: Convert(TProto, ResolutionContext)
+  nameWithType: DaoBase<TProto, TDao>.Convert(TProto, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert(TProto, ResolutionContext)
+  nameWithType.vb: DaoBase(Of TProto, TDao).Convert(TProto, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert(TProto, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<TProto, TDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of TProto, TDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  isExternal: true
+  name: Convert(TDao, ResolutionContext)
+  nameWithType: DaoBase<TProto, TDao>.Convert(TDao, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert(TDao, ResolutionContext)
+  nameWithType.vb: DaoBase(Of TProto, TDao).Convert(TDao, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert(TDao, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<TProto, TDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of TProto, TDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.DeltaDfsHash*
+  commentId: Overload:Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.DeltaDfsHash
+  name: DeltaDfsHash
+  nameWithType: DeltaDfsHashBroadcastDao.DeltaDfsHash
+  fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.DeltaDfsHash
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.PreviousDeltaDfsHash*
+  commentId: Overload:Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.PreviousDeltaDfsHash
+  name: PreviousDeltaDfsHash
+  nameWithType: DeltaDfsHashBroadcastDao.PreviousDeltaDfsHash
+  fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.PreviousDeltaDfsHash
+- uid: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.InitMappers*
+  commentId: Overload:Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.InitMappers
+  name: InitMappers
+  nameWithType: DeltaDfsHashBroadcastDao.InitMappers
+  fullName: Catalyst.Core.Lib.DAO.Deltas.DeltaDfsHashBroadcastDao.InitMappers
+- uid: IMapperConfigurationExpression
+  isExternal: true
+  name: IMapperConfigurationExpression
+  nameWithType: IMapperConfigurationExpression
+  fullName: IMapperConfigurationExpression

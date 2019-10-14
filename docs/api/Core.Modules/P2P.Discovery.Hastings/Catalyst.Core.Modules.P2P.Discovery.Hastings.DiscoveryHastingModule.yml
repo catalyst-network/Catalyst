@@ -1,0 +1,109 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule
+  commentId: T:Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule
+  id: DiscoveryHastingModule
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  children:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule.Load(ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: DiscoveryHastingModule
+  nameWithType: DiscoveryHastingModule
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/DiscoveryHastingModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: DiscoveryHastingModule
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/DiscoveryHastingModule.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  syntax:
+    content: 'public class DiscoveryHastingModule : Module'
+    content.vb: >-
+      Public Class DiscoveryHastingModule
+
+          Inherits
+
+
+
+           Module
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule.Load(ContainerBuilder)
+  commentId: M:Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule.Load(ContainerBuilder)
+  id: Load(ContainerBuilder)
+  parent: Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule
+  langs:
+  - csharp
+  - vb
+  name: Load(ContainerBuilder)
+  nameWithType: DiscoveryHastingModule.Load(ContainerBuilder)
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule.Load(ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.P2P.Discovery.Hastings/DiscoveryHastingModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Load
+    path: ../src/Catalyst.Core.Modules.P2P.Discovery.Hastings/DiscoveryHastingModule.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Modules.P2P.Discovery.Hastings
+  namespace: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  syntax:
+    content: protected override void Load(ContainerBuilder builder)
+    parameters:
+    - id: builder
+      type: ContainerBuilder
+    content.vb: Protected Overrides Sub Load(builder As ContainerBuilder)
+  overload: Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule.Load*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  commentId: N:Catalyst.Core.Modules.P2P.Discovery.Hastings
+  name: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  nameWithType: Catalyst.Core.Modules.P2P.Discovery.Hastings
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule.Load*
+  commentId: Overload:Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule.Load
+  name: Load
+  nameWithType: DiscoveryHastingModule.Load
+  fullName: Catalyst.Core.Modules.P2P.Discovery.Hastings.DiscoveryHastingModule.Load
+- uid: ContainerBuilder
+  commentId: '!:ContainerBuilder'
+  isExternal: true
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: ContainerBuilder

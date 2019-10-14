@@ -1,0 +1,140 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  commentId: T:Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  id: IPeerReputationChange
+  parent: Catalyst.Abstractions.P2P.ReputationSystem
+  children:
+  - Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.PeerId
+  - Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.ReputationEvent
+  langs:
+  - csharp
+  - vb
+  name: IPeerReputationChange
+  nameWithType: IPeerReputationChange
+  fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/ReputationSystem/IPeerReputationChange.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IPeerReputationChange
+    path: ../src/Catalyst.Abstractions/P2P/ReputationSystem/IPeerReputationChange.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.ReputationSystem
+  syntax:
+    content: public interface IPeerReputationChange
+    content.vb: Public Interface IPeerReputationChange
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.PeerId
+  commentId: P:Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.PeerId
+  id: PeerId
+  parent: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  langs:
+  - csharp
+  - vb
+  name: PeerId
+  nameWithType: IPeerReputationChange.PeerId
+  fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.PeerId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/ReputationSystem/IPeerReputationChange.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerId
+    path: ../src/Catalyst.Abstractions/P2P/ReputationSystem/IPeerReputationChange.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.ReputationSystem
+  syntax:
+    content: PeerId PeerId { get; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: ReadOnly Property PeerId As PeerId
+  overload: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.PeerId*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.ReputationEvent
+  commentId: P:Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.ReputationEvent
+  id: ReputationEvent
+  parent: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange
+  langs:
+  - csharp
+  - vb
+  name: ReputationEvent
+  nameWithType: IPeerReputationChange.ReputationEvent
+  fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.ReputationEvent
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/P2P/ReputationSystem/IPeerReputationChange.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ReputationEvent
+    path: ../src/Catalyst.Abstractions/P2P/ReputationSystem/IPeerReputationChange.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.P2P.ReputationSystem
+  syntax:
+    content: IReputationEvents ReputationEvent { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Config.IReputationEvents
+    content.vb: ReadOnly Property ReputationEvent As IReputationEvents
+  overload: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.ReputationEvent*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.P2P.ReputationSystem
+  commentId: N:Catalyst.Abstractions.P2P.ReputationSystem
+  name: Catalyst.Abstractions.P2P.ReputationSystem
+  nameWithType: Catalyst.Abstractions.P2P.ReputationSystem
+  fullName: Catalyst.Abstractions.P2P.ReputationSystem
+- uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.PeerId*
+  commentId: Overload:Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.PeerId
+  name: PeerId
+  nameWithType: IPeerReputationChange.PeerId
+  fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.PeerId
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.ReputationEvent*
+  commentId: Overload:Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.ReputationEvent
+  name: ReputationEvent
+  nameWithType: IPeerReputationChange.ReputationEvent
+  fullName: Catalyst.Abstractions.P2P.ReputationSystem.IPeerReputationChange.ReputationEvent
+- uid: Catalyst.Abstractions.Config.IReputationEvents
+  commentId: T:Catalyst.Abstractions.Config.IReputationEvents
+  parent: Catalyst.Abstractions.Config
+  name: IReputationEvents
+  nameWithType: IReputationEvents
+  fullName: Catalyst.Abstractions.Config.IReputationEvents
+- uid: Catalyst.Abstractions.Config
+  commentId: N:Catalyst.Abstractions.Config
+  name: Catalyst.Abstractions.Config
+  nameWithType: Catalyst.Abstractions.Config
+  fullName: Catalyst.Abstractions.Config

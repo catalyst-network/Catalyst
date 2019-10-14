@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Mempool
+  commentId: N:Catalyst.Core.Modules.Mempool
+  id: Catalyst.Core.Modules.Mempool
+  children:
+  - Catalyst.Core.Modules.Mempool.Mempool
+  - Catalyst.Core.Modules.Mempool.MempoolModule
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Modules.Mempool
+  nameWithType: Catalyst.Core.Modules.Mempool
+  fullName: Catalyst.Core.Modules.Mempool
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Modules.Mempool
+references:
+- uid: Catalyst.Core.Modules.Mempool.Mempool
+  commentId: T:Catalyst.Core.Modules.Mempool.Mempool
+  name: Mempool
+  nameWithType: Mempool
+  fullName: Catalyst.Core.Modules.Mempool.Mempool
+- uid: Catalyst.Core.Modules.Mempool.MempoolModule
+  commentId: T:Catalyst.Core.Modules.Mempool.MempoolModule
+  name: MempoolModule
+  nameWithType: MempoolModule
+  fullName: Catalyst.Core.Modules.Mempool.MempoolModule

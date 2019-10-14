@@ -1,0 +1,301 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig
+  commentId: T:Catalyst.Abstractions.Rpc.IRpcClientConfig
+  id: IRpcClientConfig
+  parent: Catalyst.Abstractions.Rpc
+  children:
+  - Catalyst.Abstractions.Rpc.IRpcClientConfig.HostAddress
+  - Catalyst.Abstractions.Rpc.IRpcClientConfig.NodeId
+  - Catalyst.Abstractions.Rpc.IRpcClientConfig.PfxFileName
+  - Catalyst.Abstractions.Rpc.IRpcClientConfig.Port
+  - Catalyst.Abstractions.Rpc.IRpcClientConfig.PublicKey
+  - Catalyst.Abstractions.Rpc.IRpcClientConfig.SslCertPassword
+  langs:
+  - csharp
+  - vb
+  name: IRpcClientConfig
+  nameWithType: IRpcClientConfig
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IRpcClientConfig
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: public interface IRpcClientConfig
+    content.vb: Public Interface IRpcClientConfig
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.NodeId
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcClientConfig.NodeId
+  id: NodeId
+  parent: Catalyst.Abstractions.Rpc.IRpcClientConfig
+  langs:
+  - csharp
+  - vb
+  name: NodeId
+  nameWithType: IRpcClientConfig.NodeId
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.NodeId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: NodeId
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: string NodeId { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property NodeId As String
+  overload: Catalyst.Abstractions.Rpc.IRpcClientConfig.NodeId*
+  modifiers.csharp:
+  - get
+  - set
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.HostAddress
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcClientConfig.HostAddress
+  id: HostAddress
+  parent: Catalyst.Abstractions.Rpc.IRpcClientConfig
+  langs:
+  - csharp
+  - vb
+  name: HostAddress
+  nameWithType: IRpcClientConfig.HostAddress
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.HostAddress
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: HostAddress
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: IPAddress HostAddress { get; set; }
+    parameters: []
+    return:
+      type: System.Net.IPAddress
+    content.vb: Property HostAddress As IPAddress
+  overload: Catalyst.Abstractions.Rpc.IRpcClientConfig.HostAddress*
+  modifiers.csharp:
+  - get
+  - set
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.Port
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcClientConfig.Port
+  id: Port
+  parent: Catalyst.Abstractions.Rpc.IRpcClientConfig
+  langs:
+  - csharp
+  - vb
+  name: Port
+  nameWithType: IRpcClientConfig.Port
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.Port
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Port
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: int Port { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Property Port As Integer
+  overload: Catalyst.Abstractions.Rpc.IRpcClientConfig.Port*
+  modifiers.csharp:
+  - get
+  - set
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.PfxFileName
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcClientConfig.PfxFileName
+  id: PfxFileName
+  parent: Catalyst.Abstractions.Rpc.IRpcClientConfig
+  langs:
+  - csharp
+  - vb
+  name: PfxFileName
+  nameWithType: IRpcClientConfig.PfxFileName
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.PfxFileName
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PfxFileName
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: string PfxFileName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property PfxFileName As String
+  overload: Catalyst.Abstractions.Rpc.IRpcClientConfig.PfxFileName*
+  modifiers.csharp:
+  - get
+  - set
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.SslCertPassword
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcClientConfig.SslCertPassword
+  id: SslCertPassword
+  parent: Catalyst.Abstractions.Rpc.IRpcClientConfig
+  langs:
+  - csharp
+  - vb
+  name: SslCertPassword
+  nameWithType: IRpcClientConfig.SslCertPassword
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.SslCertPassword
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: SslCertPassword
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: string SslCertPassword { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property SslCertPassword As String
+  overload: Catalyst.Abstractions.Rpc.IRpcClientConfig.SslCertPassword*
+  modifiers.csharp:
+  - get
+  - set
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.PublicKey
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcClientConfig.PublicKey
+  id: PublicKey
+  parent: Catalyst.Abstractions.Rpc.IRpcClientConfig
+  langs:
+  - csharp
+  - vb
+  name: PublicKey
+  nameWithType: IRpcClientConfig.PublicKey
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.PublicKey
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PublicKey
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcClientConfig.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: string PublicKey { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property PublicKey As String
+  overload: Catalyst.Abstractions.Rpc.IRpcClientConfig.PublicKey*
+  modifiers.csharp:
+  - get
+  - set
+references:
+- uid: Catalyst.Abstractions.Rpc
+  commentId: N:Catalyst.Abstractions.Rpc
+  name: Catalyst.Abstractions.Rpc
+  nameWithType: Catalyst.Abstractions.Rpc
+  fullName: Catalyst.Abstractions.Rpc
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.NodeId*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcClientConfig.NodeId
+  name: NodeId
+  nameWithType: IRpcClientConfig.NodeId
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.NodeId
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.HostAddress*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcClientConfig.HostAddress
+  name: HostAddress
+  nameWithType: IRpcClientConfig.HostAddress
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.HostAddress
+- uid: System.Net.IPAddress
+  commentId: T:System.Net.IPAddress
+  parent: System.Net
+  isExternal: true
+  name: IPAddress
+  nameWithType: IPAddress
+  fullName: System.Net.IPAddress
+- uid: System.Net
+  commentId: N:System.Net
+  isExternal: true
+  name: System.Net
+  nameWithType: System.Net
+  fullName: System.Net
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.Port*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcClientConfig.Port
+  name: Port
+  nameWithType: IRpcClientConfig.Port
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.Port
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.PfxFileName*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcClientConfig.PfxFileName
+  name: PfxFileName
+  nameWithType: IRpcClientConfig.PfxFileName
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.PfxFileName
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.SslCertPassword*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcClientConfig.SslCertPassword
+  name: SslCertPassword
+  nameWithType: IRpcClientConfig.SslCertPassword
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.SslCertPassword
+- uid: Catalyst.Abstractions.Rpc.IRpcClientConfig.PublicKey*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcClientConfig.PublicKey
+  name: PublicKey
+  nameWithType: IRpcClientConfig.PublicKey
+  fullName: Catalyst.Abstractions.Rpc.IRpcClientConfig.PublicKey

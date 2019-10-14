@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Mempool.Documents
+  commentId: N:Catalyst.Abstractions.Mempool.Documents
+  id: Catalyst.Abstractions.Mempool.Documents
+  children:
+  - Catalyst.Abstractions.Mempool.Documents.IMempoolDocument
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Mempool.Documents
+  nameWithType: Catalyst.Abstractions.Mempool.Documents
+  fullName: Catalyst.Abstractions.Mempool.Documents
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Mempool.Documents.IMempoolDocument
+  commentId: T:Catalyst.Abstractions.Mempool.Documents.IMempoolDocument
+  name: IMempoolDocument
+  nameWithType: IMempoolDocument
+  fullName: Catalyst.Abstractions.Mempool.Documents.IMempoolDocument

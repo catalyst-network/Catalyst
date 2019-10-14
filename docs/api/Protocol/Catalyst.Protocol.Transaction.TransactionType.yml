@@ -1,0 +1,190 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Transaction.TransactionType
+  commentId: T:Catalyst.Protocol.Transaction.TransactionType
+  id: TransactionType
+  parent: Catalyst.Protocol.Transaction
+  children:
+  - Catalyst.Protocol.Transaction.TransactionType.Confidential
+  - Catalyst.Protocol.Transaction.TransactionType.Public
+  - Catalyst.Protocol.Transaction.TransactionType.Unknown
+  langs:
+  - csharp
+  - vb
+  name: TransactionType
+  nameWithType: TransactionType
+  fullName: Catalyst.Protocol.Transaction.TransactionType
+  type: Enum
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: TransactionType
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 56
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  syntax:
+    content: public enum TransactionType
+    content.vb: Public Enum TransactionType
+  modifiers.csharp:
+  - public
+  - enum
+  modifiers.vb:
+  - Public
+  - Enum
+- uid: Catalyst.Protocol.Transaction.TransactionType.Unknown
+  commentId: F:Catalyst.Protocol.Transaction.TransactionType.Unknown
+  id: Unknown
+  parent: Catalyst.Protocol.Transaction.TransactionType
+  langs:
+  - csharp
+  - vb
+  name: Unknown
+  nameWithType: TransactionType.Unknown
+  fullName: Catalyst.Protocol.Transaction.TransactionType.Unknown
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Unknown
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 60
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  summary: "\nUnknown transaction type.\n"
+  example: []
+  syntax:
+    content: >-
+      [OriginalName("TRANSACTION_TYPE_UNKNOWN")]
+
+      Unknown = 0
+    return:
+      type: Catalyst.Protocol.Transaction.TransactionType
+    content.vb: >-
+      <OriginalName("TRANSACTION_TYPE_UNKNOWN")>
+
+      Unknown = 0
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: TRANSACTION_TYPE_UNKNOWN
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Transaction.TransactionType.Public
+  commentId: F:Catalyst.Protocol.Transaction.TransactionType.Public
+  id: Public
+  parent: Catalyst.Protocol.Transaction.TransactionType
+  langs:
+  - csharp
+  - vb
+  name: Public
+  nameWithType: TransactionType.Public
+  fullName: Catalyst.Protocol.Transaction.TransactionType.Public
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Public
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 64
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  summary: "\nPublic transaction type.\n"
+  example: []
+  syntax:
+    content: >-
+      [OriginalName("PUBLIC")]
+
+      Public = 1
+    return:
+      type: Catalyst.Protocol.Transaction.TransactionType
+    content.vb: >-
+      <OriginalName("PUBLIC")>
+
+      Public = 1
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: PUBLIC
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Transaction.TransactionType.Confidential
+  commentId: F:Catalyst.Protocol.Transaction.TransactionType.Confidential
+  id: Confidential
+  parent: Catalyst.Protocol.Transaction.TransactionType
+  langs:
+  - csharp
+  - vb
+  name: Confidential
+  nameWithType: TransactionType.Confidential
+  fullName: Catalyst.Protocol.Transaction.TransactionType.Confidential
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Confidential
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Transaction.cs
+    startLine: 68
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Transaction
+  summary: "\nPrivate transaction type.\n"
+  example: []
+  syntax:
+    content: >-
+      [OriginalName("CONFIDENTIAL")]
+
+      Confidential = 2
+    return:
+      type: Catalyst.Protocol.Transaction.TransactionType
+    content.vb: >-
+      <OriginalName("CONFIDENTIAL")>
+
+      Confidential = 2
+  attributes:
+  - type: Google.Protobuf.Reflection.OriginalNameAttribute
+    ctor: Google.Protobuf.Reflection.OriginalNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: CONFIDENTIAL
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+references:
+- uid: Catalyst.Protocol.Transaction
+  commentId: N:Catalyst.Protocol.Transaction
+  name: Catalyst.Protocol.Transaction
+  nameWithType: Catalyst.Protocol.Transaction
+  fullName: Catalyst.Protocol.Transaction
+- uid: Catalyst.Protocol.Transaction.TransactionType
+  commentId: T:Catalyst.Protocol.Transaction.TransactionType
+  parent: Catalyst.Protocol.Transaction
+  name: TransactionType
+  nameWithType: TransactionType
+  fullName: Catalyst.Protocol.Transaction.TransactionType

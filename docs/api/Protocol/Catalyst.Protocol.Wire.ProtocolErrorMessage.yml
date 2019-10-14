@@ -1,0 +1,1987 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  commentId: T:Catalyst.Protocol.Wire.ProtocolErrorMessage
+  id: ProtocolErrorMessage
+  parent: Catalyst.Protocol.Wire
+  children:
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.#ctor
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.#ctor(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.CalculateSize
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.Clone
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.Code
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.CodeFieldNumber
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationId
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationIdFieldNumber
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.Descriptor
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals(System.Object)
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.GetHashCode
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.Google#Protobuf#IMessage#Descriptor
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.Parser
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerId
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerIdFieldNumber
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.Signature
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.SignatureFieldNumber
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.ToString
+  - Catalyst.Protocol.Wire.ProtocolErrorMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  langs:
+  - csharp
+  - vb
+  name: ProtocolErrorMessage
+  nameWithType: ProtocolErrorMessage
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ProtocolErrorMessage
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 72
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  summary: "\n*\nProvides a network error message, for when a node cant send/ build a valid response\n"
+  example: []
+  syntax:
+    content: 'public sealed class ProtocolErrorMessage : IMessage<ProtocolErrorMessage>, IMessage, IEquatable<ProtocolErrorMessage>, IDeepCloneable<ProtocolErrorMessage>'
+    content.vb: >-
+      Public NotInheritable Class ProtocolErrorMessage
+          Implements IMessage(Of ProtocolErrorMessage), IMessage, IEquatable(Of ProtocolErrorMessage), IDeepCloneable(Of ProtocolErrorMessage)
+  inheritance:
+  - System.Object
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  - Google.Protobuf.IMessage
+  - System.IEquatable{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Parser
+  commentId: P:Catalyst.Protocol.Wire.ProtocolErrorMessage.Parser
+  id: Parser
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: Parser
+  nameWithType: ProtocolErrorMessage.Parser
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Parser
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Parser
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 75
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public static MessageParser<ProtocolErrorMessage> Parser { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.MessageParser{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+    content.vb: Public Shared ReadOnly Property Parser As MessageParser(Of ProtocolErrorMessage)
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.Parser*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Descriptor
+  commentId: P:Catalyst.Protocol.Wire.ProtocolErrorMessage.Descriptor
+  id: Descriptor
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: Descriptor
+  nameWithType: ProtocolErrorMessage.Descriptor
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 78
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public static MessageDescriptor Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: Public Shared ReadOnly Property Descriptor As MessageDescriptor
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.Descriptor*
+  modifiers.csharp:
+  - public
+  - static
+  - get
+  modifiers.vb:
+  - Public
+  - Shared
+  - ReadOnly
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Google#Protobuf#IMessage#Descriptor
+  commentId: P:Catalyst.Protocol.Wire.ProtocolErrorMessage.Google#Protobuf#IMessage#Descriptor
+  id: Google#Protobuf#IMessage#Descriptor
+  isEii: true
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: IMessage.Descriptor
+  nameWithType: ProtocolErrorMessage.IMessage.Descriptor
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Google.Protobuf.IMessage.Descriptor
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: pb::Google.Protobuf.IMessage.Descriptor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 83
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: MessageDescriptor IMessage.Descriptor { get; }
+    parameters: []
+    return:
+      type: Google.Protobuf.Reflection.MessageDescriptor
+    content.vb: ReadOnly WriteOnly Property pb::Google.Protobuf.IMessage.Descriptor As MessageDescriptor Implements IMessage.Descriptor
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.Google#Protobuf#IMessage#Descriptor*
+  implements:
+  - Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: ProtocolErrorMessage.pb::Google.Protobuf.IMessage.Descriptor
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+  fullName.vb: Catalyst.Protocol.Wire.ProtocolErrorMessage.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.#ctor
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.#ctor
+  id: '#ctor'
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: ProtocolErrorMessage()
+  nameWithType: ProtocolErrorMessage.ProtocolErrorMessage()
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.ProtocolErrorMessage()
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 88
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public ProtocolErrorMessage()
+    content.vb: Public Sub New
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.#ctor(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.#ctor(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  id: '#ctor(Catalyst.Protocol.Wire.ProtocolErrorMessage)'
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: ProtocolErrorMessage(ProtocolErrorMessage)
+  nameWithType: ProtocolErrorMessage.ProtocolErrorMessage(ProtocolErrorMessage)
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.ProtocolErrorMessage(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 95
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public ProtocolErrorMessage(ProtocolErrorMessage other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    content.vb: Public Sub New(other As ProtocolErrorMessage)
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Clone
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.Clone
+  id: Clone
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: Clone()
+  nameWithType: ProtocolErrorMessage.Clone()
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Clone()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Clone
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 104
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public ProtocolErrorMessage Clone()
+    return:
+      type: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    content.vb: Public Function Clone As ProtocolErrorMessage
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.Clone*
+  implements:
+  - Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.ProtocolErrorMessage}.Clone
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.SignatureFieldNumber
+  commentId: F:Catalyst.Protocol.Wire.ProtocolErrorMessage.SignatureFieldNumber
+  id: SignatureFieldNumber
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: SignatureFieldNumber
+  nameWithType: ProtocolErrorMessage.SignatureFieldNumber
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.SignatureFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: SignatureFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 110
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  summary: Field number for the &quot;signature&quot; field.
+  example: []
+  syntax:
+    content: public const int SignatureFieldNumber = 1
+    return:
+      type: System.Int32
+    content.vb: Public Const SignatureFieldNumber As Integer = 1
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Signature
+  commentId: P:Catalyst.Protocol.Wire.ProtocolErrorMessage.Signature
+  id: Signature
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: Signature
+  nameWithType: ProtocolErrorMessage.Signature
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Signature
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Signature
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 112
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public Signature Signature { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Cryptography.Signature
+    content.vb: Public Property Signature As Signature
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.Signature*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerIdFieldNumber
+  commentId: F:Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerIdFieldNumber
+  id: PeerIdFieldNumber
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: PeerIdFieldNumber
+  nameWithType: ProtocolErrorMessage.PeerIdFieldNumber
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerIdFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerIdFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 121
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  summary: Field number for the &quot;peer_id&quot; field.
+  example: []
+  syntax:
+    content: public const int PeerIdFieldNumber = 2
+    return:
+      type: System.Int32
+    content.vb: Public Const PeerIdFieldNumber As Integer = 2
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerId
+  commentId: P:Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerId
+  id: PeerId
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: PeerId
+  nameWithType: ProtocolErrorMessage.PeerId
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerId
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 123
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public PeerId PeerId { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Protocol.Peer.PeerId
+    content.vb: Public Property PeerId As PeerId
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerId*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationIdFieldNumber
+  commentId: F:Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationIdFieldNumber
+  id: CorrelationIdFieldNumber
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: CorrelationIdFieldNumber
+  nameWithType: ProtocolErrorMessage.CorrelationIdFieldNumber
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationIdFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CorrelationIdFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 132
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  summary: Field number for the &quot;correlation_id&quot; field.
+  example: []
+  syntax:
+    content: public const int CorrelationIdFieldNumber = 3
+    return:
+      type: System.Int32
+    content.vb: Public Const CorrelationIdFieldNumber As Integer = 3
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationId
+  commentId: P:Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationId
+  id: CorrelationId
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: CorrelationId
+  nameWithType: ProtocolErrorMessage.CorrelationId
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CorrelationId
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 134
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public ByteString CorrelationId { get; set; }
+    parameters: []
+    return:
+      type: Google.Protobuf.ByteString
+    content.vb: Public Property CorrelationId As ByteString
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationId*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.CodeFieldNumber
+  commentId: F:Catalyst.Protocol.Wire.ProtocolErrorMessage.CodeFieldNumber
+  id: CodeFieldNumber
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: CodeFieldNumber
+  nameWithType: ProtocolErrorMessage.CodeFieldNumber
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.CodeFieldNumber
+  type: Field
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CodeFieldNumber
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 143
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  summary: Field number for the &quot;code&quot; field.
+  example: []
+  syntax:
+    content: public const int CodeFieldNumber = 4
+    return:
+      type: System.Int32
+    content.vb: Public Const CodeFieldNumber As Integer = 4
+  modifiers.csharp:
+  - public
+  - const
+  modifiers.vb:
+  - Public
+  - Const
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Code
+  commentId: P:Catalyst.Protocol.Wire.ProtocolErrorMessage.Code
+  id: Code
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: Code
+  nameWithType: ProtocolErrorMessage.Code
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Code
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Code
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 145
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public int Code { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property Code As Integer
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.Code*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals(System.Object)
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: Equals(Object)
+  nameWithType: ProtocolErrorMessage.Equals(Object)
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals(System.Object)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 153
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public override bool Equals(object other)
+    parameters:
+    - id: other
+      type: System.Object
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides Function Equals(other As Object) As Boolean
+  overridden: System.Object.Equals(System.Object)
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  id: Equals(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: Equals(ProtocolErrorMessage)
+  nameWithType: ProtocolErrorMessage.Equals(ProtocolErrorMessage)
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Equals
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 158
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public bool Equals(ProtocolErrorMessage other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    return:
+      type: System.Boolean
+    content.vb: Public Function Equals(other As ProtocolErrorMessage) As Boolean
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals*
+  implements:
+  - System.IEquatable{Catalyst.Protocol.Wire.ProtocolErrorMessage}.Equals(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.GetHashCode
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.GetHashCode
+  id: GetHashCode
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: ProtocolErrorMessage.GetHashCode()
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetHashCode
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 173
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+    content.vb: Public Overrides Function GetHashCode As Integer
+  overridden: System.Object.GetHashCode
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.GetHashCode*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.ToString
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.ToString
+  id: ToString
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: ProtocolErrorMessage.ToString()
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ToString
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 186
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString As String
+  overridden: System.Object.ToString
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.ToString*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  id: WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: WriteTo(CodedOutputStream)
+  nameWithType: ProtocolErrorMessage.WriteTo(CodedOutputStream)
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: WriteTo
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 191
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public void WriteTo(CodedOutputStream output)
+    parameters:
+    - id: output
+      type: Google.Protobuf.CodedOutputStream
+    content.vb: Public Sub WriteTo(output As CodedOutputStream)
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.WriteTo*
+  implements:
+  - Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.CalculateSize
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.CalculateSize
+  id: CalculateSize
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: CalculateSize()
+  nameWithType: ProtocolErrorMessage.CalculateSize()
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.CalculateSize()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CalculateSize
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 214
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public int CalculateSize()
+    return:
+      type: System.Int32
+    content.vb: Public Function CalculateSize As Integer
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.CalculateSize*
+  implements:
+  - Google.Protobuf.IMessage.CalculateSize
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  id: MergeFrom(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(ProtocolErrorMessage)
+  nameWithType: ProtocolErrorMessage.MergeFrom(ProtocolErrorMessage)
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 235
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public void MergeFrom(ProtocolErrorMessage other)
+    parameters:
+    - id: other
+      type: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    content.vb: Public Sub MergeFrom(other As ProtocolErrorMessage)
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage{Catalyst.Protocol.Wire.ProtocolErrorMessage}.MergeFrom(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  id: MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  langs:
+  - csharp
+  - vb
+  name: MergeFrom(CodedInputStream)
+  nameWithType: ProtocolErrorMessage.MergeFrom(CodedInputStream)
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MergeFrom
+    path: ../src/Catalyst.Protocol/obj/Release/netcoreapp3.0/Wire.cs
+    startLine: 261
+  assemblies:
+  - Catalyst.Protocol
+  namespace: Catalyst.Protocol.Wire
+  syntax:
+    content: public void MergeFrom(CodedInputStream input)
+    parameters:
+    - id: input
+      type: Google.Protobuf.CodedInputStream
+    content.vb: Public Sub MergeFrom(input As CodedInputStream)
+  overload: Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom*
+  implements:
+  - Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Protocol.Wire
+  commentId: N:Catalyst.Protocol.Wire
+  name: Catalyst.Protocol.Wire
+  nameWithType: Catalyst.Protocol.Wire
+  fullName: Catalyst.Protocol.Wire
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  commentId: T:Google.Protobuf.IMessage{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IMessage`1
+  name: IMessage<ProtocolErrorMessage>
+  nameWithType: IMessage<ProtocolErrorMessage>
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Wire.ProtocolErrorMessage>
+  nameWithType.vb: IMessage(Of ProtocolErrorMessage)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  name.vb: IMessage(Of ProtocolErrorMessage)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage
+  commentId: T:Google.Protobuf.IMessage
+  parent: Google.Protobuf
+  isExternal: true
+  name: IMessage
+  nameWithType: IMessage
+  fullName: Google.Protobuf.IMessage
+- uid: System.IEquatable{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  commentId: T:System.IEquatable{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  parent: System
+  definition: System.IEquatable`1
+  name: IEquatable<ProtocolErrorMessage>
+  nameWithType: IEquatable<ProtocolErrorMessage>
+  fullName: System.IEquatable<Catalyst.Protocol.Wire.ProtocolErrorMessage>
+  nameWithType.vb: IEquatable(Of ProtocolErrorMessage)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  name.vb: IEquatable(Of ProtocolErrorMessage)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  commentId: T:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.IDeepCloneable`1
+  name: IDeepCloneable<ProtocolErrorMessage>
+  nameWithType: IDeepCloneable<ProtocolErrorMessage>
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Wire.ProtocolErrorMessage>
+  nameWithType.vb: IDeepCloneable(Of ProtocolErrorMessage)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  name.vb: IDeepCloneable(Of ProtocolErrorMessage)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Google.Protobuf.IMessage`1
+  commentId: T:Google.Protobuf.IMessage`1
+  isExternal: true
+  name: IMessage<T>
+  nameWithType: IMessage<T>
+  fullName: Google.Protobuf.IMessage<T>
+  nameWithType.vb: IMessage(Of T)
+  fullName.vb: Google.Protobuf.IMessage(Of T)
+  name.vb: IMessage(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1
+    name: IMessage
+    nameWithType: IMessage
+    fullName: Google.Protobuf.IMessage
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf
+  commentId: N:Google.Protobuf
+  isExternal: true
+  name: Google.Protobuf
+  nameWithType: Google.Protobuf
+  fullName: Google.Protobuf
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    nameWithType: IEquatable
+    fullName: System.IEquatable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1
+  commentId: T:Google.Protobuf.IDeepCloneable`1
+  isExternal: true
+  name: IDeepCloneable<T>
+  nameWithType: IDeepCloneable<T>
+  fullName: Google.Protobuf.IDeepCloneable<T>
+  nameWithType.vb: IDeepCloneable(Of T)
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T)
+  name.vb: IDeepCloneable(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1
+    name: IDeepCloneable
+    nameWithType: IDeepCloneable
+    fullName: Google.Protobuf.IDeepCloneable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Parser*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.Parser
+  name: Parser
+  nameWithType: ProtocolErrorMessage.Parser
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Parser
+- uid: Google.Protobuf.MessageParser{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  commentId: T:Google.Protobuf.MessageParser{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  parent: Google.Protobuf
+  definition: Google.Protobuf.MessageParser`1
+  name: MessageParser<ProtocolErrorMessage>
+  nameWithType: MessageParser<ProtocolErrorMessage>
+  fullName: Google.Protobuf.MessageParser<Catalyst.Protocol.Wire.ProtocolErrorMessage>
+  nameWithType.vb: MessageParser(Of ProtocolErrorMessage)
+  fullName.vb: Google.Protobuf.MessageParser(Of Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  name.vb: MessageParser(Of ProtocolErrorMessage)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.MessageParser`1
+  commentId: T:Google.Protobuf.MessageParser`1
+  isExternal: true
+  name: MessageParser<T>
+  nameWithType: MessageParser<T>
+  fullName: Google.Protobuf.MessageParser<T>
+  nameWithType.vb: MessageParser(Of T)
+  fullName.vb: Google.Protobuf.MessageParser(Of T)
+  name.vb: MessageParser(Of T)
+  spec.csharp:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Google.Protobuf.MessageParser`1
+    name: MessageParser
+    nameWithType: MessageParser
+    fullName: Google.Protobuf.MessageParser
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Descriptor*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.Descriptor
+  name: Descriptor
+  nameWithType: ProtocolErrorMessage.Descriptor
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Descriptor
+- uid: Google.Protobuf.Reflection.MessageDescriptor
+  commentId: T:Google.Protobuf.Reflection.MessageDescriptor
+  parent: Google.Protobuf.Reflection
+  isExternal: true
+  name: MessageDescriptor
+  nameWithType: MessageDescriptor
+  fullName: Google.Protobuf.Reflection.MessageDescriptor
+- uid: Google.Protobuf.Reflection
+  commentId: N:Google.Protobuf.Reflection
+  isExternal: true
+  name: Google.Protobuf.Reflection
+  nameWithType: Google.Protobuf.Reflection
+  fullName: Google.Protobuf.Reflection
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Google#Protobuf#IMessage#Descriptor*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.Google#Protobuf#IMessage#Descriptor
+  name: IMessage.Descriptor
+  nameWithType: ProtocolErrorMessage.IMessage.Descriptor
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Google.Protobuf.IMessage.Descriptor
+  nameWithType.vb: ProtocolErrorMessage.pb::Google.Protobuf.IMessage.Descriptor
+  fullName.vb: Catalyst.Protocol.Wire.ProtocolErrorMessage.pb::Google.Protobuf.IMessage.Descriptor
+  name.vb: pb::Google.Protobuf.IMessage.Descriptor
+- uid: Google.Protobuf.IMessage.Descriptor
+  commentId: P:Google.Protobuf.IMessage.Descriptor
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: Descriptor
+  nameWithType: IMessage.Descriptor
+  fullName: Google.Protobuf.IMessage.Descriptor
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.#ctor*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.#ctor
+  name: ProtocolErrorMessage
+  nameWithType: ProtocolErrorMessage.ProtocolErrorMessage
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.ProtocolErrorMessage
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  commentId: T:Catalyst.Protocol.Wire.ProtocolErrorMessage
+  parent: Catalyst.Protocol.Wire
+  name: ProtocolErrorMessage
+  nameWithType: ProtocolErrorMessage
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Clone*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.Clone
+  name: Clone
+  nameWithType: ProtocolErrorMessage.Clone
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Clone
+- uid: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.ProtocolErrorMessage}.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.ProtocolErrorMessage}.Clone
+  parent: Google.Protobuf.IDeepCloneable{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  definition: Google.Protobuf.IDeepCloneable`1.Clone
+  name: Clone()
+  nameWithType: IDeepCloneable<ProtocolErrorMessage>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Wire.ProtocolErrorMessage>.Clone()
+  nameWithType.vb: IDeepCloneable(Of ProtocolErrorMessage).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Wire.ProtocolErrorMessage).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<ProtocolErrorMessage>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<Catalyst.Protocol.Wire.ProtocolErrorMessage>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of ProtocolErrorMessage).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of Catalyst.Protocol.Wire.ProtocolErrorMessage).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IDeepCloneable`1.Clone
+  commentId: M:Google.Protobuf.IDeepCloneable`1.Clone
+  isExternal: true
+  name: Clone()
+  nameWithType: IDeepCloneable<T>.Clone()
+  fullName: Google.Protobuf.IDeepCloneable<T>.Clone()
+  nameWithType.vb: IDeepCloneable(Of T).Clone()
+  fullName.vb: Google.Protobuf.IDeepCloneable(Of T).Clone()
+  spec.csharp:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable<T>.Clone
+    fullName: Google.Protobuf.IDeepCloneable<T>.Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IDeepCloneable`1.Clone
+    name: Clone
+    nameWithType: IDeepCloneable(Of T).Clone
+    fullName: Google.Protobuf.IDeepCloneable(Of T).Clone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Signature*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.Signature
+  name: Signature
+  nameWithType: ProtocolErrorMessage.Signature
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Signature
+- uid: Catalyst.Protocol.Cryptography.Signature
+  commentId: T:Catalyst.Protocol.Cryptography.Signature
+  parent: Catalyst.Protocol.Cryptography
+  name: Signature
+  nameWithType: Signature
+  fullName: Catalyst.Protocol.Cryptography.Signature
+- uid: Catalyst.Protocol.Cryptography
+  commentId: N:Catalyst.Protocol.Cryptography
+  name: Catalyst.Protocol.Cryptography
+  nameWithType: Catalyst.Protocol.Cryptography
+  fullName: Catalyst.Protocol.Cryptography
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerId*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerId
+  name: PeerId
+  nameWithType: ProtocolErrorMessage.PeerId
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.PeerId
+- uid: Catalyst.Protocol.Peer.PeerId
+  commentId: T:Catalyst.Protocol.Peer.PeerId
+  parent: Catalyst.Protocol.Peer
+  name: PeerId
+  nameWithType: PeerId
+  fullName: Catalyst.Protocol.Peer.PeerId
+- uid: Catalyst.Protocol.Peer
+  commentId: N:Catalyst.Protocol.Peer
+  name: Catalyst.Protocol.Peer
+  nameWithType: Catalyst.Protocol.Peer
+  fullName: Catalyst.Protocol.Peer
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationId*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationId
+  name: CorrelationId
+  nameWithType: ProtocolErrorMessage.CorrelationId
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.CorrelationId
+- uid: Google.Protobuf.ByteString
+  commentId: T:Google.Protobuf.ByteString
+  parent: Google.Protobuf
+  isExternal: true
+  name: ByteString
+  nameWithType: ByteString
+  fullName: Google.Protobuf.ByteString
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Code*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.Code
+  name: Code
+  nameWithType: ProtocolErrorMessage.Code
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Code
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals
+  name: Equals
+  nameWithType: ProtocolErrorMessage.Equals
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.Equals
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System.IEquatable{Catalyst.Protocol.Wire.ProtocolErrorMessage}.Equals(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  commentId: M:System.IEquatable{Catalyst.Protocol.Wire.ProtocolErrorMessage}.Equals(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  parent: System.IEquatable{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  definition: System.IEquatable`1.Equals(`0)
+  name: Equals(ProtocolErrorMessage)
+  nameWithType: IEquatable<ProtocolErrorMessage>.Equals(ProtocolErrorMessage)
+  fullName: System.IEquatable<Catalyst.Protocol.Wire.ProtocolErrorMessage>.Equals(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  nameWithType.vb: IEquatable(Of ProtocolErrorMessage).Equals(ProtocolErrorMessage)
+  fullName.vb: System.IEquatable(Of Catalyst.Protocol.Wire.ProtocolErrorMessage).Equals(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<ProtocolErrorMessage>.Equals
+    fullName: System.IEquatable<Catalyst.Protocol.Wire.ProtocolErrorMessage>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of ProtocolErrorMessage).Equals
+    fullName: System.IEquatable(Of Catalyst.Protocol.Wire.ProtocolErrorMessage).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable<T>.Equals
+    fullName: System.IEquatable<T>.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    nameWithType: IEquatable(Of T).Equals
+    fullName: System.IEquatable(Of T).Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.GetHashCode*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.GetHashCode
+  name: GetHashCode
+  nameWithType: ProtocolErrorMessage.GetHashCode
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.GetHashCode
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.ToString*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.ToString
+  name: ToString
+  nameWithType: ProtocolErrorMessage.ToString
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.WriteTo*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.WriteTo
+  name: WriteTo
+  nameWithType: ProtocolErrorMessage.WriteTo
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.WriteTo
+- uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  commentId: M:Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: WriteTo(CodedOutputStream)
+  nameWithType: IMessage.WriteTo(CodedOutputStream)
+  fullName: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.WriteTo(Google.Protobuf.CodedOutputStream)
+    name: WriteTo
+    nameWithType: IMessage.WriteTo
+    fullName: Google.Protobuf.IMessage.WriteTo
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedOutputStream
+    name: CodedOutputStream
+    nameWithType: CodedOutputStream
+    fullName: Google.Protobuf.CodedOutputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedOutputStream
+  commentId: T:Google.Protobuf.CodedOutputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedOutputStream
+  nameWithType: CodedOutputStream
+  fullName: Google.Protobuf.CodedOutputStream
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.CalculateSize*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.CalculateSize
+  name: CalculateSize
+  nameWithType: ProtocolErrorMessage.CalculateSize
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.CalculateSize
+- uid: Google.Protobuf.IMessage.CalculateSize
+  commentId: M:Google.Protobuf.IMessage.CalculateSize
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: CalculateSize()
+  nameWithType: IMessage.CalculateSize()
+  fullName: Google.Protobuf.IMessage.CalculateSize()
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.CalculateSize
+    name: CalculateSize
+    nameWithType: IMessage.CalculateSize
+    fullName: Google.Protobuf.IMessage.CalculateSize
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom*
+  commentId: Overload:Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom
+  name: MergeFrom
+  nameWithType: ProtocolErrorMessage.MergeFrom
+  fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage.MergeFrom
+- uid: Google.Protobuf.IMessage{Catalyst.Protocol.Wire.ProtocolErrorMessage}.MergeFrom(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  commentId: M:Google.Protobuf.IMessage{Catalyst.Protocol.Wire.ProtocolErrorMessage}.MergeFrom(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  parent: Google.Protobuf.IMessage{Catalyst.Protocol.Wire.ProtocolErrorMessage}
+  definition: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  name: MergeFrom(ProtocolErrorMessage)
+  nameWithType: IMessage<ProtocolErrorMessage>.MergeFrom(ProtocolErrorMessage)
+  fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Wire.ProtocolErrorMessage>.MergeFrom(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  nameWithType.vb: IMessage(Of ProtocolErrorMessage).MergeFrom(ProtocolErrorMessage)
+  fullName.vb: Google.Protobuf.IMessage(Of Catalyst.Protocol.Wire.ProtocolErrorMessage).MergeFrom(Catalyst.Protocol.Wire.ProtocolErrorMessage)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<ProtocolErrorMessage>.MergeFrom
+    fullName: Google.Protobuf.IMessage<Catalyst.Protocol.Wire.ProtocolErrorMessage>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of ProtocolErrorMessage).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of Catalyst.Protocol.Wire.ProtocolErrorMessage).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Protocol.Wire.ProtocolErrorMessage
+    name: ProtocolErrorMessage
+    nameWithType: ProtocolErrorMessage
+    fullName: Catalyst.Protocol.Wire.ProtocolErrorMessage
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+  commentId: M:Google.Protobuf.IMessage`1.MergeFrom(`0)
+  isExternal: true
+  name: MergeFrom(T)
+  nameWithType: IMessage<T>.MergeFrom(T)
+  fullName: Google.Protobuf.IMessage<T>.MergeFrom(T)
+  nameWithType.vb: IMessage(Of T).MergeFrom(T)
+  fullName.vb: Google.Protobuf.IMessage(Of T).MergeFrom(T)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage<T>.MergeFrom
+    fullName: Google.Protobuf.IMessage<T>.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage`1.MergeFrom(`0)
+    name: MergeFrom
+    nameWithType: IMessage(Of T).MergeFrom
+    fullName: Google.Protobuf.IMessage(Of T).MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  commentId: M:Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  parent: Google.Protobuf.IMessage
+  isExternal: true
+  name: MergeFrom(CodedInputStream)
+  nameWithType: IMessage.MergeFrom(CodedInputStream)
+  fullName: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+  spec.csharp:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Google.Protobuf.IMessage.MergeFrom(Google.Protobuf.CodedInputStream)
+    name: MergeFrom
+    nameWithType: IMessage.MergeFrom
+    fullName: Google.Protobuf.IMessage.MergeFrom
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Google.Protobuf.CodedInputStream
+    name: CodedInputStream
+    nameWithType: CodedInputStream
+    fullName: Google.Protobuf.CodedInputStream
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Google.Protobuf.CodedInputStream
+  commentId: T:Google.Protobuf.CodedInputStream
+  parent: Google.Protobuf
+  isExternal: true
+  name: CodedInputStream
+  nameWithType: CodedInputStream
+  fullName: Google.Protobuf.CodedInputStream

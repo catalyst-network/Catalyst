@@ -1,0 +1,331 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1
+  commentId: T:Catalyst.Core.Modules.Web3.Controllers.MempoolController`1
+  id: MempoolController`1
+  parent: Catalyst.Core.Modules.Web3.Controllers
+  children:
+  - Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.#ctor(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{`0})
+  - Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetBalance(System.String)
+  - Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempool
+  - Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempoolTransaction(System.String)
+  langs:
+  - csharp
+  - vb
+  name: MempoolController<T>
+  nameWithType: MempoolController<T>
+  fullName: Catalyst.Core.Modules.Web3.Controllers.MempoolController<T>
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Web3/Controllers/MempoolController.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MempoolController
+    path: ../src/Catalyst.Core.Modules.Web3/Controllers/MempoolController.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Modules.Web3
+  namespace: Catalyst.Core.Modules.Web3.Controllers
+  syntax:
+    content: 'public sealed class MempoolController<T> : AspNetCore.Mvc.Controller where T : class, IMempoolItem'
+    typeParameters:
+    - id: T
+    content.vb: >-
+      Public NotInheritable Class MempoolController(Of T As {Class, IMempoolItem})
+
+          Inherits AspNetCore.Mvc.Controller
+  inheritance:
+  - System.Object
+  nameWithType.vb: MempoolController(Of T)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+  fullName.vb: Catalyst.Core.Modules.Web3.Controllers.MempoolController(Of T)
+  name.vb: MempoolController(Of T)
+- uid: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.#ctor(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{`0})
+  commentId: M:Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.#ctor(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{`0})
+  id: '#ctor(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{`0})'
+  parent: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1
+  langs:
+  - csharp
+  - vb
+  name: MempoolController(IMempoolRepository<T>)
+  nameWithType: MempoolController<T>.MempoolController(IMempoolRepository<T>)
+  fullName: Catalyst.Core.Modules.Web3.Controllers.MempoolController<T>.MempoolController(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Web3/Controllers/MempoolController.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Web3/Controllers/MempoolController.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Modules.Web3
+  namespace: Catalyst.Core.Modules.Web3.Controllers
+  syntax:
+    content: public MempoolController(IMempoolRepository<T> mempoolRepository)
+    parameters:
+    - id: mempoolRepository
+      type: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{{T}}
+    content.vb: Public Sub New(mempoolRepository As IMempoolRepository(Of T))
+  overload: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.#ctor*
+  nameWithType.vb: MempoolController(Of T).MempoolController(IMempoolRepository(Of T))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Web3.Controllers.MempoolController(Of T).MempoolController(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T))
+  name.vb: MempoolController(IMempoolRepository(Of T))
+- uid: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetBalance(System.String)
+  commentId: M:Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetBalance(System.String)
+  id: GetBalance(System.String)
+  parent: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1
+  langs:
+  - csharp
+  - vb
+  name: GetBalance(String)
+  nameWithType: MempoolController<T>.GetBalance(String)
+  fullName: Catalyst.Core.Modules.Web3.Controllers.MempoolController<T>.GetBalance(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Web3/Controllers/MempoolController.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetBalance
+    path: ../src/Catalyst.Core.Modules.Web3/Controllers/MempoolController.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Core.Modules.Web3
+  namespace: Catalyst.Core.Modules.Web3.Controllers
+  syntax:
+    content: public IActionResult GetBalance(string publicKey)
+    parameters:
+    - id: publicKey
+      type: System.String
+    return:
+      type: IActionResult
+    content.vb: Public Function GetBalance(publicKey As String) As IActionResult
+  overload: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetBalance*
+  nameWithType.vb: MempoolController(Of T).GetBalance(String)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Web3.Controllers.MempoolController(Of T).GetBalance(System.String)
+- uid: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempoolTransaction(System.String)
+  commentId: M:Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempoolTransaction(System.String)
+  id: GetMempoolTransaction(System.String)
+  parent: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1
+  langs:
+  - csharp
+  - vb
+  name: GetMempoolTransaction(String)
+  nameWithType: MempoolController<T>.GetMempoolTransaction(String)
+  fullName: Catalyst.Core.Modules.Web3.Controllers.MempoolController<T>.GetMempoolTransaction(System.String)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Web3/Controllers/MempoolController.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetMempoolTransaction
+    path: ../src/Catalyst.Core.Modules.Web3/Controllers/MempoolController.cs
+    startLine: 57
+  assemblies:
+  - Catalyst.Core.Modules.Web3
+  namespace: Catalyst.Core.Modules.Web3.Controllers
+  syntax:
+    content: public JsonResult GetMempoolTransaction(string publicKey)
+    parameters:
+    - id: publicKey
+      type: System.String
+    return:
+      type: JsonResult
+    content.vb: Public Function GetMempoolTransaction(publicKey As String) As JsonResult
+  overload: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempoolTransaction*
+  nameWithType.vb: MempoolController(Of T).GetMempoolTransaction(String)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Web3.Controllers.MempoolController(Of T).GetMempoolTransaction(System.String)
+- uid: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempool
+  commentId: M:Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempool
+  id: GetMempool
+  parent: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1
+  langs:
+  - csharp
+  - vb
+  name: GetMempool()
+  nameWithType: MempoolController<T>.GetMempool()
+  fullName: Catalyst.Core.Modules.Web3.Controllers.MempoolController<T>.GetMempool()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Web3/Controllers/MempoolController.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetMempool
+    path: ../src/Catalyst.Core.Modules.Web3/Controllers/MempoolController.cs
+    startLine: 72
+  assemblies:
+  - Catalyst.Core.Modules.Web3
+  namespace: Catalyst.Core.Modules.Web3.Controllers
+  syntax:
+    content: public JsonResult GetMempool()
+    return:
+      type: JsonResult
+    content.vb: Public Function GetMempool As JsonResult
+  overload: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempool*
+  nameWithType.vb: MempoolController(Of T).GetMempool()
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Web3.Controllers.MempoolController(Of T).GetMempool()
+references:
+- uid: Catalyst.Core.Modules.Web3.Controllers
+  commentId: N:Catalyst.Core.Modules.Web3.Controllers
+  name: Catalyst.Core.Modules.Web3.Controllers
+  nameWithType: Catalyst.Core.Modules.Web3.Controllers
+  fullName: Catalyst.Core.Modules.Web3.Controllers
+- uid: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.#ctor
+  name: MempoolController
+  nameWithType: MempoolController<T>.MempoolController
+  fullName: Catalyst.Core.Modules.Web3.Controllers.MempoolController<T>.MempoolController
+  nameWithType.vb: MempoolController(Of T).MempoolController
+  fullName.vb: Catalyst.Core.Modules.Web3.Controllers.MempoolController(Of T).MempoolController
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{{T}}
+  commentId: T:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{`0}
+  parent: Catalyst.Abstractions.Mempool.Repositories
+  definition: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  name: IMempoolRepository<T>
+  nameWithType: IMempoolRepository<T>
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>
+  nameWithType.vb: IMempoolRepository(Of T)
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T)
+  name.vb: IMempoolRepository(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  commentId: T:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  name: IMempoolRepository<T>
+  nameWithType: IMempoolRepository<T>
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>
+  nameWithType.vb: IMempoolRepository(Of T)
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T)
+  name.vb: IMempoolRepository(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Mempool.Repositories
+  commentId: N:Catalyst.Abstractions.Mempool.Repositories
+  name: Catalyst.Abstractions.Mempool.Repositories
+  nameWithType: Catalyst.Abstractions.Mempool.Repositories
+  fullName: Catalyst.Abstractions.Mempool.Repositories
+- uid: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetBalance*
+  commentId: Overload:Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetBalance
+  name: GetBalance
+  nameWithType: MempoolController<T>.GetBalance
+  fullName: Catalyst.Core.Modules.Web3.Controllers.MempoolController<T>.GetBalance
+  nameWithType.vb: MempoolController(Of T).GetBalance
+  fullName.vb: Catalyst.Core.Modules.Web3.Controllers.MempoolController(Of T).GetBalance
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: IActionResult
+  commentId: '!:IActionResult'
+  isExternal: true
+  name: IActionResult
+  nameWithType: IActionResult
+  fullName: IActionResult
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempoolTransaction*
+  commentId: Overload:Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempoolTransaction
+  name: GetMempoolTransaction
+  nameWithType: MempoolController<T>.GetMempoolTransaction
+  fullName: Catalyst.Core.Modules.Web3.Controllers.MempoolController<T>.GetMempoolTransaction
+  nameWithType.vb: MempoolController(Of T).GetMempoolTransaction
+  fullName.vb: Catalyst.Core.Modules.Web3.Controllers.MempoolController(Of T).GetMempoolTransaction
+- uid: JsonResult
+  isExternal: true
+  name: JsonResult
+  nameWithType: JsonResult
+  fullName: JsonResult
+- uid: Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempool*
+  commentId: Overload:Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempool
+  name: GetMempool
+  nameWithType: MempoolController<T>.GetMempool
+  fullName: Catalyst.Core.Modules.Web3.Controllers.MempoolController<T>.GetMempool
+  nameWithType.vb: MempoolController(Of T).GetMempool
+  fullName.vb: Catalyst.Core.Modules.Web3.Controllers.MempoolController(Of T).GetMempool

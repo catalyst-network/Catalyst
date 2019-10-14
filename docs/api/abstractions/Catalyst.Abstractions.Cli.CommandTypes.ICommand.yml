@@ -1,0 +1,220 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Cli.CommandTypes.ICommand
+  commentId: T:Catalyst.Abstractions.Cli.CommandTypes.ICommand
+  id: ICommand
+  parent: Catalyst.Abstractions.Cli.CommandTypes
+  children:
+  - Catalyst.Abstractions.Cli.CommandTypes.ICommand.CommandName
+  - Catalyst.Abstractions.Cli.CommandTypes.ICommand.OptionType
+  - Catalyst.Abstractions.Cli.CommandTypes.ICommand.Parse(System.String[])
+  langs:
+  - csharp
+  - vb
+  name: ICommand
+  nameWithType: ICommand
+  fullName: Catalyst.Abstractions.Cli.CommandTypes.ICommand
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/CommandTypes/ICommand.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ICommand
+    path: ../src/Catalyst.Abstractions/Cli/CommandTypes/ICommand.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.CommandTypes
+  syntax:
+    content: public interface ICommand
+    content.vb: Public Interface ICommand
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Cli.CommandTypes.ICommand.Parse(System.String[])
+  commentId: M:Catalyst.Abstractions.Cli.CommandTypes.ICommand.Parse(System.String[])
+  id: Parse(System.String[])
+  parent: Catalyst.Abstractions.Cli.CommandTypes.ICommand
+  langs:
+  - csharp
+  - vb
+  name: Parse(String[])
+  nameWithType: ICommand.Parse(String[])
+  fullName: Catalyst.Abstractions.Cli.CommandTypes.ICommand.Parse(System.String[])
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/CommandTypes/ICommand.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Parse
+    path: ../src/Catalyst.Abstractions/Cli/CommandTypes/ICommand.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.CommandTypes
+  summary: Parses the specified arguments.
+  example: []
+  syntax:
+    content: bool Parse(string[] args)
+    parameters:
+    - id: args
+      type: System.String[]
+      description: The arguments.
+    return:
+      type: System.Boolean
+    content.vb: Function Parse(args As String()) As Boolean
+  overload: Catalyst.Abstractions.Cli.CommandTypes.ICommand.Parse*
+  nameWithType.vb: ICommand.Parse(String())
+  fullName.vb: Catalyst.Abstractions.Cli.CommandTypes.ICommand.Parse(System.String())
+  name.vb: Parse(String())
+- uid: Catalyst.Abstractions.Cli.CommandTypes.ICommand.CommandName
+  commentId: P:Catalyst.Abstractions.Cli.CommandTypes.ICommand.CommandName
+  id: CommandName
+  parent: Catalyst.Abstractions.Cli.CommandTypes.ICommand
+  langs:
+  - csharp
+  - vb
+  name: CommandName
+  nameWithType: ICommand.CommandName
+  fullName: Catalyst.Abstractions.Cli.CommandTypes.ICommand.CommandName
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/CommandTypes/ICommand.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CommandName
+    path: ../src/Catalyst.Abstractions/Cli/CommandTypes/ICommand.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.CommandTypes
+  summary: Gets the name of the command.
+  example: []
+  syntax:
+    content: string CommandName { get; }
+    parameters: []
+    return:
+      type: System.String
+      description: The name of the command.
+    content.vb: ReadOnly Property CommandName As String
+  overload: Catalyst.Abstractions.Cli.CommandTypes.ICommand.CommandName*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Cli.CommandTypes.ICommand.OptionType
+  commentId: P:Catalyst.Abstractions.Cli.CommandTypes.ICommand.OptionType
+  id: OptionType
+  parent: Catalyst.Abstractions.Cli.CommandTypes.ICommand
+  langs:
+  - csharp
+  - vb
+  name: OptionType
+  nameWithType: ICommand.OptionType
+  fullName: Catalyst.Abstractions.Cli.CommandTypes.ICommand.OptionType
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/CommandTypes/ICommand.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: OptionType
+    path: ../src/Catalyst.Abstractions/Cli/CommandTypes/ICommand.cs
+    startLine: 39
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.CommandTypes
+  summary: Gets the type of the option.
+  example: []
+  syntax:
+    content: Type OptionType { get; }
+    parameters: []
+    return:
+      type: System.Type
+      description: The type of the option.
+    content.vb: ReadOnly Property OptionType As Type
+  overload: Catalyst.Abstractions.Cli.CommandTypes.ICommand.OptionType*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.Cli.CommandTypes
+  commentId: N:Catalyst.Abstractions.Cli.CommandTypes
+  name: Catalyst.Abstractions.Cli.CommandTypes
+  nameWithType: Catalyst.Abstractions.Cli.CommandTypes
+  fullName: Catalyst.Abstractions.Cli.CommandTypes
+- uid: Catalyst.Abstractions.Cli.CommandTypes.ICommand.Parse*
+  commentId: Overload:Catalyst.Abstractions.Cli.CommandTypes.ICommand.Parse
+  name: Parse
+  nameWithType: ICommand.Parse
+  fullName: Catalyst.Abstractions.Cli.CommandTypes.ICommand.Parse
+- uid: System.String[]
+  isExternal: true
+  name: String[]
+  nameWithType: String[]
+  fullName: System.String[]
+  nameWithType.vb: String()
+  fullName.vb: System.String()
+  name.vb: String()
+  spec.csharp:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Cli.CommandTypes.ICommand.CommandName*
+  commentId: Overload:Catalyst.Abstractions.Cli.CommandTypes.ICommand.CommandName
+  name: CommandName
+  nameWithType: ICommand.CommandName
+  fullName: Catalyst.Abstractions.Cli.CommandTypes.ICommand.CommandName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Abstractions.Cli.CommandTypes.ICommand.OptionType*
+  commentId: Overload:Catalyst.Abstractions.Cli.CommandTypes.ICommand.OptionType
+  name: OptionType
+  nameWithType: ICommand.OptionType
+  fullName: Catalyst.Abstractions.Cli.CommandTypes.ICommand.OptionType
+- uid: System.Type
+  commentId: T:System.Type
+  parent: System
+  isExternal: true
+  name: Type
+  nameWithType: Type
+  fullName: System.Type

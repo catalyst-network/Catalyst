@@ -1,0 +1,53 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Mempool.Repositories
+  commentId: N:Catalyst.Abstractions.Mempool.Repositories
+  id: Catalyst.Abstractions.Mempool.Repositories
+  children:
+  - Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Mempool.Repositories
+  nameWithType: Catalyst.Abstractions.Mempool.Repositories
+  fullName: Catalyst.Abstractions.Mempool.Repositories
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  commentId: T:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  name: IMempoolRepository<T>
+  nameWithType: IMempoolRepository<T>
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>
+  nameWithType.vb: IMempoolRepository(Of T)
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T)
+  name.vb: IMempoolRepository(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

@@ -1,0 +1,967 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory
+  commentId: T:Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory
+  id: RpcClientChannelFactory
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  children:
+  - Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.#ctor(IKeySigner,IRpcMessageCorrelationManager,IPeerIdValidator,IPeerSettings,System.Int32,IScheduler)
+  - Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.BuildChannel(IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  - Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.HandlerGenerationFunction
+  langs:
+  - csharp
+  - vb
+  name: RpcClientChannelFactory
+  nameWithType: RpcClientChannelFactory
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Transport/Channels/RpcClientChannelFactory.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: RpcClientChannelFactory
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Transport/Channels/RpcClientChannelFactory.cs
+    startLine: 48
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  syntax:
+    content: 'public class RpcClientChannelFactory : TcpClientChannelFactory, ITcpClientChannelFactory'
+    content.vb: >-
+      Public Class RpcClientChannelFactory
+
+          Inherits TcpClientChannelFactory
+
+          Implements ITcpClientChannelFactory
+  inheritance:
+  - System.Object
+  - Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory
+  implements:
+  - Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory
+  inheritedMembers:
+  - Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  - Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.Bootstrap(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.#ctor(IKeySigner,IRpcMessageCorrelationManager,IPeerIdValidator,IPeerSettings,System.Int32,IScheduler)
+  commentId: M:Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.#ctor(IKeySigner,IRpcMessageCorrelationManager,IPeerIdValidator,IPeerSettings,System.Int32,IScheduler)
+  id: '#ctor(IKeySigner,IRpcMessageCorrelationManager,IPeerIdValidator,IPeerSettings,System.Int32,IScheduler)'
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory
+  langs:
+  - csharp
+  - vb
+  name: RpcClientChannelFactory(IKeySigner, IRpcMessageCorrelationManager, IPeerIdValidator, IPeerSettings, Int32, IScheduler)
+  nameWithType: RpcClientChannelFactory.RpcClientChannelFactory(IKeySigner, IRpcMessageCorrelationManager, IPeerIdValidator, IPeerSettings, Int32, IScheduler)
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.RpcClientChannelFactory(IKeySigner, IRpcMessageCorrelationManager, IPeerIdValidator, IPeerSettings, System.Int32, IScheduler)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Transport/Channels/RpcClientChannelFactory.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Transport/Channels/RpcClientChannelFactory.cs
+    startLine: 64
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  summary: "\n"
+  example: []
+  syntax:
+    content: public RpcClientChannelFactory(IKeySigner keySigner, IRpcMessageCorrelationManager messageCorrelationCache, IPeerIdValidator peerIdValidator, IPeerSettings peerSettings, int backLogValue = 100, IScheduler scheduler = null)
+    parameters:
+    - id: keySigner
+      type: IKeySigner
+      description: ''
+    - id: messageCorrelationCache
+      type: IRpcMessageCorrelationManager
+      description: ''
+    - id: peerIdValidator
+      type: IPeerIdValidator
+      description: ''
+    - id: peerSettings
+      type: IPeerSettings
+      description: ''
+    - id: backLogValue
+      type: System.Int32
+      description: ''
+    - id: scheduler
+      type: IScheduler
+      description: ''
+    content.vb: Public Sub New(keySigner As IKeySigner, messageCorrelationCache As IRpcMessageCorrelationManager, peerIdValidator As IPeerIdValidator, peerSettings As IPeerSettings, backLogValue As Integer = 100, scheduler As IScheduler = Nothing)
+  overload: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.HandlerGenerationFunction
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.HandlerGenerationFunction
+  id: HandlerGenerationFunction
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory
+  langs:
+  - csharp
+  - vb
+  name: HandlerGenerationFunction
+  nameWithType: RpcClientChannelFactory.HandlerGenerationFunction
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.HandlerGenerationFunction
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Transport/Channels/RpcClientChannelFactory.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: HandlerGenerationFunction
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Transport/Channels/RpcClientChannelFactory.cs
+    startLine: 79
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  syntax:
+    content: protected override Func<List<IChannelHandler>> HandlerGenerationFunction { get; }
+    parameters: []
+    return:
+      type: System.Func{System.Collections.Generic.List{IChannelHandler}}
+    content.vb: Protected Overrides ReadOnly Property HandlerGenerationFunction As Func(Of List(Of IChannelHandler))
+  overridden: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.HandlerGenerationFunction
+  overload: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.HandlerGenerationFunction*
+  modifiers.csharp:
+  - protected
+  - override
+  - get
+  modifiers.vb:
+  - Protected
+  - Overrides
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.BuildChannel(IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  commentId: M:Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.BuildChannel(IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  id: BuildChannel(IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory
+  langs:
+  - csharp
+  - vb
+  name: BuildChannel(IEventLoopGroupFactory, IPAddress, Int32, X509Certificate2)
+  nameWithType: RpcClientChannelFactory.BuildChannel(IEventLoopGroupFactory, IPAddress, Int32, X509Certificate2)
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.BuildChannel(IEventLoopGroupFactory, System.Net.IPAddress, System.Int32, System.Security.Cryptography.X509Certificates.X509Certificate2)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Transport/Channels/RpcClientChannelFactory.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BuildChannel
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Transport/Channels/RpcClientChannelFactory.cs
+    startLine: 107
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  example: []
+  syntax:
+    content: public override Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory, IPAddress targetAddress, int targetPort, X509Certificate2 certificate = null)
+    parameters:
+    - id: eventLoopGroupFactory
+      type: IEventLoopGroupFactory
+      description: ''
+    - id: targetAddress
+      type: System.Net.IPAddress
+      description: Ignored
+    - id: targetPort
+      type: System.Int32
+      description: Ignored
+    - id: certificate
+      type: System.Security.Cryptography.X509Certificates.X509Certificate2
+      description: Local TLS certificate
+    return:
+      type: System.Threading.Tasks.Task{IObservableChannel}
+    content.vb: Public Overrides Function BuildChannel(eventLoopGroupFactory As IEventLoopGroupFactory, targetAddress As IPAddress, targetPort As Integer, certificate As X509Certificate2 = Nothing) As Task(Of IObservableChannel)
+  overload: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.BuildChannel*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  commentId: N:Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  name: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  nameWithType: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory
+  commentId: T:Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory
+  parent: Catalyst.Core.Lib.IO.Transport.Channels
+  name: TcpClientChannelFactory
+  nameWithType: TcpClientChannelFactory
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory
+- uid: Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory
+  commentId: '!:Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory'
+  isExternal: true
+  name: ITcpClientChannelFactory
+  nameWithType: ITcpClientChannelFactory
+  fullName: Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  commentId: M:Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  parent: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory
+  isExternal: true
+  name: BuildChannel(IEventLoopGroupFactory, IPAddress, Int32, X509Certificate2)
+  nameWithType: TcpClientChannelFactory.BuildChannel(IEventLoopGroupFactory, IPAddress, Int32, X509Certificate2)
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory, System.Net.IPAddress, System.Int32, System.Security.Cryptography.X509Certificates.X509Certificate2)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+    name: BuildChannel
+    nameWithType: TcpClientChannelFactory.BuildChannel
+    fullName: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.BuildChannel
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    name: IEventLoopGroupFactory
+    nameWithType: IEventLoopGroupFactory
+    fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Security.Cryptography.X509Certificates.X509Certificate2
+    name: X509Certificate2
+    nameWithType: X509Certificate2
+    fullName: System.Security.Cryptography.X509Certificates.X509Certificate2
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.BuildChannel(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+    name: BuildChannel
+    nameWithType: TcpClientChannelFactory.BuildChannel
+    fullName: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.BuildChannel
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    name: IEventLoopGroupFactory
+    nameWithType: IEventLoopGroupFactory
+    fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Security.Cryptography.X509Certificates.X509Certificate2
+    name: X509Certificate2
+    nameWithType: X509Certificate2
+    fullName: System.Security.Cryptography.X509Certificates.X509Certificate2
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.Bootstrap(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  commentId: M:Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.Bootstrap(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+  parent: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory
+  isExternal: true
+  name: Bootstrap(IEventLoopGroupFactory, IPAddress, Int32, X509Certificate2)
+  nameWithType: TcpClientChannelFactory.Bootstrap(IEventLoopGroupFactory, IPAddress, Int32, X509Certificate2)
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.Bootstrap(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory, System.Net.IPAddress, System.Int32, System.Security.Cryptography.X509Certificates.X509Certificate2)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.Bootstrap(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+    name: Bootstrap
+    nameWithType: TcpClientChannelFactory.Bootstrap
+    fullName: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.Bootstrap
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    name: IEventLoopGroupFactory
+    nameWithType: IEventLoopGroupFactory
+    fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Security.Cryptography.X509Certificates.X509Certificate2
+    name: X509Certificate2
+    nameWithType: X509Certificate2
+    fullName: System.Security.Cryptography.X509Certificates.X509Certificate2
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.Bootstrap(Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory,System.Net.IPAddress,System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate2)
+    name: Bootstrap
+    nameWithType: TcpClientChannelFactory.Bootstrap
+    fullName: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.Bootstrap
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    name: IEventLoopGroupFactory
+    nameWithType: IEventLoopGroupFactory
+    fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Net.IPAddress
+    name: IPAddress
+    nameWithType: IPAddress
+    fullName: System.Net.IPAddress
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Int32
+    name: Int32
+    nameWithType: Int32
+    fullName: System.Int32
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Security.Cryptography.X509Certificates.X509Certificate2
+    name: X509Certificate2
+    nameWithType: X509Certificate2
+    fullName: System.Security.Cryptography.X509Certificates.X509Certificate2
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.IO.Transport.Channels
+  commentId: N:Catalyst.Core.Lib.IO.Transport.Channels
+  name: Catalyst.Core.Lib.IO.Transport.Channels
+  nameWithType: Catalyst.Core.Lib.IO.Transport.Channels
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.#ctor
+  name: RpcClientChannelFactory
+  nameWithType: RpcClientChannelFactory.RpcClientChannelFactory
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.RpcClientChannelFactory
+- uid: IKeySigner
+  commentId: '!:IKeySigner'
+  isExternal: true
+  name: IKeySigner
+  nameWithType: IKeySigner
+  fullName: IKeySigner
+- uid: IRpcMessageCorrelationManager
+  commentId: '!:IRpcMessageCorrelationManager'
+  isExternal: true
+  name: IRpcMessageCorrelationManager
+  nameWithType: IRpcMessageCorrelationManager
+  fullName: IRpcMessageCorrelationManager
+- uid: IPeerIdValidator
+  commentId: '!:IPeerIdValidator'
+  isExternal: true
+  name: IPeerIdValidator
+  nameWithType: IPeerIdValidator
+  fullName: IPeerIdValidator
+- uid: IPeerSettings
+  commentId: '!:IPeerSettings'
+  isExternal: true
+  name: IPeerSettings
+  nameWithType: IPeerSettings
+  fullName: IPeerSettings
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: IScheduler
+  commentId: '!:IScheduler'
+  isExternal: true
+  name: IScheduler
+  nameWithType: IScheduler
+  fullName: IScheduler
+- uid: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.HandlerGenerationFunction
+  commentId: P:Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.HandlerGenerationFunction
+  parent: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory
+  name: HandlerGenerationFunction
+  nameWithType: TcpClientChannelFactory.HandlerGenerationFunction
+  fullName: Catalyst.Core.Lib.IO.Transport.Channels.TcpClientChannelFactory.HandlerGenerationFunction
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.HandlerGenerationFunction*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.HandlerGenerationFunction
+  name: HandlerGenerationFunction
+  nameWithType: RpcClientChannelFactory.HandlerGenerationFunction
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.HandlerGenerationFunction
+- uid: System.Func{System.Collections.Generic.List{IChannelHandler}}
+  commentId: T:System.Func{System.Collections.Generic.List{IChannelHandler}}
+  parent: System
+  definition: System.Func`1
+  name: Func<List<IChannelHandler>>
+  nameWithType: Func<List<IChannelHandler>>
+  fullName: System.Func<System.Collections.Generic.List<IChannelHandler>>
+  nameWithType.vb: Func(Of List(Of IChannelHandler))
+  fullName.vb: System.Func(Of System.Collections.Generic.List(Of IChannelHandler))
+  name.vb: Func(Of List(Of IChannelHandler))
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: IChannelHandler
+    name: IChannelHandler
+    nameWithType: IChannelHandler
+    fullName: IChannelHandler
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: System.Collections.Generic.List`1
+    name: List
+    nameWithType: List
+    fullName: System.Collections.Generic.List
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: IChannelHandler
+    name: IChannelHandler
+    nameWithType: IChannelHandler
+    fullName: IChannelHandler
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Func`1
+  commentId: T:System.Func`1
+  isExternal: true
+  name: Func<TResult>
+  nameWithType: Func<TResult>
+  fullName: System.Func<TResult>
+  nameWithType.vb: Func(Of TResult)
+  fullName.vb: System.Func(Of TResult)
+  name.vb: Func(Of TResult)
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    nameWithType: Func
+    fullName: System.Func
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.BuildChannel*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.BuildChannel
+  name: BuildChannel
+  nameWithType: RpcClientChannelFactory.BuildChannel
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels.RpcClientChannelFactory.BuildChannel
+- uid: IEventLoopGroupFactory
+  commentId: '!:IEventLoopGroupFactory'
+  isExternal: true
+  name: IEventLoopGroupFactory
+  nameWithType: IEventLoopGroupFactory
+  fullName: IEventLoopGroupFactory
+- uid: System.Net.IPAddress
+  commentId: T:System.Net.IPAddress
+  parent: System.Net
+  isExternal: true
+  name: IPAddress
+  nameWithType: IPAddress
+  fullName: System.Net.IPAddress
+- uid: System.Security.Cryptography.X509Certificates.X509Certificate2
+  commentId: T:System.Security.Cryptography.X509Certificates.X509Certificate2
+  parent: System.Security.Cryptography.X509Certificates
+  isExternal: true
+  name: X509Certificate2
+  nameWithType: X509Certificate2
+  fullName: System.Security.Cryptography.X509Certificates.X509Certificate2
+- uid: System.Threading.Tasks.Task{IObservableChannel}
+  commentId: T:System.Threading.Tasks.Task{IObservableChannel}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<IObservableChannel>
+  nameWithType: Task<IObservableChannel>
+  fullName: System.Threading.Tasks.Task<IObservableChannel>
+  nameWithType.vb: Task(Of IObservableChannel)
+  fullName.vb: System.Threading.Tasks.Task(Of IObservableChannel)
+  name.vb: Task(Of IObservableChannel)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: IObservableChannel
+    name: IObservableChannel
+    nameWithType: IObservableChannel
+    fullName: IObservableChannel
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: IObservableChannel
+    name: IObservableChannel
+    nameWithType: IObservableChannel
+    fullName: IObservableChannel
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Net
+  commentId: N:System.Net
+  isExternal: true
+  name: System.Net
+  nameWithType: System.Net
+  fullName: System.Net
+- uid: System.Security.Cryptography.X509Certificates
+  commentId: N:System.Security.Cryptography.X509Certificates
+  isExternal: true
+  name: System.Security.Cryptography.X509Certificates
+  nameWithType: System.Security.Cryptography.X509Certificates
+  fullName: System.Security.Cryptography.X509Certificates
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    nameWithType: Task
+    fullName: System.Threading.Tasks.Task
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TResult
+    nameWithType: TResult
+    fullName: TResult
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks

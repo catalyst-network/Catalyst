@@ -1,0 +1,51 @@
+trigger:
+  - master
+
+pool:
+  vmImage: windows-2019
+
+steps:
+
+  - task: DownloadSecureFile@1
+    inputs:
+      secureFile: deploy_key
+    displayName: 'Get the deploy key'
+
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        mkdir ~/.ssh && mv $DOWNLOADSECUREFILE_SECUREFILEPATH ~/.ssh/id_rsa
+        chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+    displayName: 'setup deploy key'
+    
+  - task: DotNetCoreInstaller@0
+    displayName: 'Install .NetCore SDK'
+    inputs:
+      version: 3.0.100
+
+  - powershell: |
+      choco install docfx -y
+      docfx build docs/docfx.json
+    displayName: "docfx build"
+    
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        git config --local user.name "CAT-OPS"
+        git config --local user.email "catops@catalystnet.org"
+        mv docs/_site _site
+        shopt -s extglob
+        rm -Rf !(.git|_site)
+        mv _site/* .
+        rm -Rf _site
+        git branch -D gh-pages
+        git branch gh-pages
+        git checkout gh-pages
+        git add . --all
+        git commit -m "publish gh-pages"
+        git remote set-url --push origin git@github.com:catalyst-network/Catalyst.Framework.git
+        git push origin --force HEAD:gh-pages
+      displayName: 'Build and commit pages'

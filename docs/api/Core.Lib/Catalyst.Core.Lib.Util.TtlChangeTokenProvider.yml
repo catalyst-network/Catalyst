@@ -1,0 +1,450 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Util.TtlChangeTokenProvider
+  commentId: T:Catalyst.Core.Lib.Util.TtlChangeTokenProvider
+  id: TtlChangeTokenProvider
+  parent: Catalyst.Core.Lib.Util
+  children:
+  - Catalyst.Core.Lib.Util.TtlChangeTokenProvider.#ctor(System.Int32)
+  - Catalyst.Core.Lib.Util.TtlChangeTokenProvider.GetChangeToken
+  langs:
+  - csharp
+  - vb
+  name: TtlChangeTokenProvider
+  nameWithType: TtlChangeTokenProvider
+  fullName: Catalyst.Core.Lib.Util.TtlChangeTokenProvider
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/TtlChangeTokenProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: TtlChangeTokenProvider
+    path: ../src/Catalyst.Core.Lib/Util/TtlChangeTokenProvider.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  example: []
+  syntax:
+    content: 'public class TtlChangeTokenProvider : IChangeTokenProvider'
+    content.vb: >-
+      Public Class TtlChangeTokenProvider
+
+          Implements IChangeTokenProvider
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Util.IChangeTokenProvider
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.Util.TtlChangeTokenProvider.#ctor(System.Int32)
+  commentId: M:Catalyst.Core.Lib.Util.TtlChangeTokenProvider.#ctor(System.Int32)
+  id: '#ctor(System.Int32)'
+  parent: Catalyst.Core.Lib.Util.TtlChangeTokenProvider
+  langs:
+  - csharp
+  - vb
+  name: TtlChangeTokenProvider(Int32)
+  nameWithType: TtlChangeTokenProvider.TtlChangeTokenProvider(Int32)
+  fullName: Catalyst.Core.Lib.Util.TtlChangeTokenProvider.TtlChangeTokenProvider(System.Int32)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/TtlChangeTokenProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/Util/TtlChangeTokenProvider.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  syntax:
+    content: public TtlChangeTokenProvider(int timeToLiveInMs)
+    parameters:
+    - id: timeToLiveInMs
+      type: System.Int32
+    content.vb: Public Sub New(timeToLiveInMs As Integer)
+  overload: Catalyst.Core.Lib.Util.TtlChangeTokenProvider.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.Util.TtlChangeTokenProvider.GetChangeToken
+  commentId: M:Catalyst.Core.Lib.Util.TtlChangeTokenProvider.GetChangeToken
+  id: GetChangeToken
+  parent: Catalyst.Core.Lib.Util.TtlChangeTokenProvider
+  langs:
+  - csharp
+  - vb
+  name: GetChangeToken()
+  nameWithType: TtlChangeTokenProvider.GetChangeToken()
+  fullName: Catalyst.Core.Lib.Util.TtlChangeTokenProvider.GetChangeToken()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Util/TtlChangeTokenProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetChangeToken
+    path: ../src/Catalyst.Core.Lib/Util/TtlChangeTokenProvider.cs
+    startLine: 37
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Util
+  example: []
+  syntax:
+    content: public IChangeToken GetChangeToken()
+    return:
+      type: IChangeToken
+    content.vb: Public Function GetChangeToken As IChangeToken
+  overload: Catalyst.Core.Lib.Util.TtlChangeTokenProvider.GetChangeToken*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.Util
+  commentId: N:Catalyst.Core.Lib.Util
+  name: Catalyst.Core.Lib.Util
+  nameWithType: Catalyst.Core.Lib.Util
+  fullName: Catalyst.Core.Lib.Util
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Util.IChangeTokenProvider
+  commentId: T:Catalyst.Abstractions.Util.IChangeTokenProvider
+  parent: Catalyst.Abstractions.Util
+  name: IChangeTokenProvider
+  nameWithType: IChangeTokenProvider
+  fullName: Catalyst.Abstractions.Util.IChangeTokenProvider
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Util
+  commentId: N:Catalyst.Abstractions.Util
+  name: Catalyst.Abstractions.Util
+  nameWithType: Catalyst.Abstractions.Util
+  fullName: Catalyst.Abstractions.Util
+- uid: Catalyst.Core.Lib.Util.TtlChangeTokenProvider.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.Util.TtlChangeTokenProvider.#ctor
+  name: TtlChangeTokenProvider
+  nameWithType: TtlChangeTokenProvider.TtlChangeTokenProvider
+  fullName: Catalyst.Core.Lib.Util.TtlChangeTokenProvider.TtlChangeTokenProvider
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Core.Lib.Util.TtlChangeTokenProvider.GetChangeToken*
+  commentId: Overload:Catalyst.Core.Lib.Util.TtlChangeTokenProvider.GetChangeToken
+  name: GetChangeToken
+  nameWithType: TtlChangeTokenProvider.GetChangeToken
+  fullName: Catalyst.Core.Lib.Util.TtlChangeTokenProvider.GetChangeToken
+- uid: IChangeToken
+  commentId: '!:IChangeToken'
+  isExternal: true
+  name: IChangeToken
+  nameWithType: IChangeToken
+  fullName: IChangeToken

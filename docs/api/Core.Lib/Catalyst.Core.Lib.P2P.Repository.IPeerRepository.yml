@@ -1,0 +1,43 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  commentId: T:Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  id: IPeerRepository
+  parent: Catalyst.Core.Lib.P2P.Repository
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: IPeerRepository
+  nameWithType: IPeerRepository
+  fullName: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/P2P/Repository/IPeerRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IPeerRepository
+    path: ../src/Catalyst.Core.Lib/P2P/Repository/IPeerRepository.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.P2P.Repository
+  syntax:
+    content: 'public interface IPeerRepository : IRepositoryWrapper<Peer>, IRepository<Peer, string>'
+    content.vb: >-
+      Public Interface IPeerRepository
+
+          Inherits IRepositoryWrapper(Of Peer)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+references:
+- uid: Catalyst.Core.Lib.P2P.Repository
+  commentId: N:Catalyst.Core.Lib.P2P.Repository
+  name: Catalyst.Core.Lib.P2P.Repository
+  nameWithType: Catalyst.Core.Lib.P2P.Repository
+  fullName: Catalyst.Core.Lib.P2P.Repository

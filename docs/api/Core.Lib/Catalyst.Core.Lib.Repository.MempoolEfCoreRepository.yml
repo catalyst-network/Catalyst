@@ -1,0 +1,215 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.Repository.MempoolEfCoreRepository
+  commentId: T:Catalyst.Core.Lib.Repository.MempoolEfCoreRepository
+  id: MempoolEfCoreRepository
+  parent: Catalyst.Core.Lib.Repository
+  children:
+  - Catalyst.Core.Lib.Repository.MempoolEfCoreRepository.#ctor(Catalyst.Core.Lib.Repository.IDbContext,ICachingStrategy{Catalyst.Core.Lib.DAO.TransactionBroadcastDao,System.String})
+  langs:
+  - csharp
+  - vb
+  name: MempoolEfCoreRepository
+  nameWithType: MempoolEfCoreRepository
+  fullName: Catalyst.Core.Lib.Repository.MempoolEfCoreRepository
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Repository/MempoolEfCoreRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MempoolEfCoreRepository
+    path: ../src/Catalyst.Core.Lib/Repository/MempoolEfCoreRepository.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Repository
+  syntax:
+    content: 'public class MempoolEfCoreRepository : EfCoreRepository<TransactionBroadcastDao, string>'
+    content.vb: >-
+      Public Class MempoolEfCoreRepository
+
+          Inherits EfCoreRepository(Of TransactionBroadcastDao, String)
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.Repository.MempoolEfCoreRepository.#ctor(Catalyst.Core.Lib.Repository.IDbContext,ICachingStrategy{Catalyst.Core.Lib.DAO.TransactionBroadcastDao,System.String})
+  commentId: M:Catalyst.Core.Lib.Repository.MempoolEfCoreRepository.#ctor(Catalyst.Core.Lib.Repository.IDbContext,ICachingStrategy{Catalyst.Core.Lib.DAO.TransactionBroadcastDao,System.String})
+  id: '#ctor(Catalyst.Core.Lib.Repository.IDbContext,ICachingStrategy{Catalyst.Core.Lib.DAO.TransactionBroadcastDao,System.String})'
+  parent: Catalyst.Core.Lib.Repository.MempoolEfCoreRepository
+  langs:
+  - csharp
+  - vb
+  name: MempoolEfCoreRepository(IDbContext, ICachingStrategy<TransactionBroadcastDao, String>)
+  nameWithType: MempoolEfCoreRepository.MempoolEfCoreRepository(IDbContext, ICachingStrategy<TransactionBroadcastDao, String>)
+  fullName: Catalyst.Core.Lib.Repository.MempoolEfCoreRepository.MempoolEfCoreRepository(Catalyst.Core.Lib.Repository.IDbContext, ICachingStrategy<Catalyst.Core.Lib.DAO.TransactionBroadcastDao, System.String>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/Repository/MempoolEfCoreRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/Repository/MempoolEfCoreRepository.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.Repository
+  syntax:
+    content: public MempoolEfCoreRepository(IDbContext dbContext, ICachingStrategy<TransactionBroadcastDao, string> cachingStrategy = null)
+    parameters:
+    - id: dbContext
+      type: Catalyst.Core.Lib.Repository.IDbContext
+    - id: cachingStrategy
+      type: ICachingStrategy{Catalyst.Core.Lib.DAO.TransactionBroadcastDao,System.String}
+    content.vb: Public Sub New(dbContext As IDbContext, cachingStrategy As ICachingStrategy(Of TransactionBroadcastDao, String) = Nothing)
+  overload: Catalyst.Core.Lib.Repository.MempoolEfCoreRepository.#ctor*
+  nameWithType.vb: MempoolEfCoreRepository.MempoolEfCoreRepository(IDbContext, ICachingStrategy(Of TransactionBroadcastDao, String))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Lib.Repository.MempoolEfCoreRepository.MempoolEfCoreRepository(Catalyst.Core.Lib.Repository.IDbContext, ICachingStrategy(Of Catalyst.Core.Lib.DAO.TransactionBroadcastDao, System.String))
+  name.vb: MempoolEfCoreRepository(IDbContext, ICachingStrategy(Of TransactionBroadcastDao, String))
+references:
+- uid: Catalyst.Core.Lib.Repository
+  commentId: N:Catalyst.Core.Lib.Repository
+  name: Catalyst.Core.Lib.Repository
+  nameWithType: Catalyst.Core.Lib.Repository
+  fullName: Catalyst.Core.Lib.Repository
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.Repository.MempoolEfCoreRepository.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.Repository.MempoolEfCoreRepository.#ctor
+  name: MempoolEfCoreRepository
+  nameWithType: MempoolEfCoreRepository.MempoolEfCoreRepository
+  fullName: Catalyst.Core.Lib.Repository.MempoolEfCoreRepository.MempoolEfCoreRepository
+- uid: Catalyst.Core.Lib.Repository.IDbContext
+  commentId: T:Catalyst.Core.Lib.Repository.IDbContext
+  parent: Catalyst.Core.Lib.Repository
+  name: IDbContext
+  nameWithType: IDbContext
+  fullName: Catalyst.Core.Lib.Repository.IDbContext
+- uid: ICachingStrategy{Catalyst.Core.Lib.DAO.TransactionBroadcastDao,System.String}
+  commentId: '!:ICachingStrategy{Catalyst.Core.Lib.DAO.TransactionBroadcastDao,System.String}'
+  definition: ICachingStrategy`2
+  name: ICachingStrategy<TransactionBroadcastDao, String>
+  nameWithType: ICachingStrategy<TransactionBroadcastDao, String>
+  fullName: ICachingStrategy<Catalyst.Core.Lib.DAO.TransactionBroadcastDao, System.String>
+  nameWithType.vb: ICachingStrategy(Of TransactionBroadcastDao, String)
+  fullName.vb: ICachingStrategy(Of Catalyst.Core.Lib.DAO.TransactionBroadcastDao, System.String)
+  name.vb: ICachingStrategy(Of TransactionBroadcastDao, String)
+  spec.csharp:
+  - uid: ICachingStrategy`2
+    name: ICachingStrategy
+    nameWithType: ICachingStrategy
+    fullName: ICachingStrategy
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Core.Lib.DAO.TransactionBroadcastDao
+    name: TransactionBroadcastDao
+    nameWithType: TransactionBroadcastDao
+    fullName: Catalyst.Core.Lib.DAO.TransactionBroadcastDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: ICachingStrategy`2
+    name: ICachingStrategy
+    nameWithType: ICachingStrategy
+    fullName: ICachingStrategy
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Core.Lib.DAO.TransactionBroadcastDao
+    name: TransactionBroadcastDao
+    nameWithType: TransactionBroadcastDao
+    fullName: Catalyst.Core.Lib.DAO.TransactionBroadcastDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.String
+    name: String
+    nameWithType: String
+    fullName: System.String
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: ICachingStrategy`2
+  isExternal: true
+  name: ICachingStrategy<, >
+  nameWithType: ICachingStrategy<, >
+  fullName: ICachingStrategy<, >
+  nameWithType.vb: ICachingStrategy(Of , )
+  fullName.vb: ICachingStrategy(Of , )
+  name.vb: ICachingStrategy(Of , )
+  spec.csharp:
+  - uid: ICachingStrategy`2
+    name: ICachingStrategy
+    nameWithType: ICachingStrategy
+    fullName: ICachingStrategy
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: ICachingStrategy`2
+    name: ICachingStrategy
+    nameWithType: ICachingStrategy
+    fullName: ICachingStrategy
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: )
+    nameWithType: )
+    fullName: )

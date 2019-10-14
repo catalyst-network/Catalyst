@@ -1,0 +1,111 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions
+  commentId: T:Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions
+  id: IAddFileOnDfsOptions
+  parent: Catalyst.Abstractions.Cli.Options
+  children:
+  - Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions.File
+  langs:
+  - csharp
+  - vb
+  name: IAddFileOnDfsOptions
+  nameWithType: IAddFileOnDfsOptions
+  fullName: Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Options/IAddFileOnDfsOptions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IAddFileOnDfsOptions
+    path: ../src/Catalyst.Abstractions/Cli/Options/IAddFileOnDfsOptions.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Options
+  syntax:
+    content: 'public interface IAddFileOnDfsOptions : IOptionsBase'
+    content.vb: >-
+      Public Interface IAddFileOnDfsOptions
+
+          Inherits IOptionsBase
+  inheritedMembers:
+  - Catalyst.Abstractions.Cli.Options.IOptionsBase.Node
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions.File
+  commentId: P:Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions.File
+  id: File
+  parent: Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions
+  langs:
+  - csharp
+  - vb
+  name: File
+  nameWithType: IAddFileOnDfsOptions.File
+  fullName: Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions.File
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Options/IAddFileOnDfsOptions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: File
+    path: ../src/Catalyst.Abstractions/Cli/Options/IAddFileOnDfsOptions.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Options
+  summary: "\nGets or sets the file.\n"
+  example: []
+  syntax:
+    content: string File { get; set; }
+    parameters: []
+    return:
+      type: System.String
+      description: "\nThe file.\n"
+    content.vb: Property File As String
+  overload: Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions.File*
+  modifiers.csharp:
+  - get
+  - set
+references:
+- uid: Catalyst.Abstractions.Cli.Options
+  commentId: N:Catalyst.Abstractions.Cli.Options
+  name: Catalyst.Abstractions.Cli.Options
+  nameWithType: Catalyst.Abstractions.Cli.Options
+  fullName: Catalyst.Abstractions.Cli.Options
+- uid: Catalyst.Abstractions.Cli.Options.IOptionsBase.Node
+  commentId: P:Catalyst.Abstractions.Cli.Options.IOptionsBase.Node
+  parent: Catalyst.Abstractions.Cli.Options.IOptionsBase
+  name: Node
+  nameWithType: IOptionsBase.Node
+  fullName: Catalyst.Abstractions.Cli.Options.IOptionsBase.Node
+- uid: Catalyst.Abstractions.Cli.Options.IOptionsBase
+  commentId: T:Catalyst.Abstractions.Cli.Options.IOptionsBase
+  parent: Catalyst.Abstractions.Cli.Options
+  name: IOptionsBase
+  nameWithType: IOptionsBase
+  fullName: Catalyst.Abstractions.Cli.Options.IOptionsBase
+- uid: Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions.File*
+  commentId: Overload:Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions.File
+  name: File
+  nameWithType: IAddFileOnDfsOptions.File
+  fullName: Catalyst.Abstractions.Cli.Options.IAddFileOnDfsOptions.File
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

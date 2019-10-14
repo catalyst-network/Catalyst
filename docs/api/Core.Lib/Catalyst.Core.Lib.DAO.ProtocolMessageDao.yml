@@ -1,0 +1,1299 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  commentId: T:Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  id: ProtocolMessageDao
+  parent: Catalyst.Core.Lib.DAO
+  children:
+  - Catalyst.Core.Lib.DAO.ProtocolMessageDao.CorrelationId
+  - Catalyst.Core.Lib.DAO.ProtocolMessageDao.InitMappers(IMapperConfigurationExpression)
+  - Catalyst.Core.Lib.DAO.ProtocolMessageDao.PeerId
+  - Catalyst.Core.Lib.DAO.ProtocolMessageDao.Signature
+  - Catalyst.Core.Lib.DAO.ProtocolMessageDao.TypeUrl
+  - Catalyst.Core.Lib.DAO.ProtocolMessageDao.Value
+  langs:
+  - csharp
+  - vb
+  name: ProtocolMessageDao
+  nameWithType: ProtocolMessageDao
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ProtocolMessageDao
+    path: ../src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: 'public class ProtocolMessageDao : DaoBase<ProtocolMessage, ProtocolMessageDao>, IMapperInitializer, IValueConverter<ProtocolMessage, ProtocolMessageDao>'
+    content.vb: >-
+      Public Class ProtocolMessageDao
+
+          Inherits DaoBase(Of ProtocolMessage, ProtocolMessageDao)
+
+          Implements IMapperInitializer, IValueConverter(Of ProtocolMessage, ProtocolMessageDao)
+  inheritance:
+  - System.Object
+  - Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  implements:
+  - Catalyst.Abstractions.DAO.IMapperInitializer
+  - IValueConverter{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  inheritedMembers:
+  - Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.Id
+  - Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.ToProtoBuff
+  - Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.ToDao(ProtocolMessage)
+  - Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.InitMappers(IMapperConfigurationExpression)
+  - Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.Convert(ProtocolMessage,ResolutionContext)
+  - Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.Convert(Catalyst.Core.Lib.DAO.ProtocolMessageDao,ResolutionContext)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.PeerId
+  commentId: P:Catalyst.Core.Lib.DAO.ProtocolMessageDao.PeerId
+  id: PeerId
+  parent: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  langs:
+  - csharp
+  - vb
+  name: PeerId
+  nameWithType: ProtocolMessageDao.PeerId
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.PeerId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerId
+    path: ../src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public PeerIdDao PeerId { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Core.Lib.DAO.PeerIdDao
+    content.vb: Public Property PeerId As PeerIdDao
+  overload: Catalyst.Core.Lib.DAO.ProtocolMessageDao.PeerId*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.CorrelationId
+  commentId: P:Catalyst.Core.Lib.DAO.ProtocolMessageDao.CorrelationId
+  id: CorrelationId
+  parent: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  langs:
+  - csharp
+  - vb
+  name: CorrelationId
+  nameWithType: ProtocolMessageDao.CorrelationId
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.CorrelationId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CorrelationId
+    path: ../src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public string CorrelationId { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property CorrelationId As String
+  overload: Catalyst.Core.Lib.DAO.ProtocolMessageDao.CorrelationId*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.TypeUrl
+  commentId: P:Catalyst.Core.Lib.DAO.ProtocolMessageDao.TypeUrl
+  id: TypeUrl
+  parent: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  langs:
+  - csharp
+  - vb
+  name: TypeUrl
+  nameWithType: ProtocolMessageDao.TypeUrl
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.TypeUrl
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: TypeUrl
+    path: ../src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public string TypeUrl { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property TypeUrl As String
+  overload: Catalyst.Core.Lib.DAO.ProtocolMessageDao.TypeUrl*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.Value
+  commentId: P:Catalyst.Core.Lib.DAO.ProtocolMessageDao.Value
+  id: Value
+  parent: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  langs:
+  - csharp
+  - vb
+  name: Value
+  nameWithType: ProtocolMessageDao.Value
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.Value
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Value
+    path: ../src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public string Value { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Value As String
+  overload: Catalyst.Core.Lib.DAO.ProtocolMessageDao.Value*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.Signature
+  commentId: P:Catalyst.Core.Lib.DAO.ProtocolMessageDao.Signature
+  id: Signature
+  parent: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  langs:
+  - csharp
+  - vb
+  name: Signature
+  nameWithType: ProtocolMessageDao.Signature
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.Signature
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Signature
+    path: ../src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+    startLine: 36
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public SignatureDao Signature { get; set; }
+    parameters: []
+    return:
+      type: Catalyst.Core.Lib.DAO.SignatureDao
+    content.vb: Public Property Signature As SignatureDao
+  overload: Catalyst.Core.Lib.DAO.ProtocolMessageDao.Signature*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.ProtocolMessageDao.InitMappers(IMapperConfigurationExpression)
+  id: InitMappers(IMapperConfigurationExpression)
+  parent: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  langs:
+  - csharp
+  - vb
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: ProtocolMessageDao.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.InitMappers(IMapperConfigurationExpression)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: InitMappers
+    path: ../src/Catalyst.Core.Lib/DAO/ProtocolMessageDao.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public override void InitMappers(IMapperConfigurationExpression cfg)
+    parameters:
+    - id: cfg
+      type: IMapperConfigurationExpression
+    content.vb: Public Overrides Sub InitMappers(cfg As IMapperConfigurationExpression)
+  overridden: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.InitMappers(IMapperConfigurationExpression)
+  overload: Catalyst.Core.Lib.DAO.ProtocolMessageDao.InitMappers*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: Catalyst.Core.Lib.DAO
+  commentId: N:Catalyst.Core.Lib.DAO
+  name: Catalyst.Core.Lib.DAO
+  nameWithType: Catalyst.Core.Lib.DAO
+  fullName: Catalyst.Core.Lib.DAO
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  commentId: T:Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  parent: Catalyst.Core.Lib.DAO
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2
+  name: DaoBase<ProtocolMessage, ProtocolMessageDao>
+  nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>
+  nameWithType.vb: DaoBase(Of ProtocolMessage, ProtocolMessageDao)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao)
+  name.vb: DaoBase(Of ProtocolMessage, ProtocolMessageDao)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+    name: ProtocolMessageDao
+    nameWithType: ProtocolMessageDao
+    fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+    name: ProtocolMessageDao
+    nameWithType: ProtocolMessageDao
+    fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.DAO.IMapperInitializer
+  commentId: T:Catalyst.Abstractions.DAO.IMapperInitializer
+  parent: Catalyst.Abstractions.DAO
+  name: IMapperInitializer
+  nameWithType: IMapperInitializer
+  fullName: Catalyst.Abstractions.DAO.IMapperInitializer
+- uid: IValueConverter{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  commentId: '!:IValueConverter{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}'
+  definition: IValueConverter`2
+  name: IValueConverter<ProtocolMessage, ProtocolMessageDao>
+  nameWithType: IValueConverter<ProtocolMessage, ProtocolMessageDao>
+  fullName: IValueConverter<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>
+  nameWithType.vb: IValueConverter(Of ProtocolMessage, ProtocolMessageDao)
+  fullName.vb: IValueConverter(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao)
+  name.vb: IValueConverter(Of ProtocolMessage, ProtocolMessageDao)
+  spec.csharp:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+    name: ProtocolMessageDao
+    nameWithType: ProtocolMessageDao
+    fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+    name: ProtocolMessageDao
+    nameWithType: ProtocolMessageDao
+    fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.Id
+  commentId: P:Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.Id
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  name: Id
+  nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.Id
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.Id
+  nameWithType.vb: DaoBase(Of ProtocolMessage, ProtocolMessageDao).Id
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).Id
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.ToProtoBuff
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.ToProtoBuff
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  name: ToProtoBuff()
+  nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.ToProtoBuff()
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.ToProtoBuff()
+  nameWithType.vb: DaoBase(Of ProtocolMessage, ProtocolMessageDao).ToProtoBuff()
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).ToProtoBuff()
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase(Of ProtocolMessage, ProtocolMessageDao).ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.ToDao(ProtocolMessage)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.ToDao(ProtocolMessage)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  name: ToDao(ProtocolMessage)
+  nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.ToDao(ProtocolMessage)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.ToDao(ProtocolMessage)
+  nameWithType.vb: DaoBase(Of ProtocolMessage, ProtocolMessageDao).ToDao(ProtocolMessage)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).ToDao(ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase(Of ProtocolMessage, ProtocolMessageDao).ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.InitMappers(IMapperConfigurationExpression)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.InitMappers(IMapperConfigurationExpression)
+  nameWithType.vb: DaoBase(Of ProtocolMessage, ProtocolMessageDao).InitMappers(IMapperConfigurationExpression)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).InitMappers(IMapperConfigurationExpression)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase(Of ProtocolMessage, ProtocolMessageDao).InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.Convert(ProtocolMessage,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.Convert(ProtocolMessage,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  name: Convert(ProtocolMessage, ResolutionContext)
+  nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.Convert(ProtocolMessage, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.Convert(ProtocolMessage, ResolutionContext)
+  nameWithType.vb: DaoBase(Of ProtocolMessage, ProtocolMessageDao).Convert(ProtocolMessage, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).Convert(ProtocolMessage, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of ProtocolMessage, ProtocolMessageDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.Convert(Catalyst.Core.Lib.DAO.ProtocolMessageDao,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}.Convert(Catalyst.Core.Lib.DAO.ProtocolMessageDao,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{ProtocolMessage,Catalyst.Core.Lib.DAO.ProtocolMessageDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  name: Convert(ProtocolMessageDao, ResolutionContext)
+  nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.Convert(ProtocolMessageDao, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.Convert(Catalyst.Core.Lib.DAO.ProtocolMessageDao, ResolutionContext)
+  nameWithType.vb: DaoBase(Of ProtocolMessage, ProtocolMessageDao).Convert(ProtocolMessageDao, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).Convert(Catalyst.Core.Lib.DAO.ProtocolMessageDao, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<ProtocolMessage, ProtocolMessageDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+    name: ProtocolMessageDao
+    nameWithType: ProtocolMessageDao
+    fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of ProtocolMessage, ProtocolMessageDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of ProtocolMessage, Catalyst.Core.Lib.DAO.ProtocolMessageDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+    name: ProtocolMessageDao
+    nameWithType: ProtocolMessageDao
+    fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2
+  commentId: T:Catalyst.Core.Lib.DAO.DaoBase`2
+  name: DaoBase<TProto, TDao>
+  nameWithType: DaoBase<TProto, TDao>
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>
+  nameWithType.vb: DaoBase(Of TProto, TDao)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao)
+  name.vb: DaoBase(Of TProto, TDao)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.DAO
+  commentId: N:Catalyst.Abstractions.DAO
+  name: Catalyst.Abstractions.DAO
+  nameWithType: Catalyst.Abstractions.DAO
+  fullName: Catalyst.Abstractions.DAO
+- uid: IValueConverter`2
+  isExternal: true
+  name: IValueConverter<, >
+  nameWithType: IValueConverter<, >
+  fullName: IValueConverter<, >
+  nameWithType.vb: IValueConverter(Of , )
+  fullName.vb: IValueConverter(Of , )
+  name.vb: IValueConverter(Of , )
+  spec.csharp:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  commentId: P:Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  name: Id
+  nameWithType: DaoBase<TProto, TDao>.Id
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Id
+  nameWithType.vb: DaoBase(Of TProto, TDao).Id
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Id
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  name: ToProtoBuff()
+  nameWithType: DaoBase<TProto, TDao>.ToProtoBuff()
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToProtoBuff()
+  nameWithType.vb: DaoBase(Of TProto, TDao).ToProtoBuff()
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToProtoBuff()
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase<TProto, TDao>.ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase(Of TProto, TDao).ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  name: ToDao(TProto)
+  nameWithType: DaoBase<TProto, TDao>.ToDao(TProto)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToDao(TProto)
+  nameWithType.vb: DaoBase(Of TProto, TDao).ToDao(TProto)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToDao(TProto)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase<TProto, TDao>.ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase(Of TProto, TDao).ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  isExternal: true
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: DaoBase<TProto, TDao>.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.InitMappers(IMapperConfigurationExpression)
+  nameWithType.vb: DaoBase(Of TProto, TDao).InitMappers(IMapperConfigurationExpression)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).InitMappers(IMapperConfigurationExpression)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase<TProto, TDao>.InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase(Of TProto, TDao).InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  isExternal: true
+  name: Convert(TProto, ResolutionContext)
+  nameWithType: DaoBase<TProto, TDao>.Convert(TProto, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert(TProto, ResolutionContext)
+  nameWithType.vb: DaoBase(Of TProto, TDao).Convert(TProto, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert(TProto, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<TProto, TDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of TProto, TDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  isExternal: true
+  name: Convert(TDao, ResolutionContext)
+  nameWithType: DaoBase<TProto, TDao>.Convert(TDao, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert(TDao, ResolutionContext)
+  nameWithType.vb: DaoBase(Of TProto, TDao).Convert(TDao, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert(TDao, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<TProto, TDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of TProto, TDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.PeerId*
+  commentId: Overload:Catalyst.Core.Lib.DAO.ProtocolMessageDao.PeerId
+  name: PeerId
+  nameWithType: ProtocolMessageDao.PeerId
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.PeerId
+- uid: Catalyst.Core.Lib.DAO.PeerIdDao
+  commentId: T:Catalyst.Core.Lib.DAO.PeerIdDao
+  parent: Catalyst.Core.Lib.DAO
+  name: PeerIdDao
+  nameWithType: PeerIdDao
+  fullName: Catalyst.Core.Lib.DAO.PeerIdDao
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.CorrelationId*
+  commentId: Overload:Catalyst.Core.Lib.DAO.ProtocolMessageDao.CorrelationId
+  name: CorrelationId
+  nameWithType: ProtocolMessageDao.CorrelationId
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.CorrelationId
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.TypeUrl*
+  commentId: Overload:Catalyst.Core.Lib.DAO.ProtocolMessageDao.TypeUrl
+  name: TypeUrl
+  nameWithType: ProtocolMessageDao.TypeUrl
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.TypeUrl
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.Value*
+  commentId: Overload:Catalyst.Core.Lib.DAO.ProtocolMessageDao.Value
+  name: Value
+  nameWithType: ProtocolMessageDao.Value
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.Value
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.Signature*
+  commentId: Overload:Catalyst.Core.Lib.DAO.ProtocolMessageDao.Signature
+  name: Signature
+  nameWithType: ProtocolMessageDao.Signature
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.Signature
+- uid: Catalyst.Core.Lib.DAO.SignatureDao
+  commentId: T:Catalyst.Core.Lib.DAO.SignatureDao
+  parent: Catalyst.Core.Lib.DAO
+  name: SignatureDao
+  nameWithType: SignatureDao
+  fullName: Catalyst.Core.Lib.DAO.SignatureDao
+- uid: Catalyst.Core.Lib.DAO.ProtocolMessageDao.InitMappers*
+  commentId: Overload:Catalyst.Core.Lib.DAO.ProtocolMessageDao.InitMappers
+  name: InitMappers
+  nameWithType: ProtocolMessageDao.InitMappers
+  fullName: Catalyst.Core.Lib.DAO.ProtocolMessageDao.InitMappers
+- uid: IMapperConfigurationExpression
+  isExternal: true
+  name: IMapperConfigurationExpression
+  nameWithType: IMapperConfigurationExpression
+  fullName: IMapperConfigurationExpression

@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  commentId: N:Catalyst.Abstractions.IO.Transport.Bootstrapping
+  id: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  children:
+  - Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  nameWithType: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  fullName: Catalyst.Abstractions.IO.Transport.Bootstrapping
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+  commentId: T:Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap
+  name: IServerBootstrap
+  nameWithType: IServerBootstrap
+  fullName: Catalyst.Abstractions.IO.Transport.Bootstrapping.IServerBootstrap

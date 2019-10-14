@@ -1,0 +1,911 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler
+  id: ObservableServiceHandler
+  parent: Catalyst.Core.Lib.IO.Handlers
+  children:
+  - Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.#ctor(IScheduler)
+  - Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  - Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.Dispose
+  - Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ExceptionCaught(IChannelHandlerContext,System.Exception)
+  - Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.IsSharable
+  - Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.MessageStream
+  langs:
+  - csharp
+  - vb
+  name: ObservableServiceHandler
+  nameWithType: ObservableServiceHandler
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ObservableServiceHandler
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  summary: "\nThis handler terminates DotNetty involvement and passes service messages into rx land,\nby this point all messages should be treated as genuine and sanitised.\n"
+  example: []
+  syntax:
+    content: 'public sealed class ObservableServiceHandler : InboundChannelHandlerBase<ProtocolMessage>, IObservableServiceHandler, IChannelHandler, IObservableMessageStreamer<ProtocolMessage>, IDisposable'
+    content.vb: >-
+      Public NotInheritable Class ObservableServiceHandler
+
+          Inherits InboundChannelHandlerBase(Of ProtocolMessage)
+
+          Implements IObservableServiceHandler, IChannelHandler, IObservableMessageStreamer(Of ProtocolMessage), IDisposable
+  inheritance:
+  - System.Object
+  - Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  implements:
+  - Catalyst.Abstractions.IO.Handlers.IObservableServiceHandler
+  - IChannelHandler
+  - Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{ProtocolMessage}
+  - System.IDisposable
+  inheritedMembers:
+  - Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.Logger
+  - Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead(IChannelHandlerContext,System.Object)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.#ctor(IScheduler)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.#ctor(IScheduler)
+  id: '#ctor(IScheduler)'
+  parent: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler
+  langs:
+  - csharp
+  - vb
+  name: ObservableServiceHandler(IScheduler)
+  nameWithType: ObservableServiceHandler.ObservableServiceHandler(IScheduler)
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ObservableServiceHandler(IScheduler)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+    startLine: 45
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  syntax:
+    content: public ObservableServiceHandler(IScheduler scheduler = null)
+    parameters:
+    - id: scheduler
+      type: IScheduler
+    content.vb: Public Sub New(scheduler As IScheduler = Nothing)
+  overload: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.IsSharable
+  commentId: P:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.IsSharable
+  id: IsSharable
+  parent: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler
+  langs:
+  - csharp
+  - vb
+  name: IsSharable
+  nameWithType: ObservableServiceHandler.IsSharable
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.IsSharable
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IsSharable
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+    startLine: 53
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  syntax:
+    content: public override bool IsSharable { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Overrides ReadOnly Property IsSharable As Boolean
+  overload: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.IsSharable*
+  modifiers.csharp:
+  - public
+  - override
+  - get
+  modifiers.vb:
+  - Public
+  - Overrides
+  - ReadOnly
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.MessageStream
+  commentId: P:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.MessageStream
+  id: MessageStream
+  parent: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler
+  langs:
+  - csharp
+  - vb
+  name: MessageStream
+  nameWithType: ObservableServiceHandler.MessageStream
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.MessageStream
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: MessageStream
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  syntax:
+    content: public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+    parameters: []
+    return:
+      type: System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}
+    content.vb: Public ReadOnly Property MessageStream As IObservable(Of IObserverDto(Of ProtocolMessage))
+  overload: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.MessageStream*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ExceptionCaught(IChannelHandlerContext,System.Exception)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ExceptionCaught(IChannelHandlerContext,System.Exception)
+  id: ExceptionCaught(IChannelHandlerContext,System.Exception)
+  parent: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler
+  langs:
+  - csharp
+  - vb
+  name: ExceptionCaught(IChannelHandlerContext, Exception)
+  nameWithType: ObservableServiceHandler.ExceptionCaught(IChannelHandlerContext, Exception)
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ExceptionCaught(IChannelHandlerContext, System.Exception)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ExceptionCaught
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+    startLine: 57
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  syntax:
+    content: public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
+    parameters:
+    - id: context
+      type: IChannelHandlerContext
+    - id: e
+      type: System.Exception
+    content.vb: Public Overrides Sub ExceptionCaught(context As IChannelHandlerContext, e As Exception)
+  overload: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ExceptionCaught*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.Dispose
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.Dispose
+  id: Dispose
+  parent: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: ObservableServiceHandler.Dispose()
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+    startLine: 70
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose
+  overload: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  id: ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  parent: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler
+  langs:
+  - csharp
+  - vb
+  name: ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  nameWithType: ObservableServiceHandler.ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ChannelRead0
+    path: ../src/Catalyst.Core.Lib/IO/Handlers/ObservableServiceHandler.cs
+    startLine: 80
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.IO.Handlers
+  summary: "\nReads the channel once accepted and pushed into a stream.\n"
+  example: []
+  syntax:
+    content: protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
+    parameters:
+    - id: ctx
+      type: IChannelHandlerContext
+      description: ''
+    - id: message
+      type: ProtocolMessage
+      description: ''
+    content.vb: Protected Overrides Sub ChannelRead0(ctx As IChannelHandlerContext, message As ProtocolMessage)
+  overridden: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  overload: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ChannelRead0*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Lib.IO.Handlers
+  commentId: N:Catalyst.Core.Lib.IO.Handlers
+  name: Catalyst.Core.Lib.IO.Handlers
+  nameWithType: Catalyst.Core.Lib.IO.Handlers
+  fullName: Catalyst.Core.Lib.IO.Handlers
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  parent: Catalyst.Core.Lib.IO.Handlers
+  definition: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  name: InboundChannelHandlerBase<ProtocolMessage>
+  nameWithType: InboundChannelHandlerBase<ProtocolMessage>
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>
+  nameWithType.vb: InboundChannelHandlerBase(Of ProtocolMessage)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage)
+  name.vb: InboundChannelHandlerBase(Of ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+    name: InboundChannelHandlerBase
+    nameWithType: InboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+    name: InboundChannelHandlerBase
+    nameWithType: InboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Handlers.IObservableServiceHandler
+  commentId: T:Catalyst.Abstractions.IO.Handlers.IObservableServiceHandler
+  parent: Catalyst.Abstractions.IO.Handlers
+  name: IObservableServiceHandler
+  nameWithType: IObservableServiceHandler
+  fullName: Catalyst.Abstractions.IO.Handlers.IObservableServiceHandler
+- uid: IChannelHandler
+  commentId: '!:IChannelHandler'
+  isExternal: true
+  name: IChannelHandler
+  nameWithType: IChannelHandler
+  fullName: IChannelHandler
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{ProtocolMessage}
+  commentId: T:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer{ProtocolMessage}
+  parent: Catalyst.Abstractions.IO.Observers
+  definition: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  name: IObservableMessageStreamer<ProtocolMessage>
+  nameWithType: IObservableMessageStreamer<ProtocolMessage>
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<ProtocolMessage>
+  nameWithType.vb: IObservableMessageStreamer(Of ProtocolMessage)
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of ProtocolMessage)
+  name.vb: IObservableMessageStreamer(Of ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.Logger
+  commentId: F:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.Logger
+  parent: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  definition: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.Logger
+  name: Logger
+  nameWithType: InboundChannelHandlerBase<ProtocolMessage>.Logger
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>.Logger
+  nameWithType.vb: InboundChannelHandlerBase(Of ProtocolMessage).Logger
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage).Logger
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead(IChannelHandlerContext,System.Object)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead(IChannelHandlerContext,System.Object)
+  parent: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  definition: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+  name: ChannelRead(IChannelHandlerContext, Object)
+  nameWithType: InboundChannelHandlerBase<ProtocolMessage>.ChannelRead(IChannelHandlerContext, Object)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>.ChannelRead(IChannelHandlerContext, System.Object)
+  nameWithType.vb: InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead(IChannelHandlerContext, Object)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead(IChannelHandlerContext, System.Object)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+    name: ChannelRead
+    nameWithType: InboundChannelHandlerBase<ProtocolMessage>.ChannelRead
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>.ChannelRead
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+    name: ChannelRead
+    nameWithType: InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  commentId: T:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+  name: InboundChannelHandlerBase<T>
+  nameWithType: InboundChannelHandlerBase<T>
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>
+  nameWithType.vb: InboundChannelHandlerBase(Of T)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T)
+  name.vb: InboundChannelHandlerBase(Of T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+    name: InboundChannelHandlerBase
+    nameWithType: InboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1
+    name: InboundChannelHandlerBase
+    nameWithType: InboundChannelHandlerBase
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Handlers
+  commentId: N:Catalyst.Abstractions.IO.Handlers
+  name: Catalyst.Abstractions.IO.Handlers
+  nameWithType: Catalyst.Abstractions.IO.Handlers
+  fullName: Catalyst.Abstractions.IO.Handlers
+- uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  commentId: T:Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+  name: IObservableMessageStreamer<T>
+  nameWithType: IObservableMessageStreamer<T>
+  fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer<T>
+  nameWithType.vb: IObservableMessageStreamer(Of T)
+  fullName.vb: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer(Of T)
+  name.vb: IObservableMessageStreamer(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer`1
+    name: IObservableMessageStreamer
+    nameWithType: IObservableMessageStreamer
+    fullName: Catalyst.Abstractions.IO.Observers.IObservableMessageStreamer
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.Observers
+  commentId: N:Catalyst.Abstractions.IO.Observers
+  name: Catalyst.Abstractions.IO.Observers
+  nameWithType: Catalyst.Abstractions.IO.Observers
+  fullName: Catalyst.Abstractions.IO.Observers
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.Logger
+  commentId: F:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.Logger
+  name: Logger
+  nameWithType: InboundChannelHandlerBase<T>.Logger
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.Logger
+  nameWithType.vb: InboundChannelHandlerBase(Of T).Logger
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).Logger
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+  isExternal: true
+  name: ChannelRead(IChannelHandlerContext, Object)
+  nameWithType: InboundChannelHandlerBase<T>.ChannelRead(IChannelHandlerContext, Object)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead(IChannelHandlerContext, System.Object)
+  nameWithType.vb: InboundChannelHandlerBase(Of T).ChannelRead(IChannelHandlerContext, Object)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead(IChannelHandlerContext, System.Object)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+    name: ChannelRead
+    nameWithType: InboundChannelHandlerBase<T>.ChannelRead
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead(IChannelHandlerContext,System.Object)
+    name: ChannelRead
+    nameWithType: InboundChannelHandlerBase(Of T).ChannelRead
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.#ctor*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.#ctor
+  name: ObservableServiceHandler
+  nameWithType: ObservableServiceHandler.ObservableServiceHandler
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ObservableServiceHandler
+- uid: IScheduler
+  isExternal: true
+  name: IScheduler
+  nameWithType: IScheduler
+  fullName: IScheduler
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.IsSharable*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.IsSharable
+  name: IsSharable
+  nameWithType: ObservableServiceHandler.IsSharable
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.IsSharable
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.MessageStream*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.MessageStream
+  name: MessageStream
+  nameWithType: ObservableServiceHandler.MessageStream
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.MessageStream
+- uid: System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}
+  commentId: T:System.IObservable{Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto{ProtocolMessage}}
+  parent: System
+  definition: System.IObservable`1
+  name: IObservable<IObserverDto<ProtocolMessage>>
+  nameWithType: IObservable<IObserverDto<ProtocolMessage>>
+  fullName: System.IObservable<Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto<ProtocolMessage>>
+  nameWithType.vb: IObservable(Of IObserverDto(Of ProtocolMessage))
+  fullName.vb: System.IObservable(Of Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto(Of ProtocolMessage))
+  name.vb: IObservable(Of IObserverDto(Of ProtocolMessage))
+  spec.csharp:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+    name: IObserverDto
+    nameWithType: IObserverDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto`1
+    name: IObserverDto
+    nameWithType: IObserverDto
+    fullName: Catalyst.Abstractions.IO.Messaging.Dto.IObserverDto
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IObservable`1
+  commentId: T:System.IObservable`1
+  isExternal: true
+  name: IObservable<T>
+  nameWithType: IObservable<T>
+  fullName: System.IObservable<T>
+  nameWithType.vb: IObservable(Of T)
+  fullName.vb: System.IObservable(Of T)
+  name.vb: IObservable(Of T)
+  spec.csharp:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.IObservable`1
+    name: IObservable
+    nameWithType: IObservable
+    fullName: System.IObservable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ExceptionCaught*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ExceptionCaught
+  name: ExceptionCaught
+  nameWithType: ObservableServiceHandler.ExceptionCaught
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ExceptionCaught
+- uid: IChannelHandlerContext
+  isExternal: true
+  name: IChannelHandlerContext
+  nameWithType: IChannelHandlerContext
+  fullName: IChannelHandlerContext
+- uid: System.Exception
+  commentId: T:System.Exception
+  parent: System
+  isExternal: true
+  name: Exception
+  nameWithType: Exception
+  fullName: System.Exception
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.Dispose*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.Dispose
+  name: Dispose
+  nameWithType: ObservableServiceHandler.Dispose
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}.ChannelRead0(IChannelHandlerContext,ProtocolMessage)
+  parent: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase{ProtocolMessage}
+  definition: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+  name: ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  nameWithType: InboundChannelHandlerBase<ProtocolMessage>.ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>.ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  nameWithType.vb: InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead0(IChannelHandlerContext, ProtocolMessage)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+    name: ChannelRead0
+    nameWithType: InboundChannelHandlerBase<ProtocolMessage>.ChannelRead0
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<ProtocolMessage>.ChannelRead0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+    name: ChannelRead0
+    nameWithType: InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead0
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of ProtocolMessage).ChannelRead0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ProtocolMessage
+    name: ProtocolMessage
+    nameWithType: ProtocolMessage
+    fullName: ProtocolMessage
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ChannelRead0*
+  commentId: Overload:Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ChannelRead0
+  name: ChannelRead0
+  nameWithType: ObservableServiceHandler.ChannelRead0
+  fullName: Catalyst.Core.Lib.IO.Handlers.ObservableServiceHandler.ChannelRead0
+- uid: ProtocolMessage
+  isExternal: true
+  name: ProtocolMessage
+  nameWithType: ProtocolMessage
+  fullName: ProtocolMessage
+- uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+  commentId: M:Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+  isExternal: true
+  name: ChannelRead0(IChannelHandlerContext, T)
+  nameWithType: InboundChannelHandlerBase<T>.ChannelRead0(IChannelHandlerContext, T)
+  fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead0(IChannelHandlerContext, T)
+  nameWithType.vb: InboundChannelHandlerBase(Of T).ChannelRead0(IChannelHandlerContext, T)
+  fullName.vb: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead0(IChannelHandlerContext, T)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+    name: ChannelRead0
+    nameWithType: InboundChannelHandlerBase<T>.ChannelRead0
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase<T>.ChannelRead0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase`1.ChannelRead0(IChannelHandlerContext,`0)
+    name: ChannelRead0
+    nameWithType: InboundChannelHandlerBase(Of T).ChannelRead0
+    fullName: Catalyst.Core.Lib.IO.Handlers.InboundChannelHandlerBase(Of T).ChannelRead0
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IChannelHandlerContext
+    name: IChannelHandlerContext
+    nameWithType: IChannelHandlerContext
+    fullName: IChannelHandlerContext
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )

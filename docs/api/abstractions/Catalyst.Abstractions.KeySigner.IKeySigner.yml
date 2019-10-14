@@ -1,0 +1,289 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner
+  commentId: T:Catalyst.Abstractions.KeySigner.IKeySigner
+  id: IKeySigner
+  parent: Catalyst.Abstractions.KeySigner
+  children:
+  - Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  - Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  - Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  - Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  langs:
+  - csharp
+  - vb
+  name: IKeySigner
+  nameWithType: IKeySigner
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/KeySigner/IKeySigner.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IKeySigner
+    path: ../src/Catalyst.Abstractions/KeySigner/IKeySigner.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.KeySigner
+  syntax:
+    content: public interface IKeySigner
+    content.vb: Public Interface IKeySigner
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  commentId: P:Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  id: KeyStore
+  parent: Catalyst.Abstractions.KeySigner.IKeySigner
+  langs:
+  - csharp
+  - vb
+  name: KeyStore
+  nameWithType: IKeySigner.KeyStore
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/KeySigner/IKeySigner.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: KeyStore
+    path: ../src/Catalyst.Abstractions/KeySigner/IKeySigner.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.KeySigner
+  summary: "\nTakes a KeyStore implementation to support both local and remote KeyStores&apos;.\n"
+  example: []
+  syntax:
+    content: IKeyStore KeyStore { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Keystore.IKeyStore
+    content.vb: ReadOnly Property KeyStore As IKeyStore
+  overload: Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  commentId: P:Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  id: CryptoContext
+  parent: Catalyst.Abstractions.KeySigner.IKeySigner
+  langs:
+  - csharp
+  - vb
+  name: CryptoContext
+  nameWithType: IKeySigner.CryptoContext
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/KeySigner/IKeySigner.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CryptoContext
+    path: ../src/Catalyst.Abstractions/KeySigner/IKeySigner.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.KeySigner
+  summary: "\nTakes the crypto library implementation the nodes using.\n"
+  example: []
+  syntax:
+    content: ICryptoContext CryptoContext { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Cryptography.ICryptoContext
+    content.vb: ReadOnly Property CryptoContext As ICryptoContext
+  overload: Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  commentId: M:Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  id: Sign(System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  parent: Catalyst.Abstractions.KeySigner.IKeySigner
+  langs:
+  - csharp
+  - vb
+  name: Sign(Byte[], SigningContext)
+  nameWithType: IKeySigner.Sign(Byte[], SigningContext)
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte[], Catalyst.Protocol.Cryptography.SigningContext)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/KeySigner/IKeySigner.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Sign
+    path: ../src/Catalyst.Abstractions/KeySigner/IKeySigner.cs
+    startLine: 42
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.KeySigner
+  syntax:
+    content: ISignature Sign(byte[] data, SigningContext signingContext)
+    parameters:
+    - id: data
+      type: System.Byte[]
+    - id: signingContext
+      type: Catalyst.Protocol.Cryptography.SigningContext
+    return:
+      type: Catalyst.Abstractions.Cryptography.ISignature
+    content.vb: Function Sign(data As Byte(), signingContext As SigningContext) As ISignature
+  overload: Catalyst.Abstractions.KeySigner.IKeySigner.Sign*
+  nameWithType.vb: IKeySigner.Sign(Byte(), SigningContext)
+  fullName.vb: Catalyst.Abstractions.KeySigner.IKeySigner.Sign(System.Byte(), Catalyst.Protocol.Cryptography.SigningContext)
+  name.vb: Sign(Byte(), SigningContext)
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  commentId: M:Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  id: Verify(Catalyst.Abstractions.Cryptography.ISignature,System.Byte[],Catalyst.Protocol.Cryptography.SigningContext)
+  parent: Catalyst.Abstractions.KeySigner.IKeySigner
+  langs:
+  - csharp
+  - vb
+  name: Verify(ISignature, Byte[], SigningContext)
+  nameWithType: IKeySigner.Verify(ISignature, Byte[], SigningContext)
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature, System.Byte[], Catalyst.Protocol.Cryptography.SigningContext)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/KeySigner/IKeySigner.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Verify
+    path: ../src/Catalyst.Abstractions/KeySigner/IKeySigner.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.KeySigner
+  summary: Verifies a message signature.
+  example: []
+  syntax:
+    content: bool Verify(ISignature signature, byte[] message, SigningContext signingContext)
+    parameters:
+    - id: signature
+      type: Catalyst.Abstractions.Cryptography.ISignature
+    - id: message
+      type: System.Byte[]
+    - id: signingContext
+      type: Catalyst.Protocol.Cryptography.SigningContext
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Function Verify(signature As ISignature, message As Byte(), signingContext As SigningContext) As Boolean
+  overload: Catalyst.Abstractions.KeySigner.IKeySigner.Verify*
+  nameWithType.vb: IKeySigner.Verify(ISignature, Byte(), SigningContext)
+  fullName.vb: Catalyst.Abstractions.KeySigner.IKeySigner.Verify(Catalyst.Abstractions.Cryptography.ISignature, System.Byte(), Catalyst.Protocol.Cryptography.SigningContext)
+  name.vb: Verify(ISignature, Byte(), SigningContext)
+references:
+- uid: Catalyst.Abstractions.KeySigner
+  commentId: N:Catalyst.Abstractions.KeySigner
+  name: Catalyst.Abstractions.KeySigner
+  nameWithType: Catalyst.Abstractions.KeySigner
+  fullName: Catalyst.Abstractions.KeySigner
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore*
+  commentId: Overload:Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+  name: KeyStore
+  nameWithType: IKeySigner.KeyStore
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.KeyStore
+- uid: Catalyst.Abstractions.Keystore.IKeyStore
+  commentId: T:Catalyst.Abstractions.Keystore.IKeyStore
+  parent: Catalyst.Abstractions.Keystore
+  name: IKeyStore
+  nameWithType: IKeyStore
+  fullName: Catalyst.Abstractions.Keystore.IKeyStore
+- uid: Catalyst.Abstractions.Keystore
+  commentId: N:Catalyst.Abstractions.Keystore
+  name: Catalyst.Abstractions.Keystore
+  nameWithType: Catalyst.Abstractions.Keystore
+  fullName: Catalyst.Abstractions.Keystore
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext*
+  commentId: Overload:Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+  name: CryptoContext
+  nameWithType: IKeySigner.CryptoContext
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.CryptoContext
+- uid: Catalyst.Abstractions.Cryptography.ICryptoContext
+  commentId: T:Catalyst.Abstractions.Cryptography.ICryptoContext
+  parent: Catalyst.Abstractions.Cryptography
+  name: ICryptoContext
+  nameWithType: ICryptoContext
+  fullName: Catalyst.Abstractions.Cryptography.ICryptoContext
+- uid: Catalyst.Abstractions.Cryptography
+  commentId: N:Catalyst.Abstractions.Cryptography
+  name: Catalyst.Abstractions.Cryptography
+  nameWithType: Catalyst.Abstractions.Cryptography
+  fullName: Catalyst.Abstractions.Cryptography
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.Sign*
+  commentId: Overload:Catalyst.Abstractions.KeySigner.IKeySigner.Sign
+  name: Sign
+  nameWithType: IKeySigner.Sign
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.Sign
+- uid: System.Byte[]
+  isExternal: true
+  name: Byte[]
+  nameWithType: Byte[]
+  fullName: System.Byte[]
+  nameWithType.vb: Byte()
+  fullName.vb: System.Byte()
+  name.vb: Byte()
+  spec.csharp:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: '[]'
+    nameWithType: '[]'
+    fullName: '[]'
+  spec.vb:
+  - uid: System.Byte
+    name: Byte
+    nameWithType: Byte
+    fullName: System.Byte
+    isExternal: true
+  - name: ()
+    nameWithType: ()
+    fullName: ()
+- uid: Catalyst.Protocol.Cryptography.SigningContext
+  commentId: T:Catalyst.Protocol.Cryptography.SigningContext
+  parent: Catalyst.Protocol.Cryptography
+  name: SigningContext
+  nameWithType: SigningContext
+  fullName: Catalyst.Protocol.Cryptography.SigningContext
+- uid: Catalyst.Abstractions.Cryptography.ISignature
+  commentId: T:Catalyst.Abstractions.Cryptography.ISignature
+  parent: Catalyst.Abstractions.Cryptography
+  name: ISignature
+  nameWithType: ISignature
+  fullName: Catalyst.Abstractions.Cryptography.ISignature
+- uid: Catalyst.Protocol.Cryptography
+  commentId: N:Catalyst.Protocol.Cryptography
+  name: Catalyst.Protocol.Cryptography
+  nameWithType: Catalyst.Protocol.Cryptography
+  fullName: Catalyst.Protocol.Cryptography
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner.Verify*
+  commentId: Overload:Catalyst.Abstractions.KeySigner.IKeySigner.Verify
+  name: Verify
+  nameWithType: IKeySigner.Verify
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner.Verify
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: Boolean
+  nameWithType: Boolean
+  fullName: System.Boolean
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

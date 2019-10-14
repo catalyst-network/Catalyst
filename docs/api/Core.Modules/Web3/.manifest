@@ -1,0 +1,20 @@
+{
+  "Catalyst.Core.Modules.Web3": "Catalyst.Core.Modules.Web3.yml",
+  "Catalyst.Core.Modules.Web3.ApiModule": "Catalyst.Core.Modules.Web3.ApiModule.yml",
+  "Catalyst.Core.Modules.Web3.ApiModule.#ctor(System.String,System.Collections.Generic.List{System.String},System.Boolean)": "Catalyst.Core.Modules.Web3.ApiModule.yml",
+  "Catalyst.Core.Modules.Web3.ApiModule.Configure(IApplicationBuilder)": "Catalyst.Core.Modules.Web3.ApiModule.yml",
+  "Catalyst.Core.Modules.Web3.ApiModule.ConfigureServices(IServiceCollection,ContainerBuilder)": "Catalyst.Core.Modules.Web3.ApiModule.yml",
+  "Catalyst.Core.Modules.Web3.ApiModule.Load(ContainerBuilder)": "Catalyst.Core.Modules.Web3.ApiModule.yml",
+  "Catalyst.Core.Modules.Web3.Controllers": "Catalyst.Core.Modules.Web3.Controllers.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.LedgerController": "Catalyst.Core.Modules.Web3.Controllers.LedgerController.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.LedgerController.#ctor(Catalyst.Abstractions.Consensus.Deltas.IDeltaHashProvider,Catalyst.Abstractions.Dfs.IDfs,ILogger)": "Catalyst.Core.Modules.Web3.Controllers.LedgerController.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.LedgerController.GetLatestDelta(System.Nullable{System.DateTime})": "Catalyst.Core.Modules.Web3.Controllers.LedgerController.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.MempoolController`1": "Catalyst.Core.Modules.Web3.Controllers.MempoolController-1.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.#ctor(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{`0})": "Catalyst.Core.Modules.Web3.Controllers.MempoolController-1.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetBalance(System.String)": "Catalyst.Core.Modules.Web3.Controllers.MempoolController-1.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempool": "Catalyst.Core.Modules.Web3.Controllers.MempoolController-1.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.MempoolController`1.GetMempoolTransaction(System.String)": "Catalyst.Core.Modules.Web3.Controllers.MempoolController-1.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.PeerController": "Catalyst.Core.Modules.Web3.Controllers.PeerController.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.PeerController.#ctor(Catalyst.Core.Lib.P2P.Repository.IPeerRepository)": "Catalyst.Core.Modules.Web3.Controllers.PeerController.yml",
+  "Catalyst.Core.Modules.Web3.Controllers.PeerController.GetAllPeers": "Catalyst.Core.Modules.Web3.Controllers.PeerController.yml"
+}

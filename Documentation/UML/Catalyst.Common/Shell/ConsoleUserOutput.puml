@@ -1,6 +1,0 @@
-@startuml
-class ConsoleUserOutput {
-    + WriteLine(content:string) : void
-}
-IUserOutput <|-- ConsoleUserOutput
-@enduml

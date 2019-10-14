@@ -1,6 +1,0 @@
-@startuml
-class ConsoleProgram <<static>> {
-    + {static} GetTempLogger(logFileName:string, declaringType:Type) : ILogger
-    + {static} LogUnhandledException(logger:ILogger, sender:object, e:UnhandledExceptionEventArgs) : void
-}
-@enduml

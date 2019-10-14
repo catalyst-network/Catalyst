@@ -1,0 +1,14 @@
+### YamlMime:TableOfContent
+- uid: Catalyst.Modules.Repository.MongoDb
+  name: Catalyst.Modules.Repository.MongoDb
+  items:
+  - uid: Catalyst.Modules.Repository.MongoDb.MempoolModule
+    name: MempoolModule
+- uid: Catalyst.Modules.Repository.MongoDb.Util
+  name: Catalyst.Modules.Repository.MongoDb.Util
+  items:
+  - uid: Catalyst.Modules.Repository.MongoDb.Util.BsonSerializationProviders
+    name: BsonSerializationProviders
+  - uid: Catalyst.Modules.Repository.MongoDb.Util.ProtoBsonSerializer`1
+    name: ProtoBsonSerializer<T>
+    name.vb: ProtoBsonSerializer(Of T)

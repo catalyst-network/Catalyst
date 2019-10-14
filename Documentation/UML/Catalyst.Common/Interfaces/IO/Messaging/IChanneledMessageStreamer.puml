@@ -1,7 +1,0 @@
-@startuml
-interface "IChanneledMessageStreamer`1"<out T> {
-}
-class "IObservable`1"<T> {
-}
-"IChanneledMessageStreamer`1" --> "MessageStream<IChanneledMessage<T>>" "IObservable`1"
-@enduml

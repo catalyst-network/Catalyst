@@ -1,6 +1,0 @@
-@startuml
-interface IDns {
-    GetTxtRecords(hostnames:IList<string>) : Task<IList<IDnsQueryResponse>>
-    GetTxtRecords(hostname:string) : Task<IDnsQueryResponse>
-}
-@enduml

@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.Observables
+  commentId: N:Catalyst.Abstractions.IO.Observables
+  id: Catalyst.Abstractions.IO.Observables
+  children:
+  - Catalyst.Abstractions.IO.Observables.ISocketClientRegistryEvent
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.IO.Observables
+  nameWithType: Catalyst.Abstractions.IO.Observables
+  fullName: Catalyst.Abstractions.IO.Observables
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.IO.Observables.ISocketClientRegistryEvent
+  commentId: T:Catalyst.Abstractions.IO.Observables.ISocketClientRegistryEvent
+  name: ISocketClientRegistryEvent
+  nameWithType: ISocketClientRegistryEvent
+  fullName: Catalyst.Abstractions.IO.Observables.ISocketClientRegistryEvent

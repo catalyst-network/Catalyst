@@ -1,0 +1,12 @@
+{
+  "Catalyst.Modules.Repository.MongoDb": "Catalyst.Modules.Repository.MongoDb.yml",
+  "Catalyst.Modules.Repository.MongoDb.MempoolModule": "Catalyst.Modules.Repository.MongoDb.MempoolModule.yml",
+  "Catalyst.Modules.Repository.MongoDb.MempoolModule.Load(ContainerBuilder)": "Catalyst.Modules.Repository.MongoDb.MempoolModule.yml",
+  "Catalyst.Modules.Repository.MongoDb.Util": "Catalyst.Modules.Repository.MongoDb.Util.yml",
+  "Catalyst.Modules.Repository.MongoDb.Util.BsonSerializationProviders": "Catalyst.Modules.Repository.MongoDb.Util.BsonSerializationProviders.yml",
+  "Catalyst.Modules.Repository.MongoDb.Util.BsonSerializationProviders.Init": "Catalyst.Modules.Repository.MongoDb.Util.BsonSerializationProviders.yml",
+  "Catalyst.Modules.Repository.MongoDb.Util.ProtoBsonSerializer`1": "Catalyst.Modules.Repository.MongoDb.Util.ProtoBsonSerializer-1.yml",
+  "Catalyst.Modules.Repository.MongoDb.Util.ProtoBsonSerializer`1.Deserialize(BsonDeserializationContext,BsonDeserializationArgs)": "Catalyst.Modules.Repository.MongoDb.Util.ProtoBsonSerializer-1.yml",
+  "Catalyst.Modules.Repository.MongoDb.Util.ProtoBsonSerializer`1.Serialize(BsonSerializationContext,BsonSerializationArgs,System.Object)": "Catalyst.Modules.Repository.MongoDb.Util.ProtoBsonSerializer-1.yml",
+  "Catalyst.Modules.Repository.MongoDb.Util.ProtoBsonSerializer`1.ValueType": "Catalyst.Modules.Repository.MongoDb.Util.ProtoBsonSerializer-1.yml"
+}

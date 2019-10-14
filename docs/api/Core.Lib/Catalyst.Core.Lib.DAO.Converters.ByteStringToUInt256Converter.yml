@@ -1,0 +1,116 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter
+  commentId: T:Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter
+  id: ByteStringToUInt256Converter
+  parent: Catalyst.Core.Lib.DAO.Converters
+  children:
+  - Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter.Convert(ByteString,ResolutionContext)
+  langs:
+  - csharp
+  - vb
+  name: ByteStringToUInt256Converter
+  nameWithType: ByteStringToUInt256Converter
+  fullName: Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/Converters/UInt256ByteStringConverters.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ByteStringToUInt256Converter
+    path: ../src/Catalyst.Core.Lib/DAO/Converters/UInt256ByteStringConverters.cs
+    startLine: 47
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO.Converters
+  syntax:
+    content: 'public class ByteStringToUInt256Converter : IValueConverter<ByteString, UInt256>'
+    content.vb: >-
+      Public Class ByteStringToUInt256Converter
+
+          Inherits IValueConverter(Of ByteString, UInt256)
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter.Convert(ByteString,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter.Convert(ByteString,ResolutionContext)
+  id: Convert(ByteString,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter
+  langs:
+  - csharp
+  - vb
+  name: Convert(ByteString, ResolutionContext)
+  nameWithType: ByteStringToUInt256Converter.Convert(ByteString, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter.Convert(ByteString, ResolutionContext)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/Converters/UInt256ByteStringConverters.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Convert
+    path: ../src/Catalyst.Core.Lib/DAO/Converters/UInt256ByteStringConverters.cs
+    startLine: 49
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO.Converters
+  syntax:
+    content: public UInt256 Convert(ByteString sourceMember, ResolutionContext context)
+    parameters:
+    - id: sourceMember
+      type: ByteString
+    - id: context
+      type: ResolutionContext
+    return:
+      type: UInt256
+    content.vb: Public Function Convert(sourceMember As ByteString, context As ResolutionContext) As UInt256
+  overload: Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter.Convert*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.DAO.Converters
+  commentId: N:Catalyst.Core.Lib.DAO.Converters
+  name: Catalyst.Core.Lib.DAO.Converters
+  nameWithType: Catalyst.Core.Lib.DAO.Converters
+  fullName: Catalyst.Core.Lib.DAO.Converters
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter.Convert*
+  commentId: Overload:Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter.Convert
+  name: Convert
+  nameWithType: ByteStringToUInt256Converter.Convert
+  fullName: Catalyst.Core.Lib.DAO.Converters.ByteStringToUInt256Converter.Convert
+- uid: ByteString
+  isExternal: true
+  name: ByteString
+  nameWithType: ByteString
+  fullName: ByteString
+- uid: ResolutionContext
+  isExternal: true
+  name: ResolutionContext
+  nameWithType: ResolutionContext
+  fullName: ResolutionContext
+- uid: UInt256
+  isExternal: true
+  name: UInt256
+  nameWithType: UInt256
+  fullName: UInt256

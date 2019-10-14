@@ -1,0 +1,109 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerModule
+  commentId: T:Catalyst.Core.Modules.Rpc.Server.RpcServerModule
+  id: RpcServerModule
+  parent: Catalyst.Core.Modules.Rpc.Server
+  children:
+  - Catalyst.Core.Modules.Rpc.Server.RpcServerModule.Load(ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: RpcServerModule
+  nameWithType: RpcServerModule
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerModule
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Server/RpcServerModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: RpcServerModule
+    path: ../src/Catalyst.Core.Modules.Rpc.Server/RpcServerModule.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Server
+  namespace: Catalyst.Core.Modules.Rpc.Server
+  syntax:
+    content: 'public class RpcServerModule : Module'
+    content.vb: >-
+      Public Class RpcServerModule
+
+          Inherits
+
+
+
+           Module
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerModule.Load(ContainerBuilder)
+  commentId: M:Catalyst.Core.Modules.Rpc.Server.RpcServerModule.Load(ContainerBuilder)
+  id: Load(ContainerBuilder)
+  parent: Catalyst.Core.Modules.Rpc.Server.RpcServerModule
+  langs:
+  - csharp
+  - vb
+  name: Load(ContainerBuilder)
+  nameWithType: RpcServerModule.Load(ContainerBuilder)
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerModule.Load(ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Server/RpcServerModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Load
+    path: ../src/Catalyst.Core.Modules.Rpc.Server/RpcServerModule.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Server
+  namespace: Catalyst.Core.Modules.Rpc.Server
+  syntax:
+    content: protected override void Load(ContainerBuilder builder)
+    parameters:
+    - id: builder
+      type: ContainerBuilder
+    content.vb: Protected Overrides Sub Load(builder As ContainerBuilder)
+  overload: Catalyst.Core.Modules.Rpc.Server.RpcServerModule.Load*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Modules.Rpc.Server
+  commentId: N:Catalyst.Core.Modules.Rpc.Server
+  name: Catalyst.Core.Modules.Rpc.Server
+  nameWithType: Catalyst.Core.Modules.Rpc.Server
+  fullName: Catalyst.Core.Modules.Rpc.Server
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Rpc.Server.RpcServerModule.Load*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Server.RpcServerModule.Load
+  name: Load
+  nameWithType: RpcServerModule.Load
+  fullName: Catalyst.Core.Modules.Rpc.Server.RpcServerModule.Load
+- uid: ContainerBuilder
+  commentId: '!:ContainerBuilder'
+  isExternal: true
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: ContainerBuilder

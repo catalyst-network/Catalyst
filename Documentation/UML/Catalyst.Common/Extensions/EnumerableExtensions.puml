@@ -1,6 +1,0 @@
-@startuml
-class EnumerableExtension <<static>> {
-    + {static} RandomElement(list:IEnumerable<T>) : T
-}
-EnumerableExtension o-> "Rng" Random
-@enduml

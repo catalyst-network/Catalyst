@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.IO.Codecs
+  commentId: N:Catalyst.Core.Lib.IO.Codecs
+  id: Catalyst.Core.Lib.IO.Codecs
+  children:
+  - Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Core.Lib.IO.Codecs
+  nameWithType: Catalyst.Core.Lib.IO.Codecs
+  fullName: Catalyst.Core.Lib.IO.Codecs
+  type: Namespace
+  assemblies:
+  - Catalyst.Core.Lib
+references:
+- uid: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder
+  commentId: T:Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder
+  name: AddressedEnvelopeToIMessageEncoder
+  nameWithType: AddressedEnvelopeToIMessageEncoder
+  fullName: Catalyst.Core.Lib.IO.Codecs.AddressedEnvelopeToIMessageEncoder

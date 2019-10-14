@@ -1,0 +1,43 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+  commentId: T:Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+  id: IAccountRepository
+  parent: Catalyst.Core.Modules.Ledger.Repository
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: IAccountRepository
+  nameWithType: IAccountRepository
+  fullName: Catalyst.Core.Modules.Ledger.Repository.IAccountRepository
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Ledger/Repository/IAccountRepository.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IAccountRepository
+    path: ../src/Catalyst.Core.Modules.Ledger/Repository/IAccountRepository.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Core.Modules.Ledger
+  namespace: Catalyst.Core.Modules.Ledger.Repository
+  syntax:
+    content: 'public interface IAccountRepository : IRepositoryWrapper<Account>, IRepository<Account, string>'
+    content.vb: >-
+      Public Interface IAccountRepository
+
+          Inherits IRepositoryWrapper(Of Account)
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+references:
+- uid: Catalyst.Core.Modules.Ledger.Repository
+  commentId: N:Catalyst.Core.Modules.Ledger.Repository
+  name: Catalyst.Core.Modules.Ledger.Repository
+  nameWithType: Catalyst.Core.Modules.Ledger.Repository
+  fullName: Catalyst.Core.Modules.Ledger.Repository

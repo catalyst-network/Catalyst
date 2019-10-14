@@ -1,9 +1,0 @@
-@startuml
-abstract class Client {
-    # Client(logger:ILogger)
-    # {abstract} Bootstrap(channelInitializer:IChannelHandler, ipEndPoint:IPEndPoint) : void
-    + <<async>> SendMessage(message:AnySigned) : Task
-}
-IoBase <|-- Client
-ISocketClient <|-- Client
-@enduml

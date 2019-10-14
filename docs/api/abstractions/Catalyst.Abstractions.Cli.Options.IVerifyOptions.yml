@@ -1,0 +1,184 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Cli.Options.IVerifyOptions
+  commentId: T:Catalyst.Abstractions.Cli.Options.IVerifyOptions
+  id: IVerifyOptions
+  parent: Catalyst.Abstractions.Cli.Options
+  children:
+  - Catalyst.Abstractions.Cli.Options.IVerifyOptions.Address
+  - Catalyst.Abstractions.Cli.Options.IVerifyOptions.Message
+  - Catalyst.Abstractions.Cli.Options.IVerifyOptions.Signature
+  langs:
+  - csharp
+  - vb
+  name: IVerifyOptions
+  nameWithType: IVerifyOptions
+  fullName: Catalyst.Abstractions.Cli.Options.IVerifyOptions
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Options/IVerifyOptions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IVerifyOptions
+    path: ../src/Catalyst.Abstractions/Cli/Options/IVerifyOptions.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Options
+  syntax:
+    content: 'public interface IVerifyOptions : IOptionsBase'
+    content.vb: >-
+      Public Interface IVerifyOptions
+
+          Inherits IOptionsBase
+  inheritedMembers:
+  - Catalyst.Abstractions.Cli.Options.IOptionsBase.Node
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Message
+  commentId: P:Catalyst.Abstractions.Cli.Options.IVerifyOptions.Message
+  id: Message
+  parent: Catalyst.Abstractions.Cli.Options.IVerifyOptions
+  langs:
+  - csharp
+  - vb
+  name: Message
+  nameWithType: IVerifyOptions.Message
+  fullName: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Message
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Options/IVerifyOptions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Message
+    path: ../src/Catalyst.Abstractions/Cli/Options/IVerifyOptions.cs
+    startLine: 27
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Options
+  syntax:
+    content: string Message { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property Message As String
+  overload: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Message*
+  modifiers.csharp:
+  - get
+  - set
+- uid: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Address
+  commentId: P:Catalyst.Abstractions.Cli.Options.IVerifyOptions.Address
+  id: Address
+  parent: Catalyst.Abstractions.Cli.Options.IVerifyOptions
+  langs:
+  - csharp
+  - vb
+  name: Address
+  nameWithType: IVerifyOptions.Address
+  fullName: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Address
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Options/IVerifyOptions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Address
+    path: ../src/Catalyst.Abstractions/Cli/Options/IVerifyOptions.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Options
+  syntax:
+    content: string Address { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property Address As String
+  overload: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Address*
+  modifiers.csharp:
+  - get
+  - set
+- uid: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Signature
+  commentId: P:Catalyst.Abstractions.Cli.Options.IVerifyOptions.Signature
+  id: Signature
+  parent: Catalyst.Abstractions.Cli.Options.IVerifyOptions
+  langs:
+  - csharp
+  - vb
+  name: Signature
+  nameWithType: IVerifyOptions.Signature
+  fullName: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Signature
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Cli/Options/IVerifyOptions.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Signature
+    path: ../src/Catalyst.Abstractions/Cli/Options/IVerifyOptions.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Cli.Options
+  syntax:
+    content: string Signature { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Property Signature As String
+  overload: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Signature*
+  modifiers.csharp:
+  - get
+  - set
+references:
+- uid: Catalyst.Abstractions.Cli.Options
+  commentId: N:Catalyst.Abstractions.Cli.Options
+  name: Catalyst.Abstractions.Cli.Options
+  nameWithType: Catalyst.Abstractions.Cli.Options
+  fullName: Catalyst.Abstractions.Cli.Options
+- uid: Catalyst.Abstractions.Cli.Options.IOptionsBase.Node
+  commentId: P:Catalyst.Abstractions.Cli.Options.IOptionsBase.Node
+  parent: Catalyst.Abstractions.Cli.Options.IOptionsBase
+  name: Node
+  nameWithType: IOptionsBase.Node
+  fullName: Catalyst.Abstractions.Cli.Options.IOptionsBase.Node
+- uid: Catalyst.Abstractions.Cli.Options.IOptionsBase
+  commentId: T:Catalyst.Abstractions.Cli.Options.IOptionsBase
+  parent: Catalyst.Abstractions.Cli.Options
+  name: IOptionsBase
+  nameWithType: IOptionsBase
+  fullName: Catalyst.Abstractions.Cli.Options.IOptionsBase
+- uid: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Message*
+  commentId: Overload:Catalyst.Abstractions.Cli.Options.IVerifyOptions.Message
+  name: Message
+  nameWithType: IVerifyOptions.Message
+  fullName: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Message
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Address*
+  commentId: Overload:Catalyst.Abstractions.Cli.Options.IVerifyOptions.Address
+  name: Address
+  nameWithType: IVerifyOptions.Address
+  fullName: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Address
+- uid: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Signature*
+  commentId: Overload:Catalyst.Abstractions.Cli.Options.IVerifyOptions.Signature
+  name: Signature
+  nameWithType: IVerifyOptions.Signature
+  fullName: Catalyst.Abstractions.Cli.Options.IVerifyOptions.Signature

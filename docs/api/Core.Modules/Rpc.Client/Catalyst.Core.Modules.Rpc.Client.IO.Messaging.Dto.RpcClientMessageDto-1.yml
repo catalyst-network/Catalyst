@@ -1,0 +1,215 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+  commentId: T:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+  id: RpcClientMessageDto`1
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  children:
+  - Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor(`0,PeerId)
+  - Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message
+  - Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender
+  langs:
+  - csharp
+  - vb
+  name: RpcClientMessageDto<T>
+  nameWithType: RpcClientMessageDto<T>
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: RpcClientMessageDto
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  syntax:
+    content: 'public sealed class RpcClientMessageDto<T> : IRpcClientMessageDto<T> where T : IMessage'
+    typeParameters:
+    - id: T
+    content.vb: >-
+      Public NotInheritable Class RpcClientMessageDto(Of T As IMessage)
+
+          Inherits IRpcClientMessageDto(Of T)
+  inheritance:
+  - System.Object
+  nameWithType.vb: RpcClientMessageDto(Of T)
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T)
+  name.vb: RpcClientMessageDto(Of T)
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender
+  id: Sender
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+  langs:
+  - csharp
+  - vb
+  name: Sender
+  nameWithType: RpcClientMessageDto<T>.Sender
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.Sender
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Sender
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  syntax:
+    content: public PeerId Sender { get; set; }
+    parameters: []
+    return:
+      type: PeerId
+    content.vb: Public Property Sender As PeerId
+  overload: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender*
+  nameWithType.vb: RpcClientMessageDto(Of T).Sender
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).Sender
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message
+  id: Message
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+  langs:
+  - csharp
+  - vb
+  name: Message
+  nameWithType: RpcClientMessageDto<T>.Message
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.Message
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Message
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  syntax:
+    content: public T Message { get; set; }
+    parameters: []
+    return:
+      type: '{T}'
+    content.vb: Public Property Message As T
+  overload: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message*
+  nameWithType.vb: RpcClientMessageDto(Of T).Message
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).Message
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor(`0,PeerId)
+  commentId: M:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor(`0,PeerId)
+  id: '#ctor(`0,PeerId)'
+  parent: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1
+  langs:
+  - csharp
+  - vb
+  name: RpcClientMessageDto(T, PeerId)
+  nameWithType: RpcClientMessageDto<T>.RpcClientMessageDto(T, PeerId)
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.RpcClientMessageDto(T, PeerId)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/IO/Messaging/Dto/RPCClientMessageDto.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  syntax:
+    content: public RpcClientMessageDto(T message, PeerId sender)
+    parameters:
+    - id: message
+      type: '{T}'
+    - id: sender
+      type: PeerId
+    content.vb: Public Sub New(message As T, sender As PeerId)
+  overload: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor*
+  nameWithType.vb: RpcClientMessageDto(Of T).RpcClientMessageDto(T, PeerId)
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).RpcClientMessageDto(T, PeerId)
+references:
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  commentId: N:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  name: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  nameWithType: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Sender
+  name: Sender
+  nameWithType: RpcClientMessageDto<T>.Sender
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.Sender
+  nameWithType.vb: RpcClientMessageDto(Of T).Sender
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).Sender
+- uid: PeerId
+  isExternal: true
+  name: PeerId
+  nameWithType: PeerId
+  fullName: PeerId
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.Message
+  name: Message
+  nameWithType: RpcClientMessageDto<T>.Message
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.Message
+  nameWithType.vb: RpcClientMessageDto(Of T).Message
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).Message
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto`1.#ctor
+  name: RpcClientMessageDto
+  nameWithType: RpcClientMessageDto<T>.RpcClientMessageDto
+  fullName: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto<T>.RpcClientMessageDto
+  nameWithType.vb: RpcClientMessageDto(Of T).RpcClientMessageDto
+  fullName.vb: Catalyst.Core.Modules.Rpc.Client.IO.Messaging.Dto.RpcClientMessageDto(Of T).RpcClientMessageDto

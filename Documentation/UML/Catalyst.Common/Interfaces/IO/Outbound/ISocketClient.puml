@@ -1,7 +1,0 @@
-@startuml
-interface ISocketClient {
-    SendMessage(message:AnySigned) : Task
-}
-ISocket <|-- ISocketClient
-ISocketClient --> "Channel" IChannel
-@enduml

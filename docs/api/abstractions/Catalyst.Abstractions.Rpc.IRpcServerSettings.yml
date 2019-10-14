@@ -1,0 +1,235 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  commentId: T:Catalyst.Abstractions.Rpc.IRpcServerSettings
+  id: IRpcServerSettings
+  parent: Catalyst.Abstractions.Rpc
+  children:
+  - Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress
+  - Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig
+  - Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName
+  - Catalyst.Abstractions.Rpc.IRpcServerSettings.Port
+  langs:
+  - csharp
+  - vb
+  name: IRpcServerSettings
+  nameWithType: IRpcServerSettings
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcServerSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IRpcServerSettings
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcServerSettings.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: public interface IRpcServerSettings
+    content.vb: Public Interface IRpcServerSettings
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.Port
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcServerSettings.Port
+  id: Port
+  parent: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  langs:
+  - csharp
+  - vb
+  name: Port
+  nameWithType: IRpcServerSettings.Port
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.Port
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcServerSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Port
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcServerSettings.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: int Port { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property Port As Integer
+  overload: Catalyst.Abstractions.Rpc.IRpcServerSettings.Port*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName
+  id: PfxFileName
+  parent: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  langs:
+  - csharp
+  - vb
+  name: PfxFileName
+  nameWithType: IRpcServerSettings.PfxFileName
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcServerSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PfxFileName
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcServerSettings.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: string PfxFileName { get; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: ReadOnly Property PfxFileName As String
+  overload: Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress
+  id: BindAddress
+  parent: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  langs:
+  - csharp
+  - vb
+  name: BindAddress
+  nameWithType: IRpcServerSettings.BindAddress
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcServerSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BindAddress
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcServerSettings.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: IPAddress BindAddress { get; }
+    parameters: []
+    return:
+      type: System.Net.IPAddress
+    content.vb: ReadOnly Property BindAddress As IPAddress
+  overload: Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig
+  commentId: P:Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig
+  id: NodeConfig
+  parent: Catalyst.Abstractions.Rpc.IRpcServerSettings
+  langs:
+  - csharp
+  - vb
+  name: NodeConfig
+  nameWithType: IRpcServerSettings.NodeConfig
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/Rpc/IRpcServerSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: NodeConfig
+    path: ../src/Catalyst.Abstractions/Rpc/IRpcServerSettings.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.Rpc
+  syntax:
+    content: IConfigurationRoot NodeConfig { get; }
+    parameters: []
+    return:
+      type: IConfigurationRoot
+    content.vb: ReadOnly Property NodeConfig As IConfigurationRoot
+  overload: Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Abstractions.Rpc
+  commentId: N:Catalyst.Abstractions.Rpc
+  name: Catalyst.Abstractions.Rpc
+  nameWithType: Catalyst.Abstractions.Rpc
+  fullName: Catalyst.Abstractions.Rpc
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.Port*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcServerSettings.Port
+  name: Port
+  nameWithType: IRpcServerSettings.Port
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.Port
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName
+  name: PfxFileName
+  nameWithType: IRpcServerSettings.PfxFileName
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.PfxFileName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress
+  name: BindAddress
+  nameWithType: IRpcServerSettings.BindAddress
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.BindAddress
+- uid: System.Net.IPAddress
+  commentId: T:System.Net.IPAddress
+  parent: System.Net
+  isExternal: true
+  name: IPAddress
+  nameWithType: IPAddress
+  fullName: System.Net.IPAddress
+- uid: System.Net
+  commentId: N:System.Net
+  isExternal: true
+  name: System.Net
+  nameWithType: System.Net
+  fullName: System.Net
+- uid: Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig*
+  commentId: Overload:Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig
+  name: NodeConfig
+  nameWithType: IRpcServerSettings.NodeConfig
+  fullName: Catalyst.Abstractions.Rpc.IRpcServerSettings.NodeConfig
+- uid: IConfigurationRoot
+  commentId: '!:IConfigurationRoot'
+  isExternal: true
+  name: IConfigurationRoot
+  nameWithType: IConfigurationRoot
+  fullName: IConfigurationRoot

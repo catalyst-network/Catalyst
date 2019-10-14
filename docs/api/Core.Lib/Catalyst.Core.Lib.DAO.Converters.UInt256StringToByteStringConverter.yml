@@ -1,0 +1,118 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter
+  commentId: T:Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter
+  id: UInt256StringToByteStringConverter
+  parent: Catalyst.Core.Lib.DAO.Converters
+  children:
+  - Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter.Convert(System.String,ResolutionContext)
+  langs:
+  - csharp
+  - vb
+  name: UInt256StringToByteStringConverter
+  nameWithType: UInt256StringToByteStringConverter
+  fullName: Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/Converters/UInt256ByteStringConverters.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: UInt256StringToByteStringConverter
+    path: ../src/Catalyst.Core.Lib/DAO/Converters/UInt256ByteStringConverters.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO.Converters
+  syntax:
+    content: 'public class UInt256StringToByteStringConverter : IValueConverter<string, ByteString>'
+    content.vb: >-
+      Public Class UInt256StringToByteStringConverter
+
+          Inherits IValueConverter(Of String, ByteString)
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter.Convert(System.String,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter.Convert(System.String,ResolutionContext)
+  id: Convert(System.String,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter
+  langs:
+  - csharp
+  - vb
+  name: Convert(String, ResolutionContext)
+  nameWithType: UInt256StringToByteStringConverter.Convert(String, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter.Convert(System.String, ResolutionContext)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/Converters/UInt256ByteStringConverters.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Convert
+    path: ../src/Catalyst.Core.Lib/DAO/Converters/UInt256ByteStringConverters.cs
+    startLine: 40
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO.Converters
+  syntax:
+    content: public ByteString Convert(string sourceMember, ResolutionContext context)
+    parameters:
+    - id: sourceMember
+      type: System.String
+    - id: context
+      type: ResolutionContext
+    return:
+      type: ByteString
+    content.vb: Public Function Convert(sourceMember As String, context As ResolutionContext) As ByteString
+  overload: Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter.Convert*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Lib.DAO.Converters
+  commentId: N:Catalyst.Core.Lib.DAO.Converters
+  name: Catalyst.Core.Lib.DAO.Converters
+  nameWithType: Catalyst.Core.Lib.DAO.Converters
+  fullName: Catalyst.Core.Lib.DAO.Converters
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter.Convert*
+  commentId: Overload:Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter.Convert
+  name: Convert
+  nameWithType: UInt256StringToByteStringConverter.Convert
+  fullName: Catalyst.Core.Lib.DAO.Converters.UInt256StringToByteStringConverter.Convert
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: ResolutionContext
+  isExternal: true
+  name: ResolutionContext
+  nameWithType: ResolutionContext
+  fullName: ResolutionContext
+- uid: ByteString
+  isExternal: true
+  name: ByteString
+  nameWithType: ByteString
+  fullName: ByteString

@@ -1,0 +1,1494 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  commentId: T:Catalyst.Core.Modules.Dfs.IpfsAdapter
+  id: IpfsAdapter
+  parent: Catalyst.Core.Modules.Dfs
+  children:
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.#ctor(Catalyst.Abstractions.Cryptography.IPasswordManager,Catalyst.Abstractions.FileSystem.IFileSystem,ILogger,System.String,System.Collections.Generic.IEnumerable{MultiAddress})
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Bitswap
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Block
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.BlockRepository
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Bootstrap
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Config
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Dag
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Dht
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Dispose
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Dns
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.FileSystem
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Generic
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Key
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Name
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Object
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Options
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Pin
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.PubSub
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Stats
+  - Catalyst.Core.Modules.Dfs.IpfsAdapter.Swarm
+  langs:
+  - csharp
+  - vb
+  name: IpfsAdapter
+  nameWithType: IpfsAdapter
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IpfsAdapter
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 49
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  summary: "\nModifies the IPFS behaviour to meet the Catalyst requirements.\n"
+  remarks: "\nThe IPFS engine is lazy, it is only started when needed.\n"
+  example: []
+  syntax:
+    content: 'public sealed class IpfsAdapter : IIpfsAdapter, ICoreApi, IDisposable'
+    content.vb: >-
+      Public NotInheritable Class IpfsAdapter
+
+          Implements IIpfsAdapter, ICoreApi, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter
+  - ICoreApi
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.#ctor(Catalyst.Abstractions.Cryptography.IPasswordManager,Catalyst.Abstractions.FileSystem.IFileSystem,ILogger,System.String,System.Collections.Generic.IEnumerable{MultiAddress})
+  commentId: M:Catalyst.Core.Modules.Dfs.IpfsAdapter.#ctor(Catalyst.Abstractions.Cryptography.IPasswordManager,Catalyst.Abstractions.FileSystem.IFileSystem,ILogger,System.String,System.Collections.Generic.IEnumerable{MultiAddress})
+  id: '#ctor(Catalyst.Abstractions.Cryptography.IPasswordManager,Catalyst.Abstractions.FileSystem.IFileSystem,ILogger,System.String,System.Collections.Generic.IEnumerable{MultiAddress})'
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: IpfsAdapter(IPasswordManager, IFileSystem, ILogger, String, IEnumerable<MultiAddress>)
+  nameWithType: IpfsAdapter.IpfsAdapter(IPasswordManager, IFileSystem, ILogger, String, IEnumerable<MultiAddress>)
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.IpfsAdapter(Catalyst.Abstractions.Cryptography.IPasswordManager, Catalyst.Abstractions.FileSystem.IFileSystem, ILogger, System.String, System.Collections.Generic.IEnumerable<MultiAddress>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 65
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IpfsAdapter(IPasswordManager passwordReader, IFileSystem fileSystem, ILogger logger, string swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3", IEnumerable<MultiAddress> seedServers = null)
+    parameters:
+    - id: passwordReader
+      type: Catalyst.Abstractions.Cryptography.IPasswordManager
+    - id: fileSystem
+      type: Catalyst.Abstractions.FileSystem.IFileSystem
+    - id: logger
+      type: ILogger
+    - id: swarmKey
+      type: System.String
+    - id: seedServers
+      type: System.Collections.Generic.IEnumerable{MultiAddress}
+    content.vb: Public Sub New(passwordReader As IPasswordManager, fileSystem As IFileSystem, logger As ILogger, swarmKey As String = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3", seedServers As IEnumerable(Of MultiAddress) = Nothing)
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.#ctor*
+  nameWithType.vb: IpfsAdapter.IpfsAdapter(IPasswordManager, IFileSystem, ILogger, String, IEnumerable(Of MultiAddress))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Dfs.IpfsAdapter.IpfsAdapter(Catalyst.Abstractions.Cryptography.IPasswordManager, Catalyst.Abstractions.FileSystem.IFileSystem, ILogger, System.String, System.Collections.Generic.IEnumerable(Of MultiAddress))
+  name.vb: IpfsAdapter(IPasswordManager, IFileSystem, ILogger, String, IEnumerable(Of MultiAddress))
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Bitswap
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Bitswap
+  id: Bitswap
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Bitswap
+  nameWithType: IpfsAdapter.Bitswap
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Bitswap
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Bitswap
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 139
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IBitswapApi Bitswap { get; }
+    parameters: []
+    return:
+      type: IBitswapApi
+    content.vb: Public ReadOnly Property Bitswap As IBitswapApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Bitswap*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Block
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Block
+  id: Block
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Block
+  nameWithType: IpfsAdapter.Block
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Block
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Block
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 141
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IBlockApi Block { get; }
+    parameters: []
+    return:
+      type: IBlockApi
+    content.vb: Public ReadOnly Property Block As IBlockApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Block*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.BlockRepository
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.BlockRepository
+  id: BlockRepository
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: BlockRepository
+  nameWithType: IpfsAdapter.BlockRepository
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.BlockRepository
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BlockRepository
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 143
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IBlockRepositoryApi BlockRepository { get; }
+    parameters: []
+    return:
+      type: IBlockRepositoryApi
+    content.vb: Public ReadOnly Property BlockRepository As IBlockRepositoryApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.BlockRepository*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Bootstrap
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Bootstrap
+  id: Bootstrap
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Bootstrap
+  nameWithType: IpfsAdapter.Bootstrap
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Bootstrap
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Bootstrap
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 145
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IBootstrapApi Bootstrap { get; }
+    parameters: []
+    return:
+      type: IBootstrapApi
+    content.vb: Public ReadOnly Property Bootstrap As IBootstrapApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Bootstrap*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Config
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Config
+  id: Config
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Config
+  nameWithType: IpfsAdapter.Config
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Config
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Config
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 147
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IConfigApi Config { get; }
+    parameters: []
+    return:
+      type: IConfigApi
+    content.vb: Public ReadOnly Property Config As IConfigApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Config*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Options
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Options
+  id: Options
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Options
+  nameWithType: IpfsAdapter.Options
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Options
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Options
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 148
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IpfsEngineOptions Options { get; }
+    parameters: []
+    return:
+      type: IpfsEngineOptions
+    content.vb: Public ReadOnly Property Options As IpfsEngineOptions
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Options*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dag
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Dag
+  id: Dag
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Dag
+  nameWithType: IpfsAdapter.Dag
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dag
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dag
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 150
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IDagApi Dag { get; }
+    parameters: []
+    return:
+      type: IDagApi
+    content.vb: Public ReadOnly Property Dag As IDagApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dag*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dht
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Dht
+  id: Dht
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Dht
+  nameWithType: IpfsAdapter.Dht
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dht
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dht
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 152
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IDhtApi Dht { get; }
+    parameters: []
+    return:
+      type: IDhtApi
+    content.vb: Public ReadOnly Property Dht As IDhtApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dht*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dns
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Dns
+  id: Dns
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Dns
+  nameWithType: IpfsAdapter.Dns
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dns
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dns
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 154
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IDnsApi Dns { get; }
+    parameters: []
+    return:
+      type: IDnsApi
+    content.vb: Public ReadOnly Property Dns As IDnsApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dns*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.FileSystem
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.FileSystem
+  id: FileSystem
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: FileSystem
+  nameWithType: IpfsAdapter.FileSystem
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.FileSystem
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: FileSystem
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 156
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IFileSystemApi FileSystem { get; }
+    parameters: []
+    return:
+      type: IFileSystemApi
+    content.vb: Public ReadOnly Property FileSystem As IFileSystemApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.FileSystem*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Generic
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Generic
+  id: Generic
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Generic
+  nameWithType: IpfsAdapter.Generic
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Generic
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Generic
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 158
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IGenericApi Generic { get; }
+    parameters: []
+    return:
+      type: IGenericApi
+    content.vb: Public ReadOnly Property Generic As IGenericApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Generic*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Key
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Key
+  id: Key
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Key
+  nameWithType: IpfsAdapter.Key
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Key
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Key
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 160
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IKeyApi Key { get; }
+    parameters: []
+    return:
+      type: IKeyApi
+    content.vb: Public ReadOnly Property Key As IKeyApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Key*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Name
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Name
+  id: Name
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: IpfsAdapter.Name
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Name
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Name
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 162
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public INameApi Name { get; }
+    parameters: []
+    return:
+      type: INameApi
+    content.vb: Public ReadOnly Property Name As INameApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Name*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Object
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Object
+  id: Object
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Object
+  nameWithType: IpfsAdapter.Object
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Object
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Object
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 164
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IObjectApi Object { get; }
+    parameters: []
+    return:
+      type: IObjectApi
+    content.vb: Public ReadOnly Property Object As IObjectApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Object*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Pin
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Pin
+  id: Pin
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Pin
+  nameWithType: IpfsAdapter.Pin
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Pin
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Pin
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 166
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IPinApi Pin { get; }
+    parameters: []
+    return:
+      type: IPinApi
+    content.vb: Public ReadOnly Property Pin As IPinApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Pin*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.PubSub
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.PubSub
+  id: PubSub
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: PubSub
+  nameWithType: IpfsAdapter.PubSub
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.PubSub
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PubSub
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 168
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IPubSubApi PubSub { get; }
+    parameters: []
+    return:
+      type: IPubSubApi
+    content.vb: Public ReadOnly Property PubSub As IPubSubApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.PubSub*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Stats
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Stats
+  id: Stats
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Stats
+  nameWithType: IpfsAdapter.Stats
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Stats
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Stats
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 170
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public IStatsApi Stats { get; }
+    parameters: []
+    return:
+      type: IStatsApi
+    content.vb: Public ReadOnly Property Stats As IStatsApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Stats*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Swarm
+  commentId: P:Catalyst.Core.Modules.Dfs.IpfsAdapter.Swarm
+  id: Swarm
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Swarm
+  nameWithType: IpfsAdapter.Swarm
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Swarm
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Swarm
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 172
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public ISwarmApi Swarm { get; }
+    parameters: []
+    return:
+      type: ISwarmApi
+    content.vb: Public ReadOnly Property Swarm As ISwarmApi
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Swarm*
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dispose
+  commentId: M:Catalyst.Core.Modules.Dfs.IpfsAdapter.Dispose
+  id: Dispose
+  parent: Catalyst.Core.Modules.Dfs.IpfsAdapter
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: IpfsAdapter.Dispose()
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Dispose
+    path: ../src/Catalyst.Core.Modules.Dfs/IpfsAdapter.cs
+    startLine: 185
+  assemblies:
+  - Catalyst.Core.Modules.Dfs
+  namespace: Catalyst.Core.Modules.Dfs
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose
+  overload: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dispose*
+  implements:
+  - Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.Dfs
+  commentId: N:Catalyst.Core.Modules.Dfs
+  name: Catalyst.Core.Modules.Dfs
+  nameWithType: Catalyst.Core.Modules.Dfs
+  fullName: Catalyst.Core.Modules.Dfs
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  commentId: T:Catalyst.Abstractions.Dfs.IIpfsAdapter
+  parent: Catalyst.Abstractions.Dfs
+  name: IIpfsAdapter
+  nameWithType: IIpfsAdapter
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter
+- uid: ICoreApi
+  isExternal: true
+  name: ICoreApi
+  nameWithType: ICoreApi
+  fullName: ICoreApi
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Dfs
+  commentId: N:Catalyst.Abstractions.Dfs
+  name: Catalyst.Abstractions.Dfs
+  nameWithType: Catalyst.Abstractions.Dfs
+  fullName: Catalyst.Abstractions.Dfs
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.#ctor
+  name: IpfsAdapter
+  nameWithType: IpfsAdapter.IpfsAdapter
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.IpfsAdapter
+- uid: Catalyst.Abstractions.Cryptography.IPasswordManager
+  commentId: T:Catalyst.Abstractions.Cryptography.IPasswordManager
+  parent: Catalyst.Abstractions.Cryptography
+  name: IPasswordManager
+  nameWithType: IPasswordManager
+  fullName: Catalyst.Abstractions.Cryptography.IPasswordManager
+- uid: Catalyst.Abstractions.FileSystem.IFileSystem
+  commentId: T:Catalyst.Abstractions.FileSystem.IFileSystem
+  parent: Catalyst.Abstractions.FileSystem
+  name: IFileSystem
+  nameWithType: IFileSystem
+  fullName: Catalyst.Abstractions.FileSystem.IFileSystem
+- uid: ILogger
+  isExternal: true
+  name: ILogger
+  nameWithType: ILogger
+  fullName: ILogger
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: System.Collections.Generic.IEnumerable{MultiAddress}
+  commentId: T:System.Collections.Generic.IEnumerable{MultiAddress}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  name: IEnumerable<MultiAddress>
+  nameWithType: IEnumerable<MultiAddress>
+  fullName: System.Collections.Generic.IEnumerable<MultiAddress>
+  nameWithType.vb: IEnumerable(Of MultiAddress)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of MultiAddress)
+  name.vb: IEnumerable(Of MultiAddress)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: MultiAddress
+    name: MultiAddress
+    nameWithType: MultiAddress
+    fullName: MultiAddress
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: MultiAddress
+    name: MultiAddress
+    nameWithType: MultiAddress
+    fullName: MultiAddress
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Cryptography
+  commentId: N:Catalyst.Abstractions.Cryptography
+  name: Catalyst.Abstractions.Cryptography
+  nameWithType: Catalyst.Abstractions.Cryptography
+  fullName: Catalyst.Abstractions.Cryptography
+- uid: Catalyst.Abstractions.FileSystem
+  commentId: N:Catalyst.Abstractions.FileSystem
+  name: Catalyst.Abstractions.FileSystem
+  nameWithType: Catalyst.Abstractions.FileSystem
+  fullName: Catalyst.Abstractions.FileSystem
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    nameWithType: IEnumerable
+    fullName: System.Collections.Generic.IEnumerable
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Bitswap*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Bitswap
+  name: Bitswap
+  nameWithType: IpfsAdapter.Bitswap
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Bitswap
+- uid: IBitswapApi
+  commentId: '!:IBitswapApi'
+  isExternal: true
+  name: IBitswapApi
+  nameWithType: IBitswapApi
+  fullName: IBitswapApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Block*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Block
+  name: Block
+  nameWithType: IpfsAdapter.Block
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Block
+- uid: IBlockApi
+  commentId: '!:IBlockApi'
+  isExternal: true
+  name: IBlockApi
+  nameWithType: IBlockApi
+  fullName: IBlockApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.BlockRepository*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.BlockRepository
+  name: BlockRepository
+  nameWithType: IpfsAdapter.BlockRepository
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.BlockRepository
+- uid: IBlockRepositoryApi
+  commentId: '!:IBlockRepositoryApi'
+  isExternal: true
+  name: IBlockRepositoryApi
+  nameWithType: IBlockRepositoryApi
+  fullName: IBlockRepositoryApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Bootstrap*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Bootstrap
+  name: Bootstrap
+  nameWithType: IpfsAdapter.Bootstrap
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Bootstrap
+- uid: IBootstrapApi
+  commentId: '!:IBootstrapApi'
+  isExternal: true
+  name: IBootstrapApi
+  nameWithType: IBootstrapApi
+  fullName: IBootstrapApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Config*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Config
+  name: Config
+  nameWithType: IpfsAdapter.Config
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Config
+- uid: IConfigApi
+  commentId: '!:IConfigApi'
+  isExternal: true
+  name: IConfigApi
+  nameWithType: IConfigApi
+  fullName: IConfigApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Options*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Options
+  name: Options
+  nameWithType: IpfsAdapter.Options
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Options
+- uid: IpfsEngineOptions
+  commentId: '!:IpfsEngineOptions'
+  isExternal: true
+  name: IpfsEngineOptions
+  nameWithType: IpfsEngineOptions
+  fullName: IpfsEngineOptions
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dag*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Dag
+  name: Dag
+  nameWithType: IpfsAdapter.Dag
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dag
+- uid: IDagApi
+  commentId: '!:IDagApi'
+  isExternal: true
+  name: IDagApi
+  nameWithType: IDagApi
+  fullName: IDagApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dht*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Dht
+  name: Dht
+  nameWithType: IpfsAdapter.Dht
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dht
+- uid: IDhtApi
+  commentId: '!:IDhtApi'
+  isExternal: true
+  name: IDhtApi
+  nameWithType: IDhtApi
+  fullName: IDhtApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dns*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Dns
+  name: Dns
+  nameWithType: IpfsAdapter.Dns
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dns
+- uid: IDnsApi
+  commentId: '!:IDnsApi'
+  isExternal: true
+  name: IDnsApi
+  nameWithType: IDnsApi
+  fullName: IDnsApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.FileSystem*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.FileSystem
+  name: FileSystem
+  nameWithType: IpfsAdapter.FileSystem
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.FileSystem
+- uid: IFileSystemApi
+  commentId: '!:IFileSystemApi'
+  isExternal: true
+  name: IFileSystemApi
+  nameWithType: IFileSystemApi
+  fullName: IFileSystemApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Generic*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Generic
+  name: Generic
+  nameWithType: IpfsAdapter.Generic
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Generic
+- uid: IGenericApi
+  commentId: '!:IGenericApi'
+  isExternal: true
+  name: IGenericApi
+  nameWithType: IGenericApi
+  fullName: IGenericApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Key*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Key
+  name: Key
+  nameWithType: IpfsAdapter.Key
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Key
+- uid: IKeyApi
+  commentId: '!:IKeyApi'
+  isExternal: true
+  name: IKeyApi
+  nameWithType: IKeyApi
+  fullName: IKeyApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Name*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Name
+  name: Name
+  nameWithType: IpfsAdapter.Name
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Name
+- uid: INameApi
+  commentId: '!:INameApi'
+  isExternal: true
+  name: INameApi
+  nameWithType: INameApi
+  fullName: INameApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Object*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Object
+  name: Object
+  nameWithType: IpfsAdapter.Object
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Object
+- uid: IObjectApi
+  commentId: '!:IObjectApi'
+  isExternal: true
+  name: IObjectApi
+  nameWithType: IObjectApi
+  fullName: IObjectApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Pin*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Pin
+  name: Pin
+  nameWithType: IpfsAdapter.Pin
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Pin
+- uid: IPinApi
+  commentId: '!:IPinApi'
+  isExternal: true
+  name: IPinApi
+  nameWithType: IPinApi
+  fullName: IPinApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.PubSub*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.PubSub
+  name: PubSub
+  nameWithType: IpfsAdapter.PubSub
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.PubSub
+- uid: IPubSubApi
+  commentId: '!:IPubSubApi'
+  isExternal: true
+  name: IPubSubApi
+  nameWithType: IPubSubApi
+  fullName: IPubSubApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Stats*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Stats
+  name: Stats
+  nameWithType: IpfsAdapter.Stats
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Stats
+- uid: IStatsApi
+  commentId: '!:IStatsApi'
+  isExternal: true
+  name: IStatsApi
+  nameWithType: IStatsApi
+  fullName: IStatsApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Swarm*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Swarm
+  name: Swarm
+  nameWithType: IpfsAdapter.Swarm
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Swarm
+- uid: ISwarmApi
+  commentId: '!:ISwarmApi'
+  isExternal: true
+  name: ISwarmApi
+  nameWithType: ISwarmApi
+  fullName: ISwarmApi
+- uid: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dispose*
+  commentId: Overload:Catalyst.Core.Modules.Dfs.IpfsAdapter.Dispose
+  name: Dispose
+  nameWithType: IpfsAdapter.Dispose
+  fullName: Catalyst.Core.Modules.Dfs.IpfsAdapter.Dispose
+- uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+  commentId: M:Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+  parent: Catalyst.Abstractions.Dfs.IIpfsAdapter
+  name: Dispose()
+  nameWithType: IIpfsAdapter.Dispose()
+  fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+    name: Dispose
+    nameWithType: IIpfsAdapter.Dispose
+    fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+    name: Dispose
+    nameWithType: IIpfsAdapter.Dispose
+    fullName: Catalyst.Abstractions.Dfs.IIpfsAdapter.Dispose
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )

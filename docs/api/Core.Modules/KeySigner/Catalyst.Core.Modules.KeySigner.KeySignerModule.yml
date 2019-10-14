@@ -1,0 +1,109 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.KeySigner.KeySignerModule
+  commentId: T:Catalyst.Core.Modules.KeySigner.KeySignerModule
+  id: KeySignerModule
+  parent: Catalyst.Core.Modules.KeySigner
+  children:
+  - Catalyst.Core.Modules.KeySigner.KeySignerModule.Load(ContainerBuilder)
+  langs:
+  - csharp
+  - vb
+  name: KeySignerModule
+  nameWithType: KeySignerModule
+  fullName: Catalyst.Core.Modules.KeySigner.KeySignerModule
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.KeySigner/KeySignerModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: KeySignerModule
+    path: ../src/Catalyst.Core.Modules.KeySigner/KeySignerModule.cs
+    startLine: 28
+  assemblies:
+  - Catalyst.Core.Modules.KeySigner
+  namespace: Catalyst.Core.Modules.KeySigner
+  syntax:
+    content: 'public class KeySignerModule : Module'
+    content.vb: >-
+      Public Class KeySignerModule
+
+          Inherits
+
+
+
+           Module
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Modules.KeySigner.KeySignerModule.Load(ContainerBuilder)
+  commentId: M:Catalyst.Core.Modules.KeySigner.KeySignerModule.Load(ContainerBuilder)
+  id: Load(ContainerBuilder)
+  parent: Catalyst.Core.Modules.KeySigner.KeySignerModule
+  langs:
+  - csharp
+  - vb
+  name: Load(ContainerBuilder)
+  nameWithType: KeySignerModule.Load(ContainerBuilder)
+  fullName: Catalyst.Core.Modules.KeySigner.KeySignerModule.Load(ContainerBuilder)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.KeySigner/KeySignerModule.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Load
+    path: ../src/Catalyst.Core.Modules.KeySigner/KeySignerModule.cs
+    startLine: 30
+  assemblies:
+  - Catalyst.Core.Modules.KeySigner
+  namespace: Catalyst.Core.Modules.KeySigner
+  syntax:
+    content: protected override void Load(ContainerBuilder builder)
+    parameters:
+    - id: builder
+      type: ContainerBuilder
+    content.vb: Protected Overrides Sub Load(builder As ContainerBuilder)
+  overload: Catalyst.Core.Modules.KeySigner.KeySignerModule.Load*
+  modifiers.csharp:
+  - protected
+  - override
+  modifiers.vb:
+  - Protected
+  - Overrides
+references:
+- uid: Catalyst.Core.Modules.KeySigner
+  commentId: N:Catalyst.Core.Modules.KeySigner
+  name: Catalyst.Core.Modules.KeySigner
+  nameWithType: Catalyst.Core.Modules.KeySigner
+  fullName: Catalyst.Core.Modules.KeySigner
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.KeySigner.KeySignerModule.Load*
+  commentId: Overload:Catalyst.Core.Modules.KeySigner.KeySignerModule.Load
+  name: Load
+  nameWithType: KeySignerModule.Load
+  fullName: Catalyst.Core.Modules.KeySigner.KeySignerModule.Load
+- uid: ContainerBuilder
+  commentId: '!:ContainerBuilder'
+  isExternal: true
+  name: ContainerBuilder
+  nameWithType: ContainerBuilder
+  fullName: ContainerBuilder

@@ -1,0 +1,140 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Web3.Controllers.PeerController
+  commentId: T:Catalyst.Core.Modules.Web3.Controllers.PeerController
+  id: PeerController
+  parent: Catalyst.Core.Modules.Web3.Controllers
+  children:
+  - Catalyst.Core.Modules.Web3.Controllers.PeerController.#ctor(Catalyst.Core.Lib.P2P.Repository.IPeerRepository)
+  - Catalyst.Core.Modules.Web3.Controllers.PeerController.GetAllPeers
+  langs:
+  - csharp
+  - vb
+  name: PeerController
+  nameWithType: PeerController
+  fullName: Catalyst.Core.Modules.Web3.Controllers.PeerController
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Web3/Controllers/PeerController.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerController
+    path: ../src/Catalyst.Core.Modules.Web3/Controllers/PeerController.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Modules.Web3
+  namespace: Catalyst.Core.Modules.Web3.Controllers
+  syntax:
+    content: 'public sealed class PeerController : Controller'
+    content.vb: >-
+      Public NotInheritable Class PeerController
+
+          Inherits Controller
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Web3.Controllers.PeerController.#ctor(Catalyst.Core.Lib.P2P.Repository.IPeerRepository)
+  commentId: M:Catalyst.Core.Modules.Web3.Controllers.PeerController.#ctor(Catalyst.Core.Lib.P2P.Repository.IPeerRepository)
+  id: '#ctor(Catalyst.Core.Lib.P2P.Repository.IPeerRepository)'
+  parent: Catalyst.Core.Modules.Web3.Controllers.PeerController
+  langs:
+  - csharp
+  - vb
+  name: PeerController(IPeerRepository)
+  nameWithType: PeerController.PeerController(IPeerRepository)
+  fullName: Catalyst.Core.Modules.Web3.Controllers.PeerController.PeerController(Catalyst.Core.Lib.P2P.Repository.IPeerRepository)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Web3/Controllers/PeerController.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Web3/Controllers/PeerController.cs
+    startLine: 37
+  assemblies:
+  - Catalyst.Core.Modules.Web3
+  namespace: Catalyst.Core.Modules.Web3.Controllers
+  syntax:
+    content: public PeerController(IPeerRepository peerRepository)
+    parameters:
+    - id: peerRepository
+      type: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+    content.vb: Public Sub New(peerRepository As IPeerRepository)
+  overload: Catalyst.Core.Modules.Web3.Controllers.PeerController.#ctor*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Web3.Controllers.PeerController.GetAllPeers
+  commentId: M:Catalyst.Core.Modules.Web3.Controllers.PeerController.GetAllPeers
+  id: GetAllPeers
+  parent: Catalyst.Core.Modules.Web3.Controllers.PeerController
+  langs:
+  - csharp
+  - vb
+  name: GetAllPeers()
+  nameWithType: PeerController.GetAllPeers()
+  fullName: Catalyst.Core.Modules.Web3.Controllers.PeerController.GetAllPeers()
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Web3/Controllers/PeerController.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetAllPeers
+    path: ../src/Catalyst.Core.Modules.Web3/Controllers/PeerController.cs
+    startLine: 43
+  assemblies:
+  - Catalyst.Core.Modules.Web3
+  namespace: Catalyst.Core.Modules.Web3.Controllers
+  syntax:
+    content: public JsonResult GetAllPeers()
+    return:
+      type: JsonResult
+    content.vb: Public Function GetAllPeers As JsonResult
+  overload: Catalyst.Core.Modules.Web3.Controllers.PeerController.GetAllPeers*
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.Web3.Controllers
+  commentId: N:Catalyst.Core.Modules.Web3.Controllers
+  name: Catalyst.Core.Modules.Web3.Controllers
+  nameWithType: Catalyst.Core.Modules.Web3.Controllers
+  fullName: Catalyst.Core.Modules.Web3.Controllers
+- uid: Catalyst.Core.Modules.Web3.Controllers.PeerController.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Web3.Controllers.PeerController.#ctor
+  name: PeerController
+  nameWithType: PeerController.PeerController
+  fullName: Catalyst.Core.Modules.Web3.Controllers.PeerController.PeerController
+- uid: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  commentId: T:Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  parent: Catalyst.Core.Lib.P2P.Repository
+  name: IPeerRepository
+  nameWithType: IPeerRepository
+  fullName: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+- uid: Catalyst.Core.Lib.P2P.Repository
+  commentId: N:Catalyst.Core.Lib.P2P.Repository
+  name: Catalyst.Core.Lib.P2P.Repository
+  nameWithType: Catalyst.Core.Lib.P2P.Repository
+  fullName: Catalyst.Core.Lib.P2P.Repository
+- uid: Catalyst.Core.Modules.Web3.Controllers.PeerController.GetAllPeers*
+  commentId: Overload:Catalyst.Core.Modules.Web3.Controllers.PeerController.GetAllPeers
+  name: GetAllPeers
+  nameWithType: PeerController.GetAllPeers
+  fullName: Catalyst.Core.Modules.Web3.Controllers.PeerController.GetAllPeers
+- uid: JsonResult
+  isExternal: true
+  name: JsonResult
+  nameWithType: JsonResult
+  fullName: JsonResult

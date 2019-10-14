@@ -9,6 +9,7 @@
 # Certificates
 *.pfx
 *.pem
+docs/_site
 
 src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes/*
 

@@ -1,0 +1,471 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+  commentId: T:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+  id: RpcClientSettings
+  parent: Catalyst.Core.Modules.Rpc.Client
+  children:
+  - Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.BuildRpcNodeSettingList(IConfigurationRoot)
+  - Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.HostAddress
+  - Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.NodeId
+  - Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PfxFileName
+  - Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.Port
+  - Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PublicKey
+  - Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.SslCertPassword
+  langs:
+  - csharp
+  - vb
+  name: RpcClientSettings
+  nameWithType: RpcClientSettings
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: RpcClientSettings
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client
+  syntax:
+    content: 'public sealed class RpcClientSettings : IRpcClientConfig'
+    content.vb: >-
+      Public NotInheritable Class RpcClientSettings
+
+          Inherits IRpcClientConfig
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.BuildRpcNodeSettingList(IConfigurationRoot)
+  commentId: M:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.BuildRpcNodeSettingList(IConfigurationRoot)
+  id: BuildRpcNodeSettingList(IConfigurationRoot)
+  parent: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+  langs:
+  - csharp
+  - vb
+  name: BuildRpcNodeSettingList(IConfigurationRoot)
+  nameWithType: RpcClientSettings.BuildRpcNodeSettingList(IConfigurationRoot)
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.BuildRpcNodeSettingList(IConfigurationRoot)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: BuildRpcNodeSettingList
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client
+  syntax:
+    content: public static IList<IRpcClientConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
+    parameters:
+    - id: config
+      type: IConfigurationRoot
+    return:
+      type: System.Collections.Generic.IList{IRpcClientConfig}
+    content.vb: Public Shared Function BuildRpcNodeSettingList(config As IConfigurationRoot) As IList(Of IRpcClientConfig)
+  overload: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.BuildRpcNodeSettingList*
+  modifiers.csharp:
+  - public
+  - static
+  modifiers.vb:
+  - Public
+  - Shared
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.NodeId
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.NodeId
+  id: NodeId
+  parent: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+  langs:
+  - csharp
+  - vb
+  name: NodeId
+  nameWithType: RpcClientSettings.NodeId
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.NodeId
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: NodeId
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+    startLine: 50
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client
+  syntax:
+    content: public string NodeId { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property NodeId As String
+  overload: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.NodeId*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.HostAddress
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.HostAddress
+  id: HostAddress
+  parent: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+  langs:
+  - csharp
+  - vb
+  name: HostAddress
+  nameWithType: RpcClientSettings.HostAddress
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.HostAddress
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: HostAddress
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+    startLine: 51
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client
+  syntax:
+    content: public IPAddress HostAddress { get; set; }
+    parameters: []
+    return:
+      type: System.Net.IPAddress
+    content.vb: Public Property HostAddress As IPAddress
+  overload: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.HostAddress*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.Port
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.Port
+  id: Port
+  parent: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+  langs:
+  - csharp
+  - vb
+  name: Port
+  nameWithType: RpcClientSettings.Port
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.Port
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Port
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+    startLine: 52
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client
+  syntax:
+    content: public int Port { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public Property Port As Integer
+  overload: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.Port*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PfxFileName
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PfxFileName
+  id: PfxFileName
+  parent: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+  langs:
+  - csharp
+  - vb
+  name: PfxFileName
+  nameWithType: RpcClientSettings.PfxFileName
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PfxFileName
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PfxFileName
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+    startLine: 53
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client
+  syntax:
+    content: public string PfxFileName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property PfxFileName As String
+  overload: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PfxFileName*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.SslCertPassword
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.SslCertPassword
+  id: SslCertPassword
+  parent: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+  langs:
+  - csharp
+  - vb
+  name: SslCertPassword
+  nameWithType: RpcClientSettings.SslCertPassword
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.SslCertPassword
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: SslCertPassword
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+    startLine: 54
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client
+  syntax:
+    content: public string SslCertPassword { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property SslCertPassword As String
+  overload: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.SslCertPassword*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PublicKey
+  commentId: P:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PublicKey
+  id: PublicKey
+  parent: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings
+  langs:
+  - csharp
+  - vb
+  name: PublicKey
+  nameWithType: RpcClientSettings.PublicKey
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PublicKey
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PublicKey
+    path: ../src/Catalyst.Core.Modules.Rpc.Client/RpcClientSettings.cs
+    startLine: 55
+  assemblies:
+  - Catalyst.Core.Modules.Rpc.Client
+  namespace: Catalyst.Core.Modules.Rpc.Client
+  syntax:
+    content: public string PublicKey { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property PublicKey As String
+  overload: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PublicKey*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+references:
+- uid: Catalyst.Core.Modules.Rpc.Client
+  commentId: N:Catalyst.Core.Modules.Rpc.Client
+  name: Catalyst.Core.Modules.Rpc.Client
+  nameWithType: Catalyst.Core.Modules.Rpc.Client
+  fullName: Catalyst.Core.Modules.Rpc.Client
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.BuildRpcNodeSettingList*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.BuildRpcNodeSettingList
+  name: BuildRpcNodeSettingList
+  nameWithType: RpcClientSettings.BuildRpcNodeSettingList
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.BuildRpcNodeSettingList
+- uid: IConfigurationRoot
+  commentId: '!:IConfigurationRoot'
+  isExternal: true
+  name: IConfigurationRoot
+  nameWithType: IConfigurationRoot
+  fullName: IConfigurationRoot
+- uid: System.Collections.Generic.IList{IRpcClientConfig}
+  commentId: T:System.Collections.Generic.IList{IRpcClientConfig}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IList`1
+  name: IList<IRpcClientConfig>
+  nameWithType: IList<IRpcClientConfig>
+  fullName: System.Collections.Generic.IList<IRpcClientConfig>
+  nameWithType.vb: IList(Of IRpcClientConfig)
+  fullName.vb: System.Collections.Generic.IList(Of IRpcClientConfig)
+  name.vb: IList(Of IRpcClientConfig)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: IRpcClientConfig
+    name: IRpcClientConfig
+    nameWithType: IRpcClientConfig
+    fullName: IRpcClientConfig
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: IRpcClientConfig
+    name: IRpcClientConfig
+    nameWithType: IRpcClientConfig
+    fullName: IRpcClientConfig
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IList`1
+  commentId: T:System.Collections.Generic.IList`1
+  isExternal: true
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.NodeId*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.NodeId
+  name: NodeId
+  nameWithType: RpcClientSettings.NodeId
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.NodeId
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.HostAddress*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.HostAddress
+  name: HostAddress
+  nameWithType: RpcClientSettings.HostAddress
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.HostAddress
+- uid: System.Net.IPAddress
+  commentId: T:System.Net.IPAddress
+  parent: System.Net
+  isExternal: true
+  name: IPAddress
+  nameWithType: IPAddress
+  fullName: System.Net.IPAddress
+- uid: System.Net
+  commentId: N:System.Net
+  isExternal: true
+  name: System.Net
+  nameWithType: System.Net
+  fullName: System.Net
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.Port*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.Port
+  name: Port
+  nameWithType: RpcClientSettings.Port
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.Port
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: Int32
+  nameWithType: Int32
+  fullName: System.Int32
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PfxFileName*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PfxFileName
+  name: PfxFileName
+  nameWithType: RpcClientSettings.PfxFileName
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PfxFileName
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.SslCertPassword*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.SslCertPassword
+  name: SslCertPassword
+  nameWithType: RpcClientSettings.SslCertPassword
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.SslCertPassword
+- uid: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PublicKey*
+  commentId: Overload:Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PublicKey
+  name: PublicKey
+  nameWithType: RpcClientSettings.PublicKey
+  fullName: Catalyst.Core.Modules.Rpc.Client.RpcClientSettings.PublicKey

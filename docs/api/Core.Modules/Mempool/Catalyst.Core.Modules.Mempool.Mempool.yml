@@ -1,0 +1,615 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Mempool.Mempool
+  commentId: T:Catalyst.Core.Modules.Mempool.Mempool
+  id: Mempool
+  parent: Catalyst.Core.Modules.Mempool
+  children:
+  - Catalyst.Core.Modules.Mempool.Mempool.#ctor(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument})
+  - Catalyst.Core.Modules.Mempool.Mempool.Repository
+  langs:
+  - csharp
+  - vb
+  name: Mempool
+  nameWithType: Mempool
+  fullName: Catalyst.Core.Modules.Mempool.Mempool
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Mempool/Mempool.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Mempool
+    path: ../src/Catalyst.Core.Modules.Mempool/Mempool.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Modules.Mempool
+  namespace: Catalyst.Core.Modules.Mempool
+  summary: "\nMempool class wraps around a IKeyValueStore\n"
+  example: []
+  syntax:
+    content: 'public sealed class Mempool : IMempool<MempoolDocument>'
+    content.vb: >-
+      Public NotInheritable Class Mempool
+
+          Implements IMempool(Of MempoolDocument)
+  inheritance:
+  - System.Object
+  implements:
+  - Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - sealed
+  - class
+  modifiers.vb:
+  - Public
+  - NotInheritable
+  - Class
+- uid: Catalyst.Core.Modules.Mempool.Mempool.Repository
+  commentId: P:Catalyst.Core.Modules.Mempool.Mempool.Repository
+  id: Repository
+  parent: Catalyst.Core.Modules.Mempool.Mempool
+  langs:
+  - csharp
+  - vb
+  name: Repository
+  nameWithType: Mempool.Repository
+  fullName: Catalyst.Core.Modules.Mempool.Mempool.Repository
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Mempool/Mempool.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Repository
+    path: ../src/Catalyst.Core.Modules.Mempool/Mempool.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Modules.Mempool
+  namespace: Catalyst.Core.Modules.Mempool
+  syntax:
+    content: public IMempoolRepository<MempoolDocument> Repository { get; }
+    parameters: []
+    return:
+      type: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+    content.vb: Public ReadOnly Property Repository As IMempoolRepository(Of MempoolDocument)
+  overload: Catalyst.Core.Modules.Mempool.Mempool.Repository*
+  implements:
+  - Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}.Repository
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: Catalyst.Core.Modules.Mempool.Mempool.#ctor(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument})
+  commentId: M:Catalyst.Core.Modules.Mempool.Mempool.#ctor(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument})
+  id: '#ctor(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument})'
+  parent: Catalyst.Core.Modules.Mempool.Mempool
+  langs:
+  - csharp
+  - vb
+  name: Mempool(IMempoolRepository<MempoolDocument>)
+  nameWithType: Mempool.Mempool(IMempoolRepository<MempoolDocument>)
+  fullName: Catalyst.Core.Modules.Mempool.Mempool.Mempool(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<Catalyst.Core.Lib.Mempool.Documents.MempoolDocument>)
+  type: Constructor
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Mempool/Mempool.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: .ctor
+    path: ../src/Catalyst.Core.Modules.Mempool/Mempool.cs
+    startLine: 38
+  assemblies:
+  - Catalyst.Core.Modules.Mempool
+  namespace: Catalyst.Core.Modules.Mempool
+  example: []
+  syntax:
+    content: public Mempool(IMempoolRepository<MempoolDocument> transactionStore)
+    parameters:
+    - id: transactionStore
+      type: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+    content.vb: Public Sub New(transactionStore As IMempoolRepository(Of MempoolDocument))
+  overload: Catalyst.Core.Modules.Mempool.Mempool.#ctor*
+  nameWithType.vb: Mempool.Mempool(IMempoolRepository(Of MempoolDocument))
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+  fullName.vb: Catalyst.Core.Modules.Mempool.Mempool.Mempool(Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of Catalyst.Core.Lib.Mempool.Documents.MempoolDocument))
+  name.vb: Mempool(IMempoolRepository(Of MempoolDocument))
+references:
+- uid: Catalyst.Core.Modules.Mempool
+  commentId: N:Catalyst.Core.Modules.Mempool
+  name: Catalyst.Core.Modules.Mempool
+  nameWithType: Catalyst.Core.Modules.Mempool
+  fullName: Catalyst.Core.Modules.Mempool
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+  commentId: T:Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+  parent: Catalyst.Abstractions.Mempool
+  definition: Catalyst.Abstractions.Mempool.IMempool`1
+  name: IMempool<MempoolDocument>
+  nameWithType: IMempool<MempoolDocument>
+  fullName: Catalyst.Abstractions.Mempool.IMempool<Catalyst.Core.Lib.Mempool.Documents.MempoolDocument>
+  nameWithType.vb: IMempool(Of MempoolDocument)
+  fullName.vb: Catalyst.Abstractions.Mempool.IMempool(Of Catalyst.Core.Lib.Mempool.Documents.MempoolDocument)
+  name.vb: IMempool(Of MempoolDocument)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.IMempool`1
+    name: IMempool
+    nameWithType: IMempool
+    fullName: Catalyst.Abstractions.Mempool.IMempool
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+    name: MempoolDocument
+    nameWithType: MempoolDocument
+    fullName: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.IMempool`1
+    name: IMempool
+    nameWithType: IMempool
+    fullName: Catalyst.Abstractions.Mempool.IMempool
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+    name: MempoolDocument
+    nameWithType: MempoolDocument
+    fullName: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Abstractions.Mempool.IMempool`1
+  commentId: T:Catalyst.Abstractions.Mempool.IMempool`1
+  name: IMempool<T>
+  nameWithType: IMempool<T>
+  fullName: Catalyst.Abstractions.Mempool.IMempool<T>
+  nameWithType.vb: IMempool(Of T)
+  fullName.vb: Catalyst.Abstractions.Mempool.IMempool(Of T)
+  name.vb: IMempool(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.IMempool`1
+    name: IMempool
+    nameWithType: IMempool
+    fullName: Catalyst.Abstractions.Mempool.IMempool
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.IMempool`1
+    name: IMempool
+    nameWithType: IMempool
+    fullName: Catalyst.Abstractions.Mempool.IMempool
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Mempool
+  commentId: N:Catalyst.Abstractions.Mempool
+  name: Catalyst.Abstractions.Mempool
+  nameWithType: Catalyst.Abstractions.Mempool
+  fullName: Catalyst.Abstractions.Mempool
+- uid: Catalyst.Core.Modules.Mempool.Mempool.Repository*
+  commentId: Overload:Catalyst.Core.Modules.Mempool.Mempool.Repository
+  name: Repository
+  nameWithType: Mempool.Repository
+  fullName: Catalyst.Core.Modules.Mempool.Mempool.Repository
+- uid: Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}.Repository
+  commentId: P:Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}.Repository
+  parent: Catalyst.Abstractions.Mempool.IMempool{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+  definition: Catalyst.Abstractions.Mempool.IMempool`1.Repository
+  name: Repository
+  nameWithType: IMempool<MempoolDocument>.Repository
+  fullName: Catalyst.Abstractions.Mempool.IMempool<Catalyst.Core.Lib.Mempool.Documents.MempoolDocument>.Repository
+  nameWithType.vb: IMempool(Of MempoolDocument).Repository
+  fullName.vb: Catalyst.Abstractions.Mempool.IMempool(Of Catalyst.Core.Lib.Mempool.Documents.MempoolDocument).Repository
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+  commentId: T:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository{Catalyst.Core.Lib.Mempool.Documents.MempoolDocument}
+  parent: Catalyst.Abstractions.Mempool.Repositories
+  definition: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  name: IMempoolRepository<MempoolDocument>
+  nameWithType: IMempoolRepository<MempoolDocument>
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<Catalyst.Core.Lib.Mempool.Documents.MempoolDocument>
+  nameWithType.vb: IMempoolRepository(Of MempoolDocument)
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of Catalyst.Core.Lib.Mempool.Documents.MempoolDocument)
+  name.vb: IMempoolRepository(Of MempoolDocument)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+    name: MempoolDocument
+    nameWithType: MempoolDocument
+    fullName: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+    name: MempoolDocument
+    nameWithType: MempoolDocument
+    fullName: Catalyst.Core.Lib.Mempool.Documents.MempoolDocument
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Mempool.IMempool`1.Repository
+  commentId: P:Catalyst.Abstractions.Mempool.IMempool`1.Repository
+  name: Repository
+  nameWithType: IMempool<T>.Repository
+  fullName: Catalyst.Abstractions.Mempool.IMempool<T>.Repository
+  nameWithType.vb: IMempool(Of T).Repository
+  fullName.vb: Catalyst.Abstractions.Mempool.IMempool(Of T).Repository
+- uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  commentId: T:Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+  name: IMempoolRepository<T>
+  nameWithType: IMempoolRepository<T>
+  fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository<T>
+  nameWithType.vb: IMempoolRepository(Of T)
+  fullName.vb: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository(Of T)
+  name.vb: IMempoolRepository(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1
+    name: IMempoolRepository
+    nameWithType: IMempoolRepository
+    fullName: Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Mempool.Repositories
+  commentId: N:Catalyst.Abstractions.Mempool.Repositories
+  name: Catalyst.Abstractions.Mempool.Repositories
+  nameWithType: Catalyst.Abstractions.Mempool.Repositories
+  fullName: Catalyst.Abstractions.Mempool.Repositories
+- uid: Catalyst.Core.Modules.Mempool.Mempool.#ctor*
+  commentId: Overload:Catalyst.Core.Modules.Mempool.Mempool.#ctor
+  name: Mempool
+  nameWithType: Mempool.Mempool
+  fullName: Catalyst.Core.Modules.Mempool.Mempool.Mempool

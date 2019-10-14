@@ -1,0 +1,65 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Repository
+  commentId: N:Catalyst.Abstractions.Repository
+  id: Catalyst.Abstractions.Repository
+  children:
+  - Catalyst.Abstractions.Repository.IDocument
+  - Catalyst.Abstractions.Repository.IRepositoryWrapper`1
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Repository
+  nameWithType: Catalyst.Abstractions.Repository
+  fullName: Catalyst.Abstractions.Repository
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Repository.IDocument
+  commentId: T:Catalyst.Abstractions.Repository.IDocument
+  parent: Catalyst.Abstractions.Repository
+  name: IDocument
+  nameWithType: IDocument
+  fullName: Catalyst.Abstractions.Repository.IDocument
+- uid: Catalyst.Abstractions.Repository.IRepositoryWrapper`1
+  commentId: T:Catalyst.Abstractions.Repository.IRepositoryWrapper`1
+  name: IRepositoryWrapper<T>
+  nameWithType: IRepositoryWrapper<T>
+  fullName: Catalyst.Abstractions.Repository.IRepositoryWrapper<T>
+  nameWithType.vb: IRepositoryWrapper(Of T)
+  fullName.vb: Catalyst.Abstractions.Repository.IRepositoryWrapper(Of T)
+  name.vb: IRepositoryWrapper(Of T)
+  spec.csharp:
+  - uid: Catalyst.Abstractions.Repository.IRepositoryWrapper`1
+    name: IRepositoryWrapper
+    nameWithType: IRepositoryWrapper
+    fullName: Catalyst.Abstractions.Repository.IRepositoryWrapper
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Abstractions.Repository.IRepositoryWrapper`1
+    name: IRepositoryWrapper
+    nameWithType: IRepositoryWrapper
+    fullName: Catalyst.Abstractions.Repository.IRepositoryWrapper
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.Repository
+  commentId: N:Catalyst.Abstractions.Repository
+  name: Catalyst.Abstractions.Repository
+  nameWithType: Catalyst.Abstractions.Repository
+  fullName: Catalyst.Abstractions.Repository

@@ -1,0 +1,22 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.KeySigner
+  commentId: N:Catalyst.Abstractions.KeySigner
+  id: Catalyst.Abstractions.KeySigner
+  children:
+  - Catalyst.Abstractions.KeySigner.IKeySigner
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.KeySigner
+  nameWithType: Catalyst.Abstractions.KeySigner
+  fullName: Catalyst.Abstractions.KeySigner
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.KeySigner.IKeySigner
+  commentId: T:Catalyst.Abstractions.KeySigner.IKeySigner
+  name: IKeySigner
+  nameWithType: IKeySigner
+  fullName: Catalyst.Abstractions.KeySigner.IKeySigner

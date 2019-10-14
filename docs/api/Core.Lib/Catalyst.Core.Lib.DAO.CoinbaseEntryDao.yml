@@ -1,0 +1,1212 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  commentId: T:Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  id: CoinbaseEntryDao
+  parent: Catalyst.Core.Lib.DAO
+  children:
+  - Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Amount
+  - Catalyst.Core.Lib.DAO.CoinbaseEntryDao.InitMappers(IMapperConfigurationExpression)
+  - Catalyst.Core.Lib.DAO.CoinbaseEntryDao.ReceiverPublicKey
+  - Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Version
+  langs:
+  - csharp
+  - vb
+  name: CoinbaseEntryDao
+  nameWithType: CoinbaseEntryDao
+  fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  type: Class
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/CoinbaseEntryDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: CoinbaseEntryDao
+    path: ../src/Catalyst.Core.Lib/DAO/CoinbaseEntryDao.cs
+    startLine: 29
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: 'public class CoinbaseEntryDao : DaoBase<CoinbaseEntry, CoinbaseEntryDao>, IMapperInitializer, IValueConverter<CoinbaseEntry, CoinbaseEntryDao>'
+    content.vb: >-
+      Public Class CoinbaseEntryDao
+
+          Inherits DaoBase(Of CoinbaseEntry, CoinbaseEntryDao)
+
+          Implements IMapperInitializer, IValueConverter(Of CoinbaseEntry, CoinbaseEntryDao)
+  inheritance:
+  - System.Object
+  - Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  implements:
+  - Catalyst.Abstractions.DAO.IMapperInitializer
+  - IValueConverter{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  inheritedMembers:
+  - Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.Id
+  - Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.ToProtoBuff
+  - Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.ToDao(CoinbaseEntry)
+  - Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.InitMappers(IMapperConfigurationExpression)
+  - Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.Convert(CoinbaseEntry,ResolutionContext)
+  - Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.Convert(Catalyst.Core.Lib.DAO.CoinbaseEntryDao,ResolutionContext)
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+  modifiers.csharp:
+  - public
+  - class
+  modifiers.vb:
+  - Public
+  - Class
+- uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Version
+  commentId: P:Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Version
+  id: Version
+  parent: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  langs:
+  - csharp
+  - vb
+  name: Version
+  nameWithType: CoinbaseEntryDao.Version
+  fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Version
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/CoinbaseEntryDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Version
+    path: ../src/Catalyst.Core.Lib/DAO/CoinbaseEntryDao.cs
+    startLine: 31
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public uint Version { get; set; }
+    parameters: []
+    return:
+      type: System.UInt32
+    content.vb: Public Property Version As UInteger
+  overload: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Version*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.ReceiverPublicKey
+  commentId: P:Catalyst.Core.Lib.DAO.CoinbaseEntryDao.ReceiverPublicKey
+  id: ReceiverPublicKey
+  parent: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  langs:
+  - csharp
+  - vb
+  name: ReceiverPublicKey
+  nameWithType: CoinbaseEntryDao.ReceiverPublicKey
+  fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.ReceiverPublicKey
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/CoinbaseEntryDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: ReceiverPublicKey
+    path: ../src/Catalyst.Core.Lib/DAO/CoinbaseEntryDao.cs
+    startLine: 32
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public string ReceiverPublicKey { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property ReceiverPublicKey As String
+  overload: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.ReceiverPublicKey*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Amount
+  commentId: P:Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Amount
+  id: Amount
+  parent: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  langs:
+  - csharp
+  - vb
+  name: Amount
+  nameWithType: CoinbaseEntryDao.Amount
+  fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Amount
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/CoinbaseEntryDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: Amount
+    path: ../src/Catalyst.Core.Lib/DAO/CoinbaseEntryDao.cs
+    startLine: 33
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public string Amount { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Amount As String
+  overload: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Amount*
+  modifiers.csharp:
+  - public
+  - get
+  - set
+  modifiers.vb:
+  - Public
+- uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.CoinbaseEntryDao.InitMappers(IMapperConfigurationExpression)
+  id: InitMappers(IMapperConfigurationExpression)
+  parent: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  langs:
+  - csharp
+  - vb
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: CoinbaseEntryDao.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.InitMappers(IMapperConfigurationExpression)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Lib/DAO/CoinbaseEntryDao.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: InitMappers
+    path: ../src/Catalyst.Core.Lib/DAO/CoinbaseEntryDao.cs
+    startLine: 35
+  assemblies:
+  - Catalyst.Core.Lib
+  namespace: Catalyst.Core.Lib.DAO
+  syntax:
+    content: public override void InitMappers(IMapperConfigurationExpression cfg)
+    parameters:
+    - id: cfg
+      type: IMapperConfigurationExpression
+    content.vb: Public Overrides Sub InitMappers(cfg As IMapperConfigurationExpression)
+  overridden: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.InitMappers(IMapperConfigurationExpression)
+  overload: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.InitMappers*
+  modifiers.csharp:
+  - public
+  - override
+  modifiers.vb:
+  - Public
+  - Overrides
+references:
+- uid: Catalyst.Core.Lib.DAO
+  commentId: N:Catalyst.Core.Lib.DAO
+  name: Catalyst.Core.Lib.DAO
+  nameWithType: Catalyst.Core.Lib.DAO
+  fullName: Catalyst.Core.Lib.DAO
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  commentId: T:Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  parent: Catalyst.Core.Lib.DAO
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2
+  name: DaoBase<CoinbaseEntry, CoinbaseEntryDao>
+  nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>
+  nameWithType.vb: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao)
+  name.vb: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: CoinbaseEntry
+    name: CoinbaseEntry
+    nameWithType: CoinbaseEntry
+    fullName: CoinbaseEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+    name: CoinbaseEntryDao
+    nameWithType: CoinbaseEntryDao
+    fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: CoinbaseEntry
+    name: CoinbaseEntry
+    nameWithType: CoinbaseEntry
+    fullName: CoinbaseEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+    name: CoinbaseEntryDao
+    nameWithType: CoinbaseEntryDao
+    fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.DAO.IMapperInitializer
+  commentId: T:Catalyst.Abstractions.DAO.IMapperInitializer
+  parent: Catalyst.Abstractions.DAO
+  name: IMapperInitializer
+  nameWithType: IMapperInitializer
+  fullName: Catalyst.Abstractions.DAO.IMapperInitializer
+- uid: IValueConverter{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  commentId: '!:IValueConverter{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}'
+  definition: IValueConverter`2
+  name: IValueConverter<CoinbaseEntry, CoinbaseEntryDao>
+  nameWithType: IValueConverter<CoinbaseEntry, CoinbaseEntryDao>
+  fullName: IValueConverter<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>
+  nameWithType.vb: IValueConverter(Of CoinbaseEntry, CoinbaseEntryDao)
+  fullName.vb: IValueConverter(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao)
+  name.vb: IValueConverter(Of CoinbaseEntry, CoinbaseEntryDao)
+  spec.csharp:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: CoinbaseEntry
+    name: CoinbaseEntry
+    nameWithType: CoinbaseEntry
+    fullName: CoinbaseEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+    name: CoinbaseEntryDao
+    nameWithType: CoinbaseEntryDao
+    fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: CoinbaseEntry
+    name: CoinbaseEntry
+    nameWithType: CoinbaseEntry
+    fullName: CoinbaseEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+    name: CoinbaseEntryDao
+    nameWithType: CoinbaseEntryDao
+    fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.Id
+  commentId: P:Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.Id
+  parent: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  name: Id
+  nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.Id
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.Id
+  nameWithType.vb: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).Id
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).Id
+- uid: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.ToProtoBuff
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.ToProtoBuff
+  parent: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  name: ToProtoBuff()
+  nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.ToProtoBuff()
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.ToProtoBuff()
+  nameWithType.vb: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).ToProtoBuff()
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).ToProtoBuff()
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.ToDao(CoinbaseEntry)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.ToDao(CoinbaseEntry)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  name: ToDao(CoinbaseEntry)
+  nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.ToDao(CoinbaseEntry)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.ToDao(CoinbaseEntry)
+  nameWithType.vb: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).ToDao(CoinbaseEntry)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).ToDao(CoinbaseEntry)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: CoinbaseEntry
+    name: CoinbaseEntry
+    nameWithType: CoinbaseEntry
+    fullName: CoinbaseEntry
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: CoinbaseEntry
+    name: CoinbaseEntry
+    nameWithType: CoinbaseEntry
+    fullName: CoinbaseEntry
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.InitMappers(IMapperConfigurationExpression)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.InitMappers(IMapperConfigurationExpression)
+  nameWithType.vb: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).InitMappers(IMapperConfigurationExpression)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).InitMappers(IMapperConfigurationExpression)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.Convert(CoinbaseEntry,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.Convert(CoinbaseEntry,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  name: Convert(CoinbaseEntry, ResolutionContext)
+  nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.Convert(CoinbaseEntry, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.Convert(CoinbaseEntry, ResolutionContext)
+  nameWithType.vb: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).Convert(CoinbaseEntry, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).Convert(CoinbaseEntry, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: CoinbaseEntry
+    name: CoinbaseEntry
+    nameWithType: CoinbaseEntry
+    fullName: CoinbaseEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: CoinbaseEntry
+    name: CoinbaseEntry
+    nameWithType: CoinbaseEntry
+    fullName: CoinbaseEntry
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.Convert(Catalyst.Core.Lib.DAO.CoinbaseEntryDao,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}.Convert(Catalyst.Core.Lib.DAO.CoinbaseEntryDao,ResolutionContext)
+  parent: Catalyst.Core.Lib.DAO.DaoBase{CoinbaseEntry,Catalyst.Core.Lib.DAO.CoinbaseEntryDao}
+  definition: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  name: Convert(CoinbaseEntryDao, ResolutionContext)
+  nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.Convert(CoinbaseEntryDao, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.Convert(Catalyst.Core.Lib.DAO.CoinbaseEntryDao, ResolutionContext)
+  nameWithType.vb: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).Convert(CoinbaseEntryDao, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).Convert(Catalyst.Core.Lib.DAO.CoinbaseEntryDao, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<CoinbaseEntry, CoinbaseEntryDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+    name: CoinbaseEntryDao
+    nameWithType: CoinbaseEntryDao
+    fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of CoinbaseEntry, CoinbaseEntryDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of CoinbaseEntry, Catalyst.Core.Lib.DAO.CoinbaseEntryDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+    name: CoinbaseEntryDao
+    nameWithType: CoinbaseEntryDao
+    fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object)
+  nameWithType: Object.Equals(Object)
+  fullName: System.Object.Equals(System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: Equals(Object, Object)
+  nameWithType: Object.Equals(Object, Object)
+  fullName: System.Object.Equals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    nameWithType: Object.Equals
+    fullName: System.Object.Equals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  name: GetHashCode()
+  nameWithType: Object.GetHashCode()
+  fullName: System.Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    nameWithType: Object.GetHashCode
+    fullName: System.Object.GetHashCode
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  name: GetType()
+  nameWithType: Object.GetType()
+  fullName: System.Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    nameWithType: Object.GetType
+    fullName: System.Object.GetType
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  name: MemberwiseClone()
+  nameWithType: Object.MemberwiseClone()
+  fullName: System.Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    nameWithType: Object.MemberwiseClone
+    fullName: System.Object.MemberwiseClone
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  name: ReferenceEquals(Object, Object)
+  nameWithType: Object.ReferenceEquals(Object, Object)
+  fullName: System.Object.ReferenceEquals(System.Object, System.Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    nameWithType: Object.ReferenceEquals
+    fullName: System.Object.ReferenceEquals
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  name: ToString()
+  nameWithType: Object.ToString()
+  fullName: System.Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    nameWithType: Object.ToString
+    fullName: System.Object.ToString
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2
+  commentId: T:Catalyst.Core.Lib.DAO.DaoBase`2
+  name: DaoBase<TProto, TDao>
+  nameWithType: DaoBase<TProto, TDao>
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>
+  nameWithType.vb: DaoBase(Of TProto, TDao)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao)
+  name.vb: DaoBase(Of TProto, TDao)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2
+    name: DaoBase
+    nameWithType: DaoBase
+    fullName: Catalyst.Core.Lib.DAO.DaoBase
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.DAO
+  commentId: N:Catalyst.Abstractions.DAO
+  name: Catalyst.Abstractions.DAO
+  nameWithType: Catalyst.Abstractions.DAO
+  fullName: Catalyst.Abstractions.DAO
+- uid: IValueConverter`2
+  isExternal: true
+  name: IValueConverter<, >
+  nameWithType: IValueConverter<, >
+  fullName: IValueConverter<, >
+  nameWithType.vb: IValueConverter(Of , )
+  fullName.vb: IValueConverter(Of , )
+  name.vb: IValueConverter(Of , )
+  spec.csharp:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: IValueConverter`2
+    name: IValueConverter
+    nameWithType: IValueConverter
+    fullName: IValueConverter
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ''
+    nameWithType: ''
+    fullName: ''
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  commentId: P:Catalyst.Core.Lib.DAO.DaoBase`2.Id
+  name: Id
+  nameWithType: DaoBase<TProto, TDao>.Id
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Id
+  nameWithType.vb: DaoBase(Of TProto, TDao).Id
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Id
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+  name: ToProtoBuff()
+  nameWithType: DaoBase<TProto, TDao>.ToProtoBuff()
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToProtoBuff()
+  nameWithType.vb: DaoBase(Of TProto, TDao).ToProtoBuff()
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToProtoBuff()
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase<TProto, TDao>.ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToProtoBuff
+    name: ToProtoBuff
+    nameWithType: DaoBase(Of TProto, TDao).ToProtoBuff
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToProtoBuff
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+  name: ToDao(TProto)
+  nameWithType: DaoBase<TProto, TDao>.ToDao(TProto)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToDao(TProto)
+  nameWithType.vb: DaoBase(Of TProto, TDao).ToDao(TProto)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToDao(TProto)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase<TProto, TDao>.ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.ToDao(`0)
+    name: ToDao
+    nameWithType: DaoBase(Of TProto, TDao).ToDao
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).ToDao
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+  isExternal: true
+  name: InitMappers(IMapperConfigurationExpression)
+  nameWithType: DaoBase<TProto, TDao>.InitMappers(IMapperConfigurationExpression)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.InitMappers(IMapperConfigurationExpression)
+  nameWithType.vb: DaoBase(Of TProto, TDao).InitMappers(IMapperConfigurationExpression)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).InitMappers(IMapperConfigurationExpression)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase<TProto, TDao>.InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.InitMappers(IMapperConfigurationExpression)
+    name: InitMappers
+    nameWithType: DaoBase(Of TProto, TDao).InitMappers
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).InitMappers
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: IMapperConfigurationExpression
+    name: IMapperConfigurationExpression
+    nameWithType: IMapperConfigurationExpression
+    fullName: IMapperConfigurationExpression
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+  isExternal: true
+  name: Convert(TProto, ResolutionContext)
+  nameWithType: DaoBase<TProto, TDao>.Convert(TProto, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert(TProto, ResolutionContext)
+  nameWithType.vb: DaoBase(Of TProto, TDao).Convert(TProto, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert(TProto, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<TProto, TDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`0,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of TProto, TDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TProto
+    nameWithType: TProto
+    fullName: TProto
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  commentId: M:Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+  isExternal: true
+  name: Convert(TDao, ResolutionContext)
+  nameWithType: DaoBase<TProto, TDao>.Convert(TDao, ResolutionContext)
+  fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert(TDao, ResolutionContext)
+  nameWithType.vb: DaoBase(Of TProto, TDao).Convert(TDao, ResolutionContext)
+  fullName.vb: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert(TDao, ResolutionContext)
+  spec.csharp:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase<TProto, TDao>.Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase<TProto, TDao>.Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Core.Lib.DAO.DaoBase`2.Convert(`1,ResolutionContext)
+    name: Convert
+    nameWithType: DaoBase(Of TProto, TDao).Convert
+    fullName: Catalyst.Core.Lib.DAO.DaoBase(Of TProto, TDao).Convert
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: TDao
+    nameWithType: TDao
+    fullName: TDao
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: ResolutionContext
+    name: ResolutionContext
+    nameWithType: ResolutionContext
+    fullName: ResolutionContext
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Version*
+  commentId: Overload:Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Version
+  name: Version
+  nameWithType: CoinbaseEntryDao.Version
+  fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Version
+- uid: System.UInt32
+  commentId: T:System.UInt32
+  parent: System
+  isExternal: true
+  name: UInt32
+  nameWithType: UInt32
+  fullName: System.UInt32
+- uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.ReceiverPublicKey*
+  commentId: Overload:Catalyst.Core.Lib.DAO.CoinbaseEntryDao.ReceiverPublicKey
+  name: ReceiverPublicKey
+  nameWithType: CoinbaseEntryDao.ReceiverPublicKey
+  fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.ReceiverPublicKey
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: String
+  nameWithType: String
+  fullName: System.String
+- uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Amount*
+  commentId: Overload:Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Amount
+  name: Amount
+  nameWithType: CoinbaseEntryDao.Amount
+  fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.Amount
+- uid: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.InitMappers*
+  commentId: Overload:Catalyst.Core.Lib.DAO.CoinbaseEntryDao.InitMappers
+  name: InitMappers
+  nameWithType: CoinbaseEntryDao.InitMappers
+  fullName: Catalyst.Core.Lib.DAO.CoinbaseEntryDao.InitMappers
+- uid: IMapperConfigurationExpression
+  isExternal: true
+  name: IMapperConfigurationExpression
+  nameWithType: IMapperConfigurationExpression
+  fullName: IMapperConfigurationExpression

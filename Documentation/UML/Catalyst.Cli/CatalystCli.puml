@@ -1,7 +1,0 @@
-@startuml
-class CatalystCli {
-    + CatalystCli(advancedShell:IAdvancedShell)
-}
-ICatalystCli <|-- CatalystCli
-CatalystCli --> "AdvancedShell" IAdvancedShell
-@enduml

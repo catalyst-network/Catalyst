@@ -1,0 +1,28 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.Rpc.Authentication
+  commentId: N:Catalyst.Abstractions.Rpc.Authentication
+  id: Catalyst.Abstractions.Rpc.Authentication
+  children:
+  - Catalyst.Abstractions.Rpc.Authentication.IAuthCredentials
+  - Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+  langs:
+  - csharp
+  - vb
+  name: Catalyst.Abstractions.Rpc.Authentication
+  nameWithType: Catalyst.Abstractions.Rpc.Authentication
+  fullName: Catalyst.Abstractions.Rpc.Authentication
+  type: Namespace
+  assemblies:
+  - Catalyst.Abstractions
+references:
+- uid: Catalyst.Abstractions.Rpc.Authentication.IAuthCredentials
+  commentId: T:Catalyst.Abstractions.Rpc.Authentication.IAuthCredentials
+  name: IAuthCredentials
+  nameWithType: IAuthCredentials
+  fullName: Catalyst.Abstractions.Rpc.Authentication.IAuthCredentials
+- uid: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+  commentId: T:Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy
+  name: IAuthenticationStrategy
+  nameWithType: IAuthenticationStrategy
+  fullName: Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy

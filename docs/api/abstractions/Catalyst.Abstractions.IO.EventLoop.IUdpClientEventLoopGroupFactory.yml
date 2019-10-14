@@ -1,0 +1,153 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Abstractions.IO.EventLoop.IUdpClientEventLoopGroupFactory
+  commentId: T:Catalyst.Abstractions.IO.EventLoop.IUdpClientEventLoopGroupFactory
+  id: IUdpClientEventLoopGroupFactory
+  parent: Catalyst.Abstractions.IO.EventLoop
+  children: []
+  langs:
+  - csharp
+  - vb
+  name: IUdpClientEventLoopGroupFactory
+  nameWithType: IUdpClientEventLoopGroupFactory
+  fullName: Catalyst.Abstractions.IO.EventLoop.IUdpClientEventLoopGroupFactory
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Abstractions/IO/EventLoop/IUdpClientEventLoopGroupFactory.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IUdpClientEventLoopGroupFactory
+    path: ../src/Catalyst.Abstractions/IO/EventLoop/IUdpClientEventLoopGroupFactory.cs
+    startLine: 25
+  assemblies:
+  - Catalyst.Abstractions
+  namespace: Catalyst.Abstractions.IO.EventLoop
+  syntax:
+    content: 'public interface IUdpClientEventLoopGroupFactory : IEventLoopGroupFactory, IDisposable'
+    content.vb: >-
+      Public Interface IUdpClientEventLoopGroupFactory
+
+          Inherits IEventLoopGroupFactory
+  inheritedMembers:
+  - Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup
+  - Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup
+  - System.IDisposable.Dispose
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+references:
+- uid: Catalyst.Abstractions.IO.EventLoop
+  commentId: N:Catalyst.Abstractions.IO.EventLoop
+  name: Catalyst.Abstractions.IO.EventLoop
+  nameWithType: Catalyst.Abstractions.IO.EventLoop
+  fullName: Catalyst.Abstractions.IO.EventLoop
+- uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup
+  commentId: M:Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup
+  parent: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+  name: GetOrCreateHandlerWorkerEventLoopGroup()
+  nameWithType: IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup()
+  fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup
+    name: GetOrCreateHandlerWorkerEventLoopGroup
+    nameWithType: IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup
+    fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup
+    name: GetOrCreateHandlerWorkerEventLoopGroup
+    nameWithType: IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup
+    fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup
+  commentId: M:Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup
+  parent: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+  name: GetOrCreateSocketIoEventLoopGroup()
+  nameWithType: IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup()
+  fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup()
+  spec.csharp:
+  - uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup
+    name: GetOrCreateSocketIoEventLoopGroup
+    nameWithType: IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup
+    fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup
+    name: GetOrCreateSocketIoEventLoopGroup
+    nameWithType: IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup
+    fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    nameWithType: IDisposable.Dispose
+    fullName: System.IDisposable.Dispose
+    isExternal: true
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+  commentId: T:Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+  parent: Catalyst.Abstractions.IO.EventLoop
+  name: IEventLoopGroupFactory
+  nameWithType: IEventLoopGroupFactory
+  fullName: Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactory
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System

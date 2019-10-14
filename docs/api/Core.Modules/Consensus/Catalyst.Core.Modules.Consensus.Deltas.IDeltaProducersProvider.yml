@@ -1,0 +1,229 @@
+### YamlMime:ManagedReference
+items:
+- uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  commentId: T:Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  id: IDeltaProducersProvider
+  parent: Catalyst.Core.Modules.Consensus.Deltas
+  children:
+  - Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  - Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository
+  langs:
+  - csharp
+  - vb
+  name: IDeltaProducersProvider
+  nameWithType: IDeltaProducersProvider
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  type: Interface
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/IDeltaProducersProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: IDeltaProducersProvider
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/IDeltaProducersProvider.cs
+    startLine: 34
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  summary: "\nThis is the service in charge of providing the list of PeerIdentifiers that are eligible for the\nproduction of the next delta.\n"
+  example: []
+  syntax:
+    content: public interface IDeltaProducersProvider
+    content.vb: Public Interface IDeltaProducersProvider
+  modifiers.csharp:
+  - public
+  - interface
+  modifiers.vb:
+  - Public
+  - Interface
+- uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  commentId: M:Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  id: GetDeltaProducersFromPreviousDelta(MultiHash)
+  parent: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  langs:
+  - csharp
+  - vb
+  name: GetDeltaProducersFromPreviousDelta(MultiHash)
+  nameWithType: IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta(MultiHash)
+  type: Method
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/IDeltaProducersProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: GetDeltaProducersFromPreviousDelta
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/IDeltaProducersProvider.cs
+    startLine: 41
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  summary: "\nFinds the identifiers of the peers which are allowed to produce the next delta.\n"
+  example: []
+  syntax:
+    content: IList<PeerId> GetDeltaProducersFromPreviousDelta(MultiHash previousDeltaHash)
+    parameters:
+    - id: previousDeltaHash
+      type: MultiHash
+      description: The content based address of the previous delta on the Dfs.
+    return:
+      type: System.Collections.Generic.IList{PeerId}
+      description: The list of peers which are eligible for the production of the delta following <see cref="!:previousDeltaHash"></see>
+    content.vb: Function GetDeltaProducersFromPreviousDelta(previousDeltaHash As MultiHash) As IList(Of PeerId)
+  overload: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta*
+- uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository
+  commentId: P:Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository
+  id: PeerRepository
+  parent: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider
+  langs:
+  - csharp
+  - vb
+  name: PeerRepository
+  nameWithType: IDeltaProducersProvider.PeerRepository
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository
+  type: Property
+  source:
+    remote:
+      path: src/Catalyst.Core.Modules.Consensus/Deltas/IDeltaProducersProvider.cs
+      branch: gh-pages
+      repo: https://github.com/catalyst-network/Catalyst.Framework.git
+    id: PeerRepository
+    path: ../src/Catalyst.Core.Modules.Consensus/Deltas/IDeltaProducersProvider.cs
+    startLine: 46
+  assemblies:
+  - Catalyst.Core.Modules.Consensus
+  namespace: Catalyst.Core.Modules.Consensus.Deltas
+  summary: "\nA peer repository containing peers eligible for the production of the next delta.\n"
+  example: []
+  syntax:
+    content: IPeerRepository PeerRepository { get; }
+    parameters: []
+    return:
+      type: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+    content.vb: ReadOnly Property PeerRepository As IPeerRepository
+  overload: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository*
+  modifiers.csharp:
+  - get
+  modifiers.vb:
+  - ReadOnly
+references:
+- uid: Catalyst.Core.Modules.Consensus.Deltas
+  commentId: N:Catalyst.Core.Modules.Consensus.Deltas
+  name: Catalyst.Core.Modules.Consensus.Deltas
+  nameWithType: Catalyst.Core.Modules.Consensus.Deltas
+  fullName: Catalyst.Core.Modules.Consensus.Deltas
+- uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta
+  name: GetDeltaProducersFromPreviousDelta
+  nameWithType: IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.GetDeltaProducersFromPreviousDelta
+- uid: MultiHash
+  isExternal: true
+  name: MultiHash
+  nameWithType: MultiHash
+  fullName: MultiHash
+- uid: System.Collections.Generic.IList{PeerId}
+  commentId: T:System.Collections.Generic.IList{PeerId}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IList`1
+  name: IList<PeerId>
+  nameWithType: IList<PeerId>
+  fullName: System.Collections.Generic.IList<PeerId>
+  nameWithType.vb: IList(Of PeerId)
+  fullName.vb: System.Collections.Generic.IList(Of PeerId)
+  name.vb: IList(Of PeerId)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - uid: PeerId
+    name: PeerId
+    nameWithType: PeerId
+    fullName: PeerId
+    isExternal: true
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - uid: PeerId
+    name: PeerId
+    nameWithType: PeerId
+    fullName: PeerId
+    isExternal: true
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic.IList`1
+  commentId: T:System.Collections.Generic.IList`1
+  isExternal: true
+  name: IList<T>
+  nameWithType: IList<T>
+  fullName: System.Collections.Generic.IList<T>
+  nameWithType.vb: IList(Of T)
+  fullName.vb: System.Collections.Generic.IList(Of T)
+  name.vb: IList(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: <
+    nameWithType: <
+    fullName: <
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: '>'
+    nameWithType: '>'
+    fullName: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IList`1
+    name: IList
+    nameWithType: IList
+    fullName: System.Collections.Generic.IList
+    isExternal: true
+  - name: '(Of '
+    nameWithType: '(Of '
+    fullName: '(Of '
+  - name: T
+    nameWithType: T
+    fullName: T
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+- uid: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository*
+  commentId: Overload:Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository
+  name: PeerRepository
+  nameWithType: IDeltaProducersProvider.PeerRepository
+  fullName: Catalyst.Core.Modules.Consensus.Deltas.IDeltaProducersProvider.PeerRepository
+- uid: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  commentId: T:Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+  parent: Catalyst.Core.Lib.P2P.Repository
+  name: IPeerRepository
+  nameWithType: IPeerRepository
+  fullName: Catalyst.Core.Lib.P2P.Repository.IPeerRepository
+- uid: Catalyst.Core.Lib.P2P.Repository
+  commentId: N:Catalyst.Core.Lib.P2P.Repository
+  name: Catalyst.Core.Lib.P2P.Repository
+  nameWithType: Catalyst.Core.Lib.P2P.Repository
+  fullName: Catalyst.Core.Lib.P2P.Repository
