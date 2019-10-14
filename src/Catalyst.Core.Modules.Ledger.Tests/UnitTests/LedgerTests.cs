@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
@@ -66,7 +67,6 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
             _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
-            _ledgerSynchroniser.DeltaCache.GenesisAddress.Returns(_genesisHash.ToBase32());
         }
 
         [Fact]
@@ -86,8 +86,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         [Fact]
         public void Should_Reconcile_On_New_Delta_Hash()
         {
-            var hash1 = _hashProvider.ComputeUtf8MultiHash("update");
-            var hash2 = _hashProvider.ComputeUtf8MultiHash("update again");
+            var hash1 = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update"));
+            var hash2 = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update again"));
             var updates = new[] {hash1, hash2};
 
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)

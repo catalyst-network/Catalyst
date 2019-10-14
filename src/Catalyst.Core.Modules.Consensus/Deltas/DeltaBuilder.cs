@@ -39,6 +39,7 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using LibP2P;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
@@ -73,7 +74,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         ///<inheritdoc />
-        public CandidateDeltaBroadcast BuildCandidateDelta(MultiHash previousDeltaHash)
+        public CandidateDeltaBroadcast BuildCandidateDelta(Cid previousDeltaHash)
         {
             _logger.Debug("Building candidate delta locally");
 
@@ -145,7 +146,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             return candidate;
         }
 
-        private IEnumerable<byte> GetSaltFromPreviousDelta(MultiHash previousDeltaHash)
+        private IEnumerable<byte> GetSaltFromPreviousDelta(Cid previousDeltaHash)
         {
             var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash.ToArray());
             return BitConverter.GetBytes(isaac.NextInt());

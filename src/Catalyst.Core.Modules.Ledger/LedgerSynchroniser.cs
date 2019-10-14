@@ -25,8 +25,10 @@ using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Core.Lib.Util;
+using LibP2P;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -34,12 +36,10 @@ namespace Catalyst.Core.Modules.Ledger
     public class LedgerSynchroniser : ILedgerSynchroniser
     {
         private readonly ILogger _logger;
-        private readonly IHashProvider _hashProvider;
 
-        public LedgerSynchroniser(IDeltaCache deltaCache, IHashProvider hashProvider, ILogger logger)
+        public LedgerSynchroniser(IDeltaCache deltaCache, ILogger logger)
         {
             DeltaCache = deltaCache;
-            _hashProvider = hashProvider;
             _logger = logger;
         }
 
@@ -47,8 +47,8 @@ namespace Catalyst.Core.Modules.Ledger
         public IDeltaCache DeltaCache { get; }
 
         /// <inheritdoc />
-        public IEnumerable<MultiHash> CacheDeltasBetween(MultiHash latestKnownDeltaHash,
-            MultiHash targetDeltaHash,
+        public IEnumerable<Cid> CacheDeltasBetween(Cid latestKnownDeltaHash,
+            Cid targetDeltaHash,
             CancellationToken cancellationToken)
         {
             var thisHash = targetDeltaHash;
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Ledger
                     yield break;
                 }
 
-                var previousDfsHash = _hashProvider.Cast(retrievedDelta.PreviousDeltaDfsHash.ToByteArray());
+                var previousDfsHash = CidHelper.Cast(retrievedDelta.PreviousDeltaDfsHash.ToByteArray());
 
                 _logger.Debug("Retrieved delta {previous} as predecessor of {current}",
                     previousDfsHash, thisHash);

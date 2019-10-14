@@ -24,7 +24,7 @@
 using System.Threading;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using LibP2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
@@ -39,11 +39,11 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         ///     the retrieval is done from the Dfs and the delta is added to the local cache for
         ///     later use.
         /// </summary>
-        /// <param name="hash">The hash or address of the delta on the Dfs.</param>
+        /// <param name="cid">The cid or address of the delta on the Dfs.</param>
         /// <param name="delta">The delta retrieved on the Dfs.</param>
         /// <param name="cancellationToken">A token allowing to cancel the task before it ends.</param>
         /// <returns><c>true</c> if the retrieval was successful, <c>false</c> otherwise.</returns>
-        bool TryGetOrAddConfirmedDelta(MultiHash hash,
+        bool TryGetOrAddConfirmedDelta(Cid cid,
             out Delta delta,
             CancellationToken cancellationToken = default);
 
@@ -69,8 +69,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// <summary>
         ///     Dfs address of the content for the very first delta.
         /// </summary>
-        MultiHash GenesisHash { get; set; }
-
-        string GenesisAddress { get; }
+        Cid GenesisHash { get; set; }
     }
 }
