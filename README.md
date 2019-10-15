@@ -93,28 +93,12 @@ Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-n
 
 ### Framework modules
 
-<table class="tg">
-  <tr>
-    <th class="tg-0pky">Framework Libraries</th>
-    <th class="tg-0pky">Description</th>
-    <th class="tg-0pky">Nuget</th>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Abstractions</td>
-    <td class="tg-0pky">Framework Abstractions and interfaces</td>
-    <td class="tg-0pky"><img alt="Nuget" src="https://img.shields.io/nuget/v/Catalyst.Abstractions "></td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Core Lib</td>
-    <td class="tg-0pky">Core Catalyst libraries</td>
-    <td class="tg-0pky"><img alt="Nuget" src="https://img.shields.io/nuget/v/Catalyst.Core.Lib "></td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">Protocol SDK</td>
-    <td class="tg-0pky">Catalyst protocol c# sdk</td>
-    <td class="tg-0pky"><img alt="Nuget" src="https://img.shields.io/nuget/v/Catalyst.Protocol "></td>
-  </tr>
-</table>
+
+| Framework Libraries | Description                           | Nuget |
+|---------------------|---------------------------------------|-------|
+| [Abstractions](https://catalyst-network.github.io/Catalyst.Framework/api/abstractions/Catalyst.Abstractions.html)        | Framework Abstractions and interfaces |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Abstractions )     |
+| [Core Lib](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Lib/Catalyst.Core.Lib.html)            | Core Catalyst libraries               |  ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Lib )     |
+| [Protocol SDK](https://catalyst-network.github.io/Catalyst.Framework/api/Protocol/Catalyst.Protocol.Account.html)        | Catalyst protocol c# sdk              |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Protocol )     |
 
 | Core Modules                                    | Description                                                                 | Nuget |
 |-------------------------------------------------|-----------------------------------------------------------------------------|-------|
