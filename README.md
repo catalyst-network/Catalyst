@@ -102,17 +102,17 @@ Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-n
   <tr>
     <td class="tg-0pky">Abstractions</td>
     <td class="tg-0pky">Framework Abstractions and interfaces</td>
-    <td class="tg-0pky">![Nuget](https://img.shields.io/nuget/v/Catalyst.Abstractions)</td>
+    <td class="tg-0pky"><img alt="Nuget" src="https://img.shields.io/nuget/v/Catalyst.Abstractions "></td>
   </tr>
   <tr>
     <td class="tg-0pky">Core Lib</td>
     <td class="tg-0pky">Core Catalyst libraries</td>
-    <td class="tg-0pky">![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Lib )</td>
+    <td class="tg-0pky"><img alt="Nuget" src="https://img.shields.io/nuget/v/Catalyst.Core.Lib "></td>
   </tr>
   <tr>
     <td class="tg-0pky">Protocol SDK</td>
     <td class="tg-0pky">Catalyst protocol c# sdk</td>
-    <td class="tg-0pky">![Nuget](https://img.shields.io/nuget/v/Catalyst.Protocol )</td>
+    <td class="tg-0pky"><img alt="Nuget" src="https://img.shields.io/nuget/v/Catalyst.Protocol "></td>
   </tr>
 </table>
 
