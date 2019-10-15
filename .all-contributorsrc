@@ -85,6 +85,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "tkstanczak",
+      "name": "Tomasz Kajetan Stańczak",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/498913?v=4",
+      "profile": "http://nethermind.io",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,

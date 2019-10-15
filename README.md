@@ -14,7 +14,7 @@
   
 [![Build Status](https://dev.azure.com/catalyst-network/catalyst.core/_apis/build/status/Dev%20Test%20Suite?branchName=develop)](https://dev.azure.com/catalyst-network/catalyst.core/_build/latest?definitionId=3&branchName=develop)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0940fa58afc24dbf96ad566f1fdc1390)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=catalyst-network/Catalyst.Node&amp;utm_campaign=Badge_Grade)
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors)
 
 </div>
 
@@ -133,6 +133,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://burntfen.com"><img src="https://avatars3.githubusercontent.com/u/910753?v=4" width="100px;" alt="Richard Littauer"/><br /><sub><b>Richard Littauer</b></sub></a><br /><a href="https://github.com/catalyst-network/Catalyst.Framework/commits?author=RichardLitt" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://nethermind.io"><img src="https://avatars1.githubusercontent.com/u/498913?v=4" width="100px;" alt="Tomasz Kajetan Stańczak"/><br /><sub><b>Tomasz Kajetan Stańczak</b></sub></a><br /><a href="https://github.com/catalyst-network/Catalyst.Framework/commits?author=tkstanczak" title="Code">💻</a> <a href="#ideas-tkstanczak" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
