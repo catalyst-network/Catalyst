@@ -1,3 +1,5 @@
+![stronghold logo](https://github.com/catalyst-network/Catalyst.Framework/blob/develop/docs/assets/logo.png?raw=true)
+
 # <p style="text-align: center;"> Catalyst Network </p>
 
 ## Fast, scalable PBFT distributed ledger
@@ -44,7 +46,7 @@ The decentralised protocol is designed from engineering first principles and bui
 
 ### Documentation
 
-Our current docs can be found on our [wiki](https://github.com/catalyst-network/Catalyst.Node/wiki). If you're interested in helping us write more, please open an issue or a PR.
+Our api docs can be found on our documentation site [https://catalyst-network.github.io/Catalyst.Framework/](https://catalyst-network.github.io/Catalyst.Framework)
 
 ## Install
 
