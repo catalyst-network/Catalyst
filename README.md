@@ -94,7 +94,7 @@ Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-n
 ### Framework modules
 
 
-| Framework Libraries | Description                           | Nuget |
+| Core Libraries | Description                           | Nuget |
 |---------------------|---------------------------------------|-------|
 | [Abstractions](https://catalyst-network.github.io/Catalyst.Framework/api/abstractions/Catalyst.Abstractions.html)        | Framework Abstractions and interfaces |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Abstractions )     |
 | [Core Lib](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Lib/Catalyst.Core.Lib.html)            | Core Catalyst libraries               |  ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Lib )     |
@@ -112,7 +112,10 @@ Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-n
 | [KeySigner](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/KeySigner/Catalyst.Core.Modules.KeySigner.html)                 | Catalyst KeySigner, sign transactions and message with identity and context |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.KeySigner  )    |
 | [Ledger](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Ledger/Catalyst.Core.Modules.Ledger.html)                    | Catalyst ledger state provider                                              |     ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Ledger  )  |
 | [BulletProofs Cryptography](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.html) | Bullet proof native rust bindings                                           |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Cryptography.BulletProofs)   |
-
+| Optional Modules | Description              | Nuget |
+|------------------|--------------------------|-------|
+| [CosmosDB](https://catalyst-network.github.io/Catalyst.Framework/api/Modules/Repository.CosmosDb/Catalyst.Modules.Repository.CosmosDb.html)         | Azure CosmosDb connector |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Modules.Repository.CosmosDb )   |
+| [MongoDB](https://catalyst-network.github.io/Catalyst.Framework/api/Modules/Repository.MongoDb/Catalyst.Modules.Repository.MongoDb.html)          | MongoDb connector        |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Modules.Repository.MongoDb )    |
 ## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
