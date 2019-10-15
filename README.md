@@ -91,6 +91,31 @@ If ```rustc --version``` fails, restart your console to ensure changes to ```PAT
 
 Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-network/Cryptography.FFI.Rust) for docs. If you have issues with this part of the installation, please raise them there.
 
+### Framework modules
+
+<table class="tg">
+  <tr>
+    <th class="tg-0pky">Framework Libraries</th>
+    <th class="tg-0pky">Description</th>
+    <th class="tg-0pky">Nuget</th>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Abstractions</td>
+    <td class="tg-0pky">Framework Abstractions and interfaces</td>
+    <td class="tg-0pky">![Nuget](https://img.shields.io/nuget/v/Catalyst.Abstractions)</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Core Lib</td>
+    <td class="tg-0pky">Core Catalyst libraries</td>
+    <td class="tg-0pky">![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Lib )</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">Protocol SDK</td>
+    <td class="tg-0pky">Catalyst protocol c# sdk</td>
+    <td class="tg-0pky">![Nuget](https://img.shields.io/nuget/v/Catalyst.Protocol )</td>
+  </tr>
+</table>
+
 | Core Modules                                    | Description                                                                 | Nuget |
 |-------------------------------------------------|-----------------------------------------------------------------------------|-------|
 | [Kvm](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Kvm/Catalyst.Core.Modules.Kvm.html)                       | Finite state machine for smart contacts                                     |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Kvm)    |
