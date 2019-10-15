@@ -37,15 +37,14 @@ Join us on our [Discord](https://discord.gg/anTP7xm) for any questions and discu
 - [License](#license)
 
 
-## Background
+## What is the Catalyst Network?
 
-### What is the Catalyst Network?
+The Catalyst Network is a full-stack distributed network built to fulfil the real-world potential of Distributed Ledger Technology, enabling the next generation of distributed computing applications and
+business models. 
 
-Catalyst Network is the distributed operating system that enterprise and developers can get straight on. No language barriers.  No architecture constraints. Scalable, fast and lean. The first DLT that is fit for purpose.
+Catalyst was designed by an experienced team of engineers and researchers who were presented with a difficult challenge: build a large decentralised network capable of storing all types of data ranging from structured tabular records through to large Binary Large Objects at low cost to users, as well as dApps written in any language. Broadly, this meant solving the blockchain trilemma to maintain decentralisation and support a high transaction throughput in a continuously growing network without compromising on security. 
 
-The decentralised protocol is designed from engineering first principles and built by an experienced team of software developers and financial service experts. With an enterprise focus it allows industries to leverage decentralisation into their operations.
-
-### Features
+#### Features
 
 - Protobuffs wire format ([see why](https://github.com/catalyst-network/protocol-protobuffs#why-protobuffs))
 - RPC core protocol methods
@@ -134,9 +133,7 @@ To check all is good under the hood, you can run the test suite. If you're on Li
 
 `dotnet test`
 
-
-### Framework modules
-
+## Framework modules
 
 | Core Libraries | Description                           | Nuget |
 |---------------------|---------------------------------------|-------|
