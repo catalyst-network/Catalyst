@@ -1,7 +1,7 @@
 <div align="center">
   <img alt="ReDoc logo" src="https://raw.githubusercontent.com/catalyst-network/Community/master/media-pack/logo.png" width="400px" />
 
-  ### Catalyst Framework - Fast, scalable PBFT distributed ledger
+  ### Catalyst Framework - Full Stack Distributed Protocol Framework
 
 [![Discord](https://img.shields.io/discord/629667101774446593?color=blueviolet&label=discord)](https://discord.gg/anTP7xm)
 ![GitHub followers](https://img.shields.io/github/followers/catalyst-network?style=social)
@@ -9,10 +9,13 @@
 ![Twitter Follow](https://img.shields.io/twitter/follow/catalystnetorg?style=social)
 ![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/catalystnet?style=social)
 </div>
+
 <div align="center">
+  
 [![Build Status](https://dev.azure.com/catalyst-network/catalyst.core/_apis/build/status/Dev%20Test%20Suite?branchName=develop)](https://dev.azure.com/catalyst-network/catalyst.core/_build/latest?definitionId=3&branchName=develop)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0940fa58afc24dbf96ad566f1fdc1390)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=catalyst-network/Catalyst.Node&amp;utm_campaign=Badge_Grade)
 [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
+
 </div>
 
 <hr/>
