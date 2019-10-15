@@ -58,23 +58,68 @@ The decentralised protocol is designed from engineering first principles and bui
 
 Our api docs can be found on our documentation site [https://catalyst-network.github.io/Catalyst.Framework/](https://catalyst-network.github.io/Catalyst.Framework)
 
-## Install
+## Quick Start Guide
 
-To get started very quickly, you can do this:
+This is a quick start guide for new and existing .Net developers
 
-```sh
-# Clone the repo and the submodules
-git clone git@github.com:catalyst-network/Catalyst.Node.git 
-cd Catalyst.Node
-git submodule update --init --force --recursive
-cd src
+## 1. Install .Net
 
-# Then run the build
-dotnet restore
-dotnet build
-```
+Catalyst.Node works with .Net Core v2.2. You'll need to have the .Net SDK installed. 
 
-More details on how to get going can be found in the [Quick Start Guide](https://github.com/catalyst-network/Catalyst.Node/wiki/Quick-Start-Guide).
+If you don't have .Net Core installed you can follow the instructions for your platform bellow.
+
+- [Windows](https://dotnet.microsoft.com/download?initial-os=windows)
+- [Linux](https://dotnet.microsoft.com/download?initial-os=linux)
+- [macOS](https://dotnet.microsoft.com/download?initial-os=macos)
+
+
+## 2. Clone the repository
+
+To clone the repository it is assumed you have Git installed.
+If you do not, then follow the [Git install instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for Linux/Windows/macOS.
+
+The clone command is:
+
+`git clone git@github.com:catalyst-network/Catalyst.Node.git `
+
+## 3. Clone git submodules
+
+We utilize git submodules for certain dependencies. You will need these to build the code base. To grab them, first navigate to the Catalyst.Node folder:
+
+`cd Catalyst.Node`
+
+Then initialize the submodules by running:
+
+`git submodule init`
+
+The clone then by running:
+
+`git submodule update`
+
+## 4. Install Nuget dependencies
+
+Now we have our code and submodules, the next step is to install the dependencies from .Net's package manager Nuget.
+
+Navigate to the src folder:
+
+`cd src`
+
+Next restore the dependencies:
+
+`dotnet restore`
+
+## 5. Build the solution
+
+Still in the `src` folder:
+
+`dotnet build`
+
+## 6. Run the test suite
+
+To check all is good under the hood, you can run the test suite. If you're on Linux, you need to [Create a Self Signed Certificate](https://github.com/catalyst-network/Catalyst.Node/wiki/Create-a-Self-Signed-Certificate)
+
+`dotnet test`
+
 
 ### Install the Rust Toolchain
 
