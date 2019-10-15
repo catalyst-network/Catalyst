@@ -1,18 +1,21 @@
 <div align="center">
   <img alt="ReDoc logo" src="https://raw.githubusercontent.com/catalyst-network/Community/master/media-pack/logo.png" width="400px" />
 
-  ### Catalyst Framework - Fast, scalable PBFT distributed ledger
+  ### Catalyst Framework - Full Stack Distributed Protocol Framework
 
 [![Discord](https://img.shields.io/discord/629667101774446593?color=blueviolet&label=discord)](https://discord.gg/anTP7xm)
 ![GitHub followers](https://img.shields.io/github/followers/catalyst-network?style=social)
 ![GitHub stars](https://img.shields.io/github/stars/catalyst-network/community?style=social)
 ![Twitter Follow](https://img.shields.io/twitter/follow/catalystnetorg?style=social)
 ![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/catalystnet?style=social)
-<br />
-<br />
+</div>
+
+<div align="center">
+  
 [![Build Status](https://dev.azure.com/catalyst-network/catalyst.core/_apis/build/status/Dev%20Test%20Suite?branchName=develop)](https://dev.azure.com/catalyst-network/catalyst.core/_build/latest?definitionId=3&branchName=develop)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0940fa58afc24dbf96ad566f1fdc1390)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=catalyst-network/Catalyst.Node&amp;utm_campaign=Badge_Grade)
 [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
+
 </div>
 
 <hr/>
@@ -88,6 +91,30 @@ If ```rustc --version``` fails, restart your console to ensure changes to ```PAT
 
 Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-network/Cryptography.FFI.Rust) for docs. If you have issues with this part of the installation, please raise them there.
 
+### Framework modules
+
+
+| Core Libraries | Description                           | Nuget |
+|---------------------|---------------------------------------|-------|
+| [Abstractions](https://catalyst-network.github.io/Catalyst.Framework/api/abstractions/Catalyst.Abstractions.html)        | Framework Abstractions and interfaces |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Abstractions )     |
+| [Core Lib](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Lib/Catalyst.Core.Lib.html)            | Core Catalyst libraries               |  ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Lib )     |
+| [Protocol SDK](https://catalyst-network.github.io/Catalyst.Framework/api/Protocol/Catalyst.Protocol.Account.html)        | Catalyst protocol c# sdk              |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Protocol )     |
+| **Core Modules**                                    | **Description**                                                                 | **Nuget** |
+| [Kvm](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Kvm/Catalyst.Core.Modules.Kvm.html)                       | Finite state machine for smart contacts                                     |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Kvm)    |
+| [Mempool](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Mempool/Catalyst.Core.Modules.Mempool.html)                   | Deterministic mempool for ordering transactions                             |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Mempool )   |
+| [Web3](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Web3/Catalyst.Core.Modules.Web3.html)                      | Web3 gaateway                                                               |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Web3)   |
+| [Consensus](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Consensus/Catalyst.Core.Modules.Consensus.html)                 | PBFT Consensus Mechanism                                                    |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Consensus )   |
+| [Dfs](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Dfs/Catalyst.Core.Modules.Dfs.html)                       | Distributed File Storage                                                    |     ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Dfs )  |
+| [Keystore](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Keystore/Catalyst.Core.Modules.Keystore.html)                  | Secure Keystore                                                             |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Keystore  )   |
+| [Hastings Discovery](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/P2P.Discovery.Hastings/Catalyst.Core.Modules.P2P.Discovery.Hastings.html)    | Unstructured overlay network with metropolis hasting random walk            |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.P2P.Discovery.Hastings)    |
+| [Rpc Server](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Rpc.Server/Catalyst.Core.Modules.Rpc.Server.html)                | Rpc Server pipeline with dotnetty                                           |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Rpc.Server)   |
+| [Rpc Client](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Rpc.Client/Catalyst.Core.Modules.Rpc.Client.html)                | Rpc Client pipeline with dotnetty                                           |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Rpc.Client   )   |
+| [KeySigner](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/KeySigner/Catalyst.Core.Modules.KeySigner.html)                 | Catalyst KeySigner, sign transactions and message with identity and context |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.KeySigner  )    |
+| [Ledger](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Ledger/Catalyst.Core.Modules.Ledger.html)                    | Catalyst ledger state provider                                              |     ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Ledger  )  |
+| [BulletProofs Cryptography](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.html) | Bullet proof native rust bindings                                           |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Cryptography.BulletProofs)   |
+| **Optional Modules** | **Description**              | **Nuget** |
+| [CosmosDB](https://catalyst-network.github.io/Catalyst.Framework/api/Modules/Repository.CosmosDb/Catalyst.Modules.Repository.CosmosDb.html)         | Azure CosmosDb connector |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Modules.Repository.CosmosDb )   |
+| [MongoDB](https://catalyst-network.github.io/Catalyst.Framework/api/Modules/Repository.MongoDb/Catalyst.Modules.Repository.MongoDb.html)          | MongoDb connector        |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Modules.Repository.MongoDb )    |
 ## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
