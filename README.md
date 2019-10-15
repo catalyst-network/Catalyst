@@ -1,6 +1,14 @@
-![stronghold logo](https://github.com/catalyst-network/Catalyst.Framework/blob/develop/docs/assets/logo.png?raw=true)
+<div align="center">
+  <img alt="ReDoc logo" src="https://raw.githubusercontent.com/catalyst-network/Community/master/media-pack/logo.png" width="400px" />
 
-# <p style="text-align: center;"> Catalyst Network </p>
+  **Catalyst Framework**
+
+[![Discord](https://img.shields.io/discord/629667101774446593?color=blueviolet&label=discord)](https://discord.gg/anTP7xm)
+![GitHub followers](https://img.shields.io/github/followers/catalyst-network?style=social)
+![GitHub stars](https://img.shields.io/github/stars/catalyst-network/community?style=social)
+![Twitter Follow](https://img.shields.io/twitter/follow/catalystnetorg?style=social)
+![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/catalystnet?style=social)
+</div>
 
 ## Fast, scalable PBFT distributed ledger
 
