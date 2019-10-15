@@ -33,12 +33,6 @@ Catalyst Network is the distributed operating system that enterprise and develop
 
 The decentralised protocol is designed from engineering first principles and built by an experienced team of software developers and financial service experts. With an enterprise focus it allows industries to leverage decentralisation into their operations.
 
-### What is Catalyst.Node?
-
-Catalyst.Node is the .Net implementation of the Catalyst Network. The spcification of our protocol is outlined in our technical while paper a more indepth implementation orientated document can be found in the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/).
-
-Catalyst.Node is developed on dotnet core 3.0 therefore supports Linux, macOS and Windows operating systems.
-
 ### Features
 
 - Protobuffs wire format ([see why](https://github.com/catalyst-network/protocol-protobuffs#why-protobuffs))
@@ -50,7 +44,7 @@ Catalyst.Node is developed on dotnet core 3.0 therefore supports Linux, macOS an
 
 ### Documentation
 
-Our current docs can be found on our [wiki](https://github.com/catalyst-network/Catalyst.Node/wiki) or the [Protocol Blueprint](https://github.com/catalyst-network/protocol-blueprint/). If you're interested in helping us write more, please open an issue or a PR.
+Our current docs can be found on our [wiki](https://github.com/catalyst-network/Catalyst.Node/wiki). If you're interested in helping us write more, please open an issue or a PR.
 
 ## Install
 
