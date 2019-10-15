@@ -76,10 +76,19 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "RichardLitt",
+      "name": "Richard Littauer",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/910753?v=4",
+      "profile": "https://burntfen.com",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "projectName": "Catalyst.Node",
+  "projectName": "Catalyst.Framework",
   "projectOwner": "catalyst-network",
   "repoType": "github",
   "repoHost": "https://github.com"
