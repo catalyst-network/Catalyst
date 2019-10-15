@@ -99,7 +99,6 @@ Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-n
 | [Abstractions](https://catalyst-network.github.io/Catalyst.Framework/api/abstractions/Catalyst.Abstractions.html)        | Framework Abstractions and interfaces |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Abstractions )     |
 | [Core Lib](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Lib/Catalyst.Core.Lib.html)            | Core Catalyst libraries               |  ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Lib )     |
 | [Protocol SDK](https://catalyst-network.github.io/Catalyst.Framework/api/Protocol/Catalyst.Protocol.Account.html)        | Catalyst protocol c# sdk              |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Protocol )     |
-
 | Core Modules                                    | Description                                                                 | Nuget |
 |-------------------------------------------------|-----------------------------------------------------------------------------|-------|
 | [Kvm](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Kvm/Catalyst.Core.Modules.Kvm.html)                       | Finite state machine for smart contacts                                     |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Kvm)    |
