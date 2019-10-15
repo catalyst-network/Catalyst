@@ -1,10 +1,19 @@
-# <p style="text-align: center;"> Catalyst Network </p>
+<div align="center">
+  <img alt="ReDoc logo" src="https://raw.githubusercontent.com/catalyst-network/Community/master/media-pack/logo.png" width="400px" />
 
-## Fast, scalable PBFT distributed ledger
+  ### Catalyst Framework - Fast, scalable PBFT distributed ledger
 
-|Build Status   | Code Quality | Slack Chat | Contributors | Discord
-|:-:	|:-:	|:-: |:-: |:-: |
-|[![Build Status](https://dev.azure.com/catalyst-network/catalyst.core/_apis/build/status/Dev%20Test%20Suite?branchName=develop)](https://dev.azure.com/catalyst-network/catalyst.core/_build/latest?definitionId=3&branchName=develop)   	|[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0940fa58afc24dbf96ad566f1fdc1390)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=catalyst-network/Catalyst.Node&amp;utm_campaign=Badge_Grade)	| [<img src="https://img.shields.io/badge/slack-@catalystnet-purple.svg?logo=slack">](https://join.slack.com/t/catalystnet/shared_invite/enQtNjA5MzM5NDk3MzgyLTQyYTZmMDlhMjc3ODRkODRhNTU2Njk0M2FlOGRhNjRhNzkyZGExYjUyODBkODQ1ODBkYjA2YzUwZDdjMTZiYzY) | [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors) | [![Discord](https://img.shields.io/discord/629667101774446593?color=blueviolet&label=discord)](https://discord.gg/anTP7xm)
+[![Discord](https://img.shields.io/discord/629667101774446593?color=blueviolet&label=discord)](https://discord.gg/anTP7xm)
+![GitHub followers](https://img.shields.io/github/followers/catalyst-network?style=social)
+![GitHub stars](https://img.shields.io/github/stars/catalyst-network/community?style=social)
+![Twitter Follow](https://img.shields.io/twitter/follow/catalystnetorg?style=social)
+![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/catalystnet?style=social)
+<br />
+<br />
+[![Build Status](https://dev.azure.com/catalyst-network/catalyst.core/_apis/build/status/Dev%20Test%20Suite?branchName=develop)](https://dev.azure.com/catalyst-network/catalyst.core/_build/latest?definitionId=3&branchName=develop)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0940fa58afc24dbf96ad566f1fdc1390)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=catalyst-network/Catalyst.Node&amp;utm_campaign=Badge_Grade)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
+</div>
 
 <hr/>
 
@@ -44,7 +53,7 @@ The decentralised protocol is designed from engineering first principles and bui
 
 ### Documentation
 
-Our current docs can be found on our [wiki](https://github.com/catalyst-network/Catalyst.Node/wiki). If you're interested in helping us write more, please open an issue or a PR.
+Our api docs can be found on our documentation site [https://catalyst-network.github.io/Catalyst.Framework/](https://catalyst-network.github.io/Catalyst.Framework)
 
 ## Install
 
