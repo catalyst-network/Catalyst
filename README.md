@@ -91,20 +91,20 @@ If ```rustc --version``` fails, restart your console to ensure changes to ```PAT
 
 Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-network/Cryptography.FFI.Rust) for docs. If you have issues with this part of the installation, please raise them there.
 
-| Core Modules             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;                                                                                    |<div style="width:290px">  Nuget  </div>|
-|-------------------------------------------------|-------|
-| Catalyst.Core.Modules.Kvm                                                          |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Kvm)    |
-| Catalyst.Core.Modules.Mempool                                             |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Mempool )   |
-| Catalyst.Core.Modules.Web3                                                                            |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Web3)   |
-| Catalyst.Core.Modules.Consensus                                                                   |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Consensus )   |
-| Catalyst.Core.Modules.Dfs                                                                      |     ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Dfs )  |
-| Catalyst.Core.Modules.Keystore                                                                            |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Keystore  )   |
-| Catalyst.Core.Modules.P2P.Discovery.Hastings             |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.P2P.Discovery.Hastings)    |
-| Catalyst.Core.Modules.Rpc.Server                                                     |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Rpc.Server)   |
-| Catalyst.Core.Modules.Rpc.Client                                                        |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Rpc.Client   )   |
-| Catalyst.Core.Modules.KeySigner                 |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.KeySigner  )    |
-| Catalyst.Core.Modules.Ledger                                                              |     ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Ledger  )  |
-| Catalyst.Core.Modules.Cryptography.BulletProofs                                            |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Cryptography.BulletProofs)   |
+| Core Modules                                    | Description                                                                 | Nuget |
+|-------------------------------------------------|-----------------------------------------------------------------------------|-------|
+| [Kvm](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Kvm/Catalyst.Core.Modules.Kvm.html)                       | Finite state machine for smart contacts                                     |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Kvm)    |
+| [Mempool[(https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Mempool/Catalyst.Core.Modules.Mempool.html)                   | Deterministic mempool for ordering transactions                             |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Mempool )   |
+| Web3                      | Web3 gaateway                                                               |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Web3)   |
+| [Consensus](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Consensus/Catalyst.Core.Modules.Consensus.html)                 | PBFT Consensus Mechanism                                                    |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Consensus )   |
+| [Dfs](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Dfs/Catalyst.Core.Modules.Dfs.html)                       | Distributed File Storage                                                    |     ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Dfs )  |
+| [Keystore](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Keystore/Catalyst.Core.Modules.Keystore.html)                  | Secure Keystore                                                             |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Keystore  )   |
+| [Hastings Discovery](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/P2P.Discovery.Hastings/Catalyst.Core.Modules.P2P.Discovery.Hastings.html)    | Unstructured overlay network with metropolis hasting random walk            |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.P2P.Discovery.Hastings)    |
+| [Rpc Server](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Rpc.Server/Catalyst.Core.Modules.Rpc.Server.html)                | Rpc Server pipeline with dotnetty                                           |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Rpc.Server)   |
+| [Rpc Client](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Rpc.Client/Catalyst.Core.Modules.Rpc.Client.html)                | Rpc Client pipeline with dotnetty                                           |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Rpc.Client   )   |
+| [KeySigner](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/KeySigner/Catalyst.Core.Modules.KeySigner.html)                 | Catalyst KeySigner, sign transactions and message with identity and context |   ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.KeySigner  )    |
+| [Ledger](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Ledger/Catalyst.Core.Modules.Ledger.html)                    | Catalyst ledger state provider                                              |     ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Ledger  )  |
+| [BulletProofs Cryptography](https://catalyst-network.github.io/Catalyst.Framework/api/Core.Modules/Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.html) | Bullet proof native rust bindings                                           |    ![Nuget](https://img.shields.io/nuget/v/Catalyst.Core.Modules.Cryptography.BulletProofs)   |
 
 ## Contributors
 
