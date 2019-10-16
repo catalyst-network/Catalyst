@@ -29,8 +29,8 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
@@ -70,6 +70,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         {
             _testScheduler = new TestScheduler();
             _fakeRepository = Substitute.For<IAccountRepository>();
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
 
             _logger = Substitute.For<ILogger>();
@@ -98,7 +99,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         public void Should_Mutate_State_Through_Kvm()
         {
             var cryptoContext = new FfiWrapper();
-
+            
             var hash1 = _hashProvider.ComputeUtf8MultiHash("update");
             var updates = new[] {hash1};
             var receiverPublicEntry = cryptoContext.GeneratePrivateKey().GetPublicKey();
@@ -111,41 +112,43 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _stateProvider.CreateAccount(receiverContractEntry.ToKvmAddress(), UInt256.Zero);
             _stateProvider.CreateAccount(receiverPublicEntry.ToKvmAddress(), UInt256.Zero);
             
-            _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<string>(), out Arg.Any<Delta>())
+            Delta delta = new Delta()
+            {
+                PublicEntries =
+                {
+                    new PublicEntry()
+                    {
+                        Base = new BaseEntry()
+                        {
+                            ReceiverPublicKey =
+                                ByteString.FromBase64(Convert.ToBase64String(receiverPublicEntry.Bytes)),
+                            SenderPublicKey =
+                                ByteString.FromBase64(Convert.ToBase64String(sender.Bytes)),
+                        },
+                        Amount = ByteString.FromBase64(Convert.ToBase64String(new byte[] {1}))
+                    }
+                },
+                ContractEntries =
+                {
+                    new ContractEntry()
+                    {
+                        Base = new BaseEntry()
+                        {
+                            ReceiverPublicKey =
+                                ByteString.FromBase64(Convert.ToBase64String(receiverContractEntry.Bytes)),
+                            SenderPublicKey =
+                                ByteString.FromBase64(Convert.ToBase64String(sender.Bytes)),
+                        },
+                        Amount = ByteString.FromBase64(Convert.ToBase64String(new byte[] {2})),
+                        Data = ByteString.FromBase64(Convert.ToBase64String(Bytes.FromHexString("0x4600")))
+                    }
+                }
+            };
+            
+            _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
                .Returns(c =>
                 {
-                    c[1] = new Delta()
-                    {
-                        PublicEntries =
-                        {
-                            new PublicEntry()
-                            {
-                                Base = new BaseEntry()
-                                {
-                                    ReceiverPublicKey =
-                                        ByteString.FromBase64(Convert.ToBase64String(receiverPublicEntry.Bytes)),
-                                    SenderPublicKey =
-                                        ByteString.FromBase64(Convert.ToBase64String(sender.Bytes)),
-                                },
-                                Amount = ByteString.FromBase64(Convert.ToBase64String(new byte[] {1}))
-                            }
-                        },
-                        ContractEntries =
-                        {
-                            new ContractEntry()
-                            {
-                                Base = new BaseEntry()
-                                {
-                                    ReceiverPublicKey =
-                                        ByteString.FromBase64(Convert.ToBase64String(receiverContractEntry.Bytes)),
-                                    SenderPublicKey =
-                                        ByteString.FromBase64(Convert.ToBase64String(sender.Bytes)),
-                                },
-                                Amount = ByteString.FromBase64(Convert.ToBase64String(new byte[] {2})),
-                                Data = ByteString.FromBase64(Convert.ToBase64String(Bytes.FromHexString("0x4600")))
-                            }
-                        }
-                    };
+                    c[1] = delta;
                     return true;
                 }, c => false);
 
