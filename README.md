@@ -71,7 +71,7 @@ If you don't have .Net Core installed you can follow the instructions for your p
 - [Linux](https://dotnet.microsoft.com/download?initial-os=linux)
 - [macOS](https://dotnet.microsoft.com/download?initial-os=macos)
 
-#### 7. Install the Rust Toolchain
+#### 2. Install the Rust Toolchain
 
 Catalyst.Core uses our native [Rust BulletProof library](https://github.com/catalyst-network/Cryptography.FFI.Rust).
 
