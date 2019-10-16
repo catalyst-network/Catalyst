@@ -29,21 +29,20 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
 using LibP2P;
 using Nethermind.Core;
 using Nethermind.Core.Specs;
+using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
 using Nethermind.Store;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 using Account = Catalyst.Core.Modules.Ledger.Models.Account;
 
 namespace Catalyst.Core.Modules.Ledger
@@ -56,7 +55,8 @@ namespace Catalyst.Core.Modules.Ledger
     public class Ledger : ILedger, IDisposable
     {
         public IAccountRepository Accounts { get; }
-        private readonly IKvm _kvm;
+        private readonly IKvm _virtualMachine;
+        private readonly IContractEntryExecutor _contractEntryExecutor;
         private readonly IStateProvider _stateProvider;
         private readonly ISpecProvider _specProvider;
         private readonly ILedgerSynchroniser _synchroniser;
@@ -70,7 +70,8 @@ namespace Catalyst.Core.Modules.Ledger
         public Cid LatestKnownDelta { get; private set; }
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
-        public Ledger(IKvm kvm,
+        public Ledger(IKvm virtualMachine,
+            IContractEntryExecutor contractEntryExecutor,
             IStateProvider stateProvider,
             ISpecProvider specProvider,
             IAccountRepository accounts,
@@ -80,7 +81,8 @@ namespace Catalyst.Core.Modules.Ledger
             ILogger logger)
         {
             Accounts = accounts;
-            _kvm = kvm;
+            _virtualMachine = virtualMachine;
+            _contractEntryExecutor = contractEntryExecutor;
             _stateProvider = stateProvider;
             _specProvider = specProvider;
             _synchroniser = synchroniser;
@@ -166,14 +168,16 @@ namespace Catalyst.Core.Modules.Ledger
                     return;
                 }
 
+                StateUpdate stateUpdate = ToStateUpdate(nextDeltaInChain);
+
                 foreach (var entry in nextDeltaInChain.PublicEntries)
                 {
-                    UpdateLedgerAccountFromEntry(entry);
+                    UpdateLedgerAccountFromEntry(stateUpdate, entry);
                 }
 
                 foreach (var entry in nextDeltaInChain.ContractEntries)
                 {
-                    UpdateLedgerAccountFromEntry(entry);
+                    UpdateLedgerAccountFromEntry(stateUpdate, entry);
                 }
 
                 LatestKnownDelta = deltaHash;
@@ -189,59 +193,36 @@ namespace Catalyst.Core.Modules.Ledger
             }
         }
 
-        private void UpdateLedgerAccountFromEntry(ContractEntry entry)
+        private StateUpdate ToStateUpdate(Delta delta)
         {
-            var executionType = entry.IsValidDeploymentEntry ? ExecutionType.Create : ExecutionType.Call;
-            UpdateLedgerAccountFromEntry(entry.Base, entry.Amount, executionType, entry.Data.ToByteArray());
-        }
-
-        private void UpdateLedgerAccountFromEntry(PublicEntry entry) { UpdateLedgerAccountFromEntry(entry.Base, entry.Amount, ExecutionType.Transaction, Array.Empty<byte>()); }
-
-        // <<<<<<< HEAD
-        //             //todo: get an address from the key using the Account class from Common lib
-        //             var account = Accounts.Get(pubKey.Bytes.ToBase32());
-        // =======
-        private void UpdateLedgerAccountFromEntry(BaseEntry entry, ByteString entryAmount, ExecutionType executionType, byte[] data)
-        {
-            Address GetAccountAddress(ByteString publicKey)
-            {
-                var pubKey = _cryptoContext.GetPublicKeyFromBytes(publicKey.ToByteArray());
-
-                // todo: might need to trim or hash
-                return pubKey.ToKvmAddress();
-            }
-
-            var receiver = GetAccountAddress(entry.ReceiverPublicKey);
-            var sender = GetAccountAddress(entry.SenderPublicKey);
-            var value = entryAmount.ToUInt256();
             var gasLimit = 1_000_000L;
-
-            // these values will be set by the tx processor within the state update logic
-            ExecutionEnvironment env = new ExecutionEnvironment
+            StateUpdate result = new StateUpdate
             {
-                Originator = sender,
-                Sender = sender,
-                CodeSource = receiver,
-                ExecutingAccount = receiver,
-                Value = value,
-                TransferValue = value,
-                GasPrice = 0,
-                InputData = data,
-                CallDepth = 0,
-                CurrentBlock = new StateUpdate
-                {
-                    Difficulty = 1,
-                    Number = 1,
-                    Timestamp = 1,
-                    GasLimit = gasLimit,
-                    GasBeneficiary = Address.Zero,
-                    GasUsed = 0L
-                },
-                CodeInfo = _kvm.GetCachedCodeInfo(receiver)
+                Difficulty = 1,
+                Number = 1,
+                Timestamp = (UInt256)delta.TimeStamp.Seconds,
+                GasLimit = gasLimit,
+                /* here we can read coinbase entries from the delta
+                   but we need to decide how to split fees and which one to pick for the KVM */
+                GasBeneficiary = Address.Zero,
+                GasUsed = 0L
             };
 
-            VmState state = new VmState(gasLimit, env, executionType, false, true, false);
-            _kvm.Run(state, NullTxTracer.Instance);
+            return result;
+        }
+
+        private void UpdateLedgerAccountFromEntry(StateUpdate stateUpdate, PublicEntry entry)
+        {
+            ContractEntry contractEntry = new ContractEntry();
+            contractEntry.Base = entry.Base;
+            contractEntry.Amount = entry.Amount;
+            contractEntry.Data = ByteString.Empty;
+            UpdateLedgerAccountFromEntry(stateUpdate, contractEntry);
+        }
+        
+        private void UpdateLedgerAccountFromEntry(StateUpdate stateUpdate, ContractEntry entry)
+        {
+            _contractEntryExecutor.Execute(entry, stateUpdate, NullTxTracer.Instance);
         }
 
         protected virtual void Dispose(bool disposing)

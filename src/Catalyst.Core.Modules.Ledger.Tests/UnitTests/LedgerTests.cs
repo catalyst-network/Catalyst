@@ -58,6 +58,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private readonly IHashProvider _hashProvider;
         private readonly MultiHash _genesisHash;
         private readonly IKvm _kvm;
+        private readonly IContractEntryExecutor _executor;
         private readonly IStateProvider _stateProvider;
         private readonly ISpecProvider _specProvider;
 
@@ -74,6 +75,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
             _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
             _kvm = Substitute.For<IKvm>();
+            _executor = Substitute.For<IContractEntryExecutor>();
             _stateProvider = Substitute.For<IStateProvider>();
             _specProvider = Substitute.For<ISpecProvider>();
         }
@@ -81,7 +83,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         [Fact]
         public void Save_Account_State_To_Ledger_Repository()
         {
-            _ledger = new LedgerService(_kvm, _stateProvider, _specProvider, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
+            _ledger = new LedgerService(_kvm, _executor, _stateProvider, _specProvider, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
@@ -104,7 +106,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 
-            _ledger = new LedgerService(_kvm, _stateProvider, _specProvider, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
+            _ledger = new LedgerService(_kvm, _executor, _stateProvider, _specProvider, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
 
             _testScheduler.Start();
 

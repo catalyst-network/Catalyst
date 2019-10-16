@@ -23,6 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Core.Modules.Ledger;
 using Nethermind.Core.Specs;
 using Nethermind.Evm;
 using Nethermind.Logging;
@@ -34,6 +35,7 @@ namespace Catalyst.Core.Modules.Kvm
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<ContractEntryExecutor>().As<IContractEntryExecutor>().SingleInstance();
             builder.RegisterType<KatVirtualMachine>().As<IKvm>().SingleInstance();
             builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
             builder.RegisterType<CatalystGenesisSpec>().As<IReleaseSpec>();
