@@ -31,11 +31,11 @@ using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Account;
+using Catalyst.Protocol.Network;
 using Nethereum.KeyStore;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
@@ -50,7 +50,6 @@ namespace Catalyst.Core.Modules.Keystore
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordManager _passwordManager;
         private readonly IHashProvider _hashProvider;
-        private readonly IPeerSettings _peerSettings;
         private readonly PasswordRegistryTypes _defaultNodePassword = PasswordRegistryTypes.DefaultNodePassword;
 
         private static int MaxTries => 5;
@@ -59,14 +58,12 @@ namespace Catalyst.Core.Modules.Keystore
             ICryptoContext cryptoContext,
             IFileSystem fileSystem,
             IHashProvider hashProvider,
-            IPeerSettings peerSettings,
             ILogger logger)
         {
             _passwordManager = passwordManager;
             _cryptoContext = cryptoContext;
             _fileSystem = fileSystem;
             _hashProvider = hashProvider;
-            _peerSettings = peerSettings;
             _logger = logger;
         }
 
@@ -139,12 +136,12 @@ namespace Catalyst.Core.Modules.Keystore
             try
             {
                 var publicKeyHash = _hashProvider.ComputeMultiHash(privateKey.GetPublicKey().Bytes).ToArray()
-                   .ToByteString();
+                    .ToByteString();
                 var address = new Address
                 {
                     PublicKeyHash = publicKeyHash,
                     AccountType = AccountType.PublicAccount,
-                    NetworkType = _peerSettings.NetworkType
+                    NetworkType = NetworkType.Devnet
                 };
 
                 var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword,

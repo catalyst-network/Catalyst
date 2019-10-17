@@ -210,7 +210,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             candidate.ProducerId.Should().Be(_producerId);
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash.ToArray()).Should().BeTrue();
 
-            var expectedHash = _hashProvider.ComputeMultiHash(expectedBytesToHash);
+            var expectedHash = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(expectedBytesToHash));
             candidate.Hash.ToByteArray().Should().BeEquivalentTo(expectedHash.ToArray());
         }
     }

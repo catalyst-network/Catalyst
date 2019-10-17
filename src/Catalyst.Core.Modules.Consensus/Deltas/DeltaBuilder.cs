@@ -41,7 +41,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using LibP2P;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -121,7 +121,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var candidate = new CandidateDeltaBroadcast
             {
                 // h∆j
-                Hash = _hashProvider.ComputeMultiHash(globalLedgerStateUpdate).ToArray().ToByteString(),
+                Hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate)))
+                   .ToByteString(),
 
                 // Idj
                 ProducerId = _producerUniqueId,
