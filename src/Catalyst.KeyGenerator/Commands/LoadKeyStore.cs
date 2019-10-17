@@ -29,6 +29,7 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Tools.KeyGenerator.Interfaces;
 using Catalyst.Tools.KeyGenerator.Options;
 using System;
+using Catalyst.Protocol.Network;
 
 namespace Catalyst.Tools.KeyGenerator.Commands
 {
@@ -51,7 +52,7 @@ namespace Catalyst.Tools.KeyGenerator.Commands
         public string CommandName => "load";
         public Type OptionType => typeof(LoadKeyStoreOption);
 
-        public void ParseOption(object option)
+        public void ParseOption(NetworkType networkType, object option)
         {
             var loadKeyStoreOptions = (LoadKeyStoreOption) option;
 

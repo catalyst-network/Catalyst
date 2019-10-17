@@ -22,8 +22,9 @@
 #endregion
 
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Types;
-using IPrivateKey = Catalyst.Abstractions.Cryptography.IPrivateKey;
+using Catalyst.Protocol.Network;
 
 namespace Catalyst.Abstractions.Keystore
 {
@@ -31,8 +32,8 @@ namespace Catalyst.Abstractions.Keystore
     {
         IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier);
 
-        Task<IPrivateKey> KeyStoreGenerate(KeyRegistryTypes keyIdentifier);
+        Task<IPrivateKey> KeyStoreGenerate(NetworkType networkType, KeyRegistryTypes keyIdentifier);
 
-        Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryTypes keyIdentifier);
+        Task KeyStoreEncryptAsync(IPrivateKey privateKey, NetworkType networkType, KeyRegistryTypes keyIdentifier);
     }
 }

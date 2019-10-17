@@ -122,26 +122,28 @@ namespace Catalyst.Core.Modules.Keystore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
 
-        public async Task<IPrivateKey> KeyStoreGenerate(KeyRegistryTypes keyIdentifier)
+        public async Task<IPrivateKey> KeyStoreGenerate(NetworkType networkType, KeyRegistryTypes keyIdentifier)
         {
             var privateKey = _cryptoContext.GeneratePrivateKey();
 
-            await KeyStoreEncryptAsync(privateKey, keyIdentifier);
+            await KeyStoreEncryptAsync(privateKey, networkType, keyIdentifier);
 
             return privateKey;
         }
 
-        public async Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryTypes keyIdentifier)
+        public async Task KeyStoreEncryptAsync(IPrivateKey privateKey,
+            NetworkType networkType,
+            KeyRegistryTypes keyIdentifier)
         {
             try
             {
                 var publicKeyHash = _hashProvider.ComputeMultiHash(privateKey.GetPublicKey().Bytes).ToArray()
-                    .ToByteString();
+                   .ToByteString();
                 var address = new Address
                 {
                     PublicKeyHash = publicKeyHash,
                     AccountType = AccountType.PublicAccount,
-                    NetworkType = NetworkType.Devnet
+                    NetworkType = networkType
                 };
 
                 var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword,
