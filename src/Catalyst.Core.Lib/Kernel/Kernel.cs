@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Security;
+using System.Threading.Tasks;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
@@ -56,7 +57,7 @@ namespace Catalyst.Core.Lib.Kernel
         public ContainerBuilder ContainerBuilder { get; set; }
         public ICancellationTokenProvider CancellationTokenProvider { get; }
 
-        public delegate void CustomBootLogic(Kernel kernel);
+        public delegate Task CustomBootLogic(Kernel kernel);
 
         public static Kernel Initramfs(bool overwrite = false,
             string fileName = "Catalyst.Node..log",
@@ -177,9 +178,9 @@ namespace Catalyst.Core.Lib.Kernel
         ///     Allows custom nodes to write custom code for containerBuilder
         /// </summary>
         /// <param name="customBootLogic"></param>
-        public void StartCustom(CustomBootLogic customBootLogic)
+        public async Task StartCustomAsync(CustomBootLogic customBootLogic)
         {
-            customBootLogic.Invoke(this);
+            await customBootLogic.Invoke(this);
         }
 
         public void Dispose()
