@@ -41,7 +41,7 @@ namespace Catalyst.Protocol.Transaction
             return false;
         }
 
-        public bool IsValidDeploymentEntry => IsValid() && !Base.ReceiverPublicKey.IsEmpty;
-        public bool IsValidCallEntry => IsValid() && Base.ReceiverPublicKey.IsEmpty;
+        public bool IsValidDeploymentEntry => IsValid() && Base.ReceiverPublicKey.IsEmpty;
+        public bool IsValidCallEntry => IsValid() && !Base.ReceiverPublicKey.IsEmpty;
     }
 }

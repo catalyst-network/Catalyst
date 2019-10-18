@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Kvm
 
         Address GetAccountAddress(ByteString publicKeyByteString)
         {
-            if (publicKeyByteString == null)
+            if (publicKeyByteString == null || publicKeyByteString.IsEmpty)
             {
                 return null;
             }

@@ -35,6 +35,7 @@ using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -108,7 +109,6 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             var updates = new[] {hash1};
             var recipient = cryptoContext.GeneratePrivateKey().GetPublicKey();
             var sender = cryptoContext.GeneratePrivateKey().GetPublicKey();
-            var contractAddress = Address.OfContract(sender.ToKvmAddress(), _stateProvider.GetNonce(sender.ToKvmAddress()));
 
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
                .ReturnsForAnyArgs(new Cid[] {hash1, _genesisHash});
@@ -150,7 +150,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             _testScheduler.Start();
 
-            _stateProvider.GetAccount(contractAddress).Balance.Should().Be(7);
+            _stateProvider.GetAccount(recipient.ToKvmAddress()).Balance.Should().Be(7);
         }
 
         [Fact]
@@ -221,6 +221,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _stateProvider.CreateAccount(sender.ToKvmAddress(), 1000);
             var contractAddress = Address.OfContract(sender.ToKvmAddress(), _stateProvider.GetNonce(sender.ToKvmAddress()));
 
+            // PUSH1 1 PUSH1 0 MSTORE PUSH1 1 PUSH1 31 RETURN STOP
+            string initCodeHex = "0x60016000526001601FF300";
             Delta delta = new Delta()
             {
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
@@ -230,12 +232,12 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                     {
                         Base = new BaseEntry()
                         {
-                            ReceiverPublicKey = null,
+                            ReceiverPublicKey = ByteString.Empty,
                             SenderPublicKey =
                                 ByteString.FromBase64(Convert.ToBase64String(sender.Bytes)),
                         },
                         Amount = ByteString.FromBase64(Convert.ToBase64String(new byte[] {5})),
-                        Data = ByteString.FromBase64(Convert.ToBase64String(Bytes.FromHexString("0x4600")))
+                        Data = ByteString.FromBase64(Convert.ToBase64String(Bytes.FromHexString(initCodeHex)))
                     }
                 }
             };
@@ -255,7 +257,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             Account account = _stateProvider.GetAccount(contractAddress);
             account.Balance.Should().Be(5);
-            _stateProvider.GetCode(account.CodeHash).Should().Equal(Bytes.FromHexString("0x4600"));
+            _stateProvider.GetCode(account.CodeHash).Should().Equal(Bytes.FromHexString("0x01"));
         }
     }
 }
