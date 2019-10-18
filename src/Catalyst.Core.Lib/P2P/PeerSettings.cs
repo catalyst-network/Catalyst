@@ -25,16 +25,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Microsoft.Extensions.Configuration;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.P2P
 {
@@ -58,7 +55,7 @@ namespace Catalyst.Core.Lib.P2P
         ///     Set attributes
         /// </summary>
         /// <param name="rootSection"></param>
-        public PeerSettings(IConfigurationRoot rootSection,)
+        public PeerSettings(IConfigurationRoot rootSection)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
             

@@ -30,7 +30,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
-using LibP2P;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
