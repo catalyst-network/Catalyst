@@ -68,7 +68,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
 
-            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot, ContainerProvider.Container.Resolve<IKeySigner>());
+            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
 
             var peerSettings =
                 PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port).ToSubstitutedPeerSettings();
