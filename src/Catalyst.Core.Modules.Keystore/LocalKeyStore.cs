@@ -126,7 +126,7 @@ namespace Catalyst.Core.Modules.Keystore
         {
             var privateKey = _cryptoContext.GeneratePrivateKey();
 
-            await KeyStoreEncryptAsync(privateKey, networkType, keyIdentifier);
+            await KeyStoreEncryptAsync(privateKey, networkType, keyIdentifier).ConfigureAwait(false);
 
             return privateKey;
         }
