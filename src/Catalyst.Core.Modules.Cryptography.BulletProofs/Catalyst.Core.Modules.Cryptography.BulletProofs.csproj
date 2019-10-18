@@ -18,6 +18,11 @@
         <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     </ItemGroup>
     <ItemGroup>
+        <None Include="Runtimes/**/*.*" PackagePath="Runtimes/" Pack="true">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
         <None Include="./Runtimes/osx-x64/*/libcatalystffi.dylib" Link="libcatalystffi.dylib">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -29,11 +34,6 @@
     </ItemGroup>
     <ItemGroup>
         <None Include="./Runtimes/linux-x64/*/libcatalystffi.so" Link="libcatalystffi.so">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="Runtimes\**\*.*" PackagePath="Runtimes\" Pack="true">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

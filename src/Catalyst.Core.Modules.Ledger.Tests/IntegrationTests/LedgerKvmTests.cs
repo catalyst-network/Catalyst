@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             IStateUpdateHashProvider stateUpdateHashProvider = new StateUpdateHashProvider();
             _specProvider = new CatalystSpecProvider();
-            
+
             _kvm = new KatVirtualMachine(_stateProvider, storageProvider, stateUpdateHashProvider, _specProvider, LimboLogs.Instance);
             _contractEntryExecutor = new ContractEntryExecutor(_specProvider, _stateProvider, storageProvider, _kvm, _logger);
         }
@@ -152,7 +152,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             _stateProvider.GetAccount(contractAddress).Balance.Should().Be(7);
         }
-        
+
         [Fact]
         public void Should_Update_State_On_Public_Entry()
         {
@@ -160,15 +160,15 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             var hash1 = _hashProvider.ComputeUtf8MultiHash("update");
             var updates = new[] {hash1};
-            var receiverPublicEntry = cryptoContext.GeneratePrivateKey().GetPublicKey();
+            var recipient = cryptoContext.GeneratePrivateKey().GetPublicKey();
             var sender = cryptoContext.GeneratePrivateKey().GetPublicKey();
 
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
                .ReturnsForAnyArgs(new Cid[] {hash1, _genesisHash});
 
             _stateProvider.CreateAccount(sender.ToKvmAddress(), 1000);
-            _stateProvider.CreateAccount(receiverPublicEntry.ToKvmAddress(), UInt256.Zero);
-            _stateProvider.GetAccount(receiverPublicEntry.ToKvmAddress()).Balance.Should().Be(0);
+            _stateProvider.CreateAccount(recipient.ToKvmAddress(), UInt256.Zero);
+            _stateProvider.GetAccount(recipient.ToKvmAddress()).Balance.Should().Be(0);
 
             Delta delta = new Delta()
             {
@@ -180,11 +180,11 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                         Base = new BaseEntry()
                         {
                             ReceiverPublicKey =
-                                ByteString.FromBase64(Convert.ToBase64String(receiverPublicEntry.Bytes)),
+                                ByteString.FromBase64(Convert.ToBase64String(recipient.Bytes)),
                             SenderPublicKey =
                                 ByteString.FromBase64(Convert.ToBase64String(sender.Bytes)),
                         },
-                        Amount = ByteString.FromBase64(Convert.ToBase64String(new byte[] {3}))
+                        Amount = ByteString.FromBase64(Convert.ToBase64String(new byte[] {3})),
                     }
                 }
             };
@@ -202,7 +202,60 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             _testScheduler.Start();
 
-            _stateProvider.GetAccount(receiverPublicEntry.ToKvmAddress()).Balance.Should().Be(3);
+            Account account = _stateProvider.GetAccount(recipient.ToKvmAddress());
+            account.Balance.Should().Be(3);
+        }
+
+        [Fact]
+        public void Should_Deploy_Code_On_Code_Entry()
+        {
+            var cryptoContext = new FfiWrapper();
+
+            var hash1 = _hashProvider.ComputeUtf8MultiHash("update");
+            var updates = new[] {hash1};
+            var sender = cryptoContext.GeneratePrivateKey().GetPublicKey();
+
+            _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
+               .ReturnsForAnyArgs(new Cid[] {hash1, _genesisHash});
+
+            _stateProvider.CreateAccount(sender.ToKvmAddress(), 1000);
+            var contractAddress = Address.OfContract(sender.ToKvmAddress(), _stateProvider.GetNonce(sender.ToKvmAddress()));
+
+            Delta delta = new Delta()
+            {
+                TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
+                ContractEntries =
+                {
+                    new ContractEntry()
+                    {
+                        Base = new BaseEntry()
+                        {
+                            ReceiverPublicKey = null,
+                            SenderPublicKey =
+                                ByteString.FromBase64(Convert.ToBase64String(sender.Bytes)),
+                        },
+                        Amount = ByteString.FromBase64(Convert.ToBase64String(new byte[] {5})),
+                        Data = ByteString.FromBase64(Convert.ToBase64String(Bytes.FromHexString("0x4600")))
+                    }
+                }
+            };
+
+            _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
+               .Returns(c =>
+                {
+                    c[1] = delta;
+                    return true;
+                }, c => false);
+
+            _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid) h).ToObservable(_testScheduler));
+
+            _ledger = new Ledger(_kvm, _contractEntryExecutor, _stateProvider, _specProvider, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
+
+            _testScheduler.Start();
+
+            Account account = _stateProvider.GetAccount(contractAddress);
+            account.Balance.Should().Be(5);
+            _stateProvider.GetCode(account.CodeHash).Should().Equal(Bytes.FromHexString("0x4600"));
         }
     }
 }
