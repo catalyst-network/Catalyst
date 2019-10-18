@@ -30,6 +30,7 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Tools.KeyGenerator.Interfaces;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Network;
 
 namespace Catalyst.Tools.KeyGenerator.Commands
 {
@@ -54,7 +55,7 @@ namespace Catalyst.Tools.KeyGenerator.Commands
             throw new NotSupportedException();
         }
 
-        public void ParseOption(object option)
+        public void ParseOption(NetworkType networkType, object option)
         {
             var generateKeyStoreOption = (GenerateKeyStoreOption) option;
 
@@ -69,7 +70,7 @@ namespace Catalyst.Tools.KeyGenerator.Commands
 
             try
             {
-                var privateKey = _keyStore.KeyStoreGenerate(KeyRegistryTypes.DefaultKey).ConfigureAwait(false)
+                var privateKey = _keyStore.KeyStoreGenerate(networkType, KeyRegistryTypes.DefaultKey).ConfigureAwait(false)
                    .GetAwaiter().GetResult();
                 var publicKey = privateKey.GetPublicKey().Bytes.KeyToString();
 

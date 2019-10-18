@@ -27,6 +27,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Peer;
@@ -35,6 +36,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
@@ -60,8 +62,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
 
             _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, hashProvider, logger);
-            _newHash = hashProvider.ComputeUtf8MultiHash("newHash").ToArray();
-            _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash").ToArray();
+            _newHash = MultiBase.Decode(CidHelper.CreateCid(hashProvider.ComputeUtf8MultiHash("newHash")));
+            _prevHash = MultiBase.Decode(CidHelper.CreateCid(hashProvider.ComputeUtf8MultiHash("prevHash")));
         }
 
         [Fact]

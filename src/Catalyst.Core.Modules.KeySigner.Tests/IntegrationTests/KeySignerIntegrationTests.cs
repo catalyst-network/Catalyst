@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
-            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, hashProvider, peerSettings,
+            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, hashProvider,
                 logger);
 
             var keyRegistry = new KeyRegistry();
