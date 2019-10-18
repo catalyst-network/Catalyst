@@ -22,11 +22,12 @@
 #endregion
 
 using Catalyst.Abstractions.Cli.CommandTypes;
+using Catalyst.Protocol.Network;
 
 namespace Catalyst.Tools.KeyGenerator.Interfaces
 {
     public interface IKeyGeneratorCommand : ICommand
     {
-        void ParseOption(object option);
+        void ParseOption(NetworkType networkType, object option);
     }
 }

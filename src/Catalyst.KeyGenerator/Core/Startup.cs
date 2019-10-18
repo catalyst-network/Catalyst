@@ -26,6 +26,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -43,6 +44,7 @@ namespace Catalyst.Tools.KeyGenerator.Core
         private static IKeyGeneratorCommand[] _commands;
         private static ILogger _logger;
         private static IUserOutput _userOutput;
+        private static IPeerSettings _peerSettings;
 
         public static void Main(string[] args)
         {
@@ -50,6 +52,7 @@ namespace Catalyst.Tools.KeyGenerator.Core
 
             _userOutput = container.Resolve<IUserOutput>();
             _commands = container.Resolve<IKeyGeneratorCommand[]>();
+            _peerSettings = container.Resolve<IPeerSettings>();
 
             while (true)
             {
@@ -133,7 +136,7 @@ namespace Catalyst.Tools.KeyGenerator.Core
                     return;
                 }
 
-                parserResult.WithParsed(options => parsedCommand.ParseOption(options));
+                parserResult.WithParsed(options => parsedCommand.ParseOption(_peerSettings.NetworkType, options));
                 return;
             }
 
