@@ -180,7 +180,7 @@ namespace Catalyst.Core.Lib.Kernel
         /// <param name="customBootLogic"></param>
         public async Task StartCustomAsync(CustomBootLogic customBootLogic)
         {
-            await customBootLogic.Invoke(this);
+            await customBootLogic.Invoke(this).ConfigureAwait(false);
         }
 
         public void Dispose()
@@ -212,8 +212,12 @@ namespace Catalyst.Core.Lib.Kernel
 
         public void StartContainer()
         {
-            Instance = ContainerBuilder.Build()
-               .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
+            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+            if (declaringType != null) 
+            {
+                Instance = ContainerBuilder.Build()
+                   .BeginLifetimeScope(declaringType.AssemblyQualifiedName);
+            }
         }
     }
 }
