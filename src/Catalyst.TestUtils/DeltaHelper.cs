@@ -30,6 +30,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
 using LibP2P;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.TestUtils
 {
@@ -73,8 +74,8 @@ namespace Catalyst.TestUtils
 
             return new CandidateDeltaBroadcast
             {
-                Hash = candidateHash.ToArray().ToByteString(),
-                PreviousDeltaDfsHash = previousHash.ToArray().ToByteString(),
+                Hash = MultiBase.Decode(candidateHash).ToByteString(),
+                PreviousDeltaDfsHash = MultiBase.Decode(previousHash).ToByteString(),
                 ProducerId = producer
             };
         }

@@ -39,6 +39,7 @@ using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using FluentAssertions;
 using Nethermind.Dirichlet.Numerics;
+using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
@@ -201,9 +202,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new CandidateDeltaBroadcast
             {
-                Hash = hash.ToArray().ToByteString(),
+                Hash = MultiBase.Decode(CidHelper.CreateCid(hash)).ToByteString(),
                 ProducerId = PeerIdHelper.GetPeerId("test"),
-                PreviousDeltaDfsHash = previousHash.ToArray().ToByteString()
+                PreviousDeltaDfsHash = MultiBase.Decode(CidHelper.CreateCid(previousHash)).ToByteString()
             };
 
             var candidateDeltaBroadcast = candidateDeltaBroadcastDao.ToDao(original);
@@ -216,13 +217,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             var deltaDfsHashBroadcastDao = GetMapper<DeltaDfsHashBroadcastDao>();
 
-            var hash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("this hash"));
-            var previousDfsHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousDfsHash"));
+            var hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("this hash")));
+            var previousDfsHash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousDfsHash")));
 
             var original = new DeltaDfsHashBroadcast
             {
-                DeltaDfsHash = hash.ToArray().ToByteString(),
-                PreviousDeltaDfsHash = previousDfsHash.ToArray().ToByteString()
+                DeltaDfsHash = hash.ToByteString(),
+                PreviousDeltaDfsHash = previousDfsHash.ToByteString()
             };
 
             var contextDao = deltaDfsHashBroadcastDao.ToDao(original);

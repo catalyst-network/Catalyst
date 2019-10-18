@@ -45,7 +45,6 @@ namespace Catalyst.Core.Modules.Consensus
 
         private readonly ICycleEventsProvider _cycleEventsProvider;
         private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly IHashProvider _hashProvider;
         private readonly IDeltaBuilder _deltaBuilder;
         private readonly IDeltaHub _deltaHub;
         private readonly IDeltaCache _deltaCache;
@@ -58,14 +57,12 @@ namespace Catalyst.Core.Modules.Consensus
             IDeltaHub deltaHub,
             ICycleEventsProvider cycleEventsProvider,
             IDeltaHashProvider deltaHashProvider,
-            IHashProvider hashProvider,
             ILogger logger)
         {
             _deltaVoter = deltaVoter;
             _deltaElector = deltaElector;
             _cycleEventsProvider = cycleEventsProvider;
             _deltaHashProvider = deltaHashProvider;
-            _hashProvider = hashProvider;
             _deltaBuilder = deltaBuilder;
             _deltaHub = deltaHub;
             _deltaCache = deltaCache;

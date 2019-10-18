@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
@@ -59,16 +58,12 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             _passwordManager.RetrieveOrPromptPassword(default)
                .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("test password"));
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.NetworkType.Returns(NetworkType.Devnet);
-
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _keystore = new LocalKeyStore(_passwordManager,
                 _context,
                 _fileSystem,
                 hashProvider,
-                peerSettings,
                 logger);
         }
 
@@ -76,7 +71,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void KeyStore_Can_Generate_Key_And_Create_Keystore_File()
         {
-            var privateKey = _keystore.KeyStoreGenerate(KeyRegistryTypes.DefaultKey);
+            var privateKey = _keystore.KeyStoreGenerate(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
             privateKey.Should().NotBe(null);
         }
 
@@ -98,7 +93,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
                 Arg.Do<string>(x => jsonKeyStore = x));
 
             var privateKey = _context.GeneratePrivateKey();
-            _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryTypes.DefaultKey).Wait();
+            _keystore.KeyStoreEncryptAsync(privateKey, NetworkType.Devnet, KeyRegistryTypes.DefaultKey).Wait();
 
             _fileSystem.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
                .Returns(jsonKeyStore);
@@ -114,7 +109,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             await _fileSystem.WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Do<string>(x => jsonKeyStore = x));
 
-            var privateKey = await _keystore.KeyStoreGenerate(KeyRegistryTypes.DefaultKey);
+            var privateKey = await _keystore.KeyStoreGenerate(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
             await _fileSystem.Received(1)
                .WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
 
@@ -135,7 +130,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
                 Arg.Do<string>(x => jsonKeyStore = x));
 
             var privateKey = _context.GeneratePrivateKey();
-            await _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryTypes.DefaultKey);
+            await _keystore.KeyStoreEncryptAsync(privateKey, NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
 
             _fileSystem.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
                .Returns(jsonKeyStore);

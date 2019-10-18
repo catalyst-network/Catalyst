@@ -28,7 +28,9 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
+using LibP2P;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
@@ -51,23 +53,25 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(),
                     messageDto.Payload.PeerId.Port);
-                var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
+                var deserialized = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
 
-                if (!_hashProvider.IsValidHash(deserialised.PreviousDeltaDfsHash.ToByteArray()))
+                var previousDeltaDfsHashCid = CidHelper.Cast(deserialized.PreviousDeltaDfsHash.ToByteArray());
+                if (!_hashProvider.IsValidHash(previousDeltaDfsHashCid.Hash.ToArray()))
                 {
                     Logger.Error("PreviousDeltaDfsHash is not a valid hash");
                     return;
                 }
 
-                if (!_hashProvider.IsValidHash(deserialised.Hash.ToByteArray()))
+                var hashCid = CidHelper.Cast(deserialized.Hash.ToByteArray());
+                if (!_hashProvider.IsValidHash(hashCid.Hash.ToArray()))
                 {
                     Logger.Error("Hash is not a valid hash");
                     return;
                 }
 
-                deserialised.IsValid();
+                deserialized.IsValid();
 
-                _deltaVoter.OnNext(deserialised);
+                _deltaVoter.OnNext(deserialized);
             }
             catch (Exception exception)
             {

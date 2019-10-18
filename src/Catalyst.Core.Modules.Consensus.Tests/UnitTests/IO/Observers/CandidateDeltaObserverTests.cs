@@ -27,12 +27,14 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using LibP2P;
 using NSubstitute;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiHash;
@@ -44,8 +46,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
     {
         private readonly IDeltaVoter _deltaVoter;
         private readonly IChannelHandlerContext _fakeChannelContext;
-        private readonly MultiHash _newHash;
-        private readonly MultiHash _prevHash;
+        private readonly Cid _newHash;
+        private readonly Cid _prevHash;
         private readonly PeerId _producerId;
         private readonly CandidateDeltaObserver _candidateDeltaObserver;
 
@@ -55,8 +57,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaVoter = Substitute.For<IDeltaVoter>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
-            _newHash = hashProvider.ComputeUtf8MultiHash("newHash");
-            _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash");
+            _newHash = CidHelper.CreateCid(hashProvider.ComputeUtf8MultiHash("newHash"));
+            _prevHash = CidHelper.CreateCid(hashProvider.ComputeUtf8MultiHash("prevHash"));
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
             _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, hashProvider, logger);
         }

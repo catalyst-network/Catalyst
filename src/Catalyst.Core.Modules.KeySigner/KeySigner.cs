@@ -27,6 +27,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Google.Protobuf;
 using Org.BouncyCastle.Security;
 
@@ -63,7 +64,7 @@ namespace Catalyst.Core.Modules.KeySigner
 
         private async void GenerateKeyAndPopulateRegistryWithDefault()
         {
-            var privateKey = await _keyStore.KeyStoreGenerate(_defaultKey);
+            var privateKey = await _keyStore.KeyStoreGenerate(NetworkType.Devnet, _defaultKey);
             if (privateKey != null)
             { 
                 _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
