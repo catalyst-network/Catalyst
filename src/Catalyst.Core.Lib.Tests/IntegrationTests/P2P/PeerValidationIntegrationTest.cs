@@ -58,6 +58,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
+            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot, ContainerProvider.Container.Resolve<IKeySigner>());
+
+            var peerSettings =
+                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port).ToSubstitutedPeerSettings();
+
             var logger = Substitute.For<ILogger>();
 
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
@@ -67,11 +72,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
-
-            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
-
-            var peerSettings =
-                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port).ToSubstitutedPeerSettings();
 
             ContainerProvider.ContainerBuilder.Register(c =>
             {
