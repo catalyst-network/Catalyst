@@ -32,6 +32,10 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
+using Catalyst.Core.Modules.KeySigner;
+using Catalyst.Core.Modules.Keystore;
 using DotNetty.Common.Internal.Logging;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -78,7 +82,7 @@ namespace Catalyst.TestUtils
 
                 var configBuilder = new ConfigurationBuilder();
                 _configFilesUsed.ToList().ForEach(f => configBuilder.AddJsonFile(f));
-                
+
                 _configRoot = configBuilder.Build();
                 return _configRoot;
             }
@@ -86,7 +90,9 @@ namespace Catalyst.TestUtils
 
         public IContainer Container => _container ?? (_container = ContainerBuilder.Build());
 
-        public void ConfigureContainerBuilder(bool writeLogsToTestOutput = false, bool writeLogsToFile = false, bool logDotNettyTraffic = false)
+        public void ConfigureContainerBuilder(bool writeLogsToTestOutput = false,
+            bool writeLogsToFile = false,
+            bool logDotNettyTraffic = false)
         {
             SocketPortHelper.AlterConfigurationToGetUniquePort(ConfigurationRoot);
 
@@ -96,7 +102,8 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterInstance(ConfigurationRoot).As<IConfigurationRoot>();
 
             var repoFactory =
-                RepositoryFactory.BuildSharpRepositoryConfiguation(ConfigurationRoot.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
+                RepositoryFactory.BuildSharpRepositoryConfiguation(
+                    ConfigurationRoot.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
             ContainerBuilder.RegisterSharpRepository(repoFactory);
 
             var passwordReader = new TestPasswordReader();
@@ -108,6 +115,11 @@ namespace Catalyst.TestUtils
 
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
+
+            ContainerBuilder.RegisterModule(new BulletProofsModule());
+            ContainerBuilder.RegisterModule(new KeystoreModule());
+            ContainerBuilder.RegisterModule(new KeySignerModule());
+            ContainerBuilder.RegisterModule(new HashingModule());
 
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);
         }

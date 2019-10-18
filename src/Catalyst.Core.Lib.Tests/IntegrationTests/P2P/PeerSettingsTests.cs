@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        private void CanResolveIPeerSettings()
+        public void CanResolveIPeerSettings()
         {
             ContainerProvider.ConfigureContainerBuilder();
 

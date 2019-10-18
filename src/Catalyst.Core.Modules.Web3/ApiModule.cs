@@ -31,7 +31,6 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Module = Autofac.Module;
@@ -59,12 +58,12 @@ namespace Catalyst.Core.Modules.Web3
             var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
 
             var host = WebHost.CreateDefaultBuilder()
-               .ConfigureServices(serviceCollection => ConfigureServices(serviceCollection, builder))
-               .Configure(Configure)
-               .UseUrls(_apiBindingAddress)
-               .UseWebRoot(webDirectory.FullName)
-               .UseSerilog()
-               .Build();
+                .ConfigureServices(serviceCollection => ConfigureServices(serviceCollection, builder))
+                .Configure(Configure)
+                .UseUrls(_apiBindingAddress)
+                .UseWebRoot(webDirectory.FullName)
+                .UseSerilog()
+                .Build();
 
             builder.RegisterInstance(host).As<IWebHost>();
             builder.RegisterBuildCallback(async container =>
@@ -89,10 +88,10 @@ namespace Catalyst.Core.Modules.Web3
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod()
-                   .AllowAnyHeader());
+                    .AllowAnyHeader());
             });
 
-            var mvcBuilder = services.AddMvc();
+            var mvcBuilder = services.AddMvc(options => options.EnableEndpointRouting = false);
 
             foreach (var controllerModule in _controllerModules)
             {

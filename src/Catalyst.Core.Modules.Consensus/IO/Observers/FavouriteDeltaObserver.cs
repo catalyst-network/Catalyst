@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Serilog;
 
@@ -49,23 +50,25 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         {
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
+                var deserialized = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
-                if (!_hashProvider.IsValidHash(deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray()))
+                var previousDeltaDfsHashCid = CidHelper.Cast(deserialized.Candidate.PreviousDeltaDfsHash.ToByteArray());
+                if (!_hashProvider.IsValidHash(previousDeltaDfsHashCid.Hash.ToArray()))
                 {
                     Logger.Error("PreviousDeltaDfsHash is not a valid hash");
                     return;
                 }
 
-                if (!_hashProvider.IsValidHash(deserialised.Candidate.Hash.ToByteArray()))
+                var hashCid = CidHelper.Cast(deserialized.Candidate.Hash.ToByteArray());
+                if (!_hashProvider.IsValidHash(hashCid.Hash.ToArray()))
                 {
                     Logger.Error("Hash is not a valid hash");
                     return;
                 }
 
-                deserialised.IsValid();
+                deserialized.IsValid();
 
-                _deltaElector.OnNext(deserialised);
+                _deltaElector.OnNext(deserialized);
             }
             catch (Exception exception)
             {
