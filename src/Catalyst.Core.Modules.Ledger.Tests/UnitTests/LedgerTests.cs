@@ -31,6 +31,7 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.TestUtils;

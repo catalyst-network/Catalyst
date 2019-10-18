@@ -23,7 +23,6 @@
 
 using Autofac;
 using Catalyst.Abstractions.Kvm;
-using Catalyst.Core.Modules.Ledger;
 using Nethermind.Core.Specs;
 using Nethermind.Evm;
 using Nethermind.Logging;

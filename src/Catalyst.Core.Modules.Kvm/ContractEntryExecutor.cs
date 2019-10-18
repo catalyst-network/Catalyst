@@ -26,7 +26,7 @@ using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Ledger;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Nethermind.Core;
@@ -61,11 +61,29 @@ namespace Catalyst.Core.Modules.Kvm
             _stateProvider = stateProvider;
             _storageProvider = storageProvider;
         }
+        
+        private StateUpdate ToStateUpdate(Delta delta)
+        {
+            var gasLimit = 1_000_000L;
+            StateUpdate result = new StateUpdate
+            {
+                Difficulty = 1,
+                Number = 1,
+                Timestamp = (UInt256) delta.TimeStamp.Seconds,
+                GasLimit = gasLimit,
+                /* here we can read coinbase entries from the delta
+                   but we need to decide how to split fees and which one to pick for the KVM */
+                GasBeneficiary = Address.Zero,
+                GasUsed = 0L
+            };
+
+            return result;
+        }
 
         [Todo("Wider work needed to split calls and execution properly")]
-        public void CallAndRestore(ContractEntry transaction, StateUpdate stateUpdate, ITxTracer txTracer) { Execute(transaction, stateUpdate, txTracer, true); }
+        public void CallAndRestore(ContractEntry transaction, Delta stateUpdate, ITxTracer txTracer, Address recipientOverride = null) { Execute(transaction, stateUpdate, txTracer, true, recipientOverride); }
 
-        public void Execute(ContractEntry transaction, StateUpdate stateUpdate, ITxTracer txTracer) { Execute(transaction, stateUpdate, txTracer, false); }
+        public void Execute(ContractEntry transaction, Delta stateUpdate, ITxTracer txTracer) { Execute(transaction, stateUpdate, txTracer, false); }
 
         Address GetAccountAddress(ByteString publicKeyByteString)
         {
@@ -89,16 +107,17 @@ namespace Catalyst.Core.Modules.Kvm
             if (txTracer.IsTracingReceipt) txTracer.MarkAsFailed(recipient, gasLimit, Bytes.Empty, "invalid");
         }
 
-        private void Execute(ContractEntry entry, StateUpdate stateUpdate, ITxTracer txTracer, bool readOnly)
+        private void Execute(ContractEntry entry, Delta delta, ITxTracer txTracer, bool readOnly, Address recipientOverride = null)
         {
+            var stateUpdate = ToStateUpdate(delta);
             long gasLimit = 1_000_000L;
             UInt256 gasPrice = 0L;
-            Address recipient = GetAccountAddress(entry.Base.ReceiverPublicKey);
+            Address recipient = recipientOverride ?? GetAccountAddress(entry.Base.ReceiverPublicKey);
             Address sender = GetAccountAddress(entry.Base.SenderPublicKey);
             var value = entry.Amount.ToUInt256();
 
             IReleaseSpec spec = _specProvider.GetSpec(stateUpdate.Number);
-            byte[] machineCode = entry.Data.ToByteArray(); // to be changed to Init
+            byte[] machineCode = entry.IsValidDeploymentEntry ? entry.Data.ToByteArray() : null;
             byte[] data = entry.Data.ToByteArray();
 
             // if (_logger.IsTrace) _logger.Trace($"Executing tx {transaction.Hash}");

@@ -22,6 +22,7 @@
 #endregion
 
 using System.Reflection;
+using Catalyst.Protocol.Account;
 using Serilog;
 
 namespace Catalyst.Protocol.Transaction

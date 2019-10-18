@@ -30,6 +30,7 @@ using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
@@ -168,16 +169,14 @@ namespace Catalyst.Core.Modules.Ledger
                     return;
                 }
 
-                StateUpdate stateUpdate = ToStateUpdate(nextDeltaInChain);
-
                 foreach (var entry in nextDeltaInChain.PublicEntries)
                 {
-                    UpdateLedgerAccountFromEntry(stateUpdate, entry);
+                    UpdateLedgerAccountFromEntry(nextDeltaInChain, entry);
                 }
 
                 foreach (var entry in nextDeltaInChain.ContractEntries)
                 {
-                    UpdateLedgerAccountFromEntry(stateUpdate, entry);
+                    UpdateLedgerAccountFromEntry(nextDeltaInChain, entry);
                 }
 
                 LatestKnownDelta = deltaHash;
@@ -193,36 +192,18 @@ namespace Catalyst.Core.Modules.Ledger
             }
         }
 
-        private StateUpdate ToStateUpdate(Delta delta)
-        {
-            var gasLimit = 1_000_000L;
-            StateUpdate result = new StateUpdate
-            {
-                Difficulty = 1,
-                Number = 1,
-                Timestamp = (UInt256)delta.TimeStamp.Seconds,
-                GasLimit = gasLimit,
-                /* here we can read coinbase entries from the delta
-                   but we need to decide how to split fees and which one to pick for the KVM */
-                GasBeneficiary = Address.Zero,
-                GasUsed = 0L
-            };
-
-            return result;
-        }
-
-        private void UpdateLedgerAccountFromEntry(StateUpdate stateUpdate, PublicEntry entry)
+        private void UpdateLedgerAccountFromEntry(Delta delta, PublicEntry entry)
         {
             ContractEntry contractEntry = new ContractEntry();
             contractEntry.Base = entry.Base;
             contractEntry.Amount = entry.Amount;
             contractEntry.Data = ByteString.Empty;
-            UpdateLedgerAccountFromEntry(stateUpdate, contractEntry);
+            UpdateLedgerAccountFromEntry(delta, contractEntry);
         }
         
-        private void UpdateLedgerAccountFromEntry(StateUpdate stateUpdate, ContractEntry entry)
+        private void UpdateLedgerAccountFromEntry(Delta delta, ContractEntry entry)
         {
-            _contractEntryExecutor.Execute(entry, stateUpdate, NullTxTracer.Instance);
+            _contractEntryExecutor.Execute(entry, delta, NullTxTracer.Instance);
         }
 
         protected virtual void Dispose(bool disposing)
