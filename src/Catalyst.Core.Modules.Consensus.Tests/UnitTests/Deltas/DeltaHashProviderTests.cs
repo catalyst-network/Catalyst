@@ -26,12 +26,14 @@ using System.Linq;
 using System.Reflection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using LibP2P;
 using NSubstitute;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiHash;
@@ -57,17 +59,17 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
-            _deltaCache.GenesisAddress.Returns(_hashProvider.ComputeMultiHash(new Delta().ToByteArray()).ToBase32());
+            _deltaCache.GenesisHash.Returns(
+                CidHelper.CreateCid(_hashProvider.ComputeMultiHash(new Delta().ToByteArray())));
         }
 
         [Fact]
         public void Generate_Genesis_Hash()
         {
             var emptyDelta = new Delta();
-            var hash = _hashProvider.ComputeMultiHash(emptyDelta.ToByteArray()).ToBase32();
+            var hash = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(emptyDelta.ToByteArray()));
 
             Output.WriteLine(hash);
         }
@@ -91,11 +93,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             const int deltaCount = 2;
             BuildDeltasAndSetCacheExpectations(deltaCount);
-            var observer = Substitute.For<IObserver<MultiHash>>();
+            var observer = Substitute.For<IObserver<Cid>>();
 
             var hashProvider = new DeltaHashProvider(_deltaCache, _logger, 3);
 
-            using (hashProvider.DeltaHashUpdates.Subscribe((IObserver<MultiHash>) observer))
+            using (hashProvider.DeltaHashUpdates.Subscribe((IObserver<Cid>) observer))
             {
                 hashProvider.TryUpdateLatestHash(GetHash(0), GetHash(1));
 
@@ -154,7 +156,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         private DateTime GetDateTimeForIndex(int i) { return DateTime.FromOADate(Offset + i).ToUniversalTime(); }
 
-        private MultiHash GetHash(int i)
+        private Cid GetHash(int i)
         {
             var hash = _hashProvider.ComputeMultiHash(BitConverter.GetBytes(i));
             return hash;
@@ -176,7 +178,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             Enumerable.Range(0, deltaCount).ToList().ForEach(i => { ExpectTryGetDelta(GetHash(i), deltas[i]); });
         }
 
-        private void ExpectTryGetDelta(MultiHash hash, Delta delta)
+        private void ExpectTryGetDelta(Cid hash, Delta delta)
         {
             _deltaCache.TryGetOrAddConfirmedDelta(hash, out Arg.Any<Delta>())
                .Returns(ci =>

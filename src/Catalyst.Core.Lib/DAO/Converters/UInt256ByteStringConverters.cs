@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using AutoMapper;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
@@ -42,22 +43,6 @@ namespace Catalyst.Core.Lib.DAO.Converters
         {
             var sourceValue = UInt256.Parse(sourceMember).ToUint256ByteString();
             return sourceValue; 
-        }
-    }
-    
-    public class ByteStringToUInt256Converter : IValueConverter<ByteString, UInt256>
-    {
-        public UInt256 Convert(ByteString sourceMember, ResolutionContext context)
-        {
-            return sourceMember.ToUInt256();
-        }
-    }
-
-    public class UInt256ToByteStringConverter : IValueConverter<UInt256, ByteString>
-    {
-        public ByteString Convert(UInt256 sourceMember, ResolutionContext context)
-        {
-            return sourceMember.ToUint256ByteString();
         }
     }
 }

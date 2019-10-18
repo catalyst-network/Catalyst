@@ -21,16 +21,21 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using LibP2P;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
     public sealed class DeltaProducersProvider : IDeltaProducersProvider
     {
-        public IList<PeerId> GetDeltaProducersFromPreviousDelta(MultiHash previousDeltaHash) { throw new System.NotImplementedException(); }
+        public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
+        {
+            throw new NotImplementedException();
+        }
+
         public IPeerRepository PeerRepository { get; }
     }
 }

@@ -1,7 +1,0 @@
-@startuml
-class PendingRequest <<sealed>> {
-}
-PendingRequest --> "Content" AnySigned
-PendingRequest --> "Recipient" IPeerIdentifier
-PendingRequest --> "SentAt" DateTimeOffset
-@enduml

@@ -52,23 +52,22 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         public async Task<JsonResult> GetLatestDelta(DateTime? asOf)
         {
             var latest = _deltaHashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());
-            var dfsTarget = latest.ToBase32();
             byte[] dfsContent = null;
             try
             {
-                using (var fullContentStream = await _dfs.ReadAsync(dfsTarget))
+                using (var fullContentStream = await _dfs.ReadAsync(latest))
                 {
                     dfsContent = await fullContentStream.ReadAllBytesAsync(CancellationToken.None);
                 }
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to find dfs content for delta as of {asOf} at {dfsTarget}", asOf, dfsTarget);
+                _logger.Error(e, "Failed to find dfs content for delta as of {asOf} at {dfsTarget}", asOf, latest);
             }
 
             return Json(new
             {
-                DeltaHash = dfsTarget,
+                DeltaHash = latest,
                 Base64UrlDfsContent = (dfsContent ?? new byte[0]).ToBase64Url()
             });
         }

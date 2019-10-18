@@ -76,10 +76,29 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "RichardLitt",
+      "name": "Richard Littauer",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/910753?v=4",
+      "profile": "https://burntfen.com",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "tkstanczak",
+      "name": "Tomasz Kajetan Stańczak",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/498913?v=4",
+      "profile": "http://nethermind.io",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "projectName": "Catalyst.Node",
+  "projectName": "Catalyst.Framework",
   "projectOwner": "catalyst-network",
   "repoType": "github",
   "repoHost": "https://github.com"

@@ -33,6 +33,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
@@ -60,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfs = Substitute.For<IDfs>();
             var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
-            _observer = new GetFileFromDfsRequestObserver(_dfs, _hashProvider, peerSettings, _fileTransferFactory,
+            _observer = new GetFileFromDfsRequestObserver(_dfs, peerSettings, _fileTransferFactory,
                 Substitute.For<ILogger>());
         }
 
@@ -100,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
             {
-                DfsHash = _hashProvider.ComputeUtf8MultiHash("test").ToBase32()
+                DfsHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("test"))
             };
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());

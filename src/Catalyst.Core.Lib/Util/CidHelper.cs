@@ -22,15 +22,20 @@
 #endregion
 
 using LibP2P;
+using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Lib.Util
 {
     public static class CidHelper
     {
+        public static readonly string Encoding = "base32";
+
         public static Cid CreateCid(MultiHash multiHash)
         {
-            return new Cid {Version = 1, Hash = multiHash};
+            return new Cid {Version = 1, Hash = multiHash, ContentType = "dag-pb", Encoding = Encoding};
         }
+
+        public static Cid Cast(byte[] cid) { return Cid.Decode(MultiBase.Encode(cid, Encoding)); }
     }
 }

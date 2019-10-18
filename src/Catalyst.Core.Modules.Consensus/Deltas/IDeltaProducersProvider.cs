@@ -24,25 +24,28 @@
 using System.Collections.Generic;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using LibP2P;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
     /// <summary>
-    /// This is the service in charge of providing the list of PeerIdentifiers that are eligible for the
-    /// production of the next delta.
+    ///     This is the service in charge of providing the list of PeerIdentifiers that are eligible for the
+    ///     production of the next delta.
     /// </summary>
     public interface IDeltaProducersProvider
     {
         /// <summary>
-        /// Finds the identifiers of the peers which are allowed to produce the next delta.
+        ///     Finds the identifiers of the peers which are allowed to produce the next delta.
         /// </summary>
         /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
-        /// <returns>The list of peers which are eligible for the production of the delta following <see cref="previousDeltaHash"/></returns>
-        IList<PeerId> GetDeltaProducersFromPreviousDelta(MultiHash previousDeltaHash);
+        /// <returns>
+        ///     The list of peers which are eligible for the production of the delta following
+        ///     <see cref="previousDeltaHash" />
+        /// </returns>
+        IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash);
 
         /// <summary>
-        /// A peer repository containing peers eligible for the production of the next delta.
+        ///     A peer repository containing peers eligible for the production of the next delta.
         /// </summary>
         IPeerRepository PeerRepository { get; }
     }

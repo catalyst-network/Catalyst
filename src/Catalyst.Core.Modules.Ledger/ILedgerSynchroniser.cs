@@ -24,24 +24,28 @@
 using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using LibP2P;
 
 namespace Catalyst.Core.Modules.Ledger
 {
     public interface ILedgerSynchroniser
     {
         /// <summary>
-        /// Starts a process that retrieves the deltas between the <seealso cref="latestKnownDeltaHash"/>
-        /// and the <seealso cref="targetDeltaHash"/>, and adds them to the cache.
+        ///     Starts a process that retrieves the deltas between the <seealso cref="latestKnownDeltaHash" />
+        ///     and the <seealso cref="targetDeltaHash" />, and adds them to the cache.
         /// </summary>
-        /// <param name="latestKnownDeltaHash">Hash of the latest known Delta seen on the protocol,
-        /// from the point of view of this node.</param>
+        /// <param name="latestKnownDeltaHash">
+        ///     Hash of the latest known Delta seen on the protocol,
+        ///     from the point of view of this node.
+        /// </param>
         /// <param name="targetDeltaHash">The hash of the delta up to which we want to synchronise the ledger.</param>
         /// <param name="cancellationToken">Provides a way to cancel the synchronisation task before it ends.</param>
-        IEnumerable<MultiHash> CacheDeltasBetween(MultiHash latestKnownDeltaHash, MultiHash targetDeltaHash, CancellationToken cancellationToken);
+        IEnumerable<Cid> CacheDeltasBetween(Cid latestKnownDeltaHash,
+            Cid targetDeltaHash,
+            CancellationToken cancellationToken);
 
         /// <summary>
-        /// A cache used to store the full Delta object when a synchronisation is triggered.
+        ///     A cache used to store the full Delta object when a synchronisation is triggered.
         /// </summary>
         IDeltaCache DeltaCache { get; }
     }

@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             Enumerable.Range(0, 3).ToList().ForEach(i =>
                 ordered.Where(t => t.SummedEntryFees() == (ulong) i)
                    .Select(t => t.Timestamp.ToDateTime()).Should().BeInAscendingOrder());
-            
+
             ordered.Should().NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
 
@@ -123,8 +123,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                        .Select(t => t.Signature.ToByteArray())
                        .Should().BeInAscendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default));
             });
-            
-            ordered.Select(s => 
+
+            ordered.Select(s =>
                     s.SummedEntryFees() + "|" + s.Timestamp + "|" +
                     s.Signature.RawBytes.ToBase64())
                .ToList().ForEach(x => _output.WriteLine(x));

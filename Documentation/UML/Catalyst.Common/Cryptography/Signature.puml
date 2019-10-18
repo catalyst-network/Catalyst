@@ -1,5 +1,0 @@
-@startuml
-class Signature <<sealed>> {
-    + Signature(bytes:byte[])
-}
-@enduml

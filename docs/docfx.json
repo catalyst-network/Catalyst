@@ -1,0 +1,378 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Abstractions/Catalyst.Abstractions.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/abstractions"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Lib/Catalyst.Core.Lib.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Lib"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Authentication/Catalyst.Core.Modules.Authentication.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Authentication"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Consensus/Catalyst.Core.Modules.Consensus.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Consensus"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Cryptography.BulletProofs"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Dfs/Catalyst.Core.Modules.Dfs.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Dfs"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Hashing/Catalyst.Core.Modules.Hashing.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Hashing"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.KeySigner/Catalyst.Core.Modules.KeySigner.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/KeySigner"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Keystore/Catalyst.Core.Modules.Keystore.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Keystore"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Kvm/Catalyst.Core.Modules.Kvm.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Kvm"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Ledger/Catalyst.Core.Modules.Ledger.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Ledger"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Mempool/Catalyst.Core.Modules.Mempool.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Mempool"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.P2P.Discovery.Hastings/Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/P2P.Discovery.Hastings"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Rpc.Client/Catalyst.Core.Modules.Rpc.Client.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Rpc.Client"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Rpc.Server/Catalyst.Core.Modules.Rpc.Server.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Rpc.Server"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Web3/Catalyst.Core.Modules.Web3.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Web3"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Core.Modules.Web3/Catalyst.Core.Modules.Web3.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Core.Modules/Web3"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Modules.Repository.CosmosDb/Catalyst.Modules.Repository.CosmosDb.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Modules/Repository.CosmosDb"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Modules.Repository.MongoDb/Catalyst.Modules.Repository.MongoDb.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Modules/Repository.MongoDb"
+    },
+    {
+      "src": [
+        {
+          "files": [
+            "src/Catalyst.Protocol/Catalyst.Protocol.csproj"
+          ],
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**"
+          ],
+          "src": ".."
+        }
+      ],
+      "dest": "api/Protocol"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/**/**.yml",
+          "api/**/**.md",
+          "api/toc.yml"
+        ]
+      },
+      {
+        "files": [
+          "articles/**.md",
+          "articles/toc.yml"
+        ]
+      },
+      {
+        "files": [
+          "toc.yml",
+          "index.md"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**",
+          "articles/_*.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      }
+    ],
+    "overwrite": [
+      {
+        "files": [
+          "apidoc/**.md"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      }
+    ],
+    "dest": "_site",
+    "globalMetadataFiles": [],
+    "fileMetadataFiles": [],
+    "template": [
+      "default",
+      "material"
+    ],
+    "postProcessors": [
+      "ExtractSearchIndex"
+    ],
+    "globalMetadata": {
+      "_appFooter": "<span>Copyright © 2019 <a href='https://catalystnet.org'>Catalyst Network</a>",
+      "_appTitle": "Catalyst Framework Documentation",
+      "_enableSearch": "true",
+      "_appLogoPath": "images/logo.svg",
+      "_gitContribute": {
+        "repo": "https://github.com/catalyst-network/catalyst.node"
+      },
+      "_gitUrlPattern": "github"
+    },
+    "noLangKeyword": false,
+    "keepFileLink": false,
+    "cleanupCacheHistory": false,
+    "disableGitFeatures": false
+  }
+}

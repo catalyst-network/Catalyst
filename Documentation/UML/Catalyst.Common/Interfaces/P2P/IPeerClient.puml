@@ -1,9 +1,0 @@
-@startuml
-interface IPeerClient {
-}
-class "IChanneledMessageStreamer`1"<T> {
-}
-"IChanneledMessageStreamer`1" "<AnySigned>" <|-- IPeerClient
-IDisposable <|-- IPeerClient
-ISocketClient <|-- IPeerClient
-@enduml
