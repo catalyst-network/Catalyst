@@ -30,8 +30,8 @@ namespace Catalyst.Core.Modules.Kvm
 {
     public interface IContractEntryExecutor
     {
-        void Execute(ContractEntry transaction, Delta delta, ITxTracer txTracer);
+        void Execute(ContractEntry transaction, Delta delta, ITxTracer txTracer, Address recipientOverride = null);
         
-        void CallAndRestore(ContractEntry transaction, Delta delta, ITxTracer txTracer, Address recipientOverride);
+        void CallAndRestore(ContractEntry transaction, Delta delta, ITxTracer txTracer, Address recipientOverride = null);
     }
 }

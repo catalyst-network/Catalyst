@@ -83,7 +83,7 @@ namespace Catalyst.Core.Modules.Kvm
         [Todo("Wider work needed to split calls and execution properly")]
         public void CallAndRestore(ContractEntry transaction, Delta stateUpdate, ITxTracer txTracer, Address recipientOverride = null) { Execute(transaction, stateUpdate, txTracer, true, recipientOverride); }
 
-        public void Execute(ContractEntry transaction, Delta stateUpdate, ITxTracer txTracer) { Execute(transaction, stateUpdate, txTracer, false); }
+        public void Execute(ContractEntry transaction, Delta stateUpdate, ITxTracer txTracer, Address recipientOverride = null) { Execute(transaction, stateUpdate, txTracer, false, recipientOverride); }
 
         Address GetAccountAddress(ByteString publicKeyByteString)
         {
