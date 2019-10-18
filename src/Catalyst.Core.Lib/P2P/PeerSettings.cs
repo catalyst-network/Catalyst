@@ -67,10 +67,7 @@ namespace Catalyst.Core.Lib.P2P
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Enum.TryParse(section.GetSection("Network").Value, out _networkType);
 
-            var privateKey = keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
-            var publicKey = keySigner.CryptoContext.GetPublicKeyFromPrivateKey(privateKey);
-            PublicKey = publicKey.Bytes.ToBase32();
-
+            PublicKey = section.GetSection("PublicKey").Value;
             Port = int.Parse(section.GetSection("Port").Value);
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);

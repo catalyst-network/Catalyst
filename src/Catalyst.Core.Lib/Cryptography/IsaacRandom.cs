@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Cryptography;
-using Nethereum.Hex.HexConvertors.Extensions;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.Cryptography
 {
@@ -233,7 +233,7 @@ namespace Catalyst.Core.Lib.Cryptography
     {
         public IDeterministicRandom GetDeterministicRandomFromSeed(byte[] seed)
         {
-            return new IsaacRandom(seed.ToHex());
+            return new IsaacRandom(MultiBase.Encode(seed, "base16"));
         }
     }
 }

@@ -29,7 +29,6 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Nethereum.RLP;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiBase;
 
@@ -74,12 +73,12 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
             
             try
             {
-                var decodeResult = RLP.Decode(signMessageRequest.OriginalMessage.ToByteArray()).RLPData;
+                var decodeResult = MultiBase.Decode(signMessageRequest.OriginalMessage.ToByteArray().ToString());
 
                 Guard.Argument(decodeResult, nameof(decodeResult)).NotNull("The sign message response cannot be null.");
 
-                var originalMessage = decodeResult.ToStringFromRLPDecoded();
-                
+                var originalMessage = decodeResult.ToHexString();
+
                 Guard.Argument(originalMessage, nameof(originalMessage)).NotNull();
 
                 _output.WriteLine(

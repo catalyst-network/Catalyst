@@ -21,88 +21,115 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
+using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
+using DotNetty.Transport.Channels;
+using Google.Protobuf;
+using Microsoft.Reactive.Testing;
+using NSubstitute;
+using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
+using Xunit;
+
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
-    // public sealed class SignMessageResponseHandlerTests : IDisposable
-    // {
-    //     private readonly ILogger _logger;
-    //     private readonly IChannelHandlerContext _fakeContext;
-    //     public static readonly List<object[]> QueryContents;
-    //     
-    //     private readonly IUserOutput _output;
-    //     private SignMessageResponseHandler _handler;
-    //
-    //     //@TODO why not mock the actual response object? if we ever change it then the test will pass but fail in real world
-    //     public struct SignedResponse
-    //     {
-    //         internal ByteString Signature;
-    //         internal ByteString PublicKey;
-    //         internal ByteString OriginalMessage;
-    //     }
-    //
-    //     static SignMessageResponseHandlerTests()
-    //     {
-    //         QueryContents = new List<object[]>
-    //         {
-    //             new object[]
-    //             {
-    //                 SignMessage($@"hello", $@"this is a fake signature", $@"this is a fake public key")
-    //             },
-    //             new object[]
-    //             {
-    //                 SignMessage("", "", "")
-    //             },
-    //         };
-    //     }
-    //     
-    //     public SignMessageResponseHandlerTest()
-    //     {
-    //         _logger = Substitute.For<ILogger>();
-    //         _fakeContext = Substitute.For<IChannelHandlerContext>();
-    //         _output = Substitute.For<IUserOutput>();
-    //     }
-    //
-    //     private static SignedResponse SignMessage(string messageToSign, string signature, string pubKey)
-    //     {
-    //         var signedResponse = new SignedResponse
-    //         {
-    //             Signature = signature.ToUtf8ByteString(),
-    //             PublicKey = pubKey.ToUtf8ByteString(),
-    //             OriginalMessage = RLP.EncodeElement(messageToSign.ToBytesForRLPEncoding()).ToByteString()
-    //         };
-    //
-    //         return signedResponse;
-    //     }
-    //
-    //     [Theory]
-    //     [MemberData(nameof(QueryContents))]  
-    //     public async Task RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
-    //     {
-    //         var response = new MessageFactory().GetMessage(new MessageDto(
-    //                 new SignMessageResponse
-    //                 {
-    //                     OriginalMessage = signedResponse.OriginalMessage,
-    //                     PublicKey = signedResponse.PublicKey,
-    //                     Signature = signedResponse.Signature
-    //                 },
-    //                 MessageTypes.Tell,
-    //                 PeerIdHelper.GetPeerId("recipient_key"),
-    //                 PeerIdHelper.GetPeerId("sender_key")),                
-    //             CorrelationId.GenerateCorrelationId());
-    //
-    //         var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
-    //         
-    //         _handler = new SignMessageResponseHandler(_output, _logger);
-    //         _handler.StartObserving(messageStream);
-    //
-    //         await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
-    //
-    //         _output.Received(1).WriteLine(Arg.Any<string>());
-    //     }
-    //     
-    //     public void Dispose()
-    //     {
-    //         _handler?.Dispose();
-    //     }
-    // }
+    public sealed class SignMessageResponseHandlerTests : IDisposable
+    {
+        private readonly ILogger _logger;
+        private readonly IChannelHandlerContext _fakeContext;
+        public static readonly List<object[]> QueryContents = InitialiseQueryData();
+
+        private readonly IUserOutput _output;
+
+        private SignMessageResponseObserver _handler;
+
+        public struct SignedResponse : IEquatable<SignedResponse>
+        {
+            internal ByteString Signature;
+            internal ByteString PublicKey;
+            internal ByteString OriginalMessage;
+
+            public bool Equals(SignedResponse other)
+            {
+                return (Signature == other.Signature)
+                 && (OriginalMessage == other.OriginalMessage)
+                 && (PublicKey == other.PublicKey);
+            }
+        }
+
+        static List<object[]> InitialiseQueryData()
+        {
+            return new List<object[]> 
+            {
+                new object[]
+                {
+                    SignMessage($@"hello", $@"this is a fake signature", $@"this is a fake public key")
+                },
+                new object[]
+                {
+                    SignMessage("", "", "")
+                },
+            };
+        }
+
+        public SignMessageResponseHandlerTests()
+        {
+            _logger = Substitute.For<ILogger>();
+            _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _output = Substitute.For<IUserOutput>();
+        }
+
+        private static SignedResponse SignMessage(string messageToSign, string signature, string pubKey)
+        {
+            var signedResponse = new SignedResponse
+            {
+                Signature = signature.ToUtf8ByteString(),
+                PublicKey = pubKey.ToUtf8ByteString(),
+                OriginalMessage = MultiBase.Encode(messageToSign.FromBase32()).ToUtf8ByteString()
+            };
+
+            return signedResponse;
+        }
+
+        [Theory]
+        [MemberData(nameof(QueryContents))]
+        public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
+        {
+            var testScheduler = new TestScheduler();
+
+            var signMessageResponse = new SignMessageResponse
+            {
+                OriginalMessage = signedResponse.OriginalMessage,
+                PublicKey = signedResponse.PublicKey,
+                Signature = signedResponse.Signature,
+            };
+
+            var correlationId = CorrelationId.GenerateCorrelationId();
+
+            var protocolMessage =
+                signMessageResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"), correlationId);
+
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
+                protocolMessage
+            );
+
+            _handler = new SignMessageResponseObserver(_output, _logger);
+            _handler.StartObserving(messageStream);
+
+            testScheduler.Start();
+
+            _output.Received(1).WriteLine(Arg.Any<string>());
+        }
+
+        public void Dispose()
+        {
+            _handler?.Dispose();
+        }
+    }
 }
