@@ -58,12 +58,10 @@ namespace Catalyst.Core.Lib.P2P
         ///     Set attributes
         /// </summary>
         /// <param name="rootSection"></param>
-        public PeerSettings(IConfigurationRoot rootSection, IKeySigner keySigner)
+        public PeerSettings(IConfigurationRoot rootSection,)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
-
-            _networkType = NetworkType.Devnet;
-
+            
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Enum.TryParse(section.GetSection("Network").Value, out _networkType);
 
