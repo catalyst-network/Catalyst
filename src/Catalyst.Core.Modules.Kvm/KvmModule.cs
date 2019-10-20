@@ -34,7 +34,7 @@ namespace Catalyst.Core.Modules.Kvm
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ContractEntryExecutor>().As<IContractEntryExecutor>().SingleInstance();
+            builder.RegisterType<DeltaExecutor>().As<IDeltaExecutor>().SingleInstance();
             builder.RegisterType<KatVirtualMachine>().As<IKvm>().SingleInstance();
             builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
             builder.RegisterType<CatalystGenesisSpec>().As<IReleaseSpec>();

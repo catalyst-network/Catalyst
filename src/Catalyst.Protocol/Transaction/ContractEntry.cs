@@ -22,7 +22,9 @@
 #endregion
 
 using System.Reflection;
+using System.Threading;
 using Catalyst.Protocol.Account;
+using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Protocol.Transaction
@@ -42,6 +44,12 @@ namespace Catalyst.Protocol.Transaction
             return false;
         }
 
+        // add to proto
+        public long GasLimit { get; set; }
+        
+        // add to proto
+        public UInt256 GasPrice { get; set; }
+        
         public bool IsValidDeploymentEntry => IsValid() && Base.ReceiverPublicKey.IsEmpty;
         public bool IsValidCallEntry => IsValid() && !Base.ReceiverPublicKey.IsEmpty;
     }

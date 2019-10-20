@@ -22,16 +22,15 @@
 #endregion
 
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.Transaction;
 using Nethermind.Core;
 using Nethermind.Evm.Tracing;
 
 namespace Catalyst.Core.Modules.Kvm
 {
-    public interface IContractEntryExecutor
+    public interface IDeltaExecutor
     {
-        void Execute(ContractEntry transaction, Delta delta, ITxTracer txTracer, Address recipientOverride = null);
+        void Execute(Delta delta, ITxTracer txTracer, Address recipientOverride = null);
         
-        void CallAndRestore(ContractEntry transaction, Delta delta, ITxTracer txTracer, Address recipientOverride = null);
+        void CallAndRestore(Delta delta, ITxTracer txTracer, Address recipientOverride = null);
     }
 }

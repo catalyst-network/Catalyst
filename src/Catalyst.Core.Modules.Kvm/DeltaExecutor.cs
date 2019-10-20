@@ -43,9 +43,8 @@ using Serilog.Events;
 
 namespace Catalyst.Core.Modules.Kvm
 {
-    public class ContractEntryExecutor : IContractEntryExecutor
+    public class DeltaExecutor : IDeltaExecutor
     {
-        private readonly IntrinsicGasCalculator _intrinsicGasCalculator = new IntrinsicGasCalculator();
         private readonly ILogger _logger;
         private readonly IStateProvider _stateProvider;
         private readonly IStorageProvider _storageProvider;
@@ -53,7 +52,7 @@ namespace Catalyst.Core.Modules.Kvm
         private readonly IVirtualMachine _virtualMachine;
         private readonly ICryptoContext _cryptoContext = new FfiWrapper();
 
-        public ContractEntryExecutor(ISpecProvider specProvider, IStateProvider stateProvider, IStorageProvider storageProvider, IVirtualMachine virtualMachine, ILogger logger)
+        public DeltaExecutor(ISpecProvider specProvider, IStateProvider stateProvider, IStorageProvider storageProvider, IVirtualMachine virtualMachine, ILogger logger)
         {
             _logger = logger;
             _specProvider = specProvider;
@@ -62,15 +61,36 @@ namespace Catalyst.Core.Modules.Kvm
             _storageProvider = storageProvider;
         }
         
+        public long CalculateIntrinsicGas(ContractEntry transaction, IReleaseSpec releaseSpec)
+        {
+            long result = GasCostOf.Transaction;
+            long txDataNonZeroGasCost = releaseSpec.IsEip2028Enabled ? GasCostOf.TxDataNonZeroEip2028 : GasCostOf.TxDataNonZero;
+
+            if (transaction.Data != null)
+            {
+                for (int i = 0; i < transaction.Data.Length; i++)
+                {
+                    result += transaction.Data[i] == 0 ? GasCostOf.TxDataZero : txDataNonZeroGasCost;
+                }
+            }
+
+            if (transaction.IsValidDeploymentEntry && releaseSpec.IsEip2Enabled)
+            {
+                result += GasCostOf.TxCreate;
+            }
+
+            return result;
+        }
+        
+        [Todo(Improve.MissingFunctionality, "We need to agree on delta to state mapping details")]
         private StateUpdate ToStateUpdate(Delta delta)
         {
-            var gasLimit = 1_000_000L;
             StateUpdate result = new StateUpdate
             {
                 Difficulty = 1,
                 Number = 1,
                 Timestamp = (UInt256) delta.TimeStamp.Seconds,
-                GasLimit = gasLimit,
+                GasLimit = delta.GasLimit,
                 /* here we can read coinbase entries from the delta
                    but we need to decide how to split fees and which one to pick for the KVM */
                 GasBeneficiary = Address.Zero,
@@ -81,9 +101,10 @@ namespace Catalyst.Core.Modules.Kvm
         }
 
         [Todo("Wider work needed to split calls and execution properly")]
-        public void CallAndRestore(ContractEntry transaction, Delta stateUpdate, ITxTracer txTracer, Address recipientOverride = null) { Execute(transaction, stateUpdate, txTracer, true, recipientOverride); }
+        public void CallAndRestore(Delta stateUpdate, ITxTracer txTracer, Address recipientOverride = null) { Execute(stateUpdate, txTracer, true, recipientOverride); }
 
-        public void Execute(ContractEntry transaction, Delta stateUpdate, ITxTracer txTracer, Address recipientOverride = null) { Execute(transaction, stateUpdate, txTracer, false, recipientOverride); }
+        [Todo("After delta is executed we should validate the state root and if it is not as expected we should revert all the changes.")]
+        public void Execute(Delta stateUpdate, ITxTracer txTracer, Address recipientOverride = null) { Execute(stateUpdate, txTracer, false, recipientOverride); }
 
         Address GetAccountAddress(ByteString publicKeyByteString)
         {
@@ -98,20 +119,74 @@ namespace Catalyst.Core.Modules.Kvm
 
         private void QuickFail(ContractEntry entry, StateUpdate stateUpdate, ITxTracer txTracer, bool readOnly)
         {
-            long gasLimit = 1_000_000L;
+            long gasLimit = entry.GasLimit;
             var receiver = GetAccountAddress(entry.Base.ReceiverPublicKey);
             var sender = GetAccountAddress(entry.Base.SenderPublicKey);
-            var value = entry.Amount.ToUInt256();
             stateUpdate.GasUsed += gasLimit;
             Address recipient = receiver ?? Address.OfContract(sender, _stateProvider.GetNonce(sender));
             if (txTracer.IsTracingReceipt) txTracer.MarkAsFailed(recipient, gasLimit, Bytes.Empty, "invalid");
         }
+        
+        private void Execute(Delta delta, ITxTracer txTracer, bool readOnly, Address recipientOverride = null)
+        {
+            // int stateSnapshot = _stateDb.TakeSnapshot();
+            // int codeSnapshot = _codeDb.TakeSnapshot();
+            // if (stateSnapshot != -1 || codeSnapshot != -1)
+            // {
+            //     if(_logger.IsError) _logger.Error($"Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with block {suggestedBlocks[0].ToString(Block.Format.Short)}");
+            // }
+            
+            // Keccak snapshotStateRoot = _stateProvider.StateRoot;
 
+            // below is the code for supporting reorganizations - to be discussed
+            // if (branchStateRoot != null && _stateProvider.StateRoot != branchStateRoot)
+            // {
+            //     /* discarding the other branch data - chain reorganization */
+            //     Metrics.Reorganizations++;
+            //     _storageProvider.Reset();
+            //     _stateProvider.Reset();
+            //     _stateProvider.StateRoot = branchStateRoot;
+            // }
+            
+            foreach (PublicEntry publicEntry in delta.PublicEntries)
+            {
+                ContractEntry contractEntry = new ContractEntry();
+                contractEntry.Base = publicEntry.Base;
+                contractEntry.Amount = publicEntry.Amount;
+                contractEntry.Data = ByteString.Empty;
+                contractEntry.GasLimit = 21000;
+                Execute(contractEntry, delta, txTracer, readOnly, recipientOverride);
+            }
+            
+            // revert state if any fails (take snapshot)
+            foreach (ContractEntry contractEntry in delta.ContractEntries)
+            {
+                Execute(contractEntry, delta, txTracer, readOnly, recipientOverride);
+            }
+
+            if (!readOnly)
+            {
+                // we should assign block rewards here (or in Ledger)
+                _stateProvider.CommitTree();
+                _storageProvider.CommitTrees();
+            }
+
+            // if ((options & ProcessingOptions.ReadOnlyChain) != 0)
+            // {
+            //     Restore(stateSnapshot, codeSnapshot, snapshotStateRoot);
+            // }
+            // else
+            // {
+            //     _stateDb.Commit();
+            //     _codeDb.Commit();
+            // }
+        }
+        
         private void Execute(ContractEntry entry, Delta delta, ITxTracer txTracer, bool readOnly, Address recipientOverride = null)
         {
             var stateUpdate = ToStateUpdate(delta);
-            long gasLimit = 1_000_000L;
-            UInt256 gasPrice = 0L;
+            long gasLimit = entry.GasLimit;
+            UInt256 gasPrice = entry.GasPrice;
             Address recipient = recipientOverride ?? GetAccountAddress(entry.Base.ReceiverPublicKey);
             Address sender = GetAccountAddress(entry.Base.SenderPublicKey);
             var value = entry.Amount.ToUInt256();
@@ -121,18 +196,15 @@ namespace Catalyst.Core.Modules.Kvm
             byte[] data = entry.Data.ToByteArray();
 
             // if (_logger.IsTrace) _logger.Trace($"Executing tx {transaction.Hash}");
-
             if (sender == null)
             {
                 // TraceLogInvalidTx(entry, "SENDER_NOT_SPECIFIED");
                 QuickFail(entry, stateUpdate, txTracer, readOnly);
                 return;
             }
-
-            // we need to review the intrinsic cost calculation
-            long intrinsicGas = 0L;
-
-            // long intrinsicGas = _intrinsicGasCalculator.Calculate(transaction, spec);
+            
+            long intrinsicGas = CalculateIntrinsicGas(entry, spec);
+            
             //if (_logger.IsTrace) _logger.Trace($"Intrinsic gas calculated for {entry}: " + intrinsicGas);
 
             if (gasLimit < intrinsicGas)
@@ -175,7 +247,6 @@ namespace Catalyst.Core.Modules.Kvm
             }
 
             _stateProvider.IncrementNonce(sender);
-
             _stateProvider.SubtractFromBalance(sender, (ulong) gasLimit * gasPrice, spec);
 
             // TODO: I think we can skip this commit and decrease the tree operations this way

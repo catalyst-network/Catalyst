@@ -32,15 +32,9 @@ using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
-using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.Transaction;
 using Dawn;
-using Google.Protobuf;
 using LibP2P;
-using Nethermind.Core;
 using Nethermind.Core.Specs;
-using Nethermind.Dirichlet.Numerics;
-using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
 using Nethermind.Store;
 using Serilog;
@@ -57,7 +51,7 @@ namespace Catalyst.Core.Modules.Ledger
     {
         public IAccountRepository Accounts { get; }
         private readonly IKvm _virtualMachine;
-        private readonly IContractEntryExecutor _contractEntryExecutor;
+        private readonly IDeltaExecutor _deltaExecutor;
         private readonly IStateProvider _stateProvider;
         private readonly ISpecProvider _specProvider;
         private readonly ILedgerSynchroniser _synchroniser;
@@ -72,7 +66,7 @@ namespace Catalyst.Core.Modules.Ledger
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
         public Ledger(IKvm virtualMachine,
-            IContractEntryExecutor contractEntryExecutor,
+            IDeltaExecutor deltaExecutor,
             IStateProvider stateProvider,
             ISpecProvider specProvider,
             IAccountRepository accounts,
@@ -83,7 +77,7 @@ namespace Catalyst.Core.Modules.Ledger
         {
             Accounts = accounts;
             _virtualMachine = virtualMachine;
-            _contractEntryExecutor = contractEntryExecutor;
+            _deltaExecutor = deltaExecutor;
             _stateProvider = stateProvider;
             _specProvider = specProvider;
             _synchroniser = synchroniser;
@@ -169,15 +163,8 @@ namespace Catalyst.Core.Modules.Ledger
                     return;
                 }
 
-                foreach (var entry in nextDeltaInChain.PublicEntries)
-                {
-                    UpdateLedgerAccountFromEntry(nextDeltaInChain, entry);
-                }
-
-                foreach (var entry in nextDeltaInChain.ContractEntries)
-                {
-                    UpdateLedgerAccountFromEntry(nextDeltaInChain, entry);
-                }
+                // receipts tracer or similar, depending on what data needs to be stored for each contract
+                _deltaExecutor.Execute(nextDeltaInChain, NullTxTracer.Instance);
 
                 LatestKnownDelta = deltaHash;
 
@@ -190,20 +177,6 @@ namespace Catalyst.Core.Modules.Ledger
                     _stateProvider.Restore(snapshot);
                 }
             }
-        }
-
-        private void UpdateLedgerAccountFromEntry(Delta delta, PublicEntry entry)
-        {
-            ContractEntry contractEntry = new ContractEntry();
-            contractEntry.Base = entry.Base;
-            contractEntry.Amount = entry.Amount;
-            contractEntry.Data = ByteString.Empty;
-            UpdateLedgerAccountFromEntry(delta, contractEntry);
-        }
-        
-        private void UpdateLedgerAccountFromEntry(Delta delta, ContractEntry entry)
-        {
-            _contractEntryExecutor.Execute(entry, delta, NullTxTracer.Instance);
         }
 
         protected virtual void Dispose(bool disposing)

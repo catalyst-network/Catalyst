@@ -30,20 +30,17 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.Transaction;
+using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using LibP2P;
 using Microsoft.Reactive.Testing;
 using Nethermind.Core;
-using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
 using Nethermind.Dirichlet.Numerics;
@@ -73,7 +70,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly ILedgerSynchroniser _ledgerSynchroniser;
         private readonly IMempool<TransactionBroadcastDao> _mempool;
-        private readonly IContractEntryExecutor _contractEntryExecutor;
+        private readonly IDeltaExecutor _deltaExecutor;
         private IStorageProvider _storageProvider;
 
         public LedgerKvmTests()
@@ -104,37 +101,9 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _specProvider = new CatalystSpecProvider();
 
             _kvm = new KatVirtualMachine(_stateProvider, _storageProvider, stateUpdateHashProvider, _specProvider, LimboLogs.Instance);
-            _contractEntryExecutor = new ContractEntryExecutor(_specProvider, _stateProvider, _storageProvider, _kvm, _logger);
+            _deltaExecutor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, _kvm, _logger);
         }
-
-        private static ContractEntry PrepareContractEntry(IPublicKey recipient, IPublicKey sender, UInt256 amount, string dataHex = "0x", ulong nonce = 0)
-        {
-            return new ContractEntry
-            {
-                Base = new BaseEntry
-                {
-                    ReceiverPublicKey = recipient == null ? ByteString.Empty : ByteString.CopyFrom(recipient.Bytes),
-                    SenderPublicKey = ByteString.CopyFrom(sender.Bytes),
-                    Nonce = nonce
-                },
-                Amount = amount.ToUint256ByteString(),
-                Data = ByteString.CopyFrom(Bytes.FromHexString(dataHex))
-            };
-        }
-
-        private static PublicEntry PreparePublicEntry(IPublicKey recipient, IPublicKey sender, UInt256 amount)
-        {
-            return new PublicEntry
-            {
-                Base = new BaseEntry
-                {
-                    ReceiverPublicKey = ByteString.CopyFrom(recipient.Bytes),
-                    SenderPublicKey = ByteString.CopyFrom(sender.Bytes),
-                },
-                Amount = amount.ToUint256ByteString(),
-            };
-        }
-
+        
         private void RunDeltas(Delta delta)
         {
             var hash1 = _hashProvider.ComputeUtf8MultiHash("update");
@@ -150,7 +119,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid) h).ToObservable(_testScheduler));
 
-            _ledger = new Ledger(_kvm, _contractEntryExecutor, _stateProvider, _specProvider, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
+            _ledger = new Ledger(_kvm, _deltaExecutor, _stateProvider, _specProvider, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
 
             _testScheduler.Start();
         }
@@ -168,7 +137,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 ContractEntries =
                 {
-                    PrepareContractEntry(recipient, sender, 7)
+                    EntryUtils.PrepareContractEntry(recipient, sender, 7)
                 }
             };
 
@@ -190,7 +159,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 PublicEntries =
                 {
-                    PreparePublicEntry(recipient, sender, 3)
+                    EntryUtils.PreparePublicEntry(recipient, sender, 3)
                 }
             };
 
@@ -215,7 +184,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 ContractEntries =
                 {
-                    PrepareContractEntry(null, sender, 5, initCodeHex)
+                    EntryUtils.PrepareContractEntry(null, sender, 5, initCodeHex)
                 }
             };
 
@@ -246,10 +215,10 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 ContractEntries =
                 {
-                    PrepareContractEntry(null, sender, 0, migrationInitHex),
-                    PrepareContractEntry(null, sender, 0, call1Hex, 1),
-                    PrepareContractEntry(null, sender, 0, initCodeHex, 2),
-                    PrepareContractEntry(null, sender, 0, call2Hex, 3),
+                    EntryUtils.PrepareContractEntry(null, sender, 0, migrationInitHex),
+                    EntryUtils.PrepareContractEntry(null, sender, 0, call1Hex, 1),
+                    EntryUtils.PrepareContractEntry(null, sender, 0, initCodeHex, 2),
+                    EntryUtils.PrepareContractEntry(null, sender, 0, call2Hex, 3),
                 }
             };
 
@@ -289,10 +258,10 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 ContractEntries =
                 {
-                    PrepareContractEntry(null, sender, 0, migrationInitHex),
-                    PrepareContractEntry(null, sender, 0, call1Hex, 1),
-                    PrepareContractEntry(null, sender, 0, initCodeHex, 2),
-                    PrepareContractEntry(null, sender, 0, call2Hex, 3),
+                    EntryUtils.PrepareContractEntry(null, sender, 0, migrationInitHex),
+                    EntryUtils.PrepareContractEntry(null, sender, 0, call1Hex, 1),
+                    EntryUtils.PrepareContractEntry(null, sender, 0, initCodeHex, 2),
+                    EntryUtils.PrepareContractEntry(null, sender, 0, call2Hex, 3),
                 }
             };
 
@@ -308,9 +277,9 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             
             // transfer of 500k to aaa...aaa (only here because of the issues with recipient address for smart contracts)
             var transfer = "a9059cbb000000000000000000000000aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa000000000000000000000000000000000000000000000000000000000007a120";
-            var transferCall = PrepareContractEntry(sender, sender, 0, transfer, 4);
             CallOutputTracer transferTracer = new CallOutputTracer();
-            _contractEntryExecutor.Execute(transferCall, delta, transferTracer, contractAddress2);
+            Delta transferDelta = EntryUtils.PrepareSingleContractEntryDelta(sender, sender, 0, transfer, 4);
+            _deltaExecutor.Execute(transferDelta, transferTracer, contractAddress2);
             transferTracer.StatusCode.Should().Be(1);
             
             // need to commit changes as the next two calls are reverting changes on the same state provider
@@ -321,17 +290,17 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             // balance should be 500_000 0x7a120
             var balanceOf1 = "70a08231000000000000000000000000" + sender.ToKvmAddress().ToString(false, false);
-            var balanceOf1Call = PrepareContractEntry(sender, sender, 0, balanceOf1, 5);
             CallOutputTracer balanceOf1Tracer = new CallOutputTracer();
-            _contractEntryExecutor.CallAndRestore(balanceOf1Call, delta, balanceOf1Tracer, contractAddress2);
+            Delta balanceOf1Delta = EntryUtils.PrepareSingleContractEntryDelta(sender, sender, 0, balanceOf1, 5);
+            _deltaExecutor.CallAndRestore(balanceOf1Delta, balanceOf1Tracer, contractAddress2);
             balanceOf1Tracer.StatusCode.Should().Be(1);
             balanceOf1Tracer.ReturnValue.Should().Equal(Bytes.FromHexString("0x7a120").PadLeft(32));
             
             // balance should be 500_000 0x7a120
             var balanceOf2 = "70a08231000000000000000000000000aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-            var balanceOf2Call = PrepareContractEntry(sender, sender, 0, balanceOf2, 6);
+            var balanceOf2Call = EntryUtils.PrepareSingleContractEntryDelta(sender, sender, 0, balanceOf2, 6);
             CallOutputTracer balanceOf2Tracer = new CallOutputTracer();
-            _contractEntryExecutor.CallAndRestore(balanceOf2Call, delta, balanceOf2Tracer, contractAddress2);
+            _deltaExecutor.CallAndRestore(balanceOf2Call, balanceOf2Tracer, contractAddress2);
             balanceOf2Tracer.StatusCode.Should().Be(1);
             balanceOf2Tracer.ReturnValue.Should().Equal(Bytes.FromHexString("0x7a120").PadLeft(32));
         }

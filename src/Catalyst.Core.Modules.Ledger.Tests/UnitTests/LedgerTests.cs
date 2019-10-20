@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private readonly IHashProvider _hashProvider;
         private readonly MultiHash _genesisHash;
         private readonly IKvm _kvm;
-        private readonly IContractEntryExecutor _executor;
+        private readonly IDeltaExecutor _executor;
         private readonly IStateProvider _stateProvider;
         private readonly ISpecProvider _specProvider;
 
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
             _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
             _kvm = Substitute.For<IKvm>();
-            _executor = Substitute.For<IContractEntryExecutor>();
+            _executor = Substitute.For<IDeltaExecutor>();
             _stateProvider = Substitute.For<IStateProvider>();
             _specProvider = Substitute.For<ISpecProvider>();
         }
