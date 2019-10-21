@@ -44,6 +44,5 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Extensions\Protocol\Account\" />
-      <Folder Include="Registry" />
     </ItemGroup>
 </Project>
