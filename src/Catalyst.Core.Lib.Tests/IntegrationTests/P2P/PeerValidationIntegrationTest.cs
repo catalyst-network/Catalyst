@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             ContainerProvider.ContainerBuilder.Register(c =>
             {
                 _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot,
-                    ContainerProvider.Container.Resolve<IKeySigner>());
+                    c.Resolve<IKeySigner>());
 
                 var peerClient = c.Resolve<IPeerClient>();
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
@@ -121,7 +121,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             valid.Should().BeTrue();
         }
 
-        [Theory]
+        [Fact(Skip = "false")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa", "92.207.178.198", 1574)]
         [InlineData("fzqm5kpzpo7bvl5e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusd", "198.51.100.3", 2524)]
