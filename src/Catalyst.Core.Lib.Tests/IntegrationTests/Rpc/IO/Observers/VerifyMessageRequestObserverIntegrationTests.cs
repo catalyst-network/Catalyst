@@ -66,22 +66,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         {
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
 
-            ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
-            ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new RpcServerModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new MempoolModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new ConsensusModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new AuthenticationModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
-            ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
-
             ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdHelper.GetPeerId("Test"))
                .As<PeerId>();
 
             ContainerProvider.ConfigureContainerBuilder();
+            ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();

@@ -63,11 +63,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         })
         {
             _testScheduler = new TestScheduler();
-            ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
-            ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
+
             ContainerProvider.ConfigureContainerBuilder();
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
