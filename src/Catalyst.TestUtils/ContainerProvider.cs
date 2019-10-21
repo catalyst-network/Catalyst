@@ -116,10 +116,10 @@ namespace Catalyst.TestUtils
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
 
-            ContainerBuilder.RegisterModule(new BulletProofsModule());
-            ContainerBuilder.RegisterModule(new KeystoreModule());
-            ContainerBuilder.RegisterModule(new KeySignerModule());
-            ContainerBuilder.RegisterModule(new HashingModule());
+            //ContainerBuilder.RegisterModule(new BulletProofsModule());
+            //ContainerBuilder.RegisterModule(new KeystoreModule());
+            //ContainerBuilder.RegisterModule(new KeySignerModule());
+            //ContainerBuilder.RegisterModule(new HashingModule());
 
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);
         }

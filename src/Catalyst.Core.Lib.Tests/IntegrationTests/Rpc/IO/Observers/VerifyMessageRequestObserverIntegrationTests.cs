@@ -21,35 +21,35 @@
 
 #endregion
 
+using System.Linq;
 using Autofac;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Modules.Authentication;
+using Catalyst.Core.Modules.Consensus;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Dfs;
+using Catalyst.Core.Modules.Hashing;
+using Catalyst.Core.Modules.KeySigner;
+using Catalyst.Core.Modules.Keystore;
+using Catalyst.Core.Modules.Mempool;
+using Catalyst.Core.Modules.Rpc.Server;
+using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
-using System.Linq;
-using Catalyst.Abstractions.Keystore;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Modules.Consensus;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Dfs;
-using Catalyst.Core.Modules.KeySigner;
-using Catalyst.Core.Modules.Keystore;
-using Catalyst.Core.Modules.Rpc.Server;
-using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.Core.Modules.Mempool;
-using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Peer;
-using Catalyst.Core.Modules.Authentication;
-using Catalyst.Core.Modules.Hashing;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -61,22 +61,33 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private readonly ILifetimeScope _scope;
         private readonly PeerId _peerId;
         private readonly ByteString _testMessageToSign;
-        
+
         public VerifyMessageRequestObserverIntegrationTests(ITestOutputHelper output) : base(output)
         {
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
+
+            ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
+            ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new RpcServerModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new MempoolModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new ConsensusModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new AuthenticationModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
+            ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdHelper.GetPeerId("Test"))
                .As<PeerId>();
 
             ContainerProvider.ConfigureContainerBuilder();
-            ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
             _peerId = ContainerProvider.Container.Resolve<PeerId>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            
+
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
             _verifyMessageRequestObserver = _scope.Resolve<IRpcRequestObserver>();
@@ -98,7 +109,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             {
                 Message = _testMessageToSign,
                 PublicKey = privateKey.GetPublicKey().Bytes.ToByteString(),
-                Signature = _keySigner.CryptoContext.Sign(privateKey, _testMessageToSign.ToByteArray(), signingContext.ToByteArray()).SignatureBytes.ToByteString(),
+                Signature = _keySigner.CryptoContext
+                   .Sign(privateKey, _testMessageToSign.ToByteArray(), signingContext.ToByteArray()).SignatureBytes
+                   .ToByteString(),
                 SigningContext = signingContext
             };
 

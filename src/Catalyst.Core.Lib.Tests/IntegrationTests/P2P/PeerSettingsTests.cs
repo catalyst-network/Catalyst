@@ -22,6 +22,7 @@
 #endregion
 
 using Autofac;
+using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
@@ -40,6 +41,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         public void CanResolveIPeerSettings()
         {
             ContainerProvider.ConfigureContainerBuilder();
+            ContainerProvider.ContainerBuilder.RegisterInstance(TestKeySigner.MockKeySigner()).As<IKeySigner>();
 
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {

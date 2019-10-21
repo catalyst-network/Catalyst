@@ -36,8 +36,8 @@ using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -63,7 +63,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         })
         {
             _testScheduler = new TestScheduler();
-
+            ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
+            ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ConfigureContainerBuilder();
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);

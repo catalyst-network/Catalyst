@@ -54,30 +54,27 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
     {
         private IPeerService _peerService;
         private IPeerChallenger _peerChallenger;
-        private readonly PeerSettings _peerSettings;
+        private PeerSettings _peerSettings;
 
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
-            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot, ContainerProvider.Container.Resolve<IKeySigner>());
-
-            var peerSettings =
-                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port).ToSubstitutedPeerSettings();
-
             var logger = Substitute.For<ILogger>();
-
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
-            ContainerProvider.ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
 
+            ContainerProvider.ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
 
             ContainerProvider.ContainerBuilder.Register(c =>
             {
+                _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot,
+                    ContainerProvider.Container.Resolve<IKeySigner>());
+
                 var peerClient = c.Resolve<IPeerClient>();
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                return new PeerChallenger(logger, peerClient, peerSettings, 5);
+                return new PeerChallenger(logger, peerClient, _peerSettings, 5);
             }).As<IPeerChallenger>().SingleInstance();
         }
 
@@ -104,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                     keySigner,
                     ContainerProvider.Container.Resolve<IPeerIdValidator>(),
                     ContainerProvider.Container.Resolve<IPeerSettings>()),
-                new DiscoveryHelper.DevDiscover(), 
+                new DiscoveryHelper.DevDiscover(),
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,
                 ContainerProvider.Container.Resolve<ILogger>(),
@@ -145,7 +142,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             Output.WriteLine(port.ToString());
 
             var recipient = publicKey.BuildPeerIdFromBase32Key(ip, port);
-            
+
             return await _peerChallenger.ChallengePeerAsync(recipient);
         }
 
