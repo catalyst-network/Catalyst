@@ -31,13 +31,14 @@ namespace Catalyst.TestUtils
 {
     public static class TestKeyRegistry
     {
-        public static readonly string TestPrivateKey = "ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa";
-        public static readonly string TestPublicKey; // = "qnb9bw3b2yj4hpjcmsvgp12bkwff313v9gaqb18atvwfpevrmmf0"
+        public static readonly string TestPrivateKey;
+        public static readonly string TestPublicKey;
 
         static TestKeyRegistry()
         {
             var cryptoContext = new FfiWrapper();
-            var fakePrivateKey = cryptoContext.GetPrivateKeyFromBytes(TestPrivateKey.KeyToBytes());
+            var fakePrivateKey = cryptoContext.GeneratePrivateKey();
+            TestPrivateKey = fakePrivateKey.Bytes.KeyToString();
             TestPublicKey = fakePrivateKey.GetPublicKey().Bytes.KeyToString();
         }
 
