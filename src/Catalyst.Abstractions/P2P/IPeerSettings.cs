@@ -30,7 +30,6 @@ namespace Catalyst.Abstractions.P2P
 {
     public interface IPeerSettings
     {
-        IPAddress PublicIpAddress { get; }
         int Port { get; }
         string PublicKey { get; }
         string PayoutAddress { get; }

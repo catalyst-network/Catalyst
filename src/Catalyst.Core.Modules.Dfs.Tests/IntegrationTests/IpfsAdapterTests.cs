@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         {
             using (var ipfs = new IpfsAdapter(_passwordManager, FileSystem, _logger))
             {
-                ipfs.Options.Discovery.BootstrapPeers.Count().Should().Be(8);
+                ipfs.Options.Discovery.BootstrapPeers.Count().Should().NotBe(0);
             }
         }
 
