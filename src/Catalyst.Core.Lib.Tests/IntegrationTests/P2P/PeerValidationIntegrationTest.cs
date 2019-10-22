@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
     {
         private IPeerService _peerService;
         private IPeerChallenger _peerChallenger;
-        private readonly PeerSettings _peerSettings;
+        private PeerSettings _peerSettings;
 
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
@@ -67,14 +67,14 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
-
-            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
-
+            
             var peerSettings =
                 PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port).ToSubstitutedPeerSettings();
 
             ContainerProvider.ContainerBuilder.Register(c =>
             {
+                _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot, c.Resolve<IKeySigner>());
+
                 var peerClient = c.Resolve<IPeerClient>();
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
                 return new PeerChallenger(logger, peerClient, peerSettings, 5);

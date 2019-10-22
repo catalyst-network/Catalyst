@@ -68,7 +68,7 @@ namespace Catalyst.TestUtils
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.PeerId.Returns(peerId);
-            peerSettings.BindAddress.Returns(peerId.IpAddress);
+            peerSettings.PublicIpAddress.Returns(peerId.IpAddress);
             peerSettings.Port.Returns((int) peerId.Port);
             peerSettings.PublicKey.Returns(peerId.PublicKey.KeyToString());
             return peerSettings;

@@ -25,13 +25,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.P2P
 {
@@ -43,6 +46,7 @@ namespace Catalyst.Core.Lib.P2P
         private readonly NetworkType _networkType;
         public NetworkType NetworkType => _networkType;
         public string PublicKey { get; }
+        public IPAddress PublicIpAddress { get; }
         public int Port { get; }
         public string PayoutAddress { get; }
         public IPAddress BindAddress { get; }
@@ -54,14 +58,18 @@ namespace Catalyst.Core.Lib.P2P
         ///     Set attributes
         /// </summary>
         /// <param name="rootSection"></param>
-        public PeerSettings(IConfigurationRoot rootSection)
+        /// <param name="keySigner"></param>
+        public PeerSettings(IConfigurationRoot rootSection, IKeySigner keySigner)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
             
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Enum.TryParse(section.GetSection("Network").Value, out _networkType);
 
-            PublicKey = section.GetSection("PublicKey").Value;
+            var privateKey = keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
+            var publicKey = keySigner.CryptoContext.GetPublicKeyFromPrivateKey(privateKey);
+            PublicKey = publicKey.Bytes.ToBase32();
+
             Port = int.Parse(section.GetSection("Port").Value);
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
@@ -69,7 +77,7 @@ namespace Catalyst.Core.Lib.P2P
             DnsServers = section.GetSection("DnsServers")
                .GetChildren()
                .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray();
-            PeerId = PublicKey.BuildPeerIdFromBase32Key(BindAddress, Port);
+            PeerId = PublicKey.BuildPeerIdFromBase32Key(PublicIpAddress, Port);
         }
     }
 }

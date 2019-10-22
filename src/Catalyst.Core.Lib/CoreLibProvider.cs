@@ -80,8 +80,7 @@ namespace Catalyst.Core.Lib
 
             // Register P2P
             builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
-            builder.RegisterType<PeerSettings>().As<IPeerSettings>();
-            builder.RegisterType<Peer>().As<IPeer>();
+            builder.RegisterType<PeerSettings>().As<IPeerSettings>().SingleInstance();
 
             builder.RegisterType<PeerIdValidator>().As<IPeerIdValidator>();
             builder.RegisterType<PeerChallengerResponse>().As<IPeerChallengeResponse>();
