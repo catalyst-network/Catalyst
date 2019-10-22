@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 // 
 // Copyright (c) 2019 Catalyst Network
@@ -20,8 +20,8 @@
 
 #endregion
 
-namespace Catalyst.Core.Modules.Kvm.JsonRpc {
-    public enum BlockParameterType
+namespace Catalyst.Abstractions.Kvm.Models {
+    public enum FilterBlockType
     {
         Earliest,
         Latest,

@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 // 
 // Copyright (c) 2019 Catalyst Network
@@ -20,19 +20,12 @@
 
 #endregion
 
-namespace Catalyst.Core.Modules.Kvm.JsonRpc {
-    public static class BlockParameterTypeExtensions
+namespace Catalyst.Abstractions.Kvm.Models {
+    public enum BlockParameterType
     {
-        public static FilterBlockType ToFilterBlockType(this BlockParameterType type)
-        {
-            switch (type)
-            {
-                case BlockParameterType.Latest: return FilterBlockType.Latest;
-                case BlockParameterType.Earliest: return FilterBlockType.Earliest;
-                case BlockParameterType.Pending: return FilterBlockType.Pending;
-                case BlockParameterType.BlockNumber: return FilterBlockType.BlockNumber;
-                default: return FilterBlockType.Latest;
-            }
-        }
+        Earliest,
+        Latest,
+        Pending,
+        BlockNumber
     }
 }

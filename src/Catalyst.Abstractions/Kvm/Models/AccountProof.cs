@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 // 
 // Copyright (c) 2019 Catalyst Network
@@ -20,12 +20,23 @@
 
 #endregion
 
-namespace Catalyst.Core.Modules.Kvm.JsonRpc {
-    public enum FilterBlockType
+using Nethermind.Core.Crypto;
+using Nethermind.Dirichlet.Numerics;
+
+namespace Catalyst.Abstractions.Kvm.Models 
+{
+    public class AccountProof
     {
-        Earliest,
-        Latest,
-        Pending,
-        BlockNumber
+        public byte[][] Proof { get; set; }
+
+        public UInt256 Balance { get; set; }
+
+        public Keccak CodeHash { get; set; }
+
+        public UInt256 Nonce { get; set; }
+
+        public Keccak StorageRoot { get; set; }
+
+        public StorageProof[] StorageProofs { get; set; }
     }
 }

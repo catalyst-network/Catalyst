@@ -1,7 +1,7 @@
 using System;
 using Nethermind.Core.Json;
 
-namespace Catalyst.Core.Modules.Kvm.JsonRpc
+namespace Catalyst.Abstractions.Kvm.Models
 {
     public class BlockParameter
     {

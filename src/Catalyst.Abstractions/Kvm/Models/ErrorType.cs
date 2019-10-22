@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Catalyst.Core.Modules.Kvm.JsonRpc
+namespace Catalyst.Abstractions.Kvm.Models
 {
     public enum ErrorType
     {
@@ -16,5 +12,4 @@ namespace Catalyst.Core.Modules.Kvm.JsonRpc
         ServerError,
         NotFound
     }
-}
 }

@@ -26,7 +26,7 @@ using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.Modules.Kvm.JsonRpc {
+namespace Catalyst.Abstractions.Kvm.Models {
     public class TransactionForRpc
     {
         public TransactionForRpc(Keccak blockHash, BigInteger? blockNumber, int? txIndex, Transaction transaction)

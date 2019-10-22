@@ -24,7 +24,7 @@ using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.Modules.Kvm.JsonRpc {
+namespace Catalyst.Abstractions.Kvm.Models {
     public class FilterLog
     {
         public bool Removed { get; }

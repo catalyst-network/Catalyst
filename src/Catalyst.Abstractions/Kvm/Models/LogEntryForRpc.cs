@@ -24,7 +24,7 @@ using System.Numerics;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 
-namespace Catalyst.Core.Modules.Kvm.JsonRpc {
+namespace Catalyst.Abstractions.Kvm.Models {
     public class LogEntryForRpc
     {
         public LogEntryForRpc()

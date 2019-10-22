@@ -34,6 +34,7 @@ namespace Catalyst.Core.Modules.Kvm
             builder.RegisterType<KatVirtualMachine>().As<IKvm>().SingleInstance();
             builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
             builder.RegisterType<CatalystGenesisSpec>().As<IReleaseSpec>();
+            builder.RegisterType<EthRpcService>().As<IEthRpcService>().SingleInstance();
         }  
     }
 }

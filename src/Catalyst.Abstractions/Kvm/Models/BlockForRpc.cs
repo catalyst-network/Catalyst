@@ -28,7 +28,8 @@ using Nethermind.Core.Encoding;
 using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.Modules.Kvm.JsonRpc {
+namespace Catalyst.Abstractions.Kvm.Models 
+{
     public class BlockForRpc
     {
         private BlockDecoder _blockDecoder = new BlockDecoder();

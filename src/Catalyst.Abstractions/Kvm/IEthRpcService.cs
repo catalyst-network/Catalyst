@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Autofac.Core;
-using Catalyst.Core.Modules.Kvm.JsonRpc;
+using Catalyst.Abstractions.Kvm.Models;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Model;
 using Nethermind.Dirichlet.Numerics;
-using NLog.Filters;
 
-namespace Catalyst.Core.Modules.Kvm
+namespace Catalyst.Abstractions.Kvm
 {
-    public interface IEthModule : IModule
+    public interface IEthRpcService
     {
         //long eth_chainId();
         //string eth_protocolVersion();

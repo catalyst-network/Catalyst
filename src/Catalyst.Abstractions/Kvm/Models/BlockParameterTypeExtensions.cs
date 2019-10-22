@@ -20,23 +20,19 @@
 
 #endregion
 
-using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
-
-namespace Catalyst.Core.Modules.Kvm.JsonRpc 
-{
-    public class AccountProof
+namespace Catalyst.Abstractions.Kvm.Models {
+    public static class BlockParameterTypeExtensions
     {
-        public byte[][] Proof { get; set; }
-
-        public UInt256 Balance { get; set; }
-
-        public Keccak CodeHash { get; set; }
-
-        public UInt256 Nonce { get; set; }
-
-        public Keccak StorageRoot { get; set; }
-
-        public StorageProof[] StorageProofs { get; set; }
+        public static FilterBlockType ToFilterBlockType(this BlockParameterType type)
+        {
+            switch (type)
+            {
+                case BlockParameterType.Latest: return FilterBlockType.Latest;
+                case BlockParameterType.Earliest: return FilterBlockType.Earliest;
+                case BlockParameterType.Pending: return FilterBlockType.Pending;
+                case BlockParameterType.BlockNumber: return FilterBlockType.BlockNumber;
+                default: return FilterBlockType.Latest;
+            }
+        }
     }
 }

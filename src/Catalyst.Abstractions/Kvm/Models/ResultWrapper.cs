@@ -1,6 +1,6 @@
 using Nethermind.Core.Model;
 
-namespace Catalyst.Core.Modules.Kvm.JsonRpc
+namespace Catalyst.Abstractions.Kvm.Models
 {
     public class ResultWrapper<T>
     {

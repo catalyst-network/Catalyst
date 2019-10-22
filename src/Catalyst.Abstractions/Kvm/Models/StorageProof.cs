@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 // 
 // Copyright (c) 2019 Catalyst Network
@@ -22,7 +22,7 @@
 
 using Nethermind.Core.Crypto;
 
-namespace Catalyst.Core.Modules.Kvm {
+namespace Catalyst.Abstractions.Kvm.Models {
     public class StorageProof
     {
         public byte[][] Proof { get; set; }
