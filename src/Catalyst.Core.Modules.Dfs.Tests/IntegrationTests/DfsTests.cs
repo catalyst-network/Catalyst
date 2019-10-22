@@ -99,7 +99,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "waiting for Dns seed fix: https://github.com/catalyst-network/Catalyst.Framework/issues/1075")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_connect_to_a_seednode()
         {
