@@ -2,7 +2,7 @@ variables:
   release.type: '-alpha'
   BuildPlatform: 'x64'
   BuildConfiguration: 'Debug'
-  ArtifactName: 'Catalyst.Core-$(Build.BuildId)-$(release.type)'
+  ArtifactName: 'Catalyst.Framework-$(Build.BuildId)-$(release.type)'
 stages:
   - stage: 'GetSaurce'
     jobs:
@@ -40,13 +40,13 @@ stages:
         strategy:
           matrix:
             win2016:
-              imageName: 'vs2017-win2016'
+              imageName: 'windows-2019'
               runtimeName: 'win-x64'
               package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
               project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'
               rustup_toolchain: stable
             osx1013:
-              imageName: 'macos-10.13'
+              imageName: 'macos-10.14'
               runtimeName: 'osx-x64'
               package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
               project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'
