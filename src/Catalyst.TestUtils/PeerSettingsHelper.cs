@@ -24,7 +24,6 @@
 using System.Collections.Generic;
 using System.Net;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
