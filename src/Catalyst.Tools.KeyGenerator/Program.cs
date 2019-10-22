@@ -22,25 +22,21 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
-using Autofac.Configuration;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
-using Catalyst.Core.Lib.FileSystem;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
+using Catalyst.Protocol.Network;
 using Catalyst.Tools.KeyGenerator.Commands;
 using Catalyst.Tools.KeyGenerator.Core;
 using Catalyst.Tools.KeyGenerator.Interfaces;
 using CommandLine;
-using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace Catalyst.Tools.KeyGenerator
@@ -50,25 +46,11 @@ namespace Catalyst.Tools.KeyGenerator
         private static IKeyGeneratorCommand[] _commands;
         private static ILogger _logger;
         private static IUserOutput _userOutput;
-        private static IPeerSettings _peerSettings;
 
         public static void Main(string[] args)
         {
-            var configurationBuilder = new ConfigurationBuilder();
-
-            configurationBuilder
-               .AddJsonFile(
-                    Path.Combine(new FileSystem().GetCatalystDataDir().FullName, "devnet.json") // shouldnt do this
-                );
-            
-            var config = configurationBuilder.Build();
-            var configurationModule = new ConfigurationModule(config);
-
             var containerBuilder = new ContainerBuilder();
 
-            containerBuilder.RegisterInstance(config);
-            containerBuilder.RegisterModule(configurationModule);
-            
             // Modules
             containerBuilder.RegisterModule(new CoreLibProvider());
             containerBuilder.RegisterModule(new KeystoreModule());
@@ -96,7 +78,6 @@ namespace Catalyst.Tools.KeyGenerator
 
             _userOutput = container.Resolve<IUserOutput>();
             _commands = container.Resolve<IKeyGeneratorCommand[]>();
-            _peerSettings = container.Resolve<IPeerSettings>();
 
             while (true)
             {
@@ -152,7 +133,7 @@ namespace Catalyst.Tools.KeyGenerator
                     return;
                 }
 
-                parserResult.WithParsed(options => parsedCommand.ParseOption(_peerSettings.NetworkType, options));
+                parserResult.WithParsed(options => parsedCommand.ParseOption(NetworkType.Devnet, options)); //@TODO can't hard code this
                 return;
             }
 
