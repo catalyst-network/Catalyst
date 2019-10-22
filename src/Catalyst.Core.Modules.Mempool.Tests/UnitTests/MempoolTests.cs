@@ -31,7 +31,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

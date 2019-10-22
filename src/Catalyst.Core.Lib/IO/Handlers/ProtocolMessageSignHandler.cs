@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;

@@ -70,14 +70,14 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         }
 
         private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope,
-            out string Id,
+            out string id,
             out IEnumerable<ContractEntryDao> contractEntryDaoList,
             out IEnumerable<PublicEntryDao> publicEntryDaoList)
         {
             var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
 
             var transactionBroadcastDao = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
-            Id = transactionBroadcastDao.Id;
+            id = transactionBroadcastDao.Id;
 
             transactionBroadcastDao.ContractEntries = ContractEntryHelper.GetContractEntriesDao(10);
             contractEntryDaoList = transactionBroadcastDao.ContractEntries;
@@ -120,7 +120,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         }
 
         [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2E_MongoDB)]
+        [Trait(Traits.TestType, Traits.E2EMongoDb)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
@@ -130,7 +130,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         }
 
         [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2E_MongoDB)]
+        [Trait(Traits.TestType, Traits.E2EMongoDb)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
@@ -140,7 +140,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         }
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.E2E_MSSQL)]
+        [Trait(Traits.TestType, Traits.E2EMssql)]
         public void TransactionBroadcastRepo_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
@@ -155,7 +155,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         }
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.E2E_MSSQL)]
+        [Trait(Traits.TestType, Traits.E2EMssql)]
         public void TransactionBroadcastRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
