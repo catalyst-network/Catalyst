@@ -22,9 +22,7 @@
 #endregion
 
 using System;
-using System.ComponentModel.DataAnnotations;
 using Catalyst.Abstractions.P2P.Models;
-using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Repository.Attributes;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;

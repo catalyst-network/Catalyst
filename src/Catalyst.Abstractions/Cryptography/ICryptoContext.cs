@@ -21,8 +21,6 @@
 
 #endregion
 
-using System;
-
 namespace Catalyst.Abstractions.Cryptography
 {
     public interface ICryptoContext

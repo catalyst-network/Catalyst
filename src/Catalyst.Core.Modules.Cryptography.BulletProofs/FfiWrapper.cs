@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Types;

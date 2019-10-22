@@ -24,11 +24,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Util;
 using LibP2P;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Ledger
 {

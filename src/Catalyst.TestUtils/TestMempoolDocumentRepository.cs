@@ -27,7 +27,6 @@ using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Repository;
-using Google.Protobuf;
 using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
@@ -35,9 +34,7 @@ namespace Catalyst.TestUtils
     public sealed class TestMempoolRepository : RepositoryWrapper<TransactionBroadcastDao>,
         IMempoolRepository<TransactionBroadcastDao>
     {
-        public TestMempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository)
-        {
-        }
+        public TestMempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository) { }
 
         public bool TryReadItem(string key)
         {

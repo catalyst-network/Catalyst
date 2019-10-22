@@ -27,7 +27,6 @@ using System.Linq;
 using Autofac;
 using FluentAssertions;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using Xunit;

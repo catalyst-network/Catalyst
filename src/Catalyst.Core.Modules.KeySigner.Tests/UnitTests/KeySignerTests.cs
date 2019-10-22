@@ -26,7 +26,6 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using FluentAssertions;
