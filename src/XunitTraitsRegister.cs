@@ -45,14 +45,14 @@ public class XunitTraitsRegister
     public void EmbeddedChannelTest() { true.Should().BeTrue(); }
 
     [Fact]
-    [Trait(Traits.TestType, Traits.E2E_CosmosDB)]
+    [Trait(Traits.TestType, Traits.E2ECosmosDb)]
     public void E2E_CosmosDB() { true.Should().BeTrue(); }
 
     [Fact]
-    [Trait(Traits.TestType, Traits.E2E_MongoDB)]
+    [Trait(Traits.TestType, Traits.E2EMongoDb)]
     public void E2E_MongoDB() { true.Should().BeTrue(); }
 
     [Fact]
-    [Trait(Traits.TestType, Traits.E2E_MSSQL)]
+    [Trait(Traits.TestType, Traits.E2EMssql)]
     public void E2E_MSSQL() { true.Should().BeTrue(); }
 }

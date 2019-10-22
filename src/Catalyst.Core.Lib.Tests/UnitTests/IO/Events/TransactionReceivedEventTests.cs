@@ -21,9 +21,7 @@
 
 #endregion
 
-using System;
 using System.Linq;
-using System.Linq.Expressions;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
