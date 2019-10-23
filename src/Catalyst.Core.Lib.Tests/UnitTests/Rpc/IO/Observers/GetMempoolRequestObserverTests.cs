@@ -77,8 +77,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
         [Theory]
         [MemberData(nameof(MempoolTransactions))]
-        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(
-            List<TransactionBroadcastDao> mempoolTransactions)
+        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcastDao> mempoolTransactions)
         {
             var testScheduler = new TestScheduler();
             var mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();

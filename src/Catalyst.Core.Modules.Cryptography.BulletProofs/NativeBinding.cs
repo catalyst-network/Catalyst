@@ -57,15 +57,15 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             }
 
             var signature = new byte[SignatureLength];
-            var public_key = new byte[PublicKeyLength];
+            var publicKey = new byte[PublicKeyLength];
 
-            var errorCode = std_sign(signature, public_key, privateKey, message, message.Length, context, context.Length);
+            var errorCode = std_sign(signature, publicKey, privateKey, message, message.Length, context, context.Length);
             if (errorCode != 0)
             {
                 Error.ThrowErrorFromErrorCode(errorCode.ToString());
             }
 
-            return new Signature(signature, public_key);
+            return new Signature(signature, publicKey);
         }
         
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]

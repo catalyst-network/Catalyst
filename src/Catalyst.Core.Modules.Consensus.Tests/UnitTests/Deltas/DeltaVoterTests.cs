@@ -116,8 +116,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         [Theory]
         [MemberData(nameof(DodgyCandidates))]
-        public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(
-            CandidateDeltaBroadcast dodgyCandidate)
+        public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDeltaBroadcast dodgyCandidate)
         {
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
 

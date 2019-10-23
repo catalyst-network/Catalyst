@@ -44,7 +44,7 @@ namespace Catalyst.Abstractions.Dfs
         /// <summary>
         /// Reads the content of an existing file on the DFS as a UTF8 string.
         /// </summary>
-        /// <param name="id">The unqiue ID of the content on the DFS.</param>
+        /// <param name="cid">Dfs content address</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the work.</param>
         /// <returns>The content of the DFS file as a UTF8 encoded string.</returns>
         Task<string> ReadTextAsync(Cid cid, CancellationToken cancellationToken = default);
@@ -61,7 +61,7 @@ namespace Catalyst.Abstractions.Dfs
         /// <summary>
         /// Streams the content of an existing file on the DFS.
         /// </summary>
-        /// <param name="id">The unique ID of the content on the DFS.</param>
+        /// <param name="cid">Dfs content address</param>
         /// <param name="cancellationToken">A cancellation token that can be used to cancel the work.</param>
         /// <returns>A <see cref="T:System.IO.Stream" /> to the content of the file.</returns>
         /// <remarks>

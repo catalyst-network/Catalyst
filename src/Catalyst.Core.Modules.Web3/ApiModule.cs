@@ -58,15 +58,16 @@ namespace Catalyst.Core.Modules.Web3
             var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
 
             var host = WebHost.CreateDefaultBuilder()
-                .ConfigureServices(serviceCollection => ConfigureServices(serviceCollection, builder))
-                .Configure(Configure)
-                .UseUrls(_apiBindingAddress)
-                .UseWebRoot(webDirectory.FullName)
-                .UseSerilog()
-                .Build();
+               .ConfigureServices(serviceCollection => ConfigureServices(serviceCollection, builder))
+               .Configure(Configure)
+               .UseUrls(_apiBindingAddress)
+               .UseWebRoot(webDirectory.FullName)
+               .UseSerilog()
+               .Build();
 
             builder.RegisterInstance(host).As<IWebHost>();
-            builder.RegisterBuildCallback(async container =>
+
+            async void BuildCallback(IContainer container)
             {
                 _container = container;
                 var logger = _container.Resolve<ILogger>();
@@ -79,7 +80,9 @@ namespace Catalyst.Core.Modules.Web3
                 {
                     logger.Error(e, "Error loading API");
                 }
-            });
+            }
+
+            builder.RegisterBuildCallback(BuildCallback);
             base.Load(builder);
         }
 
@@ -88,7 +91,7 @@ namespace Catalyst.Core.Modules.Web3
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod()
-                    .AllowAnyHeader());
+                   .AllowAnyHeader());
             });
 
             var mvcBuilder = services.AddMvc(options => options.EnableEndpointRouting = false);
