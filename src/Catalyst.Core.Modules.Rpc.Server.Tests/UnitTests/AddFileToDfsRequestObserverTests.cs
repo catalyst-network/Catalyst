@@ -135,7 +135,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             var protocolMessage = GenerateProtocolMessage();
 
             AddFileToDfsResponse addFileToDfsResponse = null;
-            _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(async information =>
+
+            async void UseArgument(IDownloadFileInformation information)
             {
                 information.RecipientChannel = Substitute.For<IChannel>();
                 information.UpdateChunkIndicator(0, true);
@@ -145,7 +146,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
                     addFileToDfsResponse = x.Content.FromProtocolMessage<AddFileToDfsResponse>();
                     _manualResetEvent.Set();
                 }));
-            }));
+            }
+
+            _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(UseArgument));
 
             protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
             _manualResetEvent.WaitOne();
@@ -165,7 +168,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             var protocolMessage = GenerateProtocolMessage();
 
             AddFileToDfsResponse addFileToDfsResponse = null;
-            _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(async information =>
+
+            async void UseArgument(IDownloadFileInformation information)
             {
                 information.RecipientChannel = Substitute.For<IChannel>();
                 information.UpdateChunkIndicator(0, true);
@@ -175,7 +179,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
                     addFileToDfsResponse = x.Content.FromProtocolMessage<AddFileToDfsResponse>();
                     _manualResetEvent.Set();
                 }));
-            }));
+            }
+
+            _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(UseArgument));
 
             protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
             _manualResetEvent.WaitOne();
