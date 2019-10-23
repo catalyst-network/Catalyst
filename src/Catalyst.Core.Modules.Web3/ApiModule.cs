@@ -31,7 +31,6 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Module = Autofac.Module;
@@ -93,12 +92,12 @@ namespace Catalyst.Core.Modules.Web3
             {
                 c.AddPolicy("AllowOrigin", options => 
                     options.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+                       .AllowAnyMethod()
+                       .AllowAnyHeader());
             });
 
             services.AddMvcCore()
-                .AddApiExplorer();
+               .AddApiExplorer();
 
             var mvcBuilder = services.AddRazorPages();
 
