@@ -48,7 +48,6 @@ namespace Catalyst.Core.Lib.P2P
         public string PublicKey { get; }
         public IPAddress PublicIpAddress { get; }
         public int Port { get; }
-        public string PayoutAddress { get; }
         public IPAddress BindAddress { get; }
         public IList<string> SeedServers { get; }
         public IPEndPoint[] DnsServers { get; }
@@ -71,8 +70,8 @@ namespace Catalyst.Core.Lib.P2P
             PublicKey = publicKey.Bytes.ToBase32();
 
             Port = int.Parse(section.GetSection("Port").Value);
-            PayoutAddress = section.GetSection("PayoutAddress").Value;
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
+            PublicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
             SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
             DnsServers = section.GetSection("DnsServers")
                .GetChildren()

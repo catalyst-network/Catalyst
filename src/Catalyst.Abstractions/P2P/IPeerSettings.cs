@@ -33,7 +33,6 @@ namespace Catalyst.Abstractions.P2P
         IPAddress PublicIpAddress { get; }	
         int Port { get; }
         string PublicKey { get; }
-        string PayoutAddress { get; }
         IPAddress BindAddress { get; }
         IList<string> SeedServers { get; }
         NetworkType NetworkType { get; }

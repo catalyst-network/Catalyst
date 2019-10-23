@@ -41,7 +41,6 @@ namespace Catalyst.TestUtils
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
             peerSettings.PublicKey.Returns(finalPublicKey.KeyToString());
             peerSettings.Port.Returns(port);
-            peerSettings.PayoutAddress.Returns("my_pay_out_address");
             peerSettings.BindAddress.Returns(IPAddress.Loopback);
             peerSettings.PublicIpAddress.Returns(IPAddress.Loopback);	
             peerSettings.SeedServers.Returns(new List<string>
