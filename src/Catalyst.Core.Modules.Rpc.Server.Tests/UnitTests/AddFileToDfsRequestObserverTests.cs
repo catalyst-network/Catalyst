@@ -36,8 +36,8 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -47,7 +47,9 @@ using Serilog;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
-namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
+//@TODO should be in rpc module test
+
+namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 {
     public sealed class AddFileToDfsRequestObserverTests
     {

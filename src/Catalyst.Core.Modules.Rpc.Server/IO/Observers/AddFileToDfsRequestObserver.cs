@@ -109,18 +109,22 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             var message = GetResponse(fileTransferInformation, responseCodeType);
 
-            if (responseCodeType == FileTransferResponseCodeTypes.Successful)
+            if (responseCodeType != FileTransferResponseCodeTypes.Successful)
             {
-                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None).ContinueWith(task =>
-                {
-                    if (fileTransferInformation.ChunkIndicatorsTrue())
-                    {
-                        OnSuccessAsync(fileTransferInformation).Wait();
-                    }
-
-                    fileTransferInformation.Dispose();
-                });
+                return message;
             }
+            
+            var ctx = new CancellationTokenSource();
+                
+            _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None).ContinueWith(task =>
+            {
+                if (fileTransferInformation.ChunkIndicatorsTrue())
+                {
+                    OnSuccessAsync(fileTransferInformation).ConfigureAwait(false).GetAwaiter().GetResult();
+                }
+
+                fileTransferInformation.Dispose();
+            }, ctx.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext()).GetAwaiter().GetResult();
 
             return message;
         }

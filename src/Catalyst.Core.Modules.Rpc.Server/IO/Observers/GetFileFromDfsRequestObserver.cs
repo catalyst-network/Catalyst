@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             FileTransferResponseCodeTypes responseCodeType;
 
-            var task = Task.Run(async () =>
+            var response = Task.Run(async () =>
             {
                 try
                 {
@@ -124,9 +124,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 }
 
                 return ReturnResponse(responseCodeType, fileLen);
-            });
+            }).ConfigureAwait(false).GetAwaiter().GetResult();
 
-            return task.Result;
+            return response;
         }
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
