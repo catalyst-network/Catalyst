@@ -61,8 +61,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             public DeltaHubWithFastRetryPolicy(IBroadcastManager broadcastManager,
                 IPeerSettings peerSettings,
-                IDfs dfs,
-                IHashProvider hashProvider, 
+                IDfs dfs, 
                 ILogger logger) : base(broadcastManager, peerSettings, dfs, logger) { }
 
             protected override AsyncRetryPolicy<Cid> DfsRetryPolicy =>
@@ -78,7 +77,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var logger = Substitute.For<ILogger>();
             _peerId = PeerIdHelper.GetPeerId("me");
             _dfs = Substitute.For<IDfs>();
-            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId.ToSubstitutedPeerSettings(), _dfs, _hashProvider, logger);
+            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId.ToSubstitutedPeerSettings(), _dfs, logger);
         }
 
         [Fact]

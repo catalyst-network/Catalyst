@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
@@ -58,13 +59,13 @@ namespace Catalyst.Core.Modules.KeySigner
         {
             if (!TryPopulateDefaultKeyFromKeyStore(out _))
             {
-                GenerateKeyAndPopulateRegistryWithDefault();
+                GenerateKeyAndPopulateRegistryWithDefault().ConfigureAwait(false);
             }   
         }
 
-        private async void GenerateKeyAndPopulateRegistryWithDefault()
+        private async Task GenerateKeyAndPopulateRegistryWithDefault()
         {
-            var privateKey = await _keyStore.KeyStoreGenerate(NetworkType.Devnet, _defaultKey);
+            var privateKey = await _keyStore.KeyStoreGenerate(NetworkType.Devnet, _defaultKey).ConfigureAwait(false);
             if (privateKey != null)
             { 
                 _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
