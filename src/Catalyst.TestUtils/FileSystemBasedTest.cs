@@ -39,7 +39,6 @@ using Xunit.Abstractions;
 
 namespace Catalyst.TestUtils
 {
-    /// <inheritdoc />
     /// <summary>
     ///     A base test class that can be used to offer inheriting tests a folder on which
     ///     to create files, logs, etc.
@@ -60,10 +59,9 @@ namespace Catalyst.TestUtils
         {
             Guard.Argument(output, nameof(output)).NotNull();
             Output = output;
-            var currentTest = Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
-               .GetValue(Output) as ITest;
 
-            if (currentTest == null)
+            if (!(Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
+              ?.GetValue(Output) is ITest currentTest))
             {
                 throw new ArgumentNullException(
                     $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");

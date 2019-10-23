@@ -15,7 +15,7 @@
       <None Remove="Extensions\Protocol\Transaction\**" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.8.1" />
+        <PackageReference Include="Autofac" Version="4.9.4" />
         <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
         <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0" />
         <PackageReference Include="AutoMapper" Version="9.0.0" />

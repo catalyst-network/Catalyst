@@ -15,6 +15,6 @@
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="4.8.1" />
+      <PackageReference Include="Autofac" Version="4.9.4 />
     </ItemGroup>
 </Project>

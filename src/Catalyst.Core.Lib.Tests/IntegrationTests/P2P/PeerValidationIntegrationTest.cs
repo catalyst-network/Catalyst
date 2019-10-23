@@ -113,16 +113,16 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             await _peerService.StartAsync();
         }
 
-        // [Fact(Skip = "true")]
-        // [Trait(Traits.TestType, Traits.IntegrationTest)]
-        // public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
-        // {
-        //     await Setup().ConfigureAwait(false);
-        //     var valid = await RunPeerChallengeTask(_peerSettings.PublicKey, _peerSettings.BindAddress,
-        //         _peerSettings.Port).ConfigureAwait(false);
-        //
-        //     valid.Should().BeTrue();
-        // }
+        [Fact(Skip = "true")]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
+        {
+            await Setup().ConfigureAwait(false);
+            var valid = await RunPeerChallengeTask(_peerSettings.PublicKey, _peerSettings.BindAddress,
+                _peerSettings.Port).ConfigureAwait(false);
+        
+            valid.Should().BeTrue();
+        }
 
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]

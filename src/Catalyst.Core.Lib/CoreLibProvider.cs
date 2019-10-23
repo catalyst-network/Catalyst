@@ -110,7 +110,6 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<ReputationManager>().As<IReputationManager>().SingleInstance();
             
             // Register Registry #inception
-            builder.RegisterType<KeyRegistry>().As<IKeyRegistry>().SingleInstance();
             builder.RegisterType<PasswordRegistry>().As<IPasswordRegistry>().SingleInstance();
             
             // Register Cryptography

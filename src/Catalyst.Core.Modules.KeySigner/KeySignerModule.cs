@@ -23,13 +23,16 @@
 
 using Autofac;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Core.Lib.Cryptography;
 
 namespace Catalyst.Core.Modules.KeySigner
 {
-    public class KeySignerModule : Module
+    public sealed class KeySignerModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<KeyRegistry>().As<IKeyRegistry>().SingleInstance();
             builder.RegisterType<KeySigner>().As<IKeySigner>().SingleInstance();
         }  
     }
