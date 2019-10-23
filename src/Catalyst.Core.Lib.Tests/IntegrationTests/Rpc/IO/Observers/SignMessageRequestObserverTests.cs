@@ -21,8 +21,10 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
@@ -83,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RpcServer_Can_Handle_SignMessageRequest(string message)
+        public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var sender = PeerIdHelper.GetPeerId("sender");
             var peerSettings = Substitute.For<IPeerSettings>();
@@ -106,6 +108,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+
+            //cf. RequestObserverBase which does not await for the WriteAndFlushAsync, we wait a bit.
+            await TaskHelper.WaitForAsync(() => receivedCalls.Count == 1, TimeSpan.FromSeconds(1));
+
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
