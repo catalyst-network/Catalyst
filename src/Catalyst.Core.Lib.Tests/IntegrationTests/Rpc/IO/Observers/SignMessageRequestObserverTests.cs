@@ -85,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
+        public void RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var sender = PeerIdHelper.GetPeerId("sender");
             var peerSettings = Substitute.For<IPeerSettings>();
