@@ -70,7 +70,7 @@ namespace Catalyst.Tools.KeyGenerator.Commands
 
             try
             {
-                var privateKey = _keyStore.KeyStoreGenerate(networkType, KeyRegistryTypes.DefaultKey).ConfigureAwait(false)
+                var privateKey = _keyStore.KeyStoreGenerateAsync(networkType, KeyRegistryTypes.DefaultKey).ConfigureAwait(false)
                    .GetAwaiter().GetResult();
                 var publicKey = privateKey.GetPublicKey().Bytes.KeyToString();
 

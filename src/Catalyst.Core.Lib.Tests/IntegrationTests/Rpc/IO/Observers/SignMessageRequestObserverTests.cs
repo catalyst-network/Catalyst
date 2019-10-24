@@ -24,12 +24,14 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -98,6 +100,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var protocolMessage =
                 signMessageRequest.ToProtocolMessage(sender);
 
+            await TaskHelper.WaitForAsync(
+                () => _keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey) != null, 
+                TimeSpan.FromSeconds(2));
+
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
             var handler =
@@ -108,10 +114,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-
-            //cf. RequestObserverBase which does not await for the WriteAndFlushAsync, we wait a bit.
-            await TaskHelper.WaitForAsync(() => receivedCalls.Count == 1, TimeSpan.FromSeconds(2)).ConfigureAwait(false);
-
+            _logger.DidNotReceiveWithAnyArgs().Error((Exception) default, (string) default);
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
