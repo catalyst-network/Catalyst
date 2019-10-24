@@ -22,6 +22,7 @@
 #endregion
 
 using System.Text;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
@@ -54,42 +55,51 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _cryptoContext.Sign(default, default, default).ReturnsForAnyArgs(_signature);
             _privateKey.Bytes.Returns(ByteUtil.GenerateRandomByteArray(32));
 
-            _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs(_privateKey);
+            _keystore.KeyStoreDecryptAsync(default).ReturnsForAnyArgs(_privateKey);
             
             _signingContext = new SigningContext();
         }
         
         [Fact]
-        public void On_Init_KeySigner_Can_Retrieve_Key_From_KeyStore_If_Key_Doesnt_Initially_Exist_In_Registry()
+        public async Task On_Init_KeySigner_Can_Retrieve_Key_From_KeyStore_If_Key_Doesnt_Initially_Exist_In_Registry()
         {
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
             var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
+            
+            await _keystore.Received(1).KeyStoreDecryptAsync(Arg.Any<KeyRegistryTypes>())
+               .ConfigureAwait(false);
+            
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
             keySigner.Should().NotBe(null);
         }
 
         [Fact]
-        public void On_Init_KeySigner_Can_Generate_Default_Key_If_Key_No_KeyStore_File_Exists()
+        public async Task On_Init_KeySigner_Can_Generate_Default_Key_If_Key_No_KeyStore_File_Exists()
         {
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs((IPrivateKey) null);
+            _keystore.KeyStoreDecryptAsync(default).ReturnsForAnyArgs((IPrivateKey) null);
 
             var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
-            _keystore.Received(1).KeyStoreGenerate(Arg.Any<NetworkType>(), Arg.Any<KeyRegistryTypes>());
+            
+            await _keystore.Received(1).KeyStoreDecryptAsync(Arg.Any<KeyRegistryTypes>())
+               .ConfigureAwait(false);
+            
+            await _keystore.Received(1)
+               .KeyStoreGenerateAsync(Arg.Any<NetworkType>(), Arg.Any<KeyRegistryTypes>())
+               .ConfigureAwait(false);
+            
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
             keySigner.Should().NotBe(null);
         }
 
         [Fact] 
-        public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
+        public async Task KeySigner_Can_Sign_If_Key_Exists_In_Registry()
         {
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(_privateKey);
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
@@ -98,23 +108,33 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
 
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
+            
             _keystore.ClearReceivedCalls();
             _keyRegistry.ClearReceivedCalls();
 
-            var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
+            var actualSignature = await keySigner.SignAsync(Encoding.UTF8.GetBytes("sign this please"), _signingContext)
+               .ConfigureAwait(false);
 
             _keyRegistry.ReceivedWithAnyArgs(1).GetItemFromRegistry(default);
-            _keystore.Received(0).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
-            _keystore.Received(0).KeyStoreGenerate(Arg.Any<NetworkType>(), Arg.Any<KeyRegistryTypes>());
+            
+            await _keystore.Received(0)
+               .KeyStoreDecryptAsync(Arg.Any<KeyRegistryTypes>())
+               .ConfigureAwait(false);
+            
+            await _keystore.Received(0)
+               .KeyStoreGenerateAsync(Arg.Any<NetworkType>(), Arg.Any<KeyRegistryTypes>())
+               .ConfigureAwait(false);
+            
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             
             Assert.Equal(_signature, actualSignature);
         }
 
         [Fact] 
-        public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
-        {            
-            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);            
+        public async Task KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
+        {
+            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
+
             _keystore.ClearReceivedCalls();
             _keyRegistry.ClearReceivedCalls();
 
@@ -122,9 +142,11 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
             
-            var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
+            var actualSignature = await keySigner.SignAsync(Encoding.UTF8.GetBytes("sign this please"), _signingContext)
+               .ConfigureAwait(false);
 
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
+            await _keystore.Received(1).KeyStoreDecryptAsync(Arg.Any<KeyRegistryTypes>())
+               .ConfigureAwait(false);
 
             Assert.Equal(_signature, actualSignature);
         }

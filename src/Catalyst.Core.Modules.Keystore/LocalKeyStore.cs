@@ -27,7 +27,6 @@ using System.Security;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
@@ -67,9 +66,11 @@ namespace Catalyst.Core.Modules.Keystore
             _logger = logger;
         }
 
-        public IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier)
+        public async Task<IPrivateKey> KeyStoreDecryptAsync(KeyRegistryTypes keyIdentifier)
         {
-            var json = GetJsonFromKeyStore(keyIdentifier);
+            var json = await _fileSystem.ReadTextFromCddSubDirectoryFile(keyIdentifier.Name, Constants.KeyStoreDataSubDir)
+               .ConfigureAwait(false);
+            
             if (string.IsNullOrEmpty(json))
             {
                 _logger.Error("No keystore exists for the given key");
@@ -122,7 +123,7 @@ namespace Catalyst.Core.Modules.Keystore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
 
-        public async Task<IPrivateKey> KeyStoreGenerate(NetworkType networkType, KeyRegistryTypes keyIdentifier)
+        public async Task<IPrivateKey> KeyStoreGenerateAsync(NetworkType networkType, KeyRegistryTypes keyIdentifier)
         {
             var privateKey = _cryptoContext.GeneratePrivateKey();
 
@@ -165,11 +166,6 @@ namespace Catalyst.Core.Modules.Keystore
             {
                 _logger.Error(e.Message);
             }
-        }
-
-        private string GetJsonFromKeyStore(IEnumeration keyIdentifier)
-        {
-            return _fileSystem.ReadTextFromCddSubDirectoryFile(keyIdentifier.Name, Constants.KeyStoreDataSubDir);
         }
 
         private static string StringFromSecureString(SecureString secureString)

@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
@@ -146,7 +147,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
         }
 
         [Fact]
-        public void RpcClientChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
+        public async Task RpcClientChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
@@ -159,7 +160,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 
             _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(default);
             
-            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), default);
+            await _keySigner.DidNotReceiveWithAnyArgs()
+               .SignAsync(Arg.Any<byte[]>(), default)
+               .ConfigureAwait(false);
 
             testingChannel.ReadOutbound<IByteBuffer>();
         }

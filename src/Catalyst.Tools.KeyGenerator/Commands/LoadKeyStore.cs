@@ -29,6 +29,7 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Tools.KeyGenerator.Interfaces;
 using Catalyst.Tools.KeyGenerator.Options;
 using System;
+using System.Threading.Tasks;
 using Catalyst.Protocol.Network;
 
 namespace Catalyst.Tools.KeyGenerator.Commands
@@ -52,7 +53,7 @@ namespace Catalyst.Tools.KeyGenerator.Commands
         public string CommandName => "load";
         public Type OptionType => typeof(LoadKeyStoreOption);
 
-        public void ParseOption(NetworkType networkType, object option)
+        public async Task ParseOptionAsync(NetworkType networkType, object option)
         {
             var loadKeyStoreOptions = (LoadKeyStoreOption) option;
 
@@ -63,7 +64,8 @@ namespace Catalyst.Tools.KeyGenerator.Commands
             }
 
             var secureStr = _passwordLoader.PreloadPassword(loadKeyStoreOptions.Password);
-            var privateKey = _keyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
+            var privateKey = await _keyStore.KeyStoreDecryptAsync(KeyRegistryTypes.DefaultKey)
+               .ConfigureAwait(false);
 
             // If no key store exists then KeyStoreDecrypt will log a message and return null for the private key
             if (privateKey == null)

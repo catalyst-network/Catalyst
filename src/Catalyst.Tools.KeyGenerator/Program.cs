@@ -133,7 +133,7 @@ namespace Catalyst.Tools.KeyGenerator
                     return;
                 }
 
-                parserResult.WithParsed(options => parsedCommand.ParseOption(NetworkType.Devnet, options)); //@TODO can't hard code this
+                parserResult.WithParsed(options => parsedCommand.ParseOptionAsync(NetworkType.Devnet, options)); //@TODO can't hard code this
                 return;
             }
 

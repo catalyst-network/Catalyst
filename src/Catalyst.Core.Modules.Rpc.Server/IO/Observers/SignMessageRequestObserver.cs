@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
@@ -70,7 +71,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             var decodedMessage = signMessageRequest.Message.ToByteArray();
             var signingContext = signMessageRequest.SigningContext;
 
-            var signature = _keySigner.Sign(decodedMessage, signingContext);
+            var signature = Task.Run(async () => await _keySigner.SignAsync(decodedMessage, signingContext)
+               .ConfigureAwait(false)
+            ).ConfigureAwait(false).GetAwaiter().GetResult();
 
             var publicKey = _keySigner.CryptoContext.GetPublicKeyFromBytes(signature.PublicKeyBytes);
 

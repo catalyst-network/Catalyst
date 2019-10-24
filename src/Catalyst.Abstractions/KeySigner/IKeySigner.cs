@@ -21,8 +21,10 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.Cryptography;
 using ISignature = Catalyst.Abstractions.Cryptography.ISignature;
 
@@ -40,7 +42,7 @@ namespace Catalyst.Abstractions.KeySigner
         /// </summary>
         ICryptoContext CryptoContext { get; }
         
-        ISignature Sign(byte[] data, SigningContext signingContext);
+        Task<ISignature> SignAsync(byte[] data, SigningContext signingContext, KeyRegistryTypes keyIdentifier = default);
 
         /// <summary>Verifies a message signature.</summary>
         /// <returns></returns>

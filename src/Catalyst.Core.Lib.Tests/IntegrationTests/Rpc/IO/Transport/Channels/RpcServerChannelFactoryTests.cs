@@ -109,7 +109,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
             var signature = Substitute.For<ISignature>();
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
             
-            _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
+            _serverKeySigner.SignAsync(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
             
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -126,8 +126,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 
             _serverCorrelationManager.DidNotReceiveWithAnyArgs().AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
             
-            _serverKeySigner.ReceivedWithAnyArgs(1)
-               .Sign(Arg.Any<byte[]>(), default);
+            await _serverKeySigner.ReceivedWithAnyArgs(1)
+               .SignAsync(Arg.Any<byte[]>(), default).ConfigureAwait(false);
             
             _clientKeySigner.Verify(
                     Arg.Any<ISignature>(),

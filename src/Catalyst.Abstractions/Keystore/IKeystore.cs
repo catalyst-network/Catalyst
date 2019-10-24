@@ -30,9 +30,9 @@ namespace Catalyst.Abstractions.Keystore
 {
     public interface IKeyStore
     {
-        IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier);
+        Task<IPrivateKey> KeyStoreDecryptAsync(KeyRegistryTypes keyIdentifier);
 
-        Task<IPrivateKey> KeyStoreGenerate(NetworkType networkType, KeyRegistryTypes keyIdentifier);
+        Task<IPrivateKey> KeyStoreGenerateAsync(NetworkType networkType, KeyRegistryTypes keyIdentifier);
 
         Task KeyStoreEncryptAsync(IPrivateKey privateKey, NetworkType networkType, KeyRegistryTypes keyIdentifier);
     }

@@ -22,6 +22,7 @@
 #endregion
 
 using System.Reflection;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
@@ -41,7 +42,7 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
         /// <param name="protocolMessage">The message that needs to be signed.</param>
         /// <param name="keySigner">An instance of <see cref="IKeySigner"/> used to build the signature.</param>
         /// <param name="signingContext">The context used to sign the message.</param>
-        public static ProtocolMessage Sign(this ProtocolMessage protocolMessage,
+        internal static async Task<ProtocolMessage> SignAsync(this ProtocolMessage protocolMessage,
             IKeySigner keySigner,
             SigningContext signingContext)
         {
@@ -52,12 +53,13 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
             }
 
             protocolMessage.Signature = null;
-            var signatureBytes = keySigner.Sign(protocolMessage.ToByteArray(),
-                signingContext).SignatureBytes;
+            var signedMsg = await keySigner.SignAsync(protocolMessage.ToByteArray(),
+                signingContext).ConfigureAwait(false);
+            
             var signature = new Signature
             {
                 SigningContext = signingContext,
-                RawBytes = signatureBytes.ToByteString()
+                RawBytes = signedMsg.SignatureBytes.ToByteString()
             };
             protocolMessage.Signature = signature;
             return protocolMessage;

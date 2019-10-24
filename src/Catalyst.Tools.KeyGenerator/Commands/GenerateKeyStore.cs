@@ -24,6 +24,7 @@
 using Catalyst.Tools.KeyGenerator.Options;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
@@ -55,7 +56,7 @@ namespace Catalyst.Tools.KeyGenerator.Commands
             throw new NotSupportedException();
         }
 
-        public void ParseOption(NetworkType networkType, object option)
+        public async Task ParseOptionAsync(NetworkType networkType, object option)
         {
             var generateKeyStoreOption = (GenerateKeyStoreOption) option;
 
@@ -70,8 +71,9 @@ namespace Catalyst.Tools.KeyGenerator.Commands
 
             try
             {
-                var privateKey = _keyStore.KeyStoreGenerate(networkType, KeyRegistryTypes.DefaultKey).ConfigureAwait(false)
-                   .GetAwaiter().GetResult();
+                var privateKey = await _keyStore.KeyStoreGenerateAsync(networkType, KeyRegistryTypes.DefaultKey)
+                   .ConfigureAwait(false);
+                
                 var publicKey = privateKey.GetPublicKey().Bytes.KeyToString();
 
                 _userOutput.WriteLine($"Generated key store at path: {Path.GetFullPath(generateKeyStoreOption.Path)}");

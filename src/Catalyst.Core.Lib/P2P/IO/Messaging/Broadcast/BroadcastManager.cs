@@ -165,7 +165,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             _incomingBroadcastSignatureDictionary.TryRemove(correlationId, out _);
         }
 
-        private void SendBroadcastMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
+        private async Task SendBroadcastMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
         {
             try
             {
@@ -174,7 +174,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
 
                 if (isOwnerOfBroadcast)
                 {
-                    innerMessage = innerMessage.Sign(_signer, _signingContext);
+                    innerMessage = await innerMessage.SignAsync(_signer, _signingContext)
+                       .ConfigureAwait(false);
                     message.Value = innerMessage.ToByteString();
                 }
 

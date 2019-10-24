@@ -36,9 +36,9 @@ namespace Catalyst.Abstractions.FileSystem
 
         bool DataFileExistsInSubDirectory(string fileName, string subDirectory);
 
-        string ReadTextFromCddFile(string fileName);
+        Task<string> ReadTextFromCddFile(string fileName);
 
-        string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);
+        Task<string> ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);
 
         bool SetCurrentPath(string path);
     }

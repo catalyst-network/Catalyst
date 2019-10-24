@@ -124,21 +124,27 @@ namespace Catalyst.Core.Lib.FileSystem
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
-        public string ReadTextFromCddFile(string fileName)
+        public Task<string> ReadTextFromCddFile(string fileName)
         {
             var path = Path.Combine(GetCatalystDataDir().FullName, fileName);
-            return ReadTextFromFile(path);
+            return ReadTextFromFileAsync(path);
         }
 
-        public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
+        public Task<string> ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
         {
             var path = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
-            return ReadTextFromFile(path);
+            return ReadTextFromFileAsync(path);
         }
 
-        private string ReadTextFromFile(string filePath)
+        private Task<string> ReadTextFromFileAsync(string filePath)
         {
-            return _retryPolicy.Execute(() => File.Exists(filePath) ? File.ReadAllText(filePath) : null);
+            return _retryPolicy.Execute(async () =>
+            {
+                return File.Exists(filePath)
+                    ? await File.ReadAllTextAsync(filePath)
+                       .ConfigureAwait(false)
+                    : null;
+            });
         }
     }
 }

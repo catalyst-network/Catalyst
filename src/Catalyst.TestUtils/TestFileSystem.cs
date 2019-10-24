@@ -75,9 +75,9 @@ namespace Catalyst.TestUtils
 
         public bool DataFileExists(string fileName) { return _fileSystem.DataFileExists(fileName); }
         public bool DataFileExistsInSubDirectory(string fileName, string subDirectory) { return _fileSystem.DataFileExistsInSubDirectory(fileName, subDirectory); }
-        public string ReadTextFromCddFile(string fileName) { return _fileSystem.ReadTextFromCddFile(fileName); }
+        public Task<string> ReadTextFromCddFile(string fileName) { return _fileSystem.ReadTextFromCddFile(fileName); }
 
-        public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
+        public Task<string> ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
         {
             var content = _retryPolicy.Execute(() => _fileSystem.ReadTextFromCddSubDirectoryFile(fileName, subDirectory));
             return content;

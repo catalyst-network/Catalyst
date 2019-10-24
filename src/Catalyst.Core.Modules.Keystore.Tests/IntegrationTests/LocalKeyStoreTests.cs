@@ -71,7 +71,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void KeyStore_Can_Generate_Key_And_Create_Keystore_File()
         {
-            var privateKey = _keystore.KeyStoreGenerate(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
+            var privateKey = _keystore.KeyStoreGenerateAsync(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
             privateKey.Should().NotBe(null);
         }
 
@@ -81,23 +81,32 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         {
             _fileSystem.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
                .Returns("bad contents");
-            Assert.Throws<Exception>(() => _keystore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey));
+            
+            Assert.ThrowsAnyAsync<Exception>(async () => await _keystore.KeyStoreDecryptAsync(KeyRegistryTypes.DefaultKey)
+               .ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Keystore_Can_Create_Keystore_File_From_Provided_Key()
+        public async Task Keystore_Can_Create_Keystore_File_From_Provided_Key()
         {
             string jsonKeyStore = null;
-            _fileSystem.WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Do<string>(x => jsonKeyStore = x));
+            
+            await _fileSystem.WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(),
+                    Arg.Do<string>(x => jsonKeyStore = x))
+               .ConfigureAwait(false);
 
             var privateKey = _context.GeneratePrivateKey();
-            _keystore.KeyStoreEncryptAsync(privateKey, NetworkType.Devnet, KeyRegistryTypes.DefaultKey).Wait();
+            
+            await _keystore.KeyStoreEncryptAsync(privateKey, NetworkType.Devnet, KeyRegistryTypes.DefaultKey)
+               .ConfigureAwait(false);
 
             _fileSystem.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
                .Returns(jsonKeyStore);
-            var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
+            
+            var storedKey = await _keystore.KeyStoreDecryptAsync(KeyRegistryTypes.DefaultKey)
+               .ConfigureAwait(false);
+            
             privateKey.Bytes.Should().BeEquivalentTo(storedKey.Bytes);
         }
 
@@ -109,13 +118,16 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             await _fileSystem.WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Do<string>(x => jsonKeyStore = x));
 
-            var privateKey = await _keystore.KeyStoreGenerate(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
+            var privateKey = await _keystore.KeyStoreGenerateAsync(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
+            
             await _fileSystem.Received(1)
                .WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
 
             _fileSystem.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
                .Returns(jsonKeyStore);
-            var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
+            
+            var storedKey = await _keystore.KeyStoreDecryptAsync(KeyRegistryTypes.DefaultKey)
+               .ConfigureAwait(false);
 
             storedKey.Should().NotBe(null);
             privateKey.Bytes.Should().BeEquivalentTo(storedKey.Bytes);
@@ -138,14 +150,20 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             _passwordManager.RetrieveOrPromptPassword(default)
                .ReturnsForAnyArgs(t => TestPasswordReader.BuildSecureStringPassword("a different test password"));
 
-            Assert.Throws<AuthenticationException>(() => _keystore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey));
+            await Assert.ThrowsAsync<AuthenticationException>(async () =>
+            {
+                await _keystore.KeyStoreDecryptAsync(KeyRegistryTypes.DefaultKey).ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Keystore_Returns_Null_If_Key_File_Doesnt_Exist()
+        public async Task Keystore_Returns_Null_If_Key_File_Doesnt_Exist()
         {
-            _keystore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey).Should().Be(null);
+            var store = await _keystore.KeyStoreDecryptAsync(KeyRegistryTypes.DefaultKey)
+               .ConfigureAwait(false);
+                
+            store.Should().Be(null);
         }
     }
 }

@@ -29,7 +29,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Xunit;
 
-namespace Catalyst.Protocol.Tests.Deltas
+namespace Catalyst.Protocol.Tests.UnitTests.Deltas
 {
     public sealed class DeltaTests
     {

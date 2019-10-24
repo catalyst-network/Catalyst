@@ -227,7 +227,10 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
                     discoveryTestBuilder.PeerClientObservables
                        .ToList()
-                       .ForEach(o => { o.ResponseMessageSubject.OnNext(dto); });
+                       .ForEach(o =>
+                        {
+                            o.ResponseMessageSubject.OnNext(dto);
+                        });
                 });
 
                 using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)

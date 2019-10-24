@@ -32,7 +32,6 @@ namespace Catalyst.Core.Modules.Keystore
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<SigningContextProvider>().As<ISigningContextProvider>();
-            builder.RegisterType<LocalKeyStore>().As<IKeyStore>();
             builder.RegisterType<KeyRegistry>().As<IKeyRegistry>().SingleInstance();
             builder.RegisterType<LocalKeyStore>().As<IKeyStore>();
         }  

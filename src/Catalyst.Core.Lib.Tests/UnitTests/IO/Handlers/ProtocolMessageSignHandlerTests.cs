@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
@@ -61,27 +62,38 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         }
 
         [Fact]
-        public void CantSignMessage()
+        public async Task CantSignMessage()
         {
             var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, DevNetPeerSigningContext.Instance);
 
-            protocolMessageSignHandler.WriteAsync(_fakeContext, new object());
+            await protocolMessageSignHandler.WriteAsync(_fakeContext, new object()).ConfigureAwait(false);
 
-            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), default);
-            _fakeContext.ReceivedWithAnyArgs().WriteAsync(new object());
+            await _keySigner.DidNotReceiveWithAnyArgs()
+               .SignAsync(Arg.Any<byte[]>(), default)
+               .ConfigureAwait(false);
+            
+            await _fakeContext.ReceivedWithAnyArgs()
+               .WriteAsync(new object())
+               .ConfigureAwait(false);
         }
 
         [Fact]
-        public void CanWriteAsyncOnSigningMessage()
+        public async Task CanWriteAsyncOnSigningMessage()
         {
-            _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);
+            _keySigner.SignAsync(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);
 
             var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, DevNetPeerSigningContext.Instance);
 
-            protocolMessageSignHandler.WriteAsync(_fakeContext, _dto);
+            await protocolMessageSignHandler.WriteAsync(_fakeContext, _dto)
+               .ConfigureAwait(false);
             
-            _fakeContext.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(new object());
-            _fakeContext.ReceivedWithAnyArgs().WriteAsync(new object());
+            await _fakeContext.DidNotReceiveWithAnyArgs()
+               .WriteAndFlushAsync(new object())
+               .ConfigureAwait(false);
+            
+            await _fakeContext.ReceivedWithAnyArgs()
+               .WriteAsync(new object())
+               .ConfigureAwait(false);
         }
     }
 }

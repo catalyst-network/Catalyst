@@ -293,12 +293,12 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
             using (var walker = discoveryTestBuilder.Build())
             {
-                Assert.Throws<InvalidOperationException>(() =>
+                Assert.ThrowsAsync<InvalidOperationException>(async () =>
                 {
-                    walker.DiscoveryAsync().GetAwaiter().GetResult();
+                    await walker.DiscoveryAsync().ConfigureAwait(false);
                     Thread.Sleep(2);
                     ctp.CancellationTokenSource.Cancel();
-                });
+                }).ConfigureAwait(false);
             }
         }
 

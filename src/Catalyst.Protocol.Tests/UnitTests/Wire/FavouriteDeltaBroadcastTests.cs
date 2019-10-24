@@ -29,7 +29,7 @@ using Google.Protobuf;
 using Xunit;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
-namespace Catalyst.Protocol.Tests.Wire
+namespace Catalyst.Protocol.Tests.UnitTests.Wire
 {
     public class FavouriteDeltaBroadcastTests
     {

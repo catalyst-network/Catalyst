@@ -22,13 +22,13 @@
 #endregion
 
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
 
-namespace Catalyst.Protocol.Tests
+namespace Catalyst.Protocol.Tests.UnitTests
 {
     public class ProtobufExtensionsTests
     {

@@ -32,6 +32,7 @@ using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using System.Linq;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -95,9 +96,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Valid_Message_Signature_Can_Return_True_Response()
+        public async Task Valid_Message_Signature_Can_Return_True_Response()
         {
-            var privateKey = _keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
+            var privateKey = await _keySigner.KeyStore.KeyStoreDecryptAsync(KeyRegistryTypes.DefaultKey);
 
             var signingContext = new SigningContext
             {

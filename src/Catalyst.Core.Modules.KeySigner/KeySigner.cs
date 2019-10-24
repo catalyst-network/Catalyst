@@ -52,24 +52,20 @@ namespace Catalyst.Core.Modules.KeySigner
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
             _keyRegistry = keyRegistry;
-            InitialiseKeyRegistry();
-        }
-
-        private void InitialiseKeyRegistry()
-        {
-            if (!TryPopulateDefaultKeyFromKeyStore(out _))
+            
+            Task.Run(async () =>
             {
-                GenerateKeyAndPopulateRegistryWithDefault().ConfigureAwait(false);
-            }   
-        }
-
-        private async Task GenerateKeyAndPopulateRegistryWithDefault()
-        {
-            var privateKey = await _keyStore.KeyStoreGenerate(NetworkType.Devnet, _defaultKey).ConfigureAwait(false);
-            if (privateKey != null)
-            { 
-                _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
-            }
+                if (!await PopulateRegistryFromKeyStoreAsync().ConfigureAwait(false))
+                {
+                    var privateKey = await _keyStore.KeyStoreGenerateAsync(NetworkType.Devnet, _defaultKey)
+                       .ConfigureAwait(false);
+                    
+                    if (privateKey != null)
+                    { 
+                        _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
+                    }
+                }
+            }).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -78,24 +74,17 @@ namespace Catalyst.Core.Modules.KeySigner
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        private ISignature Sign(byte[] data, SigningContext signingContext, KeyRegistryTypes keyIdentifier)
+        public async Task<ISignature> SignAsync(byte[] data, SigningContext signingContext, KeyRegistryTypes keyIdentifier = default)
         {
-            var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
-            if (privateKey == null && !TryPopulateRegistryFromKeyStore(keyIdentifier, out privateKey))
+            var keyType = keyIdentifier ?? _defaultKey;
+            var privateKey = _keyRegistry.GetItemFromRegistry(keyType);
+            
+            if (privateKey == null && !await PopulateRegistryFromKeyStoreAsync(keyType)
+               .ConfigureAwait(false))
             {
                 throw new SignatureException("The signature cannot be created because the key does not exist");
             }
 
-            return Sign(data, signingContext, privateKey);
-        }
-
-        public ISignature Sign(byte[] data, SigningContext signingContext)
-        {
-            return Sign(data, signingContext, KeyRegistryTypes.DefaultKey);
-        }
-
-        private ISignature Sign(byte[] data, SigningContext signingContext, IPrivateKey privateKey)
-        {
             return _cryptoContext.Sign(privateKey, data, signingContext.ToByteArray());
         }
 
@@ -105,22 +94,19 @@ namespace Catalyst.Core.Modules.KeySigner
             return _cryptoContext.Verify(signature, message, signingContext.ToByteArray());
         }
 
-        /// <inheritdoc/>
         public void ExportKey()
         {
             throw new NotImplementedException();
         }
 
-        private bool TryPopulateRegistryFromKeyStore(KeyRegistryTypes keyIdentifier, out IPrivateKey key)
+        private async Task<bool> PopulateRegistryFromKeyStoreAsync(KeyRegistryTypes keyIdentifier = default)
         {
-            key = _keyStore.KeyStoreDecrypt(keyIdentifier);
+            var keyType = keyIdentifier ?? _defaultKey;
             
-            return key != null && (_keyRegistry.RegistryContainsKey(keyIdentifier) || _keyRegistry.AddItemToRegistry(keyIdentifier, key));
-        }
-
-        private bool TryPopulateDefaultKeyFromKeyStore(out IPrivateKey key)
-        {
-            return TryPopulateRegistryFromKeyStore(_defaultKey, out key);
-        }   
+            var key = await _keyStore.KeyStoreDecryptAsync(keyType)
+               .ConfigureAwait(false);
+            
+            return key != null && (_keyRegistry.RegistryContainsKey(keyType) || _keyRegistry.AddItemToRegistry(keyType, key));
+        } 
     }
 }

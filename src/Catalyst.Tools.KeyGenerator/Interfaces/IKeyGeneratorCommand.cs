@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Protocol.Network;
 
@@ -28,6 +29,6 @@ namespace Catalyst.Tools.KeyGenerator.Interfaces
 {
     public interface IKeyGeneratorCommand : ICommand
     {
-        void ParseOption(NetworkType networkType, object option);
+        Task ParseOptionAsync(NetworkType networkType, object option);
     }
 }

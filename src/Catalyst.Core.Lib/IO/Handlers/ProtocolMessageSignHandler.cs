@@ -53,12 +53,16 @@ namespace Catalyst.Core.Lib.IO.Handlers
         /// <param name="context"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
+        protected override async Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             Logger.Verbose("Signing message {message}", message);
-            var protocolMessageSigned = message.Content.Sign(_keySigner, _signingContext);
+            
+            var protocolMessageSigned = await message.Content.SignAsync(_keySigner, _signingContext)
+               .ConfigureAwait(false);
+            
             var signedDto = new SignedMessageDto(protocolMessageSigned, message.RecipientPeerIdentifier);
-            return context.WriteAsync(signedDto);
+            
+            await context.WriteAsync(signedDto).ConfigureAwait(false);
         }
     }
 }

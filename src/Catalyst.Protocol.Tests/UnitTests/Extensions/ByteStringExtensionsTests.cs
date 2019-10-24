@@ -27,7 +27,7 @@ using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
 
-namespace Catalyst.Protocol.Tests.Extensions
+namespace Catalyst.Protocol.Tests.UnitTests.Extensions
 {
     public class ByteStringExtensionsTests
     {

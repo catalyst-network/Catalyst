@@ -22,6 +22,7 @@
 #endregion
 
 using System.Text;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
@@ -82,35 +83,42 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void KeySigner_Can_Sign_If_There_Is_No_Keystore_File()
+        public async Task KeySigner_Can_Sign_If_There_Is_No_Keystore_File()
         {
-            _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"), new SigningContext());
+            await _keySigner.SignAsync(Encoding.UTF8.GetBytes("sign this plz"), new SigningContext())
+               .ConfigureAwait(false);
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void KeySigner_Can_Sign_If_There_Is_An_Existing_Keystore_File()
+        public async Task KeySigner_Can_Sign_If_There_Is_An_Existing_Keystore_File()
         {
             Ensure_A_KeyStore_File_Exists();
-            _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"), new SigningContext());
+            
+            await _keySigner.SignAsync(Encoding.UTF8.GetBytes("sign this plz"), new SigningContext())
+               .ConfigureAwait(false);
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void KeySigner_Can_Verify_A_Signature()
+        public async Task KeySigner_Can_Verify_A_Signature()
         {
             var toSign = Encoding.UTF8.GetBytes("sign this plz");
-            var signature = _keySigner.Sign(toSign, new SigningContext());
+            var signature = await _keySigner.SignAsync(toSign, new SigningContext())
+               .ConfigureAwait(false);
 
             _keySigner.Verify(signature, toSign, new SigningContext()).Should().BeTrue();
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void KeySigner_Cant_Verify_An_Incorrect_Signature()
+        public async Task KeySigner_Cant_Verify_An_Incorrect_Signature()
         {
             var toSign = Encoding.UTF8.GetBytes("sign this plz");
-            var signature = _keySigner.Sign(toSign, new SigningContext());
+
+            var signature = await _keySigner.SignAsync(toSign, new SigningContext())
+               .ConfigureAwait(false);
+
             var signingContext = new SigningContext
             {
                 NetworkType = NetworkType.Mainnet,
@@ -122,7 +130,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void KeySigner_Can_Verify_A_Signature_With_Non_Default_Context()
+        public async Task KeySigner_Can_Verify_A_Signature_With_Non_Default_Context()
         {
             var toSign = Encoding.UTF8.GetBytes("sign this plz");
 
@@ -131,7 +139,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
                 NetworkType = NetworkType.Mainnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
-            var signature = _keySigner.Sign(toSign, signingContext);
+            var signature = await _keySigner.SignAsync(toSign, signingContext).ConfigureAwait(false);
 
             _keySigner.Verify(signature, toSign, signingContext).Should().BeTrue();
         }

@@ -110,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             var sender = PeerIdHelper.GetPeerId("sender");
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);
+            _serverKeySigner.SignAsync(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);
             
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -125,7 +125,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             _serverCorrelationManager.ReceivedWithAnyArgs(1)
                .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
             
-            _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>(), default);
+            await _serverKeySigner.ReceivedWithAnyArgs(1)
+               .SignAsync(Arg.Any<byte[]>(), default)
+               .ConfigureAwait(false);
             
             _clientKeySigner.Verify(
                     Arg.Any<ISignature>(),
@@ -152,8 +154,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
             
-            await _serverChannel.DisconnectAsync();
-            await _clientChannel.DisconnectAsync();
+            await _serverChannel?.DisconnectAsync();
+            await _clientChannel?.DisconnectAsync();
         }
     }
 }
