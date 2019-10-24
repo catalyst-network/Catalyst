@@ -71,7 +71,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void KeyStore_Can_Generate_Key_And_Create_Keystore_File()
         {
-            var privateKey = _keystore.KeyStoreGenerate(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
+            var privateKey = _keystore.KeyStoreGenerateAsync(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
             privateKey.Should().NotBe(null);
         }
 
@@ -109,7 +109,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             await _fileSystem.WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Do<string>(x => jsonKeyStore = x));
 
-            var privateKey = await _keystore.KeyStoreGenerate(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
+            var privateKey = await _keystore.KeyStoreGenerateAsync(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
             await _fileSystem.Received(1)
                .WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
 
