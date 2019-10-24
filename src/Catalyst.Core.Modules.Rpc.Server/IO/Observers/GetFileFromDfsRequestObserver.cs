@@ -143,7 +143,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>Returns the response.</summary>
         /// <param name="responseCode">The response code.</param>
         /// <param name="fileSize">Size of the file.</param>
-        private GetFileFromDfsResponse ReturnResponse(Enumeration responseCode, long fileSize)
+        private GetFileFromDfsResponse ReturnResponse(IEnumeration responseCode, long fileSize)
         {
             Logger.Information("File upload response code: " + responseCode);
 

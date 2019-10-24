@@ -124,7 +124,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 }
 
                 fileTransferInformation.Dispose();
-            }, ctx.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext()).GetAwaiter().GetResult();
+            }, ctx.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext()).ConfigureAwait(false);
 
             return message;
         }
