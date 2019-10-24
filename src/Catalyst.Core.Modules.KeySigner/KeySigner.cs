@@ -59,7 +59,8 @@ namespace Catalyst.Core.Modules.KeySigner
         {
             if (!TryPopulateDefaultKeyFromKeyStore(out _))
             {
-                GenerateKeyAndPopulateRegistryWithDefaultAsync().RunSynchronously();
+                GenerateKeyAndPopulateRegistryWithDefaultAsync()
+                   .ConfigureAwait(false).GetAwaiter().GetResult();
             }   
         }
 
