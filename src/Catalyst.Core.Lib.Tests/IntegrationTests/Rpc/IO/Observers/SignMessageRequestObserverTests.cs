@@ -109,10 +109,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
 
-            //cf. RequestObserverBase which does not await for the WriteAndFlushAsync, we wait a bit.
-            await TaskHelper.WaitForAsync(() => receivedCalls.Count == 1, TimeSpan.FromSeconds(1))
-               .ConfigureAwait(false);
-
+            _logger.DidNotReceiveWithAnyArgs().Error((Exception) default, (string) default);
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
