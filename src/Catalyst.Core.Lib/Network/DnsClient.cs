@@ -77,17 +77,20 @@ namespace Catalyst.Core.Lib.Network
         public IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> seedServers)
         {
             var peers = new List<PeerId>();
-            seedServers.ToList().ForEach(async seedServer =>
+
+            async void Action(string seedServer)
             {
                 var dnsQueryAnswer = await GetTxtRecordsAsync(seedServer).ConfigureAwait(false);
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
-        
+
                 Guard.Argument(answerSection.EscapedText).NotNull().Count(1);
                 answerSection.EscapedText.ToList()
                    .ForEach(stringPid => peers.Add(stringPid.ParseHexStringTo<PeerId>()));
-        
+
                 Guard.Argument(peers).MinCount(1);
-            });
+            }
+
+            seedServers.ToList().ForEach(Action);
             return peers;
         }
 

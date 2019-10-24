@@ -76,14 +76,19 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
 
         public async void OnNext(IPeerReputationChange peerReputationChange)
         {
-            await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
             try
             {
+                await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
+
                 var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
                 Guard.Argument(peer, nameof(peer)).NotNull();
 
                 peer.Reputation += peerReputationChange.ReputationEvent.Amount;
                 PeerRepository.Update(peer);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
             }
             finally
             {

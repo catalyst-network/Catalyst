@@ -78,7 +78,7 @@ namespace Catalyst.Core.Lib.IO.Events
             _mempool.Repository.CreateItem(transactionBroadcastDao);
 
             _logger.Information("Broadcasting {signature} transaction", protocolMessage);
-            _broadcastManager.BroadcastAsync(protocolMessage);
+            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             return ResponseCode.Successful;
         }
