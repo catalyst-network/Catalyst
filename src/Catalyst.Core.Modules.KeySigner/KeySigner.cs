@@ -59,14 +59,13 @@ namespace Catalyst.Core.Modules.KeySigner
         {
             if (!TryPopulateDefaultKeyFromKeyStore(out _))
             {
-                GenerateKeyAndPopulateRegistryWithDefaultAsync()
-                   .ConfigureAwait(false).GetAwaiter().GetResult();
+                GenerateKeyAndPopulateRegistryWithDefaultAsync();
             }   
         }
 
         private async Task GenerateKeyAndPopulateRegistryWithDefaultAsync()
         {
-            var privateKey = await _keyStore.KeyStoreGenerate(NetworkType.Devnet, _defaultKey);
+            var privateKey = await _keyStore.KeyStoreGenerateAsync(NetworkType.Devnet, _defaultKey);
             if (privateKey != null)
             { 
                 _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
