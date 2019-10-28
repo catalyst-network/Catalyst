@@ -73,7 +73,7 @@ If you don't have .Net Core installed you can follow the instructions for your p
 
 #### 2. Install the Rust Toolchain
 
-Catalyst.Core uses our native [Rust BulletProof library](https://github.com/catalyst-network/Cryptography.FFI.Rust). In order to be able to build the solution, you will need to ensure that the [Rust](https://www.rust-lang.org/) toolchain is correctly installed on you machine
+Catalyst.Core uses our native [Rust BulletProof library](https://github.com/catalyst-network/Cryptography.FFI.Rust). In order to be able to build the solution, you will need to ensure that the [Rust](https://www.rust-lang.org/) toolchain is correctly installed on you machine.
 
 ##### Unix environments
 
