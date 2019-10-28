@@ -93,12 +93,12 @@ namespace Catalyst.Core.Modules.Web3
             {
                 c.AddPolicy("AllowOrigin", options => 
                     options.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+                       .AllowAnyMethod()
+                       .AllowAnyHeader());
             });
 
             services.AddMvcCore()
-                .AddApiExplorer();
+               .AddApiExplorer();
 
             var mvcBuilder = services.AddRazorPages();
 

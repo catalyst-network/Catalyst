@@ -74,10 +74,8 @@ namespace Catalyst.Core.Lib.Validators
 
             var transactionSignature = _cryptoContext.GetSignatureFromBytes(transactionBroadcast.Signature.RawBytes.ToByteArray(),
                 transactionBroadcast.PublicEntries.First().Base.SenderPublicKey.ToByteArray());
-            var transactionWithoutSig = transactionBroadcast.Clone();
-            transactionWithoutSig.Signature = null;
-
-            if (_cryptoContext.Verify(transactionSignature, transactionWithoutSig.ToByteArray(), transactionBroadcast.Signature.SigningContext.ToByteArray()))
+            
+            if (_cryptoContext.Verify(transactionSignature, transactionBroadcast.ToByteArray(), transactionBroadcast.Signature.SigningContext.ToByteArray()))
             {
                 return true;
             }
