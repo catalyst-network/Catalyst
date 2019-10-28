@@ -79,7 +79,7 @@ Catalyst.Core uses our native [Rust BulletProof library](https://github.com/cata
 
 Download and install `msbuild prebuild tasks` from [Rust](https://www.rust-lang.org/). MsBuild will then compile the Bulletproof library when you try to build the project.
 
-Then make sure you install the rust using the rustup tool:
+Then, make sure you install Rust using the rustup tool:
 
 ```curl https://sh.rustup.rs -sSf | sh```
 
