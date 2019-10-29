@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
                 Signature = invalidSignature
             };
 
-            var result = transactionValidator.ValidateTransaction(invalidTransactionBroadcast, NetworkType.Unknown);
+            var result = transactionValidator.ValidateTransaction(invalidTransactionBroadcast);
             result.Should().BeFalse();
         }
 
@@ -91,6 +91,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
 
             var signature = new Signature
             {
+                // sign an actual TransactionBroadcast object
                 RawBytes = subbedContext.Sign(privateKey, validTransactionBroadcast.ToByteArray(), Arg.Any<byte[]>())
                    .SignatureBytes.ToByteString(),
                 SigningContext = new SigningContext
@@ -102,7 +103,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
 
             validTransactionBroadcast.Signature = signature;
 
-            var result = transactionValidator.ValidateTransaction(validTransactionBroadcast, NetworkType.Devnet);
+            var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
             result.Should().BeTrue();
         }
         
@@ -128,7 +129,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             {
                 Signature = new Signature
                 {
-                    RawBytes = new byte[64].ToByteString(),
+                    RawBytes = new byte[64].ToByteString(), //random bytes that are not of a signed TransactionBroadcast Object
                     SigningContext = new SigningContext
                     {
                         NetworkType = NetworkType.Devnet,
@@ -147,7 +148,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
                 }
             };
 
-            var result = transactionValidator.ValidateTransaction(validTransactionBroadcast, NetworkType.Devnet);
+            var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
             result.Should().BeFalse();
         }
     }

@@ -48,14 +48,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         private readonly ITransactionValidator _transactionValidator;
         private readonly IBroadcastManager _broadcastManager;
         private readonly TransactionReceivedEvent _transactionReceivedEvent;
-        private readonly IPeerSettings _peerSettings;
 
         public TransactionReceivedEventTests()
         {
             TestMappers.Start();
-
-            _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
             _mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
@@ -63,14 +59,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator,
                 _mempool,
                 _broadcastManager,
-                _peerSettings,
                 Substitute.For<ILogger>());
         }
 
         [Fact]
         public void Can_Send_Error_To_Invalid_Transaction()
         {
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>())
                .Returns(false);
             _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()
                    .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
@@ -83,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         {
             var transaction = TransactionHelper.GetPublicTransaction();
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>())
                .Returns(true);
 
             _mempool.Repository.TryReadItem(Arg.Any<string>()).Returns(true);
@@ -101,7 +96,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         {
             var transaction = TransactionHelper.GetPublicTransaction();
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>())
                .Returns(true);
             _transactionReceivedEvent
                .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
