@@ -45,32 +45,33 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IMapperProvider _mapperProvider;
+        private readonly TestMapperProvider _mapperProvider;
 
         public GetMempoolRequestObserverTests()
-        {
-            _mapperProvider = new TestMapperProvider();
+        {   
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
+            _mapperProvider = new TestMapperProvider();
         }
 
-        public IEnumerable<object[]> MempoolTransactions =>
+        public static IEnumerable<object[]> MempoolTransactions =>
             new List<object[]>
             {
                 new object[] {CreateTestTransactions()},
                 new object[] {new List<TransactionBroadcastDao>()}
             };
 
-        private List<TransactionBroadcastDao> CreateTestTransactions()
+        private static List<TransactionBroadcastDao> CreateTestTransactions()
         {
+            var mapperProvider = new TestMapperProvider();
             var txLst = new List<TransactionBroadcast>
             {
                 TransactionHelper.GetPublicTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetPublicTransaction(567, "standardPubKey", "sign2")
-            }.Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider)).ToList();
+            }.Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(mapperProvider)).ToList();
 
             return txLst;
         }
