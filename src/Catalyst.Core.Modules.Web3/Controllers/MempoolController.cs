@@ -46,7 +46,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         [HttpGet("{id}")]
         public TransactionBroadcastDao Get(string id)
         {
-            id = id.ToLower();
+            id = id.ToLowerInvariant();
             return _mempoolRepository.ReadItem(id);
         }
 
