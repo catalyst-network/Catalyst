@@ -53,6 +53,7 @@ namespace Catalyst.TestUtils
         private DirectoryInfo _testDirectory;
         protected List<string> ConfigFilesUsed { get; }
         protected readonly ContainerProvider ContainerProvider;
+        private DateTime _testStartTime;
 
         protected FileSystemBasedTest(ITestOutputHelper output, 
             IEnumerable<string> configFilesUsed = default,
@@ -93,10 +94,11 @@ namespace Catalyst.TestUtils
         protected void CreateUniqueTestDirectory()
         {
             var testStartTime = DateTime.Now;
+            _testStartTime = testStartTime;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
 
                 //get a unique folder for this run
-                CurrentTestName + $"_{testStartTime:yyMMddHHmmssffff}"));
+                CurrentTestName + $"_{_testStartTime:yyMMddHHmmssffff}"));
 
             _testDirectory.Exists.Should().BeFalse();
             _testDirectory.Create();
@@ -123,8 +125,17 @@ namespace Catalyst.TestUtils
             var regex = new Regex(CurrentTestName + @"_(?<timestamp>[\d]{16})");
 
             var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
-               .Where(d => regex.IsMatch(d.Name)
-                 && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)
+               .Where(d =>
+                {
+                    var matches = regex.Matches(d.Name);
+                    if (matches.Count == 0) return false;
+                    if (!DateTime.TryParseExact(matches[0].Groups["timestamp"].Value,
+                        "yyMMddHHmmssffff", System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out var previousTestTimeStamp)) return false;
+                    var isTestAtLeastAMinuteOld = _testStartTime.Subtract(previousTestTimeStamp) > TimeSpan.FromMinutes(1);
+                    return isTestAtLeastAMinuteOld;
+                })
                .ToList();
             oldDirectories.ForEach(TryDeleteFolder);
             
