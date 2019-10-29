@@ -23,20 +23,24 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class SigningContextDao : DaoBase<SigningContext, SigningContextDao>
+    public class SigningContextDao : DaoBase
     {
         public NetworkType NetworkType { get; set; }
         public SignatureType SignatureType { get; set; }
 
         [Column]
         private SignatureDao SignatureDao { get; set; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class SigningContextMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<SigningContext, SigningContextDao>().ReverseMap();
         }

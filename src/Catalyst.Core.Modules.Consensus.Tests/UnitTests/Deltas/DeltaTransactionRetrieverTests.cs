@@ -40,10 +40,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     {
         private readonly IList<TransactionBroadcast> _transactions;
         private readonly DeltaTransactionRetriever _transactionRetriever;
+        private readonly TestMapperProvider _mapperProvider;
 
         public DeltaTransactionRetrieverTests()
         {
-            TestMappers.Start();
+            _mapperProvider = new TestMapperProvider();
 
             var random = new Random();
 
@@ -55,9 +56,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     signature: i.ToString())
             ).ToList();
 
-            mempool.Repository.GetAll().Returns(_transactions.Select(x => new TransactionBroadcastDao().ToDao(x)));
+            mempool.Repository.GetAll().Returns(_transactions
+               .Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider)));
 
-            _transactionRetriever = new DeltaTransactionRetriever(mempool,
+            _transactionRetriever = new DeltaTransactionRetriever(mempool, _mapperProvider,
                 TransactionComparerByFeeTimestampAndHash.Default);
         }
 

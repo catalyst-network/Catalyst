@@ -23,13 +23,14 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class ConfidentialEntryDao : DaoBase<ConfidentialEntry, ConfidentialEntryDao>
+    public class ConfidentialEntryDao : DaoBase
     {
         public BaseEntryDao Base { get; set; }
         public string PedersenCommitment { get; set; }
@@ -37,8 +38,11 @@ namespace Catalyst.Core.Lib.DAO
 
         [Column]
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class ConfidentialEntryMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>()
                .ForMember(e => e.RangeProof,

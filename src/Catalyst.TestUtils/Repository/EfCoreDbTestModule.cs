@@ -28,9 +28,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils.Repository
 {
-    public sealed class EfCoreDbTestModule<TProto, TDao> : Module
-        where TDao : DaoBase<TProto, TDao>, new()
-
+    public sealed class EfCoreDbTestModule : Module
     {
         private readonly string _connectionString;
         public EfCoreDbTestModule(string connectionString) { _connectionString = connectionString; }

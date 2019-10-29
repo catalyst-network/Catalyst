@@ -22,6 +22,7 @@
 #endregion
 
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
@@ -29,21 +30,24 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class ProtocolErrorMessageSignedDao : DaoBase<ProtocolErrorMessage, ProtocolErrorMessageSignedDao>
+    public class ProtocolErrorMessageDao : DaoBase
     {
         public Signature Signature { get; set; }
         public PeerIdDao PeerId { get; set; }
         public string CorrelationId { get; set; }
         public int Code { get; set; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class ProtocolErrorMessageMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<ProtocolErrorMessage, ProtocolErrorMessageSignedDao>()
+            cfg.CreateMap<ProtocolErrorMessage, ProtocolErrorMessageDao>()
                .ForMember(e => e.CorrelationId,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
                .ReverseMap();
-            
-            cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessage>()
+
+            cfg.CreateMap<ProtocolErrorMessageDao, ProtocolErrorMessage>()
                .ForMember(e => e.CorrelationId,
                     opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }

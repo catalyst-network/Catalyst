@@ -23,31 +23,31 @@
 
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Deltas;
 
 namespace Catalyst.TestUtils
 {
-    public static class TestMappers
+    public class TestMapperProvider : MapperProvider
     {
-        public static void Start()
+        public TestMapperProvider() : base(new IMapperInitializer[]
         {
-            var mappers = new IMapperInitializer[]
-            {
-                new ProtocolMessageDao(),
-                new ConfidentialEntryDao(),
-                new ProtocolErrorMessageSignedDao(),
-                new PeerIdDao(),
-                new SigningContextDao(),
-                new CoinbaseEntryDao(),
-                new PublicEntryDao(),
-                new ConfidentialEntryDao(),
-                new TransactionBroadcastDao(),
-                new ContractEntryDao(),
-                new SignatureDao(),
-                new BaseEntryDao()
-            };
-
-            var map = new MapperProvider(mappers);
-            map.Start();
-        }
+            new ProtocolMessageMapperInitialiser(),
+            new ConfidentialEntryMapperInitialiser(),
+            new CandidateDeltaBroadcastMapperInitialiser(),
+            new ProtocolErrorMessageMapperInitialiser(),
+            new PeerIdMapperInitialiser(),
+            new SigningContextMapperInitialiser(),
+            new DeltaMapperInitialiser(),
+            new CandidateDeltaBroadcastMapperInitialiser(),
+            new DeltaDfsHashBroadcastMapperInitialiser(),
+            new FavouriteDeltaBroadcastMapperInitialiser(),
+            new CoinbaseEntryMapperInitialiser(),
+            new PublicEntryMapperInitialiser(),
+            new ConfidentialEntryMapperInitialiser(),
+            new TransactionBroadcastMapperInitialiser(),
+            new ContractEntryMapperInitialiser(),
+            new SignatureMapperInitialiser(),
+            new BaseEntryMapperInitialiser(),
+        }) { }
     }
 }

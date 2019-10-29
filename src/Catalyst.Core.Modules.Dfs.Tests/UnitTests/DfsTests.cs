@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
