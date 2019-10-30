@@ -90,11 +90,16 @@ namespace Catalyst.Core.Modules.Web3
         {
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod()
-                   .AllowAnyHeader());
+                c.AddPolicy("AllowOrigin", options => 
+                    options.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader());
             });
 
-            var mvcBuilder = services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddMvcCore()
+               .AddApiExplorer();
+
+            var mvcBuilder = services.AddRazorPages();
 
             foreach (var controllerModule in _controllerModules)
             {
@@ -116,12 +121,21 @@ namespace Catalyst.Core.Modules.Web3
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
             app.ApplicationServices = new AutofacServiceProvider(_container);
             app.UseDeveloperExceptionPage();
             app.UseCors("AllowOrigin");
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseMvc(routes => { routes.MapRoute("CatalystApi", "api/{controller}/{action}/{id}"); });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute("CatalystApi", "api/{controller}/{action}/{id}");
+            });
 
             if (_addSwagger)
             {

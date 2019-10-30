@@ -25,9 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Sockets;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -118,18 +116,6 @@ namespace Catalyst.Core.Lib.Network
         /// <param name="port"></param>
         /// <returns></returns>
         internal static bool ValidPortRange(int port) { return 1025 <= port && port <= 65535; }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="ipOrHost"></param>
-        /// <returns></returns>
-        public static IPAddress BuildIpAddress(string ipOrHost)
-        {
-            return IPAddress.TryParse(ipOrHost, out var address)
-                ? address
-                : Dns.GetHostAddressesAsync(ipOrHost).Result
-                   .FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
-        }
 
         /// <summary>
         ///     given an ip in a string format should validate and return a IPAddress object.

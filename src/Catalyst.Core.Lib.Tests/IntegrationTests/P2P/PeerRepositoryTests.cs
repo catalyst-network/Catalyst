@@ -31,6 +31,7 @@ using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Repository;
+using Catalyst.Protocol.Peer;
 using SharpRepository.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -40,23 +41,18 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     public sealed class PeerRepositoryTests : FileSystemBasedTest
     {
+        private readonly TestMapperProvider _mapperProvider;
+
         public static IEnumerable<object[]> ModulesList => 
             new List<object[]>
             {
-                new object[] {new InMemoryTestModule<Peer, PeerDao>()},
-                new object[] {new MongoDbTestModule<Peer, PeerDao>()}
+                new object[] {new InMemoryTestModule<PeerDao>()},
+                new object[] {new MongoDbTestModule<PeerDao>()}
             };
 
         public PeerRepositoryTests(ITestOutputHelper output) : base(output)
         {
-            var mappers = new IMapperInitializer[]
-            {
-                new PeerIdDao(),
-                new PeerDao()
-            };
-
-            var map = new MapperProvider(mappers);
-            map.Start();
+            _mapperProvider = new TestMapperProvider();
         }
 
         private void PeerRepo_Can_Save_And_Retrieve()
@@ -98,10 +94,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
 
-            var peerDao = new PeerDao().ToDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString())});
-            peerDao.Id = Guid.NewGuid().ToString();
-
-            peerDao.PeerIdentifier = new PeerIdDao().ToDao(PeerIdHelper.GetPeerId(new Random().Next().ToString()));
+            var peerDao = new PeerDao() {Id = Guid.NewGuid().ToString()};
+            
+            var peerId = PeerIdHelper.GetPeerId(new Random().Next().ToString());
+            peerDao.PeerIdentifier = peerId.ToDao<PeerId, PeerIdDao>(_mapperProvider);
             peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
 
             peerRepo.Add(peerDao);
@@ -137,7 +133,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-            RegisterModules(new EfCoreDbTestModule<Peer, PeerDao>(connectionStr));
+            RegisterModules(new EfCoreDbTestModule(connectionStr));
 
             CheckForDatabaseCreation();
 
@@ -151,7 +147,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-            RegisterModules(new EfCoreDbTestModule<Peer, PeerDao>(connectionStr));
+            RegisterModules(new EfCoreDbTestModule(connectionStr));
 
             CheckForDatabaseCreation();
 

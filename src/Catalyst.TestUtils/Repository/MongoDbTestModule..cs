@@ -27,8 +27,8 @@ using SharpRepository.MongoDbRepository;
 
 namespace Catalyst.TestUtils.Repository
 {
-    public sealed class MongoDbTestModule<TProto, TDao> : Module
-        where TDao : DaoBase<TProto, TDao>, new()
+    public sealed class MongoDbTestModule<TDao> : Module
+        where TDao : DaoBase, new()
 
     {
         protected override void Load(ContainerBuilder builder)

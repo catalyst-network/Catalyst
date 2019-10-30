@@ -23,6 +23,7 @@
 
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
@@ -71,9 +72,6 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             
-            // @TODO return int not byte
-            // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
-
             var responseCode = (FileTransferResponseCodeTypes) getFileFromDfsResponse.ResponseCode[0];
 
             var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(correlationId);
@@ -87,10 +85,11 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
             {
                 fileTransferInformation.SetLength(getFileFromDfsResponse.FileSize);
 
+                var ctx = new CancellationTokenSource();
                 _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None).ContinueWith(task =>
                 {
                     File.Move(fileTransferInformation.TempPath, fileTransferInformation.FileOutputPath);
-                }).ConfigureAwait(false);
+                }, ctx.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
             }
             else
             {

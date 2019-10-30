@@ -22,33 +22,26 @@
 #endregion
 
 using System.Collections.Generic;
-using Autofac;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class MapperProvider : IStartable
+    public class MapperProvider : IMapperProvider
     {
-        private readonly IEnumerable<IMapperInitializer> _mapperConfigurations;
-        public static IMapper MasterMapper { get; set; }
+        public IMapper Mapper { get; }
 
         public MapperProvider(IEnumerable<IMapperInitializer> mapperConfigurations)
         {
-            _mapperConfigurations = mapperConfigurations;
-        }
-
-        public void Start()
-        {
             var config = new MapperConfiguration(cfg =>
             {
-                foreach (var init in _mapperConfigurations)
+                foreach (var init in mapperConfigurations)
                 {
                     init.InitMappers(cfg);
                 }
             });
 
-            MasterMapper = config.CreateMapper();
+            Mapper = config.CreateMapper();
         }
     }
 }

@@ -4,8 +4,16 @@ strategy:
       imageName: 'windows-2019'
       netcore_sdk: 3.0.100
       rustup_toolchain: stable
+    Osx-Sierra:
+      imageName: 'macos-10.13'
+      netcore_sdk: 3.0.100
+      rustup_toolchain: stable
     Osx-Mojave:
       imageName: 'macos-10.14'
+      netcore_sdk: 3.0.100
+      rustup_toolchain: stable
+    Ubuntu-1804:
+      imageName: 'ubuntu-18.04'
       netcore_sdk: 3.0.100
       rustup_toolchain: stable
     Ubuntu-1604:

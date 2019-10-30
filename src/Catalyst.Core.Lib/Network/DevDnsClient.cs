@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Network
         }
         
         /// <inheritdoc />
-        public IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> seedServers)
+        public async Task<IEnumerable<PeerId>> GetSeedNodesFromDnsAsync(IEnumerable<string> seedServers)
         {
             return _peerIds;
         }

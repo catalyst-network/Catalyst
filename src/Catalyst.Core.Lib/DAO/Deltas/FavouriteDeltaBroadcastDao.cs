@@ -22,16 +22,20 @@
 #endregion
 
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
 {
-    public class FavouriteDeltaBroadcastDao : DaoBase<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>
+    public class FavouriteDeltaBroadcastDao : DaoBase
     {
         public CandidateDeltaBroadcastDao Candidate { get; set; }
         public PeerIdDao VoterId { get; set; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class FavouriteDeltaBroadcastMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>().ReverseMap();
         }

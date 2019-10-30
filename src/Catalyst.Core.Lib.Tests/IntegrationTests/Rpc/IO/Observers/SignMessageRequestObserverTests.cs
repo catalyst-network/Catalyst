@@ -21,13 +21,17 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -83,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RpcServer_Can_Handle_SignMessageRequest(string message)
+        public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var sender = PeerIdHelper.GetPeerId("sender");
             var peerSettings = Substitute.For<IPeerSettings>();
@@ -96,6 +100,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var protocolMessage =
                 signMessageRequest.ToProtocolMessage(sender);
 
+            await TaskHelper.WaitForAsync(
+                () => _keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey) != null, 
+                TimeSpan.FromSeconds(2));
+
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
             var handler =
@@ -106,6 +114,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            _logger.DidNotReceiveWithAnyArgs().Error((Exception) default, (string) default);
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
