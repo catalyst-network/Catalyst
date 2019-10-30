@@ -32,7 +32,9 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -48,45 +50,43 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
     public class DaoTests
     {
-        private readonly IMapperInitializer[] _mappers;
+        private readonly IMapperInitializer[] _initialisers;
         private readonly HashProvider _hashProvider;
+        private MapperProvider _mapperProvider;
 
         public DaoTests()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
-            _mappers = new IMapperInitializer[]
+            _initialisers = new IMapperInitializer[]
             {
-                new ProtocolMessageDao(),
-                new ConfidentialEntryDao(),
-                new CandidateDeltaBroadcastDao(),
-                new ProtocolErrorMessageSignedDao(),
-                new PeerIdDao(),
-                new SigningContextDao(),
-                new DeltaDao(),
-                new CandidateDeltaBroadcastDao(),
-                new DeltaDfsHashBroadcastDao(),
-                new FavouriteDeltaBroadcastDao(),
-                new CoinbaseEntryDao(),
-                new PublicEntryDao(),
-                new ConfidentialEntryDao(),
-                new TransactionBroadcastDao(),
-                new ContractEntryDao(),
-                new SignatureDao(),
-                new BaseEntryDao(), 
+                new ProtocolMessageMapperInitialiser(),
+                new ConfidentialEntryMapperInitialiser(),
+                new CandidateDeltaBroadcastMapperInitialiser(),
+                new ProtocolErrorMessageMapperInitialiser(),
+                new PeerIdMapperInitialiser(),
+                new SigningContextMapperInitialiser(),
+                new DeltaMapperInitialiser(),
+                new CandidateDeltaBroadcastMapperInitialiser(),
+                new DeltaDfsHashBroadcastMapperInitialiser(),
+                new FavouriteDeltaBroadcastMapperInitialiser(),
+                new CoinbaseEntryMapperInitialiser(),
+                new PublicEntryMapperInitialiser(),
+                new ConfidentialEntryMapperInitialiser(),
+                new TransactionBroadcastMapperInitialiser(),
+                new ContractEntryMapperInitialiser(),
+                new SignatureMapperInitialiser(),
+                new BaseEntryMapperInitialiser(), 
             };
 
-            var map = new MapperProvider(_mappers);
-            map.Start();
+            _mapperProvider = new MapperProvider(_initialisers);
         }
 
-        private TDao GetMapper<TDao>() where TDao : IMapperInitializer => _mappers.OfType<TDao>().First();
+        private TDao GetMapper<TDao>() where TDao : IMapperInitializer => _initialisers.OfType<TDao>().First();
         
         [Fact]
         public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
         {
-            var protocolMessageDao = GetMapper<ProtocolMessageDao>();
-
             var newGuid = Guid.NewGuid();
             var peerId = PeerIdHelper.GetPeerId("testcontent");
             var original = new ProtocolMessage
@@ -97,21 +97,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 PeerId = peerId
             };
 
-            var messageDao = protocolMessageDao.ToDao(original);
+            var messageDao = original.ToDao<ProtocolMessage, ProtocolMessageDao>(_mapperProvider);
 
             messageDao.TypeUrl.Should().Be("cleanurl");
             messageDao.CorrelationId.Should().Be(newGuid.ToString());
             messageDao.PeerId.Port.Should().Be((ushort) peerId.Port);
             messageDao.PeerId.Ip.Should().Be(new IPAddress(peerId.Ip.ToByteArray()).MapToIPv6().ToString());
 
-            var reconverted = messageDao.ToProtoBuff();
+            var reconverted = messageDao.ToProtoBuff<ProtocolMessageDao, ProtocolMessage>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
         [Fact]
         public void ProtocolErrorMessageSignedDao_ProtocolErrorMessageSigned_Should_Be_Convertible()
         {
-            var protocolErrorMessageSignedDao = GetMapper<ProtocolErrorMessageSignedDao>();
             var byteRn = new byte[30];
             new Random().NextBytes(byteRn);
 
@@ -127,27 +126,24 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 Code = 74
             };
 
-            var errorMessageSignedDao = protocolErrorMessageSignedDao.ToDao(original);
-            var reconverted = errorMessageSignedDao.ToProtoBuff();
+            var errorMessageSignedDao = original.ToDao<ProtocolErrorMessage, ProtocolErrorMessageDao>(_mapperProvider);
+            var reconverted = errorMessageSignedDao.ToProtoBuff<ProtocolErrorMessageDao, ProtocolErrorMessage>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
         [Fact]
         public void PeerIdDao_PeerId_Should_Be_Convertible()
         {
-            var peerIdDao = GetMapper<PeerIdDao>();
-
             var original = PeerIdHelper.GetPeerId("MyPeerId_Testing");
 
-            var peer = peerIdDao.ToDao(original);
-            var reconverted = peer.ToProtoBuff();
+            var peer = original.ToDao<PeerId, PeerIdDao>(_mapperProvider);
+            var reconverted = peer.ToProtoBuff<PeerIdDao, PeerId>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
         [Fact]
         public void SigningContextDao_SigningContext_Should_Be_Convertible()
         {
-            var signingContextDao = GetMapper<SigningContextDao>();
             var byteRn = new byte[30];
             new Random().NextBytes(byteRn);
 
@@ -157,16 +153,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 SignatureType = SignatureType.TransactionPublic
             };
 
-            var contextDao = signingContextDao.ToDao(original);
-            var reconverted = contextDao.ToProtoBuff();
+            var contextDao = original.ToDao<SigningContext, SigningContextDao>(_mapperProvider);
+            var reconverted = contextDao.ToProtoBuff<SigningContextDao, SigningContext>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
         [Fact]
         public void BaseEntryDao_And_BaseEntry_Should_Be_Convertible()
         {
-            var baseEntryDao = GetMapper<BaseEntryDao>();
-
             var original = new BaseEntry    
             {
                 ReceiverPublicKey = "hello".ToUtf8ByteString(),
@@ -174,29 +168,26 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 TransactionFees = UInt256.MaxValue.ToUint256ByteString()
             };
 
-            var contextDao = baseEntryDao.ToDao(original);
-            var reconverted = contextDao.ToProtoBuff();
+            var contextDao = original.ToDao<BaseEntry, BaseEntryDao>(_mapperProvider);
+            var reconverted = contextDao.ToProtoBuff<BaseEntryDao, BaseEntry>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
         [Fact]
         public void DeltasDao_Deltas_Should_Be_Convertible()
         {
-            var deltaDao = GetMapper<DeltaDao>();
-
             var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
 
             var original = DeltaHelper.GetDelta(_hashProvider, previousHash);
 
-            var messageDao = deltaDao.ToDao(original);
-            var reconverted = messageDao.ToProtoBuff();
+            var messageDao = original.ToDao<Delta, DeltaDao>(_mapperProvider);
+            var reconverted = messageDao.ToProtoBuff<DeltaDao, Delta>(_mapperProvider);
             original.Should().Be(reconverted);
         }
 
         [Fact]
         public void CandidateDeltaBroadcastDao_CandidateDeltaBroadcast_Should_Be_Convertible()
         {
-            var candidateDeltaBroadcastDao = GetMapper<CandidateDeltaBroadcastDao>();
             var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
             var hash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("anotherHash"));
 
@@ -207,16 +198,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 PreviousDeltaDfsHash = MultiBase.Decode(CidHelper.CreateCid(previousHash)).ToByteString()
             };
 
-            var candidateDeltaBroadcast = candidateDeltaBroadcastDao.ToDao(original);
-            var reconverted = candidateDeltaBroadcast.ToProtoBuff();
+            var candidateDeltaBroadcast = original.ToDao<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>(_mapperProvider);
+            var reconverted = candidateDeltaBroadcast.ToProtoBuff<CandidateDeltaBroadcastDao, CandidateDeltaBroadcast>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
         [Fact]
         public void DeltaDfsHashBroadcastDao_DeltaDfsHashBroadcast_Should_Be_Convertible()
         {
-            var deltaDfsHashBroadcastDao = GetMapper<DeltaDfsHashBroadcastDao>();
-
             var hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("this hash")));
             var previousDfsHash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousDfsHash")));
 
@@ -226,31 +215,28 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 PreviousDeltaDfsHash = previousDfsHash.ToByteString()
             };
 
-            var contextDao = deltaDfsHashBroadcastDao.ToDao(original);
-            var reconverted = contextDao.ToProtoBuff();
+            var contextDao = original.ToDao<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>(_mapperProvider);
+            var reconverted = contextDao.ToProtoBuff<DeltaDfsHashBroadcastDao, DeltaDfsHashBroadcast>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
         [Fact]
         public void FavouriteDeltaBroadcastDao_FavouriteDeltaBroadcast_Should_Be_Convertible()
         {
-            var favouriteDeltaBroadcastDao = GetMapper<FavouriteDeltaBroadcastDao>();
-
             var original = new FavouriteDeltaBroadcast
             {
                 Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: PeerIdHelper.GetPeerId("not me")),
                 VoterId = PeerIdHelper.GetPeerId("test")
             };
 
-            var contextDao = favouriteDeltaBroadcastDao.ToDao(original);
-            var reconverted = contextDao.ToProtoBuff();
+            var contextDao = original.ToDao<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>(_mapperProvider);
+            var reconverted = contextDao.ToProtoBuff<FavouriteDeltaBroadcastDao, FavouriteDeltaBroadcast>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
         [Fact]
         public void CoinbaseEntryDao_CoinbaseEntry_Should_Be_Convertible()
         {
-            var coinbaseEntryDao = GetMapper<CoinbaseEntryDao>();
             var pubKeyBytes = new byte[30];
             new Random().NextBytes(pubKeyBytes);
 
@@ -260,17 +246,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 Amount = 271314.ToUint256ByteString()
             };
 
-            var messageDao = coinbaseEntryDao.ToDao(original);
+            var messageDao = original.ToDao<CoinbaseEntry, CoinbaseEntryDao>(_mapperProvider);
             messageDao.ReceiverPublicKey.Should().Be(pubKeyBytes.KeyToString());
 
-            var reconverted = messageDao.ToProtoBuff();
+            var reconverted = messageDao.ToProtoBuff<CoinbaseEntryDao, CoinbaseEntry>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
         [Fact]
         public void STTransactionEntryDao_STTransactionEntry_Should_Be_Convertible()
         {
-            var stTransactionEntryDao = GetMapper<PublicEntryDao>();
             var pubKeyBytes = new byte[30];
             new Random().NextBytes(pubKeyBytes);
 
@@ -284,12 +269,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 }
             };
 
-            var transactionEntryDao = stTransactionEntryDao.ToDao(original);
+            var transactionEntryDao = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
 
             transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
             transactionEntryDao.Amount.Should().Be(8855274.ToString());
 
-            var reconverted = transactionEntryDao.ToProtoBuff();
+            var reconverted = transactionEntryDao.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
             reconverted.Base.TransactionFees.ToUInt256().Should().Be(UInt256.Zero);
             reconverted.Should().Be(original);
         }
@@ -297,8 +282,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         [Fact]
         public void ConfidentialEntry_And_ConfidentialEntryDao_Should_Be_Convertible()
         {
-            var cfTransactionEntryDao = GetMapper<ConfidentialEntryDao>();
-
             var pubKeyBytes = new byte[30];
             var pedersenCommitBytes = new byte[50];
             var rangeProofBytes = new byte[50];
@@ -320,26 +303,24 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 RangeProof = rangeProofBytes.ToByteString()
             };
 
-            var transactionEntryDao = cfTransactionEntryDao.ToDao(original);
+            var transactionEntryDao = original.ToDao<ConfidentialEntry, ConfidentialEntryDao>(_mapperProvider);
 
             transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
             transactionEntryDao.Base.Nonce.Should().Be(ulong.MaxValue);
             transactionEntryDao.PedersenCommitment.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
             transactionEntryDao.RangeProof.Should().Be(rangeProofBytes.ToByteString().ToBase64());
 
-            var reconverted = transactionEntryDao.ToProtoBuff();
+            var reconverted = transactionEntryDao.ToProtoBuff<ConfidentialEntryDao, ConfidentialEntry>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
         [Fact]
         public void TransactionBroadcastDao_TransactionBroadcast_Should_Be_Convertible()
         {
-            var transactionBroadcastDao = GetMapper<TransactionBroadcastDao>();
-
             var original = TransactionHelper.GetPublicTransaction();
 
-            var transactionEntryDao = transactionBroadcastDao.ToDao(original);
-            var reconverted = transactionEntryDao.ToProtoBuff();
+            var transactionEntryDao = original.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
+            var reconverted = transactionEntryDao.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
             reconverted.Should().Be(original);
         }
     }

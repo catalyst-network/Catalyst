@@ -29,6 +29,7 @@ using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Nethermind.Dirichlet.Numerics;
@@ -44,12 +45,15 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         private readonly Mempool _memPool;
 
         private readonly TransactionBroadcastDao _transactionBroadcast;
+        private readonly TestMapperProvider _mapperProvider;
 
         public MempoolTests()
         {
-            TestMappers.Start();
             _memPool = new Mempool(Substitute.For<IMempoolRepository<TransactionBroadcastDao>>());
-            _transactionBroadcast = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
+            _mapperProvider = new TestMapperProvider();
+            _transactionBroadcast = TransactionHelper
+               .GetPublicTransaction()
+               .ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
         }
 
         private void AddKeyValueStoreEntryExpectation(TransactionBroadcastDao transaction)
@@ -67,8 +71,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             _memPool.Repository.CreateItem(_transactionBroadcast);
             AddKeyValueStoreEntryExpectation(_transactionBroadcast);
 
-            var mempoolDocument = _memPool.Repository.ReadItem(_transactionBroadcast.Signature.RawBytes).ToProtoBuff();
-            var expectedTransaction = _transactionBroadcast.ToProtoBuff();
+            var mempoolDocument = _memPool.Repository.ReadItem(_transactionBroadcast.Signature.RawBytes)
+               .ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
+            var expectedTransaction = _transactionBroadcast.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
 
             mempoolDocument.PublicEntries.Single().Amount.ToUInt256().Should()
                .Be(expectedTransaction.PublicEntries.Single().Amount.ToUInt256());
@@ -87,7 +92,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             for (var i = 0; i < numTx; i++)
             {
                 var signature = Encoding.UTF8.GetBytes($"key{i}").ToBase32();
-                var mempoolDocument = _memPool.Repository.ReadItem(signature).ToProtoBuff();
+                var mempoolDocument = _memPool.Repository.ReadItem(signature).ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
                 mempoolDocument.PublicEntries.Single().Amount.ToUInt256().Should().Be((UInt256) i);
             }
         }
@@ -126,7 +131,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         {
             // this test seems pointless like this
 
-            var expectedAmount = _transactionBroadcast.ToProtoBuff().PublicEntries.Single().Amount;
+            var expectedAmount = _transactionBroadcast
+               .ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider)
+               .PublicEntries.Single().Amount;
 
             _memPool.Repository.CreateItem(Arg.Is(_transactionBroadcast))
                .Returns(true);
@@ -134,10 +141,13 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             var saved = _memPool.Repository.CreateItem(_transactionBroadcast);
             saved.Should().BeTrue();
 
-            var overridingTransaction = _transactionBroadcast.ToProtoBuff().Clone();
+            var overridingTransaction = _transactionBroadcast
+               .ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider).Clone();
+
             overridingTransaction.PublicEntries.Single().Amount =
                 (expectedAmount.ToUInt256() + (UInt256) 100).ToUint256ByteString();
-            var overridingTransactionDao = new TransactionBroadcastDao().ToDao(overridingTransaction);
+
+            var overridingTransactionDao = overridingTransaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
             _memPool.Repository.CreateItem(Arg.Is(overridingTransactionDao))
                .Returns(false);
             var overriden = _memPool.Repository.CreateItem(overridingTransactionDao);
@@ -201,11 +211,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             content.Should().BeEquivalentTo(mempoolDocs);
         }
 
-        private static List<TransactionBroadcastDao> GetTestingMempoolDocuments(int documentCount)
+        private List<TransactionBroadcastDao> GetTestingMempoolDocuments(int documentCount)
         {
             return Enumerable.Range(0, documentCount).Select(i =>
-                    new TransactionBroadcastDao().ToDao(
-                        TransactionHelper.GetPublicTransaction((uint) i, signature: $"key{i}")))
+                    TransactionHelper.GetPublicTransaction((uint) i, signature: $"key{i}").ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider))
                .ToList();
         }
 

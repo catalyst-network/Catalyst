@@ -45,15 +45,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
+        private readonly TestMapperProvider _mapperProvider;
 
         public GetMempoolRequestObserverTests()
-        {
-            TestMappers.Start();
+        {   
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
+            _mapperProvider = new TestMapperProvider();
         }
 
         public static IEnumerable<object[]> MempoolTransactions =>
@@ -65,12 +66,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
         private static List<TransactionBroadcastDao> CreateTestTransactions()
         {
-            TestMappers.Start();
+            var mapperProvider = new TestMapperProvider();
             var txLst = new List<TransactionBroadcast>
             {
                 TransactionHelper.GetPublicTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetPublicTransaction(567, "standardPubKey", "sign2")
-            }.Select(x => new TransactionBroadcastDao().ToDao(x)).ToList();
+            }.Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(mapperProvider)).ToList();
 
             return txLst;
         }
@@ -89,7 +90,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            var handler = new GetMempoolRequestObserver(peerSettings, mempool, _logger);
+            var handler = new GetMempoolRequestObserver(peerSettings, mempool, _mapperProvider, _logger);
 
             handler.StartObserving(messageStream);
 
@@ -102,7 +103,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var responseContent = sentResponseDto.Content.FromProtocolMessage<GetMempoolResponse>();
 
-            responseContent.Transactions.Select(x => new TransactionBroadcastDao().ToDao(x)).Should()
+            responseContent.Transactions.Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider)).Should()
                .BeEquivalentTo(mempoolTransactions);
         }
     }
