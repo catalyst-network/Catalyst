@@ -47,6 +47,6 @@ namespace Catalyst.Abstractions.Network
         /// </summary>
         /// <param name="urls"></param>
         /// <returns></returns>
-        IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> urls);
+        Task<IEnumerable<PeerId>> GetSeedNodesFromDnsAsync(IEnumerable<string> urls);
     }
 }
