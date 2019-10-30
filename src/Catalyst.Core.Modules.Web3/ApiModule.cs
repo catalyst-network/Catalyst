@@ -70,17 +70,17 @@ namespace Catalyst.Core.Modules.Web3
                 try
                 {
                     var host = Host.CreateDefaultBuilder()
-                        .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-                        .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
-                        .ConfigureWebHostDefaults(
+                       .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                       .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
+                       .ConfigureWebHostDefaults(
                             webHostBuilder =>
                             {
                                 webHostBuilder
-                                    .ConfigureServices(ConfigureServices)
-                                    .Configure(Configure)
-                                    .UseUrls(_apiBindingAddress)
-                                    .UseWebRoot(webDirectory.FullName)
-                                    .UseSerilog();
+                                   .ConfigureServices(ConfigureServices)
+                                   .Configure(Configure)
+                                   .UseUrls(_apiBindingAddress)
+                                   .UseWebRoot(webDirectory.FullName)
+                                   .UseSerilog();
                             }).Build();
                     await host.StartAsync();
                 }
@@ -94,17 +94,18 @@ namespace Catalyst.Core.Modules.Web3
             base.Load(builder);
         }
 
+        //todo Clean up - find a better way to reuse the ContainerBuilder loaded into the module
         public void ConfigureContainer(ContainerBuilder builder)
         {
             //Mempool repo
             builder.RegisterInstance(_container.Resolve<IRepository<TransactionBroadcastDao, string>>())
-                .As<IRepository<TransactionBroadcastDao, string>>()
-                .SingleInstance();
+               .As<IRepository<TransactionBroadcastDao, string>>()
+               .SingleInstance();
             builder.RegisterInstance(_container.Resolve<IMempoolRepository<TransactionBroadcastDao>>())
-                .As<IMempoolRepository<TransactionBroadcastDao>>()
-                .SingleInstance();
+               .As<IMempoolRepository<TransactionBroadcastDao>>()
+               .SingleInstance();
             builder.RegisterInstance(_container.Resolve<IMempool<TransactionBroadcastDao>>())
-                .As<IMempool<TransactionBroadcastDao>>().SingleInstance();
+               .As<IMempool<TransactionBroadcastDao>>().SingleInstance();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -113,8 +114,8 @@ namespace Catalyst.Core.Modules.Web3
             {
                 c.AddPolicy("AllowOrigin", options =>
                     options.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+                       .AllowAnyMethod()
+                       .AllowAnyHeader());
             });
 
             services.AddMvcCore().AddNewtonsoftJson().AddApiExplorer();
