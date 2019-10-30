@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
@@ -32,6 +33,7 @@ using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.P2P
 {
@@ -69,6 +71,15 @@ namespace Catalyst.Core.Lib.P2P
             DnsServers = section.GetSection("DnsServers")
                .GetChildren()
                .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray();
+            PeerId = PublicKey.BuildPeerIdFromBase32Key(BindAddress, Port);
+        }
+
+        public PeerSettings(string publicKey, IPAddress ipAddress, int port, NetworkType networkType)
+        {
+            _networkType = networkType;
+            PublicKey = publicKey;
+            BindAddress = ipAddress;
+            Port = port;
             PeerId = PublicKey.BuildPeerIdFromBase32Key(BindAddress, Port);
         }
     }
