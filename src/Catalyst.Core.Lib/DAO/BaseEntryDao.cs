@@ -23,12 +23,13 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class BaseEntryDao : DaoBase<BaseEntry, BaseEntryDao>
+    public class BaseEntryDao : DaoBase
     {
         public ulong Nonce { get; set; }
         public string ReceiverPublicKey { get; set; }
@@ -37,8 +38,11 @@ namespace Catalyst.Core.Lib.DAO
 
         [Column]
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class BaseEntryMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<BaseEntry, BaseEntryDao>().ReverseMap();
 
