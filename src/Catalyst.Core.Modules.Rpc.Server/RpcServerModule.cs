@@ -30,7 +30,7 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server
 {
-    public class RpcServerModule : Module
+    public sealed class RpcServerModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
@@ -38,7 +38,7 @@ namespace Catalyst.Core.Modules.Rpc.Server
             builder.RegisterType<RpcServer>().As<IRpcServer>().SingleInstance();
             builder.RegisterType<RpcServerSettings>().As<IRpcServerSettings>();
 
-            builder.RegisterBuildCallback(async container =>
+            async void BuildCallback(IContainer container)
             {
                 var logger = container.Resolve<ILogger>();
                 try
@@ -50,7 +50,9 @@ namespace Catalyst.Core.Modules.Rpc.Server
                 {
                     logger.Error(e, "Error loading API");
                 }
-            });
+            }
+
+            builder.RegisterBuildCallback(BuildCallback);
             
             base.Load(builder);
         }  

@@ -659,7 +659,10 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             
             var initialMemento = DiscoveryHelper.SubMemento(_ownNode, 
                 DiscoveryHelper.MockDnsClient(_settings)
-                   .GetSeedNodesFromDns(_settings.SeedServers)
+                   .GetSeedNodesFromDnsAsync(_settings.SeedServers)
+                   .ConfigureAwait(false)
+                   .GetAwaiter()
+                   .GetResult()
                    .ToNeighbours()
             );
             

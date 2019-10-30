@@ -158,11 +158,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
             Assert.True(fileTransferInformation.ChunkIndicatorsTrue());
 
-            await TaskHelper.WaitForAsync(() => fileTransferInformation.DfsHash != null, TimeSpan.FromSeconds(15));
+            await TaskHelper.WaitForAsync(() => fileTransferInformation.DfsHash != null, TimeSpan.FromSeconds(15)).ConfigureAwait(false);
             Assert.NotNull(fileTransferInformation.DfsHash);
 
             long ipfsCrcValue;
-            using (var ipfsStream = await _dfs.ReadAsync(fileTransferInformation.DfsHash))
+            using (var ipfsStream = await _dfs.ReadAsync(fileTransferInformation.DfsHash).ConfigureAwait(false))
             {
                 ipfsCrcValue = FileHelper.GetCrcValue(ipfsStream);
             }

@@ -23,6 +23,7 @@
 
 using System;
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Repository.Attributes;
 using Catalyst.Core.Lib.Util;
@@ -30,7 +31,7 @@ using Catalyst.Core.Lib.Util;
 namespace Catalyst.Core.Lib.DAO
 {
     [Audit]
-    public sealed class PeerDao : DaoBase<Peer, PeerDao>
+    public sealed class PeerDao : DaoBase
     {
         public PeerIdDao PeerIdentifier { get; set; }
 
@@ -52,8 +53,11 @@ namespace Catalyst.Core.Lib.DAO
         public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
 
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class PeerDaoMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<Peer, PeerDao>();
             cfg.AllowNullDestinationValues = true;

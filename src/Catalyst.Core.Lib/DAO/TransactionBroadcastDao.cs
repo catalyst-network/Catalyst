@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
 using MongoDB.Bson.Serialization.Attributes;
@@ -31,7 +32,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Catalyst.Core.Lib.DAO
 {
     [BsonIgnoreExtraElements]
-    public class TransactionBroadcastDao : DaoBase<TransactionBroadcast, TransactionBroadcastDao>
+    public class TransactionBroadcastDao : DaoBase
     {
         private SignatureDao _signature;
 
@@ -49,8 +50,11 @@ namespace Catalyst.Core.Lib.DAO
         public IEnumerable<PublicEntryDao> PublicEntries { get; set; }
         public IEnumerable<ConfidentialEntryDao> ConfidentialEntries { get; set; }
         public IEnumerable<ContractEntryDao> ContractEntries { get; set; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class TransactionBroadcastMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>();
             cfg.AllowNullDestinationValues = true;

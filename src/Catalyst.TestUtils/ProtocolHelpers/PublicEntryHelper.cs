@@ -33,6 +33,8 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 {
     public static class PublicEntryHelper
     {
+        private static readonly IMapperProvider MapperProvider = new TestMapperProvider();
+
         public static PublicEntry GetPublicEntry()
         {
             var amount = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
@@ -46,7 +48,7 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 
         public static PublicEntryDao GetPublicEntryDao()
         {
-            return new PublicEntryDao().ToDao(GetPublicEntry());
+            return GetPublicEntry().ToDao<PublicEntry, PublicEntryDao>(MapperProvider);
         }
 
         public static IEnumerable<PublicEntry> GetPublicEntries(int count)
@@ -62,12 +64,8 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 
         public static IEnumerable<PublicEntryDao> GetPublicEntriesDao(int count)
         {
-            var publicEntryEntries = new List<PublicEntryDao>();
-
-            GetPublicEntries(count).ToList().ForEach(i =>
-            {
-                publicEntryEntries.Add(new PublicEntryDao().ToDao(i));
-            });
+            var publicEntryEntries = GetPublicEntries(count).Select(i =>
+                i.ToDao<PublicEntry, PublicEntryDao>(MapperProvider));
 
             return publicEntryEntries;
         }
