@@ -34,6 +34,8 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 {
     public static class ContractEntryHelper
     {
+        private static readonly IMapperProvider MapperProvider = new TestMapperProvider();
+
         public static ContractEntry GetContractEntry()
         {
             var amount = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
@@ -59,12 +61,8 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 
         public static IEnumerable<ContractEntryDao> GetContractEntriesDao(int count)
         {
-            var contractList = new List<ContractEntryDao>();
-
-            GetContractEntries(count).ToList().ForEach(i =>
-            {
-                contractList.Add(new ContractEntryDao().ToDao(i));
-            });
+            var contractList = GetContractEntries(count).Select(i => 
+                i.ToDao<ContractEntry, ContractEntryDao>(MapperProvider));
 
             return contractList;
         }

@@ -95,7 +95,10 @@ namespace Catalyst.TestUtils
         public static IHastingsMemento MockSeedState(PeerId ownNode, IPeerSettings peerSettings)
         {
             return MockMemento(ownNode, MockDnsClient(peerSettings)
-               .GetSeedNodesFromDns(peerSettings.SeedServers)
+               .GetSeedNodesFromDnsAsync(peerSettings.SeedServers)
+               .ConfigureAwait(false)
+               .GetAwaiter()
+               .GetResult()
                .ToNeighbours()
             );
         }
@@ -109,7 +112,10 @@ namespace Catalyst.TestUtils
         public static IHastingsMemento SubSeedState(PeerId ownNode, IPeerSettings peerSettings)
         {
             var neighbours = MockDnsClient(peerSettings)
-               .GetSeedNodesFromDns(peerSettings.SeedServers)
+               .GetSeedNodesFromDnsAsync(peerSettings.SeedServers)
+               .ConfigureAwait(false)
+               .GetAwaiter()
+               .GetResult()
                .ToNeighbours();
 
             return SubMemento(ownNode, neighbours);

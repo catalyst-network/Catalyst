@@ -22,29 +22,33 @@
 #endregion
 
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class CoinbaseEntryDao : DaoBase<CoinbaseEntry, CoinbaseEntryDao>
+    public class CoinbaseEntryDao : DaoBase
     {
         public uint Version { get; set; }
         public string ReceiverPublicKey { get; set; }
         public string Amount { get; set; }
-        
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    }
+
+    public class CoinbaseEntryMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
 
             cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>()
-               .ForMember(d => d.ReceiverPublicKey, 
+               .ForMember(d => d.ReceiverPublicKey,
                     opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
                .ForMember(d => d.Amount,
                     opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount));
 
             cfg.CreateMap<CoinbaseEntryDao, CoinbaseEntry>()
-               .ForMember(d => d.ReceiverPublicKey, 
+               .ForMember(d => d.ReceiverPublicKey,
                     opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey))
                .ForMember(d => d.Amount,
                     opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount));

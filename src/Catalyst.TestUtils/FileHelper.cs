@@ -30,21 +30,11 @@ namespace Catalyst.TestUtils
     public static class FileHelper
     {
         /// <summary>Gets the CRC value.</summary>
-        /// <param name="crcBytes">The CRC bytes.</param>
-        /// <returns></returns>
-        public static long GetCrcValue(this byte[] crcBytes)
-        {
-            Crc32 crc32 = new Crc32();
-            crc32.Update(crcBytes);
-            return crc32.Value;
-        }
-
-        /// <summary>Gets the CRC value.</summary>
         /// <param name="stream">The stream.</param>
         /// <returns></returns>
         public static long GetCrcValue(Stream stream)
         {
-            byte[] streamBytes = new byte[stream.Length];
+            var streamBytes = new byte[stream.Length];
             var read = stream.Read(streamBytes, 0, streamBytes.Length);
 
             if (read != streamBytes.Length)
@@ -60,46 +50,57 @@ namespace Catalyst.TestUtils
         /// <returns></returns>
         public static long GetCrcValue(string filePath)
         {
-            Crc32 crc32 = new Crc32();
+            var crc32 = new Crc32();
             crc32.Update(File.ReadAllBytes(filePath));
             return crc32.Value;
-        }
-
-        /// <summary>Creates the temporary file.</summary>
-        /// <param name="bytes">The bytes.</param>
-        /// <returns></returns>
-        public static string CreateTempFile(byte[] bytes)
-        {
-            string filePath = Path.GetTempFileName();
-
-            if (bytes != null)
-            {
-                using (var fs = new FileStream(filePath, FileMode.Open))
-                {
-                    fs.Write(bytes, 0, bytes.Length);
-                }
-            }
-
-            return filePath;
-        }
-
-        /// <summary>Creates the temporary file.</summary>
-        /// <returns></returns>
-        public static string CreateTempFile() { return CreateTempFile(null); }
-
-        /// <summary>Gets the random bytes.</summary>
-        /// <param name="size">The size.</param>
-        /// <returns></returns>
-        public static byte[] GetRandomBytes(long size)
-        {
-            var fileBytes = new byte[size];
-            new Random().NextBytes(fileBytes);
-            return fileBytes;
         }
 
         /// <summary>Creates the random temporary file.</summary>
         /// <param name="byteSize">Size of the file.</param>
         /// <returns></returns>
-        public static string CreateRandomTempFile(long byteSize) { return CreateTempFile(GetRandomBytes(byteSize)); }
+        public static string CreateRandomTempFile(long byteSize)
+        {
+            return CreateTempFile(GetRandomBytes(byteSize));
+        }
+        
+        /// <summary>Creates the temporary file.</summary>
+        /// <param name="bytes">The bytes.</param>
+        /// <returns></returns>
+        private static string CreateTempFile(byte[] bytes)
+        {
+            var filePath = Path.GetTempFileName();
+
+            if (bytes == null)
+            {
+                return filePath;
+            }
+            
+            using (var fs = new FileStream(filePath, FileMode.Open))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+            }
+
+            return filePath;
+        }
+
+        /// <summary>Gets the CRC value.</summary>
+        /// <param name="crcBytes">The CRC bytes.</param>
+        /// <returns></returns>
+        private static long GetCrcValue(this byte[] crcBytes)
+        {
+            var crc32 = new Crc32();
+            crc32.Update(crcBytes);
+            return crc32.Value;
+        }
+        
+        /// <summary>Gets the random bytes.</summary>
+        /// <param name="size">The size.</param>
+        /// <returns></returns>
+        private static byte[] GetRandomBytes(long size)
+        {
+            var fileBytes = new byte[size];
+            new Random().NextBytes(fileBytes);
+            return fileBytes;
+        }
     }
 }

@@ -50,7 +50,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             try
             {
-                using (var responseStream = _dfs.ReadAsync(cid, cancellationToken).GetAwaiter().GetResult())
+                using (var responseStream = _dfs.ReadAsync(cid, cancellationToken)
+                   .ConfigureAwait(false)
+                   .GetAwaiter()
+                   .GetResult()
+                )
                 {
                     var uncheckedDelta = Delta.Parser.ParseFrom(responseStream);
                     var isValid = uncheckedDelta.IsValid();

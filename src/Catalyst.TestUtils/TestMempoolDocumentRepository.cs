@@ -27,6 +27,7 @@ using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Repository;
+using Catalyst.Protocol.Wire;
 using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
@@ -34,7 +35,12 @@ namespace Catalyst.TestUtils
     public sealed class TestMempoolRepository : RepositoryWrapper<TransactionBroadcastDao>,
         IMempoolRepository<TransactionBroadcastDao>
     {
-        public TestMempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository) { }
+        private readonly TestMapperProvider _mapperProvider;
+
+        public TestMempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository)
+        {
+            _mapperProvider = new TestMapperProvider();
+        }
 
         public bool TryReadItem(string key)
         {
@@ -61,7 +67,8 @@ namespace Catalyst.TestUtils
             var utcNow = DateTime.UtcNow;
             var tenSecondSlot = 1 + utcNow.Second / 10;
             var tx = TransactionHelper.GetPublicTransaction(timestamp: (long) utcNow.ToOADate());
-            return Enumerable.Repeat(tx, tenSecondSlot).Select(x => new TransactionBroadcastDao().ToDao(x));
+            return Enumerable.Repeat(tx, tenSecondSlot)
+               .Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider));
         }
     }
 }
