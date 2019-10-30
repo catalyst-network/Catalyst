@@ -21,25 +21,24 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using Google.Protobuf;
 
-namespace Catalyst.TestUtils.Repository
+namespace Catalyst.Core.Lib.DAO
 {
-    public sealed class EfCoreDbTestModule : Module
+    public static class ProtoDaoConversionExtensions
     {
-        private readonly string _connectionString;
-        public EfCoreDbTestModule(string connectionString) { _connectionString = connectionString; }
-
-        protected override void Load(ContainerBuilder builder)
+        public static TProto ToProtoBuff<TDao, TProto>(this TDao dao, IMapperProvider mapperProvider)
+            where TDao : DaoBase 
+            where TProto : IMessage
         {
-            builder.Register(c => new EfCoreContext(_connectionString)).AsImplementedInterfaces().AsSelf()
-               .InstancePerLifetimeScope();
+            return mapperProvider.Mapper.Map<TProto>(dao);
+        }
 
-            builder.RegisterType<PeerEfCoreRepository>().As<IRepository<PeerDao, string>>().SingleInstance();
-            builder.RegisterType<MempoolEfCoreRepository>().As<IRepository<TransactionBroadcastDao, string>>().SingleInstance();
+        public static TDao ToDao<TProto, TDao>(this TProto protoBuff, IMapperProvider mapperProvider)
+            where TDao : DaoBase
+            where TProto : IMessage
+        {
+            return mapperProvider.Mapper.Map<TDao>(protoBuff);
         }
     }
 }

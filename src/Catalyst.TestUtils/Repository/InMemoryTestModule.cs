@@ -28,8 +28,8 @@ using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils.Repository
 {
-    public sealed class InMemoryTestModule<TProto, TDao> : Module
-        where TDao : DaoBase<TProto, TDao>, new()
+    public sealed class InMemoryTestModule<TDao> : Module
+        where TDao : DaoBase, new()
     { 
         protected override void Load(ContainerBuilder builder)
         {

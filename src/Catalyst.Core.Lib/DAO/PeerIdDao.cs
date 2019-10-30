@@ -22,19 +22,23 @@
 #endregion
 
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class PeerIdDao : DaoBase<PeerId, PeerIdDao>
+    public class PeerIdDao : DaoBase
     {
         public string Ip { get; set; }
         public int Port { get; set; }
         public string PublicKey { get; set; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class PeerIdMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<PeerId, PeerIdDao>()
                .ForMember(e => e.PublicKey,

@@ -36,14 +36,17 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     public class DeltaTransactionRetriever : IDeltaTransactionRetriever
     {
         private readonly IMempool<TransactionBroadcastDao> _mempool;
+        private readonly IMapperProvider _mapperProvider;
 
         /// <inheritdoc />
         public ITransactionComparer TransactionComparer { get; }
 
         public DeltaTransactionRetriever(IMempool<TransactionBroadcastDao> mempool,
+            IMapperProvider mapperProvider,
             ITransactionComparer transactionComparer)
         {
             _mempool = mempool;
+            _mapperProvider = mapperProvider;
             TransactionComparer = transactionComparer;
         }
 
@@ -52,7 +55,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             Guard.Argument(maxCount, nameof(maxCount)).NotNegative().NotZero();
 
-            var allTransactions = _mempool.Repository.GetAll().Select(x => x.ToProtoBuff());
+            var allTransactions = _mempool.Repository.GetAll().Select(x => x.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider));
             var mempoolPrioritised = allTransactions.OrderByDescending(t => t, TransactionComparer)
                .Take(maxCount).Select(t => t).ToList();
 

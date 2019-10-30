@@ -49,10 +49,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         private readonly IBroadcastManager _broadcastManager;
         private readonly TransactionReceivedEvent _transactionReceivedEvent;
         private readonly IPeerSettings _peerSettings;
+        private readonly TestMapperProvider _mapperProvider;
 
         public TransactionReceivedEventTests()
         {
-            TestMappers.Start();
+            _mapperProvider = new TestMapperProvider();
 
             _peerSettings = Substitute.For<IPeerSettings>();
             _peerSettings.NetworkType.Returns(NetworkType.Devnet);
@@ -64,6 +65,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                 _mempool,
                 _broadcastManager,
                 _peerSettings,
+                _mapperProvider,
                 Substitute.For<ILogger>());
         }
 
