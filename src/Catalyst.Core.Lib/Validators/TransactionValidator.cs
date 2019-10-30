@@ -58,8 +58,15 @@ namespace Catalyst.Core.Lib.Validators
 
             var transactionSignature = _cryptoContext.GetSignatureFromBytes(transactionBroadcast.Signature.RawBytes.ToByteArray(),
                 transactionBroadcast.PublicEntries.First().Base.SenderPublicKey.ToByteArray());
-            var response = _cryptoContext.Verify(transactionSignature, transactionBroadcast.ToByteArray(),
-                transactionBroadcast.Signature.SigningContext.ToByteArray());
+
+            var signingContext = transactionBroadcast.Signature.SigningContext.ToByteArray();
+            
+            // we need to verify the signature matches the message, but transactionBroadcast contains the signature and original data,
+            // passing message+sig will mean your verifying an incorrect message and always return false, so just null the sig.
+            transactionBroadcast.Signature = null;
+            
+            var response = _cryptoContext.Verify(transactionSignature, transactionBroadcast.ToByteArray(), signingContext);
+            
             if (response)
             {
                 return true;

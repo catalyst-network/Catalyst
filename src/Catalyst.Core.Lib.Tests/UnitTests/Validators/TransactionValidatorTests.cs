@@ -112,30 +112,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
         {
             var subbedLogger = Substitute.For<ILogger>();
             var subbedContext = Substitute.For<ICryptoContext>();
-
-            subbedContext.GetSignatureFromBytes(Arg.Any<byte[]>(), Arg.Any<byte[]>())
-               .ReturnsForAnyArgs(Substitute.For<ISignature>());
             
-            subbedContext.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<byte[]>())
-               .Returns(false);
-            
-            subbedContext.Sign(Arg.Any<IPrivateKey>(), Arg.Any<byte[]>(), Arg.Any<byte[]>())
-               .SignatureBytes.Returns(new byte[64]);
-            
-            var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
             var privateKey = subbedContext.GeneratePrivateKey();
 
+            // raw un-signed tx message
             var validTransactionBroadcast = new TransactionBroadcast
             {
-                Signature = new Signature
-                {
-                    RawBytes = new byte[64].ToByteString(), //random bytes that are not of a signed TransactionBroadcast Object
-                    SigningContext = new SigningContext
-                    {
-                        NetworkType = NetworkType.Devnet,
-                        SignatureType = SignatureType.TransactionPublic
-                    }
-                },
                 PublicEntries =
                 {
                     new PublicEntry
@@ -147,6 +129,32 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
                     }
                 }
             };
+
+            var txSig = new Signature
+            {
+                RawBytes = new byte[64].ToByteString(), //random bytes that are not of a signed TransactionBroadcast Object
+                SigningContext = new SigningContext
+                {
+                    NetworkType = NetworkType.Devnet,
+                    SignatureType = SignatureType.TransactionPublic
+                }
+            };
+            
+            subbedContext.GetSignatureFromBytes(Arg.Is(txSig.ToByteArray()), Arg.Is(privateKey.GetPublicKey().Bytes))
+               .ReturnsForAnyArgs(Substitute.For<ISignature>());
+            
+            subbedContext.Verify(Arg.Any<ISignature>(), // @TODO be more specific
+                    Arg.Is(validTransactionBroadcast.ToByteArray()),
+                    Arg.Is(txSig.SigningContext.ToByteArray())
+                )
+               .Returns(false);
+            
+            subbedContext.Sign(Arg.Is(privateKey), validTransactionBroadcast.ToByteArray(), txSig.SigningContext.ToByteArray())
+               .SignatureBytes.Returns(new byte[64]);
+            
+            var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
+
+            validTransactionBroadcast.Signature = txSig;
 
             var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
             result.Should().BeFalse();
