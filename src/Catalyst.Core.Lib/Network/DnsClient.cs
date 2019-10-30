@@ -69,28 +69,29 @@ namespace Catalyst.Core.Lib.Network
 
             return await QueryAsync(hostname, QueryType.TXT).ConfigureAwait(false);
         }
-        
+
         /// <inheritdoc />
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
-        public IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> seedServers)
+        public async Task<IEnumerable<PeerId>> GetSeedNodesFromDnsAsync(IEnumerable<string> seedServers)
         {
             var peers = new List<PeerId>();
 
-            async void Action(string seedServer)
+            async Task Action(string seedServer)
             {
                 var dnsQueryAnswer = await GetTxtRecordsAsync(seedServer).ConfigureAwait(false);
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
 
-                Guard.Argument(answerSection.EscapedText).NotNull().Count(1);
-                answerSection.EscapedText.ToList()
+                Guard.Argument(answerSection?.EscapedText).NotNull().Count(1);
+                answerSection?.EscapedText.ToList()
                    .ForEach(stringPid => peers.Add(stringPid.ParseHexStringTo<PeerId>()));
 
                 Guard.Argument(peers).MinCount(1);
             }
 
-            seedServers.ToList().ForEach(Action);
+            var tasks = seedServers.Select(Action).ToList();
+            await Task.WhenAll(tasks);
             return peers;
         }
 

@@ -95,7 +95,11 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             _ownNode = peerSettings.PublicKey.BuildPeerIdFromBase32Key(peerSettings.BindAddress,
                 peerSettings.Port);
 
-            var neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours();
+            var neighbours = dns.GetSeedNodesFromDnsAsync(peerSettings.SeedServers)
+               .ConfigureAwait(false)
+               .GetAwaiter()
+               .GetResult()
+               .ToNeighbours();
 
             HastingsCareTaker = hastingsCareTaker ?? new HastingsCareTaker();
             if (HastingsCareTaker.HastingMementoList.IsEmpty)
