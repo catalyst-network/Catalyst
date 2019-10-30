@@ -32,6 +32,8 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 {
     public static class BaseEntryHelper
     {
+        private static readonly IMapperProvider MapperProvider = new TestMapperProvider();
+
         public static BaseEntry GetBaseEntry()
         {
             var fees = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
@@ -46,7 +48,7 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 
         public static BaseEntryDao GetBaseEntryDao()
         {
-            return new BaseEntryDao().ToDao(GetBaseEntry());
+            return GetBaseEntry().ToDao<BaseEntry, BaseEntryDao>(MapperProvider);
         }
     }
 }

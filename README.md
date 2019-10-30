@@ -73,12 +73,13 @@ If you don't have .Net Core installed you can follow the instructions for your p
 
 #### 2. Install the Rust Toolchain
 
-Catalyst.Core uses our native [Rust BulletProof library](https://github.com/catalyst-network/Cryptography.FFI.Rust).
+Catalyst.Core uses our native [Rust BulletProof library](https://github.com/catalyst-network/Cryptography.FFI.Rust). In order to be able to build the solution, you will need to ensure that the [Rust](https://www.rust-lang.org/) toolchain is correctly installed on you machine.
 
-To build the solution will require installing [Rust](https://www.rust-lang.org/). `msbuild prebuild tasks` will then compile the Bulletproof library when you try to build the project.
+##### Unix environments
 
+Download and install `msbuild prebuild tasks` from [Rust](https://www.rust-lang.org/). MsBuild will then compile the Bulletproof library when you try to build the project.
 
-#### Install Rust via the Rustup tool:
+Then, make sure you install Rust using the rustup tool:
 
 ```curl https://sh.rustup.rs -sSf | sh```
 
@@ -86,10 +87,23 @@ If ```rustc --version``` fails, restart your console to ensure changes to ```PAT
 
 Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-network/Cryptography.FFI.Rust) for docs. If you have issues with this part of the installation, please raise them there.
 
+##### Windows environments
+If you have not done so before, download and install the Microsoft Visual C++ Build Tools 2019 from https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019. Alternatively, if you are using Visual Studio, you should be able to modify your existing installation to add this feature.
+
+Go to https://www.rust-lang.org/tools/install, then download and execute `rustup-init.exe`
+
 #### 3. Clone the repository
 
 To clone the repository it is assumed you have Git installed.
 If you do not, then follow the [Git install instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for Linux/Windows/macOS.
+
+> ##### Windows environment prerquisite -  Enable long paths
+> make sure that long paths are allowed in both windows and git
+> - for windows 
+>     follow the instructions at https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#enable-long-paths-in-windows-10-version-1607-and-later
+> - for git : 
+>     start a git terminal as administrator
+>     run the following command : `git config --system core.longpaths true`
 
 The clone command is:
 

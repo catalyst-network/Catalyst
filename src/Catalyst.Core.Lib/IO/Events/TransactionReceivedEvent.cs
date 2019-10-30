@@ -39,12 +39,15 @@ namespace Catalyst.Core.Lib.IO.Events
         private readonly ILogger _logger;
         private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly IBroadcastManager _broadcastManager;
+        private readonly IMapperProvider _mapperProvider;
 
         public TransactionReceivedEvent(ITransactionValidator validator,
             IMempool<TransactionBroadcastDao> mempool,
             IBroadcastManager broadcastManager,
+            IMapperProvider mapperProvider,
             ILogger logger)
         {
+            _mapperProvider = mapperProvider;
             _broadcastManager = broadcastManager;
             _mempool = mempool;
             _validator = validator;
@@ -60,7 +63,7 @@ namespace Catalyst.Core.Lib.IO.Events
                 return ResponseCode.Error;
             }
 
-            var transactionBroadcastDao = new TransactionBroadcastDao().ToDao(transaction);
+            var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
             var transactionSignature = transactionBroadcastDao.Signature;
             _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
 
@@ -74,7 +77,7 @@ namespace Catalyst.Core.Lib.IO.Events
             _mempool.Repository.CreateItem(transactionBroadcastDao);
 
             _logger.Information("Broadcasting {signature} transaction", protocolMessage);
-            _broadcastManager.BroadcastAsync(protocolMessage);
+            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             return ResponseCode.Successful;
         }

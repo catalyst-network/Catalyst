@@ -62,16 +62,16 @@ namespace Catalyst.Core.Modules.Dfs
                 content,
                 AddFileOptions(),
                 cancellationToken);
-            _logger.Debug("Text added to IPFS with id {0}", node.Id);
+            _logger.Debug("Text added to Dfs with id {0}", node.Id);
             return node.Id;
         }
 
         /// <inheritdoc />
-        public Task<string> ReadTextAsync(Cid cid,
+        public async Task<string> ReadTextAsync(Cid cid,
             CancellationToken cancellationToken = default)
         {
-            _logger.Debug("Reading content at path {0} from IPFS", cid);
-            return _ipfs.FileSystem.ReadAllTextAsync(cid, cancellationToken);
+            _logger.Debug("Reading content at path {0} from Dfs", cid);
+            return await _ipfs.FileSystem.ReadAllTextAsync(cid, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -80,18 +80,18 @@ namespace Catalyst.Core.Modules.Dfs
             CancellationToken cancellationToken = default)
         {
             var node = await _ipfs.FileSystem
-               .AddAsync(content, name, AddFileOptions(), cancellationToken);
-            _logger.Debug("Content {1} added to IPFS with id {0}",
+               .AddAsync(content, name, AddFileOptions(), cancellationToken).ConfigureAwait(false);
+            _logger.Debug("Content {1} added to Dfs with id {0}",
                 node.Id, name + " ");
             return node.Id;
         }
 
         /// <inheritdoc />
-        public Task<Stream> ReadAsync(Cid cid,
+        public async Task<Stream> ReadAsync(Cid cid,
             CancellationToken cancellationToken = default)
         {
-            _logger.Debug("Reading content at path {0} from Ipfs", cid);
-            return _ipfs.FileSystem.ReadFileAsync(cid, cancellationToken);
+            _logger.Debug("Reading content at path {0} from Dfs", cid);
+            return await _ipfs.FileSystem.ReadFileAsync(cid, cancellationToken).ConfigureAwait(false);
         }
     }
 }

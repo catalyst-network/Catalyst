@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.IO.Observers
                     response.ToProtocolMessage(PeerSettings.PeerId, correlationId),
                     recipientPeerId);
 
-                messageDto.Context.Channel.WriteAndFlushAsync(responseDto);
+                messageDto.Context.Channel.WriteAndFlushAsync(responseDto).ConfigureAwait(false);
             }
             catch (Exception exception)
             {

@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.P2P.Discovery;
@@ -35,7 +36,7 @@ using Serilog;
 
 namespace Catalyst.Modules.POA.P2P.Discovery
 {
-    public class PoaDiscovery : IPeerDiscovery
+    public sealed class PoaDiscovery : IPeerDiscovery
     {
         public static string PoaPeerFile => "poa.nodes.json";
         private readonly IPeerRepository _peerRepository;
@@ -71,13 +72,11 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             var copiedPath = CopyPoaFile();
             var poaPeers = JsonConvert.DeserializeObject<List<PoaPeer>>(File.ReadAllText(copiedPath));
 
-            foreach (var poaPeer in poaPeers)
+            foreach (var peer in poaPeers.Select(poaPeer => new Peer
             {
-                var peer = new Peer
-                {
-                    PeerId = poaPeer.ToPeerId()
-                };
-
+                PeerId = poaPeer.ToPeerId()
+            }))
+            {
                 _logger.Information(
                     $"Adding POA Peer: {peer.PeerId.IpAddress} Public Key: {peer.PeerId.PublicKey.KeyToString()}");
 

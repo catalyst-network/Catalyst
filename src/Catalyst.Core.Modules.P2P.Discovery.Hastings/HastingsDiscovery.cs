@@ -95,7 +95,11 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             _ownNode = peerSettings.PublicKey.BuildPeerIdFromBase32Key(peerSettings.BindAddress,
                 peerSettings.Port);
 
-            var neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours();
+            var neighbours = dns.GetSeedNodesFromDnsAsync(peerSettings.SeedServers)
+               .ConfigureAwait(false)
+               .GetAwaiter()
+               .GetResult()
+               .ToNeighbours();
 
             HastingsCareTaker = hastingsCareTaker ?? new HastingsCareTaker();
             if (HastingsCareTaker.HastingMementoList.IsEmpty)
@@ -136,8 +140,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                .EvictionEventStream
                .Select(e =>
                 {
-                    _logger.Debug("Eviction stream receiving {key}", e.Key);
-                    return e.Key;
+                    var (key, _) = e;
+                    _logger.Debug("Eviction stream receiving {key}", key);
+                    return key;
                 })
                .Subscribe(EvictionCallback);
 
@@ -153,7 +158,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             {
                 await DiscoveryAsync()
                    .ConfigureAwait(false);
-            });
+            }, _cancellationTokenProvider.CancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         public IHastingsMemento CurrentStep => HastingsCareTaker.Peek();

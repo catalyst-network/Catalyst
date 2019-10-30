@@ -23,14 +23,12 @@
 
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
@@ -51,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 
         public TransactionReceivedEventTests()
         {
-            TestMappers.Start();
+            var mapperProvider = new TestMapperProvider();
 
             _mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
@@ -59,6 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator,
                 _mempool,
                 _broadcastManager,
+                mapperProvider,
                 Substitute.For<ILogger>());
         }
 

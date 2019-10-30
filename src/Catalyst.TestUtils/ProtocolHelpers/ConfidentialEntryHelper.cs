@@ -32,6 +32,8 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 {
     public static class ConfidentialEntryHelper
     {
+        private static readonly IMapperProvider MapperProvider = new TestMapperProvider();
+
         public static ConfidentialEntry GetConfidentialEntry()
         {
             return new ConfidentialEntry
@@ -55,12 +57,9 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 
         public static IEnumerable<ConfidentialEntryDao> GetConfidentialEntriesDao(int count)
         {
-            var confidentialEntryList = new List<ConfidentialEntryDao>();
-
-            GetConfidentialEntries(count).ToList().ForEach(i =>
-            {
-                confidentialEntryList.Add(new ConfidentialEntryDao().ToDao(i));
-            });
+            var confidentialEntryList = GetConfidentialEntries(count)
+               .Select(i => i.ToDao<ConfidentialEntry, ConfidentialEntryDao>(MapperProvider))
+               .ToList();
 
             return confidentialEntryList;
         }

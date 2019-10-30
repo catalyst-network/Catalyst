@@ -35,6 +35,7 @@ using Catalyst.TestUtils.ProtocolHelpers;
 using Catalyst.TestUtils.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using NSubstitute;
 using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
@@ -43,14 +44,19 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
     public sealed class TransactionBroadcastRepositoryTests : FileSystemBasedTest
     {
+        private readonly IMapperProvider _mapperProvider;
+
         public static IEnumerable<object[]> ModulesList =>
             new List<object[]>
             {
-                new object[] {new InMemoryTestModule<TransactionBroadcast, TransactionBroadcastDao>()},
-                new object[] {new MongoDbTestModule<TransactionBroadcast, TransactionBroadcastDao>()}
+                new object[] {new InMemoryTestModule<TransactionBroadcastDao>()},
+                new object[] {new MongoDbTestModule<TransactionBroadcastDao>()}
             };
 
-        public TransactionBroadcastRepositoryTests(ITestOutputHelper output) : base(output) { TestMappers.Start(); }
+        public TransactionBroadcastRepositoryTests(ITestOutputHelper output) : base(output)
+        {
+            _mapperProvider = new TestMapperProvider();
+        }
 
         private void TransactionBroadcastRepo_Can_Save_And_Retrieve()
         {
@@ -76,7 +82,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         {
             var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
 
-            var transactionBroadcastDao = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
+            var transactionBroadcastDao = TransactionHelper.GetPublicTransaction().ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
             id = transactionBroadcastDao.Id;
 
             transactionBroadcastDao.ContractEntries = ContractEntryHelper.GetContractEntriesDao(10);
@@ -147,7 +153,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString")
                .Value;
 
-            RegisterModules(new EfCoreDbTestModule<TransactionBroadcast, TransactionBroadcastDao>(connectionStr));
+            RegisterModules(new EfCoreDbTestModule(connectionStr));
 
             CheckForDatabaseCreation();
 
@@ -162,7 +168,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString")
                .Value;
 
-            RegisterModules(new EfCoreDbTestModule<TransactionBroadcast, TransactionBroadcastDao>(connectionStr));
+            RegisterModules(new EfCoreDbTestModule(connectionStr));
 
             CheckForDatabaseCreation();
 

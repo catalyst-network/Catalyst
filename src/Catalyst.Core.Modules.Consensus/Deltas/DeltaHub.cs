@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
 
             var protocolMessage = candidate.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(protocolMessage);
+            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             _logger.Debug("Broadcast candidate {0} done.", candidate);
         }
@@ -93,8 +93,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public void BroadcastFavouriteCandidateDelta(FavouriteDeltaBroadcast favourite)
         {
             Guard.Argument(favourite, nameof(favourite)).NotNull().Require(c => c.IsValid());
+            
             var protocolMessage = favourite.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(protocolMessage);
+            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             _logger.Debug("Started broadcasting favourite candidate {0}", favourite);
         }
@@ -159,12 +160,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             using (var memoryStream = new MemoryStream())
             {
                 await memoryStream.WriteAsync(deltaAsBytes, cancellationToken).ConfigureAwait(false);
-                memoryStream.Flush();
+                await memoryStream.FlushAsync(cancellationToken).ConfigureAwait(false);
+                
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                var cid = await _dfs.AddAsync(memoryStream, cancellationToken: cancellationToken);
-
-                return cid;
+                return await _dfs.AddAsync(memoryStream, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
         }
     }
