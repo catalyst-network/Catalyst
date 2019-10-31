@@ -129,7 +129,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             return message;
         }
 
-        private async Task<FileTransferResponseCodeTypes> AddFileToDfs(IFileTransferInformation fileTransferInformation)
+        private async Task<FileTransferResponseCodeTypes> AddFileToDfsAsync(IFileTransferInformation fileTransferInformation)
         {
             var responseCode = FileTransferResponseCodeTypes.Finished;
 
@@ -163,7 +163,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="fileTransferInformation">The file transfer information.</param>
         private async Task OnSuccessAsync(IFileTransferInformation fileTransferInformation)
         {
-            var addFileResponseCode = AddFileToDfs(fileTransferInformation).ConfigureAwait(false);
+            var addFileResponseCode = AddFileToDfsAsync(fileTransferInformation).ConfigureAwait(false);
 
             var message = GetResponse(fileTransferInformation, await addFileResponseCode);
             var protocolMessage =

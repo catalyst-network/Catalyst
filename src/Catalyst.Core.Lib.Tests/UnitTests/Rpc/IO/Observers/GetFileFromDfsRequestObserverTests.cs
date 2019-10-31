@@ -71,8 +71,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             using (GetFakeDfsStream(FileTransferResponseCodeTypes.Successful))
             {
                 _observer.OnNext(GetFileFromDfsRequestMessage());
-                _dfs.Received(1).ReadAsync(Arg.Any<Cid>());
-                _fileTransferFactory.Received(1)
+                _dfs.Received(1)?.ReadAsync(Arg.Any<Cid>());
+                _fileTransferFactory.Received(1)?
                    .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
             }
         }

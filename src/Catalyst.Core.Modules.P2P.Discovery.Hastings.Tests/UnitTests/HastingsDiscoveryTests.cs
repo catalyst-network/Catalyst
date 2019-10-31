@@ -28,6 +28,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
@@ -274,7 +275,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         }
         
         [Fact]
-        public void Can_Throw_Exception_In_WalkBack_When_Last_State_Has_No_Neighbours_To_Continue_Walk_Forward()
+        public async Task Can_Throw_Exception_In_WalkBack_When_Last_State_Has_No_Neighbours_To_Continue_Walk_Forward()
         {
             var ctp = new CancellationTokenProvider();
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -293,9 +294,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
             using (var walker = discoveryTestBuilder.Build())
             {
-                Assert.Throws<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(async () =>
                 {
-                    walker.DiscoveryAsync().GetAwaiter().GetResult();
+                    await walker.DiscoveryAsync();
                     Thread.Sleep(2);
                     ctp.CancellationTokenSource.Cancel();
                 });

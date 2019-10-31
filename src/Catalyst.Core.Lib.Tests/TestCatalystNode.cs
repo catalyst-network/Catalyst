@@ -73,7 +73,7 @@ namespace Catalyst.Core.Lib.Tests
             await _catalystNode.RunAsync(cancellationSourceToken);
         }
         
-        public async Task StartSockets() => await _catalystNode.StartSockets();
+        public async Task StartSocketsAsync() => await _catalystNode.StartSocketsAsync();
 
         public void BuildNode()
         {

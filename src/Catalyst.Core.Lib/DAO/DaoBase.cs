@@ -22,8 +22,6 @@
 #endregion
 
 using System.ComponentModel.DataAnnotations;
-using AutoMapper;
-using Catalyst.Abstractions.DAO;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.DAO

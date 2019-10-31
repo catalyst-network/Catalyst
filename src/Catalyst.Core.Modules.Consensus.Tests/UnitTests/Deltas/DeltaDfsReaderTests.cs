@@ -119,7 +119,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _dfsReader.TryReadDeltaFromDfs(cid, out _, CancellationToken.None);
 
-            _dfs.Received(1).ReadAsync(Arg.Is(cid), Arg.Is(cancellationToken));
+            _dfs.Received(1)?.ReadAsync(Arg.Is(cid), Arg.Is(cancellationToken));
         }
     }
 }

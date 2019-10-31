@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var hashProvider = new DeltaHashProvider(_deltaCache, _logger, 3);
 
-            using (hashProvider.DeltaHashUpdates.Subscribe((IObserver<Cid>) observer))
+            using (hashProvider.DeltaHashUpdates.Subscribe(observer))
             {
                 hashProvider.TryUpdateLatestHash(GetHash(0), GetHash(1));
 

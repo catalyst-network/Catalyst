@@ -86,16 +86,16 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Keystore_Can_Create_Keystore_File_From_Provided_Key()
+        public async Task Keystore_Can_Create_Keystore_File_From_Provided_Key()
         {
             string jsonKeyStore = null;
-            _fileSystem.WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(),
+            _fileSystem?.WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Do<string>(x => jsonKeyStore = x));
 
             var privateKey = _context.GeneratePrivateKey();
-            _keystore.KeyStoreEncryptAsync(privateKey, NetworkType.Devnet, KeyRegistryTypes.DefaultKey).Wait();
+            await _keystore.KeyStoreEncryptAsync(privateKey, NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
 
-            _fileSystem.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
+            _fileSystem?.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
                .Returns(jsonKeyStore);
             var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
             privateKey.Bytes.Should().BeEquivalentTo(storedKey.Bytes);

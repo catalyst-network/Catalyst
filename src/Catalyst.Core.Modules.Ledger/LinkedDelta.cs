@@ -21,6 +21,7 @@
 
 #endregion
 
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 namespace Catalyst.Core.Modules.Ledger
 {
     /// <summary>

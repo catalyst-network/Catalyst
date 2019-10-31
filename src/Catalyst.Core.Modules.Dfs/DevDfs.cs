@@ -42,11 +42,11 @@ namespace Catalyst.Core.Modules.Dfs
     ///     the tests can be run locally and offline.
     /// </summary>
     /// <remarks>
-    ///     The hashing algorithm is also a simple one (<see cref="BLAKE2B_32" />>) to save time
+    ///     The hashing algorithm is also a simple one (<see cref="Multiformats.Hash.Algorithms.BLAKE2B_32" />>) to save time
     ///     in integration tests
     /// </remarks>
     /// <inheritdoc cref="IDfs" />
-    public class DevDfs : IDfs
+    public sealed class DevDfs : IDfs
     {
         private readonly DirectoryInfo _baseFolder;
         private readonly IFileSystem _fileSystem;

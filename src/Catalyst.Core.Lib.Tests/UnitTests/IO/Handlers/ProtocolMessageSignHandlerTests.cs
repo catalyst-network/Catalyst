@@ -65,10 +65,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         {
             var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, DevNetPeerSigningContext.Instance);
 
-            protocolMessageSignHandler.WriteAsync(_fakeContext, new object());
+            protocolMessageSignHandler?.WriteAsync(_fakeContext, new object());
 
             _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), default);
-            _fakeContext.ReceivedWithAnyArgs().WriteAsync(new object());
+            _fakeContext.ReceivedWithAnyArgs()?.WriteAsync(new object());
         }
 
         [Fact]
@@ -78,10 +78,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 
             var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, DevNetPeerSigningContext.Instance);
 
-            protocolMessageSignHandler.WriteAsync(_fakeContext, _dto);
+            protocolMessageSignHandler?.WriteAsync(_fakeContext, _dto);
             
-            _fakeContext.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(new object());
-            _fakeContext.ReceivedWithAnyArgs().WriteAsync(new object());
+            _fakeContext.DidNotReceiveWithAnyArgs()?.WriteAndFlushAsync(new object());
+            _fakeContext.ReceivedWithAnyArgs()?.WriteAsync(new object());
         }
     }
 }

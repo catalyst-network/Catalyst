@@ -105,7 +105,6 @@ namespace Catalyst.Core.Modules.KeySigner
             return _cryptoContext.Verify(signature, message, signingContext.ToByteArray());
         }
 
-        /// <inheritdoc/>
         public void ExportKey()
         {
             throw new NotImplementedException();

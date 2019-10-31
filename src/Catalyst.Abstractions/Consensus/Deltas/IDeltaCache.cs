@@ -62,7 +62,7 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         ///     This allows for later retrieval of the full content of the delta if the candidate gets
         ///     confirmed.
         /// </summary>
-        /// <param name="localCandidate">The candidate produced locally (<see cref="IDeltaBuilder.BuildCandidateDelta(byte[])" />>)</param>
+        /// <param name="localCandidate">The candidate produced locally (<see cref="IDeltaBuilder.BuildCandidateDelta(Cid)" />>)</param>
         /// <param name="delta">The full content of the produced delta.</param>
         void AddLocalDelta(CandidateDeltaBroadcast localCandidate, Delta delta);
 

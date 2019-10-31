@@ -75,14 +75,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 
             var correlatableHandler = new CorrelatableHandler<IMessageCorrelationManager>(_fakeMessageCorrelationManager);
             
-            correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
+            correlatableHandler?.WriteAsync(_fakeContext, fakeRequestMessageDto);
             
             _fakeMessageCorrelationManager
                .DidNotReceiveWithAnyArgs()
                .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>()
                 );
 
-            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IObserverDto<IMessage>>());
+            _fakeContext.ReceivedWithAnyArgs(1)?.WriteAsync(Arg.Any<IObserverDto<IMessage>>());
         }
     }
 }

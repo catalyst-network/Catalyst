@@ -86,7 +86,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
                 fileTransferInformation.SetLength(getFileFromDfsResponse.FileSize);
 
                 var ctx = new CancellationTokenSource();
-                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None).ContinueWith(task =>
+                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None)?.ContinueWith(task =>
                 {
                     File.Move(fileTransferInformation.TempPath, fileTransferInformation.FileOutputPath);
                 }, ctx.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());

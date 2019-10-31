@@ -40,6 +40,11 @@ namespace Catalyst.Core.Modules.Rpc.Server
 
             async void BuildCallback(IContainer container)
             {
+                if (container == null)
+                {
+                    throw new ArgumentNullException(nameof(container));
+                }
+                
                 var logger = container.Resolve<ILogger>();
                 try
                 {

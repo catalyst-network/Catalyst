@@ -210,11 +210,11 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                .WithCareTaker(stateCareTaker)
                .WithStepProposal(stateCandidate);
 
+            // ReSharper disable once CollectionNeverQueried.Local
+            IList<IPeerClientMessageDto> dtoList = new List<IPeerClientMessageDto>();
             using (var walker = discoveryTestBuilder.Build())
             {
                 var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
-
-                IList<IPeerClientMessageDto> dtoList = new List<IPeerClientMessageDto>();
 
                 stateCandidate.Neighbours.ToList().ForEach(i =>
                 {

@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            var channel = await BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
+            var channel = await BootStrapChannelAsync(handlerEventLoopGroupFactory, targetAddress, targetPort);
             return new ObservableChannel(Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
         }
     }

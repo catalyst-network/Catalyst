@@ -37,10 +37,12 @@ namespace Catalyst.Core.Lib.DAO
         public string Amount { get; set; }
 
         [Column]
+
+        // ReSharper disable once UnusedMember.Local
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
     }
 
-    public class ContractEntryMapperInitialiser : IMapperInitializer
+    public sealed class ContractEntryMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
