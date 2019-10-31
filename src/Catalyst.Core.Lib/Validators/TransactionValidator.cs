@@ -65,9 +65,7 @@ namespace Catalyst.Core.Lib.Validators
             // passing message+sig will mean your verifying an incorrect message and always return false, so just null the sig.
             transactionBroadcast.Signature = null;
             
-            var response = _cryptoContext.Verify(transactionSignature, transactionBroadcast.ToByteArray(), signingContext);
-            
-            if (response)
+            if (_cryptoContext.Verify(transactionSignature, transactionBroadcast.ToByteArray(), signingContext))
             {
                 return true;
             }
