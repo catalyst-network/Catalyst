@@ -104,7 +104,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
             protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
 
-            _fakeContext.Channel.Received(1).WriteAndFlushAsync(
+            _fakeContext.Channel.Received(1)?.WriteAndFlushAsync(
                 Arg.Is<DefaultAddressedEnvelope<ProtocolMessage>>(
                     t => t.Content.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == FileTransferResponseCodeTypes.Successful.Id));
         }
@@ -118,7 +118,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
             protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
 
-            _fakeContext.Channel.Received(1).WriteAndFlushAsync(
+            _fakeContext.Channel.Received(1)?.WriteAndFlushAsync(
                 Arg.Is<DefaultAddressedEnvelope<ProtocolMessage>>(
                     t => t.Content.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == FileTransferResponseCodeTypes.Error.Id));
         }

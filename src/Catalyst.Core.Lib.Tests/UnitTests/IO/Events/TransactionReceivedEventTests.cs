@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()
                    .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
                .Be(ResponseCode.Error);
-            _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
+            _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Error);
-            _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
+            _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
             _mempool.Repository.DidNotReceiveWithAnyArgs().CreateItem(default);
         }
 
@@ -103,7 +103,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                .Should().Be(ResponseCode.Successful);
 
             _mempool.Repository.Received(1).CreateItem(Arg.Any<TransactionBroadcastDao>());
-            _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
+            _broadcastManager.Received(1)?.BroadcastAsync(Arg.Is<ProtocolMessage>(
                 broadcastedMessage => broadcastedMessage.Value.ToByteArray().SequenceEqual(transaction.ToByteArray())));
         }
     }

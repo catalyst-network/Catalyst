@@ -31,7 +31,7 @@ namespace Catalyst.Abstractions.Types
 
         private byte[] _rawBytes;
 
-        public byte[] RawBytes
+        protected byte[] RawBytes
         {
             get => _rawBytes ?? new byte[Size];
             set
@@ -46,13 +46,12 @@ namespace Catalyst.Abstractions.Types
                 }
             }
         }
-
-        private static readonly Random Random = new Random();
-
+        
         public static T RandomBytes()
         {
             var newBytes = new T();
-            Random.NextBytes(newBytes.RawBytes);
+            var random = new Random();
+            random.NextBytes(newBytes.RawBytes);
             return newBytes;
         }
     }   

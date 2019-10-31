@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
                             4b67745ac5f7d749989344cfa4ee4b71"",""kdfparams"":{""n"":""262144,""r"":""1,""p"":""8,""dklen"":32,""salt"":""2a03d9840dec04e0
                             1538df649f61958be4015a97f14b765ec0a46feed88cc5f4""}},""id"":""b4b82bc3-a495-49cd-b3bc-e022f936e6ff"",""address"":""987080731d
                             e5a56833d2edc37458a53e3fec68cd"",""version"":3}";
-            FileSystem.WriteTextFileToCddSubDirectoryAsync(KeyRegistryTypes.DefaultKey.Name,
+            FileSystem?.WriteTextFileToCddSubDirectoryAsync(KeyRegistryTypes.DefaultKey.Name,
                 Constants.KeyStoreDataSubDir, json);
         }
 

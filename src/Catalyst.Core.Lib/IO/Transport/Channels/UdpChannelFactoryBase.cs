@@ -38,7 +38,7 @@ namespace Catalyst.Core.Lib.IO.Transport.Channels
     {
         protected abstract Func<List<IChannelHandler>> HandlerGenerationFunction { get; }
 
-        protected async Task<IChannel> BootStrapChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        protected async Task<IChannel> BootStrapChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress address,
             int port)
         {

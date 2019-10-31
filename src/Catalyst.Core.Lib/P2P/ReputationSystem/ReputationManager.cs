@@ -74,6 +74,7 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             _logger.Error("Message stream ended.");
         }
 
+        // ReSharper disable once VSTHRD100
         public async void OnNext(IPeerReputationChange peerReputationChange)
         {
             try
@@ -83,6 +84,7 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
                 var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
                 Guard.Argument(peer, nameof(peer)).NotNull();
 
+                // ReSharper disable once PossibleNullReferenceException
                 peer.Reputation += peerReputationChange.ReputationEvent.Amount;
                 PeerRepository.Update(peer);
             }

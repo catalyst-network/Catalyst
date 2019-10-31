@@ -61,7 +61,11 @@ namespace Catalyst.Simulator
 
             var simulation = new TransactionSimulation(userOutput);
             var simulator = new Simulator(simulation, logger);
-            simulator.SimulateAsync(clientRpcInfoList).Wait();
+            
+            simulator.SimulateAsync(clientRpcInfoList)
+               .ConfigureAwait(false)
+               .GetAwaiter()
+               .GetResult();
 
             return Environment.ExitCode;
         }

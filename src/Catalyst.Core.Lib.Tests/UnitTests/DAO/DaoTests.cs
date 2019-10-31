@@ -82,6 +82,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             _mapperProvider = new MapperProvider(_initialisers);
         }
 
+        // ReSharper disable once UnusedMember.Local
         private TDao GetMapper<TDao>() where TDao : IMapperInitializer => _initialisers.OfType<TDao>().First();
         
         [Fact]
