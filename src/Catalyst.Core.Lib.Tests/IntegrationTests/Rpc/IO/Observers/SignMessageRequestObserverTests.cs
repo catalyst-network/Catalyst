@@ -113,7 +113,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            _logger.DidNotReceiveWithAnyArgs().Error((Exception) default, (string) default);
+            _logger.DidNotReceiveWithAnyArgs().Error((Exception) default, default);
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();

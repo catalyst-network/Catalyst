@@ -27,20 +27,23 @@ using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace Catalyst.Core.Lib.DAO
 {
     public class BaseEntryDao : DaoBase
     {
         public ulong Nonce { get; set; }
-        public string ReceiverPublicKey { get; set; }
+        internal string ReceiverPublicKey { get; set; }
         public string SenderPublicKey { get; set; }
-        public string TransactionFees { get; set; }
+        internal string TransactionFees { get; set; }
 
         [Column]
+        
+        // ReSharper disable once UnusedMember.Local
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
     }
 
-    public class BaseEntryMapperInitialiser : IMapperInitializer
+    public sealed class BaseEntryMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {

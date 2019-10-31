@@ -29,16 +29,18 @@ using Catalyst.Protocol.Network;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class SigningContextDao : DaoBase
+    public sealed class SigningContextDao : DaoBase
     {
         public NetworkType NetworkType { get; set; }
         public SignatureType SignatureType { get; set; }
 
         [Column]
+        
+        // ReSharper disable once UnusedMember.Local
         private SignatureDao SignatureDao { get; set; }
     }
 
-    public class SigningContextMapperInitialiser : IMapperInitializer
+    public sealed class SigningContextMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {

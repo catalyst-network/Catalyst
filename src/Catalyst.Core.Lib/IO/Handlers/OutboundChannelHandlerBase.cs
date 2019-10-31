@@ -68,6 +68,8 @@ namespace Catalyst.Core.Lib.IO.Handlers
         /// <param name="ctx"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
+
+        // ReSharper disable once VSTHRD200
         protected abstract Task WriteAsync0(IChannelHandlerContext ctx, T msg);
     }
 }

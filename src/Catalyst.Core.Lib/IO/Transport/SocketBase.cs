@@ -66,9 +66,6 @@ namespace Catalyst.Core.Lib.IO.Transport
             try
             {
                 Channel?.Flush();
-                
-                // var quietPeriod = TimeSpan.FromMilliseconds(100);
-                // Channel?.CloseAsync().Wait(quietPeriod);
                 Channel?.CloseAsync().ConfigureAwait(false);
 
                 EventLoopGroupFactory.Dispose();

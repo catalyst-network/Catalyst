@@ -34,6 +34,6 @@ namespace Catalyst.Abstractions
 
         Task RunAsync(CancellationToken cancellationSourceToken);
 
-        Task StartSockets();
+        Task StartSocketsAsync();
     }
 }

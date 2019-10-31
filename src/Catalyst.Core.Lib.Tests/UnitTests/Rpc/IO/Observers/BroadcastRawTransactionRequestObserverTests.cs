@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                .OnNext(new ObserverDto(channelContext,
                     new BroadcastRawTransactionRequest {Transaction = new TransactionBroadcast()}.ToProtocolMessage(
                         PeerIdHelper.GetPeerId("FakeSender"))));
-            channelContext.Channel.Received(1).WriteAndFlushAsync(
+            channelContext.Channel.Received(1)?.WriteAndFlushAsync(
                 Arg.Is<object>(transactionObj =>
                     ((MessageDto) transactionObj)
                    .Content.FromProtocolMessage<BroadcastRawTransactionResponse>()

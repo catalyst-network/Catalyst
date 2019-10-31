@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.IO.Transport.Channels
             int targetPort,
             X509Certificate2 certificate = null);
 
-        protected async Task<IChannel> Bootstrap(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        protected async Task<IChannel> BootstrapAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate)

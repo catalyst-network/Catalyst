@@ -62,7 +62,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
             // Starting IPFS takes a few seconds.  Do it here, so that individual
             // test times are not affected.
-            _ipfs.Generic.IdAsync().Wait();
+            _ipfs.Generic.IdAsync()
+               .ConfigureAwait(false)
+               .GetAwaiter()
+               .GetResult();
         }
 
         [Fact]
@@ -94,7 +97,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             using (var stream = await dfs.ReadAsync(id, cts.Token))
             {
                 var content = new byte[binary.Length];
-                stream.Read(content, 0, content.Length);
+                await stream.ReadAsync(content, 0, content.Length, cts.Token);
                 content.Should().Equal(binary);
             }
         }

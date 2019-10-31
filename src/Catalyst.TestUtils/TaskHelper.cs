@@ -61,7 +61,7 @@ namespace Catalyst.TestUtils
             }
         }
 
-        public static async Task WaitForAsyncOrThrow(Expression<Func<bool>> condition,
+        internal static async Task WaitForAsyncOrThrowAsync(Expression<Func<bool>> condition,
             TimeSpan timeout = default,
             TimeSpan waitPeriod = default)
         {
@@ -142,7 +142,7 @@ namespace Catalyst.TestUtils
 
             var watch = new Stopwatch();
             watch.Start();
-            new Func<Task>(async () => await TaskHelper.WaitForAsyncOrThrow(
+            new Func<Task>(async () => await TaskHelper.WaitForAsyncOrThrowAsync(
                         () => IncreaseAndCheckIfAboveLimit(ref attempts,
                             (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
                    .ConfigureAwait(false)).Should().Throw<XunitException>()
@@ -163,7 +163,7 @@ namespace Catalyst.TestUtils
 
             var watch = new Stopwatch();
             watch.Start();
-            await TaskHelper.WaitForAsyncOrThrow(
+            await TaskHelper.WaitForAsyncOrThrowAsync(
                     () => IncreaseAndCheckIfAboveLimit(ref attempts, 2), timeout, waitDelay)
                .ConfigureAwait(false);
             watch.Stop();

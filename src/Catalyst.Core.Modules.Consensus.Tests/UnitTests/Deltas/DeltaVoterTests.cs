@@ -355,6 +355,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                    .OrderBy(c => c.Candidate.Hash.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default)
                    .First();
 
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                 favouriteCandidate.Candidate.Hash.Equals(expectedFavourite.Candidate.Hash);
             }
         }

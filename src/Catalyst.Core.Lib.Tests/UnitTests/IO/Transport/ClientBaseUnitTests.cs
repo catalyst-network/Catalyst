@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
             var testClientBase = new TestClientBase(channelFactory, logger, eventLoopGroupFactory);
             testClientBase.SendMessage(messageDto);
 
-            testClientBase.Channel.Received(1).WriteAsync(messageDto);
+            testClientBase.Channel.Received(1)?.WriteAsync(messageDto);
         }
     }
 }

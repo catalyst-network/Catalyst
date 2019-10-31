@@ -203,7 +203,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                 try
                 {
                     // spins until our expected result equals found and unreachable peers for this step.
-                    await WaitUntil(StepProposal.HasValidCandidate, _hasValidCandidatesCheckMillisecondsFrequency,
+                    await WaitUntilAsync(StepProposal.HasValidCandidate, _hasValidCandidatesCheckMillisecondsFrequency,
                         _millisecondsTimeout).ConfigureAwait(false);
 
                     if (StepProposal.Neighbours.Any())
@@ -450,7 +450,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
         /// <param name="frequency">The frequency at which the condition will be checked.</param>
         /// <param name="timeout">The timeout in milliseconds.</param>
         /// <returns></returns>
-        private static async Task WaitUntil(Func<bool> condition, int frequency = 25, int timeout = -1)
+        private static async Task WaitUntilAsync(Func<bool> condition, int frequency = 25, int timeout = -1)
         {
             var waitTask = Task.Run(async () =>
             {
@@ -490,7 +490,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             Interlocked.Add(ref _discoveredPeerInCurrentWalk, 1);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposing)
             {
