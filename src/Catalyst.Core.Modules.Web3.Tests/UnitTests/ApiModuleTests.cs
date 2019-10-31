@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
             {
                 _apiModule = new ApiModule(null,
                     new List<string>(), addSwagger);
-                _apiModule.ConfigureServices(_serviceCollection, _containerBuilder);
+                _apiModule.ConfigureServices(_serviceCollection);
             }
 
             _serviceCollection.Any(service => service.ServiceType == type).Should().Be(shouldContain);

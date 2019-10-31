@@ -24,15 +24,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore;
+using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Core.Lib.DAO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using SharpRepository.Repository;
 using Module = Autofac.Module;
 
 namespace Catalyst.Core.Modules.Web3
@@ -57,16 +62,6 @@ namespace Catalyst.Core.Modules.Web3
             var buildPath = Path.GetDirectoryName(executingAssembly);
             var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
 
-            var host = WebHost.CreateDefaultBuilder()
-               .ConfigureServices(serviceCollection => ConfigureServices(serviceCollection, builder))
-               .Configure(Configure)
-               .UseUrls(_apiBindingAddress)
-               .UseWebRoot(webDirectory.FullName)
-               .UseSerilog()
-               .Build();
-
-            builder.RegisterInstance(host).As<IWebHost>();
-
             async void BuildCallback(IContainer container)
             {
                 _container = container;
@@ -74,6 +69,19 @@ namespace Catalyst.Core.Modules.Web3
 
                 try
                 {
+                    var host = Host.CreateDefaultBuilder()
+                       .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                       .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
+                       .ConfigureWebHostDefaults(
+                            webHostBuilder =>
+                            {
+                                webHostBuilder
+                                   .ConfigureServices(ConfigureServices)
+                                   .Configure(Configure)
+                                   .UseUrls(_apiBindingAddress)
+                                   .UseWebRoot(webDirectory.FullName)
+                                   .UseSerilog();
+                            }).Build();
                     await host.StartAsync();
                 }
                 catch (Exception e)
@@ -86,25 +94,35 @@ namespace Catalyst.Core.Modules.Web3
             base.Load(builder);
         }
 
-        public void ConfigureServices(IServiceCollection services, ContainerBuilder containerBuilder)
+        //todo Clean up - find a better way to reuse the ContainerBuilder loaded into the module
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            //Mempool repo
+            builder.RegisterInstance(_container.Resolve<IRepository<TransactionBroadcastDao, string>>())
+               .As<IRepository<TransactionBroadcastDao, string>>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IMempoolRepository<TransactionBroadcastDao>>())
+               .As<IMempoolRepository<TransactionBroadcastDao>>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IMempool<TransactionBroadcastDao>>())
+               .As<IMempool<TransactionBroadcastDao>>().SingleInstance();
+        }
+
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => 
+                c.AddPolicy("AllowOrigin", options =>
                     options.AllowAnyOrigin()
                        .AllowAnyMethod()
                        .AllowAnyHeader());
             });
 
-            services.AddMvcCore()
-               .AddApiExplorer();
+            services.AddMvcCore().AddNewtonsoftJson().AddApiExplorer();
 
             var mvcBuilder = services.AddRazorPages();
 
-            foreach (var controllerModule in _controllerModules)
-            {
-                mvcBuilder.AddApplicationPart(Assembly.Load(controllerModule));
-            }
+            _controllerModules.ToList().ForEach(controller => mvcBuilder.AddApplicationPart(Assembly.Load(controller)));
 
             mvcBuilder.AddControllersAsServices();
 
@@ -115,22 +133,16 @@ namespace Catalyst.Core.Modules.Web3
                     swagger.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalyst API", Description = "Catalyst"});
                 });
             }
-
-            containerBuilder.Populate(services);
         }
 
         public void Configure(IApplicationBuilder app)
         {
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            app.ApplicationServices = new AutofacServiceProvider(_container);
             app.UseDeveloperExceptionPage();
             app.UseCors("AllowOrigin");
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
