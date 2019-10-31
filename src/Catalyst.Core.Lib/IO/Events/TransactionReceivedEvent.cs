@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.DAO;
@@ -40,17 +39,14 @@ namespace Catalyst.Core.Lib.IO.Events
         private readonly ILogger _logger;
         private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly IBroadcastManager _broadcastManager;
-        private readonly IPeerSettings _peerSettings;
         private readonly IMapperProvider _mapperProvider;
 
         public TransactionReceivedEvent(ITransactionValidator validator,
             IMempool<TransactionBroadcastDao> mempool,
             IBroadcastManager broadcastManager,
-            IPeerSettings peerSettings,
             IMapperProvider mapperProvider,
             ILogger logger)
         {
-            _peerSettings = peerSettings;
             _mapperProvider = mapperProvider;
             _broadcastManager = broadcastManager;
             _mempool = mempool;
@@ -61,7 +57,7 @@ namespace Catalyst.Core.Lib.IO.Events
         public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
         {
             var transaction = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
-            var transactionValid = _validator.ValidateTransaction(transaction, _peerSettings.NetworkType);
+            var transactionValid = _validator.ValidateTransaction(transaction);
             if (!transactionValid)
             {
                 return ResponseCode.Error;

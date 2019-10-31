@@ -24,7 +24,6 @@
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
-using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Serilog;
@@ -43,28 +42,13 @@ namespace Catalyst.Core.Lib.Validators
             _logger = logger;
         }
 
-        public bool ValidateTransaction(TransactionBroadcast transactionBroadcast, NetworkType networkType)
+        public bool ValidateTransaction(TransactionBroadcast transactionBroadcast)
         {
-            return ValidateTransactionFields(transactionBroadcast)
-             && CheckContractInputFields(transactionBroadcast)
-             && CheckCfEntries(transactionBroadcast)
-             && CheckStEntries(transactionBroadcast)
-             && ValidateTransactionSignature(transactionBroadcast, networkType);
+            // will add more checks
+            return ValidateTransactionSignature(transactionBroadcast);
         }
-
-        private bool CheckContractInputFields(TransactionBroadcast transactionBroadcast)
-        {
-            // @TODO DO SOMETHING
-            return true;
-        }
-
-        private bool ValidateTransactionFields(TransactionBroadcast transactionBroadcast)
-        {
-            // @TODO DO SOMETHING
-            return true;
-        }
-
-        private bool ValidateTransactionSignature(TransactionBroadcast transactionBroadcast, NetworkType networkType)
+        
+        private bool ValidateTransactionSignature(TransactionBroadcast transactionBroadcast)
         {
             if (transactionBroadcast.Signature.RawBytes == ByteString.Empty)
             {
@@ -74,10 +58,14 @@ namespace Catalyst.Core.Lib.Validators
 
             var transactionSignature = _cryptoContext.GetSignatureFromBytes(transactionBroadcast.Signature.RawBytes.ToByteArray(),
                 transactionBroadcast.PublicEntries.First().Base.SenderPublicKey.ToByteArray());
-            var transactionWithoutSig = transactionBroadcast.Clone();
-            transactionWithoutSig.Signature = null;
 
-            if (_cryptoContext.Verify(transactionSignature, transactionWithoutSig.ToByteArray(), transactionBroadcast.Signature.SigningContext.ToByteArray()))
+            var signingContext = transactionBroadcast.Signature.SigningContext.ToByteArray();
+            
+            // we need to verify the signature matches the message, but transactionBroadcast contains the signature and original data,
+            // passing message+sig will mean your verifying an incorrect message and always return false, so just null the sig.
+            transactionBroadcast.Signature = null;
+            
+            if (_cryptoContext.Verify(transactionSignature, transactionBroadcast.ToByteArray(), signingContext))
             {
                 return true;
             }
@@ -86,23 +74,6 @@ namespace Catalyst.Core.Lib.Validators
                 "Transaction Signature {signature} invalid.",
                 transactionSignature);
             return false;
-        }
-
-        private bool CheckCfEntries(TransactionBroadcast transactionBroadcast)
-        {
-            // @TODO DO SOMETHING
-            return true;
-        }
-
-        private bool CheckStEntries(TransactionBroadcast transactionBroadcast)
-        {
-            // @TODO DO SOMETHING
-            return true;
-        }
-
-        private bool CheckKeySize(ByteString publicKey)
-        {
-            return publicKey.Length == _cryptoContext.PublicKeyLength;
         }
     }
 }
