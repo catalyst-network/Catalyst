@@ -4,8 +4,6 @@
   ### Catalyst Framework - Full Stack Distributed Protocol Framework
  
 [![Discord](https://img.shields.io/discord/629667101774446593?color=blueviolet&label=discord)](https://discord.gg/anTP7xm)
-![GitHub followers](https://img.shields.io/github/followers/catalyst-network?style=social)
-[![GitHub stars](https://img.shields.io/github/stars/catalyst-network/community?style=social)](https://github.com/catalyst-network/protocol-protobuffs/stargazers)
 [![Twitter Follow](https://img.shields.io/twitter/follow/catalystnetorg?style=social)](https://twitter.com/catalystnetorg)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/catalystnet?style=social)](https://reddit.com/r/catalystnet)
 </div>
@@ -39,19 +37,19 @@ Join us on our [Discord](https://discord.gg/anTP7xm) for any questions and discu
 
 ## What is the Catalyst Network?
 
-The Catalyst Network is a full-stack distributed network built to fulfil the real-world potential of Distributed Ledger Technology, enabling the next generation of distributed computing applications and
-business models. 
+The Catalyst Network is a full-stack distributed network built to fulfill the real-world potential of Distributed Ledger Technology, enabling the next generation of distributed computing applications and
+business models.
 
-Catalyst was designed by an experienced team of engineers and researchers who were presented with a difficult challenge: build a large decentralised network capable of storing all types of data ranging from structured tabular records through to large Binary Large Objects at low cost to users, as well as dApps written in any language. Broadly, this meant solving the blockchain trilemma to maintain decentralisation and support a high transaction throughput in a continuously growing network without compromising on security. 
+Catalyst was designed by an experienced team of engineers and researchers who were presented with a difficult challenge: build a large decentralized network capable of storing all types of data ranging from structured tabular records through to large Binary Large Objects at low cost to users, as well as dApps written in any language. Broadly, this meant solving the blockchain trilemma to maintain decentralization and support a high transaction throughput in a continuously growing network without compromising on security.
 
 #### Features
 
 - Protobuffs wire format ([see why](https://github.com/catalyst-network/protocol-protobuffs#why-protobuffs))
 - RPC core protocol methods
-- Distributed file storage (DFS) built upon IPFS
+- Distributed file storage built upon IPFS
 - Confidential and Public transactions
-- Fast new and novel consensus Probabalistic BFT
-- Flexible modula design
+- Fast new and novel consensus Probabilistic BFT
+- Flexible modular design
 
 ## Documentation
 
