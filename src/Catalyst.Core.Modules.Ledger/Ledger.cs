@@ -34,10 +34,12 @@ using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Dawn;
 using LibP2P;
+using Nethermind.Core.Crypto;
 using Nethermind.Core.Specs;
 using Nethermind.Evm.Tracing;
 using Nethermind.Store;
 using Serilog;
+using Serilog.Events;
 using Account = Catalyst.Core.Modules.Ledger.Models.Account;
 
 namespace Catalyst.Core.Modules.Ledger
@@ -50,10 +52,11 @@ namespace Catalyst.Core.Modules.Ledger
     public class Ledger : ILedger, IDisposable
     {
         public IAccountRepository Accounts { get; }
-        private readonly IKvm _virtualMachine;
         private readonly IDeltaExecutor _deltaExecutor;
         private readonly IStateProvider _stateProvider;
-        private readonly ISpecProvider _specProvider;
+        private readonly IStorageProvider _storageProvider;
+        private readonly ISnapshotableDb _stateDb;
+        private readonly ISnapshotableDb _codeDb;
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly ILogger _logger;
@@ -65,10 +68,11 @@ namespace Catalyst.Core.Modules.Ledger
         public Cid LatestKnownDelta { get; private set; }
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
-        public Ledger(IKvm virtualMachine,
-            IDeltaExecutor deltaExecutor,
+        public Ledger(IDeltaExecutor deltaExecutor,
             IStateProvider stateProvider,
-            ISpecProvider specProvider,
+            IStorageProvider storageProvider,
+            ISnapshotableDb stateDb,
+            ISnapshotableDb codeDb,
             IAccountRepository accounts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
@@ -76,10 +80,11 @@ namespace Catalyst.Core.Modules.Ledger
             ILogger logger)
         {
             Accounts = accounts;
-            _virtualMachine = virtualMachine;
             _deltaExecutor = deltaExecutor;
             _stateProvider = stateProvider;
-            _specProvider = specProvider;
+            _storageProvider = storageProvider;
+            _stateDb = stateDb;
+            _codeDb = codeDb;
             _synchroniser = synchroniser;
             _mempool = mempool;
             _logger = logger;
@@ -150,10 +155,27 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void UpdateLedgerFromDelta(Cid deltaHash)
         {
-            int snapshot = -1;
+            int stateSnapshot = _stateDb.TakeSnapshot();
+            int codeSnapshot = _codeDb.TakeSnapshot();
+            if (stateSnapshot != -1 || codeSnapshot != -1)
+            {
+                if (_logger.IsEnabled(LogEventLevel.Error))
+                    _logger.Error("Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}", stateSnapshot, codeSnapshot, null, deltaHash);
+            }
+            
+            Keccak snapshotStateRoot = _stateProvider.StateRoot;
+
+            // if (branchStateRoot != null && _stateProvider.StateRoot != branchStateRoot)
+            // {
+            //     /* discarding the other branch data - chain reorganization */
+            //     Metrics.Reorganizations++;
+            //     _storageProvider.Reset();
+            //     _stateProvider.Reset();
+            //     _stateProvider.StateRoot = branchStateRoot;
+            // }
+            
             try
             {
-                snapshot = _stateProvider.TakeSnapshot();
                 if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash,
                     out var nextDeltaInChain))
                 {
@@ -166,17 +188,37 @@ namespace Catalyst.Core.Modules.Ledger
                 // receipts tracer or similar, depending on what data needs to be stored for each contract
                 _deltaExecutor.Execute(nextDeltaInChain, NullTxTracer.Instance);
 
-                LatestKnownDelta = deltaHash;
+                // delta testing here (for delta production)
+                // if ((options & ProcessingOptions.ReadOnlyChain) != 0)
+                // {
+                //     Restore(stateSnapshot, codeSnapshot, snapshotStateRoot);
+                // }
+                // else
+                // {
+                //   _stateDb.Commit();
+                //   _codeDb.Commit();
+                // }
+                
+                _stateDb.Commit();
+                _codeDb.Commit();
 
-                _stateProvider.Commit(_specProvider.GenesisSpec);
+                LatestKnownDelta = deltaHash;
             }
             catch
             {
-                if (snapshot != -1)
-                {
-                    _stateProvider.Restore(snapshot);
-                }
+                Restore(stateSnapshot, codeSnapshot, snapshotStateRoot);
             }
+        }
+        
+        private void Restore(int stateSnapshot, int codeSnapshot, Keccak snapshotStateRoot)
+        {
+            if (_logger.IsEnabled(LogEventLevel.Verbose)) _logger.Verbose("Reverting deltas {stateRoot}", _stateProvider.StateRoot);
+            _stateDb.Restore(stateSnapshot);
+            _codeDb.Restore(codeSnapshot);
+            _storageProvider.Reset();
+            _stateProvider.Reset();
+            _stateProvider.StateRoot = snapshotStateRoot;
+            if (_logger.IsEnabled(LogEventLevel.Verbose)) _logger.Verbose("Reverted deltas {stateRoot}", _stateProvider.StateRoot);
         }
 
         protected virtual void Dispose(bool disposing)

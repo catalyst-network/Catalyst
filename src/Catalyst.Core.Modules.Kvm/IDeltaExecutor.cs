@@ -29,8 +29,8 @@ namespace Catalyst.Core.Modules.Kvm
 {
     public interface IDeltaExecutor
     {
-        void Execute(Delta delta, ITxTracer txTracer, Address recipientOverride = null);
+        void Execute(Delta delta, ITxTracer txTracer);
         
-        void CallAndRestore(Delta delta, ITxTracer txTracer, Address recipientOverride = null);
+        void CallAndRestore(Delta delta, ITxTracer txTracer);
     }
 }
