@@ -307,6 +307,11 @@ namespace Catalyst.Core.Modules.Kvm
             }
         }
 
+        /// <summary>
+        /// Accounts for which SELF_DESTRUCT opcode was invoked during the tx execution.
+        /// Note that one of them can be coinbase / validator and in such case the miner / validator rewards are lost.
+        /// </summary>
+        /// <param name="substate"></param>
         private void DestroyAccounts(TransactionSubstate substate)
         {
             foreach (Address toBeDestroyed in substate.DestroyList)
@@ -315,7 +320,7 @@ namespace Catalyst.Core.Modules.Kvm
                 _stateProvider.DeleteAccount(toBeDestroyed);
             }
         }
-
+        
         private void DeployCode(ExecutionEnvironment env, TransactionSubstate substate, ref long unspentGas, IReleaseSpec spec)
         {
             long codeDepositGasCost = CodeDepositHandler.CalculateCost(substate.Output.Length, spec);

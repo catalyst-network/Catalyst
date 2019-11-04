@@ -89,10 +89,28 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
                 t => t.PublicEntries.Select(e =>
                     new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
+            
+            var rawAndSaltedContractEntriesBySignature = includedTransactions.SelectMany(
+                t => t.ContractEntries.Select(e =>
+                {
+                    var contractEntriesProtoBuff = e;
+                    return new
+                    {
+                        RawEntry = contractEntriesProtoBuff,
+                        SaltedAndHashedEntry =
+                            _hashProvider.ComputeMultiHash(contractEntriesProtoBuff.ToByteArray().Concat(salt))
+                    };
+                }));
 
             // (Eα;Oα)
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
                .OrderBy(v => v.SaltedAndHashedEntry, ByteUtil.ByteListComparer.Default)
+               .SelectMany(v => v.RawEntry.ToByteArray())
+               .ToArray();
+
+            var shuffledContractEntriesBytes = rawAndSaltedContractEntriesBySignature
+               .OrderBy(v => v.RawEntry.GasPrice)
+               .ThenBy(v => v.SaltedAndHashedEntry.ToArray(), ByteUtil.ByteListComparer.Default)
                .SelectMany(v => v.RawEntry.ToByteArray())
                .ToArray();
 
@@ -113,6 +131,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 ReceiverPublicKey = _producerUniqueId.PublicKey.ToByteString()
             };
             var globalLedgerStateUpdate = shuffledEntriesBytes
+               .Concat(shuffledContractEntriesBytes)
                .Concat(signaturesInOrder)
                .Concat(coinbaseEntry.ToByteArray())
                .ToArray();
@@ -137,6 +156,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 MerkleRoot = candidate.Hash,
                 CoinbaseEntries = {coinbaseEntry},
                 PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x)},
+                ContractEntries = {includedTransactions.SelectMany(t => t.ContractEntries).Select(x => x)},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -178,7 +198,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             //we assume all transactions are of type non-confidential for now
 
             var validTransactionsForDelta =
-                allTransactions.Where(m => m.IsPublicTransaction && m.HasValidEntries()).ToList();
+                allTransactions.Where(m => (m.IsPublicTransaction || m.IsContractCall || m.IsContractDeployment) && m.HasValidEntries()).ToList();
             var rejectedTransactions = allTransactions.Except(validTransactionsForDelta);
             _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}",
                 rejectedTransactions);

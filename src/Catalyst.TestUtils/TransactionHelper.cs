@@ -26,6 +26,7 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
 
@@ -65,6 +66,50 @@ namespace Catalyst.TestUtils
                     RawBytes = signature.ToUtf8ByteString()
                 }
             };
+            return transaction;
+        }
+        
+        public static TransactionBroadcast GetContractTransaction(ByteString data,
+            UInt256 amount,
+            uint gasLimit,
+            UInt256 gasPrice,
+            byte[] targetContract = null, // to be reviewed
+            string senderPublicKey = "sender",
+            string receiverPublicKey = "receiver",
+            string signature = "signature",
+            long timestamp = 12345,
+            ulong transactionFees = 2,
+            ulong nonce = 0,
+            NetworkType networkType = NetworkType.Devnet)
+        {
+            var transaction = new TransactionBroadcast
+            {
+                ContractEntries =
+                {
+                    new ContractEntry
+                    {
+                        Amount = ((UInt256) amount).ToUint256ByteString(),
+                        Base = new BaseEntry
+                        {
+                            Nonce = nonce,
+                            ReceiverPublicKey = receiverPublicKey.ToUtf8ByteString(),
+                            SenderPublicKey = senderPublicKey.ToUtf8ByteString(),
+                            TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
+                        },
+                        Data = data,
+                        GasLimit = gasLimit,
+                        GasPrice = gasPrice,
+                        TargetContract = targetContract
+                    }
+                },
+                Timestamp = new Timestamp {Seconds = timestamp},
+                Signature = new Signature
+                {
+                    SigningContext = new SigningContext {NetworkType = networkType, SignatureType = SignatureType.TransactionPublic},
+                    RawBytes = signature.ToUtf8ByteString()
+                }
+            };
+
             return transaction;
         }
     }

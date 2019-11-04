@@ -35,6 +35,7 @@ using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
@@ -44,6 +45,7 @@ using FluentAssertions;
 using Google.Protobuf;
 using LibP2P;
 using Nethereum.Hex.HexConvertors.Extensions;
+using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using Serilog;
@@ -203,6 +205,87 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
+        [Fact]
+        public void BuildDeltaWithContractEntries()
+        {
+            var transactions = Enumerable.Range(0, 20).Select(i =>
+            {
+                var transaction = TransactionHelper.GetContractTransaction(ByteString.Empty,
+                    UInt256.Zero, 
+                    21000,
+                    (20 + i).GFul(),
+                    Bytes.Empty,
+                    receiverPublicKey: i.ToString(),
+                    transactionFees: (ulong) _random.Next(),
+                    timestamp: _random.Next(),
+                    signature: i.ToString());
+                return transaction;
+            }).ToList();
+
+            var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
+            transactionRetriever.GetMempoolTransactionsByPriority().Returns(transactions);
+
+            // TODO: discuss it
+            transactions.ForEach(t => t.AfterConstruction());
+            
+            var selectedTransactions = transactions.Where(t => (t.IsContractCall || t.IsContractDeployment) && t.HasValidEntries()).ToArray();
+
+            var expectedCoinBase = new CoinbaseEntry
+            {
+                Amount = selectedTransactions.Sum(t => t.SummedEntryFees()).ToUint256ByteString(),
+                ReceiverPublicKey = _producerId.PublicKey.ToByteString()
+            };
+
+            var salt = BitConverter.GetBytes(
+                _randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash.ToArray()).NextInt());
+
+            var rawAndSaltedEntriesBySignature = selectedTransactions.SelectMany(
+                t => t.ContractEntries.Select(e =>
+                {
+                    var contractEntriesProtoBuff = e;
+                    return new
+                    {
+                        RawEntry = contractEntriesProtoBuff,
+                        SaltedAndHashedEntry =
+                            _hashProvider.ComputeMultiHash(contractEntriesProtoBuff.ToByteArray().Concat(salt))
+                    };
+                }));
+
+            // TODO:
+            // first transactions are grouped by the sender address and ordered by nonce within each group
+            //     * if there is more than one transaction with the same nonce and same sender address then the transaction with the higher gas price is selected
+            //     * in case of a draw the transaction with a lower tx hash is selected (according to any agreed hash comparison strategy)
+            //     * the new pool is created after discarding the transactions that were with the same nonce and same sender but lower gas price
+            //     * within the new pool transactions we order them by the gas price and then ascending by the gas limit
+            //     * then we execute transactions in this order with an exception that if any tx has a nonce which is not the next nonce for the account the the transaction is stashed and we set the MAX_STASHED_PRICE to MAX(MAX_STASHED_PRICE, tx.gasPrice)
+            //     * before executing any transaction we make two checks
+            // a) we check if MAX_STASHED_PRICE is >= tx.gasPrice and then push the stashed transaction with tx.gasPrice == MAX_STASHED_PRICE in front of the queue
+            // b) we check if delta.gasRemaining >= next transaction in the queue and discard this transaction if not
+            //     * then we execute the transaction and apply the state transition
+            var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
+               .OrderBy(v => v.RawEntry.GasPrice)
+               .ThenBy(v => v.SaltedAndHashedEntry.ToArray(), ByteUtil.ByteListComparer.Default)
+               .SelectMany(v => v.RawEntry.ToByteArray())
+               .ToArray();
+
+            var signaturesInOrder = selectedTransactions
+               .Select(p => p.Signature.ToByteArray())
+               .OrderBy(s => s, ByteUtil.ByteListComparer.Default)
+               .SelectMany(b => b)
+               .ToArray();
+
+            var expectedBytesToHash = shuffledEntriesBytes.Concat(signaturesInOrder)
+               .Concat(expectedCoinBase.ToByteArray()).ToArray();
+
+            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
+                _cache, _dateTimeProvider, _logger);
+            var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
+
+            ValidateDeltaCandidate(candidate, expectedBytesToHash);
+
+            _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
+        }
+        
         private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedBytesToHash)
         {
             candidate.Should().NotBeNull();

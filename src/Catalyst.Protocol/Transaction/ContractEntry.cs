@@ -34,13 +34,8 @@ namespace Catalyst.Protocol.Transaction
 
         public bool IsValid()
         {
-            if (!Data.IsEmpty)
-            {
-                return true;
-            }
-            
-            Logger.Debug("{field} cannot be Empty", nameof(Data));
-            return false;
+            // data can be empty
+            return GasLimit >= 21000; // make it a constant - MIN_GAS_LIMIT
         }
 
         // add to proto

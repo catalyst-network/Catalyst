@@ -42,6 +42,18 @@ namespace Catalyst.Protocol.Wire
              && ConfidentialEntries.All(e => e.IsValid());
         }
 
+        /// <summary>
+        /// TODO: discuss OnConstruction - why is it designed this way 
+        /// </summary>
+        public void AfterConstruction()
+        {
+            IsContractDeployment = ContractEntries.Any(c => c.IsValidDeploymentEntry);
+            IsContractCall = ContractEntries.Any(c => c.IsValidCallEntry);
+            IsPublicTransaction = PublicEntries.Any() && PublicEntries.All(e => e.IsValid());
+            IsConfidentialTransaction = ConfidentialEntries.Any()
+             && ConfidentialEntries.All(e => e.IsValid());
+        }
+
         public bool IsContractDeployment { get; private set; }
         public bool IsContractCall { get; private set; }
         public bool IsPublicTransaction { get; private set; }
