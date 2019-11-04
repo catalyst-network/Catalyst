@@ -22,9 +22,11 @@
 #endregion
 
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using Catalyst.Protocol.Cryptography;
 using Google.Protobuf.WellKnownTypes;
+using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Protocol.Wire
@@ -54,6 +56,47 @@ namespace Catalyst.Protocol.Wire
              && ConfidentialEntries.All(e => e.IsValid());
         }
 
+        // TODO: discuss why TransactionBroadcastTest is commented out
+        public UInt256 AverageGasPrice
+        {
+            get
+            {
+                BigInteger averagePrice = BigInteger.Zero;
+                ulong totalLimit = 0;
+                int count = ContractEntries.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    ulong limit = ContractEntries[i].GasLimit;
+                    totalLimit += limit;
+                    averagePrice += limit * ContractEntries[i].GasPrice;
+                }
+
+                if (totalLimit == 0)
+                {
+                    return UInt256.Zero;
+                }
+                
+                UInt256.Create(out UInt256 result, averagePrice / totalLimit);
+                return result;
+            }
+        }
+        
+        // TODO: discuss why TransactionBroadcastTest is commented out
+        public ulong TotalGasLimit
+        {
+            get
+            {
+                ulong totalLimit = 0;
+                int count = ContractEntries.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    totalLimit += ContractEntries[i].GasLimit;
+                }
+                
+                return totalLimit;
+            }
+        }
+        
         public bool IsContractDeployment { get; private set; }
         public bool IsContractCall { get; private set; }
         public bool IsPublicTransaction { get; private set; }

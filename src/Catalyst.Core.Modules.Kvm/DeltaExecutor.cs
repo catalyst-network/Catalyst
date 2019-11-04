@@ -96,16 +96,16 @@ namespace Catalyst.Core.Modules.Kvm
         /// <param name="entry"></param>
         /// <param name="releaseSpec"></param>
         /// <returns>Total intrinsic cost of the <paramref name="entry" /></returns>
-        public long CalculateIntrinsicGas(ContractEntry entry, IReleaseSpec releaseSpec)
+        public ulong CalculateIntrinsicGas(ContractEntry entry, IReleaseSpec releaseSpec)
         {
-            long result = GasCostOf.Transaction; // the basic entry cost
+            ulong result = GasCostOf.Transaction; // the basic entry cost
             if (entry.Data != null)
             {
                 // here is the difference between the 0 bytes and non-zero bytes cost
                 // justified by a better compression level of zero bytes
                 long txDataNonZeroGasCost = releaseSpec.IsEip2028Enabled ? GasCostOf.TxDataNonZeroEip2028 : GasCostOf.TxDataNonZero;
                 int length = entry.Data.Length;
-                for (int i = 0; i < length; i++) result += entry.Data[i] == 0 ? GasCostOf.TxDataZero : txDataNonZeroGasCost;
+                for (int i = 0; i < length; i++) result += entry.Data[i] == 0 ? GasCostOf.TxDataZero : (ulong) txDataNonZeroGasCost;
             }
 
             if (entry.IsValidDeploymentEntry && releaseSpec.IsEip2Enabled) result += GasCostOf.TxCreate;
@@ -121,7 +121,7 @@ namespace Catalyst.Core.Modules.Kvm
                 Difficulty = 1,
                 Number = 1,
                 Timestamp = (UInt256) delta.TimeStamp.Seconds,
-                GasLimit = delta.GasLimit,
+                GasLimit = (long) delta.GasLimit,
                 /* here we can read coinbase entries from the delta
                    but we need to decide how to split fees and which one to pick for the KVM */
                 GasBeneficiary = Address.Zero,
@@ -144,7 +144,7 @@ namespace Catalyst.Core.Modules.Kvm
             // here we need to propagate back to Delta
             // env.CurrentBlock.GasUsed += gasLimit;
             if (txTracer.IsTracingReceipt)
-                txTracer.MarkAsFailed(env.ExecutingAccount, entry.GasLimit, Bytes.Empty, "invalid");
+                txTracer.MarkAsFailed(env.ExecutingAccount, (long) entry.GasLimit, Bytes.Empty, "invalid");
         }
 
         private void Execute(Delta delta, ITxTracer txTracer, bool readOnly)
@@ -198,8 +198,8 @@ namespace Catalyst.Core.Modules.Kvm
             bool isPrecompile = recipient.IsPrecompiled(spec);
             ExecutionEnvironment env = PrepareEnv(entry, sender, recipient, stateUpdate, isPrecompile);
 
-            long gasLimit = entry.GasLimit;
-            long intrinsicGas = CalculateIntrinsicGas(entry, spec);
+            ulong gasLimit = entry.GasLimit;
+            ulong intrinsicGas = CalculateIntrinsicGas(entry, spec);
 
             if (_logger.IsEnabled(LogEventLevel.Verbose)) _logger.Verbose("Executing entry {entry}", entry);
             if (!ValidateSender(entry, env, txTracer)) return;
@@ -217,8 +217,8 @@ namespace Catalyst.Core.Modules.Kvm
             InitEntryExecution(env, gasLimit, spec, txTracer);
 
             // we prepare two fields to track the amount of gas spent / left
-            long unspentGas = gasLimit - intrinsicGas;
-            long spentGas = gasLimit;
+            ulong unspentGas = gasLimit - intrinsicGas;
+            ulong spentGas = gasLimit;
 
             // the snapshots are needed to revert the subroutine state changes in case of an VM exception
             int stateSnapshot = _stateProvider.TakeSnapshot();
@@ -236,10 +236,10 @@ namespace Catalyst.Core.Modules.Kvm
             {
                 if (entry.IsValidDeploymentEntry) PrepareContractAccount(env.CodeSource);
                 ExecutionType executionType = entry.IsValidDeploymentEntry ? ExecutionType.Create : ExecutionType.Call;
-                using (VmState state = new VmState(unspentGas, env, executionType, isPrecompile, true, false))
+                using (VmState state = new VmState((long) unspentGas, env, executionType, isPrecompile, true, false))
                 {
                     substate = _virtualMachine.Run(state, txTracer);
-                    unspentGas = state.GasAvailable;
+                    unspentGas = (ulong) state.GasAvailable;
                 }
 
                 if (substate.ShouldRevert || substate.IsError)
@@ -292,17 +292,17 @@ namespace Catalyst.Core.Modules.Kvm
                 _stateProvider.Reset();
             }
 
-            if (!readOnly) stateUpdate.GasUsed += spentGas;
+            if (!readOnly) stateUpdate.GasUsed += (long) spentGas;
             if (txTracer.IsTracingReceipt)
             {
                 if (statusCode == StatusCode.Failure)
                 {
-                    txTracer.MarkAsFailed(env.CodeSource, spentGas, substate?.ShouldRevert ?? false ? substate.Output : Bytes.Empty, substate?.Error);
+                    txTracer.MarkAsFailed(env.CodeSource, (long) spentGas, substate?.ShouldRevert ?? false ? substate.Output : Bytes.Empty, substate?.Error);
                 }
                 else
                 {
                     if (substate == null) throw new InvalidOperationException("Substate should not be null after a successful VM run.");
-                    txTracer.MarkAsSuccess(env.CodeSource, spentGas, substate.Output, substate.Logs.Any() ? substate.Logs.ToArray() : LogEntry.EmptyLogs);
+                    txTracer.MarkAsSuccess(env.CodeSource, (long) spentGas, substate.Output, substate.Logs.Any() ? substate.Logs.ToArray() : LogEntry.EmptyLogs);
                 }
             }
         }
@@ -321,9 +321,9 @@ namespace Catalyst.Core.Modules.Kvm
             }
         }
         
-        private void DeployCode(ExecutionEnvironment env, TransactionSubstate substate, ref long unspentGas, IReleaseSpec spec)
+        private void DeployCode(ExecutionEnvironment env, TransactionSubstate substate, ref ulong unspentGas, IReleaseSpec spec)
         {
-            long codeDepositGasCost = CodeDepositHandler.CalculateCost(substate.Output.Length, spec);
+            ulong codeDepositGasCost = (ulong) CodeDepositHandler.CalculateCost(substate.Output.Length, spec);
             if (unspentGas < codeDepositGasCost && spec.IsEip2Enabled) throw new OutOfGasException();
 
             if (unspentGas >= codeDepositGasCost)
@@ -378,7 +378,7 @@ namespace Catalyst.Core.Modules.Kvm
 
         private bool ValidateDeltaGasLimit(ContractEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
-            if (entry.GasLimit > env.CurrentBlock.GasLimit - env.CurrentBlock.GasUsed)
+            if (entry.GasLimit > (ulong) (env.CurrentBlock.GasLimit - env.CurrentBlock.GasUsed))
             {
                 TraceLogInvalidTx(entry, $"BLOCK_GAS_LIMIT_EXCEEDED {entry.GasLimit} > {env.CurrentBlock.GasLimit} - {env.CurrentBlock.GasUsed}");
                 QuickFail(entry, env, txTracer);
@@ -390,7 +390,7 @@ namespace Catalyst.Core.Modules.Kvm
 
         private bool ValidateIntrinsicGas(ContractEntry entry,
             ExecutionEnvironment env,
-            long intrinsicGas,
+            ulong intrinsicGas,
             ITxTracer txTracer)
         {
             if (_logger.IsEnabled(LogEventLevel.Verbose))
@@ -431,11 +431,11 @@ namespace Catalyst.Core.Modules.Kvm
 
         private bool ValidateSenderBalance(ContractEntry entry,
             ExecutionEnvironment env,
-            long intrinsicGas,
+            ulong intrinsicGas,
             ITxTracer txTracer)
         {
             UInt256 senderBalance = _stateProvider.GetBalance(env.Sender);
-            if ((ulong) intrinsicGas * env.GasPrice + env.Value > senderBalance)
+            if (intrinsicGas * env.GasPrice + env.Value > senderBalance)
             {
                 TraceLogInvalidTx(entry, $"INSUFFICIENT_SENDER_BALANCE: ({env.Sender})_BALANCE = {senderBalance}");
                 QuickFail(entry, env, txTracer);
@@ -467,14 +467,14 @@ namespace Catalyst.Core.Modules.Kvm
             }
         }
 
-        private void InitEntryExecution(ExecutionEnvironment env, long gasLimit, IReleaseSpec spec, ITxTracer txTracer)
+        private void InitEntryExecution(ExecutionEnvironment env, ulong gasLimit, IReleaseSpec spec, ITxTracer txTracer)
         {
             // first we increment nonce on the executing account
             _stateProvider.IncrementNonce(env.Sender);
 
             // then we subtract money from the sender's account to pay for gas - this will be paid
             // even if the entry execution fails
-            _stateProvider.SubtractFromBalance(env.Sender, (ulong) gasLimit * env.GasPrice, spec);
+            _stateProvider.SubtractFromBalance(env.Sender, gasLimit * env.GasPrice, spec);
 
             // we commit the nonce and gas payment
             _stateProvider.Commit(_specProvider.GetSpec(env.CurrentBlock.Number), txTracer.IsTracingState ? txTracer : null);
@@ -492,23 +492,23 @@ namespace Catalyst.Core.Modules.Kvm
         /// <param name="env">Details of the execution environment.</param>
         /// <param name="spec">Provides the refund logic version details.</param>
         /// <returns>Returns spent gas after the refund.</returns>
-        private long Refund(long gasLimit,
-            long unspentGas,
+        private ulong Refund(ulong gasLimit,
+            ulong unspentGas,
             TransactionSubstate substate,
             ExecutionEnvironment env,
             IReleaseSpec spec)
         {
-            long spentGas = gasLimit;
+            ulong spentGas = gasLimit;
             if (!substate.IsError)
             {
                 spentGas -= unspentGas;
-                long refund = substate.ShouldRevert
+                ulong refund = substate.ShouldRevert
                     ? 0
-                    : Math.Min(spentGas / 2L, substate.Refund + substate.DestroyList.Count * RefundOf.Destroy);
+                    : Math.Min(spentGas / 2UL, (ulong) (substate.Refund + substate.DestroyList.Count * RefundOf.Destroy));
 
                 if (_logger.IsEnabled(LogEventLevel.Verbose))
                     _logger.Verbose("Refunding unused gas of {unspent} and refund of {refund}", unspentGas, refund);
-                UInt256 refundValue = (ulong) (unspentGas + refund) * env.GasPrice;
+                UInt256 refundValue = (unspentGas + refund) * env.GasPrice;
                 _stateProvider.AddToBalance(env.Sender, refundValue, spec);
                 spentGas -= refund;
             }

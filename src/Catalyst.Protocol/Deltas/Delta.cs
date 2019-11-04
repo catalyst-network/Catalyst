@@ -49,6 +49,6 @@ namespace Catalyst.Protocol.Deltas
         }
 
         // update proto
-        public long GasLimit { get; set; } = 8_000_000L;
+        public ulong GasLimit { get; set; } = 8_000_000UL;
     }
 }

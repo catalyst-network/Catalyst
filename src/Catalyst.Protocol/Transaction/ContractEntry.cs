@@ -42,7 +42,7 @@ namespace Catalyst.Protocol.Transaction
         /// <summary>
         /// Gas limit for the entry expressed in gas units.
         /// </summary>
-        public long GasLimit { get; set; }
+        public ulong GasLimit { get; set; }
         
         // add to proto
         /// <summary>
