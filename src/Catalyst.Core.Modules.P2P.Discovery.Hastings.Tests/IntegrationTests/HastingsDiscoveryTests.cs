@@ -257,11 +257,12 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
             var stateHistory = new Stack<IHastingsMemento>();
             stateHistory.Push(seedState);
 
-            DiscoveryHelper.MockMementoHistory(stateHistory, 5) //this isn't an angry pirate this is just 5
+            DiscoveryHelper.MockMementoHistory(stateHistory, 5)
                .ToList()
                .ForEach(i => stateCareTaker.Add(i));
 
-            var stateCandidate = DiscoveryHelper.MockOriginator();
+            var stateCandidate = DiscoveryHelper.MockOriginator(default,
+                DiscoveryHelper.MockNeighbours(Constants.NumberOfRandomPeers, NeighbourStateTypes.NotContacted));
 
             var discoveryTestBuilder = new DiscoveryTestBuilder();
             discoveryTestBuilder
@@ -297,10 +298,12 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
                     streamObserver.Received(1).OnNext(Arg.Is(pingDto));
 
-                    walker.StepProposal.Neighbours
+                    var foundResponsiveNeighbour = walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
                        .Select(n => n.PeerId)
                        .Contains(pingDto.Sender);
+                    
+                    foundResponsiveNeighbour.Should().BeTrue();
                 }
             }
         }
