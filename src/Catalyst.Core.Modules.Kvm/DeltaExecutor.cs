@@ -188,8 +188,6 @@ namespace Catalyst.Core.Modules.Kvm
         /// <param name="stateUpdate"><see cref="Delta"/> to be used for execution environment construction</param>
         /// <param name="txTracer">Tracer to extract the execution steps for debugging or analytics.</param>
         /// <param name="readOnly">Defines whether the state should be reverted after the execution.</param>
-        /// <param name="recipientOverride">Required temporarily for testing.
-        /// while we are updating the proto files.</param>
         /// <exception cref="TransactionCollisionException">Thrown when deployment address already has some code.</exception>
         /// <exception cref="OutOfGasException">Thrown when not enough gas is available for deposit.</exception>
         private void Execute(ContractEntry entry, StateUpdate stateUpdate, ITxTracer txTracer, bool readOnly)
