@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.Validators
             var transactionBroadcastClone = transactionBroadcast.Clone();
             transactionBroadcastClone.Signature = null;
 
-            if (_cryptoContext.Verify(transactionSignature, transactionBroadcast.ToByteArray(), signingContext))
+            if (_cryptoContext.Verify(transactionSignature, transactionBroadcastClone.ToByteArray(), signingContext))
             {
                 return true;
             }
