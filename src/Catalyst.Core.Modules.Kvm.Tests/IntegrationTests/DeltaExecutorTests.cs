@@ -43,14 +43,14 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
     public sealed class DeltaExecutorTests
     {
         private readonly ICryptoContext _cryptoContext = new FfiWrapper();
-        private CatalystSpecProvider _specProvider;
-        private StateProvider _stateProvider;
-        private StorageProvider _storageProvider;
-        private VirtualMachine _virtualMachine;
-        private IPublicKey _recipient;
-        private IPublicKey _sender;
-        private IPublicKey _poorSender;
-        private DeltaExecutor _executor;
+        private readonly CatalystSpecProvider _specProvider;
+        private readonly StateProvider _stateProvider;
+        private readonly StorageProvider _storageProvider;
+        private readonly VirtualMachine _virtualMachine;
+        private readonly IPublicKey _recipient;
+        private readonly IPublicKey _sender;
+        private readonly IPublicKey _poorSender;
+        private readonly DeltaExecutor _executor;
 
         public DeltaExecutorTests()
         {

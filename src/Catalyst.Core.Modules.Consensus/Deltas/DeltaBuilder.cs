@@ -194,7 +194,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         private sealed class AveragePriceComparer : IComparer<TransactionBroadcast>
         {
-            private int _multiplier;
+            private readonly int _multiplier;
 
             private AveragePriceComparer(int multiplier) { _multiplier = multiplier; }
             

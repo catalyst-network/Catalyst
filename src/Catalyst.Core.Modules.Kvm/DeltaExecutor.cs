@@ -139,7 +139,10 @@ namespace Catalyst.Core.Modules.Kvm
 
         private Address GetAccountAddress(ByteString publicKeyByteString)
         {
-            if (publicKeyByteString == null || publicKeyByteString.IsEmpty) return null;
+            if (publicKeyByteString == null || publicKeyByteString.IsEmpty)
+            {
+                return null;
+            }
 
             IPublicKey publicKey = _cryptoContext.GetPublicKeyFromBytes(publicKeyByteString.ToByteArray());
             return publicKey.ToKvmAddress();
@@ -150,7 +153,9 @@ namespace Catalyst.Core.Modules.Kvm
             // here we need to propagate back to Delta
             env.CurrentBlock.GasUsed += (long) entry.GasLimit;
             if (txTracer.IsTracingReceipt)
+            {
                 txTracer.MarkAsFailed(env.ExecutingAccount, (long) entry.GasLimit, Bytes.Empty, "invalid");
+            }
         }
 
         private void Execute(Delta delta, ITxTracer txTracer, bool readOnly)
@@ -271,7 +276,11 @@ namespace Catalyst.Core.Modules.Kvm
 
             try
             {
-                if (entry.IsValidDeploymentEntry) PrepareContractAccount(env.CodeSource);
+                if (entry.IsValidDeploymentEntry)
+                {
+                    PrepareContractAccount(env.CodeSource);
+                }
+                
                 ExecutionType executionType = entry.IsValidDeploymentEntry ? ExecutionType.Create : ExecutionType.Call;
                 using (VmState state = new VmState((long) unspentGas, env, executionType, isPrecompile, true, false))
                 {
@@ -337,6 +346,7 @@ namespace Catalyst.Core.Modules.Kvm
             {
                 _storageProvider.Commit(txTracer.IsTracingState ? txTracer : null);
                 _stateProvider.Commit(spec, txTracer.IsTracingState ? txTracer : null);
+                stateUpdate.GasUsed += (long) spentGas;
             }
             else
             {
@@ -344,7 +354,6 @@ namespace Catalyst.Core.Modules.Kvm
                 _stateProvider.Reset();
             }
 
-            if (!readOnly) stateUpdate.GasUsed += (long) spentGas;
             if (txTracer.IsTracingReceipt)
             {
                 if (statusCode == StatusCode.Failure)
