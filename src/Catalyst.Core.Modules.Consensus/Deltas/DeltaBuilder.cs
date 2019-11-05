@@ -207,7 +207,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
         }
         
-        private bool IsTransactionOfAcceptedType(TransactionBroadcast transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
+        private static bool IsTransactionOfAcceptedType(TransactionBroadcast transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
         
         /// <summary>
         ///     Gets the valid transactions for delta.

@@ -96,7 +96,7 @@ namespace Catalyst.Core.Modules.Kvm
         /// <param name="entry"></param>
         /// <param name="releaseSpec"></param>
         /// <returns>Total intrinsic cost of the <paramref name="entry" /></returns>
-        public ulong CalculateIntrinsicGas(ContractEntry entry, IReleaseSpec releaseSpec)
+        public static ulong CalculateIntrinsicGas(ContractEntry entry, IReleaseSpec releaseSpec)
         {
             ulong result = GasCostOf.Transaction; // the basic entry cost
             if (entry.Data != null)
@@ -148,7 +148,7 @@ namespace Catalyst.Core.Modules.Kvm
             return publicKey.ToKvmAddress();
         }
 
-        private void QuickFail(ContractEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
+        private static void QuickFail(ContractEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
             // here we need to propagate back to Delta
             env.CurrentBlock.GasUsed += (long) entry.GasLimit;
@@ -334,11 +334,11 @@ namespace Catalyst.Core.Modules.Kvm
             {
                 if (!_stateProvider.AccountExists(gasBeneficiary))
                 {
-                    _stateProvider.CreateAccount(gasBeneficiary, (ulong) spentGas * env.GasPrice);
+                    _stateProvider.CreateAccount(gasBeneficiary, spentGas * env.GasPrice);
                 }
                 else
                 {
-                    _stateProvider.AddToBalance(gasBeneficiary, (ulong) spentGas * env.GasPrice, spec);
+                    _stateProvider.AddToBalance(gasBeneficiary, spentGas * env.GasPrice, spec);
                 }
             }
 

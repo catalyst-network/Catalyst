@@ -45,8 +45,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         private readonly ICryptoContext _cryptoContext = new FfiWrapper();
         private readonly CatalystSpecProvider _specProvider;
         private readonly StateProvider _stateProvider;
-        private readonly StorageProvider _storageProvider;
-        private readonly VirtualMachine _virtualMachine;
         private readonly IPublicKey _recipient;
         private readonly IPublicKey _sender;
         private readonly IPublicKey _poorSender;
@@ -56,9 +54,9 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         {
             _specProvider = new CatalystSpecProvider();
             _stateProvider = new StateProvider(new StateDb(), new StateDb(), LimboLogs.Instance);
-            _storageProvider = new StorageProvider(new StateDb(), _stateProvider, LimboLogs.Instance);
-            _virtualMachine = new VirtualMachine(_stateProvider, _storageProvider, new StateUpdateHashProvider(), _specProvider, LimboLogs.Instance);
-            var logger = Substitute.For<ILogger>();
+            StorageProvider storageProvider = new StorageProvider(new StateDb(), _stateProvider, LimboLogs.Instance);
+            VirtualMachine virtualMachine = new VirtualMachine(_stateProvider, storageProvider, new StateUpdateHashProvider(), _specProvider, LimboLogs.Instance);
+            ILogger logger = Substitute.For<ILogger>();
             logger.IsEnabled(Arg.Any<LogEventLevel>()).Returns(true);
             
             _recipient = _cryptoContext.GeneratePrivateKey().GetPublicKey();
@@ -70,7 +68,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             _stateProvider.CreateAccount(Address.Zero, 1000.Kat());
             _stateProvider.Commit(_specProvider.GenesisSpec);
             
-            _executor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, _virtualMachine, logger);
+            _executor = new DeltaExecutor(_specProvider, _stateProvider, storageProvider, virtualMachine, logger);
         }
         
         [Fact]
