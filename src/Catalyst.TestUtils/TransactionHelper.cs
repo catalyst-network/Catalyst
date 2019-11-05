@@ -88,7 +88,7 @@ namespace Catalyst.TestUtils
                 {
                     new ContractEntry
                     {
-                        Amount = ((UInt256) amount).ToUint256ByteString(),
+                        Amount = amount.ToUint256ByteString(),
                         Base = new BaseEntry
                         {
                             Nonce = nonce,

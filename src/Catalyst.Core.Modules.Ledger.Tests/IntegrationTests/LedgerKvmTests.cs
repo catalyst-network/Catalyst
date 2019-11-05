@@ -59,7 +59,6 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
     public class LedgerKvmTests
     {
         private Ledger _ledger;
-        private readonly IKvm _kvm;
         private readonly ILogger _logger;
         private readonly MultiHash _genesisHash;
         private readonly IHashProvider _hashProvider;
@@ -72,9 +71,9 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private readonly ILedgerSynchroniser _ledgerSynchroniser;
         private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly IDeltaExecutor _deltaExecutor;
-        private IStorageProvider _storageProvider;
-        private ISnapshotableDb _stateDb;
-        private ISnapshotableDb _codeDb;
+        private readonly IStorageProvider _storageProvider;
+        private readonly ISnapshotableDb _stateDb;
+        private readonly ISnapshotableDb _codeDb;
 
         public LedgerKvmTests()
         {
@@ -103,8 +102,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             IStateUpdateHashProvider stateUpdateHashProvider = new StateUpdateHashProvider();
             _specProvider = new CatalystSpecProvider();
 
-            _kvm = new KatVirtualMachine(_stateProvider, _storageProvider, stateUpdateHashProvider, _specProvider, LimboLogs.Instance);
-            _deltaExecutor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, _kvm, _logger);
+            IKvm kvm = new KatVirtualMachine(_stateProvider, _storageProvider, stateUpdateHashProvider, _specProvider, LimboLogs.Instance);
+            _deltaExecutor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, kvm, _logger);
         }
         
         private void RunDeltas(Delta delta)

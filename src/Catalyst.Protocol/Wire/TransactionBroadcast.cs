@@ -45,7 +45,7 @@ namespace Catalyst.Protocol.Wire
         }
 
         /// <summary>
-        /// TODO: discuss OnConstruction - why is it designed this way 
+        /// OnConstruction does not generate valid transactions for tests / in general - need to discuss 
         /// </summary>
         public void AfterConstruction()
         {
@@ -56,7 +56,7 @@ namespace Catalyst.Protocol.Wire
              && ConfidentialEntries.All(e => e.IsValid());
         }
 
-        // TODO: discuss why TransactionBroadcastTest is commented out
+        // why TransactionBroadcastTest is commented out? if brought back - this needs to have a test coverage there too
         public UInt256 AverageGasPrice
         {
             get
@@ -81,7 +81,7 @@ namespace Catalyst.Protocol.Wire
             }
         }
         
-        // TODO: discuss why TransactionBroadcastTest is commented out
+        // why TransactionBroadcastTest is commented out? if brought back - this needs to have a test coverage there too
         public ulong TotalGasLimit
         {
             get
