@@ -4,9 +4,9 @@ variables:
   BuildConfiguration: 'Debug'
   ArtifactName: 'Catalyst.Framework-$(Build.BuildId)-$(release.type)'
 stages:
-  - stage: 'GetSource'
+  - stage: 'GetSaurce'
     jobs:
-      - job: 'CloneSource'
+      - job: 'GetSaurce'
         continueOnError: false
         pool:
           vmImage: 'macos-10.14'
