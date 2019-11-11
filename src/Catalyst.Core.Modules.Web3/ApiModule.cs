@@ -108,17 +108,6 @@ namespace Catalyst.Core.Modules.Web3
                .SingleInstance();
             builder.RegisterInstance(_container.Resolve<IMempool<TransactionBroadcastDao>>())
                .As<IMempool<TransactionBroadcastDao>>().SingleInstance();
-
-
-            builder.RegisterInstance(_container.Resolve<IDeltaHashProvider>())
-                .As<IDeltaHashProvider>()
-                .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<IDfs>())
-                .As<IDfs>()
-                .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<ILogger>())
-                .As<ILogger>()
-                .SingleInstance();
         }
 
         public void ConfigureServices(IServiceCollection services)
