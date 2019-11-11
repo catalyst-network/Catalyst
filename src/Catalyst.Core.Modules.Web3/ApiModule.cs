@@ -28,8 +28,6 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
