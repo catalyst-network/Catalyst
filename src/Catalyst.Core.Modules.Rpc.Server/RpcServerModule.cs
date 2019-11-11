@@ -48,6 +48,7 @@ namespace Catalyst.Core.Modules.Rpc.Server
                 var logger = container.Resolve<ILogger>();
                 try
                 {
+                    
                     var rpcServer = container.Resolve<IRpcServer>();
                     await rpcServer.StartAsync().ConfigureAwait(false);
                 }
