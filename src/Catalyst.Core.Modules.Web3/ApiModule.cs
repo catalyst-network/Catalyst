@@ -28,6 +28,8 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
@@ -106,6 +108,20 @@ namespace Catalyst.Core.Modules.Web3
                .SingleInstance();
             builder.RegisterInstance(_container.Resolve<IMempool<TransactionBroadcastDao>>())
                .As<IMempool<TransactionBroadcastDao>>().SingleInstance();
+
+
+            builder.RegisterInstance(_container.Resolve<IDeltaHashProvider>())
+                .As<IDeltaHashProvider>()
+                .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IDfs>())
+                .As<IDfs>()
+                .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IMapperProvider>())
+                .As<IMapperProvider>()
+                .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<ILogger>())
+                .As<ILogger>()
+                .SingleInstance();
         }
 
         public void ConfigureServices(IServiceCollection services)

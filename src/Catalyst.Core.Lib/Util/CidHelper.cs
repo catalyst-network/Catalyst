@@ -33,7 +33,7 @@ namespace Catalyst.Core.Lib.Util
 
         public static Cid CreateCid(MultiHash multiHash)
         {
-            return new Cid {Version = 1, Hash = multiHash, ContentType = "dag-pb", Encoding = Encoding};
+            return new Cid {Version = 1, Hash = multiHash, ContentType = "raw", Encoding = Encoding};
         }
 
         public static Cid Cast(byte[] cid) { return Cid.Decode(MultiBase.Encode(cid, Encoding)); }

@@ -56,17 +56,17 @@ namespace Catalyst.Core.Lib.DAO.Deltas
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>())
                .ForMember(d => d.MerkleRoot,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>())
                .ForMember(d => d.MerklePoda,
-                    opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.MerklePoda));
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
 
             cfg.CreateMap<DeltaDao, Delta>()
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>())
                .ForMember(d => d.MerkleRoot,
-                    opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.MerkleRoot))
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>())
                .ForMember(d => d.MerklePoda,
-                    opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.MerklePoda));
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }
     }
 }
