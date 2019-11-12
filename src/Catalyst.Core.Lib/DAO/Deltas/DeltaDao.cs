@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.DAO.Deltas
                .ForMember(d => d.MerkleRoot,
                     opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>())
                .ForMember(d => d.MerklePoda,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
         }
     }
 }
