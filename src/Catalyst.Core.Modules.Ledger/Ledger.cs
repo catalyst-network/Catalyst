@@ -160,7 +160,11 @@ namespace Catalyst.Core.Modules.Ledger
             {
                 if (_logger.IsEnabled(LogEventLevel.Error))
                 {
-                    _logger.Error("Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}", stateSnapshot, codeSnapshot, null, deltaHash);
+                    _logger.Error("Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}", 
+                        stateSnapshot,
+                        codeSnapshot,
+                        null,
+                        deltaHash);
                 }
             }
             
