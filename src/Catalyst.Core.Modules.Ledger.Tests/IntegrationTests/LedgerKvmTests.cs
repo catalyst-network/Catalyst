@@ -58,7 +58,6 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 {
     public class LedgerKvmTests
     {
-        private Ledger _ledger;
         private readonly ILogger _logger;
         private readonly MultiHash _genesisHash;
         private readonly IHashProvider _hashProvider;
@@ -121,7 +120,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid) h).ToObservable(_testScheduler));
 
-            _ledger = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
+            Ledger ledger = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
 
             _testScheduler.Start();
         }
