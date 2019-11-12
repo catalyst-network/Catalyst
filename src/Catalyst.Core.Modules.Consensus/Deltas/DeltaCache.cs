@@ -32,6 +32,7 @@ using Google.Protobuf.WellKnownTypes;
 using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -47,7 +48,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate)
         {
-            return nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash;
+            return nameof(DeltaCache) + "-LocalDelta-" + MultiBase.Encode(candidate.Hash.ToByteArray(), "base32");
         }
 
         public DeltaCache(IHashProvider hashProvider,
