@@ -32,7 +32,7 @@ namespace Catalyst.Core.Lib.DAO.Converters
     {
         public string Convert(ByteString sourceMember, ResolutionContext context)
         {
-            return sourceMember.ToByteArray().ToBase32();
+            return MultiBase.Encode(sourceMember.ToByteArray(), "base32");
         }
     }
 
@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.DAO.Converters
     {
         public ByteString Convert(string sourceMember, ResolutionContext context)
         {
-            return Base32.Decode(sourceMember).ToByteString();
+            return MultiBase.Decode(sourceMember).ToByteString();
         }
     }
 }

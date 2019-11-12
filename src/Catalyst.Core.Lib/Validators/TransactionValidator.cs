@@ -60,12 +60,13 @@ namespace Catalyst.Core.Lib.Validators
                 transactionBroadcast.PublicEntries.First().Base.SenderPublicKey.ToByteArray());
 
             var signingContext = transactionBroadcast.Signature.SigningContext.ToByteArray();
-            
+
             // we need to verify the signature matches the message, but transactionBroadcast contains the signature and original data,
             // passing message+sig will mean your verifying an incorrect message and always return false, so just null the sig.
-            transactionBroadcast.Signature = null;
-            
-            if (_cryptoContext.Verify(transactionSignature, transactionBroadcast.ToByteArray(), signingContext))
+            var transactionBroadcastClone = transactionBroadcast.Clone();
+            transactionBroadcastClone.Signature = null;
+
+            if (_cryptoContext.Verify(transactionSignature, transactionBroadcastClone.ToByteArray(), signingContext))
             {
                 return true;
             }
