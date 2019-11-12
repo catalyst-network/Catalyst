@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var correlationId = SendResponseToHandler(FileTransferResponseCodeTypes.Successful);
             _fileDownloadFactory.GetFileTransferInformation(correlationId).Received(1).SetLength(ExpectedFileSize);
-            _fileDownloadFactory.Received(1).FileTransferAsync(correlationId, CancellationToken.None);
+            _fileDownloadFactory.Received(1)?.FileTransferAsync(correlationId, CancellationToken.None);
         }
 
         [Fact]
@@ -81,8 +81,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var getFileResponse = GetResponseMessage(correlationId, responseCode);
             getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 
-            _fileDownloadFactory.DidNotReceiveWithAnyArgs().FileTransferAsync(default, default);
-            _fakeContext.Channel.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(default);
+            _fileDownloadFactory.DidNotReceiveWithAnyArgs()?.FileTransferAsync(default, default);
+            _fakeContext.Channel.DidNotReceiveWithAnyArgs()?.WriteAndFlushAsync(default);
         }
 
         private ICorrelationId SendResponseToHandler(FileTransferResponseCodeTypes responseCodeType)

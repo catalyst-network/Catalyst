@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Hashing
 
                 return null;
             }
-            catch (System.Exception exc)
+            catch (System.Exception)
             {
                 return null;
             }

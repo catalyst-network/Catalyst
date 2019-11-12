@@ -35,7 +35,6 @@ using Catalyst.TestUtils.ProtocolHelpers;
 using Catalyst.TestUtils.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using NSubstitute;
 using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
@@ -112,16 +111,19 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
                 var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId,
-                    out var contractEntryDaoList, out var publicEntryDaoList);
+                    out _, out _);
 
-                var retievedTransactionDao = transactBroadcastRepo.Get(criteriaId);
-                retievedTransactionDao.TimeStamp = new DateTime(1999, 2, 2);
-                transactBroadcastRepo.Update(retievedTransactionDao);
+                var retrievedTransactionDao = transactBroadcastRepo.Get(criteriaId);
+                retrievedTransactionDao.TimeStamp = new DateTime(1999, 2, 2);
+                transactBroadcastRepo.Update(retrievedTransactionDao);
 
-                var retievedTranscantionDaoModified = transactBroadcastRepo.Get(criteriaId);
+                var retrievedTransactionDaoModified = transactBroadcastRepo.Get(criteriaId);
 
-                var dateComparer = retievedTranscantionDaoModified.TimeStamp.Date.ToString("MM/dd/yyyy");
-                dateComparer.Should().Equals("02/02/1999");
+                var dateComparer = retrievedTransactionDaoModified.TimeStamp.Date.ToString("MM/dd/yyyy");
+                
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                dateComparer.Should()?.Equals("02/02/1999");
             }
         }
 

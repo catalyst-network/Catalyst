@@ -24,12 +24,10 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
-using Catalyst.Abstractions.DAO;
 using Catalyst.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Repository;
 using Catalyst.Protocol.Peer;
 using SharpRepository.Repository;
@@ -86,7 +84,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 }
 
                 var dateComparer = retrievedPeerModified.Modified.Value.Date.ToString("MM/dd/yyyy");
-                dateComparer.Should().Equals(now.ToString("MM/dd/yyyy"));
+                
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                dateComparer.Should()?.Equals(now.ToString("MM/dd/yyyy"));
             }
         }
 
@@ -94,7 +95,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
 
-            var peerDao = new PeerDao() {Id = Guid.NewGuid().ToString()};
+            var peerDao = new PeerDao
+            {
+                Id = Guid.NewGuid().ToString()
+            };
             
             var peerId = PeerIdHelper.GetPeerId(new Random().Next().ToString());
             peerDao.PeerIdentifier = peerId.ToDao<PeerId, PeerIdDao>(_mapperProvider);

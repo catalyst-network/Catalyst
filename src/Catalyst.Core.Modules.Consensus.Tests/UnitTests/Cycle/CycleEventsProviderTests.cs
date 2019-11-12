@@ -146,6 +146,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
                 var timeDiff = phases[i].UtcStartTime - eventsStartTime;
 
                 var phaseTimings = CycleConfiguration.Default.TimingsByName[phases[i].Name];
+
+                // ReSharper disable once PossibleLossOfFraction
                 var fullCycleOffset = CycleConfiguration.Default.CycleDuration.Multiply(i / 3);
 
                 var expectedDiff = phases[i].Status.Equals(PhaseStatus.Producing)
@@ -187,6 +189,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
                 }, () =>
                 {
                     _output.WriteLine(
+
+                        // ReSharper disable once InterpolatedStringExpressionIsNotIFormattable
                         $"% 2 -- completed after {_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture):g}");
                     spy2.OnCompleted();
                 }))

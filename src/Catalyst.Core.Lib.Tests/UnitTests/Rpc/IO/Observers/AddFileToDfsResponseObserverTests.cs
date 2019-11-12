@@ -89,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
                 senderPeerId, correlationId);
             _uploadFileTransferFactory.Received(1)
-               .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
+              ?.FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
         }
     }
 }

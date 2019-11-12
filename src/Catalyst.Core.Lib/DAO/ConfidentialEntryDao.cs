@@ -28,6 +28,7 @@ using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace Catalyst.Core.Lib.DAO
 {
     public class ConfidentialEntryDao : DaoBase
@@ -37,10 +38,12 @@ namespace Catalyst.Core.Lib.DAO
         public string RangeProof { get; set; }
 
         [Column]
+        
+        // ReSharper disable once UnusedMember.Local
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
     }
 
-    public class ConfidentialEntryMapperInitialiser : IMapperInitializer
+    public sealed class ConfidentialEntryMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {

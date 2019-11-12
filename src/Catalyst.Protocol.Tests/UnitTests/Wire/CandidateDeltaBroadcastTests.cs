@@ -27,9 +27,9 @@ using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
 
-namespace Catalyst.Protocol.Tests.Wire
+namespace Catalyst.Protocol.Tests.UnitTests.Wire
 {
-    public class CandidateDeltaTests
+    public sealed class CandidateDeltaTests
     {
         private sealed class InvalidCandidateDeltaBroadCasts : TheoryData<CandidateDeltaBroadcast>
         {

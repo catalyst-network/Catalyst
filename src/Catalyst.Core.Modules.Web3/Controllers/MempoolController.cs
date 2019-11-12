@@ -43,6 +43,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             _mempoolRepository = (MempoolRepository) mempoolRepository;
         }
 
+        [HttpGet("{id}")]
+        public TransactionBroadcastDao Get(string id)
+        {
+            id = id.ToLowerInvariant();
+            return _mempoolRepository.ReadItem(id);
+        }
+
         [HttpGet]
         public JsonResult GetMempool()
         {

@@ -27,14 +27,14 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Core.Modules.Authentication.Tests
+namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
 {
     public sealed class AuthenticationHandlerTests
     {

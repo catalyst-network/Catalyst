@@ -29,7 +29,7 @@ using FluentAssertions;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Xunit;
 
-namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
+namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
 {
     public sealed class CryptoWrapperTests
     {

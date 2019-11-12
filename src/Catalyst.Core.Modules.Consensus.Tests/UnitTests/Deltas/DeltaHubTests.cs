@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 producerId: _peerId);
 
             _hub.BroadcastCandidate(myCandidate);
-            _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
+            _broadcastManager.Received(1)?.BroadcastAsync(Arg.Is<ProtocolMessage>(
                 m => IsExpectedCandidateMessage(m, myCandidate, _peerId)));
         }
         
@@ -111,7 +111,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             };
 
             _hub.BroadcastFavouriteCandidateDelta(favourite);
-            _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
+            _broadcastManager.Received(1)?.BroadcastAsync(Arg.Is<ProtocolMessage>(
                 c => IsExpectedCandidateMessage(c, favourite, _peerId)));
         }
 

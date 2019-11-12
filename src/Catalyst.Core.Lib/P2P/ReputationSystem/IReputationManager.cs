@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Core.Lib.P2P.Repository;
 

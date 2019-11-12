@@ -31,6 +31,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 {
     public sealed class DeltaProducersProvider : IDeltaProducersProvider
     {
+        public DeltaProducersProvider(IPeerRepository peerRepository) { PeerRepository = peerRepository; }
+
         public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
         {
             throw new NotImplementedException();
