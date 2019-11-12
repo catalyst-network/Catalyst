@@ -58,11 +58,9 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private readonly ILedgerSynchroniser _ledgerSynchroniser;
         private readonly IHashProvider _hashProvider;
         private readonly MultiHash _genesisHash;
-        private readonly IKvm _kvm;
         private readonly IDeltaExecutor _executor;
         private readonly IStateProvider _stateProvider;
         private readonly IStorageProvider _storageProvider;
-        private readonly ISpecProvider _specProvider;
 
         public LedgerTests()
         {
@@ -76,11 +74,9 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
             _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
-            _kvm = Substitute.For<IKvm>();
             _executor = Substitute.For<IDeltaExecutor>();
             _stateProvider = Substitute.For<IStateProvider>();
             _storageProvider = Substitute.For<IStorageProvider>();
-            _specProvider = Substitute.For<ISpecProvider>();
         }
 
         [Fact]
