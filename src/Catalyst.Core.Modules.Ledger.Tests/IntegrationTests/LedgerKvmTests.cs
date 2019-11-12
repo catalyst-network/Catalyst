@@ -102,7 +102,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _specProvider = new CatalystSpecProvider();
 
             IKvm kvm = new KatVirtualMachine(_stateProvider, _storageProvider, stateUpdateHashProvider, _specProvider, LimboLogs.Instance);
-            _deltaExecutor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, kvm, _logger);
+            _deltaExecutor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, kvm, new FfiWrapper(), _logger);
         }
         
         private void RunDeltas(Delta delta)

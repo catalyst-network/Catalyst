@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
@@ -55,7 +56,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             _specProvider = new CatalystSpecProvider();
             _stateProvider = new StateProvider(new StateDb(), new StateDb(), LimboLogs.Instance);
             StorageProvider storageProvider = new StorageProvider(new StateDb(), _stateProvider, LimboLogs.Instance);
-            VirtualMachine virtualMachine = new VirtualMachine(_stateProvider, storageProvider, new StateUpdateHashProvider(), _specProvider, LimboLogs.Instance);
+            IKvm virtualMachine = new KatVirtualMachine(_stateProvider, storageProvider, new StateUpdateHashProvider(), _specProvider, LimboLogs.Instance);
             ILogger logger = Substitute.For<ILogger>();
             logger.IsEnabled(Arg.Any<LogEventLevel>()).Returns(true);
             
@@ -68,7 +69,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             _stateProvider.CreateAccount(Address.Zero, 1000.Kat());
             _stateProvider.Commit(_specProvider.GenesisSpec);
             
-            _executor = new DeltaExecutor(_specProvider, _stateProvider, storageProvider, virtualMachine, logger);
+            _executor = new DeltaExecutor(_specProvider, _stateProvider, storageProvider, virtualMachine, new FfiWrapper(), logger);
         }
         
         [Fact]

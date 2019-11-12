@@ -24,6 +24,7 @@
 using System;
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Deltas;
@@ -51,12 +52,12 @@ namespace Catalyst.Core.Modules.Kvm
     /// </summary>
     public class DeltaExecutor : IDeltaExecutor
     {
-        private readonly ICryptoContext _cryptoContext = new FfiWrapper();
+        private readonly ICryptoContext _cryptoContext;
         private readonly ILogger _logger;
         private readonly ISpecProvider _specProvider;
         private readonly IStateProvider _stateProvider;
         private readonly IStorageProvider _storageProvider;
-        private readonly IVirtualMachine _virtualMachine;
+        private readonly IKvm _virtualMachine;
 
         /// <summary>
         ///     Note that there is a distinct approach to state and storage even as only together they form the 'state'
@@ -67,16 +68,19 @@ namespace Catalyst.Core.Modules.Kvm
         /// <param name="stateProvider">Access to accounts.</param>
         /// <param name="storageProvider">Access to accounts' storage.</param>
         /// <param name="virtualMachine">A virtual machine to execute the code on.</param>
+        /// <param name="cryptoContext">Support for crypto operations.</param>
         /// <param name="logger">Logger for the execution details.</param>
         public DeltaExecutor(ISpecProvider specProvider,
             IStateProvider stateProvider,
             IStorageProvider storageProvider,
-            IVirtualMachine virtualMachine,
+            IKvm virtualMachine,
+            ICryptoContext cryptoContext,
             ILogger logger)
         {
             _logger = logger;
             _specProvider = specProvider;
             _virtualMachine = virtualMachine;
+            _cryptoContext = cryptoContext;
             _stateProvider = stateProvider;
             _storageProvider = storageProvider;
         }
