@@ -37,7 +37,6 @@ namespace Catalyst.Core.Modules.Kvm
             builder.RegisterType<DeltaExecutor>().As<IDeltaExecutor>().SingleInstance();
             builder.RegisterType<KatVirtualMachine>().As<IKvm>().SingleInstance();
             builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
-            builder.RegisterType<CatalystGenesisSpec>().As<IReleaseSpec>();
 
             builder.RegisterType<StateProvider>().As<IStateProvider>().SingleInstance();
             builder.RegisterType<StorageProvider>().As<IStorageProvider>().SingleInstance();
