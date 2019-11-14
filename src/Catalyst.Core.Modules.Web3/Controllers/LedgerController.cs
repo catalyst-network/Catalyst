@@ -59,9 +59,11 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             var latest = _deltaHashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());
             try
             {
-                using (var fullContentStream = await _dfs.ReadAsync(latest))
+                using (var fullContentStream = await _dfs.ReadAsync(latest).ConfigureAwait(false))
                 {
-                    var delta = Delta.Parser.ParseFrom(await fullContentStream.ReadAllBytesAsync(CancellationToken.None)).ToDao<Delta, DeltaDao>(_mapperProvider);
+                    var contentBytes = await fullContentStream.ReadAllBytesAsync(CancellationToken.None)
+                       .ConfigureAwait(false);
+                    var delta = Delta.Parser.ParseFrom(contentBytes).ToDao<Delta, DeltaDao>(_mapperProvider);
 
                     return Json(new
                     {
