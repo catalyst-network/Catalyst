@@ -32,7 +32,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Web3.Controllers
 {
@@ -67,6 +66,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
 
                     return Json(new
                     {
+                        Success = true,
                         DeltaHash = latest,
                         Delta = delta
                     });
@@ -74,8 +74,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to find dfs content for delta as of {asOf} at {dfsTarget}", asOf, latest);
-                throw;
+                var errorMessage = $"Failed to find dfs content for delta as of {asOf} at {latest}";
+                _logger.Error(e, errorMessage);
+                return Json(new
+                {
+                    Success = false,
+                    Message = errorMessage
+                });
             }
         }
     }
