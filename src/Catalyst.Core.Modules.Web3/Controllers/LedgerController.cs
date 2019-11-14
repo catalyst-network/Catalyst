@@ -74,12 +74,11 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             }
             catch (Exception e)
             {
-                var errorMessage = $"Failed to find dfs content for delta as of {asOf} at {latest}";
-                _logger.Error(e, errorMessage);
+                _logger.Error(e, "Failed to find dfs content for delta as of {asOf} at {dfsTarget}", asOf, latest);
                 return Json(new
                 {
                     Success = false,
-                    Message = errorMessage
+                    Message = $"Failed to find dfs content for delta as of {asOf} at {latest}"
                 });
             }
         }
