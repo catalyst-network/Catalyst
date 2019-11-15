@@ -25,18 +25,14 @@ using System;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
 using Dawn;
 using LibP2P;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Specs;
 using Nethermind.Evm.Tracing;
 using Nethermind.Store;
 using Serilog;
@@ -50,7 +46,7 @@ namespace Catalyst.Core.Modules.Ledger
     /// </summary>
     /// <inheritdoc cref="ILedger" />
     /// <inheritdoc cref="IDisposable" />
-    public class Ledger : ILedger, IDisposable
+    public sealed class Ledger : ILedger, IDisposable
     {
         public IAccountRepository Accounts { get; }
         private readonly IDeltaExecutor _deltaExecutor;
@@ -95,7 +91,7 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void FlushTransactionsFromDelta()
         {
-            var transactionsToFlush = _mempool.Repository.GetAll(); //TOD0 no get alls
+            var transactionsToFlush = _mempool.Repository.GetAll(); //@TOD0 no get alls
             _mempool.Repository.Delete(transactionsToFlush);
         }
 
@@ -168,7 +164,7 @@ namespace Catalyst.Core.Modules.Ledger
                 }
             }
             
-            Keccak snapshotStateRoot = _stateProvider.StateRoot;
+            var snapshotStateRoot = _stateProvider.StateRoot;
 
             // this code should be brought in / used as a reference if reorganization behaviour is known
             //// if (branchStateRoot != null && _stateProvider.StateRoot != branchStateRoot)
@@ -234,7 +230,7 @@ namespace Catalyst.Core.Modules.Ledger
             }
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposing)
             {

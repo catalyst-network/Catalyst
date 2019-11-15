@@ -30,7 +30,6 @@ using Google.Protobuf;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
-using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
 using Nethermind.Logging;
 using Nethermind.Store;
@@ -51,13 +50,16 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         private readonly IPublicKey _poorSender;
         private readonly DeltaExecutor _executor;
 
-        public DeltaExecutorTests()
+        /**
+         * @TODO this should extend file system based tests and resolve tests via autofac container
+         */
+        public DeltaExecutorTests(ICryptoContext cryptoContext)
         {
             _specProvider = new CatalystSpecProvider();
             _stateProvider = new StateProvider(new StateDb(), new StateDb(), LimboLogs.Instance);
-            StorageProvider storageProvider = new StorageProvider(new StateDb(), _stateProvider, LimboLogs.Instance);
+            var storageProvider = new StorageProvider(new StateDb(), _stateProvider, LimboLogs.Instance);
             IKvm virtualMachine = new KatVirtualMachine(_stateProvider, storageProvider, new StateUpdateHashProvider(), _specProvider, LimboLogs.Instance);
-            ILogger logger = Substitute.For<ILogger>();
+            var logger = Substitute.For<ILogger>();
             logger.IsEnabled(Arg.Any<LogEventLevel>()).Returns(true);
             
             _recipient = _cryptoContext.GeneratePrivateKey().GetPublicKey();
@@ -75,10 +77,10 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Fails_when_sender_not_specified()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 3);
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 3);
             delta.ContractEntries[0].Base.SenderPublicKey = ByteString.Empty;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -89,10 +91,10 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Fails_when_gas_limit_below_data_intrinsic_cost()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 0, "0x0102");
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 0, "0x0102");
             delta.ContractEntries[0].GasLimit = 21001; // just above 21000 but not paying for data
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -103,10 +105,10 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Fails_when_gas_limit_below_entry_intrinsic_cost()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 0);
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 0);
             delta.ContractEntries[0].GasLimit = 20999; // just below 21000
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -117,9 +119,9 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Fails_on_wrong_nonce()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 0, "0x", 1);
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 0, "0x", 1);
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -130,12 +132,12 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Fails_on_insufficient_balance()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _poorSender, 0);
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _poorSender, 0);
             
             // when gas price is non-zero then sender needs to have a non-zero balance to pay for the gas cost
             delta.ContractEntries[0].GasPrice = 1;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -146,10 +148,10 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Fails_when_tx_beyond_delta_gas_limit()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 0);
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 0);
             delta.ContractEntries[0].GasLimit = 10_000_000;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -160,11 +162,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Can_deploy_code()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x60016000526001601FF300");
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x60016000526001601FF300");
             delta.ContractEntries[0].GasLimit = 1_000_000L;
             delta.ContractEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -176,11 +178,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Can_self_destruct()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x730001020304050607080910111213141516171819ff");
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x730001020304050607080910111213141516171819ff");
             delta.ContractEntries[0].GasLimit = 1_000_000L;
             delta.ContractEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -192,11 +194,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Fails_when_not_enough_gas_for_code_deposit()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x60016000526001601FF300");
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x60016000526001601FF300");
             delta.ContractEntries[0].GasLimit = 53369;
             delta.ContractEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -210,15 +212,15 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         {
             var contractAddress = Address.OfContract(_sender.ToKvmAddress(), 0);
             _stateProvider.CreateAccount(contractAddress, 1000.Kat());
-            Keccak codeHash = _stateProvider.UpdateCode(Bytes.FromHexString("0x01"));
+            var codeHash = _stateProvider.UpdateCode(Bytes.FromHexString("0x01"));
             _stateProvider.UpdateCodeHash(contractAddress, codeHash, _specProvider.GenesisSpec);
             _stateProvider.Commit(_specProvider.GenesisSpec);
 
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x60016000526001601FF300");
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x60016000526001601FF300");
             delta.ContractEntries[0].GasLimit = 1_000_000L;
             delta.ContractEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -233,11 +235,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             _stateProvider.CreateAccount(contractAddress, 1000.Kat());
             _stateProvider.Commit(_specProvider.GenesisSpec);
 
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x60016000526001601FF300");
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x60016000526001601FF300");
             delta.ContractEntries[0].GasLimit = 1_000_000L;
             delta.ContractEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -248,11 +250,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Can_deploy_code_read_only()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x60016000526001601FF300");
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x60016000526001601FF300");
             delta.ContractEntries[0].GasLimit = 1_000_000L;
             delta.ContractEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.CallAndRestore(delta, tracer);
@@ -266,10 +268,10 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         {
             // here we test a case when we deploy a contract where constructor throws invalid opcode EVM error
             // 0xfe is a bad opcode that immediately causes an EVM error
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0xfe");
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0xfe");
             delta.ContractEntries[0].GasLimit = 1_000_000L;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -284,10 +286,10 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             // here we test a case when we deploy a contract where constructor throws StackUnderflowException
             // 0x01 is the ADD opcode which requires two items on the stack and stack is empty here
             // added here for full coverage as the errors (EVM) are handled differently in some cases (via .NET exceptions)
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x01");
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _sender, 0, "0x01");
             delta.ContractEntries[0].GasLimit = 1_000_000L;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -299,9 +301,9 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Can_execute_transfers_from_public_entries()
         {
-            Delta delta = EntryUtils.PrepareSinglePublicEntryDelta(_recipient, _sender, 0);
+            var delta = EntryUtils.PrepareSinglePublicEntryDelta(_recipient, _sender, 0);
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);
@@ -312,10 +314,10 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Can_add_gas_to_existing_balance()
         {
-            Delta delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 0);
+            var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _sender, 0);
             delta.ContractEntries[0].GasPrice = 1;
 
-            ITxTracer tracer = Substitute.For<ITxTracer>();
+            var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
             
             _executor.Execute(delta, tracer);

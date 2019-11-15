@@ -22,7 +22,6 @@
 #endregion
 
 using System.Reflection;
-using Catalyst.Protocol.Account;
 using Nethermind.Dirichlet.Numerics;
 using Serilog;
 

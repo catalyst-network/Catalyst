@@ -61,12 +61,12 @@ namespace Catalyst.Protocol.Wire
         {
             get
             {
-                BigInteger averagePrice = BigInteger.Zero;
+                var averagePrice = BigInteger.Zero;
                 ulong totalLimit = 0;
-                int count = ContractEntries.Count;
-                for (int i = 0; i < count; i++)
+                var count = ContractEntries.Count;
+                for (var i = 0; i < count; i++)
                 {
-                    ulong limit = ContractEntries[i].GasLimit;
+                    var limit = ContractEntries[i].GasLimit;
                     totalLimit += limit;
                     averagePrice += limit * ContractEntries[i].GasPrice;
                 }
@@ -76,7 +76,7 @@ namespace Catalyst.Protocol.Wire
                     return UInt256.Zero;
                 }
                 
-                UInt256.Create(out UInt256 result, averagePrice / totalLimit);
+                UInt256.Create(out var result, averagePrice / totalLimit);
                 return result;
             }
         }
@@ -87,8 +87,8 @@ namespace Catalyst.Protocol.Wire
             get
             {
                 ulong totalLimit = 0;
-                int count = ContractEntries.Count;
-                for (int i = 0; i < count; i++)
+                var count = ContractEntries.Count;
+                for (var i = 0; i < count; i++)
                 {
                     totalLimit += ContractEntries[i].GasLimit;
                 }
