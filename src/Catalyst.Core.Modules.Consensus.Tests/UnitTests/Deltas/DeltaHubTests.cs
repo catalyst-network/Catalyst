@@ -81,13 +81,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         }
 
         [Fact]
-        public void BroadcastCandidate_should_not_broadcast_candidates_from_other_nodes()
+        public async Task BroadcastCandidate_should_not_broadcast_candidates_from_other_nodes()
         {
             var notMyCandidate = DeltaHelper.GetCandidateDelta(_hashProvider,
                 producerId: PeerIdHelper.GetPeerId("not me"));
 
             _hub.BroadcastCandidate(notMyCandidate);
-            _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default).ConfigureAwait(false);
+            await _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default).ConfigureAwait(false);
         }
 
         [Fact]

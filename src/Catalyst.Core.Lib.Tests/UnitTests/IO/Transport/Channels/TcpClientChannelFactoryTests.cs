@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
             var port = 9000;
 
             var testTcpClientChannelFactory = new TestTcpClientChannelFactory();
-            var channel = await testTcpClientChannelFactory.BuildChannel(eventLoopGroupFactory, ipAddress, port);
+            var channel = await testTcpClientChannelFactory.BuildChannelAsync(eventLoopGroupFactory, ipAddress, port).ConfigureAwait(false);
 
             channel.Should().BeOfType<ObservableChannel>();
         }

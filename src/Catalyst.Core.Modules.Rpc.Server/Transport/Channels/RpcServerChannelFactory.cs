@@ -109,12 +109,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
         /// <param name="targetPort"></param>
         /// <param name="certificate">Local TLS certificate</param>
         /// <param name="targetAddress"></param>
-        public override async Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            var channel = await BootstrapAsync(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
+            var channel = await BootstrapAsync(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate).ConfigureAwait(false);
 
             var messageStream = _observableServiceHandler.MessageStream;
 
