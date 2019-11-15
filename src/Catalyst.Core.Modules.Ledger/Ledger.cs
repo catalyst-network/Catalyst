@@ -152,16 +152,13 @@ namespace Catalyst.Core.Modules.Ledger
         {
             var stateSnapshot = _stateDb.TakeSnapshot();
             var codeSnapshot = _codeDb.TakeSnapshot();
-            if (stateSnapshot != -1 || codeSnapshot != -1)
+            if (stateSnapshot != -1 || codeSnapshot != -1 && _logger.IsEnabled(LogEventLevel.Error))
             {
-                if (_logger.IsEnabled(LogEventLevel.Error))
-                {
-                    _logger.Error("Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}", 
-                        stateSnapshot,
-                        codeSnapshot,
-                        null,
-                        deltaHash);
-                }
+                _logger.Error("Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}", 
+                    stateSnapshot,
+                    codeSnapshot,
+                    null,
+                    deltaHash);
             }
             
             var snapshotStateRoot = _stateProvider.StateRoot;
