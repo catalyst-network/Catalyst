@@ -26,13 +26,13 @@ using Nethermind.Core.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {
-    public class BlockParameter
+    public sealed class BlockParameter
     {
-        public static BlockParameter Earliest = new BlockParameter(BlockParameterType.Earliest);
+        private static readonly BlockParameter Earliest = new BlockParameter(BlockParameterType.Earliest);
 
-        public static BlockParameter Pending = new BlockParameter(BlockParameterType.Pending);
+        private static readonly BlockParameter Pending = new BlockParameter(BlockParameterType.Pending);
 
-        public static BlockParameter Latest = new BlockParameter(BlockParameterType.Latest);
+        private static readonly BlockParameter Latest = new BlockParameter(BlockParameterType.Latest);
 
         public BlockParameterType Type { get; set; }
         public long? BlockNumber { get; set; }

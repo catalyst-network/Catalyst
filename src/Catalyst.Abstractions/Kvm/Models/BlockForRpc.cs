@@ -33,11 +33,11 @@ namespace Catalyst.Abstractions.Kvm.Models
 {
     public class BlockForRpc
     {
-        private BlockDecoder _blockDecoder = new BlockDecoder();
+        private readonly BlockDecoder _blockDecoder = new BlockDecoder();
 
         public BlockForRpc(Block block, bool includeFullTransactionData)
         {
-            bool isAuRaBlock = block.Header.AuRaSignature != null;
+            var isAuRaBlock = block.Header.AuRaSignature != null;
             Author = block.Author;
             Difficulty = block.Difficulty;
             ExtraData = block.ExtraData;
@@ -66,7 +66,13 @@ namespace Catalyst.Abstractions.Kvm.Models
 
             Timestamp = block.Timestamp;
             TotalDifficulty = block.TotalDifficulty ?? 0;
-            Transactions = includeFullTransactionData ? block.Transactions.Select((t, idx) => new TransactionForRpc(block.Hash, block.Number, idx, t)).ToArray() : (object[]) block.Transactions.Select(t => t.Hash).ToArray();
+            Transactions = includeFullTransactionData
+                ? block.Transactions.Select((t, idx) =>
+                {
+                    return new TransactionForRpc(block.Hash, block.Number, idx, t);
+                }).ToArray()
+                : (object[]) block.Transactions.Select(t => t.Hash).AsEnumerable();
+            
             TransactionsRoot = block.TransactionsRoot;
             Uncles = block.Ommers.Select(o => o.Hash);
         }
