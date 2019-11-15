@@ -24,6 +24,7 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
@@ -31,16 +32,16 @@ using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
-using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
     public sealed class DeltaHeightResponseObserver
-        : ResponseObserverBase<DeltaHeightResponse>,
+        : ResponseObserverBase<LatestDeltaHashResponse>,
             IP2PMessageObserver, IPeerClientObservable
     {
         private readonly IPeerQueryTip _peerQueryTip;
@@ -60,7 +61,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
-        protected override void HandleResponse(DeltaHeightResponse deltaHeightResponse,
+        protected override void HandleResponse(LatestDeltaHashResponse deltaHeightResponse,
             IChannelHandlerContext channelHandlerContext,
             PeerId senderPeerId,
             ICorrelationId correlationId)
@@ -68,7 +69,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, senderPeerId, correlationId));
             
             _peerQueryTip.QueryTipResponseMessageStreamer.OnNext(
-                new PeerQueryTipResponse(senderPeerId, Multihash.Parse(deltaHeightResponse.DeltaHash.ToString()))
+                new PeerQueryTipResponse(senderPeerId, HashProvider.Parse(deltaHeightResponse.DeltaHash.ToString()))
             );
         }
     }

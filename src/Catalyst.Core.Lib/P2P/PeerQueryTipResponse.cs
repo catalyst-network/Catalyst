@@ -23,16 +23,16 @@
 
 using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Peer;
-using Multiformats.Hash;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Lib.P2P
 {
     public sealed class PeerQueryTipResponse : IPeerQueryTipResponse
     {
         public PeerId PeerId { get; }
-        public Multihash DeltaHash { get; }
+        public MultiHash DeltaHash { get; }
 
-        public PeerQueryTipResponse(PeerId peerId, Multihash deltaHash)
+        public PeerQueryTipResponse(PeerId peerId, MultiHash deltaHash)
         {
             PeerId = peerId;
             DeltaHash = deltaHash;

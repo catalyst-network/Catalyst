@@ -23,13 +23,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Encoding;
 using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Abstractions.Kvm.Models 
+namespace Catalyst.Abstractions.Kvm.Models
 {
     public class BlockForRpc
     {
@@ -49,7 +50,7 @@ namespace Catalyst.Abstractions.Kvm.Models
             if (!isAuRaBlock)
             {
                 MixHash = block.MixHash;
-                Nonce = block.Nonce.ToBigEndianByteArray().PadLeft(8);
+                Nonce = ((BigInteger) block.Nonce).ToBigEndianByteArray().PadLeft(8);
             }
             else
             {
@@ -67,12 +68,9 @@ namespace Catalyst.Abstractions.Kvm.Models
             Timestamp = block.Timestamp;
             TotalDifficulty = block.TotalDifficulty ?? 0;
             Transactions = includeFullTransactionData
-                ? block.Transactions.Select((t, idx) =>
-                {
-                    return new TransactionForRpc(block.Hash, block.Number, idx, t);
-                }).ToArray()
+                ? block.Transactions.Select((t, idx) => { return new TransactionForRpc(block.Hash, block.Number, idx, t); }).ToArray()
                 : (object[]) block.Transactions.Select(t => t.Hash).AsEnumerable();
-            
+
             TransactionsRoot = block.TransactionsRoot;
             Uncles = block.Ommers.Select(o => o.Hash);
         }

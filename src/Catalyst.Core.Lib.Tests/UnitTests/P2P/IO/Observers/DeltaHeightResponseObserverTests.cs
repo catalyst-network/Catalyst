@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             var testScheduler = new TestScheduler();
 
-            var deltaHeightResponse = new DeltaHeightResponse();
+            var deltaHeightResponse = new LatestDeltaHashResponse();
             var protocolMessage =
                 deltaHeightResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"),
                     CorrelationId.GenerateCorrelationId());

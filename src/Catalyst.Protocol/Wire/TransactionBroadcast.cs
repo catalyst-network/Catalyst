@@ -22,9 +22,11 @@
 #endregion
 
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using Catalyst.Protocol.Cryptography;
 using Google.Protobuf.WellKnownTypes;
+using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Protocol.Wire
@@ -42,6 +44,59 @@ namespace Catalyst.Protocol.Wire
              && ConfidentialEntries.All(e => e.IsValid());
         }
 
+        /// <summary>
+        /// OnConstruction does not generate valid transactions for tests / in general - need to discuss 
+        /// </summary>
+        public void AfterConstruction()
+        {
+            IsContractDeployment = ContractEntries.Any(c => c.IsValidDeploymentEntry);
+            IsContractCall = ContractEntries.Any(c => c.IsValidCallEntry);
+            IsPublicTransaction = PublicEntries.Any() && PublicEntries.All(e => e.IsValid());
+            IsConfidentialTransaction = ConfidentialEntries.Any()
+             && ConfidentialEntries.All(e => e.IsValid());
+        }
+
+        // why TransactionBroadcastTest is commented out? if brought back - this needs to have a test coverage there too
+        public UInt256 AverageGasPrice
+        {
+            get
+            {
+                var averagePrice = BigInteger.Zero;
+                ulong totalLimit = 0;
+                var count = ContractEntries.Count;
+                for (var i = 0; i < count; i++)
+                {
+                    var limit = ContractEntries[i].GasLimit;
+                    totalLimit += limit;
+                    averagePrice += limit * ContractEntries[i].GasPrice;
+                }
+
+                if (totalLimit == 0)
+                {
+                    return UInt256.Zero;
+                }
+                
+                UInt256.Create(out var result, averagePrice / totalLimit);
+                return result;
+            }
+        }
+        
+        // why TransactionBroadcastTest is commented out? if brought back - this needs to have a test coverage there too
+        public ulong TotalGasLimit
+        {
+            get
+            {
+                ulong totalLimit = 0;
+                var count = ContractEntries.Count;
+                for (var i = 0; i < count; i++)
+                {
+                    totalLimit += ContractEntries[i].GasLimit;
+                }
+                
+                return totalLimit;
+            }
+        }
+        
         public bool IsContractDeployment { get; private set; }
         public bool IsContractCall { get; private set; }
         public bool IsPublicTransaction { get; private set; }

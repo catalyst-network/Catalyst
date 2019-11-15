@@ -101,8 +101,8 @@ namespace Catalyst.Core.Modules.Rpc.Client
 
         public override async Task StartAsync()
         {
-            var socket = await _channelFactory.BuildChannel(EventLoopGroupFactory, _clientConfig.HostAddress, _clientConfig.Port,
-                _certificate);
+            var socket = await _channelFactory.BuildChannelAsync(EventLoopGroupFactory, _clientConfig.HostAddress, _clientConfig.Port,
+                _certificate).ConfigureAwait(false);
 
             _socketMessageStream = socket.MessageStream;
 

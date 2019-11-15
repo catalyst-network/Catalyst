@@ -105,12 +105,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public override async Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            var channel = await BootStrapChannelAsync(handlerEventLoopGroupFactory, targetAddress, targetPort);
+            var channel = await BootStrapChannelAsync(handlerEventLoopGroupFactory, targetAddress, targetPort).ConfigureAwait(false);
 
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 

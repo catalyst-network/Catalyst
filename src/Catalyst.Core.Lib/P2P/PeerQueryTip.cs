@@ -72,7 +72,7 @@ namespace Catalyst.Core.Lib.P2P
             try
             {
                 var messageDto = new MessageDto(
-                    new DeltaHeightRequest().ToProtocolMessage(_senderIdentifier, CorrelationId.GenerateCorrelationId()),
+                    new LatestDeltaHashRequest().ToProtocolMessage(_senderIdentifier, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
                 );
                 

@@ -32,10 +32,9 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
@@ -59,7 +58,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         [Fact]
         public async Task Can_Process_DeltaHeightRequest_Correctly()
         {
-            var deltaHeightRequestMessage = new DeltaHeightRequest();
+            var deltaHeightRequestMessage = new LatestDeltaHashRequest();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var channeledAny = new ObserverDto(fakeContext, deltaHeightRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
@@ -69,11 +68,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             _testScheduler.Start();
 
+            // @TODO get type from hashing module
+            var deltaHash = MultiHash.ComputeHash(new byte[32]);
+
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(new DeltaHeightResponse
+               .WriteAndFlushAsync(new LatestDeltaHashResponse
                 {
-                    DeltaHash = Multihash.Sum<BLAKE2B_256>(new byte[32]).ToBytes().ToByteString() // @TODO get from hashing module
-                }.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
+                    DeltaHash = deltaHash.Digest.ToByteString()
+                }.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).ConfigureAwait(false);
             
             _subbedLogger.ReceivedWithAnyArgs(1);
         }

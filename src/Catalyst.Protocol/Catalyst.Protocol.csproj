@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>Catalyst.Protocol</RootNamespace>
@@ -17,5 +17,8 @@
     </ItemGroup>
     <ItemGroup>
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
     </ItemGroup>
 </Project>

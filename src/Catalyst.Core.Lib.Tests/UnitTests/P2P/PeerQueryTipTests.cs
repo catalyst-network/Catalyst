@@ -31,10 +31,9 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -64,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         public async Task Can_Query_Expected_Peer()
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
-            await _peerQueryTip.QueryPeerTipAsync(recipientPeerId);
+            await _peerQueryTip.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
             var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
             expectedDto.RecipientPeerIdentifier.Returns(recipientPeerId);
             expectedDto.SenderPeerIdentifier.Returns(_testSettings.PeerId);
@@ -75,11 +74,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         public async Task Can_Receive_Query_Response_On_Observer()
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
-            var tipQueryResponse = new PeerQueryTipResponse(PeerIdHelper.GetPeerId(),
-                Multihash.Sum<BLAKE2B_256>(ByteUtil.GenerateRandomByteArray(32)));
+            var tipQueryResponse = new PeerQueryTipResponse(PeerIdHelper.GetPeerId(), 
+                MultiHash.ComputeHash(ByteUtil.GenerateRandomByteArray(32))
+            );
 
             _peerQueryTip.QueryTipResponseMessageStreamer.OnNext(tipQueryResponse);
-            var response = await _peerQueryTip.QueryPeerTipAsync(recipientPeerId);
+            var response = await _peerQueryTip.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeTrue();
         }
 
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
             _cancellationProvider.CancellationTokenSource.Cancel();
-            var response = await _peerQueryTip.QueryPeerTipAsync(recipientPeerId);
+            var response = await _peerQueryTip.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeFalse();
         }
 
@@ -97,7 +97,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
             _cancellationProvider.Dispose(); //do summet nasty to force exception
-            var response = await _peerQueryTip.QueryPeerTipAsync(recipientPeerId);
+            var response = await _peerQueryTip.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeFalse();   
         }
 

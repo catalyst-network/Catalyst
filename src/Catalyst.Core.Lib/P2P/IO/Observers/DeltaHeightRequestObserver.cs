@@ -30,14 +30,13 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
     public sealed class DeltaHeightRequestObserver 
-        : RequestObserverBase<DeltaHeightRequest, DeltaHeightResponse>,
+        : RequestObserverBase<LatestDeltaHashRequest, LatestDeltaHashResponse>,
             IP2PMessageObserver
     {
         public DeltaHeightRequestObserver(IPeerSettings peerSettings,
@@ -49,7 +48,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override DeltaHeightResponse HandleRequest(DeltaHeightRequest deltaHeightRequest, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)
+        protected override LatestDeltaHashResponse HandleRequest(LatestDeltaHashRequest deltaHeightRequest, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)
         {
             Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
@@ -57,9 +56,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             
             Logger.Debug("PeerId: {0} wants to know your current chain height", senderPeerId);
 
-            return new DeltaHeightResponse
+            return new LatestDeltaHashResponse
             {
-                DeltaHash = Multihash.Sum<BLAKE2B_256>(new byte[32]).ToBytes().ToByteString() // @TODO get from hashing module
+                DeltaHash = MultiHash.ComputeHash(new byte[32]).Digest.ToByteString()
             };
         }
     }

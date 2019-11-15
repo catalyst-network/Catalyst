@@ -21,10 +21,12 @@
 
 #endregion
 
+using System.Diagnostics;
 using Catalyst.Abstractions.Cryptography;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Types
 {
+    [DebuggerDisplay("{System.Convert.ToBase64String(Bytes)}")]
     public class PublicKey : IPublicKey
     {
         public byte[] Bytes { get; }
