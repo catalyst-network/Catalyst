@@ -73,7 +73,13 @@ namespace Catalyst.Core.Modules.Hashing
         {
             try
             {
-                return new MultiHash(HashingAlgorithm.Name, data);
+                var multiHash = new MultiHash(data);
+                if (multiHash.Algorithm == HashingAlgorithm && multiHash.Digest.Length == HashingAlgorithm.DigestSize)
+                {
+                    return multiHash;
+                }
+
+                return null;
             }
             catch (System.Exception)
             {
