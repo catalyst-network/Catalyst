@@ -26,9 +26,8 @@ using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Cycle;
-using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus
@@ -108,14 +107,13 @@ namespace Catalyst.Core.Modules.Consensus
                .Subscribe(d =>
                 {
                     _logger.Information("New Delta following {deltaHash} published", 
-                        d.PreviousDeltaDfsHash.AsBase32Address());
+                        d.PreviousDeltaDfsHash);
 
-                    var newHash = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
+                    var newCid = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
                        .ConfigureAwait(false).GetAwaiter().GetResult();
-                    var newMultiHash = Multihash.Parse(newHash);
-                    var previousHash = Multihash.Cast(d.PreviousDeltaDfsHash.ToByteArray());
+                    var previousHash = CidHelper.Cast(d.PreviousDeltaDfsHash.ToByteArray());
 
-                    _deltaHashProvider.TryUpdateLatestHash(previousHash, newMultiHash);
+                    _deltaHashProvider.TryUpdateLatestHash(previousHash, newCid.Hash);
                 });
         }
         

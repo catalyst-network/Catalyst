@@ -36,17 +36,18 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using LibP2P;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     /// <summary>
-    /// The request handler to get a file from the DFS
+    ///     The request handler to get a file from the DFS
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class GetFileFromDfsRequestObserver
@@ -59,7 +60,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>The DFS</summary>
         private readonly IDfs _dfs;
 
-        /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestObserver"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestObserver" /> class.</summary>
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerSettings"></param>
         /// <param name="fileTransferFactory">The upload file transfer factory.</param>
@@ -74,7 +75,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getFileFromDfsRequest"></param>
         /// <param name="channelHandlerContext"></param>
@@ -94,13 +94,14 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             FileTransferResponseCodeTypes responseCodeType;
 
-            var task = Task.Run(async () =>
+            var response = Task.Run(async () =>
             {
                 try
                 {
                     responseCodeType = await Task.Run(async () =>
                     {
-                        var stream = await _dfs.ReadAsync(getFileFromDfsRequest.DfsHash).ConfigureAwait(false);
+                        var stream = await _dfs.ReadAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
+                           .ConfigureAwait(false);
                         fileLen = stream.Length;
                         using (var fileTransferInformation = new UploadFileTransferInformation(
                             stream,
@@ -117,14 +118,15 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 catch (Exception e)
                 {
                     Logger.Error(e,
-                        "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}", getFileFromDfsRequest);
+                        "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}",
+                        getFileFromDfsRequest);
                     responseCodeType = FileTransferResponseCodeTypes.Error;
                 }
 
                 return ReturnResponse(responseCodeType, fileLen);
-            });
+            }).ConfigureAwait(false).GetAwaiter().GetResult();
 
-            return task.Result;
+            return response;
         }
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
@@ -141,7 +143,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>Returns the response.</summary>
         /// <param name="responseCode">The response code.</param>
         /// <param name="fileSize">Size of the file.</param>
-        private GetFileFromDfsResponse ReturnResponse(Enumeration responseCode, long fileSize)
+        private GetFileFromDfsResponse ReturnResponse(IEnumeration responseCode, long fileSize)
         {
             Logger.Information("File upload response code: " + responseCode);
 

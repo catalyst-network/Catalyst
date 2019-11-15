@@ -70,6 +70,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
         private readonly ILogger _logger;
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable_And_Can_RollBack_State()
         {
             var cacheEntriesByRequest = new Dictionary<ByteString, ICacheEntry>();
@@ -180,6 +181,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Expected_Ping_Response_From_All_Contacted_Nodes_Produces_Valid_State_Candidate()
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
@@ -208,11 +210,11 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                .WithCareTaker(stateCareTaker)
                .WithStepProposal(stateCandidate);
 
+            // ReSharper disable once CollectionNeverQueried.Local
+            IList<IPeerClientMessageDto> dtoList = new List<IPeerClientMessageDto>();
             using (var walker = discoveryTestBuilder.Build())
             {
                 var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
-
-                IList<IPeerClientMessageDto> dtoList = new List<IPeerClientMessageDto>();
 
                 stateCandidate.Neighbours.ToList().ForEach(i =>
                 {
@@ -244,6 +246,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Expected_Ping_Response_Sets_Neighbour_As_Reachable()
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
@@ -254,11 +257,12 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
             var stateHistory = new Stack<IHastingsMemento>();
             stateHistory.Push(seedState);
 
-            DiscoveryHelper.MockMementoHistory(stateHistory, 5) //this isn't an angry pirate this is just 5
+            DiscoveryHelper.MockMementoHistory(stateHistory, 5)
                .ToList()
                .ForEach(i => stateCareTaker.Add(i));
 
-            var stateCandidate = DiscoveryHelper.MockOriginator();
+            var stateCandidate = DiscoveryHelper.MockOriginator(default,
+                DiscoveryHelper.MockNeighbours(Constants.NumberOfRandomPeers, NeighbourStateTypes.NotContacted));
 
             var discoveryTestBuilder = new DiscoveryTestBuilder();
             discoveryTestBuilder
@@ -294,10 +298,12 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
                     streamObserver.Received(1).OnNext(Arg.Is(pingDto));
 
-                    walker.StepProposal.Neighbours
+                    var foundResponsiveNeighbour = walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
                        .Select(n => n.PeerId)
                        .Contains(pingDto.Sender);
+                    
+                    foundResponsiveNeighbour.Should().BeTrue();
                 }
             }
         }

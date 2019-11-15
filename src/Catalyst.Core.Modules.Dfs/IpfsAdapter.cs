@@ -31,11 +31,13 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Common.Logging;
 using Common.Logging.Serilog;
-using Ipfs;
-using Ipfs.CoreApi;
-using Ipfs.Engine;
-using PeerTalk.Cryptography;
+using LibP2P;
+using LibP2P.Cryptography;
 using Serilog;
+using TheDotNetLeague.Ipfs.Abstractions;
+using TheDotNetLeague.Ipfs.Core.Lib;
+using TheDotNetLeague.MultiFormats.MultiAddress;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -71,14 +73,9 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 seedServers = new[]
                 {
-                    new MultiAddress("/ip4/165.22.209.154/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdzVq4jUMZsJKddJPrwWjkcwtf23ZcGFW2xUCmSE29ABRs"),
-                    new MultiAddress("/ip4/165.22.226.50/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe2jBdLcqbqE6qLfApXJLPr855vycKygWXnRsMVXuW8o1E"),
-                    new MultiAddress("/ip4/167.71.129.154/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe79QPeKgXsvTvVTPV732TnSya3MqQ5YUMcGHZFxW1VAEC"),
-                    new MultiAddress("/ip4/167.71.79.54/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe4BowwZZyjRazPAMd5VhWBfvM88Qcyy3viWGQ8fzEhcvc"),
-                    new MultiAddress("/ip4/167.71.79.77/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe64FqVyvgWoLYBktgShFe6oEYeDWox8o2WhA8brQu5dBA"),
-                    new MultiAddress("/ip4/165.22.175.71/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwHHKV44GJfKE9ecyRXHcXY4yNtEExgPSvvwsDtvZspZj"),
-                    new MultiAddress("/ip4/165.22.234.49/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdxSv6GpHsHAVYb51xvH3y4xvGVztM1h1GEsUjEzqc8Wh4"),
-                    new MultiAddress("/ip4/167.71.134.31/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe4SkF2tXtZbBMUSsmbosM5SAJaU3oxUAbReFDBaKeHqR3")
+                    new MultiAddress("/ip4/46.101.132.61/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdtAkDHgs8MDwwhtyLu8JpYitY4Nk8jmyGgQ4Gt3VKNson"),
+                    new MultiAddress("/ip4/188.166.13.135/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe2AAPTCoujCxhJHECaySDEsPrEz9W2u7uo6hAbJhYzhPg"),
+                    new MultiAddress("/ip4/167.172.73.132/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe1E9wXdykR6h3Q9EaQcQc6hdNAXyCTEzoGfcA2wQgCRyg")
                 };
             }
             

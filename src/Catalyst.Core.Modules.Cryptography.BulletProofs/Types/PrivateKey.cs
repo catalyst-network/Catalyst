@@ -31,7 +31,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Types
 
         internal PrivateKey(byte[] privateKey)
         { 
-            var requiredLength = Ffi.PublicKeyLength;
+            var requiredLength = NativeBinding.PublicKeyLength;
             if (privateKey.Length != requiredLength)
             {
                 Error.ThrowArgumentExceptionPrivateKeyLength(requiredLength);
@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Types
 
         public IPublicKey GetPublicKey()
         {
-            return new PublicKey(Ffi.GetPublicKeyFromPrivate(Bytes));
+            return NativeBinding.GetPublicKeyFromPrivate(Bytes);
         }
     }
 }

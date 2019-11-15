@@ -21,18 +21,28 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class SigningContextDao : DaoBase<SigningContext, SigningContextDao>
+    public sealed class SigningContextDao : DaoBase
     {
         public NetworkType NetworkType { get; set; }
         public SignatureType SignatureType { get; set; }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+        [Column]
+        
+        // ReSharper disable once UnusedMember.Local
+        private SignatureDao SignatureDao { get; set; }
+    }
+
+    public sealed class SigningContextMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<SigningContext, SigningContextDao>().ReverseMap();
         }

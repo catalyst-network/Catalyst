@@ -92,10 +92,14 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             _discoveredPeerInCurrentWalk = 0;
 
             // build the initial step proposal for the walk, which is our node and seed nodes
-            _ownNode = peerSettings.PublicKey.BuildPeerIdFromBase32CrockfordKey(peerSettings.PublicIpAddress,
+            _ownNode = peerSettings.PublicKey.BuildPeerIdFromBase32Key(peerSettings.BindAddress,
                 peerSettings.Port);
 
-            var neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours();
+            var neighbours = dns.GetSeedNodesFromDnsAsync(peerSettings.SeedServers)
+               .ConfigureAwait(false)
+               .GetAwaiter()
+               .GetResult()
+               .ToNeighbours();
 
             HastingsCareTaker = hastingsCareTaker ?? new HastingsCareTaker();
             if (HastingsCareTaker.HastingMementoList.IsEmpty)
@@ -136,8 +140,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                .EvictionEventStream
                .Select(e =>
                 {
-                    _logger.Debug("Eviction stream receiving {key}", e.Key);
-                    return e.Key;
+                    var (key, _) = e;
+                    _logger.Debug("Eviction stream receiving {key}", key);
+                    return key;
                 })
                .Subscribe(EvictionCallback);
 
@@ -153,7 +158,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             {
                 await DiscoveryAsync()
                    .ConfigureAwait(false);
-            });
+            }, _cancellationTokenProvider.CancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         public IHastingsMemento CurrentStep => HastingsCareTaker.Peek();
@@ -198,7 +203,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                 try
                 {
                     // spins until our expected result equals found and unreachable peers for this step.
-                    await WaitUntil(StepProposal.HasValidCandidate, _hasValidCandidatesCheckMillisecondsFrequency,
+                    await WaitUntilAsync(StepProposal.HasValidCandidate, _hasValidCandidatesCheckMillisecondsFrequency,
                         _millisecondsTimeout).ConfigureAwait(false);
 
                     if (StepProposal.Neighbours.Any())
@@ -445,7 +450,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
         /// <param name="frequency">The frequency at which the condition will be checked.</param>
         /// <param name="timeout">The timeout in milliseconds.</param>
         /// <returns></returns>
-        private static async Task WaitUntil(Func<bool> condition, int frequency = 25, int timeout = -1)
+        private static async Task WaitUntilAsync(Func<bool> condition, int frequency = 25, int timeout = -1)
         {
             var waitTask = Task.Run(async () =>
             {
@@ -485,7 +490,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             Interlocked.Add(ref _discoveredPeerInCurrentWalk, 1);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposing)
             {

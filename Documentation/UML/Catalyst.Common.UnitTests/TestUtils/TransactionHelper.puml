@@ -1,6 +1,0 @@
-@startuml
-class TransactionHelper <<static>> {
-    + {static} GetTransaction(standardAmount:uint, standardPubKey:string, signature:string, challenge:string, confidentialCommitment:string, confidentialPubKey:string, version:uint, timeStamp:ulong, transactionFees:ulong, lockTime:ulong) : Transaction
-    + {static} GetTransactionSignature(signature:string, challenge:string) : TransactionSignature
-}
-@enduml

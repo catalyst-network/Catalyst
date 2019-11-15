@@ -27,15 +27,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Dawn;
+using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using Nethereum.Hex.HexConvertors.Extensions;
 using Serilog;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -47,26 +45,31 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
-        public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate) =>
-            nameof(DeltaElector) + "-" + candidate.Candidate.PreviousDeltaDfsHash.AsBase32Address();
+        public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate)
+        {
+            return nameof(DeltaElector) + "-" +
+                CidHelper.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
+        }
 
-        public static string GetCandidateListCacheKey(byte[] previousDeltaHash) =>
-            nameof(DeltaElector) + "-" + previousDeltaHash.AsBase32Address();
-        
-        public DeltaElector(IMemoryCache candidatesCache, IDeltaProducersProvider deltaProducersProvider, ILogger logger)
+        public string GetCandidateListCacheKey(Cid previousDeltaHash)
+        {
+            return nameof(DeltaElector) + "-" + previousDeltaHash;
+        }
+
+        public DeltaElector(IMemoryCache candidatesCache,
+            IDeltaProducersProvider deltaProducersProvider,
+            ILogger logger)
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
             _cacheEntryOptions = () => new MemoryCacheEntryOptions()
-               .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
+               .AddExpirationToken(
+                    new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
 
             _logger = logger;
         }
 
-        public void OnCompleted()
-        {
-            _logger.Information("End of {0} stream.", nameof(FavouriteDeltaBroadcast));
-        }
+        public void OnCompleted() { _logger.Information("End of {0} stream.", nameof(FavouriteDeltaBroadcast)); }
 
         public void OnError(Exception error)
         {
@@ -79,19 +82,23 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             try
             {
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
+
+                var cid = CidHelper.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
                 if (!_deltaProducersProvider
-                   .GetDeltaProducersFromPreviousDelta(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray())
+                   .GetDeltaProducersFromPreviousDelta(cid)
                    .Any(p => p.Equals(candidate.VoterId)))
                 {
                     //https://github.com/catalyst-network/Catalyst.Node/issues/827
-                    _logger.Debug("Voter {voter} is not a producer for this cycle succeeding {deltaHash} and its vote has been discarded.",
+                    _logger.Debug(
+                        "Voter {voter} is not a producer for this cycle succeeding {deltaHash} and its vote has been discarded.",
                         candidate.VoterId, candidate.Candidate.PreviousDeltaDfsHash);
                     return;
                 }
 
                 var candidateListKey = GetCandidateListCacheKey(candidate);
 
-                if (_candidatesCache.TryGetValue(candidateListKey, out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
+                if (_candidatesCache.TryGetValue(candidateListKey,
+                    out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
                 {
                     retrieved.TryAdd(candidate, default);
                     return;
@@ -99,7 +106,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
                 _candidatesCache.Set(candidateListKey,
                     new ConcurrentDictionary<FavouriteDeltaBroadcast, bool>(
-                        new[] {new KeyValuePair<FavouriteDeltaBroadcast, bool>(candidate, false)}, FavouriteByHashAndVoterComparer.Default), _cacheEntryOptions());
+                        new[] {new KeyValuePair<FavouriteDeltaBroadcast, bool>(candidate, false)},
+                        FavouriteByHashAndVoterComparer.Default), _cacheEntryOptions());
             }
             catch (Exception e)
             {
@@ -108,23 +116,24 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public CandidateDeltaBroadcast GetMostPopularCandidateDelta(byte[] previousDeltaDfsHash)
+        public CandidateDeltaBroadcast GetMostPopularCandidateDelta(Cid previousDeltaDfsHash)
         {
             var candidateListCacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
             if (!_candidatesCache.TryGetValue(candidateListCacheKey,
                 out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
             {
                 _logger.Debug("Failed to retrieve any favourite candidate with previous delta {0}",
-                    previousDeltaDfsHash.ToHex());
+                    previousDeltaDfsHash);
                 return null;
             }
 
-            var votesThreshold = _deltaProducersProvider.GetDeltaProducersFromPreviousDelta(previousDeltaDfsHash).Count / 3;
+            var votesThreshold =
+                _deltaProducersProvider.GetDeltaProducersFromPreviousDelta(previousDeltaDfsHash).Count / 3;
             var favourites = retrieved.Keys.GroupBy(k => k.Candidate.Hash)
                .Select(g => new {Favourite = g.First(), TotalVotes = g.Count()})
                .Where(f => f.TotalVotes >= votesThreshold)
                .OrderByDescending(h => h.TotalVotes)
-               .ThenByDescending(h => h.Favourite.Candidate.Hash.ToByteArray(), 
+               .ThenByDescending(h => h.Favourite.Candidate.Hash.ToByteArray(),
                     ByteUtil.ByteListMinSizeComparer.Default)
                .ToList();
 

@@ -38,6 +38,7 @@ using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
@@ -57,18 +58,21 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
+            var logger = Substitute.For<ILogger>();
+
+            var keyRegistry = TestKeyRegistry.MockKeyRegistry();
+            ContainerProvider.ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
+
+            ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
+
             _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
 
             var peerSettings =
                 PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port).ToSubstitutedPeerSettings();
 
-            var logger = Substitute.For<ILogger>();
-            var keyRegistry = TestKeyRegistry.MockKeyRegistry();
-            
-            ContainerProvider.ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
-            ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerProvider.ContainerBuilder.Register(c =>
             {
                 var peerClient = c.Resolve<IPeerClient>();
@@ -122,8 +126,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        [InlineData("Fr2a300k06032b657793", "92.207.178.198", 1574)]
-        [InlineData("pp2a300k55032b657791", "198.51.100.3", 2524)]
+        [InlineData("ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa", "92.207.178.198", 1574)]
+        [InlineData("fzqm5kpzpo7bvl5e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusd", "198.51.100.3", 2524)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey,
             string ip,
             int port)
@@ -140,7 +144,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             Output.WriteLine(ip.ToString());
             Output.WriteLine(port.ToString());
 
-            var recipient = publicKey.BuildPeerIdFromBase32CrockfordKey(ip, port);
+            var recipient = publicKey.BuildPeerIdFromBase32Key(ip, port);
             
             return await _peerChallenger.ChallengePeerAsync(recipient);
         }

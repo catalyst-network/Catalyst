@@ -23,15 +23,13 @@
 
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Serilog;
-using System;
 
 namespace Catalyst.Core.Lib.IO.Events
 {
@@ -39,17 +37,17 @@ namespace Catalyst.Core.Lib.IO.Events
     {
         private readonly ITransactionValidator _validator;
         private readonly ILogger _logger;
-        private readonly IMempool<MempoolDocument> _mempool;
+        private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly IBroadcastManager _broadcastManager;
-        private readonly IPeerSettings _peerSettings;
+        private readonly IMapperProvider _mapperProvider;
 
         public TransactionReceivedEvent(ITransactionValidator validator,
-            IMempool<MempoolDocument> mempool,
+            IMempool<TransactionBroadcastDao> mempool,
             IBroadcastManager broadcastManager,
-            IPeerSettings peerSettings,
+            IMapperProvider mapperProvider,
             ILogger logger)
         {
-            _peerSettings = peerSettings;
+            _mapperProvider = mapperProvider;
             _broadcastManager = broadcastManager;
             _mempool = mempool;
             _validator = validator;
@@ -59,13 +57,14 @@ namespace Catalyst.Core.Lib.IO.Events
         public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
         {
             var transaction = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
-            var transactionValid = _validator.ValidateTransaction(transaction, _peerSettings.NetworkType);
+            var transactionValid = _validator.ValidateTransaction(transaction);
             if (!transactionValid)
             {
                 return ResponseCode.Error;
             }
 
-            var transactionSignature = transaction.Signature;
+            var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
+            var transactionSignature = transactionBroadcastDao.Signature;
             _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
 
             // https://github.com/catalyst-network/Catalyst.Node/issues/910 - should we fail or succeed if we already have the transaction in the ledger?
@@ -75,10 +74,11 @@ namespace Catalyst.Core.Lib.IO.Events
                 return ResponseCode.Error;
             }
 
-            _mempool.Repository.CreateItem(transaction);
+            _mempool.Repository.CreateItem(transactionBroadcastDao);
 
             _logger.Information("Broadcasting {signature} transaction", protocolMessage);
-            _broadcastManager.BroadcastAsync(protocolMessage);
+            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
+
             return ResponseCode.Successful;
         }
     }

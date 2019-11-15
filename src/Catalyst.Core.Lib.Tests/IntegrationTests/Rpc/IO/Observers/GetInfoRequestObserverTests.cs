@@ -66,6 +66,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
             var protocolMessage = new GetInfoRequest

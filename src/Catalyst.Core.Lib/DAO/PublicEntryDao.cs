@@ -21,24 +21,36 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class PublicEntryDao : DaoBase<PublicEntry, PublicEntryDao>
+    public class PublicEntryDao : DaoBase
     {
         public BaseEntryDao Base { get; set; }
         public string Amount { get; set; }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+        [Column]
+
+        // ReSharper disable once UnusedMember.Local
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
+    }
+
+    public sealed class PublicEntryMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<PublicEntry, PublicEntryDao>()
-               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount));
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount));
 
             cfg.CreateMap<PublicEntryDao, PublicEntry>()
-               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount));
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount));
         }
     }
 }

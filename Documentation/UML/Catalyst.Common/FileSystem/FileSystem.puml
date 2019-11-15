@@ -1,7 +1,0 @@
-@startuml
-class FileSystem <<sealed>> {
-    + GetCatalystHomeDir() : DirectoryInfo
-    - {static} GetUserHomeDir() : string
-}
-IFileSystem <|-- FileSystem
-@enduml

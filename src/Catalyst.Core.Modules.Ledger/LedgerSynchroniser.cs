@@ -24,8 +24,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Extensions;
-using Multiformats.Hash;
+using Catalyst.Core.Lib.Util;
+using LibP2P;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Ledger
@@ -45,8 +45,8 @@ namespace Catalyst.Core.Modules.Ledger
         public IDeltaCache DeltaCache { get; }
 
         /// <inheritdoc />
-        public IEnumerable<Multihash> CacheDeltasBetween(Multihash latestKnownDeltaHash,
-            Multihash targetDeltaHash,
+        public IEnumerable<Cid> CacheDeltasBetween(Cid latestKnownDeltaHash,
+            Cid targetDeltaHash,
             CancellationToken cancellationToken)
         {
             var thisHash = targetDeltaHash;
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Ledger
                     yield break;
                 }
 
-                var previousDfsHash = retrievedDelta.PreviousDeltaDfsHash.AsMultihash();
+                var previousDfsHash = CidHelper.Cast(retrievedDelta.PreviousDeltaDfsHash.ToByteArray());
 
                 _logger.Debug("Retrieved delta {previous} as predecessor of {current}",
                     previousDfsHash, thisHash);
@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Ledger
                 yield return thisHash;
 
                 thisHash = previousDfsHash;
-            } while ((thisHash.AsBase32Address() != latestKnownDeltaHash.AsBase32Address())
+            } while (!thisHash.Equals(latestKnownDeltaHash)
              && !cancellationToken.IsCancellationRequested);
 
             yield return thisHash;

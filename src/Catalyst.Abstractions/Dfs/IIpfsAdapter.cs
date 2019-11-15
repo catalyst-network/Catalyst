@@ -22,31 +22,9 @@
 #endregion
 
 using System;
-using Ipfs.CoreApi;
-using Ipfs.Engine;
+using TheDotNetLeague.Ipfs.Core.Lib;
 
 namespace Catalyst.Abstractions.Dfs
 {
-    public interface IIpfsAdapter : ICoreApi, IDisposable
-    {
-        IBitswapApi Bitswap { get; }
-        IBlockApi Block { get; }
-        IBlockRepositoryApi BlockRepository { get; }
-        IBootstrapApi Bootstrap { get; }
-        IConfigApi Config { get; }
-        IpfsEngineOptions Options { get; }
-        IDagApi Dag { get; }
-        IDhtApi Dht { get; }
-        IDnsApi Dns { get; }
-        IFileSystemApi FileSystem { get; }
-        IGenericApi Generic { get; }
-        IKeyApi Key { get; }
-        INameApi Name { get; }
-        IObjectApi Object { get; }
-        IPinApi Pin { get; }
-        IPubSubApi PubSub { get; }
-        IStatsApi Stats { get; }
-        ISwarmApi Swarm { get; }
-        void Dispose();
-    }
+    public interface IIpfsAdapter : ICoreApi, IDisposable { }
 }

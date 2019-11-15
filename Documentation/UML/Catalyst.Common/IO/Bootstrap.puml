@@ -1,5 +1,0 @@
-@startuml
-class Bootstrap <<sealed>> {
-}
-IBootstrap <|-- Bootstrap
-@enduml

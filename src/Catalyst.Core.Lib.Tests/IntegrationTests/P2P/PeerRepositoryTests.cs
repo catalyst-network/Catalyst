@@ -24,37 +24,33 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
-using Catalyst.Abstractions.DAO;
 using Catalyst.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.Repository;
+using Catalyst.Protocol.Peer;
 using SharpRepository.Repository;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Catalyst.TestUtils.Repository;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     public sealed class PeerRepositoryTests : FileSystemBasedTest
     {
+        private readonly TestMapperProvider _mapperProvider;
+
         public static IEnumerable<object[]> ModulesList => 
             new List<object[]>
             {
-                new object[] {new InMemoryTestModule<Peer, PeerDao>()},
-                new object[] {new MongoDbTestModule<Peer, PeerDao>()}
+                new object[] {new InMemoryTestModule<PeerDao>()},
+                new object[] {new MongoDbTestModule<PeerDao>()}
             };
 
         public PeerRepositoryTests(ITestOutputHelper output) : base(output)
         {
-            var mappers = new IMapperInitializer[]
-            {
-                new PeerIdDao(),
-                new PeerDao()
-            };
-
-            var map = new MapperProvider(mappers);
-            map.Start();
+            _mapperProvider = new TestMapperProvider();
         }
 
         private void PeerRepo_Can_Save_And_Retrieve()
@@ -88,7 +84,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 }
 
                 var dateComparer = retrievedPeerModified.Modified.Value.Date.ToString("MM/dd/yyyy");
-                dateComparer.Should().Equals(now.ToString("MM/dd/yyyy"));
+                
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                dateComparer.Should()?.Equals(now.ToString("MM/dd/yyyy"));
             }
         }
 
@@ -96,10 +95,13 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
 
-            var peerDao = new PeerDao().ToDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString())});
-            peerDao.Id = Guid.NewGuid().ToString();
-
-            peerDao.PeerIdentifier = new PeerIdDao().ToDao(PeerIdHelper.GetPeerId(new Random().Next().ToString()));
+            var peerDao = new PeerDao
+            {
+                Id = Guid.NewGuid().ToString()
+            };
+            
+            var peerId = PeerIdHelper.GetPeerId(new Random().Next().ToString());
+            peerDao.PeerIdentifier = peerId.ToDao<PeerId, PeerIdDao>(_mapperProvider);
             peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
 
             peerRepo.Add(peerDao);
@@ -109,7 +111,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
         
         [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Trait(Traits.TestType, Traits.E2EMongoDb)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
@@ -119,13 +121,51 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
 
         [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Trait(Traits.TestType, Traits.E2EMongoDb)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
 
             PeerRepo_Can_Save_And_Retrieve();
+        }
+
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Trait(Traits.TestType, Traits.E2EMssql)]
+        public void PeerRepo_EfCore_Dbs_Update_And_Retrieve()
+        {
+            var connectionStr = ContainerProvider.ConfigurationRoot
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+
+            RegisterModules(new EfCoreDbTestModule(connectionStr));
+
+            CheckForDatabaseCreation();
+
+            PeerRepo_Can_Update_And_Retrieve();
+        }
+
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Trait(Traits.TestType, Traits.E2EMssql)]
+        public void PeerRepo_EfCore_Dbs_Can_Save_And_Retrieve()
+        {
+            var connectionStr = ContainerProvider.ConfigurationRoot
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+
+            RegisterModules(new EfCoreDbTestModule(connectionStr));
+
+            CheckForDatabaseCreation();
+
+            PeerRepo_Can_Save_And_Retrieve();
+        }
+
+        private void CheckForDatabaseCreation()
+        {
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+            {
+                var contextDb = scope.Resolve<IDbContext>();
+
+                ((DbContext) contextDb).Database.EnsureCreated();
+            }
         }
 
         private void RegisterModules(Module module)

@@ -22,19 +22,23 @@
 #endregion
 
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
 {
-    public class CandidateDeltaBroadcastDao : DaoBase<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>
+    public class CandidateDeltaBroadcastDao : DaoBase
     {
         public string Hash { get; set; }
         public PeerIdDao ProducerId { get; set; }
         public string PreviousDeltaDfsHash { get; set; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class CandidateDeltaBroadcastMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>()
                .ForMember(e => e.Hash,

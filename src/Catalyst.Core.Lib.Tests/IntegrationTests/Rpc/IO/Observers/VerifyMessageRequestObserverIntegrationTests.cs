@@ -48,6 +48,8 @@ using Catalyst.Core.Modules.Mempool;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
+using Catalyst.Core.Modules.Authentication;
+using Catalyst.Core.Modules.Hashing;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -72,6 +74,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterModule(new MempoolModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new ConsensusModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new AuthenticationModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdHelper.GetPeerId("Test"))
@@ -90,6 +94,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Valid_Message_Signature_Can_Return_True_Response()
         {
             var privateKey = _keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
@@ -115,6 +120,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Invalid_Message_Signature_Can_Return_False_Response()
         {
             var requestMessage = new VerifyMessageRequest

@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
@@ -31,7 +32,7 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
 {
-    public class DeltaDao : DaoBase<Delta, DeltaDao>
+    public class DeltaDao : DaoBase
     {
         public UInt32 Version { get; set; }
         public string PreviousDeltaDfsHash { get; set; }
@@ -41,8 +42,11 @@ namespace Catalyst.Core.Lib.DAO.Deltas
         public List<PublicEntryDao> StEntries { get; set; }
         public List<ConfidentialEntryDao> CfEntries { get; set; }
         public List<CoinbaseEntryDao> CbEntries { get; set; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class DeltaMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<Delta, DeltaDao>().ReverseMap();
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
@@ -52,17 +56,17 @@ namespace Catalyst.Core.Lib.DAO.Deltas
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>())
                .ForMember(d => d.MerkleRoot,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>())
                .ForMember(d => d.MerklePoda,
-                    opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.MerklePoda));
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
 
             cfg.CreateMap<DeltaDao, Delta>()
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>())
-               .ForMember(d => d.MerkleRoot, 
-                    opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.MerkleRoot))
+               .ForMember(d => d.MerkleRoot,
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>())
                .ForMember(d => d.MerklePoda,
-                    opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.MerklePoda));
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
         }
     }
 }

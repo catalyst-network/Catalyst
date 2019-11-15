@@ -44,20 +44,4 @@ namespace Catalyst.Core.Lib.DAO.Converters
             return sourceValue; 
         }
     }
-    
-    public class ByteStringToUInt256Converter : IValueConverter<ByteString, UInt256>
-    {
-        public UInt256 Convert(ByteString sourceMember, ResolutionContext context)
-        {
-            return sourceMember.ToUInt256();
-        }
-    }
-
-    public class UInt256ToByteStringConverter : IValueConverter<UInt256, ByteString>
-    {
-        public ByteString Convert(UInt256 sourceMember, ResolutionContext context)
-        {
-            return sourceMember.ToUint256ByteString();
-        }
-    }
 }

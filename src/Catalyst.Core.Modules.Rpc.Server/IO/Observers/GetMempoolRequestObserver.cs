@@ -22,14 +22,16 @@
 #endregion
 
 using System;
+using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -40,18 +42,20 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         : RequestObserverBase<GetMempoolRequest, GetMempoolResponse>,
             IRpcRequestObserver
     {
-        private readonly IMempool<MempoolDocument> _mempool;
+        private readonly IMempool<TransactionBroadcastDao> _mempool;
+        private readonly IMapperProvider _mappingProvider;
 
         public GetMempoolRequestObserver(IPeerSettings peerSettings,
-            IMempool<MempoolDocument> mempool,
+            IMempool<TransactionBroadcastDao> mempool,
+            IMapperProvider mappingProvider,
             ILogger logger)
             : base(logger, peerSettings)
         {
             _mempool = mempool;
+            _mappingProvider = mappingProvider;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getMempoolRequest"></param>
         /// <param name="channelHandlerContext"></param>
@@ -72,7 +76,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             {
                 Logger.Debug("Received GetMempoolRequest message with content {0}", getMempoolRequest);
 
-                var mempoolTransactions = _mempool.Repository.GetAll();
+                var mempoolTransactions = _mempool.Repository.GetAll()
+                   .Select(x => x.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mappingProvider));
 
                 return new GetMempoolResponse
                 {

@@ -62,13 +62,12 @@ namespace Catalyst.Core.Lib.IO.Transport
             }
             
             _logger.Debug($"Disposing{GetType().Name}");
-
-            var quietPeriod = TimeSpan.FromMilliseconds(100);
-
+            
             try
             {
                 Channel?.Flush();
-                Channel?.CloseAsync().Wait(quietPeriod);
+                Channel?.CloseAsync().ConfigureAwait(false);
+
                 EventLoopGroupFactory.Dispose();
             }
             catch (Exception e)

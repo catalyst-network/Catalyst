@@ -21,12 +21,30 @@
 
 #endregion
 
-using System;
-
 namespace Catalyst.Abstractions.Cryptography
 {
     public interface ICryptoContext
     {
+        /// <summary>
+        /// Private key byte length.
+        /// </summary>
+        int PrivateKeyLength { get; }
+
+        /// <summary>
+        /// Public key byte length.
+        /// </summary>
+        int PublicKeyLength { get; }
+
+        /// <summary>
+        /// Signature byte length.
+        /// </summary>
+        int SignatureLength { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int SignatureContextMaxLength { get; }
+        
         /// <summary>
         ///     Generates a new private key.
         /// </summary>
@@ -34,18 +52,25 @@ namespace Catalyst.Abstractions.Cryptography
         IPrivateKey GeneratePrivateKey();
 
         /// <summary>
+        ///     Given a private key returns corresponding public key.
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <returns></returns>
+        IPublicKey GetPublicKeyFromPrivateKey(IPrivateKey privateKey);
+        
+        /// <summary>
         ///     Creates public key from public key bytes.
         /// </summary>
         /// <param name="publicKeyBytes"></param>
         /// <returns></returns>
-        IPublicKey PublicKeyFromBytes(byte[] publicKeyBytes);
+        IPublicKey GetPublicKeyFromBytes(byte[] publicKeyBytes);
 
         /// <summary>
         ///     Creates private key from key bytes.
         /// </summary>
         /// <param name="privateKeyBytes"></param>
         /// <returns></returns>
-        IPrivateKey PrivateKeyFromBytes(byte[] privateKeyBytes);
+        IPrivateKey GetPrivateKeyFromBytes(byte[] privateKeyBytes);
 
         /// <summary>
         ///     Takes signature bytes and corresponding public key bytes and creates a signature.
@@ -53,7 +78,7 @@ namespace Catalyst.Abstractions.Cryptography
         /// <param name="signatureBytes"></param>
         /// <param name="publicKeyBytes"></param>
         /// <returns></returns>
-        ISignature SignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes);
+        ISignature GetSignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes);
 
         /// <summary>
         /// Returns private key bytes.
@@ -76,32 +101,8 @@ namespace Catalyst.Abstractions.Cryptography
         /// <param name="message"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context);
+        ISignature Sign(IPrivateKey privateKey, byte[] message, byte[] context);
 
-        bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context);
-
-        /// <summary>
-        ///     Given a private key returns corresponding public key.
-        /// </summary>
-        /// <param name="privateKey"></param>
-        /// <returns></returns>
-        IPublicKey GetPublicKey(IPrivateKey privateKey);
-
-        /// <summary>
-        /// Private key byte length.
-        /// </summary>
-        int PrivateKeyLength { get; }
-
-        /// <summary>
-        /// Public key byte length.
-        /// </summary>
-        int PublicKeyLength { get; }
-
-        /// <summary>
-        /// Signature byte length.
-        /// </summary>
-        int SignatureLength { get; }
-
-        int SignatureContextMaxLength { get; }
+        bool Verify(ISignature signature, byte[] message, byte[] context);
     }
 }

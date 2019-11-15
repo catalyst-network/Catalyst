@@ -54,8 +54,8 @@ namespace Catalyst.TestUtils
             int port = 12345)
         {
             var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
-               .Concat(Enumerable.Repeat(default(byte), Ffi.PublicKeyLength))
-               .Take(Ffi.PublicKeyLength).ToArray();
+               .Concat(Enumerable.Repeat(default(byte), new FfiWrapper().PublicKeyLength))
+               .Take(new FfiWrapper().PublicKeyLength).ToArray();
             return GetPeerId(publicKeyBytes, ipAddress, port);
         }
 
@@ -68,7 +68,7 @@ namespace Catalyst.TestUtils
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.PeerId.Returns(peerId);
-            peerSettings.PublicIpAddress.Returns(peerId.IpAddress);
+            peerSettings.BindAddress.Returns(peerId.IpAddress);
             peerSettings.Port.Returns((int) peerId.Port);
             peerSettings.PublicKey.Returns(peerId.PublicKey.KeyToString());
             return peerSettings;

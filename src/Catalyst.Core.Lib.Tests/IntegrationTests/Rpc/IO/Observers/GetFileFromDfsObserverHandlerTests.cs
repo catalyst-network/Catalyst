@@ -26,11 +26,13 @@ using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,6 +41,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -50,9 +53,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _fileDownloadFactory;
         private readonly IDfs _dfs;
+        private readonly IHashProvider _hashProvider;
 
         public GetFileFromDfsObserverHandlerTests(ITestOutputHelper testOutput) : base(testOutput)
         {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _fileDownloadFactory = new DownloadFileTransferFactory(_logger);
@@ -125,10 +130,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             }
         }
 
-        private string AddFileToDfs(long byteSize, out long crcValue, out Stream stream)
+        private MultiHash AddFileToDfs(long byteSize, out long crcValue, out Stream stream)
         {
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
-            var fakeId = CorrelationId.GenerateCorrelationId().ToString();
+            var fakeId = _hashProvider.ComputeUtf8MultiHash(CorrelationId.GenerateCorrelationId().ToString());
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             stream = new MemoryStream(File.ReadAllBytes(fileToTransfer));
             _dfs.ReadAsync(fakeId).Returns(stream);

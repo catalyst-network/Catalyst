@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>Catalyst.Abstractions</RootNamespace>
     <Authors>James Kirby (nshcore@protonmail.com)</Authors>
     <SignAssembly>true</SignAssembly>
@@ -16,12 +16,13 @@
     <PackageReference Include="DnsClient" Version="1.2.0" />
     <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
     <PackageReference Include="Google.Protobuf" Version="3.9.1" />
-    <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.0.0" />
     <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
     <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
     <PackageReference Include="System.Reactive" Version="4.1.6" />
+    <PackageReference Include="TheDotNetLeague.Ipfs.Abstractions" Version="0.0.1" />
+    <PackageReference Include="TheDotNetLeague.Ipfs.Core.Lib" Version="0.0.1" />
+    <PackageReference Include="TheDotNetLeague.MultiFormats.MultiHash" Version="0.0.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />

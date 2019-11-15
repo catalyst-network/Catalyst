@@ -114,7 +114,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            var channel = await Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
+            var channel = await BootstrapAsync(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
 
             var messageStream = _observableServiceHandler.MessageStream;
 

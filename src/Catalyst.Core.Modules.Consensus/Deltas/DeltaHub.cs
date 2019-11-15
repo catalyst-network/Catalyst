@@ -31,16 +31,16 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
-using Multiformats.Hash;
+using LibP2P;
 using Polly;
 using Polly.Retry;
 using Serilog;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IDfs _dfs;
         private readonly ILogger _logger;
 
-        protected virtual AsyncRetryPolicy<string> DfsRetryPolicy { get; }
+        protected virtual AsyncRetryPolicy<Cid> DfsRetryPolicy { get; }
 
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerSettings peerSettings,
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _dfs = dfs;
             _logger = logger;
 
-            DfsRetryPolicy = Policy<string>.Handle<Exception>()
+            DfsRetryPolicy = Polly.Policy<Cid>.Handle<Exception>()
                .WaitAndRetryAsync(4, retryAttempt =>
                     TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }
@@ -79,12 +79,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             if (!candidate.ProducerId.Equals(_peerId))
             {
                 _logger.Warning($"{nameof(BroadcastCandidate)} " +
-                    $"should only be called by the producer of a candidate.");
+                    "should only be called by the producer of a candidate.");
                 return;
             }
 
             var protocolMessage = candidate.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(protocolMessage);
+            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             _logger.Debug("Broadcast candidate {0} done.", candidate);
         }
@@ -93,27 +93,29 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public void BroadcastFavouriteCandidateDelta(FavouriteDeltaBroadcast favourite)
         {
             Guard.Argument(favourite, nameof(favourite)).NotNull().Require(c => c.IsValid());
+            
             var protocolMessage = favourite.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(protocolMessage);
+            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             _logger.Debug("Started broadcasting favourite candidate {0}", favourite);
         }
 
         /// <inheritdoc />
-        public async Task<string> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta, CancellationToken cancellationToken = default)
+        public async Task<Cid> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta,
+            CancellationToken cancellationToken = default)
         {
             var newAddress = await PublishDeltaToDfs(delta, cancellationToken).ConfigureAwait(false);
             await BroadcastNewDfsFileAddressAsync(newAddress, delta.PreviousDeltaDfsHash).ConfigureAwait(false);
             return newAddress;
         }
 
-        private async Task<string> PublishDeltaToDfs(Delta delta, CancellationToken cancellationToken)
+        private async Task<Cid> PublishDeltaToDfs(Delta delta, CancellationToken cancellationToken)
         {
             try
             {
                 var deltaAsArray = delta.ToByteArray();
                 var dfsFileAddress = await DfsRetryPolicy.ExecuteAsync(
-                    async c => await PublishDfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
+                    async c => await PublishDfsFileAsync(deltaAsArray, c).ConfigureAwait(false),
                     cancellationToken).ConfigureAwait(false);
 
                 _logger.Debug("New delta published to DFS at address: {ipfsFileAddress}", dfsFileAddress);
@@ -126,7 +128,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
         }
 
-        private async Task BroadcastNewDfsFileAddressAsync(string dfsFileAddress, ByteString previousDeltaHash)
+        private async Task BroadcastNewDfsFileAddressAsync(Cid dfsFileAddress, ByteString previousDeltaHash)
         {
             if (dfsFileAddress == null)
             {
@@ -135,12 +137,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             try
             {
-                _logger.Verbose("Broadcasting new delta dfs address {dfsAddress} for delta with previous delta hash {previousDeltaHash}",
-                    dfsFileAddress, previousDeltaHash.AsBase32Address());
+                _logger.Verbose(
+                    "Broadcasting new delta dfs address {dfsAddress} for delta with previous delta hash {previousDeltaHash}",
+                    dfsFileAddress, CidHelper.Cast(previousDeltaHash.ToByteArray()));
 
                 var newDeltaHashOnDfs = new DeltaDfsHashBroadcast
                 {
-                    DeltaDfsHash = Multihash.Parse(dfsFileAddress).ToBytes().ToByteString(),
+                    DeltaDfsHash = dfsFileAddress.ToArray().ToByteString(),
                     PreviousDeltaDfsHash = previousDeltaHash
                 }.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
 
@@ -152,17 +155,16 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
         }
 
-        private async Task<string> PublishDfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)
+        private async Task<Cid> PublishDfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)
         {
             using (var memoryStream = new MemoryStream())
             {
                 await memoryStream.WriteAsync(deltaAsBytes, cancellationToken).ConfigureAwait(false);
-                memoryStream.Flush();
+                await memoryStream.FlushAsync(cancellationToken).ConfigureAwait(false);
+                
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                var address = await _dfs.AddAsync(memoryStream, cancellationToken: cancellationToken);
-
-                return address;
+                return await _dfs.AddAsync(memoryStream, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
         }
     }

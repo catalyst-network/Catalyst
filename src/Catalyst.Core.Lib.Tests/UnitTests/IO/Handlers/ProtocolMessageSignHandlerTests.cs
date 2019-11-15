@@ -52,8 +52,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _keySigner = Substitute.For<IKeySigner>();
             _signature = Substitute.For<ISignature>();
 
-            _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength));
-            _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength));
+            _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength));
+            _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength));
 
             _dto = new MessageDto(new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender")),
                 PeerIdHelper.GetPeerId("recipient")
@@ -65,10 +65,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         {
             var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, DevNetPeerSigningContext.Instance);
 
-            protocolMessageSignHandler.WriteAsync(_fakeContext, new object());
+            protocolMessageSignHandler?.WriteAsync(_fakeContext, new object());
 
             _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), default);
-            _fakeContext.ReceivedWithAnyArgs().WriteAsync(new object());
+            _fakeContext.ReceivedWithAnyArgs()?.WriteAsync(new object());
         }
 
         [Fact]
@@ -78,10 +78,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 
             var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, DevNetPeerSigningContext.Instance);
 
-            protocolMessageSignHandler.WriteAsync(_fakeContext, _dto);
+            protocolMessageSignHandler?.WriteAsync(_fakeContext, _dto);
             
-            _fakeContext.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(new object());
-            _fakeContext.ReceivedWithAnyArgs().WriteAsync(new object());
+            _fakeContext.DidNotReceiveWithAnyArgs()?.WriteAndFlushAsync(new object());
+            _fakeContext.ReceivedWithAnyArgs()?.WriteAsync(new object());
         }
     }
 }

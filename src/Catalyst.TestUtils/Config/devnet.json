@@ -2,7 +2,7 @@
     "CatalystNodeConfiguration": {
         "Peer": {
             "Network": "Devnet",
-            "PublicKey": "qnb9bw3b2yj4hpjcmsvgp12bkwff313v9gaqb18atvwfpevrmmf0",
+            "PublicKey": "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq",
             "Port": 42076,
             "BindAddress": "127.0.0.1",
             "PublicIpAddress": "127.0.0.1",
@@ -34,7 +34,7 @@
                 //},
                 "efCore": {
                     "factory": "SharpRepository.EfCoreRepository.EfCoreConfigRepositoryFactory, SharpRepository.EfCoreRepository",
-                    "connectionString": "", // optional, you can configure it with dependency resolver
+                    "connectionString": "Server=localhost\\SQLExpress;Integrated Security=true;Initial Catalog=CatalystDB", // optional, you can configure it with dependency resolver
                     "dbContextType": "EfCoreContext, Catalyst.Core.Lib.Repository" // optional, you can configure it with dependency resolver
                 },
                 "inMemoryNoCaching": {

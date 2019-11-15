@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Cryptography.BulletProofs</RootNamespace>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
         <SignAssembly>true</SignAssembly>
@@ -15,8 +15,22 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.8.1" />
-        <PackageReference Include="Nethereum.Hex" Version="3.3.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="./Runtimes/osx-x64/*/libcatalystffi.dylib" Link="libcatalystffi.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="./Runtimes/win-x64/*/catalystffi.dll" Link="catalystffi.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="./Runtimes/linux-x64/*/libcatalystffi.so" Link="libcatalystffi.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <None Include="Runtimes\**\*.*" PackagePath="Runtimes\" Pack="true">

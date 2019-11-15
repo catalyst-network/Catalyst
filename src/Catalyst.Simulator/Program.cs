@@ -26,7 +26,6 @@ using System.Linq;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.FileSystem;
-using Catalyst.Core.Lib.Registry;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Simulator.Extensions;
@@ -62,7 +61,11 @@ namespace Catalyst.Simulator
 
             var simulation = new TransactionSimulation(userOutput);
             var simulator = new Simulator(simulation, logger);
-            simulator.SimulateAsync(clientRpcInfoList).Wait();
+            
+            simulator.SimulateAsync(clientRpcInfoList)
+               .ConfigureAwait(false)
+               .GetAwaiter()
+               .GetResult();
 
             return Environment.ExitCode;
         }

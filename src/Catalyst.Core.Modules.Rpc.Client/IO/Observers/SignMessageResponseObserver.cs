@@ -29,9 +29,8 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Multiformats.Base;
-using Nethereum.RLP;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
 {
@@ -74,17 +73,17 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
             
             try
             {
-                var decodeResult = RLP.Decode(signMessageRequest.OriginalMessage.ToByteArray()).RLPData;
+                var decodeResult = MultiBase.Decode(signMessageRequest.OriginalMessage.ToByteArray().ToString());
 
                 Guard.Argument(decodeResult, nameof(decodeResult)).NotNull("The sign message response cannot be null.");
 
-                var originalMessage = decodeResult.ToStringFromRLPDecoded();
-                
+                var originalMessage = decodeResult.ToHexString();
+
                 Guard.Argument(originalMessage, nameof(originalMessage)).NotNull();
 
                 _output.WriteLine(
-                    $@"Signature: {Multibase.Encode(MultibaseEncoding.Base64, signMessageRequest.Signature.ToByteArray())} " +
-                    $@"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, signMessageRequest.PublicKey.ToByteArray())} Original Message: {originalMessage}");
+                    $@"Signature: {signMessageRequest.Signature.ToByteArray().ToBase32()} " +
+                    $@"Public Key: {signMessageRequest.PublicKey.ToByteArray().ToBase32()} Original Message: {originalMessage}");
             }
             catch (Exception ex)
             {

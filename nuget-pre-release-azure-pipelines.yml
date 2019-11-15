@@ -2,21 +2,15 @@ variables:
   release.type: '-alpha'
   BuildPlatform: 'x64'
   BuildConfiguration: 'Debug'
-  ArtifactName: 'Catalyst.Core-$(Build.BuildId)-$(release.type)'
+  ArtifactName: 'Catalyst.Framework-$(Build.BuildId)-$(release.type)'
 stages:
   - stage: 'GetSaurce'
     jobs:
-      - job: 'CloneSaurce'
+      - job: 'GetSaurce'
         continueOnError: false
         pool:
           vmImage: 'macos-10.14'
         steps:
-          - task: DotNetCoreInstaller@0
-            displayName: 'Install .NetCore SDK'
-            inputs:
-              version: 2.2.104
-              failOnStandardError: 'true'
-            timeoutInMinutes: 10
           - bash: |
               git submodule update --init --force --recursive
             displayName: 'Clone submodules'
@@ -40,19 +34,19 @@ stages:
         strategy:
           matrix:
             win2016:
-              imageName: 'vs2017-win2016'
+              imageName: 'windows-2019'
               runtimeName: 'win-x64'
               package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
               project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'
               rustup_toolchain: stable
-            osx1013:
-              imageName: 'macos-10.13'
+            osx1014:
+              imageName: 'macos-10.14'
               runtimeName: 'osx-x64'
               package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
               project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'
               rustup_toolchain: stable
             nix1604:
-              imageName: 'ubuntu-16.04'
+              imageName: 'ubuntu-18.04'
               runtimeName: 'linux-x64'
               package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
               project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'
@@ -60,6 +54,12 @@ stages:
         pool:
           vmImage: $(imageName)
         steps:
+          - task: DotNetCoreInstaller@0
+            displayName: 'Install .NetCore SDK'
+            inputs:
+              version: 3.0.100
+              failOnStandardError: 'true'
+            timeoutInMinutes: 10
           - checkout: none
           - download: current
             artifact: $(ArtifactName)
@@ -186,6 +186,12 @@ stages:
               project: 'src/Catalyst.Modules.Repository.MongoDb/Catalyst.Modules.Repository.MongoDb.csproj'
               rustup_toolchain: stable
         steps:
+          - task: DotNetCoreInstaller@0
+            displayName: 'Install .NetCore SDK'
+            inputs:
+              version: 3.0.100
+              failOnStandardError: 'true'
+            timeoutInMinutes: 10
           - checkout: none
           - download: current
             artifact: $(ArtifactName)

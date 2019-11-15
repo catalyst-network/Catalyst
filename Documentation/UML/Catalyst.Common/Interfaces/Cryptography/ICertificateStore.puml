@@ -1,5 +1,0 @@
-@startuml
-interface ICertificateStore {
-    ReadOrCreateCertificateFile(fileName:string) : X509Certificate2
-}
-@enduml

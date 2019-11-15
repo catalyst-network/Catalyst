@@ -24,7 +24,7 @@
 using AutoMapper;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
-using Multiformats.Hash;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
@@ -32,7 +32,7 @@ namespace Catalyst.Core.Lib.DAO.Converters
     {
         public string Convert(ByteString sourceMember, ResolutionContext context)
         {
-            return sourceMember.AsMultihash().AsBase32Address();
+            return MultiBase.Encode(sourceMember.ToByteArray(), "base32");
         }
     }
 
@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.DAO.Converters
     {
         public ByteString Convert(string sourceMember, ResolutionContext context)
         {
-            return Multihash.Parse(sourceMember).ToBytes().ToByteString();
+            return MultiBase.Decode(sourceMember).ToByteString();
         }
     }
 }

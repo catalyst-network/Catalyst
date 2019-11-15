@@ -102,13 +102,14 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
         }
 
         [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task
             RpcClientChannelFactory_Pipeline_Should_Produce_Request_Object_RpcServerChannelFactory_Can_Process_Into_Observable()
         {
             var recipient = PeerIdHelper.GetPeerId("recipient");
             var sender = PeerIdHelper.GetPeerId("sender");
             var signature = Substitute.For<ISignature>();
-            signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength));
+            signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength));
 
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 

@@ -36,7 +36,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         public PeerSettingsTests(ITestOutputHelper output) : base(output) { }
 
         [Fact]
-        private void CanResolveIPeerSettings()
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void CanResolveIPeerSettings()
         {
             ContainerProvider.ConfigureContainerBuilder();
 

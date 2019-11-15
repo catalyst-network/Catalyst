@@ -71,7 +71,9 @@ namespace Catalyst.Core.Lib.Network
         }
         
         /// <inheritdoc />
-        public IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> seedServers)
+#pragma warning disable 1998
+        public async Task<IEnumerable<PeerId>> GetSeedNodesFromDnsAsync(IEnumerable<string> seedServers)
+#pragma warning restore 1998
         {
             return _peerIds;
         }

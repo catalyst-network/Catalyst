@@ -84,16 +84,19 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Repository.MongoDb", "Catalyst.Modules.Repository.MongoDb\Catalyst.Modules.Repository.MongoDb.csproj", "{A84C4347-5892-49B0-8568-354E830B3D9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687-ABC9-496B-B507-68AEDD4B91D5}"
-ProjectSection(SolutionItems) = preProject
-	Common.TestProjects.props = Common.TestProjects.props
-	Common.Projects.props = Common.Projects.props
-	Common.Packable.props = Common.Packable.props
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		Common.Packable.props = Common.Packable.props
+		Common.Projects.props = Common.Projects.props
+		Common.TestProjects.props = Common.TestProjects.props
+		XunitTraitsRegister.cs = XunitTraitsRegister.cs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"
 	ProjectSection(SolutionItems) = preProject
+		..\mssql-e2e-azure-pipelines.yml = ..\mssql-e2e-azure-pipelines.yml
 		..\nuget-pre-release-azure-pipelines.yml = ..\nuget-pre-release-azure-pipelines.yml
 		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
+		..\docfx-azure-pipeline.yml = ..\docfx-azure-pipeline.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"
@@ -118,47 +121,53 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Crypt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Tools.KeyGenerator", "Catalyst.KeyGenerator\Catalyst.Tools.KeyGenerator.csproj", "{B475A679-4B9C-46F9-A6BC-627A28573C0A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cryptography.FFI.Rust", "Cryptography.FFI.Rust", "{3339A04C-D933-4712-A556-F8F1B74B9753}"
-ProjectSection(SolutionItems) = preProject
-	..\submodules\Cryptography.FFI.Rust\README.md = ..\submodules\Cryptography.FFI.Rust\README.md
-	..\submodules\Cryptography.FFI.Rust\LICENSE = ..\submodules\Cryptography.FFI.Rust\LICENSE
-	..\submodules\Cryptography.FFI.Rust\Cargo.toml = ..\submodules\Cryptography.FFI.Rust\Cargo.toml
-	..\submodules\Cryptography.FFI.Rust\Cargo.lock = ..\submodules\Cryptography.FFI.Rust\Cargo.lock
-	..\submodules\Cryptography.FFI.Rust\azure-pipelines.yml = ..\submodules\Cryptography.FFI.Rust\azure-pipelines.yml
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		..\submodules\Cryptography.FFI.Rust\azure-pipelines.yml = ..\submodules\Cryptography.FFI.Rust\azure-pipelines.yml
+		..\submodules\Cryptography.FFI.Rust\Cargo.lock = ..\submodules\Cryptography.FFI.Rust\Cargo.lock
+		..\submodules\Cryptography.FFI.Rust\Cargo.toml = ..\submodules\Cryptography.FFI.Rust\Cargo.toml
+		..\submodules\Cryptography.FFI.Rust\LICENSE = ..\submodules\Cryptography.FFI.Rust\LICENSE
+		..\submodules\Cryptography.FFI.Rust\README.md = ..\submodules\Cryptography.FFI.Rust\README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA88D78E-377B-4452-864A-C1D5DFB06854}"
-ProjectSection(SolutionItems) = preProject
-	..\submodules\Cryptography.FFI.Rust\src\std_signature.rs = ..\submodules\Cryptography.FFI.Rust\src\std_signature.rs
-	..\submodules\Cryptography.FFI.Rust\src\lib.rs = ..\submodules\Cryptography.FFI.Rust\src\lib.rs
-	..\submodules\Cryptography.FFI.Rust\src\keys.rs = ..\submodules\Cryptography.FFI.Rust\src\keys.rs
-	..\submodules\Cryptography.FFI.Rust\src\helpers.rs = ..\submodules\Cryptography.FFI.Rust\src\helpers.rs
-	..\submodules\Cryptography.FFI.Rust\src\ffi.rs = ..\submodules\Cryptography.FFI.Rust\src\ffi.rs
-	..\submodules\Cryptography.FFI.Rust\src\errors.rs = ..\submodules\Cryptography.FFI.Rust\src\errors.rs
-	..\submodules\Cryptography.FFI.Rust\src\constants.rs = ..\submodules\Cryptography.FFI.Rust\src\constants.rs
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		..\submodules\Cryptography.FFI.Rust\src\constants.rs = ..\submodules\Cryptography.FFI.Rust\src\constants.rs
+		..\submodules\Cryptography.FFI.Rust\src\errors.rs = ..\submodules\Cryptography.FFI.Rust\src\errors.rs
+		..\submodules\Cryptography.FFI.Rust\src\ffi.rs = ..\submodules\Cryptography.FFI.Rust\src\ffi.rs
+		..\submodules\Cryptography.FFI.Rust\src\helpers.rs = ..\submodules\Cryptography.FFI.Rust\src\helpers.rs
+		..\submodules\Cryptography.FFI.Rust\src\keys.rs = ..\submodules\Cryptography.FFI.Rust\src\keys.rs
+		..\submodules\Cryptography.FFI.Rust\src\lib.rs = ..\submodules\Cryptography.FFI.Rust\src\lib.rs
+		..\submodules\Cryptography.FFI.Rust\src\std_signature.rs = ..\submodules\Cryptography.FFI.Rust\src\std_signature.rs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{46B22170-3D54-43F4-9474-C9F02DEF3A14}"
-ProjectSection(SolutionItems) = preProject
-	..\submodules\Cryptography.FFI.Rust\tests\integration_test.rs = ..\submodules\Cryptography.FFI.Rust\tests\integration_test.rs
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		..\submodules\Cryptography.FFI.Rust\tests\integration_test.rs = ..\submodules\Cryptography.FFI.Rust\tests\integration_test.rs
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Dirichlet.Numerics", "..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj", "{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Dirichlet.Numerics", "..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj", "{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{BAB02934-9818-4691-91AF-8B56980C82C7}"
-ProjectSection(SolutionItems) = preProject
-	..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml = ..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml = ..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.POA.Consensus", "Catalyst.Modules.POA.Consensus\Catalyst.Modules.POA.Consensus.csproj", "{BCF86A5A-8BF0-43B1-9D0C-E36108BD0F8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.Consensus", "Catalyst.Modules.POA.Consensus\Catalyst.Modules.POA.Consensus.csproj", "{BCF86A5A-8BF0-43B1-9D0C-E36108BD0F8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests", "Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests\Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests.csproj", "{1D5BB576-6C99-4071-89EB-09BADCE09912}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests", "Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests\Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests.csproj", "{1D5BB576-6C99-4071-89EB-09BADCE09912}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.POA.Consensus.Tests", "Catalyst.Modules.POA.Consensus.Tests\Catalyst.Modules.POA.Consensus.Tests.csproj", "{58B03908-7E68-4F27-BF75-60B7B1866A70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.Consensus.Tests", "Catalyst.Modules.POA.Consensus.Tests\Catalyst.Modules.POA.Consensus.Tests.csproj", "{58B03908-7E68-4F27-BF75-60B7B1866A70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.POA.P2P.Discovery.Consortium", "Catalyst.Modules.POA.P2P.Discovery.Consortium\Catalyst.Modules.POA.P2P.Discovery.Consortium.csproj", "{CDB7C91F-BA03-4BA8-92B0-5EB398DCCA43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.P2P.Discovery.Consortium", "Catalyst.Modules.POA.P2P.Discovery.Consortium\Catalyst.Modules.POA.P2P.Discovery.Consortium.csproj", "{CDB7C91F-BA03-4BA8-92B0-5EB398DCCA43}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashing", "Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj", "{719343C7-C1C1-4C23-8763-8FB493C33D66}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashing.Tests", "Catalyst.Core.Modules.Hashing.Tests\Catalyst.Core.Modules.Hashing.Tests.csproj", "{2FF077F1-E652-4D17-83D2-C766E385BA5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Documentation", "..\docs\Catalyst.Documentation.csproj", "{9B99940D-EBFA-40CC-9522-6776C687EAB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Tools.KeyGenerator", "Catalyst.Tools.KeyGenerator\Catalyst.Tools.KeyGenerator.csproj", "{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -330,12 +339,6 @@ Global
 		{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B475A679-4B9C-46F9-A6BC-627A28573C0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B475A679-4B9C-46F9-A6BC-627A28573C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B475A679-4B9C-46F9-A6BC-627A28573C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B475A679-4B9C-46F9-A6BC-627A28573C0A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E72CF774-9A2F-475C-ADA0-C061C35CEA91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E72CF774-9A2F-475C-ADA0-C061C35CEA91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -356,6 +359,22 @@ Global
 		{CDB7C91F-BA03-4BA8-92B0-5EB398DCCA43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDB7C91F-BA03-4BA8-92B0-5EB398DCCA43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDB7C91F-BA03-4BA8-92B0-5EB398DCCA43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{719343C7-C1C1-4C23-8763-8FB493C33D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{719343C7-C1C1-4C23-8763-8FB493C33D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{719343C7-C1C1-4C23-8763-8FB493C33D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{719343C7-C1C1-4C23-8763-8FB493C33D66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FF077F1-E652-4D17-83D2-C766E385BA5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FF077F1-E652-4D17-83D2-C766E385BA5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FF077F1-E652-4D17-83D2-C766E385BA5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FF077F1-E652-4D17-83D2-C766E385BA5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B99940D-EBFA-40CC-9522-6776C687EAB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B99940D-EBFA-40CC-9522-6776C687EAB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B99940D-EBFA-40CC-9522-6776C687EAB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B99940D-EBFA-40CC-9522-6776C687EAB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

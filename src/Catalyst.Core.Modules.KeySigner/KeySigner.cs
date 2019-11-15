@@ -22,11 +22,13 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Google.Protobuf;
 using Org.BouncyCastle.Security;
 
@@ -57,13 +59,13 @@ namespace Catalyst.Core.Modules.KeySigner
         {
             if (!TryPopulateDefaultKeyFromKeyStore(out _))
             {
-                GenerateKeyAndPopulateRegistryWithDefault();
+                GenerateKeyAndPopulateRegistryWithDefaultAsync().ConfigureAwait(false);
             }   
         }
 
-        private async void GenerateKeyAndPopulateRegistryWithDefault()
+        private async Task GenerateKeyAndPopulateRegistryWithDefaultAsync()
         {
-            var privateKey = await _keyStore.KeyStoreGenerate(_defaultKey);
+            var privateKey = await _keyStore.KeyStoreGenerateAsync(NetworkType.Devnet, _defaultKey).ConfigureAwait(false);
             if (privateKey != null)
             { 
                 _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
@@ -103,7 +105,6 @@ namespace Catalyst.Core.Modules.KeySigner
             return _cryptoContext.Verify(signature, message, signingContext.ToByteArray());
         }
 
-        /// <inheritdoc/>
         public void ExportKey()
         {
             throw new NotImplementedException();

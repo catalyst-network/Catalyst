@@ -23,18 +23,18 @@
 
 using System;
 using Catalyst.Protocol.Wire;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
+using LibP2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
     /// <summary>
-    /// This component is meant to be used to produce and retrieve ranking/voting data
-    /// about the different candidate deltas observed on the network, in order to be
-    /// able to determine which candidate should eventually make it to the DFS.
+    ///     This component is meant to be used to produce and retrieve ranking/voting data
+    ///     about the different candidate deltas observed on the network, in order to be
+    ///     able to determine which candidate should eventually make it to the DFS.
     /// </summary>
     /// <remarks>A producer will call that method at the start of the Campaigning phase.</remarks>
     public interface IDeltaVoter : IObserver<CandidateDeltaBroadcast>
     {
-        bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite);
+        bool TryGetFavouriteDelta(Cid previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite);
     }
 }

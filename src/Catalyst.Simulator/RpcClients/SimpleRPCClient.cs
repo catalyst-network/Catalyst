@@ -39,10 +39,10 @@ using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P;
-using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Client;
@@ -50,21 +50,22 @@ using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Peer;
+using Catalyst.Simulator.Interfaces;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
-using IRpcClient = Catalyst.Abstractions.Rpc.IRpcClient;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Simulator.RpcClients
 {
-    public class SimpleRpcClient : Interfaces.IRpcClient
+    public class SimpleRpcClient : IRpcClient
     {
         private readonly ILogger _logger;
         private readonly PeerId _senderPeerId;
         private PeerId _recipientPeerId;
-        private IRpcClient _rpcClient;
+        private Abstractions.Rpc.IRpcClient _rpcClient;
         private readonly X509Certificate2 _certificate;
         private readonly RpcClientFactory _rpcClientFactory;
 
@@ -82,14 +83,14 @@ namespace Catalyst.Simulator.RpcClients
             var consolePasswordReader = new ConsolePasswordReader(userOutput, new ConsoleUserInput());
             var passwordManager = new PasswordManager(consolePasswordReader, passwordRegistry);
 
-            var wrapper = new CryptoWrapper();
-            var cryptoContext = new CryptoContext(wrapper);
+            var cryptoContext = new FfiWrapper();
 
-            var keyServiceStore = new KeyStoreServiceWrapped(cryptoContext);
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
-            var addressHelper = new AddressHelper(signingContextProvider.NetworkType);
-            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, keyServiceStore, fileSystem,
-                _logger, addressHelper);
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(signingContextProvider.NetworkType);
+
+            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, fileSystem, hashProvider, _logger);
 
             var keyRegistry = new KeyRegistry();
             var keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);
@@ -99,9 +100,6 @@ namespace Catalyst.Simulator.RpcClients
             var changeTokenProvider = new TtlChangeTokenProvider(10000);
             var messageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, _logger, changeTokenProvider);
             var peerIdValidator = new PeerIdValidator(cryptoContext);
-
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.NetworkType.Returns(signingContextProvider.NetworkType);
 
             var nodeRpcClientChannelFactory =
                 new RpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, peerSettings);

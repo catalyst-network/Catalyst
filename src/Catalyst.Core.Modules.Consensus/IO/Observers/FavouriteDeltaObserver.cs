@@ -23,10 +23,12 @@
 
 using System;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Serilog;
 
@@ -35,28 +37,43 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public class FavouriteDeltaObserver : BroadcastObserverBase<FavouriteDeltaBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaElector _deltaElector;
+        private readonly IHashProvider _hashProvider;
 
-        public FavouriteDeltaObserver(IDeltaElector deltaElector, ILogger logger) 
+        public FavouriteDeltaObserver(IDeltaElector deltaElector, IHashProvider hashProvider, ILogger logger)
             : base(logger)
         {
             _deltaElector = deltaElector;
+            _hashProvider = hashProvider;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
+                var deserialized = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
-                deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
-                deserialised.Candidate.Hash.ToByteArray().AsMultihash();
-                deserialised.IsValid();
-                
-                _deltaElector.OnNext(deserialised);
+                var previousDeltaDfsHashCid = CidHelper.Cast(deserialized.Candidate.PreviousDeltaDfsHash.ToByteArray());
+                if (!_hashProvider.IsValidHash(previousDeltaDfsHashCid.Hash.ToArray()))
+                {
+                    Logger.Error("PreviousDeltaDfsHash is not a valid hash");
+                    return;
+                }
+
+                var hashCid = CidHelper.Cast(deserialized.Candidate.Hash.ToByteArray());
+                if (!_hashProvider.IsValidHash(hashCid.Hash.ToArray()))
+                {
+                    Logger.Error("Hash is not a valid hash");
+                    return;
+                }
+
+                deserialized.IsValid();
+
+                _deltaElector.OnNext(deserialized);
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, $"Failed to process favourite delta broadcast {messageDto.Payload.ToJsonString()}.");
+                Logger.Error(exception,
+                    $"Failed to process favourite delta broadcast {messageDto.Payload.ToJsonString()}.");
             }
         }
     }

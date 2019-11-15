@@ -42,10 +42,10 @@ namespace Catalyst.Core.Lib.Tests
         [Fact]
         public static async Task All_Cs_Files_Should_Have_License_Header()
         {
-            var declaringTypeAssembly = MethodBase.GetCurrentMethod().DeclaringType.Assembly;
+            var declaringTypeAssembly = MethodBase.GetCurrentMethod().DeclaringType?.Assembly;
 
             var basePathRegex = new Regex("(?<sourcePath>(.*)[\\/]src[\\/])(.*)");
-            var codeBasePath = new Uri(declaringTypeAssembly.CodeBase).AbsolutePath;
+            var codeBasePath = new Uri(declaringTypeAssembly?.CodeBase).AbsolutePath;
             var sourcePath = basePathRegex.Match(codeBasePath).Groups["sourcePath"].Value;
 
             sourcePath.Should().NotBeNull();

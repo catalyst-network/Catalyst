@@ -29,7 +29,7 @@ using System.Reactive.Subjects;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf.WellKnownTypes;
-using Multiformats.Hash;
+using LibP2P;
 using Nito.Comparers;
 using Serilog;
 
@@ -41,43 +41,43 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IDeltaCache _deltaCache;
         private readonly ILogger _logger;
 
-        private readonly ReplaySubject<Multihash> _deltaHashUpdatesSubject;
-        private readonly SortedList<Timestamp, Multihash> _hashesByTimeDescending;
+        private readonly ReplaySubject<Cid> _deltaHashUpdatesSubject;
+        private readonly SortedList<Timestamp, Cid> _hashesByTimeDescending;
         private readonly int _capacity;
 
-        public IObservable<Multihash> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
+        public IObservable<Cid> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
 
-        public DeltaHashProvider(IDeltaCache deltaCache, 
+        public DeltaHashProvider(IDeltaCache deltaCache,
             ILogger logger,
             int capacity = 10_000)
         {
             _deltaCache = deltaCache;
             _logger = logger;
-            _deltaHashUpdatesSubject = new ReplaySubject<Multihash>(0);
-            var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, @descending: true);
+            _deltaHashUpdatesSubject = new ReplaySubject<Cid>(0);
+            var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, descending: true);
             _capacity = capacity;
-            _hashesByTimeDescending = new SortedList<Timestamp, Multihash>(comparer)
+            _hashesByTimeDescending = new SortedList<Timestamp, Cid>(comparer)
             {
-                Capacity = _capacity,
+                Capacity = _capacity
             };
 
             _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
-                _deltaCache.GenesisAddress.FromBase32Address());
+                _deltaCache.GenesisHash);
         }
 
         /// <inheritdoc />
-        public bool TryUpdateLatestHash(Multihash previousHash, Multihash newHash)
+        public bool TryUpdateLatestHash(Cid previousHash, Cid newHash)
         {
-            var newAddress = newHash.AsBase32Address();
-            var previousAddress = previousHash.AsBase32Address();
-            _logger.Debug("New hash {hash} received for previous hash {previousHash}", 
+            var newAddress = newHash;
+            var previousAddress = previousHash;
+            _logger.Debug("New hash {hash} received for previous hash {previousHash}",
                 newAddress, previousAddress);
             var foundNewDelta = _deltaCache.TryGetOrAddConfirmedDelta(newAddress, out var newDelta);
             var foundPreviousDelta = _deltaCache.TryGetOrAddConfirmedDelta(previousAddress, out var previousDelta);
 
-            if (!foundNewDelta 
+            if (!foundNewDelta
              || !foundPreviousDelta
-             || newDelta.PreviousDeltaDfsHash != previousHash.ToBytes().ToByteString()
+             || newDelta.PreviousDeltaDfsHash != previousHash.ToArray().ToByteString()
              || previousDelta.TimeStamp >= newDelta.TimeStamp)
             {
                 _logger.Warning("Failed to update latest hash from {previousHash} to {newHash}",
@@ -96,14 +96,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     _hashesByTimeDescending.RemoveAt(_capacity);
                 }
             }
-            
+
             _deltaHashUpdatesSubject.OnNext(newAddress);
 
             return true;
         }
 
         /// <inheritdoc />
-        public Multihash GetLatestDeltaHash(DateTime? asOf = null)
+        public Cid GetLatestDeltaHash(DateTime? asOf = null)
         {
             _logger.Verbose("Trying to retrieve latest delta as of {asOf}", asOf);
             if (!asOf.HasValue)

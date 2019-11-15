@@ -26,8 +26,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
@@ -274,7 +274,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         }
         
         [Fact]
-        public void Can_Throw_Exception_In_WalkBack_When_Last_State_Has_No_Neighbours_To_Continue_Walk_Forward()
+        public async Task Can_Throw_Exception_In_WalkBack_When_Last_State_Has_No_Neighbours_To_Continue_Walk_Forward()
         {
             var ctp = new CancellationTokenProvider();
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -293,9 +293,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
             using (var walker = discoveryTestBuilder.Build())
             {
-                Assert.Throws<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(async () =>
                 {
-                    walker.DiscoveryAsync().GetAwaiter().GetResult();
+                    await walker.DiscoveryAsync();
                     Thread.Sleep(2);
                     ctp.CancellationTokenSource.Cancel();
                 });
@@ -648,31 +648,28 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact(Skip = "for now")]
-        public void Known_Evicted_Correlation_Cache_PingRequest_Message_Increments_UnResponsivePeer()
+        [Fact]
+        public void Known_Evicted_Correlation_Cache_PingRequest_Message_Increments_UnResponsivePeer() 
         {
             var pnr = CorrelationId.GenerateCorrelationId();
-            
-            var evictionEvent = new ReplaySubject<ICorrelationId>(0);
-
-            evictionEvent.OnNext(pnr);
+            var unresponsiveNeighbour = new Neighbour(new PeerId(), NeighbourStateTypes.NotContacted, pnr);
             
             var initialMemento = DiscoveryHelper.SubMemento(_ownNode, 
                 DiscoveryHelper.MockDnsClient(_settings)
-                   .GetSeedNodesFromDns(_settings.SeedServers)
+                   .GetSeedNodesFromDnsAsync(_settings.SeedServers)
+                   .ConfigureAwait(false)
+                   .GetAwaiter()
+                   .GetResult()
                    .ToNeighbours()
             );
             
             var initialStateCandidate = Substitute.For<IHastingsOriginator>();
             initialStateCandidate.Peer.Returns(initialMemento.Peer);
-            initialStateCandidate.Neighbours.Returns(Substitute.For<INeighbours>());
+            initialStateCandidate.Neighbours.Returns(new Neighbours(new INeighbour[] {unresponsiveNeighbour}));
             
             initialStateCandidate.CreateMemento().Returns(initialMemento);
-            
-            initialStateCandidate.Neighbours.Contains(
-                Arg.Any<INeighbour>()).Returns(true);
 
-            initialStateCandidate.PnrCorrelationId.ReturnsForAnyArgs(pnr);
+            initialStateCandidate.PnrCorrelationId.ReturnsForAnyArgs(CorrelationId.GenerateCorrelationId());
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
@@ -682,6 +679,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                .WithPeerSettings()
                .WithPeerClient()
                .WithCancellationProvider()
+               .WithPeerMessageCorrelationManager()
                .WithPeerClientObservables(typeof(GetNeighbourResponseObserver))
                .WithAutoStart()
                .WithBurn()
@@ -690,8 +688,10 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             
             using (var walker = discoveryTestBuilder.Build())
             {
-                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                walker.StepProposal.ReceivedWithAnyArgs(1).Neighbours?.Count();
+                walker.TestEvictionCallback(pnr);
+                walker.StepProposal.Neighbours
+                   .Count(n => n.StateTypes == NeighbourStateTypes.UnResponsive && n.DiscoveryPingCorrelationId.Equals(pnr))
+                   .Should().Be(1);
             }
         }
     }

@@ -26,6 +26,7 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Protocol.Deltas;
+using LibP2P;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
@@ -43,13 +44,17 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public bool TryReadDeltaFromDfs(string hash,
+        public bool TryReadDeltaFromDfs(Cid cid,
             out Delta delta,
             CancellationToken cancellationToken)
         {
             try
             {
-                using (var responseStream = _dfs.ReadAsync(hash, cancellationToken).GetAwaiter().GetResult())
+                using (var responseStream = _dfs.ReadAsync(cid, cancellationToken)
+                   .ConfigureAwait(false)
+                   .GetAwaiter()
+                   .GetResult()
+                )
                 {
                     var uncheckedDelta = Delta.Parser.ParseFrom(responseStream);
                     var isValid = uncheckedDelta.IsValid();
@@ -66,7 +71,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to retrieve delta with hash {0} from the Dfs", hash);
+                _logger.Error(e, "Failed to retrieve delta with hash {0} from the Dfs", cid);
                 delta = default;
                 return false;
             }

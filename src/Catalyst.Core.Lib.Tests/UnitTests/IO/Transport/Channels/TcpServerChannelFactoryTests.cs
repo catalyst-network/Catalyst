@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
         {
             var certificate = Substitute.For<X509Certificate2>();
             var channel =
-                await _testTcServerChannelFactory.Bootstrap(_eventLoopGroupFactory, _ipAddress, _port, certificate);
+                await _testTcServerChannelFactory.BootstrapAsync(_eventLoopGroupFactory, _ipAddress, _port, certificate);
 
             channel.Should().BeAssignableTo<IChannel>();
         }

@@ -45,8 +45,5 @@ namespace Catalyst.Abstractions.KeySigner
         /// <summary>Verifies a message signature.</summary>
         /// <returns></returns>
         bool Verify(ISignature signature, byte[] message, SigningContext signingContext);
-
-        /// <summary>Exports the key.</summary>
-        void ExportKey();
     }
 }

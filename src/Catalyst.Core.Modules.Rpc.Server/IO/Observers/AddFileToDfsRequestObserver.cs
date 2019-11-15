@@ -41,6 +41,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using LibP2P;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -108,38 +109,42 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             var message = GetResponse(fileTransferInformation, responseCodeType);
 
-            if (responseCodeType == FileTransferResponseCodeTypes.Successful)
+            if (responseCodeType != FileTransferResponseCodeTypes.Successful)
             {
-                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None).ContinueWith(task =>
-                {
-                    if (fileTransferInformation.ChunkIndicatorsTrue())
-                    {
-                        OnSuccessAsync(fileTransferInformation).Wait();
-                    }
-
-                    fileTransferInformation.Dispose();
-                });
+                return message;
             }
+            
+            var ctx = new CancellationTokenSource();
+                
+            _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None).ContinueWith(task =>
+            {
+                if (fileTransferInformation.ChunkIndicatorsTrue())
+                {
+                    OnSuccessAsync(fileTransferInformation).ConfigureAwait(false).GetAwaiter().GetResult();
+                }
+
+                fileTransferInformation.Dispose();
+            }, ctx.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext()).ConfigureAwait(false);
 
             return message;
         }
 
-        private async Task<FileTransferResponseCodeTypes> AddFileToDfs(IFileTransferInformation fileTransferInformation)
+        private async Task<FileTransferResponseCodeTypes> AddFileToDfsAsync(IFileTransferInformation fileTransferInformation)
         {
             var responseCode = FileTransferResponseCodeTypes.Finished;
 
             try
             {
-                string fileHash;
+                Cid cid;
 
                 using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    fileHash = await _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
+                    cid = await _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
                 }
 
-                fileTransferInformation.DfsHash = fileHash;
+                fileTransferInformation.DfsHash = cid.Encode();
 
-                Logger.Information($"Added File Name {fileTransferInformation.FileOutputPath} to DFS, Hash: {fileHash}");
+                Logger.Information($"Added File Name {fileTransferInformation.FileOutputPath} to DFS, Hash: {fileTransferInformation.DfsHash}");
             }
             catch (Exception e)
             {
@@ -158,7 +163,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="fileTransferInformation">The file transfer information.</param>
         private async Task OnSuccessAsync(IFileTransferInformation fileTransferInformation)
         {
-            var addFileResponseCode = AddFileToDfs(fileTransferInformation).ConfigureAwait(false);
+            var addFileResponseCode = AddFileToDfsAsync(fileTransferInformation).ConfigureAwait(false);
 
             var message = GetResponse(fileTransferInformation, await addFileResponseCode);
             var protocolMessage =

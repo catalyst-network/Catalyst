@@ -24,12 +24,12 @@
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Cryptography;
-using Catalyst.Core.Lib.Registry;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
@@ -37,6 +37,7 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -46,17 +47,19 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
     {
         public KeySignerIntegrationTests(ITestOutputHelper output) : base(output)
         {
-            var addressHelper = new AddressHelper(NetworkType.Devnet);
-
             var logger = Substitute.For<ILogger>();
 
-            var passwordManager = Substitute.For<IPasswordManager>(); 
+            var passwordManager = Substitute.For<IPasswordManager>();
 
-            var cryptoContext = new CryptoContext(new CryptoWrapper());
+            var cryptoContext = new FfiWrapper();
 
-            var keyStoreService = new KeyStoreServiceWrapped(cryptoContext);
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var keystore = new LocalKeyStore(passwordManager, cryptoContext, keyStoreService, FileSystem, logger, addressHelper);
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+
+            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, hashProvider,
+                logger);
 
             var keyRegistry = new KeyRegistry();
 
@@ -67,12 +70,14 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 
         private void Ensure_A_KeyStore_File_Exists()
         {
-            string json = @"""{""crypto"":{""cipher"":""aes-128-ctr"",""ciphertext"":""58e1617da38fc002816268967fea4d8d2f1dd51c8b638de5265bf06d781226a5""
+            var json =
+                @"""{""crypto"":{""cipher"":""aes-128-ctr"",""ciphertext"":""58e1617da38fc002816268967fea4d8d2f1dd51c8b638de5265bf06d781226a5""
                             ,""cipherparams"":{""iv"":""45f6c68c2ac3ad38f02aea8f3c928d2c""},""kdf"":""scrypt"",""mac"":""00bec3c8eb4988e9603105066cf297d7
                             4b67745ac5f7d749989344cfa4ee4b71"",""kdfparams"":{""n"":""262144,""r"":""1,""p"":""8,""dklen"":32,""salt"":""2a03d9840dec04e0
                             1538df649f61958be4015a97f14b765ec0a46feed88cc5f4""}},""id"":""b4b82bc3-a495-49cd-b3bc-e022f936e6ff"",""address"":""987080731d
                             e5a56833d2edc37458a53e3fec68cd"",""version"":3}";
-            FileSystem.WriteTextFileToCddSubDirectoryAsync(KeyRegistryTypes.DefaultKey.Name, Constants.KeyStoreDataSubDir, json);
+            FileSystem?.WriteTextFileToCddSubDirectoryAsync(KeyRegistryTypes.DefaultKey.Name,
+                Constants.KeyStoreDataSubDir, json);
         }
 
         [Fact]
@@ -94,7 +99,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Verify_A_Signature()
         {
-            byte[] toSign = Encoding.UTF8.GetBytes("sign this plz");
+            var toSign = Encoding.UTF8.GetBytes("sign this plz");
             var signature = _keySigner.Sign(toSign, new SigningContext());
 
             _keySigner.Verify(signature, toSign, new SigningContext()).Should().BeTrue();
@@ -104,7 +109,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Cant_Verify_An_Incorrect_Signature()
         {
-            byte[] toSign = Encoding.UTF8.GetBytes("sign this plz");
+            var toSign = Encoding.UTF8.GetBytes("sign this plz");
             var signature = _keySigner.Sign(toSign, new SigningContext());
             var signingContext = new SigningContext
             {
@@ -119,7 +124,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Verify_A_Signature_With_Non_Default_Context()
         {
-            byte[] toSign = Encoding.UTF8.GetBytes("sign this plz");
+            var toSign = Encoding.UTF8.GetBytes("sign this plz");
 
             var signingContext = new SigningContext
             {

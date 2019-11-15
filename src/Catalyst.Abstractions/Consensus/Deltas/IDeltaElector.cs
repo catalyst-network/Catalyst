@@ -23,21 +23,23 @@
 
 using System;
 using Catalyst.Protocol.Wire;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
+using LibP2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
     public interface IDeltaElector : IObserver<FavouriteDeltaBroadcast>
     {
         /// <summary>
-        /// When the election phase is over, this method can be called to retrieve which candidate
-        /// has been the most popular for a given cycle. If the candidate is popular enough, it
-        /// will then be appointed as the next official delta.
+        ///     When the election phase is over, this method can be called to retrieve which candidate
+        ///     has been the most popular for a given cycle. If the candidate is popular enough, it
+        ///     will then be appointed as the next official delta.
         /// </summary>
         /// <remarks>This function will be called at the beginning of a Voting cycle.</remarks>
-        /// <param name="previousDeltaDfsHash">The DFS hash of the delta for which we are
-        /// trying to produce a successor.</param>
+        /// <param name="previousDeltaDfsHash">
+        ///     The DFS hash of the delta for which we are
+        ///     trying to produce a successor.
+        /// </param>
         /// <returns>The most popular candidate for a given cycle.</returns>
-        CandidateDeltaBroadcast GetMostPopularCandidateDelta(byte[] previousDeltaDfsHash);
+        CandidateDeltaBroadcast GetMostPopularCandidateDelta(Cid previousDeltaDfsHash);
     }
 }

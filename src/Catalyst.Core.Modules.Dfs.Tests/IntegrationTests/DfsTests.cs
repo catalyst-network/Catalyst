@@ -28,11 +28,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -43,19 +46,26 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         private readonly IpfsAdapter _ipfs;
         private readonly ILogger _logger;
         private readonly ITestOutputHelper _output;
+        private readonly IHashProvider _hashProvider;
 
         public DfsTests(ITestOutputHelper output) : base(output)
         {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+
             _output = output;
             var passwordReader = Substitute.For<IPasswordManager>();
-            passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
+            passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>())
+               .Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 
             _logger = Substitute.For<ILogger>();
             _ipfs = new IpfsAdapter(passwordReader, FileSystem, _logger);
 
             // Starting IPFS takes a few seconds.  Do it here, so that individual
             // test times are not affected.
-            _ipfs.Generic.IdAsync().Wait();
+            _ipfs.Generic.IdAsync()
+               .ConfigureAwait(false)
+               .GetAwaiter()
+               .GetResult();
         }
 
         [Fact]
@@ -65,7 +75,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
 
             const string text = "good morning";
-            var dfs = new Dfs(_ipfs, _logger);
+            var dfs = new Dfs(_ipfs, _hashProvider, _logger);
             var id = await dfs.AddTextAsync(text, cts.Token);
             var content = await dfs.ReadTextAsync(id, cts.Token);
 
@@ -82,17 +92,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 1, 2, 3
             };
             var ms = new MemoryStream(binary);
-            var dfs = new Dfs(_ipfs, _logger);
+            var dfs = new Dfs(_ipfs, _hashProvider, _logger);
             var id = await dfs.AddAsync(ms, "", cts.Token);
             using (var stream = await dfs.ReadAsync(id, cts.Token))
             {
                 var content = new byte[binary.Length];
-                stream.Read(content, 0, content.Length);
+                await stream.ReadAsync(content, 0, content.Length, cts.Token);
                 content.Should().Equal(binary);
             }
         }
 
-        [Fact]
+        [Fact(Skip = "waiting for Dns seed fix: https://github.com/catalyst-network/Catalyst.Framework/issues/1075")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_connect_to_a_seednode()
         {
@@ -113,7 +123,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 await Task.Delay(100).ConfigureAwait(false);
             }
 
-            _output.WriteLine($"Found in {(DateTime.Now - start).TotalSeconds.ToString(CultureInfo.InvariantCulture)} seconds.");
+            _output.WriteLine(
+                $"Found in {(DateTime.Now - start).TotalSeconds.ToString(CultureInfo.InvariantCulture)} seconds.");
         }
 
         protected override void Dispose(bool disposing)

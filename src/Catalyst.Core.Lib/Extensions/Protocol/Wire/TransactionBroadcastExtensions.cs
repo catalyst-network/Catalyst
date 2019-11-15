@@ -44,20 +44,20 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
         }
 
         public static TransactionBroadcast Sign(this TransactionBroadcast transaction,
-            IWrapper cryptoWrapper,
+            ICryptoContext cryptoContext,
             IPrivateKey privateKey,
             SigningContext context)
         {
             var clone = transaction.Clone();
 
-            if (transaction.Signature?.RawBytes.Length == cryptoWrapper.SignatureLength)
+            if (transaction.Signature?.RawBytes.Length == cryptoContext.SignatureLength)
             {
                 Logger.Debug("The transaction was already signed, returning a clone.");
                 return clone;
             }
 
             clone.Signature = null;
-            var signatureBytes = cryptoWrapper.StdSign(privateKey, clone.ToByteArray(),
+            var signatureBytes = cryptoContext.Sign(privateKey, clone.ToByteArray(),
                 context.ToByteArray()).SignatureBytes;
 
             clone.Signature = new Signature

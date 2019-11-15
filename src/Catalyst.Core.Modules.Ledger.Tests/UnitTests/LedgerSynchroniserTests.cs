@@ -26,14 +26,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
+using LibP2P;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -44,13 +45,14 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private readonly ITestOutputHelper _output;
         private readonly IDeltaCache _deltaCache;
         private readonly LedgerSynchroniser _synchroniser;
-        private readonly IMultihashAlgorithm _hashingAlgo;
         private readonly CancellationToken _cancellationToken;
+        private readonly HashProvider _hashProvider;
 
         public LedgerSynchroniserTests(ITestOutputHelper output)
         {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+
             _output = output;
-            _hashingAlgo = new BLAKE2B_16();
             _deltaCache = Substitute.For<IDeltaCache>();
             var logger = Substitute.For<ILogger>();
 
@@ -59,24 +61,25 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _synchroniser = new LedgerSynchroniser(_deltaCache, logger);
         }
 
-        private Dictionary<Multihash, Delta> BuildChainedDeltas(int chainSize)
+        private Dictionary<Cid, Delta> BuildChainedDeltas(int chainSize)
         {
             var chainedDeltas = Enumerable.Range(0, chainSize + 1).ToDictionary(
-                i => i.ToString().ComputeUtf8Multihash(_hashingAlgo),
+                i => CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash(i.ToString())),
                 i =>
                 {
-                    var previousHash = (i - 1).ToString().ComputeUtf8Multihash(_hashingAlgo);
-                    var delta = DeltaHelper.GetDelta(previousHash);
+                    var previousHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash((i - 1).ToString()));
+                    var delta = DeltaHelper.GetDelta(_hashProvider, previousHash);
                     return delta;
                 });
 
             _output.WriteLine("chain is:");
-            _output.WriteLine(string.Join(Environment.NewLine, 
-                chainedDeltas.Select((c, i) => $"{i}: current {c.Key} | previous {c.Value.PreviousDeltaDfsHash.AsMultihash()}")));
+            _output.WriteLine(string.Join(Environment.NewLine,
+                chainedDeltas.Select((c, i) =>
+                    $"{i}: current {c.Key} | previous {CidHelper.Cast(c.Value.PreviousDeltaDfsHash.ToByteArray())}")));
             return chainedDeltas;
         }
 
-        private void SetCacheExpectations(Dictionary<Multihash, Delta> deltasByHash)
+        private void SetCacheExpectations(Dictionary<Cid, Delta> deltasByHash)
         {
             foreach (var delta in deltasByHash)
             {
@@ -92,7 +95,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         [Fact]
         public void CacheDeltasBetween_Should_Stop_When_One_Of_Deltas_Is_Missing()
         {
-            var chainSize = 5;  
+            var chainSize = 5;
             var chain = BuildChainedDeltas(chainSize);
             SetCacheExpectations(chain);
 
@@ -115,7 +118,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             });
         }
 
-        private void OutputCachedHashes(List<Multihash> cachedHashes)
+        private void OutputCachedHashes(List<Cid> cachedHashes)
         {
             _output.WriteLine("cached hashes between: ");
             _output.WriteLine(string.Join(", ", cachedHashes));
@@ -144,10 +147,9 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
             hashes.TakeLast(expectedResultLength - 1).Reverse().ToList().ForEach(h =>
             {
-                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h.ToString(),
+                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h,
                     out Arg.Any<Delta>(), _cancellationToken);
             });
         }
     }
 }
-

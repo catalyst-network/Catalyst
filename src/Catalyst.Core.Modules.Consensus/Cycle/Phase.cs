@@ -23,15 +23,15 @@
 
 using System;
 using Catalyst.Abstractions.Consensus.Cycle;
-using Multiformats.Hash;
+using LibP2P;
 
 namespace Catalyst.Core.Modules.Consensus.Cycle
 {
-    /// <inheritdoc cref="IPhase"/>
+    /// <inheritdoc cref="IPhase" />
     public class Phase : IPhase
     {
-        public Phase(Multihash previousDeltaDfsHash, 
-            IPhaseName phaseName, 
+        public Phase(Cid previousDeltaDfsHash,
+            IPhaseName phaseName,
             IPhaseStatus phaseStatus,
             DateTime utcStartTime)
         {
@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
         }
 
         /// <inheritdoc />
-        public Multihash PreviousDeltaDfsHash { get; }
+        public Cid PreviousDeltaDfsHash { get; }
 
         /// <inheritdoc />
         public IPhaseName Name { get; }
@@ -54,9 +54,6 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
         public DateTime UtcStartTime { get; }
 
         /// <inheritdoc />
-        public override string ToString()
-        {
-            return $"{Name} : {Status} @ {UtcStartTime:O} | {PreviousDeltaDfsHash}";
-        }
+        public override string ToString() { return $"{Name} : {Status} @ {UtcStartTime:O} | {PreviousDeltaDfsHash}"; }
     }
 }

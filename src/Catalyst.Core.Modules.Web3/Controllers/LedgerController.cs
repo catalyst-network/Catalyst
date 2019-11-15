@@ -26,8 +26,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Deltas;
 using Catalyst.Core.Lib.Extensions;
-using Ipfs;
+using Catalyst.Protocol.Deltas;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -37,40 +39,48 @@ namespace Catalyst.Core.Modules.Web3.Controllers
     [Route("api/[controller]/[action]")]
     public sealed class LedgerController : Controller
     {
-        private readonly IDeltaHashProvider _hashProvider;
+        private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IDfs _dfs;
+        private readonly IMapperProvider _mapperProvider;
         private readonly ILogger _logger;
 
-        public LedgerController(IDeltaHashProvider hashProvider, IDfs dfs, ILogger logger)
+        public LedgerController(IDeltaHashProvider deltaHashProvider, IDfs dfs, IMapperProvider mapperProvider, ILogger logger)
         {
-            _hashProvider = hashProvider;
+            _deltaHashProvider = deltaHashProvider;
             _dfs = dfs;
+            _mapperProvider = mapperProvider;
             _logger = logger;
         }
 
         [HttpGet]
         public async Task<JsonResult> GetLatestDelta(DateTime? asOf)
         {
-            var latest = _hashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());
-            var dfsTarget = latest.ToBytes().ToBase32();
-            byte[] dfsContent = null;
+            var latest = _deltaHashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());
             try
             {
-                using (var fullContentStream = await _dfs.ReadAsync(dfsTarget))
+                using (var fullContentStream = await _dfs.ReadAsync(latest).ConfigureAwait(false))
                 {
-                    dfsContent = await fullContentStream.ReadAllBytesAsync(CancellationToken.None);
+                    var contentBytes = await fullContentStream.ReadAllBytesAsync(CancellationToken.None)
+                       .ConfigureAwait(false);
+                    var delta = Delta.Parser.ParseFrom(contentBytes).ToDao<Delta, DeltaDao>(_mapperProvider);
+
+                    return Json(new
+                    {
+                        Success = true,
+                        DeltaHash = latest,
+                        Delta = delta
+                    });
                 }
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to find dfs content for delta as of {asOf} at {dfsTarget}", asOf, dfsTarget);
+                _logger.Error(e, "Failed to find dfs content for delta as of {asOf} at {dfsTarget}", asOf, latest);
+                return Json(new
+                {
+                    Success = false,
+                    Message = $"Failed to find dfs content for delta as of {asOf} at {latest}"
+                });
             }
-
-            return Json(new
-            {
-                DeltaHash = dfsTarget,
-                Base64UrlDfsContent = (dfsContent ?? new byte[0]).ToBase64Url()
-            });
         }
     }
 }

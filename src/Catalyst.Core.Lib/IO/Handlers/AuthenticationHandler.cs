@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
             }
             else
             {
-                ctx.CloseAsync();
+                ctx?.CloseAsync().ConfigureAwait(false);
 
                 throw new AuthenticationException("Authentication Attempt Failed");
             }

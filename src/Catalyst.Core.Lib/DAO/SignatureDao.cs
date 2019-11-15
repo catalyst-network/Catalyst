@@ -22,20 +22,24 @@
 #endregion
 
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Cryptography;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class SignatureDao : DaoBase<Signature, SignatureDao>
+    public class SignatureDao : DaoBase
     {
-        public SigningContext SigningContext { get; set; }
+        public SigningContextDao SigningContext { get; set; }
         public string RawBytes { get; set; }
+    }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+    public class SignatureMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<Signature, SignatureDao>()
-               .ForMember(d => d.RawBytes, 
+               .ForMember(d => d.RawBytes,
                     opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.RawBytes));
 
             cfg.CreateMap<SignatureDao, Signature>()

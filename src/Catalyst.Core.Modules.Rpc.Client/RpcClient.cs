@@ -107,7 +107,7 @@ namespace Catalyst.Core.Modules.Rpc.Client
             _socketMessageStream = socket.MessageStream;
 
             _handlers = _rpcResponseObservers.ToDictionary(
-                x => x.GetType().BaseType.GenericTypeArguments[0].ShortenedProtoFullName(), x => x);
+                x => x.GetType().BaseType?.GenericTypeArguments[0].ShortenedProtoFullName(), x => x);
 
             Channel = socket.Channel;
         }

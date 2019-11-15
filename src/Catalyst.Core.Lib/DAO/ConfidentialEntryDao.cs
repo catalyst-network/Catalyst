@@ -21,26 +21,41 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace Catalyst.Core.Lib.DAO
 {
-    public class ConfidentialEntryDao : DaoBase<ConfidentialEntry, ConfidentialEntryDao>
+    public class ConfidentialEntryDao : DaoBase
     {
         public BaseEntryDao Base { get; set; }
         public string PedersenCommitment { get; set; }
-        public RangeProofDao RangeProof { get; set; }
+        public string RangeProof { get; set; }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+        [Column]
+        
+        // ReSharper disable once UnusedMember.Local
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
+    }
+
+    public sealed class ConfidentialEntryMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>()
+               .ForMember(e => e.RangeProof,
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
                .ForMember(e => e.PedersenCommitment,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
             cfg.CreateMap<ConfidentialEntryDao, ConfidentialEntry>()
+               .ForMember(e => e.RangeProof,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
                .ForMember(e => e.PedersenCommitment,
                     opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }

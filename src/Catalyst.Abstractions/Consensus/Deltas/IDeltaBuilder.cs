@@ -22,23 +22,26 @@
 #endregion
 
 using Catalyst.Protocol.Wire;
+using LibP2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
     /// <summary>
-    /// The service in charge of building the delta state update used to update the ledger update 
-    /// for a given cycle.
+    ///     The service in charge of building the delta state update used to update the ledger update
+    ///     for a given cycle.
     /// </summary>
     public interface IDeltaBuilder
     {
         /// <summary>
-        /// Builds a new candidate delta based on the content of its predecessor, and cache the full content
-        /// of the delta locally. If the delta is elected at the end of the cycle, the cache will be used to retrieve
-        /// and publish the whole delta onto the DFS.
+        ///     Builds a new candidate delta based on the content of its predecessor, and cache the full content
+        ///     of the delta locally. If the delta is elected at the end of the cycle, the cache will be used to retrieve
+        ///     and publish the whole delta onto the DFS.
         /// </summary>
         /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
-        /// <returns>Returns a candidate delta object that contains the hash for the update,
-        /// the hash for the previous delta and the producer's PeerId</returns>
-        CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash);
+        /// <returns>
+        ///     Returns a candidate delta object that contains the hash for the update,
+        ///     the hash for the previous delta and the producer's PeerId
+        /// </returns>
+        CandidateDeltaBroadcast BuildCandidateDelta(Cid previousDeltaHash);
     }
 }

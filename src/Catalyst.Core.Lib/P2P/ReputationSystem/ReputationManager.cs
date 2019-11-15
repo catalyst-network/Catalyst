@@ -74,16 +74,23 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             _logger.Error("Message stream ended.");
         }
 
+        // ReSharper disable once VSTHRD100
         public async void OnNext(IPeerReputationChange peerReputationChange)
         {
-            await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
             try
             {
+                await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
+
                 var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
                 Guard.Argument(peer, nameof(peer)).NotNull();
 
+                // ReSharper disable once PossibleNullReferenceException
                 peer.Reputation += peerReputationChange.ReputationEvent.Amount;
                 PeerRepository.Update(peer);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
             }
             finally
             {

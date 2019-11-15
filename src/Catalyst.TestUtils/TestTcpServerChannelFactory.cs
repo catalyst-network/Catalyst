@@ -72,12 +72,12 @@ namespace Catalyst.TestUtils
             return await Task.FromResult(new ObservableChannel(messageStream, channel));
         }
 
-        public new Task<IChannel> Bootstrap(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public new Task<IChannel> BootstrapAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate)
         {
-            return base.Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
+            return base.BootstrapAsync(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
         }
     }
 }

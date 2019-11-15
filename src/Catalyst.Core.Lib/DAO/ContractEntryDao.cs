@@ -21,28 +21,42 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
+using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class ContractEntryDao : DaoBase<ContractEntry, ContractEntryDao>
+    public class ContractEntryDao : DaoBase
     {
         public BaseEntryDao Base { get; set; }
         public string Data { get; set; }
         public string Amount { get; set; }
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
-        {
-            cfg.CreateMap<ContractEntry, ContractEntryDao>()
-               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
-               .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+        [Column]
 
-            cfg.CreateMap<ContractEntryDao, ContractEntry>()
-               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
-               .ForMember(e => e.Data, opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
+        // ReSharper disable once UnusedMember.Local
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
+    }
+
+    public sealed class ContractEntryMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
+        {
+            {
+                cfg.CreateMap<ContractEntry, ContractEntryDao>()
+                   .ForMember(d => d.Amount,
+                        opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
+                   .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+
+                cfg.CreateMap<ContractEntryDao, ContractEntry>()
+                   .ForMember(d => d.Amount,
+                        opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
+                   .ForMember(e => e.Data, opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
+            }
         }
     }
 }

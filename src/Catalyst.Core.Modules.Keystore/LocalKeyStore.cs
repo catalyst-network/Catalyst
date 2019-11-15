@@ -29,42 +29,42 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Config;
-using Catalyst.Core.Lib.Extensions.Protocol.Account;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Account;
+using Catalyst.Protocol.Network;
+using Nethereum.KeyStore;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Keystore
 {
-    public sealed class LocalKeyStore : IKeyStore
+    public sealed class LocalKeyStore : KeyStoreService, IKeyStore
     {
         private readonly ILogger _logger;
-        private readonly IAddressHelper _addressHelper;
         private readonly IFileSystem _fileSystem;
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordManager _passwordManager;
-        private readonly IKeyStoreService _keyStoreService;
+        private readonly IHashProvider _hashProvider;
         private readonly PasswordRegistryTypes _defaultNodePassword = PasswordRegistryTypes.DefaultNodePassword;
 
         private static int MaxTries => 5;
 
         public LocalKeyStore(IPasswordManager passwordManager,
             ICryptoContext cryptoContext,
-            IKeyStoreService keyStoreService,
             IFileSystem fileSystem,
-            ILogger logger,
-            IAddressHelper addressHelper)
+            IHashProvider hashProvider,
+            ILogger logger)
         {
             _passwordManager = passwordManager;
             _cryptoContext = cryptoContext;
-            _keyStoreService = keyStoreService;
             _fileSystem = fileSystem;
+            _hashProvider = hashProvider;
             _logger = logger;
-            _addressHelper = addressHelper;            
         }
 
         public IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier)
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Keystore
             IPrivateKey privateKey = null;
             try
             {
-                privateKey = _cryptoContext.PrivateKeyFromBytes(keyBytes);
+                privateKey = _cryptoContext.GetPrivateKeyFromBytes(keyBytes);
             }
             catch (ArgumentException)
             {
@@ -96,13 +96,14 @@ namespace Catalyst.Core.Modules.Keystore
 
             while (tries < MaxTries)
             {
-                var securePassword = _passwordManager.RetrieveOrPromptPassword(passwordIdentifier, "Please provide your node password");
+                var securePassword =
+                    _passwordManager.RetrieveOrPromptPassword(passwordIdentifier, "Please provide your node password");
                 var password = StringFromSecureString(securePassword);
-                
+
                 try
                 {
-                    var keyBytes = _keyStoreService.DecryptKeyStoreFromJson(password, json);
-                    
+                    var keyBytes = DecryptKeyStoreFromJson(password, json);
+
                     if (keyBytes != null && keyBytes.Length > 0)
                     {
                         _passwordManager.AddPasswordToRegistry(passwordIdentifier, securePassword);
@@ -121,32 +122,44 @@ namespace Catalyst.Core.Modules.Keystore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
 
-        public async Task<IPrivateKey> KeyStoreGenerate(KeyRegistryTypes keyIdentifier)
+        public async Task<IPrivateKey> KeyStoreGenerateAsync(NetworkType networkType, KeyRegistryTypes keyIdentifier)
         {
             var privateKey = _cryptoContext.GeneratePrivateKey();
 
-            await KeyStoreEncryptAsync(privateKey, keyIdentifier);
+            await KeyStoreEncryptAsync(privateKey, networkType, keyIdentifier).ConfigureAwait(false);
 
             return privateKey;
         }
 
-        public async Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryTypes keyIdentifier)
+        public async Task KeyStoreEncryptAsync(IPrivateKey privateKey,
+            NetworkType networkType,
+            KeyRegistryTypes keyIdentifier)
         {
             try
             {
-                var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey(), AccountType.PublicAccount);        
-                var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword, "Please create a password for this node");
-    
+                var publicKeyHash = _hashProvider.ComputeMultiHash(privateKey.GetPublicKey().Bytes).ToArray()
+                   .ToByteString();
+                var address = new Address
+                {
+                    PublicKeyHash = publicKeyHash,
+                    AccountType = AccountType.PublicAccount,
+                    NetworkType = networkType
+                };
+
+                var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword,
+                    "Please create a password for this node");
+
                 var password = StringFromSecureString(securePassword);
-    
-                var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
-                    password, 
+
+                var json = EncryptAndGenerateDefaultKeyStoreAsJson(
+                    password,
                     _cryptoContext.ExportPrivateKey(privateKey),
-                    address.AsBase32Crockford());
+                    address.RawBytes.ToBase32());
 
                 _passwordManager.AddPasswordToRegistry(_defaultNodePassword, securePassword);
 
-                await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
+                await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir,
+                    json);
             }
             catch (Exception e)
             {

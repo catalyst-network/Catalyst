@@ -24,25 +24,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac;
 using FluentAssertions;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
 {
-    public class ApiModuleTests
+    public sealed class ApiModuleTests
     {
         private ApiModule _apiModule;
-        private readonly ContainerBuilder _containerBuilder;
         private readonly IServiceCollection _serviceCollection;
 
         public ApiModuleTests()
         {
-            _containerBuilder = new ContainerBuilder();
             _serviceCollection = new ServiceCollection();
         }
 
@@ -60,7 +56,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
                 typeof(ICorsService),
                 
                 // typeof(IViewCompilerProvider),
-                typeof(MvcRouteHandler)
+                // typeof(RouteHandler)
             };
 
             Can_Add_Swagger();
@@ -77,7 +73,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
             {
                 _apiModule = new ApiModule(null,
                     new List<string>(), addSwagger);
-                _apiModule.ConfigureServices(_serviceCollection, _containerBuilder);
+                _apiModule.ConfigureServices(_serviceCollection);
             }
 
             _serviceCollection.Any(service => service.ServiceType == type).Should().Be(shouldContain);

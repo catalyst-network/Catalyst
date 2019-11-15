@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -28,13 +29,13 @@ using Catalyst.Protocol.Cryptography;
 
 namespace Catalyst.TestUtils.Protocol
 {
-    public static class SignatureHelper
+    internal static class SignatureHelper
     {
-        public static Signature GetSignature(byte[] signature = default, SigningContext signingContext = default)
+        internal static Signature GetSignature(IEnumerable<byte> signature = default, SigningContext signingContext = default)
         {
             var defaultedSignature = new Signature
             {
-                RawBytes = signature?.ToByteString() ?? ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength).ToByteString(),
+                RawBytes = signature?.ToByteString() ?? ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength).ToByteString(),
                 SigningContext = signingContext ?? DevNetPeerSigningContext.Instance
             };
             return defaultedSignature;

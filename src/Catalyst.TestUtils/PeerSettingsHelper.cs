@@ -24,7 +24,6 @@
 using System.Collections.Generic;
 using System.Net;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -37,14 +36,13 @@ namespace Catalyst.TestUtils
     {
         public static IPeerSettings TestPeerSettings(byte[] publicKey = default, int port = 42069)
         {
-            var finalPublicKey = publicKey ?? ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength);
+            var finalPublicKey = publicKey ?? ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
             peerSettings.PublicKey.Returns(finalPublicKey.KeyToString());
             peerSettings.Port.Returns(port);
             peerSettings.PayoutAddress.Returns("my_pay_out_address");
             peerSettings.BindAddress.Returns(IPAddress.Loopback);
-            peerSettings.PublicIpAddress.Returns(IPAddress.Loopback);
             peerSettings.SeedServers.Returns(new List<string>
             {
                 "seed1.catalystnetwork.io",
@@ -55,17 +53,6 @@ namespace Catalyst.TestUtils
             });
             peerSettings.PeerId.Returns(finalPublicKey.BuildPeerIdFromPublicKey(IPAddress.Loopback, port));
             return peerSettings;
-        }
-    }
-
-    public static class RpcServerSettingsHelper
-    {
-        public static IRpcServerSettings GetRpcServerSettings(int port = 42051)
-        {
-            var settings = Substitute.For<IRpcServerSettings>();
-            settings.Port.Returns(port);
-            settings.BindAddress.Returns(IPAddress.Loopback);
-            return settings;
         }
     }
 }

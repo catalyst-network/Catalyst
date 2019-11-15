@@ -27,8 +27,8 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
-using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
@@ -37,7 +37,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
 
-        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, ILogger logger) 
+        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, ILogger logger)
             : base(logger)
         {
             _deltaHashProvider = deltaHashProvider;
@@ -48,8 +48,21 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
-                var previousHash = Multihash.Cast(deserialised.PreviousDeltaDfsHash.ToByteArray());
-                var newHash = Multihash.Cast(deserialised.DeltaDfsHash.ToByteArray());
+
+                var previousHash = CidHelper.Cast(deserialised.PreviousDeltaDfsHash.ToByteArray());
+                if (previousHash == null)
+                {
+                    Logger.Error("PreviousDeltaDfsHash is not a valid hash");
+                    return;
+                }
+
+                var newHash = CidHelper.Cast(deserialised.DeltaDfsHash.ToByteArray());
+                if (newHash == null)
+                {
+                    Logger.Error("DeltaDfsHash is not a valid hash");
+                    return;
+                }
+
                 _deltaHashProvider.TryUpdateLatestHash(previousHash, newHash);
             }
             catch (Exception exception)
