@@ -29,8 +29,6 @@ namespace Catalyst.Protocol.Transaction
 {
     public partial class ContractEntry
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
         public bool IsValid()
         {
             // data can be empty

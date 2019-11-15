@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             var mockEventStream = _mockSocketReplySubject.AsObservable();
             var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
 
-            _channelFactory.BuildChannel(_clientEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
+            _channelFactory.BuildChannelAsync(_clientEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
                 Arg.Any<X509Certificate2>()).Returns(observableChannel);
 
             _rpcClientConfig = Substitute.For<IRpcClientConfig>();
