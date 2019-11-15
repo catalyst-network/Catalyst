@@ -150,8 +150,8 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void UpdateLedgerFromDelta(Cid deltaHash)
         {
-            int stateSnapshot = _stateDb.TakeSnapshot();
-            int codeSnapshot = _codeDb.TakeSnapshot();
+            var stateSnapshot = _stateDb.TakeSnapshot();
+            var codeSnapshot = _codeDb.TakeSnapshot();
             if (stateSnapshot != -1 || codeSnapshot != -1)
             {
                 if (_logger.IsEnabled(LogEventLevel.Error))
