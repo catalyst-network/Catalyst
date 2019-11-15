@@ -125,7 +125,7 @@ steps:
     timeoutInMinutes: 10
 
   - script: |
-      reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:$(Build.ArtifactStagingDirectory)" -reporttypes:HtmlInline_AzurePipelines;Cobertura;SonarQube;Badges "-assemblyfilters:+Catalyst.Core.Lib*;+Catalyst.Core.Modules.Kvm*;"
+      reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:$(Build.ArtifactStagingDirectory)" -reporttypes:HtmlInline_AzurePipelines;Cobertura;SonarQube;Badges "-assemblyfilters:+Catalyst.Core.*;+Catalyst.Modules.*;"
     displayName: 'Generate unit test coverage'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
   - task: PublishBuildArtifacts@1
