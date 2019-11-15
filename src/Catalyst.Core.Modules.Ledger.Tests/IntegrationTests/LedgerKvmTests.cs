@@ -57,46 +57,51 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 {
     public sealed class LedgerKvmTests
     {
+        private readonly ILogger _logger;
         private readonly MultiHash _genesisHash;
         private readonly IHashProvider _hashProvider;
         private readonly ISpecProvider _specProvider;
         private readonly TestScheduler _testScheduler;
         private readonly StateProvider _stateProvider;
         private readonly ICryptoContext _cryptoContext;
+        private readonly IAccountRepository _fakeRepository;
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly ILedgerSynchroniser _ledgerSynchroniser;
+        private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly IDeltaExecutor _deltaExecutor;
         private readonly IStorageProvider _storageProvider;
+        private readonly ISnapshotableDb _stateDb;
+        private readonly ISnapshotableDb _codeDb;
 
         public LedgerKvmTests()
         {
             _testScheduler = new TestScheduler();
             _cryptoContext = new FfiWrapper();
-            Substitute.For<IAccountRepository>();
+            _fakeRepository = Substitute.For<IAccountRepository>();
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
 
-            var logger = Substitute.For<ILogger>();
-            Substitute.For<IMempool<TransactionBroadcastDao>>();
+            _logger = Substitute.For<ILogger>();
+            _mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
 
             _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
 
-            IDb stateDbDevice = new MemDb();
-            IDb codeDbDevice = new MemDb();
+            var stateDbDevice = new MemDb();
+            var codeDbDevice = new MemDb();
 
-            ISnapshotableDb stateDb = new StateDb(stateDbDevice);
-            ISnapshotableDb codeDb = new StateDb(codeDbDevice);
+            _stateDb = new StateDb(stateDbDevice);
+            _codeDb = new StateDb(codeDbDevice);
 
-            _stateProvider = new StateProvider(stateDb, codeDb, LimboLogs.Instance);
-            _storageProvider = new StorageProvider(stateDb, _stateProvider, LimboLogs.Instance);
+            _stateProvider = new StateProvider(_stateDb, _codeDb, LimboLogs.Instance);
+            _storageProvider = new StorageProvider(_stateDb, _stateProvider, LimboLogs.Instance);
 
-            IStateUpdateHashProvider stateUpdateHashProvider = new StateUpdateHashProvider();
+            var stateUpdateHashProvider = new StateUpdateHashProvider();
             _specProvider = new CatalystSpecProvider();
 
-            IKvm kvm = new KatVirtualMachine(_stateProvider, _storageProvider, stateUpdateHashProvider, _specProvider, LimboLogs.Instance);
-            _deltaExecutor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, kvm, new FfiWrapper(), logger);
+            var kvm = new KatVirtualMachine(_stateProvider, _storageProvider, stateUpdateHashProvider, _specProvider, LimboLogs.Instance);
+            _deltaExecutor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, kvm, new FfiWrapper(), _logger);
         }
         
         private void RunDeltas(Delta delta)
@@ -114,6 +119,9 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid) h).ToObservable(_testScheduler));
             
+            // do not remove - it registers with observable so there is a reference to this object held until the test is ended
+            var classUnderTest = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
+
             _testScheduler.Start();
         }
 

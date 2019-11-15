@@ -245,9 +245,12 @@ namespace Catalyst.Core.Modules.Kvm
                 return;
             }
 
-            if (!_stateProvider.AccountExists(env.Sender) && env.GasPrice == UInt256.Zero)
+            if (!_stateProvider.AccountExists(env.Sender))
             {
-                _stateProvider.CreateAccount(env.Sender, UInt256.Zero);
+                if (env.GasPrice == UInt256.Zero)
+                {
+                    _stateProvider.CreateAccount(env.Sender, UInt256.Zero);
+                }
             }
 
             if (!ValidateSenderBalance(entry, env, intrinsicGas, txTracer))
