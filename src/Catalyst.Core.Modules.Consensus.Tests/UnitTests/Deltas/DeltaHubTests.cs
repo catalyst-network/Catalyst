@@ -87,7 +87,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 producerId: PeerIdHelper.GetPeerId("not me"));
 
             _hub.BroadcastCandidate(notMyCandidate);
-            _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
+            _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default).ConfigureAwait(false);
         }
 
         [Fact]

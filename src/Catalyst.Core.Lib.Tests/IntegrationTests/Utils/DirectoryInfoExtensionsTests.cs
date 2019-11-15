@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Utils
             var parentDirInfo = FileSystem.GetCatalystDataDir();
             var subDirInfo = FileSystem.GetCatalystDataDir().SubDirectoryInfo(_subDirectory);
 
-            subDirInfo.Parent.FullName.Should().BeEquivalentTo(parentDirInfo.FullName);
+            subDirInfo.Parent?.FullName.Should().BeEquivalentTo(parentDirInfo.FullName);
         }
     }
 }
