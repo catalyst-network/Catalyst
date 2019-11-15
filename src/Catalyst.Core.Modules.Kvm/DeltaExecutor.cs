@@ -26,7 +26,6 @@ using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
@@ -175,7 +174,7 @@ namespace Catalyst.Core.Modules.Kvm
             }
 
             // revert state if any fails (take snapshot)
-            foreach (ContractEntry contractEntry in delta.ContractEntries)
+            foreach (var contractEntry in delta.ContractEntries)
             {
                 Execute(contractEntry, stateUpdate, txTracer, readOnly);
             }

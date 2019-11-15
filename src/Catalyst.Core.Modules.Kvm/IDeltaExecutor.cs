@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Protocol.Deltas;
-using Nethermind.Core;
 using Nethermind.Evm.Tracing;
 
 namespace Catalyst.Core.Modules.Kvm

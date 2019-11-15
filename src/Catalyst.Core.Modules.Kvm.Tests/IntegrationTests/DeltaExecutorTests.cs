@@ -24,11 +24,9 @@
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using Google.Protobuf;
 using Nethermind.Core;
-using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Evm.Tracing;
 using Nethermind.Logging;
@@ -53,7 +51,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         /**
          * @TODO this should extend file system based tests and resolve tests via autofac container
          */
-        public DeltaExecutorTests(ICryptoContext cryptoContext)
+        public DeltaExecutorTests()
         {
             _specProvider = new CatalystSpecProvider();
             _stateProvider = new StateProvider(new StateDb(), new StateDb(), LimboLogs.Instance);

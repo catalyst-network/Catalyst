@@ -30,7 +30,7 @@ namespace Catalyst.Abstractions.IO.Transport.Channels
 {
     public interface IChannelFactory
     {
-        Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
+        Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null);

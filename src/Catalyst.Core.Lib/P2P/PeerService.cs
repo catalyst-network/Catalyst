@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public override async Task StartAsync()
         {
-            var observableChannel = await ChannelFactory.BuildChannel(EventLoopGroupFactory, _peerSettings.BindAddress, _peerSettings.Port);
+            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, _peerSettings.BindAddress, _peerSettings.Port).ConfigureAwait(false);
             Channel = observableChannel.Channel;
 
             MessageStream = observableChannel.MessageStream;
