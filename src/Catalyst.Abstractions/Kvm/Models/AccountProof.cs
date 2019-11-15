@@ -21,20 +21,23 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Abstractions.Kvm;
-using Nethermind.Core.Specs;
+using Nethermind.Core.Crypto;
+using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.Modules.Kvm
+namespace Catalyst.Abstractions.Kvm.Models 
 {
-    public class KvmModule : Module
+    public class AccountProof
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<KatVirtualMachine>().As<IKvm>().SingleInstance();
-            builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
-            builder.RegisterType<CatalystGenesisSpec>().As<IReleaseSpec>();
-            builder.RegisterType<EthRpcService>().As<IEthRpcService>().SingleInstance();
-        }  
+        public byte[][] Proof { get; set; }
+
+        public UInt256 Balance { get; set; }
+
+        public Keccak CodeHash { get; set; }
+
+        public UInt256 Nonce { get; set; }
+
+        public Keccak StorageRoot { get; set; }
+
+        public StorageProof[] StorageProofs { get; set; }
     }
 }

@@ -21,20 +21,18 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Abstractions.Kvm;
-using Nethermind.Core.Specs;
-
-namespace Catalyst.Core.Modules.Kvm
+namespace Catalyst.Abstractions.Kvm.Models
 {
-    public class KvmModule : Module
+    public enum ErrorType
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<KatVirtualMachine>().As<IKvm>().SingleInstance();
-            builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
-            builder.RegisterType<CatalystGenesisSpec>().As<IReleaseSpec>();
-            builder.RegisterType<EthRpcService>().As<IEthRpcService>().SingleInstance();
-        }  
+        None,
+        ParseError,
+        InvalidRequest,
+        MethodNotFound,
+        InvalidParams,
+        InternalError,
+        ExecutionError,
+        ServerError,
+        NotFound
     }
 }

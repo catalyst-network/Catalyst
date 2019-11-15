@@ -21,20 +21,20 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Abstractions.Kvm;
-using Nethermind.Core.Specs;
-
-namespace Catalyst.Core.Modules.Kvm
+namespace Catalyst.Abstractions.Kvm.Models
 {
-    public class KvmModule : Module
+    public static class BlockParameterTypeExtensions
     {
-        protected override void Load(ContainerBuilder builder)
+        public static FilterBlockType ToFilterBlockType(this BlockParameterType type)
         {
-            builder.RegisterType<KatVirtualMachine>().As<IKvm>().SingleInstance();
-            builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
-            builder.RegisterType<CatalystGenesisSpec>().As<IReleaseSpec>();
-            builder.RegisterType<EthRpcService>().As<IEthRpcService>().SingleInstance();
-        }  
+            switch (type)
+            {
+                case BlockParameterType.Latest: return FilterBlockType.Latest;
+                case BlockParameterType.Earliest: return FilterBlockType.Earliest;
+                case BlockParameterType.Pending: return FilterBlockType.Pending;
+                case BlockParameterType.BlockNumber: return FilterBlockType.BlockNumber;
+                default: return FilterBlockType.Latest;
+            }
+        }
     }
 }

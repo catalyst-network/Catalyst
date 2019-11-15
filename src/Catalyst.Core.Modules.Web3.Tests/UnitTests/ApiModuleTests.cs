@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac;
 using FluentAssertions;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,15 +32,13 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
 {
-    public class ApiModuleTests
+    public sealed class ApiModuleTests
     {
         private ApiModule _apiModule;
-        private readonly ContainerBuilder _containerBuilder;
         private readonly IServiceCollection _serviceCollection;
 
         public ApiModuleTests()
         {
-            _containerBuilder = new ContainerBuilder();
             _serviceCollection = new ServiceCollection();
         }
 
