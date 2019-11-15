@@ -22,6 +22,7 @@
 #endregion
 
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.DAO
@@ -30,6 +31,7 @@ namespace Catalyst.Core.Lib.DAO
     {
         [RepositoryPrimaryKey(Order = 1)]
         [Key]
+        [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
     }
 }
