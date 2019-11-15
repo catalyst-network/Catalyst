@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
         public async Task BuildChannel_Should_Return_IObservableChannel()
         {
             var observableChannel =
-                await _testTcServerChannelFactory.BuildChannel(_eventLoopGroupFactory, _ipAddress, _port);
+                await _testTcServerChannelFactory.BuildChannelAsync(_eventLoopGroupFactory, _ipAddress, _port).ConfigureAwait(false);
 
             observableChannel.Should().BeOfType<ObservableChannel>();
         }

@@ -24,6 +24,9 @@
 using Autofac;
 using Catalyst.Abstractions.Kvm;
 using Nethermind.Core.Specs;
+using Nethermind.Evm;
+using Nethermind.Logging;
+using Nethermind.Store;
 
 namespace Catalyst.Core.Modules.Kvm
 {
@@ -31,8 +34,17 @@ namespace Catalyst.Core.Modules.Kvm
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<DeltaExecutor>().As<IDeltaExecutor>().SingleInstance();
             builder.RegisterType<KatVirtualMachine>().As<IKvm>().SingleInstance();
             builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
+
+            builder.RegisterType<StateProvider>().As<IStateProvider>().SingleInstance();
+            builder.RegisterType<StorageProvider>().As<IStorageProvider>().SingleInstance();
+            builder.RegisterType<StateUpdateHashProvider>().As<IStateUpdateHashProvider>().SingleInstance();
+            builder.RegisterInstance(LimboLogs.Instance).As<ILogManager>();
+            
+            builder.RegisterInstance(new MemDb()).As<IDb>(); // code db
+            builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>(); // state db
             builder.RegisterType<CatalystGenesisSpec>().As<IReleaseSpec>();
             builder.RegisterType<EthRpcService>().As<IEthRpcService>().SingleInstance();
         }  
