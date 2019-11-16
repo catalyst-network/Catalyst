@@ -30,59 +30,63 @@ using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using Dawn;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public sealed class PeerChallenger : IPeerChallenger, IDisposable
+    public sealed class PeerQueryTip : IPeerQueryTip
     {
         private readonly ILogger _logger;
         private readonly PeerId _senderIdentifier;
-        private readonly IPeerClient _peerClient;
-        private readonly int _ttl;
+        public IPeerClient PeerClient { get; }
+        private readonly ICancellationTokenProvider _cancellationTokenProvider;
+        public bool Disposing { get; private set; }
 
-        public ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
+        public ReplaySubject<IPeerQueryTipResponse> QueryTipResponseMessageStreamer { get; }
 
-        public PeerChallenger(ILogger logger,
+        public PeerQueryTip(ILogger logger,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
-            int ttl,
+            ICancellationTokenProvider cancellationTokenProvider,
             IScheduler scheduler = null)
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
-            ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler);
+            QueryTipResponseMessageStreamer = new ReplaySubject<IPeerQueryTipResponse>(1, observableScheduler);
             _senderIdentifier = peerSettings.PeerId;
             _logger = logger;
-            _peerClient = peerClient;
-            _ttl = ttl;
+            PeerClient = peerClient;
+            _cancellationTokenProvider = cancellationTokenProvider;
         }
 
-        public async Task<bool> ChallengePeerAsync(PeerId recipientPeerId)
+        public async Task<bool> QueryPeerTipAsync(PeerId recipientPeerId)
         {
+            Guard.Argument(_senderIdentifier, nameof(_senderIdentifier)).NotNull();
+            
             try
             {
-                var correlationId = CorrelationId.GenerateCorrelationId();
-                var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier, correlationId);
                 var messageDto = new MessageDto(
-                    protocolMessage,
+                    new LatestDeltaHashRequest().ToProtocolMessage(_senderIdentifier, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
                 );
+                
+                PeerClient.SendMessage(messageDto);
 
-                _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
-                _peerClient.SendMessage(messageDto);
-                using (var cancellationTokenSource =
-                    new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
+                _logger.Verbose($"Query Peer Chain tip to: {recipientPeerId}");
+                
+                using (_cancellationTokenProvider.CancellationTokenSource)
                 {
-                    await ChallengeResponseMessageStreamer
+                    await QueryTipResponseMessageStreamer
                        .FirstAsync(a => a != null 
                          && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
                          && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
-                       .ToTask(cancellationTokenSource.Token)
+                       .ToTask(_cancellationTokenProvider.CancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }
             }
@@ -92,16 +96,24 @@ namespace Catalyst.Core.Lib.P2P
             }
             catch (Exception e)
             {
-                _logger.Error(e, nameof(ChallengePeerAsync));
+                _logger.Error(e, nameof(QueryPeerTipAsync));
                 return false;
             }
 
             return true;
         }
 
-        public void Dispose()
+        public void Dispose() { Dispose(true); }
+
+        private void Dispose(bool disposing)
         {
-            ChallengeResponseMessageStreamer?.Dispose();
+            Disposing = disposing;
+            if (!Disposing)
+            {
+                return;
+            }
+
+            QueryTipResponseMessageStreamer?.Dispose();
         }
     }
 }

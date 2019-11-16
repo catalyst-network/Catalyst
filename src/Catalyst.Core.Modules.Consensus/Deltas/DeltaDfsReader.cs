@@ -32,7 +32,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
     /// <inheritdoc />
-    public class DeltaDfsReader : IDeltaDfsReader
+    public sealed class DeltaDfsReader : IDeltaDfsReader
     {
         private readonly IDfs _dfs;
         private readonly ILogger _logger;

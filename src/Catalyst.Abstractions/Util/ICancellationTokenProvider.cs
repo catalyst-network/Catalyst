@@ -30,7 +30,7 @@ namespace Catalyst.Abstractions.Util
     /// </summary>
     public interface ICancellationTokenProvider
     {
-        CancellationTokenSource CancellationTokenSource { get; set; }
+        CancellationTokenSource CancellationTokenSource { get; }
 
         bool HasTokenCancelled();
     }
