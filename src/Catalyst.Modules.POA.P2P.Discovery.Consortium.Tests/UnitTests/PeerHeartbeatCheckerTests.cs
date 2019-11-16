@@ -42,7 +42,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
     public sealed class PeerHeartbeatCheckerTests : IDisposable
     {
         private const int PeerHeartbeatCheckSeconds = 3;
-        private const int PeerChallengeTimeoutSeconds = 10;
+        private const int PeerChallengeTimeoutSeconds = 100;
         private IHealthChecker _peerHeartbeatChecker;
         private readonly IPeerClient _peerClient;
         private readonly IPeerRepository _peerRepository;

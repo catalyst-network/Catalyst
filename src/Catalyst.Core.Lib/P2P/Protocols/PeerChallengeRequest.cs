@@ -67,11 +67,9 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         {
             try
             {
-                var protocolMessage = new PingRequest().ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId());
-
                 Logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
                 PeerClient.SendMessage(new MessageDto(
-                    protocolMessage,
+                    new PingRequest().ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
                 ));
                 
