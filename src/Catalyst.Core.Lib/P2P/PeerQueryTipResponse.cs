@@ -21,34 +21,21 @@
 
 #endregion
 
-using System;
-using System.Threading;
-using Catalyst.Abstractions.Util;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Peer;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Core.Lib.Util
+namespace Catalyst.Core.Lib.P2P
 {
-    public sealed class CancellationTokenProvider : ICancellationTokenProvider, IDisposable
+    public sealed class PeerQueryTipResponse : IPeerQueryTipResponse
     {
-        public CancellationTokenSource CancellationTokenSource { get; }
+        public PeerId PeerId { get; }
+        public MultiHash DeltaHash { get; }
 
-        public CancellationTokenProvider()
+        public PeerQueryTipResponse(PeerId peerId, MultiHash deltaHash)
         {
-            CancellationTokenSource = new CancellationTokenSource();
-        }
-        
-        public CancellationTokenProvider(TimeSpan timeToLiveInMs)
-        {
-            CancellationTokenSource = new CancellationTokenSource(timeToLiveInMs);
-        }
-
-        public bool HasTokenCancelled()
-        {
-            return CancellationTokenSource.Token.IsCancellationRequested;
-        }
-        
-        public void Dispose()
-        {
-            CancellationTokenSource?.Dispose();
+            PeerId = peerId;
+            DeltaHash = deltaHash;
         }
     }
 }

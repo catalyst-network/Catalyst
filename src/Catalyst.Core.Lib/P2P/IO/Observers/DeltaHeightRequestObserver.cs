@@ -24,20 +24,22 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
-    public sealed class PingRequestObserver 
-        : RequestObserverBase<PingRequest, PingResponse>,
+    public sealed class DeltaHeightRequestObserver 
+        : RequestObserverBase<LatestDeltaHashRequest, LatestDeltaHashResponse>,
             IP2PMessageObserver
     {
-        public PingRequestObserver(IPeerSettings peerSettings,
+        public DeltaHeightRequestObserver(IPeerSettings peerSettings,
             ILogger logger)
             : base(logger, peerSettings) { }
         
@@ -46,15 +48,18 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override PingResponse HandleRequest(PingRequest pingRequest, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)
+        protected override LatestDeltaHashResponse HandleRequest(LatestDeltaHashRequest deltaHeightRequest, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)
         {
-            Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
+            Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             
-            Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
+            Logger.Debug("PeerId: {0} wants to know your current chain height", senderPeerId);
 
-            return new PingResponse();
+            return new LatestDeltaHashResponse
+            {
+                DeltaHash = MultiHash.ComputeHash(new byte[32]).Digest.ToByteString()
+            };
         }
     }
 }

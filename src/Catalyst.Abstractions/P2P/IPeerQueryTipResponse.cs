@@ -21,19 +21,14 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Abstractions.Hashing;
+using Catalyst.Protocol.Peer;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Core.Modules.Hashing
+namespace Catalyst.Abstractions.P2P
 {
-    public sealed class HashingModule : Module
+    public interface IPeerQueryTipResponse
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            builder.RegisterInstance(hashingAlgorithm).SingleInstance();
-            builder.RegisterType<HashProvider>().As<IHashProvider>().SingleInstance();
-        }
+        PeerId PeerId { get; }
+        MultiHash DeltaHash { get; }
     }
 }

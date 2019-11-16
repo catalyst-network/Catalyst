@@ -32,7 +32,7 @@ namespace Catalyst.Core.Lib.Repository
     /// </summary>
     /// <typeparam name="T">Type of object</typeparam>
     /// <seealso cref="SharpRepository.XmlRepository.XmlRepository{T}" />
-    public class FileSystemAwareXmlRepository<T> : XmlRepository<T, string> where T : class, new()
+    public sealed class FileSystemAwareXmlRepository<T> : XmlRepository<T, string> where T : class, new()
     {
         public FileSystemAwareXmlRepository(IFileSystem fileSystem, string path = "") : base(Path.Combine(fileSystem.GetCatalystDataDir().ToString(), path)) { }
     }
