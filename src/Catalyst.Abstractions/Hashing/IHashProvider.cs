@@ -30,6 +30,7 @@ namespace Catalyst.Abstractions.Hashing
     public interface IHashProvider
     {
         HashingAlgorithm HashingAlgorithm { set; get; }
+
         MultiHash ComputeUtf8MultiHash(string data);
         MultiHash ComputeMultiHash(Stream data);
         MultiHash ComputeMultiHash(byte[] data);

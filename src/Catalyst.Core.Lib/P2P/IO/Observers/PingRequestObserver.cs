@@ -40,10 +40,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         public PingRequestObserver(IPeerSettings peerSettings,
             ILogger logger)
             : base(logger, peerSettings) { }
-
-        /// <summary>
-        /// 
-        /// </summary>
+        
         /// <param name="pingRequest"></param>
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerId"></param>

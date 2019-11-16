@@ -44,14 +44,14 @@ namespace Catalyst.Core.Lib.P2P
         private readonly ILogger _logger;
         private readonly PeerId _senderIdentifier;
         private readonly IPeerClient _peerClient;
-        private readonly int _peerChallengeWaitTimeSeconds;
+        private readonly int _ttl;
 
         public ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
 
         public PeerChallenger(ILogger logger,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
-            int peerChallengeWaitTimeSeconds,
+            int ttl,
             IScheduler scheduler = null)
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.P2P
             _senderIdentifier = peerSettings.PeerId;
             _logger = logger;
             _peerClient = peerClient;
-            _peerChallengeWaitTimeSeconds = peerChallengeWaitTimeSeconds;
+            _ttl = ttl;
         }
 
         public async Task<bool> ChallengePeerAsync(PeerId recipientPeerId)
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Lib.P2P
                 _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
                 _peerClient.SendMessage(messageDto);
                 using (var cancellationTokenSource =
-                    new CancellationTokenSource(TimeSpan.FromSeconds(_peerChallengeWaitTimeSeconds)))
+                    new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
                 {
                     await ChallengeResponseMessageStreamer
                        .FirstAsync(a => a != null 

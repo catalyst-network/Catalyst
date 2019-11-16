@@ -47,5 +47,8 @@ namespace Catalyst.Protocol.Deltas
 
             return true;
         }
+
+        // update proto
+        public ulong GasLimit { get; set; } = 8_000_000UL;
     }
 }

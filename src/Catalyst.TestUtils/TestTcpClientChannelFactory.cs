@@ -60,7 +60,7 @@ namespace Catalyst.TestUtils
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        public override async Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
+        public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)
@@ -69,7 +69,7 @@ namespace Catalyst.TestUtils
 
             var messageStream = _observableServiceHandler.MessageStream;
 
-            return await Task.FromResult(new ObservableChannel(messageStream, channel));
+            return await Task.FromResult(new ObservableChannel(messageStream, channel)).ConfigureAwait(false);
         }
     }
 }

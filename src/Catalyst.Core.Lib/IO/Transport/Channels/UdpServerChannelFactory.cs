@@ -31,7 +31,7 @@ namespace Catalyst.Core.Lib.IO.Transport.Channels
 {
     public abstract class UdpServerChannelFactory : UdpChannelFactoryBase, IUdpServerChannelFactory
     {
-        public abstract Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
+        public abstract Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null);
