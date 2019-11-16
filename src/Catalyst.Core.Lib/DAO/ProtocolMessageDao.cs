@@ -24,6 +24,8 @@
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
+using Catalyst.Core.Lib.DAO.Cryptography;
+using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 

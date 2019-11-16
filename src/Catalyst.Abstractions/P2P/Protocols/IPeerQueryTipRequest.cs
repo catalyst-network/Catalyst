@@ -31,11 +31,8 @@ namespace Catalyst.Abstractions.P2P.Protocols
     /// <summary>
     /// This class is used to validate peers by carrying out a peer challenge response
     /// </summary>
-    public interface IPeerQueryTipRequest : IDisposable
+    public interface IPeerQueryTipRequest : IProtocolRequest, IDisposable
     {
-        bool Disposing { get; }
-        IPeerClient PeerClient { get; }
-        
         /// <summary>
         /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 
         /// </summary>

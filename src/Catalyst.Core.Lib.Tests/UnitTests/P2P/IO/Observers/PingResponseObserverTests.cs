@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.Extensions;

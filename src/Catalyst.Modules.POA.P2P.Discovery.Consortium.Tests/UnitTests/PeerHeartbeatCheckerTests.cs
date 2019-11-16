@@ -27,7 +27,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.Repository;
@@ -43,7 +42,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
     public sealed class PeerHeartbeatCheckerTests : IDisposable
     {
         private const int PeerHeartbeatCheckSeconds = 3;
-        private const int PeerChallengeTimeoutSeconds = 1;
+        private const int PeerChallengeTimeoutSeconds = 10;
         private IHealthChecker _peerHeartbeatChecker;
         private readonly IPeerClient _peerClient;
         private readonly IPeerRepository _peerRepository;

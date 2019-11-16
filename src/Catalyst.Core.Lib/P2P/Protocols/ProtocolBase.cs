@@ -21,14 +21,15 @@
 
 #endregion
 
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {
-    public class ProtocolBase
+    public class ProtocolBase : IProtocol
     {
-        protected ProtocolBase(PeerId peerId) { PeerId = peerId; }
-
         public PeerId PeerId { get; }
+
+        protected ProtocolBase(PeerId peerId) { PeerId = peerId; }
     }
 }

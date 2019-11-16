@@ -22,15 +22,15 @@
 #endregion
 
 using System.Collections.Generic;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
-using LibP2P;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using Google.Protobuf;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IPeerDeltaHistoryResponse
     {
         PeerId PeerId { get; }
-        IEnumerable<Cid> DeltaCid { get; }
+        ICollection<DeltaIndex> DeltaCid { get; }
     }
 }

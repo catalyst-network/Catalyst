@@ -22,23 +22,29 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Abstractions.P2P.Protocols;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Dawn;
-using LibP2P;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {
-    public class PeerDeltaHistoryResponse : ProtocolResponseBase, IPeerDeltaHistoryResponse
+    public sealed class PeerDeltaHistoryResponse : ProtocolResponseBase, IPeerDeltaHistoryResponse
     {
-        public IEnumerable<Cid> DeltaCid { get; }
+        public ICollection<DeltaIndex> DeltaCid { get; }
 
-        public PeerDeltaHistoryResponse(PeerId peerId, IEnumerable<Cid> deltaCid) : base(peerId)
+        /// <summary>
+        ///     @TODO look at side effects/ how to handle out of range index more detail
+        ///     Since the protocol is over udp we need to make sure we dont fragment udp packets
+        ///     Could build a buffer into the udp pipeline
+        /// </summary>
+        /// <param name="peerId"></param>
+        /// <param name="deltaCid"></param>
+        public PeerDeltaHistoryResponse(PeerId peerId, ICollection<DeltaIndex> deltaCid) : base(peerId)
         {
-            var enumerable = deltaCid as Cid[] ?? deltaCid.ToArray();
-            Guard.Argument(enumerable.Length).InRange(1, 1024);
-            DeltaCid = enumerable;
+            Guard.Argument(deltaCid.Count).InRange(1, 1024);
+            DeltaCid = deltaCid;
         }
     }
 }

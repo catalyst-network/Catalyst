@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Peer;
@@ -30,7 +31,7 @@ namespace Catalyst.Abstractions.P2P.Protocols
     /// <summary>
     /// This class is used to validate peers by carrying out a peer challenge response
     /// </summary>
-    public interface IPeerChallengeRequest 
+    public interface IPeerChallengeRequest : IProtocolRequest, IDisposable
     {
         /// <summary>
         /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 

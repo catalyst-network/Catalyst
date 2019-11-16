@@ -32,7 +32,6 @@ using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Protocols;
-using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
@@ -40,32 +39,30 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
-    public sealed class DeltaHeightResponseObserver
-        : ResponseObserverBase<LatestDeltaHashResponse>,
+    public sealed class DeltaHistoryResponseObserver
+        : ResponseObserverBase<DeltaHistoryResponse>,
             IP2PMessageObserver, IPeerClientObservable
     {
-        private readonly IPeerQueryTipRequest _peerQueryTipRequest;
+        private readonly IPeerDeltaHistoryRequest _deltaHistoryRequest;
         public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
-
-        public DeltaHeightResponseObserver(ILogger logger, IPeerQueryTipRequest peerQueryTipRequest)
+        
+        public DeltaHistoryResponseObserver(ILogger logger, IPeerDeltaHistoryRequest deltaHistoryRequest)
             : base(logger)
         {
-            _peerQueryTipRequest = peerQueryTipRequest;
+            _deltaHistoryRequest = deltaHistoryRequest;
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
-        protected override void HandleResponse(LatestDeltaHashResponse deltaHeightResponse,
+        protected override void HandleResponse(DeltaHistoryResponse deltaHeightResponse,
             IChannelHandlerContext channelHandlerContext,
             PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, senderPeerId, correlationId));
-            
-            _peerQueryTipRequest.QueryTipResponseMessageStreamer.OnNext(
-                new PeerQueryTipResponse(senderPeerId, HashProvider.Parse(deltaHeightResponse.DeltaHash.ToString())
-                )
-            );
+
+            _deltaHistoryRequest.DeltaHistoryResponseMessageStreamer
+               .OnNext(new PeerDeltaHistoryResponse(senderPeerId, deltaHeightResponse.Result));
         }
     }
 }

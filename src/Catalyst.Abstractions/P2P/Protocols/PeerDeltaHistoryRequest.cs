@@ -31,10 +31,9 @@ namespace Catalyst.Abstractions.P2P.Protocols
     /// <summary>
     /// Protocol of requesting index of delta histories from peers
     /// </summary>
-    public interface IPeerDeltaHistoryRequest : IDisposable
+    public interface IPeerDeltaHistoryRequest : IProtocolRequest, IDisposable
     {
-        bool Disposing { get; }
-        IPeerClient PeerClient { get; }
+        ReplaySubject<IPeerDeltaHistoryResponse> DeltaHistoryResponseMessageStreamer { get; }
 
         /// <summary>
         ///     Request an index of delta cid from a peer at a given height.
@@ -42,8 +41,6 @@ namespace Catalyst.Abstractions.P2P.Protocols
         /// <param name="recipientPeerIdentifier"> The recipient peer identifier </param>
         /// <param name="height"> Delta height to request </param>
         /// <param name="range"> number of deltas requested </param>
-        Task<bool> DeltaHistoryAsync(PeerId recipientPeerIdentifier, uint height = 1, uint range = 1024);
-
-        ReplaySubject<IPeerDeltaHistoryResponse> DeltaHistoryResponseMessageStreamer { get; }
+        Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(PeerId recipientPeerIdentifier, uint height = 1, uint range = 1024);
     }
 }

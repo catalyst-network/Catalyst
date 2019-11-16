@@ -28,36 +28,35 @@ using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Core.Lib.DAO.Transaction
 {
-    public class ConfidentialEntryDao : DaoBase
+    public class ContractEntryDao : DaoBase
     {
         public BaseEntryDao Base { get; set; }
-        public string PedersenCommitment { get; set; }
-        public string RangeProof { get; set; }
+        public string Data { get; set; }
+        public string Amount { get; set; }
 
         [Column]
-        
+
         // ReSharper disable once UnusedMember.Local
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
     }
 
-    public sealed class ConfidentialEntryMapperInitialiser : IMapperInitializer
+    public sealed class ContractEntryMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>()
-               .ForMember(e => e.RangeProof,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
-               .ForMember(e => e.PedersenCommitment,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+            {
+                cfg.CreateMap<ContractEntry, ContractEntryDao>()
+                   .ForMember(d => d.Amount,
+                        opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
+                   .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
-            cfg.CreateMap<ConfidentialEntryDao, ConfidentialEntry>()
-               .ForMember(e => e.RangeProof,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
-               .ForMember(e => e.PedersenCommitment,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
+                cfg.CreateMap<ContractEntryDao, ContractEntry>()
+                   .ForMember(d => d.Amount,
+                        opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
+                   .ForMember(e => e.Data, opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
+            }
         }
     }
 }

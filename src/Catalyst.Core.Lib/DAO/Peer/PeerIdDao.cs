@@ -21,36 +21,36 @@
 
 #endregion
 
-using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Peer;
+using Google.Protobuf;
 
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Core.Lib.DAO.Peer
 {
-    public class PublicEntryDao : DaoBase
+    public class PeerIdDao : DaoBase
     {
-        public BaseEntryDao Base { get; set; }
-        public string Amount { get; set; }
-
-        [Column]
-
-        // ReSharper disable once UnusedMember.Local
-        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
+        public string Ip { get; set; }
+        public int Port { get; set; }
+        public string PublicKey { get; set; }
     }
 
-    public sealed class PublicEntryMapperInitialiser : IMapperInitializer
+    public class PeerIdMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<PublicEntry, PublicEntryDao>()
-               .ForMember(d => d.Amount,
-                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount));
+            cfg.CreateMap<PeerId, PeerIdDao>()
+               .ForMember(e => e.PublicKey,
+                    opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>())
+               .ForMember(e => e.Ip,
+                    opt => opt.ConvertUsing<ByteStringToIpAddressConverter, ByteString>());
 
-            cfg.CreateMap<PublicEntryDao, PublicEntry>()
-               .ForMember(d => d.Amount,
-                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount));
+            cfg.CreateMap<PeerIdDao, PeerId>()
+               .ForMember(e => e.PublicKey,
+                    opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>())
+               .ForMember(e => e.Ip,
+                    opt => opt.ConvertUsing<IpAddressToByteStringConverter, string>());
         }
     }
 }

@@ -21,25 +21,10 @@
 
 #endregion
 
-using System.Linq;
-using System.Reflection;
-using Serilog;
-
-namespace Catalyst.Protocol.Transaction
+namespace Catalyst.Abstractions.P2P.Protocols
 {
-    public partial class PublicEntry
+    public interface IProtocolRequest : IProtocol
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
-        public bool IsValid()
-        {
-            if (Amount != null && !Amount.IsEmpty && Amount.Any(b => b != default))
-            {
-                return true;
-            }
-            
-            Logger.Debug("{field} cannot be 0", nameof(Amount));
-            return false;
-        }
+        IPeerClient PeerClient { get; }
     }
 }

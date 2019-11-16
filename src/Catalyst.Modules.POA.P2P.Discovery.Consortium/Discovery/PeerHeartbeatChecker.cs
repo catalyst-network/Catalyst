@@ -25,7 +25,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.Repository;

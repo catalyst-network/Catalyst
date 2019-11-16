@@ -53,8 +53,9 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             DeltaHistoryResponseMessageStreamer = new ReplaySubject<IPeerDeltaHistoryResponse>(1, observableScheduler ?? Scheduler.Default);
         }
 
-        public async Task<bool> DeltaHistoryAsync(PeerId recipientPeerId, uint height = 1, uint range = 1024)
+        public async Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(PeerId recipientPeerId, uint height = 1, uint range = 1024)
         {
+            IPeerDeltaHistoryResponse history;
             try
             {
                 PeerClient.SendMessage(new MessageDto(
@@ -68,7 +69,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
                 
                 using (CancellationTokenProvider.CancellationTokenSource)
                 {
-                    await DeltaHistoryResponseMessageStreamer
+                    history = await DeltaHistoryResponseMessageStreamer
                        .FirstAsync(a => a != null 
                          && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
                          && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
@@ -78,15 +79,15 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             }
             catch (OperationCanceledException)
             {
-                return false;
+                return null;
             }
             catch (Exception e)
             {
                 Logger.Error(e, nameof(DeltaHistoryAsync));
-                return false;
+                return null;
             }
 
-            return true;
+            return history;
         }
 
         public void Dispose() { Dispose(true); }

@@ -26,7 +26,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Protocols;
@@ -40,6 +39,11 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
+    /// <summary>
+    ///     @TODO we inject IPeerChallengeRequest, this class probably shouldnt care about IPeerChallengeRequest,
+    ///     IPeerChallengeRequest should consume ResponseMessageSubject, and filter for messages it is concerned with.
+    ///     OnNext(new PeerChallengeResponse(senderPeerId)); would then instantiate PeerChallengeResponse where its consumed not here.
+    /// </summary>
     public sealed class PingResponseObserver
         : ResponseObserverBase<PingResponse>,
             IP2PMessageObserver, IPeerClientObservable
@@ -48,8 +52,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
         
-        /// <param name="logger"></param>
-        /// <param name="peerChallengeRequest"></param>
         public PingResponseObserver(ILogger logger, IPeerChallengeRequest peerChallengeRequest)
             : base(logger)
         {
@@ -57,10 +59,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
-        /// <param name="pingResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
-        /// <param name="correlationId"></param>
         protected override void HandleResponse(PingResponse pingResponse,
             IChannelHandlerContext channelHandlerContext,
             PeerId senderPeerId,

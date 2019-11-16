@@ -21,25 +21,27 @@
 
 #endregion
 
-using System.Linq;
-using System.Reflection;
-using Serilog;
+using AutoMapper;
+using Catalyst.Abstractions.DAO;
+using Catalyst.Core.Lib.DAO.Converters;
+using Catalyst.Protocol.IPPN;
+using Google.Protobuf;
 
-namespace Catalyst.Protocol.Transaction
+namespace Catalyst.Core.Lib.DAO.Ledger
 {
-    public partial class PublicEntry
+    public class DeltaIndexDao : DaoBase
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
-        public bool IsValid()
+        public int DeltaHeight { get; }
+        public string DeltaCid { get; }
+    }
+    
+    public class DeltaIndexMapperInitialiser : IMapperInitializer
+    {
+        public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            if (Amount != null && !Amount.IsEmpty && Amount.Any(b => b != default))
-            {
-                return true;
-            }
-            
-            Logger.Debug("{field} cannot be 0", nameof(Amount));
-            return false;
+            cfg.CreateMap<DeltaHistoryResponse, DeltaIndexDao>()
+               .ForMember(a => a.DeltaHeight, opt => opt.UseDestinationValue())
+               .ForMember(a => a.DeltaCid, opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
         }
     }
 }

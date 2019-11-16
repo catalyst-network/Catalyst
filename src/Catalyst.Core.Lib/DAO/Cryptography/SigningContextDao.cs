@@ -21,30 +21,30 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Core.Lib.DAO.Cryptography
 {
-    public class SignatureDao : DaoBase
+    public sealed class SigningContextDao : DaoBase
     {
-        public SigningContextDao SigningContext { get; set; }
-        public string RawBytes { get; set; }
+        public NetworkType NetworkType { get; set; }
+        public SignatureType SignatureType { get; set; }
+
+        [Column]
+        
+        // ReSharper disable once UnusedMember.Local
+        private SignatureDao SignatureDao { get; set; }
     }
 
-    public class SignatureMapperInitialiser : IMapperInitializer
+    public sealed class SigningContextMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<Signature, SignatureDao>()
-               .ForMember(d => d.RawBytes,
-                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.RawBytes));
-
-            cfg.CreateMap<SignatureDao, Signature>()
-               .ForMember(d => d.RawBytes,
-                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.RawBytes));
+            cfg.CreateMap<SigningContext, SigningContextDao>().ReverseMap();
         }
     }
 }

@@ -21,35 +21,42 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Core.Lib.DAO.Peer;
-using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
-namespace Catalyst.Core.Lib.DAO
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+namespace Catalyst.Core.Lib.DAO.Transaction
 {
-    public class ProtocolErrorMessageDao : DaoBase
+    public class ConfidentialEntryDao : DaoBase
     {
-        public Signature Signature { get; set; }
-        public PeerIdDao PeerId { get; set; }
-        public string CorrelationId { get; set; }
-        public int Code { get; set; }
+        public BaseEntryDao Base { get; set; }
+        public string PedersenCommitment { get; set; }
+        public string RangeProof { get; set; }
+
+        [Column]
+        
+        // ReSharper disable once UnusedMember.Local
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
     }
 
-    public class ProtocolErrorMessageMapperInitialiser : IMapperInitializer
+    public sealed class ConfidentialEntryMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<ProtocolErrorMessage, ProtocolErrorMessageDao>()
-               .ForMember(e => e.CorrelationId,
+            cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>()
+               .ForMember(e => e.RangeProof,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
-               .ReverseMap();
+               .ForMember(e => e.PedersenCommitment,
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
-            cfg.CreateMap<ProtocolErrorMessageDao, ProtocolErrorMessage>()
-               .ForMember(e => e.CorrelationId,
+            cfg.CreateMap<ConfidentialEntryDao, ConfidentialEntry>()
+               .ForMember(e => e.RangeProof,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
+               .ForMember(e => e.PedersenCommitment,
                     opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }
     }

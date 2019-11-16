@@ -26,14 +26,12 @@ using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
 
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Core.Lib.DAO.Transaction
 {
-    public class ContractEntryDao : DaoBase
+    public class PublicEntryDao : DaoBase
     {
         public BaseEntryDao Base { get; set; }
-        public string Data { get; set; }
         public string Amount { get; set; }
 
         [Column]
@@ -42,21 +40,17 @@ namespace Catalyst.Core.Lib.DAO
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
     }
 
-    public sealed class ContractEntryMapperInitialiser : IMapperInitializer
+    public sealed class PublicEntryMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            {
-                cfg.CreateMap<ContractEntry, ContractEntryDao>()
-                   .ForMember(d => d.Amount,
-                        opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
-                   .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+            cfg.CreateMap<PublicEntry, PublicEntryDao>()
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount));
 
-                cfg.CreateMap<ContractEntryDao, ContractEntry>()
-                   .ForMember(d => d.Amount,
-                        opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
-                   .ForMember(e => e.Data, opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-            }
+            cfg.CreateMap<PublicEntryDao, PublicEntry>()
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount));
         }
     }
 }

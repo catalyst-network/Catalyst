@@ -24,11 +24,12 @@
 using System;
 using System.IO;
 using System.Threading;
+using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -42,12 +43,12 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
-    public class DeltaDfsReaderTests
+    public sealed class DeltaDfsReaderTests
     {
         private readonly IHashProvider _hashProvider;
         private readonly IDfs _dfs;
         private readonly ILogger _logger;
-        private readonly DeltaDfsReader _dfsReader;
+        private readonly IDeltaDfsReader _dfsReader;
 
         public DeltaDfsReaderTests()
         {

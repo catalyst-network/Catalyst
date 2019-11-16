@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
@@ -39,7 +38,7 @@ using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
+namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 {
     public sealed class PeerQueryTipTests : SelfAwareTestBase
     {
@@ -103,22 +102,22 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             response.Should().BeFalse();   
         }
 
-        [Fact]
-        public async Task Can_Dispose_Class()
-        {
-            using (_peerQueryTipRequest)
-            {
-                Debug.Assert(!_peerQueryTipRequest.Disposing); // Best not be disposed yet.
-            }
-
-            try
-            {
-                Debug.Assert(_peerQueryTipRequest.Disposing); // Expecting an exception.
-            }
-            catch (Exception ex)
-            {
-                Debug.Assert(ex is ObjectDisposedException); // Better be the right one.
-            }
-        }
+        // [Fact]
+        // public async Task Can_Dispose_Class()
+        // {
+        //     using (_peerQueryTipRequest)
+        //     {
+        //         Debug.Assert(!_peerQueryTipRequest.Disposing); // Best not be disposed yet.
+        //     }
+        //
+        //     try
+        //     {
+        //         Debug.Assert(_peerQueryTipRequest.Disposing); // Expecting an exception.
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         Debug.Assert(ex is ObjectDisposedException); // Better be the right one.
+        //     }
+        // }
     }
 }
