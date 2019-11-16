@@ -21,14 +21,16 @@
 
 #endregion
 
+using System.Collections.Generic;
 using Catalyst.Protocol.Peer;
+using LibP2P;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.Abstractions.P2P.Protocols
 {
-    public interface IPeerQueryTipResponse
+    public interface IPeerDeltaHistoryResponse
     {
         PeerId PeerId { get; }
-        MultiHash DeltaHash { get; }
+        IEnumerable<Cid> DeltaCid { get; }
     }
 }

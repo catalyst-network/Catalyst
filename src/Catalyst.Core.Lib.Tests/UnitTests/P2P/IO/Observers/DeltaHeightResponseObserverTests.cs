@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Observers;
@@ -45,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         public DeltaHeightResponseObserverTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _observer = new DeltaHeightResponseObserver(Substitute.For<ILogger>(), Substitute.For<IPeerQueryTip>());
+            _observer = new DeltaHeightResponseObserver(Substitute.For<ILogger>(), Substitute.For<IPeerQueryTipRequest>());
         }
 
         [Fact]

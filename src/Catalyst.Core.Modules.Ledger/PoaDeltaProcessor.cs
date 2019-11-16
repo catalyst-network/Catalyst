@@ -21,15 +21,7 @@
 
 #endregion
 
-using Catalyst.Abstractions.P2P;
-using Catalyst.Protocol.Peer;
-
-namespace Catalyst.Core.Lib.P2P
+namespace Catalyst.Core.Modules.Ledger
 {
-    public sealed class PeerChallengerResponse : IPeerChallengeResponse
-    {
-        public PeerId PeerId { get; }
-
-        public PeerChallengerResponse(PeerId peerId) { PeerId = peerId; }
-    }
+    public class PoaDeltaProcessor { }
 }

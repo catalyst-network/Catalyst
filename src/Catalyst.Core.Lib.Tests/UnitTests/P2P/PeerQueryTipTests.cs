@@ -26,7 +26,9 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
@@ -41,7 +43,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
 {
     public sealed class PeerQueryTipTests : SelfAwareTestBase
     {
-        private readonly IPeerQueryTip _peerQueryTip;
+        private readonly IPeerQueryTipRequest _peerQueryTipRequest;
         private readonly IPeerSettings _testSettings;
         private readonly CancellationTokenProvider _cancellationProvider;
 
@@ -51,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             _testSettings = PeerSettingsHelper.TestPeerSettings();
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(15));
             
-            _peerQueryTip = new PeerQueryTip(
+            _peerQueryTipRequest = new PeerQueryTipRequestRequest(
                 Substitute.For<ILogger>(),
                 subbedPeerClient,
                 _testSettings,
@@ -63,11 +65,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         public async Task Can_Query_Expected_Peer()
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
-            await _peerQueryTip.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
+            await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
             var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
             expectedDto.RecipientPeerIdentifier.Returns(recipientPeerId);
             expectedDto.SenderPeerIdentifier.Returns(_testSettings.PeerId);
-            _peerQueryTip.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Is(expectedDto));
+            _peerQueryTipRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Is(expectedDto));
         }
 
         [Fact]
@@ -78,8 +80,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
                 MultiHash.ComputeHash(ByteUtil.GenerateRandomByteArray(32))
             );
 
-            _peerQueryTip.QueryTipResponseMessageStreamer.OnNext(tipQueryResponse);
-            var response = await _peerQueryTip.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
+            _peerQueryTipRequest.QueryTipResponseMessageStreamer.OnNext(tipQueryResponse);
+            var response = await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeTrue();
         }
 
@@ -88,7 +90,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
             _cancellationProvider.CancellationTokenSource.Cancel();
-            var response = await _peerQueryTip.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
+            var response = await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeFalse();
         }
 
@@ -97,21 +99,21 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
             _cancellationProvider.Dispose(); //do summet nasty to force exception
-            var response = await _peerQueryTip.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
+            var response = await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeFalse();   
         }
 
         [Fact]
         public async Task Can_Dispose_Class()
         {
-            using (_peerQueryTip)
+            using (_peerQueryTipRequest)
             {
-                Debug.Assert(!_peerQueryTip.Disposing); // Best not be disposed yet.
+                Debug.Assert(!_peerQueryTipRequest.Disposing); // Best not be disposed yet.
             }
 
             try
             {
-                Debug.Assert(_peerQueryTip.Disposing); // Expecting an exception.
+                Debug.Assert(_peerQueryTipRequest.Disposing); // Expecting an exception.
             }
             catch (Exception ex)
             {

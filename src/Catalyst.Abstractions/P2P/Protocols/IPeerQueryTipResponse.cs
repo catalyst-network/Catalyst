@@ -22,11 +22,13 @@
 #endregion
 
 using Catalyst.Protocol.Peer;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.Abstractions.P2P.Protocols
 {
-    public interface IPeerChallengeResponse
+    public interface IPeerQueryTipResponse
     {
         PeerId PeerId { get; }
+        MultiHash DeltaHash { get; }
     }
 }

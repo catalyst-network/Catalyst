@@ -29,8 +29,10 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
+using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
@@ -42,16 +44,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : ResponseObserverBase<PingResponse>,
             IP2PMessageObserver, IPeerClientObservable
     {
-        private readonly IPeerChallenger _peerChallenger;
+        private readonly IPeerChallengeRequest _peerChallengeRequest;
         public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
         
         /// <param name="logger"></param>
-        /// <param name="peerChallenger"></param>
-        public PingResponseObserver(ILogger logger, IPeerChallenger peerChallenger)
+        /// <param name="peerChallengeRequest"></param>
+        public PingResponseObserver(ILogger logger, IPeerChallengeRequest peerChallengeRequest)
             : base(logger)
         {
-            _peerChallenger = peerChallenger;
+            _peerChallengeRequest = peerChallengeRequest;
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
@@ -65,7 +67,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ICorrelationId correlationId)
         {
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, senderPeerId, correlationId));
-            _peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(senderPeerId));
+            _peerChallengeRequest.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(senderPeerId));
         }
     }
 }

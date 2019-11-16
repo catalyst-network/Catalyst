@@ -29,7 +29,9 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
 using NSubstitute;
@@ -82,15 +84,15 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         {
             var peers = new List<Peer> {_testPeer};
             var peerSettings = _testPeer.PeerId.ToSubstitutedPeerSettings();
-            var peerChallenger = new PeerChallenger(
+            var peerChallenger = new PeerChallengeRequest(
                 Substitute.For<ILogger>(), 
                 _peerClient,
                 peerSettings, 
-                PeerChallengeTimeoutSeconds);
+                new CancellationTokenProvider(PeerChallengeTimeoutSeconds));
 
             if (sendResponse)
             {
-                peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(_testPeer.PeerId));
+                peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(_testPeer.PeerId));
             }
 
             _peerRepository.GetAll().Returns(peers);

@@ -31,14 +31,24 @@ namespace Catalyst.Core.Lib.Util
     {
         public CancellationTokenSource CancellationTokenSource { get; }
 
-        public CancellationTokenProvider()
+        public CancellationTokenProvider(bool goodTillCancel)
         {
+            if (!goodTillCancel) 
+            {
+                CancellationTokenSource = new CancellationTokenSource(10);
+            }
+            
             CancellationTokenSource = new CancellationTokenSource();
         }
         
         public CancellationTokenProvider(TimeSpan timeToLiveInMs)
         {
             CancellationTokenSource = new CancellationTokenSource(timeToLiveInMs);
+        }
+        
+        public CancellationTokenProvider(int timeToLiveInMs)
+        {
+            CancellationTokenSource = new CancellationTokenSource(new TimeSpan(timeToLiveInMs));
         }
 
         public bool HasTokenCancelled()
