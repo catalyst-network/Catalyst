@@ -28,7 +28,7 @@ using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Core.Lib.DAO.Transaction
 {
     public class ContractEntryDao : DaoBase
     {

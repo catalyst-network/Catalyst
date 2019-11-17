@@ -41,12 +41,18 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ILogger logger)
             : base(logger, peerSettings) { }
         
+        /// <summary>
+        ///     Basic method to handle ping messages. 
+        /// </summary>
         /// <param name="pingRequest"></param>
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
-        /// <returns></returns>
-        protected override PingResponse HandleRequest(PingRequest pingRequest, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)
+        /// <returns><see cref="PingResponse"/></returns>
+        protected override PingResponse HandleRequest(PingRequest pingRequest,
+            IChannelHandlerContext channelHandlerContext,
+            PeerId senderPeerId,
+            ICorrelationId correlationId)
         {
             Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

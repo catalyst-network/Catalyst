@@ -29,7 +29,7 @@ using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Core.Lib.DAO.Transaction
 {
     public class ConfidentialEntryDao : DaoBase
     {

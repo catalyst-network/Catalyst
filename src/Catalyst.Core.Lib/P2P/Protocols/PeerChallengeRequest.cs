@@ -30,16 +30,18 @@ using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Serilog;
 
-namespace Catalyst.Core.Lib.P2P
+namespace Catalyst.Core.Lib.P2P.Protocols
 {
-    public sealed class PeerChallenger : IPeerChallenger, IDisposable
+    public sealed class PeerChallengeRequest : ProtocolRequestBase, IPeerChallengeRequest, IDisposable
     {
         private readonly ILogger _logger;
         private readonly PeerId _senderIdentifier;
@@ -48,11 +50,15 @@ namespace Catalyst.Core.Lib.P2P
 
         public ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
 
-        public PeerChallenger(ILogger logger,
+        public PeerChallengeRequest(ILogger logger,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
             int ttl,
-            IScheduler scheduler = null)
+            IScheduler scheduler = null) 
+            : base(logger,
+                peerSettings.PeerId,
+                new CancellationTokenProvider(ttl),
+                peerClient)
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
             ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler);

@@ -24,33 +24,27 @@
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Peer;
-using Google.Protobuf;
+using Catalyst.Protocol.Cryptography;
 
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Core.Lib.DAO.Cryptography
 {
-    public class PeerIdDao : DaoBase
+    public class SignatureDao : DaoBase
     {
-        public string Ip { get; set; }
-        public int Port { get; set; }
-        public string PublicKey { get; set; }
+        public SigningContextDao SigningContext { get; set; }
+        public string RawBytes { get; set; }
     }
 
-    public class PeerIdMapperInitialiser : IMapperInitializer
+    public class SignatureMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<PeerId, PeerIdDao>()
-               .ForMember(e => e.PublicKey,
-                    opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>())
-               .ForMember(e => e.Ip,
-                    opt => opt.ConvertUsing<ByteStringToIpAddressConverter, ByteString>());
+            cfg.CreateMap<Signature, SignatureDao>()
+               .ForMember(d => d.RawBytes,
+                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.RawBytes));
 
-            cfg.CreateMap<PeerIdDao, PeerId>()
-               .ForMember(e => e.PublicKey,
-                    opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>())
-               .ForMember(e => e.Ip,
-                    opt => opt.ConvertUsing<IpAddressToByteStringConverter, string>());
+            cfg.CreateMap<SignatureDao, Signature>()
+               .ForMember(d => d.RawBytes,
+                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.RawBytes));
         }
     }
 }

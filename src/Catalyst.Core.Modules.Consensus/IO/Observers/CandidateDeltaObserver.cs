@@ -34,7 +34,11 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
 {
-    public class CandidateDeltaObserver : BroadcastObserverBase<CandidateDeltaBroadcast>, IP2PMessageObserver
+    /**
+     * Receives candidate delta broadcasts from producers in validation pool.
+     * Validates hash and then adds to IDeltaVoter
+     */
+    public sealed class CandidateDeltaObserver : BroadcastObserverBase<CandidateDeltaBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaVoter _deltaVoter;
         private readonly IHashProvider _hashProvider;
@@ -52,25 +56,33 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(),
                     messageDto.Payload.PeerId.Port);
+                
+                // @TODO here we use the protobuff message to parse rather than using the CandidateDeltaBroadcastDao
+                /////////////////////////////////////////////////////////////////////////////////////////////////
                 var deserialized = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
-
                 var previousDeltaDfsHashCid = CidHelper.Cast(deserialized.PreviousDeltaDfsHash.ToByteArray());
+                /////////////////////////////////////////////////////////////////////////////////////////////////
+                
                 if (!_hashProvider.IsValidHash(previousDeltaDfsHashCid.Hash.ToArray()))
                 {
                     Logger.Error("PreviousDeltaDfsHash is not a valid hash");
                     return;
                 }
 
+                /////////////////////////////////////////////////////////////////////////////////////////////////
                 var hashCid = CidHelper.Cast(deserialized.Hash.ToByteArray());
+                /////////////////////////////////////////////////////////////////////////////////////////////////
+
                 if (!_hashProvider.IsValidHash(hashCid.Hash.ToArray()))
                 {
                     Logger.Error("Hash is not a valid hash");
                     return;
                 }
 
-                deserialized.IsValid();
-
-                _deltaVoter.OnNext(deserialized);
+                if (deserialized.IsValid())
+                {
+                    _deltaVoter.OnNext(deserialized);
+                }
             }
             catch (Exception exception)
             {

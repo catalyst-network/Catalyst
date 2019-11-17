@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Repository;
-using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.P2P.Models;
 
 namespace Catalyst.Core.Lib.P2P.Repository

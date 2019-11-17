@@ -21,9 +21,7 @@
 
 #endregion
 
-using System.Reflection;
 using Nethermind.Dirichlet.Numerics;
-using Serilog;
 
 namespace Catalyst.Protocol.Transaction
 {

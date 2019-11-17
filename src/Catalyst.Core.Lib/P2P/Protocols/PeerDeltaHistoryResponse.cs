@@ -21,29 +21,30 @@
 
 #endregion
 
-using System;
-using System.Reactive.Subjects;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Catalyst.Abstractions.P2P.Protocols;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
+using Dawn;
+using Google.Protobuf;
 
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.Core.Lib.P2P.Protocols
 {
-    /// <summary>
-    /// This class is used to validate peers by carrying out a peer challenge response
-    /// </summary>
-    public interface IPeerQueryTip : IDisposable
+    public sealed class PeerDeltaHistoryResponse : ProtocolResponseBase, IPeerDeltaHistoryResponse
     {
-        bool Disposing { get; }
-        IPeerClient PeerClient { get; }
-        
-        /// <summary>
-        /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 
-        /// </summary>
-        /// <param name="recipientPeerIdentifier">The recipient peer identifier.
-        /// PeerId holds the chunks we want to validate.</param>
-        /// <returns>bool true means valid and false means not valid</returns>
-        Task<bool> QueryPeerTipAsync(PeerId recipientPeerIdentifier);
+        public ICollection<DeltaIndex> DeltaCid { get; }
 
-        ReplaySubject<IPeerQueryTipResponse> QueryTipResponseMessageStreamer { get; }
+        /// <summary>
+        ///     @TODO look at side effects/ how to handle out of range index more detail
+        ///     Since the protocol is over udp we need to make sure we dont fragment udp packets
+        ///     Could build a buffer into the udp pipeline
+        /// </summary>
+        /// <param name="peerId"></param>
+        /// <param name="deltaCid"></param>
+        public PeerDeltaHistoryResponse(PeerId peerId, ICollection<DeltaIndex> deltaCid) : base(peerId)
+        {
+            Guard.Argument(deltaCid.Count).InRange(1, 1024);
+            DeltaCid = deltaCid;
+        }
     }
 }

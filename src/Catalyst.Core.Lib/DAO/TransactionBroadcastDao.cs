@@ -25,12 +25,18 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
+using Catalyst.Core.Lib.DAO.Cryptography;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Catalyst.Core.Lib.DAO
 {
+    /// <summary>
+    /// @TODO we shouldnt be saving TransactionBroadcast, this is a wire only object,
+    ///     this should be mapped to a mempool object
+    /// </summary>
     [BsonIgnoreExtraElements]
     public class TransactionBroadcastDao : DaoBase
     {

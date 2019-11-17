@@ -21,37 +21,49 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Core.Lib.DAO
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+namespace Catalyst.Core.Lib.DAO.Transaction
 {
-    public class CoinbaseEntryDao : DaoBase
+    public class BaseEntryDao : DaoBase
     {
-        public uint Version { get; set; }
+        public ulong Nonce { get; set; }
         public string ReceiverPublicKey { get; set; }
-        public string Amount { get; set; }
+        public string SenderPublicKey { get; set; }
+        public string TransactionFees { get; set; }
+
+        [Column]
+        
+        // ReSharper disable once UnusedMember.Local
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
     }
 
-    public class CoinbaseEntryMapperInitialiser : IMapperInitializer
+    public sealed class BaseEntryMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
+            cfg.CreateMap<BaseEntry, BaseEntryDao>().ReverseMap();
 
-            cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>()
+            cfg.CreateMap<BaseEntry, BaseEntryDao>()
                .ForMember(d => d.ReceiverPublicKey,
                     opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
-               .ForMember(d => d.Amount,
-                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount));
+               .ForMember(d => d.SenderPublicKey,
+                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.SenderPublicKey))
+               .ForMember(d => d.TransactionFees,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.TransactionFees));
 
-            cfg.CreateMap<CoinbaseEntryDao, CoinbaseEntry>()
+            cfg.CreateMap<BaseEntryDao, BaseEntry>()
                .ForMember(d => d.ReceiverPublicKey,
                     opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey))
-               .ForMember(d => d.Amount,
-                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount));
+               .ForMember(d => d.SenderPublicKey,
+                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.SenderPublicKey))
+               .ForMember(d => d.TransactionFees,
+                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.TransactionFees));
         }
     }
 }

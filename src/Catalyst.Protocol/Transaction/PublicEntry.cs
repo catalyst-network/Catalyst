@@ -33,13 +33,13 @@ namespace Catalyst.Protocol.Transaction
 
         public bool IsValid()
         {
-            if (Amount == null || Amount.IsEmpty || Amount.All(b => b == default))
+            if (Amount != null && !Amount.IsEmpty && Amount.Any(b => b != default))
             {
-                Logger.Debug("{field} cannot be 0", nameof(Amount));
-                return false;
+                return true;
             }
-
-            return true;
+            
+            Logger.Debug("{field} cannot be 0", nameof(Amount));
+            return false;
         }
     }
 }

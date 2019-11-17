@@ -23,9 +23,9 @@
 
 using Catalyst.Protocol.Peer;
 
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.Abstractions.P2P.Protocols
 {
-    public interface IPeerChallengeResponse
+    public interface IProtocol
     {
         PeerId PeerId { get; }
     }
