@@ -27,80 +27,67 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
-using Dawn;
 using Serilog;
 
-namespace Catalyst.Core.Lib.P2P
+namespace Catalyst.Core.Lib.P2P.Protocols
 {
-    public sealed class PeerQueryTip : IPeerQueryTip
+    public class PeerDeltaHistoryRequest : ProtocolRequestBase, IPeerDeltaHistoryRequest
     {
-        private readonly ILogger _logger;
-        private readonly PeerId _senderIdentifier;
-        public IPeerClient PeerClient { get; }
-        private readonly ICancellationTokenProvider _cancellationTokenProvider;
-        public bool Disposing { get; private set; }
+        public ReplaySubject<IPeerDeltaHistoryResponse> DeltaHistoryResponseMessageStreamer { get; }
 
-        public ReplaySubject<IPeerQueryTipResponse> QueryTipResponseMessageStreamer { get; }
-
-        public PeerQueryTip(ILogger logger,
+        public PeerDeltaHistoryRequest(ILogger logger,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
             ICancellationTokenProvider cancellationTokenProvider,
-            IScheduler scheduler = null)
+            IScheduler observableScheduler = null) : base(logger, peerSettings.PeerId, cancellationTokenProvider, peerClient)
         {
-            var observableScheduler = scheduler ?? Scheduler.Default;
-            QueryTipResponseMessageStreamer = new ReplaySubject<IPeerQueryTipResponse>(1, observableScheduler);
-            _senderIdentifier = peerSettings.PeerId;
-            _logger = logger;
-            PeerClient = peerClient;
-            _cancellationTokenProvider = cancellationTokenProvider;
+            DeltaHistoryResponseMessageStreamer = new ReplaySubject<IPeerDeltaHistoryResponse>(1, observableScheduler ?? Scheduler.Default);
         }
 
-        public async Task<bool> QueryPeerTipAsync(PeerId recipientPeerId)
+        public async Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(PeerId recipientPeerId, uint height = 1, uint range = 1024)
         {
-            Guard.Argument(_senderIdentifier, nameof(_senderIdentifier)).NotNull();
-            
+            IPeerDeltaHistoryResponse history;
             try
             {
-                var messageDto = new MessageDto(
-                    new LatestDeltaHashRequest().ToProtocolMessage(_senderIdentifier, CorrelationId.GenerateCorrelationId()),
+                PeerClient.SendMessage(new MessageDto(
+                    new DeltaHistoryRequest
+                    {
+                        Range = range,
+                        Height = height
+                    }.ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
-                );
+                ));
                 
-                PeerClient.SendMessage(messageDto);
-
-                _logger.Verbose($"Query Peer Chain tip to: {recipientPeerId}");
-                
-                using (_cancellationTokenProvider.CancellationTokenSource)
+                using (CancellationTokenProvider.CancellationTokenSource)
                 {
-                    await QueryTipResponseMessageStreamer
+                    history = await DeltaHistoryResponseMessageStreamer
                        .FirstAsync(a => a != null 
                          && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
                          && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
-                       .ToTask(_cancellationTokenProvider.CancellationTokenSource.Token)
+                       .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }
             }
             catch (OperationCanceledException)
             {
-                return false;
+                return null;
             }
             catch (Exception e)
             {
-                _logger.Error(e, nameof(QueryPeerTipAsync));
-                return false;
+                Logger.Error(e, nameof(DeltaHistoryAsync));
+                return null;
             }
 
-            return true;
+            return history;
         }
 
         public void Dispose() { Dispose(true); }
@@ -113,7 +100,7 @@ namespace Catalyst.Core.Lib.P2P
                 return;
             }
 
-            QueryTipResponseMessageStreamer?.Dispose();
+            DeltaHistoryResponseMessageStreamer?.Dispose();
         }
     }
 }

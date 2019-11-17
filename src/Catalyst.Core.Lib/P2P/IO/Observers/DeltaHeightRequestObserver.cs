@@ -43,12 +43,15 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ILogger logger)
             : base(logger, peerSettings) { }
         
-        /// <param name="pingRequest"></param>
+        /// <param name="deltaHeightRequest"></param>
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override LatestDeltaHashResponse HandleRequest(LatestDeltaHashRequest deltaHeightRequest, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)
+        protected override LatestDeltaHashResponse HandleRequest(LatestDeltaHashRequest deltaHeightRequest,
+            IChannelHandlerContext channelHandlerContext,
+            PeerId senderPeerId,
+            ICorrelationId correlationId)
         {
             Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

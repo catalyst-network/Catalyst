@@ -24,11 +24,10 @@
 using System;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Repository.Attributes;
 using Catalyst.Core.Lib.Util;
 
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Core.Lib.DAO.Peer
 {
     [Audit]
     public sealed class PeerDao : DaoBase
@@ -59,10 +58,10 @@ namespace Catalyst.Core.Lib.DAO
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<Peer, PeerDao>();
+            cfg.CreateMap<P2P.Models.Peer, PeerDao>();
             cfg.AllowNullDestinationValues = true;
 
-            cfg.CreateMap<PeerDao, Peer>()
+            cfg.CreateMap<PeerDao, P2P.Models.Peer>()
                .ForMember(e => e.Reputation, opt => opt.UseDestinationValue())
                .ForMember(e => e.BlackListed, opt => opt.UseDestinationValue())
                .ForMember(e => e.Created, opt => opt.UseDestinationValue())

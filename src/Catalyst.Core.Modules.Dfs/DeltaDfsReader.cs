@@ -29,7 +29,7 @@ using Catalyst.Protocol.Deltas;
 using LibP2P;
 using Serilog;
 
-namespace Catalyst.Core.Modules.Consensus.Deltas
+namespace Catalyst.Core.Modules.Dfs
 {
     /// <inheritdoc />
     public sealed class DeltaDfsReader : IDeltaDfsReader

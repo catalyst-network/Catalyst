@@ -45,7 +45,6 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<DeltaDfsHashObserver>().As<IP2PMessageObserver>();
             builder.RegisterType<CandidateDeltaObserver>().As<IP2PMessageObserver>();
             builder.RegisterType<DeltaProducersProvider>().As<IDeltaProducersProvider>();
-            builder.RegisterType<DeltaDfsReader>().As<IDeltaDfsReader>().SingleInstance();
             builder.RegisterType<DeltaElector>().As<IDeltaElector>().SingleInstance();
             builder.RegisterType<DeltaHashProvider>().As<IDeltaHashProvider>().SingleInstance().WithParameter("capacity", 10_000);
             builder.RegisterType<DeltaCache>().As<IDeltaCache>().SingleInstance();

@@ -21,14 +21,19 @@
 
 #endregion
 
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Protocol.Peer;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.Core.Lib.P2P.Protocols
 {
-    public interface IPeerQueryTipResponse
+    public sealed class PeerQueryTipResponse : ProtocolResponseBase, IPeerQueryTipResponse
     {
-        PeerId PeerId { get; }
-        MultiHash DeltaHash { get; }
+        public MultiHash DeltaHash { get; } // @TODO should probably be a DFS CID
+
+        public PeerQueryTipResponse(PeerId peerId, MultiHash deltaHash) : base(peerId)
+        {
+            DeltaHash = deltaHash;
+        }
     }
 }

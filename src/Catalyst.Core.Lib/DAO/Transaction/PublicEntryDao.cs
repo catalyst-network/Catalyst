@@ -24,27 +24,33 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Network;
+using Catalyst.Core.Lib.DAO.Converters;
+using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Core.Lib.DAO.Transaction
 {
-    public sealed class SigningContextDao : DaoBase
+    public class PublicEntryDao : DaoBase
     {
-        public NetworkType NetworkType { get; set; }
-        public SignatureType SignatureType { get; set; }
+        public BaseEntryDao Base { get; set; }
+        public string Amount { get; set; }
 
         [Column]
-        
+
         // ReSharper disable once UnusedMember.Local
-        private SignatureDao SignatureDao { get; set; }
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
     }
 
-    public sealed class SigningContextMapperInitialiser : IMapperInitializer
+    public sealed class PublicEntryMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<SigningContext, SigningContextDao>().ReverseMap();
+            cfg.CreateMap<PublicEntry, PublicEntryDao>()
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount));
+
+            cfg.CreateMap<PublicEntryDao, PublicEntry>()
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount));
         }
     }
 }

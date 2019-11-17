@@ -23,6 +23,9 @@
 
 using System;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Cryptography;
+using Catalyst.Core.Lib.DAO.Peer;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Microsoft.EntityFrameworkCore;
 
 namespace Catalyst.Core.Lib.Repository

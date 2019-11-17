@@ -24,14 +24,14 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
+using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
@@ -44,23 +44,17 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : ResponseObserverBase<LatestDeltaHashResponse>,
             IP2PMessageObserver, IPeerClientObservable
     {
-        private readonly IPeerQueryTip _peerQueryTip;
+        private readonly IPeerQueryTipRequest _peerQueryTipRequest;
         public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
 
-        /// <param name="logger"></param>
-        /// <param name="peerQueryTip"></param>
-        public DeltaHeightResponseObserver(ILogger logger, IPeerQueryTip peerQueryTip)
+        public DeltaHeightResponseObserver(ILogger logger, IPeerQueryTipRequest peerQueryTipRequest)
             : base(logger)
         {
-            _peerQueryTip = peerQueryTip;
+            _peerQueryTipRequest = peerQueryTipRequest;
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
-        /// <param name="deltaHeightResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
-        /// <param name="correlationId"></param>
         protected override void HandleResponse(LatestDeltaHashResponse deltaHeightResponse,
             IChannelHandlerContext channelHandlerContext,
             PeerId senderPeerId,
@@ -68,8 +62,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         {
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, senderPeerId, correlationId));
             
-            _peerQueryTip.QueryTipResponseMessageStreamer.OnNext(
-                new PeerQueryTipResponse(senderPeerId, HashProvider.Parse(deltaHeightResponse.DeltaHash.ToString()))
+            _peerQueryTipRequest.QueryTipResponseMessageStreamer.OnNext(
+                new PeerQueryTipResponse(senderPeerId, HashProvider.Parse(deltaHeightResponse.DeltaHash.ToString())
+                )
             );
         }
     }

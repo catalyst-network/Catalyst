@@ -21,21 +21,10 @@
 
 #endregion
 
-using Catalyst.Abstractions.P2P;
-using Catalyst.Protocol.Peer;
-using TheDotNetLeague.MultiFormats.MultiHash;
-
-namespace Catalyst.Core.Lib.P2P
+namespace Catalyst.Abstractions.P2P.Protocols
 {
-    public sealed class PeerQueryTipResponse : IPeerQueryTipResponse
+    public interface IProtocolRequest : IProtocol
     {
-        public PeerId PeerId { get; }
-        public MultiHash DeltaHash { get; }
-
-        public PeerQueryTipResponse(PeerId peerId, MultiHash deltaHash)
-        {
-            PeerId = peerId;
-            DeltaHash = deltaHash;
-        }
+        IPeerClient PeerClient { get; }
     }
 }

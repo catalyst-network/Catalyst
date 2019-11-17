@@ -23,6 +23,7 @@
 
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
+using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
