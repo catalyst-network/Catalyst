@@ -49,13 +49,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         {
             var subbedPeerClient = Substitute.For<IPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
-            _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(15));
+            _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));
             
             _peerChallengeRequest = new PeerChallengeRequest(
                 Substitute.For<ILogger>(),
                 subbedPeerClient,
                 _testSettings,
-                _cancellationProvider
+                10
             );
         }
         

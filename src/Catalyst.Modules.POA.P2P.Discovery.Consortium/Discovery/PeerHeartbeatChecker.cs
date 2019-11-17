@@ -70,7 +70,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             {
                 Task.Run(async () =>
                 {
-                    var result = await _peerChallengeRequest.ChallengePeerAsync(peer.PeerId).ConfigureAwait(false);
+                    var result = await _peerChallengeRequest.ChallengePeerAsync(peer.PeerId);
                     var counterValue = _nonResponsivePeerMap.GetOrAdd(peer.DocumentId, 0);
                     _logger.Verbose(
                         $"Heartbeat result: {result.ToString()} Peer: {peer.PeerId} Non-Responsive Counter: {counterValue}");

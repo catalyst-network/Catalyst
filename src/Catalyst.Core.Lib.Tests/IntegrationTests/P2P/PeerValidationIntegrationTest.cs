@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             {
                 var peerClient = c.Resolve<IPeerClient>();
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                return new PeerChallengeRequest(logger, peerClient, peerSettings, new CancellationTokenProvider(10));
+                return new PeerChallengeRequest(logger, peerClient, peerSettings, 10);
             }).As<IPeerChallengeRequest>().SingleInstance();
         }
 

@@ -27,63 +27,68 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {
-    /// <summary>
-    ///     @TODO This challenge should really check some signature of the peer id
-    ///     But that also duplicates part of the functionality provided by pipeline.
-    /// </summary>
     public sealed class PeerChallengeRequest : ProtocolRequestBase, IPeerChallengeRequest, IDisposable
     {
+        private readonly ILogger _logger;
+        private readonly PeerId _senderIdentifier;
+        private readonly IPeerClient _peerClient;
+        private readonly int _ttl;
+
         public ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
 
-        /**
-         *     Protocol to ping a target peer and await a response.
-         */
         public PeerChallengeRequest(ILogger logger,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
-            ICancellationTokenProvider cancellationTokenProvider,
-            IScheduler observableScheduler = null) : base(logger, peerSettings.PeerId, cancellationTokenProvider, peerClient)
+            int ttl,
+            IScheduler scheduler = null) 
+            : base(logger,
+                peerSettings.PeerId,
+                new CancellationTokenProvider(ttl),
+                peerClient)
         {
-            ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler ?? Scheduler.Default);
+            var observableScheduler = scheduler ?? Scheduler.Default;
+            ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler);
+            _senderIdentifier = peerSettings.PeerId;
+            _logger = logger;
+            _peerClient = peerClient;
+            _ttl = ttl;
         }
-        
-        /**
-         * Awaitable wrapper of PingRequest
-         */
+
         public async Task<bool> ChallengePeerAsync(PeerId recipientPeerId)
         {
             try
             {
-                Logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
-                PeerClient.SendMessage(new MessageDto(
-                    new PingRequest().ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
+                var correlationId = CorrelationId.GenerateCorrelationId();
+                var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier, correlationId);
+                var messageDto = new MessageDto(
+                    protocolMessage,
                     recipientPeerId
-                ));
-                
-                using (CancellationTokenProvider.CancellationTokenSource)
+                );
+
+                _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
+                _peerClient.SendMessage(messageDto);
+                using (var cancellationTokenSource =
+                    new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
                 {
-                    // wait on stream until we get a response when the udp server gets
-                    // a valid correlatable ping response message it will end up here
-                    // then filter the stream to pk/ip we are interested in, as other
-                    // parts of the system maybe generating pings
                     await ChallengeResponseMessageStreamer
                        .FirstAsync(a => a != null 
-                         && Enumerable.SequenceEqual(a.PeerId.PublicKey, recipientPeerId.PublicKey) 
-                         && Enumerable.SequenceEqual(a.PeerId.Ip, recipientPeerId.Ip))
-                       .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
+                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
+                         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
+                       .ToTask(cancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }
             }
@@ -93,7 +98,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             }
             catch (Exception e)
             {
-                Logger.Error(e, nameof(ChallengePeerAsync));
+                _logger.Error(e, nameof(ChallengePeerAsync));
                 return false;
             }
 
