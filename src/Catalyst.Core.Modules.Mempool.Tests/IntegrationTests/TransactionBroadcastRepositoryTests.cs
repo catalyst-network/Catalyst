@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
         private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope,
             out string id,
-            out IEnumerable<ContractEntryDao> contractEntryDaoList,
+            out IEnumerable<PublicEntryDao> contractEntryDaoList,
             out IEnumerable<PublicEntryDao> publicEntryDaoList)
         {
             var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
