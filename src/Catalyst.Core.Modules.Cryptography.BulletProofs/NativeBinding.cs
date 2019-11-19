@@ -24,6 +24,9 @@
 using System.Runtime.InteropServices;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Types;
+using Catalyst.Protocol.Cryptography;
+using Google.Protobuf.WellKnownTypes;
+using Signature = Catalyst.Core.Modules.Cryptography.BulletProofs.Types.Signature;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 {
@@ -37,10 +40,10 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         internal static IPrivateKey GeneratePrivateKey()
         {
             var key = new byte[PrivateKeyLength];
-            var errorCode = generate_key(key);
-            if (errorCode != 0)
+            var error_code = generate_key(key);
+            if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
             {
-                Error.ThrowErrorFromErrorCode(errorCode.ToString());
+                Error.ThrowErrorFromErrorCode(errorCode);
             }
 
             return new PrivateKey(key);
@@ -59,41 +62,46 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             var signature = new byte[SignatureLength];
             var publicKey = new byte[PublicKeyLength];
 
-            var errorCode = std_sign(signature, publicKey, privateKey, message, message.Length, context, context.Length);
-            if (errorCode != 0)
+            var error_code = std_sign(signature, publicKey, privateKey, message, message.Length, context, context.Length);
+            
+            if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
             {
-                Error.ThrowErrorFromErrorCode(errorCode.ToString());
+                Error.ThrowErrorFromErrorCode(errorCode);
             }
 
             return new Signature(signature, publicKey);
         }
         
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int std_verify(byte[] signature, byte[] publicKey, byte[] message, int messageLength, byte[] context, int contextLength, byte[] b);
+        private static extern int std_verify(byte[] signature, byte[] publicKey, byte[] message, int messageLength, byte[] context, int contextLength);
 
         internal static bool StdVerify(byte[] signature, byte[] publicKey, byte[] message, byte[] context)
         {
             if (signature.Length != SignatureLength)
-            { 
-                Error.ThrowArgumentExceptionSignatureLength(SignatureLength);
-            } 
-            
-            if (publicKey.Length != PublicKeyLength)
-            { 
-                Error.ThrowArgumentExceptionPublicKeyLength(PublicKeyLength);
-            } 
-
-            var isVerified = new byte[1];
-
-            var errorCode = std_verify(signature, publicKey, message, message.Length, context, context.Length,
-                isVerified);
-
-            if (errorCode != 0)
             {
-                Error.ThrowErrorFromErrorCode(errorCode.ToString());
+                Error.ThrowArgumentExceptionSignatureLength(SignatureLength);
             }
 
-            return isVerified[0] == 1;
+            if (publicKey.Length != PublicKeyLength)
+            {
+                Error.ThrowArgumentExceptionPublicKeyLength(PublicKeyLength);
+            }
+
+            var error_code = std_verify(signature, publicKey, message, message.Length, context, context.Length);
+
+            ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
+
+            if (errorCode == ErrorCode.NoError)
+            {
+                return true;
+            }
+
+            if (errorCode != ErrorCode.SignatureVerificationFailure)
+            {
+                Error.ThrowErrorFromErrorCode(errorCode);
+            }
+
+            return false;
         }
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
@@ -106,11 +114,11 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
                 Error.ThrowArgumentExceptionPublicKeyLength(PublicKeyLength);
             } 
 
-            var errorCode = validate_public_key(publicKey);
+            var error_code = validate_public_key(publicKey);
 
-            if (errorCode != 0)
+            if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
             {
-                Error.ThrowErrorFromErrorCode(errorCode.ToString());
+                Error.ThrowErrorFromErrorCode(errorCode);
             }
         }
 
@@ -129,20 +137,6 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             
             return new PublicKey(publicKeyBytes);
         }
-
-        internal static string GetLastError()
-        {
-            var errorLength = last_error_length();
-            if (errorLength <= 0) return "";
-            var readInto = new byte[errorLength - 1];
-            return last_error_message(readInto, errorLength) > 0 ? System.Text.Encoding.UTF8.GetString(readInto) : "";
-        }
-
-        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int last_error_length();
-
-        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int last_error_message(byte[] errorBuffer, int messageLength);
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int get_private_key_length();
