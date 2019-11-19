@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using System.Resources;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Exceptions;
+using Catalyst.Protocol.Cryptography;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 {
@@ -37,42 +38,39 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
                 new ResourceManager(typeof(Error).FullName,
                     typeof(Error).GetTypeInfo().Assembly));
 
-        internal static void ThrowErrorFromErrorCode(string errorCode)
+        internal static void ThrowErrorFromErrorCode(ErrorCode errorCode)
         {
             switch (errorCode)
-            {
-                case "101":
-                    ThrowSignatureException();
+            { 
+                case ErrorCode.NoError:
+                    break;
+                case ErrorCode.InvalidSignature:
+                case ErrorCode.InvalidPublicKey:
+                case ErrorCode.InvalidPrivateKey:
+                case ErrorCode.SignatureVerificationFailure:
+                case ErrorCode.InvalidContextLength:
+                    ThrowSignatureException(errorCode);
                     break;
                 default:
-                    ThrowUnknownException();
+                    ThrowUnknownException(errorCode);
                     break;
             }
         }
 
-        private static string ErrorFromErrorNameAdditionalInfo(string name)
-        {
-            string error = ErrorFromErrorName(name);
-            string additionalInfo = NativeBinding.GetLastError();
-            return error + " - " + additionalInfo + ".";
-        }
-
-        private static string ErrorFromErrorName(string name)
+        private static string ErrorDescFromErrorCode(string name)
         {
             return ResourceManager.GetString(name);   
         }
 
-        private static void ThrowSignatureException()
+        private static void ThrowSignatureException(ErrorCode errorCode)
         {
-            const string errorName = "Signature_Exception";
-            var error = ErrorFromErrorNameAdditionalInfo(errorName);
+            string error = ErrorDescFromErrorCode(errorCode.ToString());
             throw new SignatureException(error);
         }
 
-        private static void ThrowUnknownException()
+        private static void ThrowUnknownException(ErrorCode errorCode)
         {
-            const string errorName = "Unknown_Exception";
-            var error = ErrorFromErrorNameAdditionalInfo(errorName);
+            string error = ErrorDescFromErrorCode(errorCode.ToString());
             throw new UnknownException(error);
         }
 
@@ -96,7 +94,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 
         private static void ThrowArgumentExceptionLength(string errorName, int requiredLength)
         {
-            var error = ErrorFromErrorName(errorName);
+            var error = ErrorDescFromErrorCode(errorName);
             throw new ArgumentException(string.Format(error, requiredLength));
         }        
     }
