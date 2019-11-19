@@ -117,10 +117,22 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="Unknown_Exception" xml:space="preserve">
-    <value>Unknown error</value>
+    <value>An unknown error has occurred</value>
     </data>
-    <data name="Signature_Exception" xml:space="preserve">
-    <value>Signature error</value>
+    <data name="InvalidSignature" xml:space="preserve">
+    <value>The signature does not correspond to a valid point on the elliptic curve.</value>
+    </data>
+    <data name="InvalidPublicKey" xml:space="preserve">
+    <value>The public key does not represent a valid point on the elliptic curve.</value>
+    </data>
+    <data name="InvalidPrivateKey" xml:space="preserve">
+    <value>The private key is invalid.</value>
+    </data>
+    <data name="SignatureVerificationFailure" xml:space="preserve">
+    <value>The signature could not be validated against the information provided.</value>
+    </data>
+    <data name="InvalidContextLength" xml:space="preserve">
+    <value>The context exceeded the maximum allowed length.</value>
     </data>
     <data name="Argument_Invalid_PublicKey_Length" xml:space="preserve">
     <value>The length of the public key must be {0}.</value>
