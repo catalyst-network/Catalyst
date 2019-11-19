@@ -55,7 +55,6 @@ namespace Catalyst.Core.Lib.DAO
         public DateTime TimeStamp { get; set; }
         public IEnumerable<PublicEntryDao> PublicEntries { get; set; }
         public IEnumerable<ConfidentialEntryDao> ConfidentialEntries { get; set; }
-        public IEnumerable<PublicEntryDao> ContractEntries { get; set; }
     }
 
     public class TransactionBroadcastMapperInitialiser : IMapperInitializer
