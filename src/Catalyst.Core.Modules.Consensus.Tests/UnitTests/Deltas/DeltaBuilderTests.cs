@@ -49,6 +49,7 @@ using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 

@@ -86,6 +86,7 @@ namespace Catalyst.TestUtils
                     SenderPublicKey = ByteString.CopyFrom(sender.Bytes),
                 },
                 Amount = amount.ToUint256ByteString(),
+                GasLimit = 21000
             };
         }
     }
