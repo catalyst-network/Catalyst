@@ -1,5 +1,4 @@
 #region LICENSE
-
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -18,16 +17,25 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
-
 #endregion
 
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.P2P.Models;
+using System.Collections.Generic;
 
 namespace Catalyst.Core.Lib.P2P.Repository
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
+    public interface IPeerRepository {
+        IEnumerable<Peer> GetAll();
 
-    public interface IPeerRepositoryDao : IRepositoryWrapper<PeerDao> { }
+        IEnumerable<Peer> GetActivePeers(int count);
+
+        void Add(Peer peer);
+
+        void Update(Peer peer);
+
+        int Count();
+        void Dispose();
+    }
+
+    public interface IPeerRepositoryDao { }
 }

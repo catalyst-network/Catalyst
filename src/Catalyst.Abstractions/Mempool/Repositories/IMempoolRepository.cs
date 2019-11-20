@@ -21,11 +21,9 @@
 
 #endregion
 
-using Catalyst.Abstractions.Repository;
-
 namespace Catalyst.Abstractions.Mempool.Repositories
 {
-    public interface IMempoolRepository<T> : IRepositoryWrapper<T> where T : class
+    public interface IMempoolRepository<T> where T : class
     {
         bool TryReadItem(string signature);
 

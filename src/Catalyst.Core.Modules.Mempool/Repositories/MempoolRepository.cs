@@ -24,17 +24,19 @@
 using System;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Repository;
 using Dawn;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Repositories
 {
-    public class MempoolRepository : RepositoryWrapper<TransactionBroadcastDao>,
-        IMempoolRepository<TransactionBroadcastDao>
+    public class MempoolRepository : IMempoolRepository<TransactionBroadcastDao>
     {
-        public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository) { }
+        public IRepository<TransactionBroadcastDao, string> Repository { set; get; }
+        public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository)
+        {
+            Repository = repository;
+        }
 
         /// <inheritdoc />
         public bool TryReadItem(string signature)

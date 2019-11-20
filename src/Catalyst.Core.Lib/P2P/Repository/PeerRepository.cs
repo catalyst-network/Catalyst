@@ -21,14 +21,55 @@
 
 #endregion
 
+using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.Repository;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Specifications;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Catalyst.Core.Lib.P2P.Repository
 {
-    public class PeerRepository : RepositoryWrapper<Peer>, IPeerRepository
+    public class PeerRepository : IPeerRepository, IDisposable
     {
-        public PeerRepository(IRepository<Peer, string> repository) : base(repository) { }
+        public IRepository<Peer> Repository { set; get; }
+
+        public IEnumerable<Peer> GetAll()
+        {
+            return Repository.GetAll();
+        }
+
+        public IEnumerable<Peer> GetActivePeers(int count)
+        {
+            return Repository.FindAll(new Specification<Peer>(p => !p.IsAwolPeer)).Take(count);
+        }
+
+        public void Add(Peer peer)
+        {
+            Repository.Add(peer);
+        }
+
+        public void Update(Peer peer)
+        {
+            Repository.Update(peer);
+        }
+
+        public int Count()
+        {
+            return Repository.Count();
+        }
+
+        public IEnumerable<Peer> GetRandomPeers(int count)
+        {
+            return null;
+            //return Repository.AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(Repository.Get).Select(p => p.PeerId).ToList();
+        }
+
+        public void Dispose()
+        {
+            Repository.Dispose();
+        }
     }
 }
