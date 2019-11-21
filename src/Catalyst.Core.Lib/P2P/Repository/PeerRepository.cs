@@ -62,9 +62,9 @@ namespace Catalyst.Core.Lib.P2P.Repository
             return Repository.AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(Repository.Get).ToList();
         }
 
-        public IEnumerable<Peer> FindAllByIpAndPublicKey(ByteString ip, ByteString publicKey)
+        public IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
         {
-            return Repository.FindAll(m => m.PeerId.Ip == ip && m.PeerId.PublicKey == publicKey);
+            return Repository.FindAll(m => m.PeerId.Ip == ip && (publicKey.IsEmpty || m.PeerId.PublicKey == publicKey));
         }
 
         public void Add(Peer peer)
@@ -90,11 +90,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
         public uint DeletePeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
         {
             var peerDeletedCount = 0u;
-            var publicKeyIsEmpty = publicKey.IsEmpty;
-
-            var peersToDelete = Repository.FindAll(new Specification<Peer>(peer =>
-                peer.PeerId.Ip.SequenceEqual(ip) &&
-                (publicKeyIsEmpty || peer.PeerId.PublicKey.SequenceEqual(publicKey.ToByteArray())))).ToArray();
+            var peersToDelete = GetPeersByIpAndPublicKey(ip, publicKey);
 
             foreach (var peerToDelete in peersToDelete)
             {

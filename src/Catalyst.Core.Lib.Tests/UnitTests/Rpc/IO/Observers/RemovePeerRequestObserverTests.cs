@@ -40,6 +40,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using SharpRepository.InMemoryRepository;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -92,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
             var testScheduler = new TestScheduler();
-            IPeerRepository peerRepository = Substitute.For<IPeerRepository>();
+            IPeerRepository peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             Peer targetPeerToDelete = null;
             var fakePeerList = fakePeers.ToList().Select(fakePeer =>
             {
@@ -111,7 +112,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 return peer;
             }).ToList();
 
-            peerRepository.FindAllByIpAndPublicKey(Arg.Any<ByteString>(), Arg.Any<ByteString>()).Returns(withPublicKey ? new List<Peer> {targetPeerToDelete} : fakePeerList);
+            peerRepository.Add(fakePeerList);
+
+            //peerRepository.GetPeersByIpAndPublicKey(Arg.Is(targetPeerToDelete.PeerId.Ip), Arg.Is(targetPeerToDelete.PeerId.PublicKey)).Returns(withPublicKey ? new List<Peer> {targetPeerToDelete} : fakePeerList);
             
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));

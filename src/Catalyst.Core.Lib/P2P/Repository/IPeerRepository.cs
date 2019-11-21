@@ -20,6 +20,7 @@
 #endregion
 
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 using SharpRepository.Repository;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
         IEnumerable<Peer> GetAll();
         IEnumerable<Peer> GetActivePeers(int count);
         IEnumerable<Peer> GetRandomPeers(int count);
-        IEnumerable<Peer> FindAllByIpAndPublicKey(ByteString ip, ByteString publicKey);
+        IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey);
 
         void Add(Peer peer);
         void Add(IEnumerable<Peer> peer);

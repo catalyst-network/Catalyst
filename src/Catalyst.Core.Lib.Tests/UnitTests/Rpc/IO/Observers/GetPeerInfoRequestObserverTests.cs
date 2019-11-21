@@ -42,6 +42,8 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using Google.Protobuf;
+using SharpRepository.InMemoryRepository;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -62,9 +64,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
 
-            var peers = GetPeerTestData();
-
-            _peerRepository = Substitute.For<IPeerRepository>();
+            _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
+            _peerRepository.Add(GetPeerTestData());
+            //_peerRepository.GetPeersByIpAndPublicKey(Arg.Any<ByteString>(), Arg.Any<ByteString>()).Returns(ci => { return peers.Where(p => ((Expression<Func<Peer, bool>>)ci[0]).Compile()(p)); });
             //_peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
             //   .Returns(ci => { return peers.Where(p => ((Expression<Func<Peer, bool>>) ci[0]).Compile()(p)); });
         }

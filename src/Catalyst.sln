@@ -85,6 +85,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Repository
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687-ABC9-496B-B507-68AEDD4B91D5}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Common.Packable.props = Common.Packable.props
 		Common.Projects.props = Common.Projects.props
 		Common.TestProjects.props = Common.TestProjects.props
@@ -93,10 +94,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"
 	ProjectSection(SolutionItems) = preProject
+		..\docfx-azure-pipeline.yml = ..\docfx-azure-pipeline.yml
 		..\mssql-e2e-azure-pipelines.yml = ..\mssql-e2e-azure-pipelines.yml
 		..\nuget-pre-release-azure-pipelines.yml = ..\nuget-pre-release-azure-pipelines.yml
 		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
-		..\docfx-azure-pipeline.yml = ..\docfx-azure-pipeline.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"
@@ -165,9 +166,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashing.Tests", "Catalyst.Core.Modules.Hashing.Tests\Catalyst.Core.Modules.Hashing.Tests.csproj", "{2FF077F1-E652-4D17-83D2-C766E385BA5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Documentation", "..\docs\Catalyst.Documentation.csproj", "{9B99940D-EBFA-40CC-9522-6776C687EAB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Documentation", "..\docs\Catalyst.Documentation.csproj", "{9B99940D-EBFA-40CC-9522-6776C687EAB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Tools.KeyGenerator", "Catalyst.Tools.KeyGenerator\Catalyst.Tools.KeyGenerator.csproj", "{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Tools.KeyGenerator", "Catalyst.Tools.KeyGenerator\Catalyst.Tools.KeyGenerator.csproj", "{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
