@@ -28,20 +28,20 @@ namespace Catalyst.Core.Modules.Ledger.Repository
 {
     public class AccountRepository : IAccountRepository
     {
-        public IRepository<Account, string> Repository { set; get; }
+        private readonly IRepository<Account, string> _repository;
         public AccountRepository(IRepository<Account, string> repository)
         {
-            Repository = repository;
+            _repository = repository;
         }
 
         public void Add(Account account)
         {
-            Repository.Add(account);
+            _repository.Add(account);
         }
 
         public void Dispose()
         {
-            Repository.Dispose();
+            _repository.Dispose();
         }
     }
 }

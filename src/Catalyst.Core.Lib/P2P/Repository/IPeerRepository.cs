@@ -20,17 +20,13 @@
 #endregion
 
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Protocol.Peer;
 using Google.Protobuf;
-using SharpRepository.Repository;
 using System.Collections.Generic;
 
 namespace Catalyst.Core.Lib.P2P.Repository
 {
     public interface IPeerRepository
     {
-        IRepository<Peer, string> Repository { set; get; }
-
         Peer Get(string id);
         IEnumerable<Peer> GetAll();
         IEnumerable<Peer> GetActivePeers(int count);
@@ -53,6 +49,4 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         void Dispose();
     }
-
-    public interface IPeerRepositoryDao { }
 }

@@ -31,21 +31,21 @@ namespace Catalyst.Core.Modules.Authentication.Repository
 {
     public sealed class AuthCredentialRepository : IAuthCredentialRepository
     {
-        public IRepository<AuthCredentials, string> Repository { set; get; }
+        private readonly IRepository<AuthCredentials, string> _repository;
 
         public AuthCredentialRepository(IRepository<AuthCredentials, string> repository)
         {
-            Repository = repository;
+            _repository = repository;
         }
 
         public void Add(AuthCredentials authCredentials)
         {
-            Repository.Add(authCredentials);
+            _repository.Add(authCredentials);
         }
 
         public bool TryFind(PeerId peerIdentifier, out AuthCredentials authCredentials)
         {
-            return Repository.TryFind(t => t.IpAddress.Equals(peerIdentifier.Ip.ToString()) &&
+            return _repository.TryFind(t => t.IpAddress.Equals(peerIdentifier.Ip.ToString()) &&
                 t.PublicKey.KeyToBytes().SequenceEqual(peerIdentifier.PublicKey), out authCredentials);
         }
     }

@@ -23,15 +23,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.Repository;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
 using NSubstitute;
@@ -96,7 +93,6 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
             }
 
             _peerRepository.GetAll().Returns(peers);
-            //_peerRepository.AsQueryable().Returns(peers.AsQueryable());
             _peerHeartbeatChecker = new PeerHeartbeatChecker(
                 Substitute.For<ILogger>(),
                 _peerRepository,
