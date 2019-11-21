@@ -24,6 +24,8 @@
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Protocol.Peer;
+using Google.Protobuf;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Specifications;
 using System;
@@ -34,7 +36,16 @@ namespace Catalyst.Core.Lib.P2P.Repository
 {
     public class PeerRepository : IPeerRepository, IDisposable
     {
-        public IRepository<Peer> Repository { set; get; }
+        public IRepository<Peer, string> Repository { set; get; }
+        public PeerRepository(IRepository<Peer, string> repository)
+        {
+            Repository = repository;
+        }
+
+        public Peer Get(string id)
+        {
+            return Repository.Get(id);
+        }
 
         public IEnumerable<Peer> GetAll()
         {
@@ -46,9 +57,29 @@ namespace Catalyst.Core.Lib.P2P.Repository
             return Repository.FindAll(new Specification<Peer>(p => !p.IsAwolPeer)).Take(count);
         }
 
+        public IEnumerable<Peer> GetRandomPeers(int count)
+        {
+            return Repository.AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(Repository.Get).ToList();
+        }
+
+        public IEnumerable<Peer> FindAllByIpAndPublicKey(ByteString ip, ByteString publicKey)
+        {
+            return Repository.FindAll(m => m.PeerId.Ip == ip && m.PeerId.PublicKey == publicKey);
+        }
+
         public void Add(Peer peer)
         {
             Repository.Add(peer);
+        }
+
+        public void Add(IEnumerable<Peer> peer)
+        {
+            Repository.Add(peer);
+        }
+
+        public bool Exists(string id)
+        {
+            return Repository.Exists(id);
         }
 
         public void Update(Peer peer)
@@ -56,15 +87,37 @@ namespace Catalyst.Core.Lib.P2P.Repository
             Repository.Update(peer);
         }
 
+        public uint DeletePeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
+        {
+            var peerDeletedCount = 0u;
+            var publicKeyIsEmpty = publicKey.IsEmpty;
+
+            var peersToDelete = Repository.FindAll(new Specification<Peer>(peer =>
+                peer.PeerId.Ip.SequenceEqual(ip) &&
+                (publicKeyIsEmpty || peer.PeerId.PublicKey.SequenceEqual(publicKey.ToByteArray())))).ToArray();
+
+            foreach (var peerToDelete in peersToDelete)
+            {
+                Repository.Delete(peerToDelete);
+                peerDeletedCount += 1;
+            }
+
+            return peerDeletedCount;
+        }
+
+        public void Delete(Peer peer)
+        {
+            Repository.Delete(peer);
+        }
+
+        public void Delete(string id)
+        {
+            Repository.Delete(id);
+        }
+
         public int Count()
         {
             return Repository.Count();
-        }
-
-        public IEnumerable<Peer> GetRandomPeers(int count)
-        {
-            return null;
-            //return Repository.AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(Repository.Get).Select(p => p.PeerId).ToList();
         }
 
         public void Dispose()

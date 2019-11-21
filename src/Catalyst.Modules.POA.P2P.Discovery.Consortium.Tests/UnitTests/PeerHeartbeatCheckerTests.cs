@@ -96,7 +96,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
             }
 
             _peerRepository.GetAll().Returns(peers);
-            _peerRepository.AsQueryable().Returns(peers.AsQueryable());
+            //_peerRepository.AsQueryable().Returns(peers.AsQueryable());
             _peerHeartbeatChecker = new PeerHeartbeatChecker(
                 Substitute.For<ILogger>(),
                 _peerRepository,

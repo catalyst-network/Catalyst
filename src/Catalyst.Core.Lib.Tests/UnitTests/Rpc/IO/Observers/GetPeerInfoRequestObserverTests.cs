@@ -65,8 +65,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var peers = GetPeerTestData();
 
             _peerRepository = Substitute.For<IPeerRepository>();
-            _peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
-               .Returns(ci => { return peers.Where(p => ((Expression<Func<Peer, bool>>) ci[0]).Compile()(p)); });
+            //_peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
+            //   .Returns(ci => { return peers.Where(p => ((Expression<Func<Peer, bool>>) ci[0]).Compile()(p)); });
         }
 
         public IEnumerable<Peer> GetPeerTestData()

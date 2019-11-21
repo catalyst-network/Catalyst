@@ -73,8 +73,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             var ip = getPeerInfoRequest.Ip;
 
-            var peerInfo = _peerRepository.FindAll(m => m.PeerId.Ip == ip
-                 && m.PeerId.PublicKey == getPeerInfoRequest.PublicKey)
+            var peerInfo = _peerRepository.FindAllByIpAndPublicKey(ip, getPeerInfoRequest.PublicKey)
                .Select(x =>
                     new PeerInfo
                     {

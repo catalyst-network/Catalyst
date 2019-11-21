@@ -172,7 +172,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                 _peers.Get(peer.DocumentId).Returns(peer);
             }
 
-            _peers.AsQueryable().Returns(peerList.AsQueryable());
+            _peers.Repository.AsQueryable().Returns(peerList.AsQueryable());
         }
 
         public void Dispose()

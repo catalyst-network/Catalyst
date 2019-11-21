@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
 using Dawn;
@@ -38,6 +39,11 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
             Repository = repository;
         }
 
+        public IEnumerable<TransactionBroadcastDao> GetAll()
+        {
+            return Repository.GetAll();
+        }
+
         /// <inheritdoc />
         public bool TryReadItem(string signature)
         {
@@ -49,6 +55,11 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
         {
             Guard.Argument(signature, nameof(signature)).NotNull();
             return Repository.Get(signature);
+        }
+
+        public void Delete(IEnumerable<TransactionBroadcastDao> transactionBroadcasts)
+        {
+            Repository.Delete(transactionBroadcasts);
         }
 
         /// <inheritdoc />

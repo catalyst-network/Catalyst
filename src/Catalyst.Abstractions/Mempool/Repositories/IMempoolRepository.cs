@@ -1,5 +1,4 @@
 #region LICENSE
-
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -18,13 +17,17 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
-
 #endregion
 
+using System.Collections.Generic;
 namespace Catalyst.Abstractions.Mempool.Repositories
 {
     public interface IMempoolRepository<T> where T : class
     {
+        IEnumerable<T> GetAll();
+
+        void Delete(IEnumerable<T> transactionBroadcasts);
+
         bool TryReadItem(string signature);
 
         T ReadItem(string signature);

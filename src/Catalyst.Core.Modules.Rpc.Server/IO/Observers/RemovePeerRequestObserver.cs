@@ -77,19 +77,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            uint peerDeletedCount = 0;
-
-            var publicKeyIsEmpty = removePeerRequest.PublicKey.IsEmpty;
-            
-            var peersToDelete = _peerRepository.FindAll(new Specification<Peer>(peer =>
-                peer.PeerId.Ip.SequenceEqual(removePeerRequest.PeerIp) &&
-                (publicKeyIsEmpty || peer.PeerId.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray())))).ToArray();
-
-            foreach (var peerToDelete in peersToDelete)
-            {
-                _peerRepository.Delete(peerToDelete);
-                peerDeletedCount += 1;
-            }
+            var peerDeletedCount = _peerRepository.DeletePeersByIpAndPublicKey(removePeerRequest.PublicKey, removePeerRequest.PeerIp);
 
             return new RemovePeerResponse
             {

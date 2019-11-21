@@ -39,7 +39,6 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository.Specifications;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -112,7 +111,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 return peer;
             }).ToList();
 
-            peerRepository.FindAll(Arg.Any<ISpecification<Peer>>()).Returns(withPublicKey ? new List<Peer> {targetPeerToDelete} : fakePeerList);
+            peerRepository.FindAllByIpAndPublicKey(Arg.Any<ByteString>(), Arg.Any<ByteString>()).Returns(withPublicKey ? new List<Peer> {targetPeerToDelete} : fakePeerList);
             
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));

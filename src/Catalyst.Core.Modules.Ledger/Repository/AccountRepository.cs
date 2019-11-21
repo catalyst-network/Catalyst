@@ -21,14 +21,27 @@
 
 #endregion
 
-using Catalyst.Core.Modules.Authentication.Models;
-using Catalyst.Protocol.Peer;
+using Catalyst.Core.Modules.Ledger.Models;
+using SharpRepository.Repository;
 
-namespace Catalyst.Core.Modules.Authentication.Repository
+namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    public interface IAuthCredentialRepository
+    public class AccountRepository : IAccountRepository
     {
-        void Add(AuthCredentials authCredentials);
-        bool TryFind(PeerId peerIdentifier, out AuthCredentials authCredentials);
+        public IRepository<Account, string> Repository { set; get; }
+        public AccountRepository(IRepository<Account, string> repository)
+        {
+            Repository = repository;
+        }
+
+        public void Add(Account account)
+        {
+            Repository.Add(account);
+        }
+
+        public void Dispose()
+        {
+            Repository.Dispose();
+        }
     }
 }

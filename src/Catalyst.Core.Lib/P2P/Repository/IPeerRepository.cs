@@ -20,20 +20,36 @@
 #endregion
 
 using Catalyst.Core.Lib.P2P.Models;
+using Google.Protobuf;
+using SharpRepository.Repository;
 using System.Collections.Generic;
 
 namespace Catalyst.Core.Lib.P2P.Repository
 {
-    public interface IPeerRepository {
-        IEnumerable<Peer> GetAll();
+    public interface IPeerRepository
+    {
+        IRepository<Peer, string> Repository { set; get; }
 
+        Peer Get(string id);
+        IEnumerable<Peer> GetAll();
         IEnumerable<Peer> GetActivePeers(int count);
+        IEnumerable<Peer> GetRandomPeers(int count);
+        IEnumerable<Peer> FindAllByIpAndPublicKey(ByteString ip, ByteString publicKey);
 
         void Add(Peer peer);
+        void Add(IEnumerable<Peer> peer);
 
         void Update(Peer peer);
 
+        void Delete(Peer peer);
+        void Delete(string id);
+
+        uint DeletePeersByIpAndPublicKey(ByteString ip, ByteString publicKey);
+
+        bool Exists(string id);
+
         int Count();
+
         void Dispose();
     }
 
