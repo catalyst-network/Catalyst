@@ -21,20 +21,12 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Catalyst.Abstractions.Network;
 using Catalyst.Core.Lib.Config;
-using Catalyst.TestUtils;
 using FluentAssertions;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Xunit;
 using Microsoft.Extensions.Configuration;
-using Xunit.Sdk;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Config
 {
@@ -42,7 +34,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Config
     {
         public ConfigValueParserTests()
         {
-            //_configurationSection = Substitute.For<IConfigurationSection>();
             _ipEndpoint1 = IPEndPoint.Parse("127.0.0.1:5052");
             _ipEndpoint2 = IPEndPoint.Parse("127.0.0.1:5053");
             _sectionName = "DnsServers";
@@ -56,7 +47,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Config
         }
 
         private readonly IConfigurationRoot _configurationRoot;
-        private readonly IConfigurationSection _configurationSection;
         private readonly string _sectionName;
         private readonly IPEndPoint _ipEndpoint1;
         private readonly IPEndPoint _ipEndpoint2;
