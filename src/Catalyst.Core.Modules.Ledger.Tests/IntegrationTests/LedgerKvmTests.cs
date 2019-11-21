@@ -105,9 +105,16 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private void RunDeltas(Delta delta)
         {
             var hash1 = _hashProvider.ComputeUtf8MultiHash("update");
-            var updates = new[] { hash1 };
+            var updates = new[]
+            {
+                hash1
+            };
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
-               .ReturnsForAnyArgs(new Cid[] { hash1, _genesisHash });
+               .ReturnsForAnyArgs(new Cid[]
+                {
+                    hash1, _genesisHash
+                });
+
             _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
                .Returns(c =>
                 {
@@ -115,7 +122,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                     return true;
                 }, c => false);
 
-            _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid)h).ToObservable(_testScheduler));
+            _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid) h).ToObservable(_testScheduler));
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
             var classUnderTest = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
