@@ -46,7 +46,6 @@ namespace Catalyst.Core.Lib.Repository
         public DbSet<TransactionBroadcastDao> TransactionBroadcastStore { get; set; }
         public DbSet<PublicEntryDao> PublicEntryDaoStore { get; set; }
         public DbSet<ConfidentialEntryDao> ConfidentialEntryDaoStore { get; set; }
-        public DbSet<ContractEntryDao> ContractEntryDaoStore { get; set; }
         public DbSet<BaseEntryDao> BaseEntryDaoStore { get; set; }
         public DbSet<SignatureDao> SignatureDaoStore { get; set; }
         public DbSet<SigningContextDao> SigningContextDaoStore { get; set; }

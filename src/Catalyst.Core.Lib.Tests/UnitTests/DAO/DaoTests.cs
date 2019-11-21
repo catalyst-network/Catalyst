@@ -77,7 +77,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new PublicEntryMapperInitialiser(),
                 new ConfidentialEntryMapperInitialiser(),
                 new TransactionBroadcastMapperInitialiser(),
-                new ContractEntryMapperInitialiser(),
                 new SignatureMapperInitialiser(),
                 new BaseEntryMapperInitialiser(), 
             };

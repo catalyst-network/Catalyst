@@ -102,9 +102,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"
 	ProjectSection(SolutionItems) = preProject
 		..\scripts\addLicenseHeader.sh = ..\scripts\addLicenseHeader.sh
-		..\devnet-docker-compose.yml = ..\devnet-docker-compose.yml
-		..\Dockerfile = ..\Dockerfile
-		..\Vagrantfile = ..\Vagrantfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{8FEB1C8E-EA58-451D-A8FE-2A5189D46A0E}"
