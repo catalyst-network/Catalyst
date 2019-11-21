@@ -78,6 +78,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Config
             endPoints.Should().Contain(_ipEndpoint1.ToString());
             endPoints.Should().Contain(_ipEndpoint2.ToString());
         }
+
+        [Fact]
+        public void ConfigValueParser_Can_Parse_Empty_Config()
+        {
+            var peerConfig = new List<KeyValuePair<string, string>>();
+
+            var configurationRoot = new ConfigurationBuilder().AddInMemoryCollection(peerConfig).Build();
+
+            var endPoints = ConfigValueParser.GetIpEndpointArrValues(configurationRoot, _sectionName);
+            endPoints.Should().HaveCount(0);
+        }
     }
 
 }
