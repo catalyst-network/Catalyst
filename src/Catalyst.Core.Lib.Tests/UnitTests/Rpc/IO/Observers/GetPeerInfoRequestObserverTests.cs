@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
@@ -42,7 +41,6 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Google.Protobuf;
 using SharpRepository.InMemoryRepository;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -66,9 +64,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             _peerRepository.Add(GetPeerTestData());
-            //_peerRepository.GetPeersByIpAndPublicKey(Arg.Any<ByteString>(), Arg.Any<ByteString>()).Returns(ci => { return peers.Where(p => ((Expression<Func<Peer, bool>>)ci[0]).Compile()(p)); });
-            //_peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
-            //   .Returns(ci => { return peers.Where(p => ((Expression<Func<Peer, bool>>) ci[0]).Compile()(p)); });
         }
 
         public IEnumerable<Peer> GetPeerTestData()
@@ -76,26 +71,26 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             yield return new Peer
             {
                 PeerId =
-                    PeerIdHelper.GetPeerId("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
-                LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
+                   PeerIdHelper.GetPeerId("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
+                Reputation = 0,
+                LastSeen = DateTime.UtcNow,
+                Created = DateTime.UtcNow
             };
             yield return new Peer
             {
                 PeerId =
                     PeerIdHelper.GetPeerId("publickey-2", IPAddress.Parse("172.0.0.2"), 9090),
-                LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
+                Reputation = 1,
+                LastSeen = DateTime.UtcNow,
+                Created = DateTime.UtcNow
             };
             yield return new Peer
             {
                 PeerId =
                     PeerIdHelper.GetPeerId("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
-                LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
-            };
-            yield return new Peer
-            {
-                PeerId =
-                    PeerIdHelper.GetPeerId("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
-                LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
+                Reputation = 2,
+                LastSeen = DateTime.UtcNow,
+                Created = DateTime.UtcNow
             };
         }
 
@@ -108,32 +103,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData("publickey-1", "172.0.0.1")]
         [InlineData("publickey-2", "172.0.0.2")]
-        public void TestGetPeerInfoRequestSingularResponse(string publicKey, string ipAddress)
+        public void TestGetPeerInfoRequestResponse(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
             var responseContent = GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count().Should().Be(1);
-
-            foreach (var peerInfo in responseContent.PeerInfo)
-            {
-                peerInfo.PeerId.Ip.ToByteArray().Should().BeEquivalentTo(peerId.Ip.ToByteArray());
-                peerInfo.PeerId.PublicKey.ToByteArray().Should().BeEquivalentTo(peerId.PublicKey.ToByteArray());
-            }
-        }
-
-        /// <summary>
-        ///     Tests the get peer info request and response via RPC.
-        ///     Peer is expected to be found in this case
-        /// </summary>
-        /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
-        /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
-        [Theory]
-        [InlineData("publickey-3", "172.0.0.3")]
-        public void TestGetPeerInfoRequestRepeatedResponse(string publicKey, string ipAddress)
-        {
-            var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
-            var responseContent = GetPeerInfoTest(peerId);
-            responseContent.PeerInfo.Count().Should().Be(2);
 
             foreach (var peerInfo in responseContent.PeerInfo)
             {
