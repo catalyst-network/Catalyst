@@ -29,10 +29,10 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
 
-            GenesisHash = hashProvider.ComputeMultiHash(new Delta().ToByteArray());
+            GenesisHash = Cid.Read(hashProvider.ComputeMultiHash(new Delta().ToByteArray()).Digest);
 
             _dfsReader = dfsReader;
             _logger = logger;

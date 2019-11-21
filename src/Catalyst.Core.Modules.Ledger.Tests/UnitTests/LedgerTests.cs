@@ -35,11 +35,13 @@ using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.TestUtils;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
+using MultiFormats.Registry;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Store;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using LedgerService = Catalyst.Core.Modules.Ledger.Ledger;
 
@@ -70,8 +72,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
-            _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
-            _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
+            _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis"); // @TODO SHOULDNT BE MULTIHASH USE ICID
+            _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(Cid.Read(_genesisHash.Digest));
             _executor = Substitute.For<IDeltaExecutor>();
             _stateProvider = Substitute.For<IStateProvider>();
             _storageProvider = Substitute.For<IStorageProvider>();
@@ -99,7 +101,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             var updates = new[] {hash1, hash2};
 
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
-               .ReturnsForAnyArgs(new[] {hash2, hash1, _genesisHash});
+               .ReturnsForAnyArgs(new[] {Cid.Read(hash1.Hash.Digest), Cid.Read(hash2.Hash.Digest), Cid.Read(_genesisHash.Digest)});
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 

@@ -34,8 +34,9 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using PeerTalk;
 using Xunit;
 using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
@@ -192,7 +193,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         {
             var cancellationToken = new CancellationToken();
             await _dfs.ReadTextAsync(
-                _hashProvider.ComputeUtf8MultiHash(@"https://media.giphy.com/media/KZwQMLTSx7M8bJ9OkZ/giphy.gif"),
+                Cid.Read(_hashProvider.ComputeUtf8MultiHash(@"https://media.giphy.com/media/KZwQMLTSx7M8bJ9OkZ/giphy.gif").Digest),
                 cancellationToken);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
                 Arg.Any<string>(),

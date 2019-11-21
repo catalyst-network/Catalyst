@@ -40,10 +40,10 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using LibP2P;
+using MultiFormats.Registry;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
             {
-                DfsHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("test"))
+                DfsHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("test")).ToString() // @@TODO dfs is string in GetFileFromDfsRequest we need to update protocol to take a Cid
             };
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());

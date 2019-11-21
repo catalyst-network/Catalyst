@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Protocol.Wire;
-using LibP2P;
+using PeerTalk;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {

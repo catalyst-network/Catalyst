@@ -26,10 +26,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
-using LibP2P;
+using Ipfs.Abstractions;
+using Ipfs.Abstractions.CoreApi;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.Ipfs.Core.Lib;
-using TheDotNetLeague.Ipfs.Core.Lib.CoreApi;
+
+// using TheDotNetLeague.Ipfs.Core.Lib;
+// using TheDotNetLeague.Ipfs.Core.Lib.CoreApi;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -71,7 +74,7 @@ namespace Catalyst.Core.Modules.Dfs
             CancellationToken cancellationToken = default)
         {
             _logger.Debug("Reading content at path {0} from Dfs", cid);
-            return await _ipfs.FileSystem.ReadAllTextAsync(cid, cancellationToken).ConfigureAwait(false);
+            return await _ipfs.FileSystem.ReadAllTextAsync(cid.ToString(), cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -91,7 +94,7 @@ namespace Catalyst.Core.Modules.Dfs
             CancellationToken cancellationToken = default)
         {
             _logger.Debug("Reading content at path {0} from Dfs", cid);
-            return await _ipfs.FileSystem.ReadFileAsync(cid, cancellationToken).ConfigureAwait(false);
+            return await _ipfs.FileSystem.ReadFileAsync(cid.ToString(), cancellationToken).ConfigureAwait(false);
         }
     }
 }

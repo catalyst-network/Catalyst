@@ -26,7 +26,6 @@ using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Dawn;
-using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {

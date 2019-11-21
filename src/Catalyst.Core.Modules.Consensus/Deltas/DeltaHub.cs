@@ -37,7 +37,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
-using LibP2P;
+using PeerTalk;
 using Polly;
 using Polly.Retry;
 using Serilog;

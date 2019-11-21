@@ -39,13 +39,13 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using MultiFormats.Registry;
 using NSubstitute;
+using PeerTalk;
 using Polly;
 using Polly.Retry;
 using Serilog;
 using Xunit;
-using LibP2P;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -157,7 +157,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var cancellationSource = new CancellationTokenSource();
             var cancellationToken = cancellationSource.Token;
 
-            var dfsResults = new SubstituteResults<string>(() => throw new Exception("this one failed"))
+            var dfsResults = new SubstituteResults<Cid>(() => throw new Exception("this one failed"))
                .Then(() => throw new Exception("this one failed again"))
                .Then(() =>
                 {
@@ -172,7 +172,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             new Action(() => _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken).GetAwaiter().GetResult())
                .Should().NotThrow<TaskCanceledException>();
 
-            await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
+            await _dfs.ReceivedWithAnyArgs(3)
+               .AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken)
+               .ConfigureAwait(false);
         }
 
         public class BadDeltas : TheoryData<Delta>

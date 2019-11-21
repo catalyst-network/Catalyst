@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Semver" Version="2.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Cryptography" />
+      <Folder Include="Discovery" />
+      <Folder Include="Protocols" />
+      <Folder Include="PubSub" />
+      <Folder Include="Transports" />
+    </ItemGroup>
+
+</Project>

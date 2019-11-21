@@ -29,13 +29,12 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
-using LibP2P;
+using Ipfs.Abstractions;
+using Ipfs.Abstractions.CoreApi;
+using MultiFormats.Registry;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.Ipfs.Abstractions;
-using TheDotNetLeague.Ipfs.Core.Lib;
-using TheDotNetLeague.Ipfs.Core.Lib.CoreApi;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests

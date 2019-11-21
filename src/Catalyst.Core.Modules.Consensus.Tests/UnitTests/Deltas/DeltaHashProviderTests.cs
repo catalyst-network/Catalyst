@@ -33,10 +33,10 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using LibP2P;
+using MultiFormats.Registry;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -71,7 +71,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var emptyDelta = new Delta();
             var hash = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(emptyDelta.ToByteArray()));
 
-            Output.WriteLine(hash);
+            Output.WriteLine(hash.ToString());
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private Cid GetHash(int i)
         {
             var hash = _hashProvider.ComputeMultiHash(BitConverter.GetBytes(i));
-            return hash;
+            return Cid.Read(hash.Digest);
         }
 
         private void BuildDeltasAndSetCacheExpectations(int deltaCount)

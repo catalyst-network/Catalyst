@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Core.Modules.Ledger.Models;
-using LibP2P;
+using PeerTalk;
 
 namespace Catalyst.Core.Modules.Ledger
 {

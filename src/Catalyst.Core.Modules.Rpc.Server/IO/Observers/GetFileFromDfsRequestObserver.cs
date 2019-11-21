@@ -41,7 +41,7 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using LibP2P;
+using PeerTalk;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers

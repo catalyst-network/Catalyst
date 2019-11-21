@@ -37,8 +37,9 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
+using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
@@ -47,7 +48,7 @@ using Nethermind.Evm.Tracing;
 using Nethermind.Logging;
 using Nethermind.Store;
 using NSubstitute;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using PeerTalk;
 using Xunit;
 using ILogger = Serilog.ILogger;
 
@@ -77,14 +78,14 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _cryptoContext = new FfiWrapper();
             _fakeRepository = Substitute.For<IAccountRepository>();
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-            _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
+            _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis"); // @TODO this shouldn't be a multihash but a ICID
 
             _logger = Substitute.For<ILogger>();
             _mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
 
-            _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
+            _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(Cid.Read(_genesisHash.Digest));
 
             var stateDbDevice = new MemDb();
             var codeDbDevice = new MemDb();
@@ -107,7 +108,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             var hash1 = _hashProvider.ComputeUtf8MultiHash("update");
             var updates = new[] {hash1};
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
-               .ReturnsForAnyArgs(new Cid[] {hash1, _genesisHash});
+               .ReturnsForAnyArgs(new[] {Cid.Read(hash1.Digest), Cid.Read(_genesisHash.Digest)});
             _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
                .Returns(c =>
                 {
@@ -115,7 +116,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                     return true;
                 }, c => false);
 
-            _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid) h).ToObservable(_testScheduler));
+            _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => Cid.Read(h.Digest)).ToObservable(_testScheduler));
             
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
             var classUnderTest = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);

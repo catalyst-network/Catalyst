@@ -25,7 +25,7 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
-using LibP2P;
+using PeerTalk;
 
 namespace Catalyst.TestUtils
 {

@@ -24,7 +24,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using LibP2P;
+using PeerTalk;
 
 namespace Catalyst.Abstractions.Dfs
 {

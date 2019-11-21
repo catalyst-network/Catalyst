@@ -33,11 +33,11 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats.Registry;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
@@ -107,10 +107,10 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
 
-            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)),
+            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash.ToString())),
                 out Arg.Any<object>());
             _producersByPreviousDelta.Received(1)
-               .CreateEntry(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)));
+               .CreateEntry(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash.ToString())));
 
             producers.Should().OnlyHaveUniqueItems();
 
@@ -124,7 +124,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void GetDeltaProducersFromPreviousDelta_when_cached_should_not_recompute()
         {
-            _producersByPreviousDelta.TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)),
+            _producersByPreviousDelta.TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash.ToString())),
                     out Arg.Any<object>())
                .Returns(ci =>
                 {
@@ -134,7 +134,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
 
-            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)),
+            _producersByPreviousDelta.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash.ToString())),
                 out Arg.Any<object>());
             _producersByPreviousDelta.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<string>());
 

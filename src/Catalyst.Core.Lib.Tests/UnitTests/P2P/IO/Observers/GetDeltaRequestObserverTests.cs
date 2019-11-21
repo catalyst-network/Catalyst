@@ -36,9 +36,9 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using LibP2P;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
 using Xunit;
 

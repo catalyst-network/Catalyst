@@ -31,13 +31,16 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Common.Logging;
 using Common.Logging.Serilog;
-using LibP2P;
-using LibP2P.Cryptography;
+using Ipfs.Abstractions.CoreApi;
+using Ipfs.Core;
+using MultiFormats;
+using PeerTalk.Cryptography;
+using PeerTalk.PubSub;
+using PeerTalk.Routing;
 using Serilog;
-using TheDotNetLeague.Ipfs.Abstractions;
-using TheDotNetLeague.Ipfs.Core.Lib;
-using TheDotNetLeague.MultiFormats.MultiAddress;
-using TheDotNetLeague.MultiFormats.MultiBase;
+
+// using TheDotNetLeague.Ipfs.Abstractions;
+// using TheDotNetLeague.Ipfs.Core.Lib;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -98,7 +101,7 @@ namespace Catalyst.Core.Modules.Dfs
             // of catalyst only nodes.
             _ipfs.Options.Swarm.PrivateNetworkKey = new PreSharedKey
             {
-                Value = swarmKey.ToHexBuffer()
+                Value = HexString.ToHexBuffer(swarmKey)
             };
 
             _logger.Information("IPFS configured.");

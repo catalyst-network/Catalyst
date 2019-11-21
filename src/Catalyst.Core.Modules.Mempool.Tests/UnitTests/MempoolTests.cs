@@ -32,10 +32,10 @@ using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using TheDotNetLeague.MultiFormats.MultiBase;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests

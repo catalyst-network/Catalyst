@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using LibP2P;
+using PeerTalk;
 
 namespace Catalyst.Abstractions.Consensus.Cycle
 {

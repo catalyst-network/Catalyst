@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Util;
-using LibP2P;
+using PeerTalk;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Ledger

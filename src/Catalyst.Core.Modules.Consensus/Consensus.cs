@@ -113,7 +113,7 @@ namespace Catalyst.Core.Modules.Consensus
                        .ConfigureAwait(false).GetAwaiter().GetResult();
                     var previousHash = CidHelper.Cast(d.PreviousDeltaDfsHash.ToByteArray());
 
-                    _deltaHashProvider.TryUpdateLatestHash(previousHash, newCid.Hash);
+                    _deltaHashProvider.TryUpdateLatestHash(previousHash, newCid);
                 });
         }
         

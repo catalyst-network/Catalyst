@@ -43,13 +43,13 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using LibP2P;
+using MultiFormats.Registry;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _producerId = PeerIdHelper.GetPeerId("producer");
             _peerSettings = _producerId.ToSubstitutedPeerSettings();
 
-            _previousDeltaHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousDelta"));
+            _previousDeltaHash = (Cid) CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousDelta"));
             _zeroCoinbaseEntry = new CoinbaseEntry
             {
                 Amount = UInt256.Zero.ToUint256ByteString(),

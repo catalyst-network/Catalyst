@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\submodules\peer-talk\src\PeerTalk.csproj" />
+      <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
+<!--      <ProjectReference Include="..\PeerTalk.Abstractions\PeerTalk.Abstractions.csproj" />-->
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Google.Protobuf" Version="3.9.1" />
+    </ItemGroup>
+
+</Project>

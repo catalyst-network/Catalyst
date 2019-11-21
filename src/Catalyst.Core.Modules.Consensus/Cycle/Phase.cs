@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Consensus.Cycle;
-using LibP2P;
+using PeerTalk;
 
 namespace Catalyst.Core.Modules.Consensus.Cycle
 {

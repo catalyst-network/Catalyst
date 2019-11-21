@@ -10,3 +10,15 @@
 [submodule "docs/articles"]
 	path = docs/articles
 	url = https://github.com/catalyst-network/Catalyst.Framework.wiki.git
+[submodule "submodules/peer-talk"]
+	path = submodules/peer-talk
+	url = git@github.com:richardschneider/peer-talk.git
+[submodule "submodules/net-ipfs-http-client"]
+	path = submodules/net-ipfs-http-client
+	url = git@github.com:richardschneider/net-ipfs-http-client.git
+[submodule "submodules/net-mdns"]
+	path = submodules/net-mdns
+	url = git@github.com:richardschneider/net-mdns.git
+[submodule "submodules/k-bucket"]
+	path = submodules/k-bucket
+	url = git@github.com:richardschneider/k-bucket.git

@@ -24,7 +24,9 @@
 using Autofac;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
-using TheDotNetLeague.Ipfs.Core.Lib;
+using Ipfs.Abstractions.CoreApi;
+
+// using TheDotNetLeague.Ipfs.Core.Lib;
 
 namespace Catalyst.Core.Modules.Dfs
 {

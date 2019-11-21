@@ -41,10 +41,10 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 //@TODO should be in rpc module test
@@ -129,7 +129,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("expectedHash"));
+            var expectedCid = CidHelper.CreateCid("expectedHash"); // @@
             _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(expectedCid);
 
             var protocolMessage = GenerateProtocolMessage();

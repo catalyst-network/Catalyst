@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
-using LibP2P;
+using PeerTalk;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

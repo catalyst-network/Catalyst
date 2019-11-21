@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Cryptography;
-using TheDotNetLeague.MultiFormats.MultiBase;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Cryptography
 {

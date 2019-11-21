@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using LibP2P;
+using PeerTalk;
 
 namespace Catalyst.Core.Modules.Ledger
 {

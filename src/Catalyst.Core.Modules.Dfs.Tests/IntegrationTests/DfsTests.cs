@@ -33,9 +33,9 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -102,7 +102,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
         }
 
-        [Fact(Skip = "waiting for Dns seed fix: https://github.com/catalyst-network/Catalyst.Framework/issues/1075")]
+        // [Fact(Skip = "waiting for Dns seed fix: https://github.com/catalyst-network/Catalyst.Framework/issues/1075")]
+        
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_connect_to_a_seednode()
         {

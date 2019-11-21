@@ -35,9 +35,10 @@ using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
+using MultiFormats.Registry;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -75,7 +76,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             _logger = Substitute.For<ILogger>();
 
             _deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
-               .Returns(hashProvider.ComputeUtf8MultiHash("test"));
+               .Returns(Cid.Read(hashProvider.ComputeUtf8MultiHash("test").Digest));
 
             _dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
             _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider,

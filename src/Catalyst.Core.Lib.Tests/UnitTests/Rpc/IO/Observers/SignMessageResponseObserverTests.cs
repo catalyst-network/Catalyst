@@ -32,9 +32,9 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers

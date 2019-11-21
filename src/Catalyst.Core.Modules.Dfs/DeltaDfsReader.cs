@@ -26,7 +26,7 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Protocol.Deltas;
-using LibP2P;
+using PeerTalk;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs

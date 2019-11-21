@@ -30,8 +30,8 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {

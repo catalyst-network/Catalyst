@@ -21,9 +21,8 @@
 
 #endregion
 
-using LibP2P;
-using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using MultiFormats;
+using PeerTalk;
 
 namespace Catalyst.Core.Lib.Util
 {
@@ -31,9 +30,14 @@ namespace Catalyst.Core.Lib.Util
     {
         public static readonly string Encoding = "base32";
 
+        /// <summary>
+        ///     @TODO WE PASS IN MULTIHASH THEN COMPUTE THE HASH OF THE HASH!!!!!
+        /// </summary>
+        /// <param name="multiHash"></param>
+        /// <returns></returns>
         public static Cid CreateCid(MultiHash multiHash)
         {
-            return new Cid {Version = 1, Hash = multiHash, ContentType = "raw", Encoding = Encoding};
+            return new Cid {Version = 1, Hash = MultiHash.ComputeHash(multiHash.Digest), ContentType = "raw", Encoding = Encoding};
         }
 
         public static Cid Cast(byte[] cid) { return Cid.Decode(MultiBase.Encode(cid, Encoding)); }

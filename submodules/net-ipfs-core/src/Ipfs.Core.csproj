@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
+        <AssemblyName>Ipfs.Core</AssemblyName>
+        <RootNamespace>Ipfs.Core</RootNamespace>
+        <DebugType>portable</DebugType>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+        <!-- developer build is always 0.42 -->
+        <AssemblyVersion>0.42</AssemblyVersion>
+        <Version>0.42</Version>
+
+        <!-- Nuget specs -->
+        <PackageId>Ipfs.Core</PackageId>
+        <Authors>Richard Schneider</Authors>
+        <Title>IPFS Core Objects</Title>
+        <Description>
+            Core objects and interfaces for IPFS.
+
+            The InterPlanetary File System is the permanent web. It is a new hypermedia distribution protocol, addressed by content and identities. IPFS enables the creation of completely distributed applications. It aims to make the web faster, safer, and more open.
+        </Description>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageReleaseNotes>https://github.com/richardschneider/net-ipfs-core/releases</PackageReleaseNotes>
+        <Copyright>© 2015-2019 Richard Schneider</Copyright>
+        <PackageTags>ipfs peer-to-peer distributed file-system</PackageTags>
+        <IncludeSymbols>True</IncludeSymbols>
+        <PackageProjectUrl>https://github.com/richardschneider/net-ipfs-core</PackageProjectUrl>
+        <PackageIconUrl>https://raw.githubusercontent.com/richardschneider/net-ipfs-core/master/doc/images/ipfs-cs-logo-64x64.png</PackageIconUrl>
+
+        <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
+        <EmbedUntrackedSources>false</EmbedUntrackedSources>
+        <!-- Optional: Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>.pdb;$(AllowedOutputExtensionsInPackageBuildOutputFolder)</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Makaretu.Dns.Unicast" Version="0.11.1" />
+        <PackageReference Include="PeterO.Cbor" Version="3.1.0" />
+        <PackageReference Include="Common.Logging" Version="3.4.1" />
+        <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
+        <PackageReference Include="Google.Protobuf" Version="3.9.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+        <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.0.0" />
+        <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
+        <PackageReference Include="Grpc.Tools" Version="1.21.0" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19270-01" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.0.102" PrivateAssets="All" />
+        <PackageReference Include="protobuf-net" Version="2.4.0" />
+        <PackageReference Include="SharpZipLib" Version="1.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="**/*.proto" />
+        <EmbeddedResource Include="**/*.proto" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\src\Ipfs.Abstractions\Ipfs.Abstractions.csproj" />
+      <ProjectReference Include="..\..\..\src\MultiFormats\MultiFormats.csproj" />
+      <ProjectReference Include="..\..\peer-talk\src\PeerTalk.csproj" />
+    </ItemGroup>
+
+</Project>

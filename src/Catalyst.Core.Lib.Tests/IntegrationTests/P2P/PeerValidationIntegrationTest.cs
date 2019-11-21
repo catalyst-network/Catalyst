@@ -39,7 +39,6 @@ using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Protocols;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
@@ -116,16 +115,16 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             await _peerService.StartAsync();
         }
 
-        [Fact(Skip = "this wont work as it tries to connect to a real node!! We need to instantiate two sockets here")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
-        {
-            // await Setup().ConfigureAwait(false);
-            // var valid = await RunPeerChallengeTask(_peerSettings.PublicKey, _peerSettings.BindAddress,
-            //     _peerSettings.Port).ConfigureAwait(false);
-            //
-            // valid.Should().BeTrue();
-        }
+        // [Fact(Skip = "this wont work as it tries to connect to a real node!! We need to instantiate two sockets here")]
+        // [Trait(Traits.TestType, Traits.IntegrationTest)]
+        // public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
+        // {
+        //     // await Setup().ConfigureAwait(false);
+        //     // var valid = await RunPeerChallengeTask(_peerSettings.PublicKey, _peerSettings.BindAddress,
+        //     //     _peerSettings.Port).ConfigureAwait(false);
+        //     //
+        //     // valid.Should().BeTrue();
+        // }
 
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]

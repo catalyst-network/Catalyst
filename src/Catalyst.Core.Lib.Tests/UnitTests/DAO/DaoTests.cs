@@ -43,11 +43,11 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using FluentAssertions;
+using MultiFormats.Registry;
 using Nethermind.Dirichlet.Numerics;
-using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
+using MultiFormats;
+using PeerTalk;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
@@ -182,7 +182,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
 
-            var original = DeltaHelper.GetDelta(_hashProvider, previousHash);
+            var original = DeltaHelper.GetDelta(_hashProvider, (Cid) Cid.Read(previousHash.Digest));
 
             var messageDao = original.ToDao<Delta, DeltaDao>(_mapperProvider);
             var reconverted = messageDao.ToProtoBuff<DeltaDao, Delta>(_mapperProvider);
@@ -197,9 +197,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new CandidateDeltaBroadcast
             {
-                Hash = MultiBase.Decode(CidHelper.CreateCid(hash)).ToByteString(),
+                Hash = MultiBase.Decode(CidHelper.CreateCid(hash).ToString()).ToByteString(),
                 ProducerId = PeerIdHelper.GetPeerId("test"),
-                PreviousDeltaDfsHash = MultiBase.Decode(CidHelper.CreateCid(previousHash)).ToByteString()
+                PreviousDeltaDfsHash = MultiBase.Decode(CidHelper.CreateCid(previousHash).ToString()).ToByteString()
             };
 
             var candidateDeltaBroadcast = original.ToDao<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>(_mapperProvider);
@@ -210,8 +210,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         [Fact]
         public void DeltaDfsHashBroadcastDao_DeltaDfsHashBroadcast_Should_Be_Convertible()
         {
-            var hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("this hash")));
-            var previousDfsHash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousDfsHash")));
+            var hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("this hash")).ToString());
+            var previousDfsHash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousDfsHash")).ToString());
 
             var original = new DeltaDfsHashBroadcast
             {

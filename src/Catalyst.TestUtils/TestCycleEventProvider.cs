@@ -28,9 +28,10 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Hashing;
 using Microsoft.Reactive.Testing;
+using MultiFormats.Registry;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.TestUtils
 {
@@ -59,9 +60,9 @@ namespace Catalyst.TestUtils
                 logger ?? Substitute.For<ILogger>());
 
             deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
-               .Returns(ci => hashingProvider.ComputeMultiHash(
+               .Returns(ci => Cid.Read(hashingProvider.ComputeMultiHash(
                     BitConverter.GetBytes(((DateTime) ci[0]).Ticks /
-                        (int) _cycleEventsProvider.Configuration.CycleDuration.Ticks)));
+                        (int) _cycleEventsProvider.Configuration.CycleDuration.Ticks)).Digest));
 
             _deltaUpdatesSubscription = PhaseChanges.Subscribe(p => CurrentPhase = p);
         }

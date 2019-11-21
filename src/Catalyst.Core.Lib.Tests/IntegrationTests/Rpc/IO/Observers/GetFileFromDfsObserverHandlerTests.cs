@@ -39,11 +39,14 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using MultiFormats;
+using MultiFormats.Registry;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
+using TaskHelper = Catalyst.TestUtils.TaskHelper;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -104,7 +107,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 
-                fileStream = await _dfs.ReadAsync(addedIpfsHash);
+                fileStream = await _dfs.ReadAsync((Cid) Cid.Read(addedIpfsHash.Digest));
                 IUploadFileInformation fileUploadInformation = new UploadFileTransferInformation(
                     fileStream,
                     rpcPeer,
@@ -136,7 +139,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var fakeId = _hashProvider.ComputeUtf8MultiHash(CorrelationId.GenerateCorrelationId().ToString());
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             stream = new MemoryStream(File.ReadAllBytes(fileToTransfer));
-            _dfs.ReadAsync(fakeId).Returns(stream);
+            _dfs.ReadAsync(Cid.Read(fakeId.Digest)).Returns(stream);
             return fakeId;
         }
     }

@@ -33,9 +33,9 @@ using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
-using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using PeerTalk;
 using Serilog;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
@@ -75,7 +75,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         {
             Guard.Argument(previousDeltaHash, nameof(previousDeltaHash)).NotNull();
 
-            if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHash),
+            if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHash.ToString()),
                 out IList<PeerId> cachedPeerIdsInPriorityOrder))
             {
                 _logger.Information("Retrieved favourite delta producers for successor of {0} from cache.",
@@ -105,7 +105,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             _logger.Information("Adding favourite delta producers for the successor of {0} to cache.",
                 previousDeltaHash);
             _logger.Debug("Favourite producers are, in that order, [{0}]", string.Join(", ", peerIdsInPriorityOrder));
-            _producersByPreviousDelta.Set(GetCacheKey(previousDeltaHash), peerIdsInPriorityOrder,
+            _producersByPreviousDelta.Set(GetCacheKey(previousDeltaHash.ToString()), peerIdsInPriorityOrder,
                 _cacheEntryOptions);
 
             return peerIdsInPriorityOrder;

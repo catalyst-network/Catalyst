@@ -37,11 +37,11 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats.Registry;
 using NSubstitute;
+using PeerTalk;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
@@ -154,16 +154,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var candidateHash = CidHelper.Cast(candidate.Hash.ToByteArray());
 
             var addedEntry = Substitute.For<ICacheEntry>();
-            _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHash)))
+            _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHash.ToString())))
                .Returns(addedEntry);
 
             _voter.OnNext(candidate);
 
             _cache.Received(1)
-               .TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHash)), out Arg.Any<object>());
+               .TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHash.ToString())), out Arg.Any<object>());
 
             _cache.ReceivedWithAnyArgs(2).CreateEntry(Arg.Any<object>());
-            _cache.Received(1).CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHash)));
+            _cache.Received(1).CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHash.ToString())));
 
             addedEntry.Value.Should().BeAssignableTo<IScoredCandidateDelta>();
             var scoredCandidateDelta = (IScoredCandidateDelta) addedEntry.Value;
@@ -194,7 +194,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _voter.OnNext(cacheCandidate.Candidate);
 
             _cache.Received(1)
-               .TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHash)), out Arg.Any<object>());
+               .TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHash.ToString())), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<string>());
 
             cacheCandidate.Score.Should().Be(initialScore + 1);

@@ -23,7 +23,7 @@
 
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Protocol.Peer;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {
