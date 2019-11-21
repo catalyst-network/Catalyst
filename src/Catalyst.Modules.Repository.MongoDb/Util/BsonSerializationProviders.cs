@@ -37,7 +37,6 @@ namespace Catalyst.Modules.Repository.MongoDb.Util
             AddSerializer<PeerId>();
             AddSerializer<PublicEntry>();
             AddSerializer<ConfidentialEntry>();
-            AddSerializer<ContractEntry>();
         }
         
         static void AddSerializer<TType>() where TType : IMessage, new()

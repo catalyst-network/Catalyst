@@ -23,24 +23,36 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Kvm;
-using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
+using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
+using Google.Protobuf;
+using LibP2P;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Reactive.Testing;
+using Nethermind.Core;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Store;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
+using Account = Catalyst.Core.Modules.Ledger.Models.Account;
 using LedgerService = Catalyst.Core.Modules.Ledger.Ledger;
 
 namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
@@ -84,7 +96,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
-                var account = AccountHelper.GetAccount((UInt256) i * 5);
+                var account = AccountHelper.GetAccount((UInt256)i * 5);
                 _ledger.SaveAccountState(account);
             }
 
@@ -96,10 +108,10 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         {
             var hash1 = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update"));
             var hash2 = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update again"));
-            var updates = new[] {hash1, hash2};
+            var updates = new[] { hash1, hash2 };
 
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
-               .ReturnsForAnyArgs(new[] {hash2, hash1, _genesisHash});
+               .ReturnsForAnyArgs(new[] { hash2, hash1, _genesisHash });
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 

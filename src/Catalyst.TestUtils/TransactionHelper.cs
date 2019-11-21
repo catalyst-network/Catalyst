@@ -84,9 +84,9 @@ namespace Catalyst.TestUtils
         {
             var transaction = new TransactionBroadcast
             {
-                ContractEntries =
+                PublicEntries =
                 {
-                    new ContractEntry
+                    new PublicEntry
                     {
                         Amount = amount.ToUint256ByteString(),
                         Base = new BaseEntry

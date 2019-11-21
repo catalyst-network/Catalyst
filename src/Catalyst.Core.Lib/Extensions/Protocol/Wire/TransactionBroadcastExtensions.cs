@@ -37,8 +37,7 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
 
         public static UInt256 SummedEntryFees(this TransactionBroadcast transaction)
         {
-            var sum = transaction.ContractEntries.Sum(e => e.Base.TransactionFees.ToUInt256())
-              + transaction.PublicEntries.Sum(e => e.Base.TransactionFees.ToUInt256())
+            var sum = transaction.PublicEntries.Sum(e => e.Base.TransactionFees.ToUInt256())
               + transaction.ConfidentialEntries.Sum(e => e.Base.TransactionFees.ToUInt256());
             return sum;
         }

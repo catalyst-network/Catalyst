@@ -48,7 +48,6 @@ namespace Catalyst.TestUtils
             new PublicEntryMapperInitialiser(),
             new ConfidentialEntryMapperInitialiser(),
             new TransactionBroadcastMapperInitialiser(),
-            new ContractEntryMapperInitialiser(),
             new SignatureMapperInitialiser(),
             new BaseEntryMapperInitialiser(),
         }) { }

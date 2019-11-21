@@ -37,8 +37,8 @@ namespace Catalyst.Protocol.Wire
 
         partial void OnConstruction()
         {
-            IsContractDeployment = ContractEntries.Any(c => c.IsValidDeploymentEntry);
-            IsContractCall = ContractEntries.Any(c => c.IsValidCallEntry);
+            IsContractDeployment = PublicEntries.Any(c => c.IsValidDeploymentEntry);
+            IsContractCall = PublicEntries.Any(c => c.IsValidCallEntry);
             IsPublicTransaction = PublicEntries.Any() && PublicEntries.All(e => e.IsValid());
             IsConfidentialTransaction = ConfidentialEntries.Any()
              && ConfidentialEntries.All(e => e.IsValid());
@@ -49,8 +49,8 @@ namespace Catalyst.Protocol.Wire
         /// </summary>
         public void AfterConstruction()
         {
-            IsContractDeployment = ContractEntries.Any(c => c.IsValidDeploymentEntry);
-            IsContractCall = ContractEntries.Any(c => c.IsValidCallEntry);
+            IsContractDeployment = PublicEntries.Any(c => c.IsValidDeploymentEntry);
+            IsContractCall = PublicEntries.Any(c => c.IsValidCallEntry);
             IsPublicTransaction = PublicEntries.Any() && PublicEntries.All(e => e.IsValid());
             IsConfidentialTransaction = ConfidentialEntries.Any()
              && ConfidentialEntries.All(e => e.IsValid());
@@ -63,40 +63,40 @@ namespace Catalyst.Protocol.Wire
             {
                 var averagePrice = BigInteger.Zero;
                 ulong totalLimit = 0;
-                var count = ContractEntries.Count;
+                var count = PublicEntries.Count;
                 for (var i = 0; i < count; i++)
                 {
-                    var limit = ContractEntries[i].GasLimit;
+                    var limit = PublicEntries[i].GasLimit;
                     totalLimit += limit;
-                    averagePrice += limit * ContractEntries[i].GasPrice;
+                    averagePrice += limit * PublicEntries[i].GasPrice;
                 }
 
                 if (totalLimit == 0)
                 {
                     return UInt256.Zero;
                 }
-                
+
                 UInt256.Create(out var result, averagePrice / totalLimit);
                 return result;
             }
         }
-        
+
         // why TransactionBroadcastTest is commented out? if brought back - this needs to have a test coverage there too
         public ulong TotalGasLimit
         {
             get
             {
                 ulong totalLimit = 0;
-                var count = ContractEntries.Count;
+                var count = PublicEntries.Count;
                 for (var i = 0; i < count; i++)
                 {
-                    totalLimit += ContractEntries[i].GasLimit;
+                    totalLimit += PublicEntries[i].GasLimit;
                 }
-                
+
                 return totalLimit;
             }
         }
-        
+
         public bool IsContractDeployment { get; private set; }
         public bool IsContractCall { get; private set; }
         public bool IsPublicTransaction { get; private set; }
@@ -104,7 +104,7 @@ namespace Catalyst.Protocol.Wire
 
         public bool HasValidEntries()
         {
-            var hasSingleType = IsContractDeployment ^ IsContractCall ^ IsPublicTransaction ^ IsConfidentialTransaction;
+            var hasSingleType = IsContractDeployment ^ IsContractCall ^ IsConfidentialTransaction;
             if (hasSingleType)
             {
                 return true;
@@ -123,8 +123,8 @@ namespace Catalyst.Protocol.Wire
                 return false;
             }
 
-            var hasValidSignature = Signature.IsValid(IsConfidentialTransaction 
-                ? SignatureType.TransactionConfidential 
+            var hasValidSignature = Signature.IsValid(IsConfidentialTransaction
+                ? SignatureType.TransactionConfidential
                 : SignatureType.TransactionPublic);
 
             return hasValidSignature && HasValidEntries();
