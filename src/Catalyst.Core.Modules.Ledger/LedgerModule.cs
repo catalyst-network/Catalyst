@@ -23,7 +23,6 @@
 
 using Autofac;
 using Catalyst.Core.Modules.Ledger.Models;
-using Catalyst.Core.Modules.Ledger.Repository;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 
@@ -38,7 +37,6 @@ namespace Catalyst.Core.Modules.Ledger
                .SingleInstance();
 
             builder.RegisterType<LedgerSynchroniser>().As<ILedgerSynchroniser>();
-            builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
             builder.RegisterType<Ledger>().As<ILedger>().SingleInstance();
         }  
     }

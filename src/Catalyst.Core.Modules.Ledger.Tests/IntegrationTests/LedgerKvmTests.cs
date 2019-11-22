@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -114,6 +114,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 {
                     hash1, _genesisHash
                 });
+
             _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
                .Returns(c =>
                 {

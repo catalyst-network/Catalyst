@@ -39,8 +39,8 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository.Specifications;
 using Xunit;
+using SharpRepository.InMemoryRepository;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -93,26 +93,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
             var testScheduler = new TestScheduler();
-            IPeerRepository peerRepository = Substitute.For<IPeerRepository>();
-            Peer targetPeerToDelete = null;
+            IPeerRepository peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             var fakePeerList = fakePeers.ToList().Select(fakePeer =>
             {
-                var peer = new Peer
+                return new Peer
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now.Subtract(TimeSpan.FromSeconds(fakePeers.ToList().IndexOf(fakePeer))),
                     PeerId = PeerIdHelper.GetPeerId(fakePeer)
                 };
-
-                if (targetPeerToDelete == null)
-                {
-                    targetPeerToDelete = peer;
-                }
-
-                return peer;
             }).ToList();
 
-            peerRepository.FindAll(Arg.Any<ISpecification<Peer>>()).Returns(withPublicKey ? new List<Peer> {targetPeerToDelete} : fakePeerList);
+            Peer targetPeerToDelete = fakePeerList[0];
+
+            peerRepository.Add(fakePeerList);
             
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));

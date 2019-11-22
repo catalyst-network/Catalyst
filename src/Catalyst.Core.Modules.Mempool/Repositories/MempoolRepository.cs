@@ -22,31 +22,44 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Repository;
 using Dawn;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Repositories
 {
-    public class MempoolRepository : RepositoryWrapper<TransactionBroadcastDao>,
-        IMempoolRepository<TransactionBroadcastDao>
+    public class MempoolRepository : IMempoolRepository<TransactionBroadcastDao>
     {
-        public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository) { }
+        private readonly IRepository<TransactionBroadcastDao, string> _repository;
+        public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository)
+        {
+            _repository = repository;
+        }
+
+        public IEnumerable<TransactionBroadcastDao> GetAll()
+        {
+            return _repository.GetAll();
+        }
 
         /// <inheritdoc />
         public bool TryReadItem(string signature)
         {
             Guard.Argument(signature, nameof(signature)).NotNull();
-            return Repository.TryGet(signature, out _);
+            return _repository.TryGet(signature, out _);
         }
 
         public TransactionBroadcastDao ReadItem(string signature)
         {
             Guard.Argument(signature, nameof(signature)).NotNull();
-            return Repository.Get(signature);
+            return _repository.Get(signature);
+        }
+
+        public void Delete(IEnumerable<TransactionBroadcastDao> transactionBroadcasts)
+        {
+            _repository.Delete(transactionBroadcasts);
         }
 
         /// <inheritdoc />
@@ -54,7 +67,7 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
         {
             try
             {
-                Repository.Delete(transactionSignatures);
+                _repository.Delete(transactionSignatures);
             }
             catch (Exception exception)
             {
@@ -72,7 +85,7 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
 
             try
             {
-                Repository.Add(transactionBroadcast);
+                _repository.Add(transactionBroadcast);
             }
             catch (Exception e)
             {
@@ -81,6 +94,11 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
             }
 
             return true;
+        }
+
+        public void Dispose()
+        {
+            _repository.Dispose();
         }
     }
 }
