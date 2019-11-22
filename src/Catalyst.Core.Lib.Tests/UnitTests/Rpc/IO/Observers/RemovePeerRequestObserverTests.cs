@@ -94,27 +94,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var testScheduler = new TestScheduler();
             IPeerRepository peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
-            Peer targetPeerToDelete = null;
             var fakePeerList = fakePeers.ToList().Select(fakePeer =>
             {
-                var peer = new Peer
+                return new Peer
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now.Subtract(TimeSpan.FromSeconds(fakePeers.ToList().IndexOf(fakePeer))),
                     PeerId = PeerIdHelper.GetPeerId(fakePeer)
                 };
-
-                if (targetPeerToDelete == null)
-                {
-                    targetPeerToDelete = peer;
-                }
-
-                return peer;
             }).ToList();
 
-            peerRepository.Add(fakePeerList);
+            Peer targetPeerToDelete = fakePeerList[0];
 
-            //peerRepository.GetPeersByIpAndPublicKey(Arg.Is(targetPeerToDelete.PeerId.Ip), Arg.Is(targetPeerToDelete.PeerId.PublicKey)).Returns(withPublicKey ? new List<Peer> {targetPeerToDelete} : fakePeerList);
+            peerRepository.Add(fakePeerList);
             
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
