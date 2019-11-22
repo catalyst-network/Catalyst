@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         [Fact]
         public async Task Can_Increase_Broadcast_Count_When_Broadcasting()
         {
-            await TestBroadcast(100,
+            await TestBroadcast(100, 
                 PeerIdHelper.GetPeerId("AnotherBroadcaster"),
                 BroadcastManager.MaxGossipPeersPerRound).ConfigureAwait(false);
         }
@@ -96,7 +96,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 
             _cache.TryGetValue(correlationId.Id, out BroadcastMessage value);
 
-            value.BroadcastCount.Should().Be((uint)expectedBroadcastCount);
+            value.BroadcastCount.Should().Be((uint) expectedBroadcastCount);
             value.ReceivedCount.Should().Be(0);
         }
 
@@ -114,8 +114,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             IBroadcastManager broadcastMessageHandler = new BroadcastManager(
                 _peers,
                 _peerSettings,
-                _cache,
-                Substitute.For<IPeerClient>(),
+                _cache, 
+                Substitute.For<IPeerClient>(), 
                 _keySigner,
                 Substitute.For<ILogger>());
 
@@ -144,12 +144,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         private async Task<ICorrelationId> BroadcastMessage(PeerId broadcaster)
         {
             var gossipMessageHandler = new
-                BroadcastManager(
+                BroadcastManager( 
                     _peers,
                     _peerSettings,
-                    _cache,
-                    Substitute.For<IPeerClient>(),
-                    _keySigner,
+                    _cache, 
+                    Substitute.For<IPeerClient>(), 
+                    _keySigner, 
                     Substitute.For<ILogger>());
 
             var innerMessage = TransactionHelper.GetPublicTransaction()
@@ -161,10 +161,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 
         private void PopulatePeers(int count)
         {
-            _peers.Add(Enumerable.Range(10, count + 10).Select(i => new Peer
+            for (var i = 10; i < count + 10; i++)
             {
-                PeerId = PeerIdHelper.GetPeerId(i.ToString())
-            }));
+                _peers.Add(new Peer
+                {
+                    PeerId = PeerIdHelper.GetPeerId(i.ToString())
+                });
+            }
         }
 
         public void Dispose()
