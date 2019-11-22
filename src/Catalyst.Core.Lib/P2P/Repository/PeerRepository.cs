@@ -62,8 +62,6 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
         {
-            var i = ip.ToBase64();
-            var p = publicKey.ToBase64();
             return _repository.FindAll(m => m.PeerId.Ip == ip && (publicKey.IsEmpty || m.PeerId.PublicKey == publicKey));
         }
 
