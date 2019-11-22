@@ -21,11 +21,12 @@
 
 using Catalyst.Core.Lib.P2P.Models;
 using Google.Protobuf;
+using System;
 using System.Collections.Generic;
 
 namespace Catalyst.Core.Lib.P2P.Repository
 {
-    public interface IPeerRepository
+    public interface IPeerRepository : IDisposable
     {
         Peer Get(string id);
         IEnumerable<Peer> GetAll();
@@ -46,7 +47,5 @@ namespace Catalyst.Core.Lib.P2P.Repository
         bool Exists(string id);
 
         int Count();
-
-        void Dispose();
     }
 }

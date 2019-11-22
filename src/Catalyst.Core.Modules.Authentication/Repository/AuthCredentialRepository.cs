@@ -48,5 +48,10 @@ namespace Catalyst.Core.Modules.Authentication.Repository
             return _repository.TryFind(t => t.IpAddress.Equals(peerIdentifier.Ip.ToString()) &&
                 t.PublicKey.KeyToBytes().SequenceEqual(peerIdentifier.PublicKey), out authCredentials);
         }
+
+        public void Dispose()
+        {
+            _repository.Dispose();
+        }
     }
 }

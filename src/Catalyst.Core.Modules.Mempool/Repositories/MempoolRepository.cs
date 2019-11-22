@@ -95,5 +95,10 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
 
             return true;
         }
+
+        public void Dispose()
+        {
+            _repository.Dispose();
+        }
     }
 }

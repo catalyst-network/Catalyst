@@ -32,7 +32,7 @@ using System.Linq;
 
 namespace Catalyst.Core.Lib.P2P.Repository
 {
-    public class PeerRepository : IPeerRepository, IDisposable
+    public class PeerRepository : IPeerRepository
     {
         private readonly IRepository<Peer, string> _repository;
         public PeerRepository(IRepository<Peer, string> repository)

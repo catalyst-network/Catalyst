@@ -23,10 +23,11 @@
 
 using Catalyst.Core.Modules.Authentication.Models;
 using Catalyst.Protocol.Peer;
+using System;
 
 namespace Catalyst.Core.Modules.Authentication.Repository
 {
-    public interface IAuthCredentialRepository
+    public interface IAuthCredentialRepository : IDisposable
     {
         void Add(AuthCredentials authCredentials);
         bool TryFind(PeerId peerIdentifier, out AuthCredentials authCredentials);

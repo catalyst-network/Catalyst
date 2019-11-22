@@ -73,5 +73,10 @@ namespace Catalyst.TestUtils
         {
             throw new NotImplementedException();
         }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
