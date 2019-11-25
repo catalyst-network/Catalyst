@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IPeerService _peerRepository;
+        private readonly IPeerService _peerService;
 
         public GetPeerInfoRequestObserverTests()
         {
@@ -62,8 +62,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
 
-            _peerRepository = new PeerService(new InMemoryRepository<Peer, string>());
-            _peerRepository.Add(GetPeerTestData());
+            _peerService = new PeerService(new InMemoryRepository<Peer, string>());
+            _peerService.Add(GetPeerTestData());
         }
 
         public IEnumerable<Peer> GetPeerTestData()
@@ -153,7 +153,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = senderPeerIdentifier.ToSubstitutedPeerSettings();
-            var handler = new GetPeerInfoRequestObserver(peerSettings, _logger, _peerRepository);
+            var handler = new GetPeerInfoRequestObserver(peerSettings, _logger, _peerService);
 
             handler.StartObserving(messageStream);
 
