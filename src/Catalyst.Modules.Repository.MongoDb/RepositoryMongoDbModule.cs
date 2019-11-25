@@ -21,21 +21,21 @@
 
 #endregion
 
-//using Autofac;
-//using Catalyst.Core.Lib.Mempool.Documents;
-//using SharpRepository.MongoDbRepository;
-//using SharpRepository.Repository;
-//using SharpRepository.Repository.Caching;
+using Autofac;
+using Catalyst.Abstractions.Mempool.Models;
+using SharpRepository.MongoDbRepository;
+using SharpRepository.Repository;
+using SharpRepository.Repository.Caching;
 
-//namespace Catalyst.Modules.Repository.MongoDb
-//{
-//    public class MempoolModule : Module
-//    {
-//        protected override void Load(ContainerBuilder builder)
-//        {
-//            builder.Register(c => new MongoDbRepository<MempoolDocument>(
-//                c.ResolveOptional<ICachingStrategy<MempoolDocument, string>>()
-//            )).As<IRepository<MempoolDocument, string>>().SingleInstance();
-//        }  
-//    }
-//}
+namespace Catalyst.Modules.Repository.MongoDb
+{
+    public class MongoDbMempoolModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.Register(c => new MongoDbRepository<MempoolItem>(
+                c.ResolveOptional<ICachingStrategy<MempoolItem, string>>()
+            )).As<IRepository<MempoolItem, string>>().SingleInstance();
+        }
+    }
+}

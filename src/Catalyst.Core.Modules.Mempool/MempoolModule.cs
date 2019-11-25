@@ -23,8 +23,8 @@
 
 using Autofac;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
