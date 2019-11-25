@@ -94,10 +94,10 @@ namespace Catalyst.Core.Modules.Ledger
         {
             _synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(LatestKnownDelta, out var delta);
 
-            var mempoolItems = delta.PublicEntries.
+            //var mempoolItems = delta.PublicEntries.
 
-            var transactionsToFlush = _mempool.Repository.GetAll(); //@TOD0 no get alls
-            _mempool.Repository.Delete(transactionsToFlush);
+            var transactionsToFlush = _mempool.Service.GetAll(); //@TOD0 no get alls
+            _mempool.Service.Delete(transactionsToFlush);
         }
 
         /// <inheritdoc />

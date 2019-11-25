@@ -22,7 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Protocol.Peer;
 using LibP2P;
 
@@ -47,6 +47,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         /// <summary>
         ///     A peer repository containing peers eligible for the production of the next delta.
         /// </summary>
-        IPeerRepository PeerRepository { get; }
+        IPeerService PeerService { get; }
     }
 }

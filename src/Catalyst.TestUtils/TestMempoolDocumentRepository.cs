@@ -26,16 +26,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Protocol.Wire;
 using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
 {
-    public sealed class TestMempoolRepository : IMempoolRepository<TransactionBroadcastDao>
+    public sealed class TestMempoolRepository : IMempoolService<MempoolItem>
     {
         private readonly TestMapperProvider _mapperProvider;
 
-        public TestMempoolRepository(IRepository<TransactionBroadcastDao, string> repository)
+        public TestMempoolRepository(IRepository<MempoolItem, string> repository)
         {
             _mapperProvider = new TestMapperProvider();
         }
@@ -45,31 +46,32 @@ namespace Catalyst.TestUtils
             throw new NotImplementedException();
         }
 
-        public TransactionBroadcastDao ReadItem(string key)
+        public MempoolItem ReadItem(string key)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteItem(params string[] transactionSignatures)
+        public bool DeleteItem(params string[] ids)
         {
             throw new NotImplementedException();
         }
 
-        public bool CreateItem(TransactionBroadcastDao transactionBroadcast)
+        public bool CreateItem(MempoolItem mempoolItem)
         {
             throw new NotImplementedException();
         }
 
-        public new IEnumerable<TransactionBroadcastDao> GetAll()
+        public new IEnumerable<MempoolItem> GetAll()
         {
-            var utcNow = DateTime.UtcNow;
-            var tenSecondSlot = 1 + utcNow.Second / 10;
-            var tx = TransactionHelper.GetPublicTransaction(timestamp: (long) utcNow.ToOADate());
-            return Enumerable.Repeat(tx, tenSecondSlot)
-               .Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider));
+            return null;
+            //var utcNow = DateTime.UtcNow;
+            //var tenSecondSlot = 1 + utcNow.Second / 10;
+            //var tx = TransactionHelper.GetPublicTransaction(timestamp: (long) utcNow.ToOADate());
+            //return Enumerable.Repeat(tx, tenSecondSlot)
+            //   .Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider));
         }
 
-        public void Delete(IEnumerable<TransactionBroadcastDao> transactionBroadcasts)
+        public void Delete(IEnumerable<MempoolItem> mempoolItem)
         {
             throw new NotImplementedException();
         }

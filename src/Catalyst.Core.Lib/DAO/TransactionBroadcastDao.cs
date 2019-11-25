@@ -32,6 +32,7 @@ using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -98,6 +99,14 @@ namespace Catalyst.Core.Lib.DAO
             .ForMember(d => d.Nonce, opt => opt.MapFrom(s => s.Base.Nonce))
             .ForMember(d => d.SenderAddress, opt => opt.MapFrom(src => src.Base.SenderPublicKey))
             .ForMember(d => d.ReceiverAddress, opt => opt.MapFrom(src => src.Base.ReceiverPublicKey));
+
+            cfg.CreateMap<MempoolItem, PublicEntry>()
+            .ForMember(d => d.Amount, opt => opt.MapFrom(src => src.Amount))
+            .ForMember(d => d.Data, opt => opt.MapFrom(src => src.Amount))
+            .ForMember(d => d.Base.TransactionFees, opt => opt.MapFrom(src => src.Fee))
+            .ForMember(d => d.Base.Nonce, opt => opt.MapFrom(s => s.Nonce))
+            .ForMember(d => d.Base.SenderPublicKey, opt => opt.MapFrom(src => src.SenderAddress))
+            .ForMember(d => d.Base.ReceiverPublicKey, opt => opt.MapFrom(src => src.ReceiverAddress));
         }
     }
 }

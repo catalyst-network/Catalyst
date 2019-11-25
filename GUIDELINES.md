@@ -64,7 +64,7 @@ British English is preferred over other dialects throughout the solution. You ca
 /// <param name="rootSection"></param>
 /// <param name="logger"></param>
 public PeerDiscovery(IDns dns,
-    IPeerRepository repository,
+    IPeerService repository,
     IConfigurationRoot rootSection,
     ILogger logger)
 {

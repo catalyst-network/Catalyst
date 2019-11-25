@@ -38,12 +38,12 @@ namespace Catalyst.Core.Lib.IO.Events
     {
         private readonly ITransactionValidator _validator;
         private readonly ILogger _logger;
-        private readonly IMempool<TransactionBroadcastDao> _mempool;
+        private readonly IMempool<MempoolItem> _mempool;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IMapperProvider _mapperProvider;
 
         public TransactionReceivedEvent(ITransactionValidator validator,
-            IMempool<TransactionBroadcastDao> mempool,
+            IMempool<MempoolItem> mempool,
             IBroadcastManager broadcastManager,
             IMapperProvider mapperProvider,
             ILogger logger)
@@ -57,15 +57,15 @@ namespace Catalyst.Core.Lib.IO.Events
 
         public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
         {
-            var transaction = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
+            var transaction = protocolMessage.FromProtocolMessage<MempoolItem>();
             var transactionValid = _validator.ValidateTransaction(transaction);
             if (!transactionValid)
             {
                 return ResponseCode.Error;
             }
 
-            var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-            var mempoolItems = transactionBroadcastDao.ToMempoolItems(_mapperProvider);
+            //var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
+            var mempoolItems = transaction.GetMempoolItems(_mapperProvider);
 
             var transactionSignature = transactionBroadcastDao.Signature;
             _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);

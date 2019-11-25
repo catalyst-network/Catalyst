@@ -27,7 +27,7 @@ using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Kvm;
@@ -51,7 +51,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private LedgerService _ledger;
         private readonly IAccountRepository _fakeRepository;
         private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly IMempool<TransactionBroadcastDao> _mempool;
+        private readonly IMempool<MempoolItem> _mempool;
         private readonly ILogger _logger;
         private readonly ILedgerSynchroniser _ledgerSynchroniser;
         private readonly IHashProvider _hashProvider;
@@ -67,7 +67,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _logger = Substitute.For<ILogger>();
-            _mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
+            _mempool = Substitute.For<IMempool<MempoolItem>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
@@ -107,7 +107,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
             _testScheduler.Start();
 
-            _mempool.Repository.ReceivedWithAnyArgs(updates.Length).Delete(Arg.Any<IEnumerable<TransactionBroadcastDao>>());
+            _mempool.Service.ReceivedWithAnyArgs(updates.Length).Delete(Arg.Any<IEnumerable<MempoolItem>>());
         }
 
         public void Dispose()

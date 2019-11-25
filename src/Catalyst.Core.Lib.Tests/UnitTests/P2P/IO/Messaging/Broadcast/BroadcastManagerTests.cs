@@ -33,7 +33,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -42,12 +42,13 @@ using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
 using Xunit;
+using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
     public sealed class BroadcastManagerTests : IDisposable
     {
-        private readonly IPeerRepository _peers;
+        private readonly IPeerService _peers;
         private readonly IMemoryCache _cache;
         private readonly IKeySigner _keySigner;
         private readonly PeerId _senderPeerId;
@@ -60,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             var fakeSignature = Substitute.For<ISignature>();
             _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(fakeSignature);
             _keySigner.CryptoContext.SignatureLength.Returns(64);
-            _peers = new PeerRepository(new InMemoryRepository<Peer, string>());
+            _peers = new PeerService(new InMemoryRepository<Peer, string>());
             _cache = new MemoryCache(new MemoryCacheOptions());
             _peerSettings = _senderPeerId.ToSubstitutedPeerSettings();
         }

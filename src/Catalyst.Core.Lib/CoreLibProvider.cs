@@ -50,7 +50,7 @@ using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Protocols;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Lib
                .WithProperty("UdpClientHandlerWorkerThreads", 2);
 
             // Register P2P
-            builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
+            builder.RegisterType<P2P.Service.PeerService>().As<P2P.Service.IPeerService>().SingleInstance();
             builder.RegisterType<PeerSettings>().As<IPeerSettings>();
             builder.RegisterType<Peer>().As<IPeer>();
 
@@ -107,7 +107,7 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<BroadcastManager>().As<IBroadcastManager>().SingleInstance();
             
             //  Register P2P.Repository
-            builder.RegisterType<PeerRepository>().As<IPeerRepository>().SingleInstance();
+            builder.RegisterType<P2P.Service.PeerService>().As<P2P.Service.IPeerService>().SingleInstance();
             
             //  Register P2P.ReputationSystem
             builder.RegisterType<ReputationManager>().As<IReputationManager>().SingleInstance();

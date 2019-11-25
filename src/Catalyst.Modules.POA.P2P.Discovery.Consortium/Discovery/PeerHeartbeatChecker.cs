@@ -27,7 +27,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Serilog;
 
 namespace Catalyst.Modules.POA.P2P.Discovery
@@ -35,7 +35,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
     public sealed class PeerHeartbeatChecker : IHealthChecker
     {
         private readonly TimeSpan _checkHeartbeatInterval;
-        private readonly IPeerRepository _peerRepository;
+        private readonly IPeerService _peerService;
         private readonly IPeerChallengeRequest _peerChallengeRequest;
         private readonly int _maxNonResponsiveCounter;
         private readonly ConcurrentDictionary<string, int> _nonResponsivePeerMap;
@@ -43,14 +43,14 @@ namespace Catalyst.Modules.POA.P2P.Discovery
         private IDisposable _subscription;
 
         public PeerHeartbeatChecker(ILogger logger,
-            IPeerRepository peerRepository,
+            IPeerService peerService,
             IPeerChallengeRequest peerChallengeRequest,
             int checkHeartbeatIntervalSeconds,
             int maxNonResponsiveCounter)
         {
             _logger = logger;
             _nonResponsivePeerMap = new ConcurrentDictionary<string, int>();
-            _peerRepository = peerRepository;
+            _peerService = peerService;
             _maxNonResponsiveCounter = maxNonResponsiveCounter;
             _peerChallengeRequest = peerChallengeRequest;
             _checkHeartbeatInterval = TimeSpan.FromSeconds(checkHeartbeatIntervalSeconds);
@@ -66,7 +66,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
 
         private void CheckHeartbeat()
         {
-            foreach (var peer in _peerRepository.GetAll())
+            foreach (var peer in _peerService.GetAll())
             {
                 Task.Run(async () =>
                 {
@@ -81,7 +81,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
 
                         if (counterValue >= _maxNonResponsiveCounter)
                         {
-                            _peerRepository.Delete(peer.DocumentId);
+                            _peerService.Delete(peer.DocumentId);
                             _nonResponsivePeerMap.TryRemove(peer.DocumentId, out _);
                             _logger.Verbose(
                                 $"Peer reached maximum non-responsive count: {peer.PeerId}. Evicted from repository");

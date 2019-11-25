@@ -24,9 +24,9 @@ using Google.Protobuf;
 using System;
 using System.Collections.Generic;
 
-namespace Catalyst.Core.Lib.P2P.Repository
+namespace Catalyst.Core.Lib.P2P.Service
 {
-    public interface IPeerRepository : IDisposable
+    public interface IPeerService : IDisposable
     {
         Peer Get(string id);
         IEnumerable<Peer> GetAll();

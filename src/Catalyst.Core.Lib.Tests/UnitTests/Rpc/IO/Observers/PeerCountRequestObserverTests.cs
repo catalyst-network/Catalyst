@@ -28,7 +28,6 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,6 +38,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using Catalyst.Core.Lib.P2P.Service;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [InlineData(20)]
         public void TestPeerListRequestResponse(int fakePeers)
         {
-            var peerRepository = Substitute.For<IPeerRepository>();
+            var peerRepository = Substitute.For<IPeerService>();
             var peerList = new List<Peer>();
 
             for (var i = 0; i < fakePeers; i++)

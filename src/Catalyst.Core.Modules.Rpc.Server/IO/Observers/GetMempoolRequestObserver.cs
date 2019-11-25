@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             {
                 Logger.Debug("Received GetMempoolRequest message with content {0}", getMempoolRequest);
 
-                var mempoolTransactions = _mempool.Repository.GetAll()
+                var mempoolTransactions = _mempool.Service.GetAll()
                    .Select(x => x.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mappingProvider));
 
                 return new GetMempoolResponse

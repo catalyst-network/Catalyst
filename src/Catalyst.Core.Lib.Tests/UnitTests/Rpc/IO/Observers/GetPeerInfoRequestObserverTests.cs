@@ -29,7 +29,6 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
@@ -42,6 +41,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using SharpRepository.InMemoryRepository;
+using Catalyst.Core.Lib.P2P.Service;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IPeerRepository _peerRepository;
+        private readonly IPeerService _peerRepository;
 
         public GetPeerInfoRequestObserverTests()
         {
@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
 
-            _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
+            _peerRepository = new PeerService(new InMemoryRepository<Peer, string>());
             _peerRepository.Add(GetPeerTestData());
         }
 

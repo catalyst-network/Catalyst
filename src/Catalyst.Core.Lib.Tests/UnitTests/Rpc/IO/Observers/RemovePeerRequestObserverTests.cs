@@ -28,7 +28,6 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
@@ -41,6 +40,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using SharpRepository.InMemoryRepository;
+using Catalyst.Core.Lib.P2P.Service;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
             var testScheduler = new TestScheduler();
-            IPeerRepository peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
+            IPeerService peerRepository = new PeerService(new InMemoryRepository<Peer, string>());
             var fakePeerList = fakePeers.ToList().Select(fakePeer =>
             {
                 return new Peer

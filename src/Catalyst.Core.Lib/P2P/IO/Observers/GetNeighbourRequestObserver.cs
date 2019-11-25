@@ -29,13 +29,14 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
 using SharpRepository.Repository.Specifications;
+using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
@@ -43,14 +44,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : RequestObserverBase<PeerNeighborsRequest, PeerNeighborsResponse>,
             IP2PMessageObserver
     {
-        private readonly IPeerRepository _repository;
+        private readonly IPeerService _service;
 
         public GetNeighbourRequestObserver(IPeerSettings peerSettings,
-            IPeerRepository repository,
+            IPeerService service,
             ILogger logger)
             : base(logger, peerSettings)
-        { 
-            _repository = repository;
+        {
+            _service = service;
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             
             Logger.Debug("PeerNeighborsRequest Message Received");
 
-            var activePeersList = _repository.GetActivePeers(Constants.NumberOfRandomPeers);
+            var activePeersList = _service.GetActivePeers(Constants.NumberOfRandomPeers);
             
             Guard.Argument(activePeersList).MinCount(1);
 

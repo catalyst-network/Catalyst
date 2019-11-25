@@ -28,12 +28,13 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Protocols;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {
@@ -43,12 +44,12 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         private const int PeerChallengeTimeoutSeconds = 1;
         private IHealthChecker _peerHeartbeatChecker;
         private readonly IPeerClient _peerClient;
-        private readonly IPeerRepository _peerRepository;
+        private readonly IPeerService _peerRepository;
         private readonly Peer _testPeer;
 
         public PeerHeartbeatCheckerTests()
         {
-            _peerRepository = Substitute.For<IPeerRepository>();
+            _peerRepository = Substitute.For<IPeerService>();
             _peerClient = Substitute.For<IPeerClient>();
             _testPeer = new Peer
             {

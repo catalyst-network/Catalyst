@@ -24,7 +24,7 @@
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
@@ -50,7 +50,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         [Fact]
         public async Task Can_Populate_Peers_Correctly()
         {
-            var peerRepository = Substitute.For<IPeerRepository>();
+            var peerRepository = Substitute.For<IPeerService>();
             var pubkey = _hashProvider.ComputeUtf8MultiHash("hello").ToBase32();
 
             var peers = new[]

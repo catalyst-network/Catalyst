@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     signature: i.ToString())
             ).ToList();
 
-            mempool.Repository.GetAll().Returns(_transactions
+            mempool.PeerService.GetAll().Returns(_transactions
                .Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(mapperProvider)));
 
             _transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider,

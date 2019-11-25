@@ -28,7 +28,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using Catalyst.Abstractions.P2P.ReputationSystem;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Dawn;
 using Serilog;
 
@@ -37,16 +37,16 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
     public sealed class ReputationManager : IReputationManager, IDisposable
     {
         private readonly ILogger _logger;
-        public IPeerRepository PeerRepository { get; }
+        public IPeerService PeerService { get; }
         public readonly ReplaySubject<IPeerReputationChange> ReputationEvent;
         public IObservable<IPeerReputationChange> ReputationEventStream => ReputationEvent.AsObservable();
         public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
         static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
 
-        public ReputationManager(IPeerRepository peerRepository, ILogger logger)
+        public ReputationManager(IPeerService peerService, ILogger logger)
         {
             _logger = logger;
-            PeerRepository = peerRepository;
+            PeerService = peerService;
             ReputationEvent = new ReplaySubject<IPeerReputationChange>(0);
             
             ReputationEventStream
@@ -81,12 +81,12 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             {
                 await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
 
-                var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
+                var peer = PeerService.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
                 Guard.Argument(peer, nameof(peer)).NotNull();
 
                 // ReSharper disable once PossibleNullReferenceException
                 peer.Reputation += peerReputationChange.ReputationEvent.Amount;
-                PeerRepository.Update(peer);
+                PeerService.Update(peer);
             }
             catch (Exception e)
             {
@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
         public void Dispose()
         {
             ReputationEvent?.Dispose();
-            PeerRepository?.Dispose();    
+            PeerService?.Dispose();    
         }
     }
 }

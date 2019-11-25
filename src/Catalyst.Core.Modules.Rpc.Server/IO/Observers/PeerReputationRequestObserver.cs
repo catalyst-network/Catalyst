@@ -26,13 +26,14 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
+using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -43,11 +44,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>
         /// The PeerReputationRequestHandler 
         /// </summary>
-        private readonly IPeerRepository _peerRepository;
+        private readonly IPeerService _peerRepository;
 
         public PeerReputationRequestObserver(IPeerSettings peerSettings,
             ILogger logger,
-            IPeerRepository peerRepository)
+            IPeerService peerRepository)
             : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;

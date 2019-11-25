@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                 {
                     walker.TestStorePeer(Substitute.For<INeighbour>());
                 
-                    walker.PeerRepository
+                    walker.PeerService
                        .Received(0)
                        .Add(Arg.Any<Peer>()); 
                 });
@@ -102,7 +102,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                     walker.TestStorePeer(Substitute.For<INeighbour>());
                 });
                 
-                walker.PeerRepository
+                walker.PeerService
                    .Received(5)
                    .Add(Arg.Any<Peer>()); 
             }
@@ -133,7 +133,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                 
                 walker.TestStorePeer(Substitute.For<INeighbour>());
                 
-                walker.PeerRepository
+                walker.PeerService
                    .Received(0)
                    .Add(Arg.Any<Peer>());
             }

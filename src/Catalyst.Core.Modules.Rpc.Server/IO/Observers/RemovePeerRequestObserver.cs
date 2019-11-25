@@ -25,12 +25,13 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
+using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -43,14 +44,14 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
-        private readonly IPeerRepository _peerRepository;
+        private readonly IPeerService _peerRepository;
 
         /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestObserver"/> class.</summary>
         /// <param name="peerSettings"></param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
         public RemovePeerRequestObserver(IPeerSettings peerSettings,
-            IPeerRepository peerRepository,
+            IPeerService peerRepository,
             ILogger logger) : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;

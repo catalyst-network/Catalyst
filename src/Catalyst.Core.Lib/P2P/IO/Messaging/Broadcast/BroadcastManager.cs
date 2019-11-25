@@ -34,7 +34,7 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
@@ -42,6 +42,7 @@ using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
+using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
 {
@@ -52,7 +53,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
     public sealed class BroadcastManager : IBroadcastManager
     {
         /// <summary>The peers</summary>
-        private readonly IPeerRepository _peers;
+        private readonly IPeerService _peers;
 
         private readonly SigningContext _signingContext;
 
@@ -89,7 +90,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <param name="peerClient">The peer client.</param>
         /// <param name="signer">The signature writer</param>
         /// <param name="logger"></param>
-        public BroadcastManager(IPeerRepository peers, 
+        public BroadcastManager(IPeerService peers, 
             IPeerSettings peerSettings,
             IMemoryCache memoryCache,
             IPeerClient peerClient,

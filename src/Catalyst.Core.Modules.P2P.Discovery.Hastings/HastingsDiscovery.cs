@@ -40,10 +40,11 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Serilog;
+using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 {
@@ -60,13 +61,13 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
         private readonly PeerId _ownNode;
         private readonly IDisposable _pingResponseSubscriptions;
         protected readonly int PeerDiscoveryBurnIn;
-        public readonly IPeerRepository PeerRepository;
+        public readonly IPeerService PeerService;
         private int _discoveredPeerInCurrentWalk;
 
         private bool _isDiscovering;
 
         public HastingsDiscovery(ILogger logger,
-            IPeerRepository peerRepository,
+            IPeerService peerService,
             IDns dns,
             IPeerSettings peerSettings,
             IPeerClient peerClient,
@@ -84,7 +85,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             _cancellationTokenProvider = cancellationTokenProvider;
 
             PeerClient = peerClient;
-            PeerRepository = peerRepository;
+            PeerService = peerService;
             PeerDiscoveryBurnIn = peerDiscoveryBurnIn;
             _millisecondsTimeout = millisecondsTimeout;
             _hasValidCandidatesCheckMillisecondsFrequency = hasValidCandidatesCheckMillisecondsFrequency;
@@ -480,7 +481,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                 return;
             }
 
-            PeerRepository.Add(new Peer
+            PeerService.Add(new Peer
             {
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,

@@ -33,6 +33,7 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Mempool.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -100,14 +101,14 @@ namespace Catalyst.Core.Modules.Web3
         public void ConfigureContainer(ContainerBuilder builder)
         {
             //Mempool repo
-            builder.RegisterInstance(_container.Resolve<IRepository<TransactionBroadcastDao, string>>())
-               .As<IRepository<TransactionBroadcastDao, string>>()
+            builder.RegisterInstance(_container.Resolve<IRepository<MempoolItem, string>>())
+               .As<IRepository<MempoolItem, string>>()
                .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<IMempoolRepository<TransactionBroadcastDao>>())
-               .As<IMempoolRepository<TransactionBroadcastDao>>()
+            builder.RegisterInstance(_container.Resolve<IMempoolService<MempoolItem>>())
+               .As<IMempoolService<MempoolItem>>()
                .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<IMempool<TransactionBroadcastDao>>())
-               .As<IMempool<TransactionBroadcastDao>>().SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IMempool<MempoolItem>>())
+               .As<IMempool<MempoolItem>>().SingleInstance();
 
             builder.RegisterInstance(_container.Resolve<IDeltaHashProvider>())
                .As<IDeltaHashProvider>()

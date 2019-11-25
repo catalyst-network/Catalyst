@@ -30,7 +30,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
@@ -47,18 +47,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly PeerId _peerId;
-        private readonly IPeerRepository _subbedPeerRepository;
+        private readonly IPeerService _subbedPeerRepository;
 
         public GetNeighbourRequestObserverTests()
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
-            _subbedPeerRepository = Substitute.For<IPeerRepository>();
+            _subbedPeerRepository = Substitute.For<IPeerService>();
             _peerId = PeerIdHelper.GetPeerId("testPeer");
         }
         
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
-            IPeerRepository store)
+            IPeerService store)
         {
             store.Add(peer);
             store.GetActivePeers(Arg.Any<int>()).Returns(peer);

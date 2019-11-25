@@ -28,8 +28,8 @@ using System.Reactive.Subjects;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.TestUtils;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -42,13 +42,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
     {
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
-        private readonly IPeerRepository _subbedPeerRepository;
+        private readonly IPeerService _subbedPeerRepository;
 
         public ReputationManagerTests()
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
-            _subbedPeerRepository = Substitute.For<IPeerRepository>();
+            _subbedPeerRepository = Substitute.For<IPeerService>();
         }
 
         [Fact]

@@ -26,16 +26,15 @@ using Catalyst.Core.Lib.P2P.Models;
 using Google.Protobuf;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Specifications;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Catalyst.Core.Lib.P2P.Repository
+namespace Catalyst.Core.Lib.P2P.Service
 {
-    public class PeerRepository : IPeerRepository
+    public class PeerService : IPeerService
     {
         private readonly IRepository<Peer, string> _repository;
-        public PeerRepository(IRepository<Peer, string> repository)
+        public PeerService(IRepository<Peer, string> repository)
         {
             _repository = repository;
         }

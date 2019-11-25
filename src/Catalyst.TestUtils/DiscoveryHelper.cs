@@ -40,8 +40,8 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
+using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings;
 using Catalyst.Protocol.Peer;
@@ -51,6 +51,7 @@ using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
+using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.TestUtils
 {
@@ -211,9 +212,9 @@ namespace Catalyst.TestUtils
             return new DevDnsClient(settings);
         }
 
-        public static IPeerRepository MockPeerRepository()
+        public static IPeerService MockPeerRepository()
         {
-            return new PeerRepository(new InMemoryRepository<Peer, string>());
+            return new PeerService(new InMemoryRepository<Peer, string>());
         }
 
         public static IPeerClientMessageDto SubDto(Type discoveryMessage,
