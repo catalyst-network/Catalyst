@@ -22,17 +22,16 @@
 #endregion
 
 using Catalyst.Abstractions.Consensus;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Wire;
-using Google.Protobuf;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus
 {
     /// <inheritdoc />
     public class TransactionComparerByFeeTimestampAndHash : ITransactionComparer
     {
-        public int Compare(TransactionBroadcast x, TransactionBroadcast y)
+        public int Compare(IMempoolItem x, IMempoolItem y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -49,7 +48,7 @@ namespace Catalyst.Core.Modules.Consensus
                 return -1;
             }
 
-            var feeComparison = x.SummedEntryFees().CompareTo(y.SummedEntryFees());
+            var feeComparison = x.Fee.CompareTo(y.Fee);
             if (feeComparison != 0)
             {
                 return feeComparison;
@@ -61,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus
                 return timeStampComparison;
             }
 
-            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.Signature.ToByteArray(), y.Signature.ToByteArray());
+            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.Signature.FromBase32(), y.Signature.FromBase32());
         }
 
         public static ITransactionComparer Default { get; } = new TransactionComparerByFeeTimestampAndHash();

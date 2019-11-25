@@ -82,7 +82,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var testScheduler = new TestScheduler();
             var mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
-            mempool.Repository.GetAll().Returns(mempoolTransactions);
+            mempool.Service.GetAll().Returns(mempoolTransactions);
 
             var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender_key"));
 

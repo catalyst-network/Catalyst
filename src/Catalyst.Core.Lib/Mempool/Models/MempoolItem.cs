@@ -22,42 +22,12 @@
 #endregion
 
 using System;
-using System.IO;
 using Catalyst.Abstractions.Mempool.Models;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.Mempool.Models
 {
     public class MempoolItem : IMempoolItem
     {
-        //private string _id;
-        //public string Id
-        //{
-        //    get
-        //    {
-        //        if (_id != null)
-        //        {
-        //            return _id;
-        //        }
-
-        //        using (var memoryStream = new MemoryStream())
-        //        {
-        //            using (BinaryWriter writer = new BinaryWriter(memoryStream))
-        //            {
-        //                writer.Write(Signature);
-        //                writer.Write(BitConverter.GetBytes(Timestamp.Ticks));
-        //                writer.Write(Amount);
-        //                writer.Write(Nonce);
-        //                writer.Write(ReceiverAddress);
-        //                writer.Write(SenderAddress);
-        //                writer.Write(Fee);
-        //                writer.Write(Data);
-        //            }
-        //            return _id = memoryStream.ToArray().ToBase32();
-        //        }
-        //    }
-        //}
-
         public string Id { set; get; }
         public string Signature { set; get; }
         public DateTime Timestamp { set; get; }

@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
@@ -28,6 +29,7 @@ using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Models;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Serilog;
@@ -41,11 +43,13 @@ namespace Catalyst.Core.Lib.IO.Events
         private readonly IMempool<MempoolItem> _mempool;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IMapperProvider _mapperProvider;
+        private readonly IHashProvider _hashProvider;
 
         public TransactionReceivedEvent(ITransactionValidator validator,
             IMempool<MempoolItem> mempool,
             IBroadcastManager broadcastManager,
             IMapperProvider mapperProvider,
+            IHashProvider hashProvider,
             ILogger logger)
         {
             _mapperProvider = mapperProvider;
@@ -57,7 +61,7 @@ namespace Catalyst.Core.Lib.IO.Events
 
         public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
         {
-            var transaction = protocolMessage.FromProtocolMessage<MempoolItem>();
+            var transaction = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
             var transactionValid = _validator.ValidateTransaction(transaction);
             if (!transactionValid)
             {
@@ -65,10 +69,10 @@ namespace Catalyst.Core.Lib.IO.Events
             }
 
             //var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-            var mempoolItems = transaction.GetMempoolItems(_mapperProvider);
+            var mempoolItems = MempoolHelper.GetMempoolItems(transaction, _hashProvider);
 
-            var transactionSignature = transactionBroadcastDao.Signature;
-            _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
+            //var transactionSignature = transactionBroadcastDao.Signature;
+            //_logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
 
             // https://github.com/catalyst-network/Catalyst.Node/issues/910 - should we fail or succeed if we already have the transaction in the ledger?
 
@@ -80,7 +84,7 @@ namespace Catalyst.Core.Lib.IO.Events
                     return ResponseCode.Error;
                 }
 
-                _mempool.Service.CreateItem(transactionBroadcastDao);
+                _mempool.Service.CreateItem(mempoolItem);
             }
 
             //if (_mempool.Repository.TryReadItem(transactionSignature.RawBytes))

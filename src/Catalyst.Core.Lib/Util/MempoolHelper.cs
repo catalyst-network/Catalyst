@@ -1,17 +1,36 @@
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Models;
+using Catalyst.Protocol.Wire;
+using Google.Protobuf;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using TheDotNetLeague.MultiFormats.MultiBase;
 
-namespace Catalyst.Core.Modules.Mempool.Helper
+namespace Catalyst.Core.Lib.Util
 {
     public static class MempoolHelper
     {
+        public static IEnumerable<MempoolItem> GetMempoolItems(TransactionBroadcast transactionBroadcast, IHashProvider hashProvider)
+        {
+            foreach (var publicEntry in transactionBroadcast.PublicEntries)
+            {
+                var mempoolItem = new MempoolItem();
+                mempoolItem.Id = MultiBase.Encode(hashProvider.ComputeMultiHash(transactionBroadcast.Signature.ToByteArray()).ToArray(), "base32");
+                mempoolItem.Amount = publicEntry.Amount.ToUInt256().ToString();
+                mempoolItem.ReceiverAddress = publicEntry.Base.ReceiverPublicKey.ToByteArray().ToBase32();
+                mempoolItem.SenderAddress = publicEntry.Base.SenderPublicKey.ToByteArray().ToBase32();
+                mempoolItem.Timestamp = transactionBroadcast.Timestamp.ToDateTime();
+                mempoolItem.Signature = transactionBroadcast.Signature.ToByteArray().ToBase32();
+                mempoolItem.Nonce = publicEntry.Base.Nonce;
+                yield return mempoolItem;
+            }
+        }
+
         public static void GenerateMempoolItemId(IEnumerable<MempoolItem> mempoolItems, IHashProvider hashProvider)
         {
-            foreach(var mempoolItem in mempoolItems)
+            foreach (var mempoolItem in mempoolItems)
             {
                 GenerateMempoolItemId(mempoolItem, hashProvider);
             }

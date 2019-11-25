@@ -26,6 +26,7 @@ using System.Linq;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Protocol.Wire;
@@ -52,13 +53,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public IList<MempoolItem> GetMempoolTransactionsByPriority(int maxCount = 2147483647)
+        public IList<IMempoolItem> GetMempoolTransactionsByPriority(int maxCount = 2147483647)
         {
             Guard.Argument(maxCount, nameof(maxCount)).NotNegative().NotZero();
 
-            var allTransactions = _mempool.Service.GetAll().Select(x => x.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider));
+            var allTransactions = _mempool.Service.GetAll();
             var mempoolPrioritised = allTransactions.OrderByDescending(t => t, TransactionComparer)
-               .Take(maxCount).Select(t => t).ToList();
+               .Take(maxCount).Select(t => t).Cast<IMempoolItem>().ToList();
 
             return mempoolPrioritised;
         }

@@ -23,7 +23,6 @@
 
 using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Mempool.Repositories;

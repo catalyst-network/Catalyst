@@ -28,9 +28,11 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
+using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
@@ -93,6 +95,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
                 t => t.PublicEntries.Select(e =>
                     new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
+
+            //var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
+            //   t => t.PublicEntries.Select(e =>
+            //       new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
 
             // (Eα;Oα)
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
@@ -187,19 +193,19 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
         }
         
-        private static bool IsTransactionOfAcceptedType(TransactionBroadcast transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
+        private static bool IsTransactionOfAcceptedType(MempoolItem transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
         
         /// <summary>
         ///     Gets the valid transactions for delta.
         ///     This method can be used to extract the collection of transactions that meet the criteria for validating delta.
         /// </summary>
-        private IList<TransactionBroadcast> GetValidTransactionsForDelta(IList<TransactionBroadcast> allTransactions)
+        private IList<IMempoolItem> GetValidTransactionsForDelta(IList<IMempoolItem> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            var validTransactionsForDelta = new List<TransactionBroadcast>();
-            var rejectedTransactions = new List<TransactionBroadcast>();
+            var validTransactionsForDelta = new List<IMempoolItem>();
+            var rejectedTransactions = new List<IMempoolItem>();
 
             var allTransactionsCount = allTransactions.Count;
             for (var i = 0; i < allTransactionsCount; i++)

@@ -22,7 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Protocol.Wire;
+using Catalyst.Abstractions.Mempool.Models;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
@@ -47,6 +47,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// </summary>
         /// <param name="maxCount">The maximum number of transactions to be returned by the method.</param>
         /// <returns>The top <see cref="maxCount"/> transactions in order of </returns>
-        IList<TransactionBroadcast> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue);
+        IList<IMempoolItem> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue);
     }
 }
