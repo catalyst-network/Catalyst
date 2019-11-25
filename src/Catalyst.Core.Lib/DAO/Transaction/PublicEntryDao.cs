@@ -24,12 +24,10 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
-using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO.Transaction
 {
@@ -64,6 +62,14 @@ namespace Catalyst.Core.Lib.DAO.Transaction
                    .ForMember(d => d.Amount,
                         opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
                    .ForMember(e => e.Data, opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
+
+                cfg.CreateMap<MempoolItem, PublicEntry>()
+                  .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
+                  .ForMember(d => d.Base.SenderPublicKey, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.SenderAddress))
+                  .ForMember(d => d.Base.ReceiverPublicKey, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.ReceiverAddress))
+                  .ForMember(d => d.Base.Nonce, opt => opt.MapFrom(src => src.Nonce))
+                  .ForMember(d => d.Base.TransactionFees, opt => opt.MapFrom(src => src.Fee))
+                  .ForMember(e => e.Data, opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
             }
         }
     }

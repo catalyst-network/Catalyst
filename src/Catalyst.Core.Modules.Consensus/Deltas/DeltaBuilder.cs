@@ -30,9 +30,9 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
-using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
@@ -92,9 +92,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var includedTransactions = GetValidTransactionsForDelta(allTransactions);
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
-            var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
-                t => t.PublicEntries.Select(e =>
-                    new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
+            var rawAndSaltedEntriesBySignature = includedTransactions.Select(
+                x => new RawEntryWithSaltedAndHashedEntry(x, salt, _hashProvider));
 
             //var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
             //   t => t.PublicEntries.Select(e =>
@@ -140,6 +139,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             };
 
             _logger.Debug("Building full delta locally");
+
+            var publicEntries = includedTransactions.Select(x => x.ToProtoBuff<MempoolItem, TransactionBroadcast>());
 
             var producedDelta = new Delta
             {
@@ -193,29 +194,29 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
         }
         
-        private static bool IsTransactionOfAcceptedType(MempoolItem transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
+        //private static bool IsTransactionOfAcceptedType(MempoolItem transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
         
         /// <summary>
         ///     Gets the valid transactions for delta.
         ///     This method can be used to extract the collection of transactions that meet the criteria for validating delta.
         /// </summary>
-        private IList<IMempoolItem> GetValidTransactionsForDelta(IList<IMempoolItem> allTransactions)
+        private IList<MempoolItem> GetValidTransactionsForDelta(IList<MempoolItem> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            var validTransactionsForDelta = new List<IMempoolItem>();
-            var rejectedTransactions = new List<IMempoolItem>();
+            var validTransactionsForDelta = new List<MempoolItem>();
+            var rejectedTransactions = new List<MempoolItem>();
 
             var allTransactionsCount = allTransactions.Count;
             for (var i = 0; i < allTransactionsCount; i++)
             {
                 var currentItem = allTransactions[i];
-                if (!IsTransactionOfAcceptedType(currentItem) || !currentItem.HasValidEntries())
-                {
-                    rejectedTransactions.Add(currentItem);
-                    continue;
-                }
+                //if (!IsTransactionOfAcceptedType(currentItem) || !currentItem.HasValidEntries())
+                //{
+                //    rejectedTransactions.Add(currentItem);
+                //    continue;
+                //}
 
                 validTransactionsForDelta.Add(currentItem);
             }

@@ -26,5 +26,5 @@ using Catalyst.Abstractions.Mempool.Models;
 
 namespace Catalyst.Abstractions.Consensus
 {
-    public interface ITransactionComparer : IComparer<IMempoolItem> { }
+    public interface ITransactionComparer : IComparer<MempoolItem> { }
 }

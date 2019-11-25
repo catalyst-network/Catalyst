@@ -24,11 +24,11 @@
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;

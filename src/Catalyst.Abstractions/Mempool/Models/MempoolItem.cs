@@ -22,9 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.Mempool.Models;
 
-namespace Catalyst.Core.Lib.Mempool.Models
+namespace Catalyst.Abstractions.Mempool.Models
 {
     public class MempoolItem : IMempoolItem
     {

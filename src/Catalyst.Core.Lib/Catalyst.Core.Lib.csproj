@@ -43,4 +43,7 @@
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Mempool\Models\" />
+    </ItemGroup>
 </Project>

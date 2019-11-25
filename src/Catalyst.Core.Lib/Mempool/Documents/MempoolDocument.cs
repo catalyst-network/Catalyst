@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.Mempool.Documents;
-using Catalyst.Core.Lib.Mempool.Models;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using SharpRepository.Repository;

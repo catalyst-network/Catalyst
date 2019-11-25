@@ -47,6 +47,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// </summary>
         /// <param name="maxCount">The maximum number of transactions to be returned by the method.</param>
         /// <returns>The top <see cref="maxCount"/> transactions in order of </returns>
-        IList<IMempoolItem> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue);
+        IList<MempoolItem> GetMempoolTransactionsByPriority(int maxCount = int.MaxValue);
     }
 }

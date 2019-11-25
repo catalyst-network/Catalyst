@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Core.Lib.Mempool.Models;
+using Catalyst.Abstractions.Mempool.Models;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO

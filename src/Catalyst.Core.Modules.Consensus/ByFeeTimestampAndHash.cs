@@ -31,7 +31,7 @@ namespace Catalyst.Core.Modules.Consensus
     /// <inheritdoc />
     public class TransactionComparerByFeeTimestampAndHash : ITransactionComparer
     {
-        public int Compare(IMempoolItem x, IMempoolItem y)
+        public int Compare(MempoolItem x, MempoolItem y)
         {
             if (ReferenceEquals(x, y))
             {

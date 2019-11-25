@@ -25,11 +25,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
-using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
@@ -146,7 +146,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
 
             var b = transactionBroadcastDao.ToMempoolItems(_mapperProvider);
-            var id = b.First().Id;
+            var id = b.First().ToProtoBuff<MempoolItem, TransactionBroadcast>(_mapperProvider);
             var a = 0;
         }
 

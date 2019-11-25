@@ -22,8 +22,8 @@
 #endregion
 
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.Mempool.Models;
 using Dawn;
 
 namespace Catalyst.Core.Modules.Mempool

@@ -1,6 +1,6 @@
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using System;

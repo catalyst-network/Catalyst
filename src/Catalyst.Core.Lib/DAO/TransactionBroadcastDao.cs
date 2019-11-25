@@ -26,18 +26,15 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Core.Lib.DAO.Converters;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Core.Lib.DAO.Transaction;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using MongoDB.Bson.Serialization.Attributes;
-using Nethermind.Dirichlet.Numerics;
 using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.DAO

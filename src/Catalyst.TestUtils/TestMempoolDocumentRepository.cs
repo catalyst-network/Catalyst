@@ -23,11 +23,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Mempool.Models;
-using Catalyst.Protocol.Wire;
 using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
