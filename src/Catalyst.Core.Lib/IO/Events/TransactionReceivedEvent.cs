@@ -74,13 +74,13 @@ namespace Catalyst.Core.Lib.IO.Events
 
             foreach(var mempoolItem in mempoolItems)
             {
-                if (_mempool.Repository.TryReadItem(mempoolItem.Id))
+                if (_mempool.Service.TryReadItem(mempoolItem.Id))
                 {
                     _logger.Information("Transaction {id} already exists in mempool", mempoolItem.Id);
                     return ResponseCode.Error;
                 }
 
-                _mempool.Repository.CreateItem(transactionBroadcastDao);
+                _mempool.Service.CreateItem(transactionBroadcastDao);
             }
 
             //if (_mempool.Repository.TryReadItem(transactionSignature.RawBytes))

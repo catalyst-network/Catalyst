@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Mempool.Models;
 using Dawn;
 
@@ -34,13 +33,13 @@ namespace Catalyst.Core.Modules.Mempool
     /// </summary>
     public sealed class Mempool : IMempool<MempoolItem>
     {
-        public IMempoolRepository<MempoolItem> Repository { get; }
+        public IMempoolService<MempoolItem> Service { get; }
 
         /// <inheritdoc />
-        public Mempool(IMempoolRepository<MempoolItem> transactionStore)
+        public Mempool(IMempoolService<MempoolItem> mempoolService)
         {
-            Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
-            Repository = transactionStore;
+            Guard.Argument(mempoolService, nameof(mempoolService)).NotNull();
+            Service = mempoolService;
         }
     }
 }

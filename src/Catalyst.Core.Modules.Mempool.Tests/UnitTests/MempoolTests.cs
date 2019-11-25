@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
             _mempoolItem = transactionBroadcastDao.ToMempoolItems(_mapperProvider).First();
 
-            _memPool = new Mempool(Substitute.For<IMempoolRepository<MempoolItem>>());
+            _memPool = new Mempool(Substitute.For<IMempoolService<MempoolItem>>());
             _mapperProvider = new TestMapperProvider();
             _transactionBroadcast = TransactionHelper
                .GetPublicTransaction()
@@ -101,10 +101,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
         private void AddKeyValueStoreEntryExpectation(MempoolItem mempoolItem)
         {
-            _memPool.Repository.ReadItem(Arg.Is<string>(k => k == mempoolItem.Signature))
+            _memPool.Service.ReadItem(Arg.Is<string>(k => k == mempoolItem.Id))
                .Returns(mempoolItem);
 
-            _memPool.Repository.TryReadItem(Arg.Is<string>(k => k == mempoolItem.Signature))
+            _memPool.Service.TryReadItem(Arg.Is<string>(k => k == mempoolItem.Id))
                .Returns(true);
         }
 
@@ -153,10 +153,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         [Fact]
         public void Get_should_retrieve_a_saved_transaction()
         {
-            _memPool.Repository.CreateItem(_mempoolItem);
+            _memPool.Service.CreateItem(_mempoolItem);
             AddKeyValueStoreEntryExpectation(_mempoolItem);
 
-            var mempoolDocument = _memPool.Repository.ReadItem(_mempoolItem.Id)
+            var mempoolDocument = _memPool.Service.ReadItem(_mempoolItem.Id)
                .ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
             var expectedTransaction = _transactionBroadcast.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
 
@@ -177,7 +177,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             for (var i = 0; i < numTx; i++)
             {
                 var signature = Encoding.UTF8.GetBytes($"key{i}").ToBase32();
-                var mempoolDocument = _memPool.Repository.ReadItem(signature).ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
+                var mempoolDocument = _memPool.Service.ReadItem(signature).ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
                 mempoolDocument.PublicEntries.Single().Amount.ToUInt256().Should().Be((UInt256)i);
             }
         }
@@ -186,8 +186,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         public void Delete_should_delete_all_transactions()
         {
             var keys = Enumerable.Range(0, 10).Select(i => i.ToString()).ToArray();
-            _memPool.Repository.DeleteItem(keys);
-            _memPool.Repository.Received(1).DeleteItem(Arg.Is<string[]>(s => s.SequenceEqual(keys)));
+            _memPool.Service.DeleteItem(keys);
+            _memPool.Service.Received(1).DeleteItem(Arg.Is<string[]>(s => s.SequenceEqual(keys)));
         }
 
         [Fact(Skip = "don't like testing we hit a logger")]
@@ -195,10 +195,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         {
             var keys = Enumerable.Range(0, 3).Select(i => i.ToString()).ToArray();
             var connectTimeoutException = new TimeoutException("that mempool connection was too slow");
-            _memPool.Repository.WhenForAnyArgs(t => t.DeleteItem(keys))
+            _memPool.Service.WhenForAnyArgs(t => t.DeleteItem(keys))
                .Throw(connectTimeoutException);
 
-            var result = _memPool.Repository.DeleteItem(keys);
+            var result = _memPool.Service.DeleteItem(keys);
 
             result.Should().BeFalse();
         }
@@ -206,8 +206,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         [Fact]
         public void Get_When_Key_Not_In_Store_Should_Throw()
         {
-            _memPool.Repository.ReadItem(Arg.Any<string>()).ThrowsForAnyArgs(new KeyNotFoundException());
-            new Action(() => _memPool.Repository.ReadItem("Signature that doesn't exist"))
+            _memPool.Service.ReadItem(Arg.Any<string>()).ThrowsForAnyArgs(new KeyNotFoundException());
+            new Action(() => _memPool.Service.ReadItem("Signature that doesn't exist"))
                .Should().Throw<KeyNotFoundException>();
         }
 
@@ -220,10 +220,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
                .ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider)
                .PublicEntries.Single().Amount;
 
-            _memPool.Repository.CreateItem(Arg.Is(_transactionBroadcast))
+            _memPool.Service.CreateItem(Arg.Is(_transactionBroadcast))
                .Returns(true);
 
-            var saved = _memPool.Repository.CreateItem(_transactionBroadcast);
+            var saved = _memPool.Service.CreateItem(_transactionBroadcast);
             saved.Should().BeTrue();
 
             var overridingTransaction = _transactionBroadcast
@@ -233,16 +233,16 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
                 (expectedAmount.ToUInt256() + (UInt256)100).ToUint256ByteString();
 
             var overridingTransactionDao = overridingTransaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-            _memPool.Repository.CreateItem(Arg.Is(overridingTransactionDao))
+            _memPool.Service.CreateItem(Arg.Is(overridingTransactionDao))
                .Returns(false);
-            var overriden = _memPool.Repository.CreateItem(overridingTransactionDao);
+            var overriden = _memPool.Service.CreateItem(overridingTransactionDao);
 
             overriden.Should().BeFalse();
 
-            _memPool.Repository.TryReadItem(Arg.Is(_transactionBroadcast.Signature.RawBytes))
+            _memPool.Service.TryReadItem(Arg.Is(_transactionBroadcast.Signature.RawBytes))
                .Returns(true);
 
-            var retrievedTransaction = _memPool.Repository.TryReadItem(_transactionBroadcast.Signature.RawBytes);
+            var retrievedTransaction = _memPool.Service.TryReadItem(_transactionBroadcast.Signature.RawBytes);
             retrievedTransaction.Should().BeTrue();
         }
 
@@ -250,10 +250,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         public void SaveMempoolDocument_Should_Return_False_And_Log_On_Store_Exception()
         {
             var exception = new TimeoutException("underlying store is not connected");
-            _memPool.Repository.TryReadItem(default)
+            _memPool.Service.TryReadItem(default)
                .ThrowsForAnyArgs(exception);
 
-            var saved = _memPool.Repository.CreateItem(_transactionBroadcast);
+            var saved = _memPool.Service.CreateItem(_transactionBroadcast);
 
             saved.Should().BeFalse();
         }
@@ -263,9 +263,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         {
             _transactionBroadcast.Signature.RawBytes = null;
 
-            _memPool.Repository.CreateItem(_transactionBroadcast).Throws<ArgumentNullException>();
+            _memPool.Service.CreateItem(_transactionBroadcast).Throws<ArgumentNullException>();
 
-            new Action(() => _memPool.Repository.CreateItem(_transactionBroadcast))
+            new Action(() => _memPool.Service.CreateItem(_transactionBroadcast))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null");
         }
@@ -273,9 +273,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         [Fact]
         public void SaveMempoolDocument_Should_Throw_On_Null_Document()
         {
-            _memPool.Repository.CreateItem(null).Throws<ArgumentNullException>();
+            _memPool.Service.CreateItem(null).Throws<ArgumentNullException>();
 
-            new Action(() => _memPool.Repository.CreateItem(null))
+            new Action(() => _memPool.Service.CreateItem(null))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null"); // transaction is null so do not insert
         }
@@ -286,17 +286,17 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             var documentCount = 13;
             var mempoolDocs = GetTestingMempoolDocuments(documentCount);
 
-            _memPool.Repository.GetAll().Returns(mempoolDocs);
+            _memPool.Service.GetAll().Returns(mempoolDocs);
 
-            var content = _memPool.Repository.GetAll().ToList();
+            var content = _memPool.Service.GetAll().ToList();
 
-            _memPool.Repository.ReceivedWithAnyArgs(1).GetAll();
+            _memPool.Service.ReceivedWithAnyArgs(1).GetAll();
 
             content.Count.Should().Be(documentCount);
             content.Should().BeEquivalentTo(mempoolDocs);
         }
 
-        private List<TransactionBroadcastDao> GetTestingMempoolDocuments(int documentCount)
+        private List<MempoolItem> GetTestingMempoolDocuments(int documentCount)
         {
             return Enumerable.Range(0, documentCount).Select(i =>
                     TransactionHelper.GetPublicTransaction((uint)i, signature: $"key{i}").ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider))
@@ -309,11 +309,11 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             var documentCount = 7;
             var mempoolDocs = GetTestingMempoolDocuments(documentCount);
 
-            _memPool.Repository.GetAll().Returns(mempoolDocs);
+            _memPool.Service.GetAll().Returns(mempoolDocs);
 
-            var content = _memPool.Repository.GetAll().ToList();
+            var content = _memPool.Service.GetAll().ToList();
 
-            _memPool.Repository.ReceivedWithAnyArgs(1).GetAll();
+            _memPool.Service.ReceivedWithAnyArgs(1).GetAll();
 
             content.Count.Should().Be(documentCount);
             content.Should().BeEquivalentTo(mempoolDocs);
@@ -322,15 +322,15 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         [Fact]
         public void ContainsDocument_Should_Return_True_On_Known_DocumentId()
         {
-            AddKeyValueStoreEntryExpectation(_transactionBroadcast);
-            _memPool.Repository.TryReadItem(_transactionBroadcast.Signature.RawBytes).Should().BeTrue();
+            AddKeyValueStoreEntryExpectation(_mempoolItem);
+            _memPool.Service.TryReadItem(_transactionBroadcast.Signature.RawBytes).Should().BeTrue();
         }
 
         [Fact]
         public void ContainsDocument_Should_Return_False_On_Unknown_DocumentId()
         {
             var unknownTransaction = "key not in the mempool";
-            _memPool.Repository.TryReadItem(unknownTransaction).Should().BeFalse();
+            _memPool.Service.TryReadItem(unknownTransaction).Should().BeFalse();
         }
     }
 }
