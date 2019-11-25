@@ -60,11 +60,11 @@ British English is preferred over other dialects throughout the solution. You ca
 /// <summary>
 /// </summary>
 /// <param name="dns"></param>
-/// <param name="repository"></param>
+/// <param name="service"></param>
 /// <param name="rootSection"></param>
 /// <param name="logger"></param>
 public PeerDiscovery(IDns dns,
-    IPeerService repository,
+    IPeerService service,
     IConfigurationRoot rootSection,
     ILogger logger)
 {

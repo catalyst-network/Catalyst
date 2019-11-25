@@ -57,6 +57,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IDeltaTransactionRetriever _transactionRetriever;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
+        private readonly IMapperProvider _mapperProvider;
         private readonly PeerId _producerUniqueId;
         private readonly IDeltaCache _deltaCache;
         private readonly IDateTimeProvider _dateTimeProvider;
@@ -68,6 +69,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IPeerSettings peerSettings,
             IDeltaCache deltaCache,
             IDateTimeProvider dateTimeProvider,
+            IMapperProvider mapperProvider,
             ILogger logger)
         {
             _transactionRetriever = transactionRetriever;
@@ -76,6 +78,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _producerUniqueId = peerSettings.PeerId;
             _deltaCache = deltaCache;
             _dateTimeProvider = dateTimeProvider;
+            _mapperProvider = mapperProvider;
             _logger = logger;
         }
 
@@ -140,14 +143,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             _logger.Debug("Building full delta locally");
 
-            var publicEntries = includedTransactions.Select(x => x.ToProtoBuff<MempoolItem, TransactionBroadcast>());
+            var publicEntries = includedTransactions.Select(x => x.ToProtoBuff<MempoolItem, PublicEntry>(_mapperProvider));
 
             var producedDelta = new Delta
             {
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
                 CoinbaseEntries = {coinbaseEntry},
-                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x)},
+                PublicEntries = {publicEntries},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
