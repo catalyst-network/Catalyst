@@ -100,13 +100,22 @@ namespace Catalyst.Core.Modules.Hashing
                 Encoding.UTF8.GetBytes(data, span);
                 return ComputeMultiHash(span);
             }
-            else
+
+            byte[] array = null;
+            try
             {
-                using (var owner = MemoryPool<byte>.Shared.Rent(byteCount))
+                array = ArrayPool<byte>.Shared.Rent(byteCount);
+                
+                // align span to match the required length
+                var span = new Span<byte>(array, 0, byteCount);
+                Encoding.UTF8.GetBytes(data, array);
+                return ComputeMultiHash(span);
+            }
+            finally
+            {
+                if (array != null)
                 {
-                    var span = owner.Memory.Span;
-                    Encoding.UTF8.GetBytes(data, span);
-                    return ComputeMultiHash(span);
+                    ArrayPool<byte>.Shared.Return(array);
                 }
             }
         }
