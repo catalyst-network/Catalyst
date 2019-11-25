@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using TheDotNetLeague.MultiFormats.MultiHash;
@@ -37,5 +38,6 @@ namespace Catalyst.Abstractions.Hashing
         MultiHash ComputeMultiHash(IEnumerable<byte> content);
         MultiHash Cast(byte[] data);
         bool IsValidHash(byte[] data);
+        MultiHash ComputeMultiHash(ReadOnlySpan<byte> data);
     }
 }

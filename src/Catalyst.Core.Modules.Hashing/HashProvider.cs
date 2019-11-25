@@ -21,6 +21,8 @@
 
 #endregion
 
+using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -89,7 +91,24 @@ namespace Catalyst.Core.Modules.Hashing
 
         public MultiHash ComputeUtf8MultiHash(string data)
         {
-            return ComputeMultiHash(Encoding.UTF8.GetBytes(data));
+            var byteCount = Encoding.UTF8.GetByteCount(data);
+
+            const int maxBytes = 512;
+            if (byteCount < maxBytes)
+            {
+                Span<byte> span = stackalloc byte[byteCount];
+                Encoding.UTF8.GetBytes(data, span);
+                return ComputeMultiHash(span);
+            }
+            else
+            {
+                using (var owner = MemoryPool<byte>.Shared.Rent(byteCount))
+                {
+                    var span = owner.Memory.Span;
+                    Encoding.UTF8.GetBytes(data, span);
+                    return ComputeMultiHash(span);
+                }
+            }
         }
 
         public MultiHash ComputeMultiHash(IEnumerable<byte> data)
@@ -105,6 +124,24 @@ namespace Catalyst.Core.Modules.Hashing
         public MultiHash ComputeMultiHash(Stream data)
         {
             return MultiHash.ComputeHash(data, HashingAlgorithm.Name);
+        }
+
+        public MultiHash ComputeMultiHash(ReadOnlySpan<byte> data)
+        {
+            var size = HashingAlgorithm.DigestSize;
+            var digest = new byte[size];
+
+            using (var hasher = HashingAlgorithm.Hasher())
+            {
+                var success = hasher.TryComputeHash(data, digest, out var written);
+
+                if (!success || written != size)
+                {
+                    throw new System.Exception("Hashing failed");
+                }
+
+                return new MultiHash(HashingAlgorithm.Name, digest);
+            }
         }
     }
 }
