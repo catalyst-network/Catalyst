@@ -77,7 +77,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void TestPeerListRequestResponse(params string[] fakePeers)
         {
             var testScheduler = new TestScheduler();
-            var peerRepository = Substitute.For<IPeerService>();
+            var peerService = Substitute.For<IPeerService>();
             var peerList = new List<Peer>();
 
             fakePeers.ToList().ForEach(fakePeer =>
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             });
 
             // Let peerRepository return the fake peer list
-            peerRepository.GetAll().Returns(peerList.ToArray());
+            peerService.GetAll().Returns(peerList.ToArray());
 
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
@@ -100,7 +100,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            var handler = new PeerListRequestObserver(peerSettings, _logger, peerRepository);
+            var handler = new PeerListRequestObserver(peerSettings, _logger, peerService);
             handler.StartObserving(messageStream);
 
             testScheduler.Start();

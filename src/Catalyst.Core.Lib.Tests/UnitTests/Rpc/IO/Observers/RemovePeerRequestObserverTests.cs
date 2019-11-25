@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
             var testScheduler = new TestScheduler();
-            IPeerService peerRepository = new PeerService(new InMemoryRepository<Peer, string>());
+            IPeerService peerService = new PeerService(new InMemoryRepository<Peer, string>());
             var fakePeerList = fakePeers.ToList().Select(fakePeer =>
             {
                 return new Peer
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             Peer targetPeerToDelete = fakePeerList[0];
 
-            peerRepository.Add(fakePeerList);
+            peerService.Add(fakePeerList);
             
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
@@ -124,7 +124,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = peerId.ToSubstitutedPeerSettings();
-            var handler = new RemovePeerRequestObserver(peerSettings, peerRepository, _logger);
+            var handler = new RemovePeerRequestObserver(peerSettings, peerService, _logger);
             handler.StartObserving(messageStream);
 
             testScheduler.Start();

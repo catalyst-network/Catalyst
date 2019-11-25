@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly TestScheduler _testScheduler;
-        private readonly IPeerService _peerRepository;
+        private readonly IPeerService _peerService;
         private readonly PeerId _senderId;
 
         public PeerReputationRequestObserverTests()
@@ -59,10 +59,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
             _testScheduler = new TestScheduler();
-            _peerRepository = Substitute.For<IPeerService>();
+            _peerService = Substitute.For<IPeerService>();
 
             var fakePeers = PreparePeerRepositoryContent();
-            _peerRepository.GetAll().Returns(fakePeers);
+            _peerService.GetAll().Returns(fakePeers);
 
             _senderId = PeerIdHelper.GetPeerId("sender");
         }
@@ -100,7 +100,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var peerSettings = _senderId.ToSubstitutedPeerSettings();
-            var handler = new PeerReputationRequestObserver(peerSettings, _logger, _peerRepository);
+            var handler = new PeerReputationRequestObserver(peerSettings, _logger, _peerService);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
