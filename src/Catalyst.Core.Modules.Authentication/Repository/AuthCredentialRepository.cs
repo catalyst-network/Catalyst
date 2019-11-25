@@ -21,14 +21,37 @@
 
 #endregion
 
-using Catalyst.Core.Lib.Repository;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Authentication.Models;
+using Catalyst.Protocol.Peer;
 using SharpRepository.Repository;
+using System.Linq;
 
 namespace Catalyst.Core.Modules.Authentication.Repository
 {
-    public sealed class AuthCredentialRepository : RepositoryWrapper<AuthCredentials>, IAuthCredentialRepository
+    public sealed class AuthCredentialRepository : IAuthCredentialRepository
     {
-        public AuthCredentialRepository(IRepository<AuthCredentials, string> repository) : base(repository) { }
+        private readonly IRepository<AuthCredentials, string> _repository;
+
+        public AuthCredentialRepository(IRepository<AuthCredentials, string> repository)
+        {
+            _repository = repository;
+        }
+
+        public void Add(AuthCredentials authCredentials)
+        {
+            _repository.Add(authCredentials);
+        }
+
+        public bool TryFind(PeerId peerIdentifier, out AuthCredentials authCredentials)
+        {
+            return _repository.TryFind(t => t.IpAddress.Equals(peerIdentifier.Ip.ToString()) &&
+                t.PublicKey.KeyToBytes().SequenceEqual(peerIdentifier.PublicKey), out authCredentials);
+        }
+
+        public void Dispose()
+        {
+            _repository.Dispose();
+        }
     }
 }

@@ -22,44 +22,56 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.Mempool.Models;
-using Catalyst.Core.Lib.Repository;
 using Dawn;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Repositories
 {
-    public class MempoolRepository : RepositoryWrapper<MempoolItem>,
-        IMempoolRepository<MempoolItem>
+    public class MempoolService : IMempoolService<MempoolItem>
     {
-        public MempoolRepository(IRepository<MempoolItem, string> repository) : base(repository) { }
+        private readonly IRepository<MempoolItem, string> _repository;
+        public MempoolService(IRepository<MempoolItem, string> repository)
+        {
+            _repository = repository;
+        }
+
+        public IEnumerable<MempoolItem> GetAll()
+        {
+            return _repository.GetAll();
+        }
 
         /// <inheritdoc />
         public bool TryReadItem(string id)
         {
             Guard.Argument(id, nameof(id)).NotNull();
-            return Repository.TryGet(id, out _);
+            return _repository.TryGet(id, out _);
         }
 
         public MempoolItem ReadItem(string id)
         {
             Guard.Argument(id, nameof(id)).NotNull();
-            return Repository.Get(id);
+            return _repository.Get(id);
+        }
+
+        public void Delete(IEnumerable<MempoolItem> mempoolItems)
+        {
+            _repository.Delete(mempoolItems);
         }
 
         /// <inheritdoc />
-        public bool DeleteItem(params string[] transactionIds)
+        public bool DeleteItem(params string[] ids)
         {
             try
             {
-                Repository.Delete(transactionIds);
+                _repository.Delete(ids);
             }
             catch (Exception exception)
             {
-                Log.Logger.Error(exception, "Failed to delete transactions from the mempool {transactionIds}",
-                    transactionIds);
+                Log.Logger.Error(exception, "Failed to delete transactions from the mempool {ids}", ids);
                 return false;
             }
 
@@ -72,7 +84,7 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
 
             try
             {
-                Repository.Add(mempoolItem);
+                _repository.Add(mempoolItem);
             }
             catch (Exception e)
             {
@@ -81,6 +93,11 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
             }
 
             return true;
+        }
+
+        public void Dispose()
+        {
+            _repository.Dispose();
         }
     }
 }

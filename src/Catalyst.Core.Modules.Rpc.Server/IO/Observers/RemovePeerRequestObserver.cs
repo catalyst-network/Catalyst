@@ -21,19 +21,16 @@
 
 #endregion
 
-using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
-using SharpRepository.Repository.Specifications;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -58,7 +55,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         {
             _peerRepository = peerRepository;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -77,19 +74,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            uint peerDeletedCount = 0;
-
-            var publicKeyIsEmpty = removePeerRequest.PublicKey.IsEmpty;
-            
-            var peersToDelete = _peerRepository.FindAll(new Specification<Peer>(peer =>
-                peer.PeerId.Ip.SequenceEqual(removePeerRequest.PeerIp) &&
-                (publicKeyIsEmpty || peer.PeerId.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray())))).ToArray();
-
-            foreach (var peerToDelete in peersToDelete)
-            {
-                _peerRepository.Delete(peerToDelete);
-                peerDeletedCount += 1;
-            }
+            var peerDeletedCount = _peerRepository.DeletePeersByIpAndPublicKey(removePeerRequest.PeerIp, removePeerRequest.PublicKey);
 
             return new RemovePeerResponse
             {
