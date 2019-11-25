@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Lib.Repository;
 using Dawn;
 using Serilog;
@@ -31,48 +31,48 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Repositories
 {
-    public class MempoolRepository : RepositoryWrapper<TransactionBroadcastDao>,
-        IMempoolRepository<TransactionBroadcastDao>
+    public class MempoolRepository : RepositoryWrapper<MempoolItem>,
+        IMempoolRepository<MempoolItem>
     {
-        public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository) : base(repository) { }
+        public MempoolRepository(IRepository<MempoolItem, string> repository) : base(repository) { }
 
         /// <inheritdoc />
-        public bool TryReadItem(string signature)
+        public bool TryReadItem(string id)
         {
-            Guard.Argument(signature, nameof(signature)).NotNull();
-            return Repository.TryGet(signature, out _);
+            Guard.Argument(id, nameof(id)).NotNull();
+            return Repository.TryGet(id, out _);
         }
 
-        public TransactionBroadcastDao ReadItem(string signature)
+        public MempoolItem ReadItem(string id)
         {
-            Guard.Argument(signature, nameof(signature)).NotNull();
-            return Repository.Get(signature);
+            Guard.Argument(id, nameof(id)).NotNull();
+            return Repository.Get(id);
         }
 
         /// <inheritdoc />
-        public bool DeleteItem(params string[] transactionSignatures)
+        public bool DeleteItem(params string[] transactionIds)
         {
             try
             {
-                Repository.Delete(transactionSignatures);
+                Repository.Delete(transactionIds);
             }
             catch (Exception exception)
             {
-                Log.Logger.Error(exception, "Failed to delete transactions from the mempool {transactionSignatures}",
-                    transactionSignatures);
+                Log.Logger.Error(exception, "Failed to delete transactions from the mempool {transactionIds}",
+                    transactionIds);
                 return false;
             }
 
             return true;
         }
 
-        public bool CreateItem(TransactionBroadcastDao transactionBroadcast)
+        public bool CreateItem(MempoolItem mempoolItem)
         {
-            Guard.Argument(transactionBroadcast.Signature, nameof(transactionBroadcast.Signature)).NotNull();
+            Guard.Argument(mempoolItem.Id, nameof(mempoolItem.Id)).NotNull();
 
             try
             {
-                Repository.Add(transactionBroadcast);
+                Repository.Add(mempoolItem);
             }
             catch (Exception e)
             {

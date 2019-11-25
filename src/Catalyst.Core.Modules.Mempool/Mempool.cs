@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Mempool.Models;
 using Dawn;
 
 namespace Catalyst.Core.Modules.Mempool
@@ -31,12 +32,12 @@ namespace Catalyst.Core.Modules.Mempool
     /// <summary>
     ///     Mempool class wraps around a IKeyValueStore
     /// </summary>
-    public sealed class Mempool : IMempool<TransactionBroadcastDao>
+    public sealed class Mempool : IMempool<MempoolItem>
     {
-        public IMempoolRepository<TransactionBroadcastDao> Repository { get; }
+        public IMempoolRepository<MempoolItem> Repository { get; }
 
         /// <inheritdoc />
-        public Mempool(IMempoolRepository<TransactionBroadcastDao> transactionStore)
+        public Mempool(IMempoolRepository<MempoolItem> transactionStore)
         {
             Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
             Repository = transactionStore;

@@ -27,6 +27,7 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
@@ -55,7 +56,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ISnapshotableDb _stateDb;
         private readonly ISnapshotableDb _codeDb;
         private readonly ILedgerSynchroniser _synchroniser;
-        private readonly IMempool<TransactionBroadcastDao> _mempool;
+        private readonly IMempool<MempoolItem> _mempool;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
@@ -72,7 +73,7 @@ namespace Catalyst.Core.Modules.Ledger
             IAccountRepository accounts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
-            IMempool<TransactionBroadcastDao> mempool,
+            IMempool<MempoolItem> mempool,
             ILogger logger)
         {
             Accounts = accounts;
@@ -91,6 +92,10 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void FlushTransactionsFromDelta()
         {
+            _synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(LatestKnownDelta, out var delta);
+
+            var mempoolItems = delta.PublicEntries.
+
             var transactionsToFlush = _mempool.Repository.GetAll(); //@TOD0 no get alls
             _mempool.Repository.Delete(transactionsToFlush);
         }

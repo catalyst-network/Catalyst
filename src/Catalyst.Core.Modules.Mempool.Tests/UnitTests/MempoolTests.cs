@@ -29,9 +29,16 @@ using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
+using Catalyst.Core.Lib.Mempool.Models;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -43,35 +50,113 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
     public sealed class MempoolTests
     {
         private readonly Mempool _memPool;
+        private readonly MempoolItem _mempoolItem;
 
         private readonly TransactionBroadcastDao _transactionBroadcast;
         private readonly TestMapperProvider _mapperProvider;
 
         public MempoolTests()
         {
-            _memPool = new Mempool(Substitute.For<IMempoolRepository<TransactionBroadcastDao>>());
+            var ffiWrapper = new FfiWrapper();
+            var privateKey = ffiWrapper.GeneratePrivateKey();
+            var publicKey = privateKey.GetPublicKey();
+
+            var signingContext = new SigningContext { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic };
+
+            var transaction = new TransactionBroadcast
+            {
+                PublicEntries =
+                {
+                    new PublicEntry
+                    {
+                        Amount = ((UInt256) 10).ToUint256ByteString(),
+                        Data = publicKey.Bytes.ToByteString(),
+                        Base = new BaseEntry
+                        {
+                            Nonce = 10,
+                            ReceiverPublicKey = publicKey.Bytes.ToByteString(),
+                            SenderPublicKey = publicKey.Bytes.ToByteString(),
+                            TransactionFees = ((UInt256) 1).ToUint256ByteString(),
+                        }
+                    }
+                },
+                Timestamp = new Timestamp { Seconds = 10 }
+            };
+
+            transaction.Signature = new Signature
+            {
+                SigningContext = signingContext,
+                RawBytes = ffiWrapper.Sign(privateKey, transaction.ToByteArray(), signingContext.ToByteArray()).SignatureBytes.ToByteString()
+            };
+
+            var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
+            _mempoolItem = transactionBroadcastDao.ToMempoolItems(_mapperProvider).First();
+
+            _memPool = new Mempool(Substitute.For<IMempoolRepository<MempoolItem>>());
             _mapperProvider = new TestMapperProvider();
             _transactionBroadcast = TransactionHelper
                .GetPublicTransaction()
                .ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
         }
 
-        private void AddKeyValueStoreEntryExpectation(TransactionBroadcastDao transaction)
+        private void AddKeyValueStoreEntryExpectation(MempoolItem mempoolItem)
         {
-            _memPool.Repository.ReadItem(Arg.Is<string>(k => k == transaction.Signature.RawBytes))
-               .Returns(transaction);
+            _memPool.Repository.ReadItem(Arg.Is<string>(k => k == mempoolItem.Signature))
+               .Returns(mempoolItem);
 
-            _memPool.Repository.TryReadItem(Arg.Is<string>(k => k == transaction.Signature.RawBytes))
+            _memPool.Repository.TryReadItem(Arg.Is<string>(k => k == mempoolItem.Signature))
                .Returns(true);
+        }
+
+        [Fact]
+        public void TransactionBroadcastDao_should_be_convertable_to_MempoolItems()
+        {
+            var ffiWrapper = new FfiWrapper();
+            var privateKey = ffiWrapper.GeneratePrivateKey();
+            var publicKey = privateKey.GetPublicKey();
+
+            var signingContext = new SigningContext { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic };
+
+            var transaction = new TransactionBroadcast
+            {
+                PublicEntries =
+                {
+                    new PublicEntry
+                    {
+                        Amount = ((UInt256) 10).ToUint256ByteString(),
+                        Data = publicKey.Bytes.ToByteString(),
+                        Base = new BaseEntry
+                        {
+                            Nonce = 10,
+                            ReceiverPublicKey = publicKey.Bytes.ToByteString(),
+                            SenderPublicKey = publicKey.Bytes.ToByteString(),
+                            TransactionFees = ((UInt256) 1).ToUint256ByteString(),
+                        }
+                    }
+                },
+                Timestamp = new Timestamp { Seconds = 10 }
+            };
+
+            transaction.Signature = new Signature
+            {
+                SigningContext = signingContext,
+                RawBytes = ffiWrapper.Sign(privateKey, transaction.ToByteArray(), signingContext.ToByteArray()).SignatureBytes.ToByteString()
+            };
+
+            var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
+
+            var b = transactionBroadcastDao.ToMempoolItems(_mapperProvider);
+            var id = b.First().Id;
+            var a = 0;
         }
 
         [Fact]
         public void Get_should_retrieve_a_saved_transaction()
         {
-            _memPool.Repository.CreateItem(_transactionBroadcast);
-            AddKeyValueStoreEntryExpectation(_transactionBroadcast);
+            _memPool.Repository.CreateItem(_mempoolItem);
+            AddKeyValueStoreEntryExpectation(_mempoolItem);
 
-            var mempoolDocument = _memPool.Repository.ReadItem(_transactionBroadcast.Signature.RawBytes)
+            var mempoolDocument = _memPool.Repository.ReadItem(_mempoolItem.Id)
                .ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
             var expectedTransaction = _transactionBroadcast.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
 
@@ -93,7 +178,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             {
                 var signature = Encoding.UTF8.GetBytes($"key{i}").ToBase32();
                 var mempoolDocument = _memPool.Repository.ReadItem(signature).ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
-                mempoolDocument.PublicEntries.Single().Amount.ToUInt256().Should().Be((UInt256) i);
+                mempoolDocument.PublicEntries.Single().Amount.ToUInt256().Should().Be((UInt256)i);
             }
         }
 
@@ -145,7 +230,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
                .ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider).Clone();
 
             overridingTransaction.PublicEntries.Single().Amount =
-                (expectedAmount.ToUInt256() + (UInt256) 100).ToUint256ByteString();
+                (expectedAmount.ToUInt256() + (UInt256)100).ToUint256ByteString();
 
             var overridingTransactionDao = overridingTransaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
             _memPool.Repository.CreateItem(Arg.Is(overridingTransactionDao))
@@ -214,7 +299,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         private List<TransactionBroadcastDao> GetTestingMempoolDocuments(int documentCount)
         {
             return Enumerable.Range(0, documentCount).Select(i =>
-                    TransactionHelper.GetPublicTransaction((uint) i, signature: $"key{i}").ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider))
+                    TransactionHelper.GetPublicTransaction((uint)i, signature: $"key{i}").ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider))
                .ToList();
         }
 

@@ -29,11 +29,11 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.Mempool.Documents
 {
-    public sealed class MempoolDocument : MempoolItem, IMempoolDocument
-    {
-        [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("id")]
-        [BsonId]
-        public string DocumentId => Transaction?.Signature?.RawBytes.ToBase64();
-    }
+    //public sealed class MempoolDocument : MempoolItem, IMempoolDocument
+    //{
+    //    [RepositoryPrimaryKey(Order = 1)]
+    //    [JsonProperty("id")]
+    //    [BsonId]
+    //    public string DocumentId => Transaction?.Signature?.RawBytes.ToBase64();
+    //}
 }

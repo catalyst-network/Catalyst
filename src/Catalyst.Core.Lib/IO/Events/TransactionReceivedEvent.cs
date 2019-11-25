@@ -65,22 +65,31 @@ namespace Catalyst.Core.Lib.IO.Events
             }
 
             var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
+            var mempoolItems = transactionBroadcastDao.ToMempoolItems(_mapperProvider);
+
             var transactionSignature = transactionBroadcastDao.Signature;
             _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
 
             // https://github.com/catalyst-network/Catalyst.Node/issues/910 - should we fail or succeed if we already have the transaction in the ledger?
-            if (_mempool.Repository.TryReadItem(transactionSignature.RawBytes))
+
+            foreach(var mempoolItem in mempoolItems)
             {
-                _logger.Information("Transaction {signature} already exists in mempool", transactionSignature);
-                return ResponseCode.Error;
+                if (_mempool.Repository.TryReadItem(mempoolItem.Id))
+                {
+                    _logger.Information("Transaction {id} already exists in mempool", mempoolItem.Id);
+                    return ResponseCode.Error;
+                }
+
+                _mempool.Repository.CreateItem(transactionBroadcastDao);
             }
 
-            foreach(var publicEntry in transactionBroadcastDao.PublicEntries)
-            {
-                var mempoolItem = new MempoolItem();
-            }
+            //if (_mempool.Repository.TryReadItem(transactionSignature.RawBytes))
+            //{
+            //    _logger.Information("Transaction {signature} already exists in mempool", transactionSignature);
+            //    return ResponseCode.Error;
+            //}
 
-            _mempool.Repository.CreateItem(transactionBroadcastDao);
+            //_mempool.Repository.CreateItem(transactionBroadcastDao);
 
             _logger.Information("Broadcasting {signature} transaction", protocolMessage);
             _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);

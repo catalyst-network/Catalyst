@@ -25,8 +25,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO.Transaction
 {
@@ -40,6 +43,11 @@ namespace Catalyst.Core.Lib.DAO.Transaction
 
         // ReSharper disable once UnusedMember.Local
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
+
+        public MempoolItem ToMempoolItem(IMapperProvider mapperProvider)
+        {
+            return mapperProvider.Mapper.Map<MempoolItem>(this);
+        }
     }
 
     public sealed class PublicEntryMapperInitialiser : IMapperInitializer
@@ -50,12 +58,12 @@ namespace Catalyst.Core.Lib.DAO.Transaction
                 cfg.CreateMap<PublicEntry, PublicEntryDao>()
                    .ForMember(d => d.Amount,
                         opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
-                   .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+                   .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>());
 
                 cfg.CreateMap<PublicEntryDao, PublicEntry>()
                    .ForMember(d => d.Amount,
                         opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
-                   .ForMember(e => e.Data, opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
+                   .ForMember(e => e.Data, opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
             }
         }
     }

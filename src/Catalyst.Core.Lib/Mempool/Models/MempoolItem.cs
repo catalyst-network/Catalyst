@@ -22,39 +22,50 @@
 #endregion
 
 using System;
-using AutoMapper;
-using Catalyst.Abstractions.DAO;
+using System.IO;
 using Catalyst.Abstractions.Mempool.Models;
-using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.DAO.Transaction;
-using Catalyst.Protocol.Transaction;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.Mempool.Models
 {
     public class MempoolItem : IMempoolItem
     {
-        public byte[] Signature { set; get; }
+        //private string _id;
+        //public string Id
+        //{
+        //    get
+        //    {
+        //        if (_id != null)
+        //        {
+        //            return _id;
+        //        }
+
+        //        using (var memoryStream = new MemoryStream())
+        //        {
+        //            using (BinaryWriter writer = new BinaryWriter(memoryStream))
+        //            {
+        //                writer.Write(Signature);
+        //                writer.Write(BitConverter.GetBytes(Timestamp.Ticks));
+        //                writer.Write(Amount);
+        //                writer.Write(Nonce);
+        //                writer.Write(ReceiverAddress);
+        //                writer.Write(SenderAddress);
+        //                writer.Write(Fee);
+        //                writer.Write(Data);
+        //            }
+        //            return _id = memoryStream.ToArray().ToBase32();
+        //        }
+        //    }
+        //}
+
+        public string Id { set; get; }
+        public string Signature { set; get; }
         public DateTime Timestamp { set; get; }
-        public byte[] Amount { set; get; }
-        public long Nonce { set; get; }
-        public byte[] ReceiverAddress { set; get; }
-        public byte[] SenderAddress { set; get; }
-        public byte[] Fee { set; get; }
-        public byte[] Data { set; get; }
-    }
-
-    public sealed class MempoolItemMapperInitialiser : IMapperInitializer
-    {
-        public void InitMappers(IMapperConfigurationExpression cfg)
-        {
-            {
-                cfg.CreateMap<TransactionBroadcastDao, MempoolItem[]>().ForMember(x=>x.)
-
-                cfg.CreateMap<MempoolItem, PublicEntry>()
-                   .ForMember(d => d.Amount,
-                        opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
-                   .ForMember(e => e.Data, opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-            }
-        }
+        public string Amount { set; get; }
+        public ulong Nonce { set; get; }
+        public string ReceiverAddress { set; get; }
+        public string SenderAddress { set; get; }
+        public string Fee { set; get; }
+        public string Data { set; get; }
     }
 }

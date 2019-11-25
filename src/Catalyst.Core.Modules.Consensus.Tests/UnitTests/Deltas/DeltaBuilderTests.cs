@@ -259,7 +259,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             {
                 var transaction = TransactionHelper.GetContractTransaction(ByteString.Empty,
                     UInt256.Zero,
-                    i > 10 ? (uint)DeltaGasLimit / 8U - 10000U : 70000U, // to test scenarios when both single transaction is ignored and all remaining
+                    i > 10 ? (uint) DeltaGasLimit / 8U - 10000U : 70000U, // to test scenarios when both single transaction is ignored and all remaining
                     (20 + i).GFul(),
                     Bytes.Empty,
                     receiverPublicKey: i.ToString(),

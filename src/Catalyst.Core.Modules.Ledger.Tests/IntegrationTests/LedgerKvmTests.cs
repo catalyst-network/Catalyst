@@ -28,7 +28,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Kvm;
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private readonly IAccountRepository _fakeRepository;
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly ILedgerSynchroniser _ledgerSynchroniser;
-        private readonly IMempool<TransactionBroadcastDao> _mempool;
+        private readonly IMempool<MempoolItem> _mempool;
         private readonly IDeltaExecutor _deltaExecutor;
         private readonly IStorageProvider _storageProvider;
         private readonly ISnapshotableDb _stateDb;
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
 
             _logger = Substitute.For<ILogger>();
-            _mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
+            _mempool = Substitute.For<IMempool<MempoolItem>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
 
@@ -105,9 +105,15 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private void RunDeltas(Delta delta)
         {
             var hash1 = _hashProvider.ComputeUtf8MultiHash("update");
-            var updates = new[] { hash1 };
+            var updates = new[]
+            {
+                hash1
+            };
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
-               .ReturnsForAnyArgs(new Cid[] { hash1, _genesisHash });
+               .ReturnsForAnyArgs(new Cid[]
+                {
+                    hash1, _genesisHash
+                });
             _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
                .Returns(c =>
                 {

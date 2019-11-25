@@ -27,6 +27,7 @@ using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Core.Lib.DAO.Deltas;
 using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Mempool.Models;
 
 namespace Catalyst.TestUtils
 {
@@ -49,7 +50,7 @@ namespace Catalyst.TestUtils
             new ConfidentialEntryMapperInitialiser(),
             new TransactionBroadcastMapperInitialiser(),
             new SignatureMapperInitialiser(),
-            new BaseEntryMapperInitialiser(),
+            new BaseEntryMapperInitialiser()
         }) { }
     }
 }
