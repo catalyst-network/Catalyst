@@ -110,7 +110,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             // dn
             var signaturesInOrder = includedTransactions
-               .Select(p => p.Signature.ToByteArray())
+               .Select(p => p.Signature.FromBase32())
                .OrderBy(s => s, ByteUtil.ByteListComparer.Default)
                .SelectMany(b => b)
                .ToArray();

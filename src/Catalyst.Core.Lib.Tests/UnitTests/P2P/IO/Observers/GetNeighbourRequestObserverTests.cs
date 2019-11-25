@@ -47,21 +47,21 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly PeerId _peerId;
-        private readonly IPeerService _subbedPeerRepository;
+        private readonly IPeerService _subbedPeerService;
 
         public GetNeighbourRequestObserverTests()
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
-            _subbedPeerRepository = Substitute.For<IPeerService>();
+            _subbedPeerService = Substitute.For<IPeerService>();
             _peerId = PeerIdHelper.GetPeerId("testPeer");
         }
         
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
-            IPeerService store)
+            IPeerService service)
         {
-            store.Add(peer);
-            store.GetActivePeers(Arg.Any<int>()).Returns(peer);
+            service.Add(peer);
+            service.GetActivePeers(Arg.Any<int>()).Returns(peer);
         }
 
         [Fact]
@@ -79,11 +79,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             };
 
             // add them to the mocked repository, and set return expectation
-            AddMockPeerToDbAndSetReturnExpectation(randomPeers, _subbedPeerRepository);
+            AddMockPeerToDbAndSetReturnExpectation(randomPeers, _subbedPeerService);
 
             var peerSettings = _peerId.ToSubstitutedPeerSettings();
             var neighbourRequestHandler = new GetNeighbourRequestObserver(peerSettings,
-                _subbedPeerRepository,
+                _subbedPeerService,
                 _subbedLogger
             );
             
@@ -110,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
         public void Dispose()
         {
-            _subbedPeerRepository?.Dispose();
+            _subbedPeerService?.Dispose();
         }
     }
 }
