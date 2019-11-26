@@ -23,17 +23,18 @@
 
 using System;
 using System.Collections.Generic;
-using Catalyst.Abstractions.Mempool.Models;
+
 using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Core.Lib.DAO.Transaction;
 using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
 {
-    public sealed class TestMempoolRepository : IMempoolService<MempoolItem>
+    public sealed class TestMempoolRepository : IMempoolService<PublicEntryDao>
     {
         private readonly TestMapperProvider _mapperProvider;
 
-        public TestMempoolRepository(IRepository<MempoolItem, string> repository)
+        public TestMempoolRepository(IRepository<PublicEntryDao, string> repository)
         {
             _mapperProvider = new TestMapperProvider();
         }
@@ -43,7 +44,7 @@ namespace Catalyst.TestUtils
             throw new NotImplementedException();
         }
 
-        public MempoolItem ReadItem(string key)
+        public PublicEntryDao ReadItem(string key)
         {
             throw new NotImplementedException();
         }
@@ -53,12 +54,12 @@ namespace Catalyst.TestUtils
             throw new NotImplementedException();
         }
 
-        public bool CreateItem(MempoolItem mempoolItem)
+        public bool CreateItem(PublicEntryDao mempoolItem)
         {
             throw new NotImplementedException();
         }
 
-        public new IEnumerable<MempoolItem> GetAll()
+        public new IEnumerable<PublicEntryDao> GetAll()
         {
             return null;
             //var utcNow = DateTime.UtcNow;
@@ -68,7 +69,7 @@ namespace Catalyst.TestUtils
             //   .Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider));
         }
 
-        public void Delete(IEnumerable<MempoolItem> mempoolItem)
+        public void Delete(IEnumerable<PublicEntryDao> mempoolItem)
         {
             throw new NotImplementedException();
         }

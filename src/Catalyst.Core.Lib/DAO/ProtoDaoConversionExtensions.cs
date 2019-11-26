@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Abstractions.Mempool.Models;
+
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
@@ -31,13 +31,6 @@ namespace Catalyst.Core.Lib.DAO
         public static TProto ToProtoBuff<TDao, TProto>(this TDao dao, IMapperProvider mapperProvider)
             where TDao : DaoBase
             where TProto : IMessage
-        {
-            return mapperProvider.Mapper.Map<TProto>(dao);
-        }
-
-        public static TProto ToProtoBuff<TDao, TProto>(this MempoolItem dao, IMapperProvider mapperProvider)
-       where TDao : MempoolItem
-       where TProto : IMessage
         {
             return mapperProvider.Mapper.Map<TProto>(dao);
         }

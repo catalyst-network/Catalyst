@@ -25,7 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
+
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Hashing;
@@ -39,7 +40,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaTransactionRetrieverTests
     {
-        private readonly IList<MempoolItem> _transactions;
+        private readonly IList<PublicEntryDao> _transactions;
         private readonly DeltaTransactionRetriever _transactionRetriever;
 
         public DeltaTransactionRetrieverTests()
@@ -49,19 +50,20 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var random = new Random();
 
-            var mempool = Substitute.For<IMempool<MempoolItem>>();
-            _transactions = Enumerable.Range(0, 20).Select(i =>
-                TransactionHelper.GetPublicTransaction(
-                    transactionFees: (ulong) random.Next(),
-                    timestamp: random.Next(),
-                    signature: i.ToString())
-            ).SelectMany(x=> MempoolHelper.GetMempoolItems(x, hashProvider)).ToList();
+            //todo
+            //var mempool = Substitute.For<IMempool<MempoolItem>>();
+            //_transactions = Enumerable.Range(0, 20).Select(i =>
+            //    TransactionHelper.GetPublicTransaction(
+            //        transactionFees: (ulong) random.Next(),
+            //        timestamp: random.Next(),
+            //        signature: i.ToString())
+            //).SelectMany(x=> MempoolHelper.GetMempoolItems(x, hashProvider)).ToList();
 
-            mempool.Service.GetAll().Returns(_transactions);
-            //   .Select(x => x.ToDao<TransactionBroadcast, MempoolItem>(mapperProvider)));
+            //mempool.Service.GetAll().Returns(_transactions);
+            ////   .Select(x => x.ToDao<TransactionBroadcast, MempoolItem>(mapperProvider)));
 
-            _transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider,
-                TransactionComparerByFeeTimestampAndHash.Default);
+            //_transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider,
+            //    TransactionComparerByFeeTimestampAndHash.Default);
         }
 
         [Fact]

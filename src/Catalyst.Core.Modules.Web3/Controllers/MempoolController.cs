@@ -23,7 +23,7 @@
 
 using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.Mempool.Models;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -38,13 +38,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers
     {
         private readonly MempoolService _mempoolService;
 
-        public MempoolController(IMempoolService<MempoolItem> mempoolService)
+        public MempoolController(IMempoolService<PublicEntryDao> mempoolService)
         {
             _mempoolService = (MempoolService)mempoolService;
         }
 
         [HttpGet("{id}")]
-        public MempoolItem Get(string id)
+        public PublicEntryDao Get(string id)
         {
             id = id.ToLowerInvariant();
             return _mempoolService.ReadItem(id);

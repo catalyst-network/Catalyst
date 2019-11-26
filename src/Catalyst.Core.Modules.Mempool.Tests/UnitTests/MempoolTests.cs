@@ -25,9 +25,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Catalyst.Abstractions.Mempool.Models;
+
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -50,7 +51,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
     public sealed class MempoolTests
     {
         private readonly Mempool _memPool;
-        private readonly MempoolItem _mempoolItem;
+        private readonly PublicEntryDao _mempoolItem;
 
         private readonly TransactionBroadcastDao _transactionBroadcast;
         private readonly TestMapperProvider _mapperProvider;
@@ -67,15 +68,17 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             {
                 PublicEntry = new PublicEntry
                 {
+                    Base = new BaseEntry()
+                    {
+                        Nonce = 10,
+                        ReceiverPublicKey = publicKey.Bytes.ToByteString(),
+                        SenderPublicKey = publicKey.Bytes.ToByteString(),
+                        TransactionFees = ((UInt256)1).ToUint256ByteString()
+                    },
                     Amount = ((UInt256)10).ToUint256ByteString(),
                     Data = publicKey.Bytes.ToByteString(),
-                    Nonce = 10,
-                    ReceiverPublicKey = publicKey.Bytes.ToByteString(),
-                    SenderPublicKey = publicKey.Bytes.ToByteString(),
-                    TransactionFees = ((UInt256)1).ToUint256ByteString(),
                     Timestamp = new Timestamp { Seconds = 10 }
                 }
-
             };
 
             transaction.PublicEntry.Signature = new Signature
@@ -85,16 +88,16 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             };
 
             var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-            _mempoolItem = transactionBroadcastDao.ToMempoolItems(_mapperProvider).First();
+            _mempoolItem = transactionBroadcastDao.PublicEntry;
 
-            _memPool = new Mempool(Substitute.For<IMempoolService<MempoolItem>>());
+            _memPool = new Mempool(Substitute.For<IMempoolService<PublicEntryDao>>());
             _mapperProvider = new TestMapperProvider();
             _transactionBroadcast = TransactionHelper
                .GetPublicTransaction()
                .ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
         }
 
-        private void AddKeyValueStoreEntryExpectation(MempoolItem mempoolItem)
+        private void AddKeyValueStoreEntryExpectation(PublicEntryDao mempoolItem)
         {
             _memPool.Service.ReadItem(Arg.Is<string>(k => k == mempoolItem.Id))
                .Returns(mempoolItem);
@@ -117,15 +120,17 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
                 PublicEntry =
                     new PublicEntry
                     {
+                        Base = new BaseEntry()
+                        {
+                            Nonce = 10,
+                            ReceiverPublicKey = publicKey.Bytes.ToByteString(),
+                            SenderPublicKey = publicKey.Bytes.ToByteString(),
+                            TransactionFees = ((UInt256)1).ToUint256ByteString()
+                        },
                         Amount = ((UInt256)10).ToUint256ByteString(),
                         Data = publicKey.Bytes.ToByteString(),
-                        Nonce = 10,
-                        ReceiverPublicKey = publicKey.Bytes.ToByteString(),
-                        SenderPublicKey = publicKey.Bytes.ToByteString(),
-                        TransactionFees = ((UInt256)1).ToUint256ByteString(),
                         Timestamp = new Timestamp { Seconds = 10 },
                     }
-
             };
 
             transaction.PublicEntry.Signature = new Signature
@@ -136,9 +141,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
             var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
 
-            var b = transactionBroadcastDao.ToMempoolItems(_mapperProvider);
-            var id = b.First().ToProtoBuff<MempoolItem, TransactionBroadcast>(_mapperProvider);
-            var a = 0;
+            //var b = transactionBroadcastDao.ToMempoolItems(_mapperProvider);
+            //var id = b.First().ToProtoBuff<MempoolItem, TransactionBroadcast>(_mapperProvider);
+            //var a = 0;
         }
 
         [Fact]
@@ -147,13 +152,13 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             _memPool.Service.CreateItem(_mempoolItem);
             AddKeyValueStoreEntryExpectation(_mempoolItem);
 
-            var mempoolDocument = _memPool.Service.ReadItem(_mempoolItem.Id).ToProtoBuff<MempoolItem, TransactionBroadcast>(_mapperProvider);
+            var mempoolDocument = _memPool.Service.ReadItem(_mempoolItem.Id).ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
             var expectedTransaction = _transactionBroadcast.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
 
-            mempoolDocument.PublicEntry.Amount.ToUInt256().Should()
+            mempoolDocument.Amount.ToUInt256().Should()
                .Be(expectedTransaction.PublicEntry.Amount.ToUInt256());
-            mempoolDocument.PublicEntry.Signature.RawBytes.SequenceEqual(expectedTransaction.PublicEntry.Signature.RawBytes).Should().BeTrue();
-            mempoolDocument.PublicEntry.Timestamp.Should().Be(expectedTransaction.PublicEntry.Timestamp);
+            mempoolDocument.Signature.RawBytes.SequenceEqual(expectedTransaction.PublicEntry.Signature.RawBytes).Should().BeTrue();
+            mempoolDocument.Timestamp.Should().Be(expectedTransaction.PublicEntry.Timestamp);
             //mempoolDocument.PublicEntry.SummedEntryFees().Should().Be(expectedTransaction.SummedEntryFees());
         }
 
@@ -286,10 +291,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             content.Should().BeEquivalentTo(mempoolDocs);
         }
 
-        private List<MempoolItem> GetTestingMempoolDocuments(int documentCount)
+        private List<PublicEntryDao> GetTestingMempoolDocuments(int documentCount)
         {
             return Enumerable.Range(0, documentCount).Select(i =>
-                    TransactionHelper.GetPublicTransaction((uint)i, signature: $"key{i}").ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider)).SelectMany(x => x.ToMempoolItems(_mapperProvider)).ToList();
+                    TransactionHelper.GetPublicTransaction((uint)i, signature: $"key{i}").ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider)).Select(x => x.PublicEntry).ToList();
         }
 
         [Fact]

@@ -23,9 +23,9 @@
 
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
@@ -44,7 +44,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 {
     public sealed class TransactionReceivedEventTests
     {
-        private readonly IMempool<MempoolItem> _mempool;
+        private readonly IMempool<PublicEntryDao> _mempool;
         private readonly ITransactionValidator _transactionValidator;
         private readonly IBroadcastManager _broadcastManager;
         private readonly TransactionReceivedEvent _transactionReceivedEvent;
@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         {
             var mapperProvider = new TestMapperProvider();
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-            _mempool = Substitute.For<IMempool<MempoolItem>>();
+            _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
             _broadcastManager = Substitute.For<IBroadcastManager>();
             _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator,
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Successful);
 
-            _mempool.Service.Received(1).CreateItem(Arg.Any<MempoolItem>());
+            _mempool.Service.Received(1).CreateItem(Arg.Any<PublicEntryDao>());
             _broadcastManager.Received(1)?.BroadcastAsync(Arg.Is<ProtocolMessage>(
                 broadcastedMessage => broadcastedMessage.Value.ToByteArray().SequenceEqual(transaction.ToByteArray())));
         }

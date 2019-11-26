@@ -22,9 +22,9 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Abstractions.Mempool.Models;
+using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Abstractions.Consensus
 {
-    public interface ITransactionComparer : IComparer<MempoolItem> { }
+    public interface ITransactionComparer : IComparer<PublicEntry> { }
 }

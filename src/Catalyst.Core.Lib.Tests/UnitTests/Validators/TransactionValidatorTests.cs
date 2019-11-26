@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             var invalidSignature = new Signature();
             var invalidTransactionBroadcast = new TransactionBroadcast
             {
-                Signature = invalidSignature
+                PublicEntry = new PublicEntry() { Signature = invalidSignature }
             };
 
             var result = transactionValidator.ValidateTransaction(invalidTransactionBroadcast);
@@ -77,14 +77,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
 
             var validTransactionBroadcast = new TransactionBroadcast
             {
-                PublicEntries =
+                PublicEntry = new PublicEntry
                 {
-                    new PublicEntry
+                    Base = new BaseEntry
                     {
-                        Base = new BaseEntry
-                        {
-                            SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
-                        }
+                        SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
                     }
                 }
             };
@@ -101,31 +98,28 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
                 }
             };
 
-            validTransactionBroadcast.Signature = signature;
+            validTransactionBroadcast.PublicEntry.Signature = signature;
 
             var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
             result.Should().BeTrue();
         }
-        
+
         [Fact]
         public void TransactionValidator_ValidateTransactionSignature_returns_false_for_invalid_transaction_signature_verification()
         {
             var subbedLogger = Substitute.For<ILogger>();
             var subbedContext = Substitute.For<ICryptoContext>();
-            
+
             var privateKey = subbedContext.GeneratePrivateKey();
 
             // raw un-signed tx message
             var validTransactionBroadcast = new TransactionBroadcast
             {
-                PublicEntries =
+                PublicEntry = new PublicEntry
                 {
-                    new PublicEntry
+                    Base = new BaseEntry
                     {
-                        Base = new BaseEntry
-                        {
-                            SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
-                        }
+                        SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
                     }
                 }
             };
@@ -139,22 +133,22 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
                     SignatureType = SignatureType.TransactionPublic
                 }
             };
-            
+
             subbedContext.GetSignatureFromBytes(Arg.Is(txSig.ToByteArray()), Arg.Is(privateKey.GetPublicKey().Bytes))
                .ReturnsForAnyArgs(Substitute.For<ISignature>());
-            
+
             subbedContext.Verify(Arg.Any<ISignature>(), // @TODO be more specific
                     Arg.Is(validTransactionBroadcast.ToByteArray()),
                     Arg.Is(txSig.SigningContext.ToByteArray())
                 )
                .Returns(false);
-            
+
             subbedContext.Sign(Arg.Is(privateKey), validTransactionBroadcast.ToByteArray(), txSig.SigningContext.ToByteArray())
                .SignatureBytes.Returns(new byte[64]);
-            
+
             var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
 
-            validTransactionBroadcast.Signature = txSig;
+            validTransactionBroadcast.PublicEntry.Signature = txSig;
 
             var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
             result.Should().BeFalse();

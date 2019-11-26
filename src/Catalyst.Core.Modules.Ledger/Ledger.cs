@@ -26,7 +26,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ISnapshotableDb _stateDb;
         private readonly ISnapshotableDb _codeDb;
         private readonly ILedgerSynchroniser _synchroniser;
-        private readonly IMempool<MempoolItem> _mempool;
+        private readonly IMempool<PublicEntryDao> _mempool;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
@@ -72,7 +72,7 @@ namespace Catalyst.Core.Modules.Ledger
             IAccountRepository accounts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
-            IMempool<MempoolItem> mempool,
+            IMempool<PublicEntryDao> mempool,
             ILogger logger)
         {
             Accounts = accounts;

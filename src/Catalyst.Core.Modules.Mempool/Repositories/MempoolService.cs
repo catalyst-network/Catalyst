@@ -24,22 +24,22 @@
 using System;
 using System.Collections.Generic;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.Mempool.Models;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Dawn;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Repositories
 {
-    public class MempoolService : IMempoolService<MempoolItem>
+    public class MempoolService : IMempoolService<PublicEntryDao>
     {
-        private readonly IRepository<MempoolItem, string> _repository;
-        public MempoolService(IRepository<MempoolItem, string> repository)
+        private readonly IRepository<PublicEntryDao, string> _repository;
+        public MempoolService(IRepository<PublicEntryDao, string> repository)
         {
             _repository = repository;
         }
 
-        public IEnumerable<MempoolItem> GetAll()
+        public IEnumerable<PublicEntryDao> GetAll()
         {
             return _repository.GetAll();
         }
@@ -51,13 +51,13 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
             return _repository.TryGet(id, out _);
         }
 
-        public MempoolItem ReadItem(string id)
+        public PublicEntryDao ReadItem(string id)
         {
             Guard.Argument(id, nameof(id)).NotNull();
             return _repository.Get(id);
         }
 
-        public void Delete(IEnumerable<MempoolItem> mempoolItems)
+        public void Delete(IEnumerable<PublicEntryDao> mempoolItems)
         {
             _repository.Delete(mempoolItems);
         }
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
             return true;
         }
 
-        public bool CreateItem(MempoolItem mempoolItem)
+        public bool CreateItem(PublicEntryDao mempoolItem)
         {
             Guard.Argument(mempoolItem.Id, nameof(mempoolItem.Id)).NotNull();
 

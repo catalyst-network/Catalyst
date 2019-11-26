@@ -28,7 +28,8 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
+
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Kvm;
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private readonly IAccountRepository _fakeRepository;
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly ILedgerSynchroniser _ledgerSynchroniser;
-        private readonly IMempool<MempoolItem> _mempool;
+        private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IDeltaExecutor _deltaExecutor;
         private readonly IStorageProvider _storageProvider;
         private readonly ISnapshotableDb _stateDb;
@@ -80,7 +81,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
 
             _logger = Substitute.For<ILogger>();
-            _mempool = Substitute.For<IMempool<MempoolItem>>();
+            _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
 

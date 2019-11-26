@@ -44,20 +44,17 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
             var subbedLogger = Substitute.For<ILogger>();
             var cryptoContext = new FfiWrapper();
             var transactionValidator = new TransactionValidator(subbedLogger, cryptoContext);
-            
+
             // build a valid transaction
             var privateKey = cryptoContext.GeneratePrivateKey();
 
             var validTransactionBroadcast = new TransactionBroadcast
             {
-                PublicEntries =
+                PublicEntry = new PublicEntry
                 {
-                    new PublicEntry
+                    Base = new BaseEntry
                     {
-                        Base = new BaseEntry
-                        {
-                            SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
-                        }
+                        SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
                     }
                 }
             };
@@ -75,8 +72,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
                    .SignatureBytes.ToByteString(),
                 SigningContext = signingContext
             };
-            
-            validTransactionBroadcast.Signature = signature;
+
+            validTransactionBroadcast.PublicEntry.Signature = signature;
 
             var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
             result.Should().BeTrue();

@@ -28,11 +28,9 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
@@ -96,7 +94,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 //GetValidTransactionsForDelta(allTransactions);
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
-            var publicEntries = includedTransactions.Select(x => x.ToProtoBuff<MempoolItem, PublicEntry>(_mapperProvider));
+            var publicEntries = includedTransactions;
 
             var rawAndSaltedEntriesBySignature = publicEntries.Select(
                 x => new RawEntryWithSaltedAndHashedEntry(x, salt, _hashProvider));
@@ -109,13 +107,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             // dn
             var signaturesInOrder = includedTransactions
-               .Select(p => p.Signature)
+               .Select(p => p.Signature.ToByteArray())
                .OrderBy(s => s, ByteUtil.ByteListComparer.Default)
                .SelectMany(b => b)
                .ToArray();
 
             // xf
-            var summedFees = allTransactions.Sum(t => UInt256.Parse(t.Fee));
+            var summedFees = allTransactions.Sum(t => t.Base.TransactionFees.ToUInt256());
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)
             var coinbaseEntry = new CoinbaseEntry

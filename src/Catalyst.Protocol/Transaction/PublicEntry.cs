@@ -50,14 +50,19 @@ namespace Catalyst.Protocol.Transaction
         /// If this is an entry that is about to deploy a smart contract then <value>true</value>,
         /// otherwise <value>false</value>.
         /// </summary>
-        public bool IsValidDeploymentEntry => IsValid() && ReceiverPublicKey.IsEmpty;
+        public bool IsValidDeploymentEntry => IsValid() && Base.ReceiverPublicKey.IsEmpty;
 
         /// <summary>
         /// If this is an entry that is about to call a smart contract then <value>true</value>,
         /// otherwise <value>false</value>.
         /// </summary>
-        public bool IsValidCallEntry => IsValid() && !ReceiverPublicKey.IsEmpty;
+        public bool IsValidCallEntry => IsValid() && !Base.ReceiverPublicKey.IsEmpty;
 
         public byte[] TargetContract { get; set; }
+
+        public byte[] GetId()
+        {
+            return new byte[10];
+        }
     }
 }

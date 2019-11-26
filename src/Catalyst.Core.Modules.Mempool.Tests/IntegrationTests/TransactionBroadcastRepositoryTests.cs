@@ -63,22 +63,23 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
+                //out var contractEntryDaoList,
                 var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId,
-                    out var contractEntryDaoList, out var publicEntryDaoList);
+                     out var publicEntryDaoList);
 
                 transactBroadcastRepo.Get(criteriaId).Id.Should().Be(criteriaId);
 
-                transactBroadcastRepo.Get(criteriaId).PublicEntries.FirstOrDefault().Data
-                   .Should().Be(contractEntryDaoList.FirstOrDefault().Data);
+                //transactBroadcastRepo.Get(criteriaId).PublicEntry.Data
+                //   .Should().Be(contractEntryDaoList.FirstOrDefault().Data);
 
-                transactBroadcastRepo.Get(criteriaId).PublicEntries.FirstOrDefault().Amount
+                transactBroadcastRepo.Get(criteriaId).PublicEntry.Amount
                    .Should().Be(publicEntryDaoList.FirstOrDefault().Amount);
             }
         }
 
         private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope,
             out string id,
-            out IEnumerable<PublicEntryDao> contractEntryDaoList,
+            //out IEnumerable<PublicEntryDao> contractEntryDaoList,
             out IEnumerable<PublicEntryDao> publicEntryDaoList)
         {
             var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
@@ -86,10 +87,11 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             var transactionBroadcastDao = TransactionHelper.GetPublicTransaction().ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
             id = transactionBroadcastDao.Id;
 
-            contractEntryDaoList = ContractEntryHelper.GetContractEntriesDao(10);
+            //contractEntryDaoList = ContractEntryHelper.GetContractEntriesDao(10);
             publicEntryDaoList = PublicEntryHelper.GetPublicEntriesDao(10);
 
-            transactionBroadcastDao.PublicEntries = publicEntryDaoList.Concat(contractEntryDaoList);
+            transactionBroadcastDao.PublicEntry = publicEntryDaoList.First();
+                //.Concat(contractEntryDaoList);
 
             var signingContextDao = new SigningContextDao
             {
@@ -97,7 +99,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 SignatureType = SignatureType.TransactionPublic
             };
 
-            transactionBroadcastDao.ConfidentialEntries = ConfidentialEntryHelper.GetConfidentialEntriesDao(10);
+            //transactionBroadcastDao.ConfidentialEntries = ConfidentialEntryHelper.GetConfidentialEntriesDao(10);
 
             transactionBroadcastDao.Signature = new SignatureDao
             { RawBytes = "mplwifwfjfw", SigningContext = signingContextDao };
@@ -111,8 +113,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
+                //out _,
                 var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId,
-                    out _, out _);
+                    out _);
 
                 var retrievedTransactionDao = transactBroadcastRepo.Get(criteriaId);
                 retrievedTransactionDao.TimeStamp = new DateTime(1999, 2, 2);

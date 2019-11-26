@@ -22,8 +22,8 @@
 #endregion
 
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Dawn;
 
 namespace Catalyst.Core.Modules.Mempool
@@ -31,12 +31,12 @@ namespace Catalyst.Core.Modules.Mempool
     /// <summary>
     ///     Mempool class wraps around a IKeyValueStore
     /// </summary>
-    public sealed class Mempool : IMempool<MempoolItem>
+    public sealed class Mempool : IMempool<PublicEntryDao>
     {
-        public IMempoolService<MempoolItem> Service { get; }
+        public IMempoolService<PublicEntryDao> Service { get; }
 
         /// <inheritdoc />
-        public Mempool(IMempoolService<MempoolItem> mempoolService)
+        public Mempool(IMempoolService<PublicEntryDao> mempoolService)
         {
             Guard.Argument(mempoolService, nameof(mempoolService)).NotNull();
             Service = mempoolService;

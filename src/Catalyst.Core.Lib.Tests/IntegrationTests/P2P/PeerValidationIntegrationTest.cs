@@ -39,7 +39,6 @@ using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Protocols;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
@@ -55,7 +54,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     public sealed class PeerValidationIntegrationTest : FileSystemBasedTest
     {
-        private IPeerService _peerService;
+        private IPeerNetworkService _peerService;
         private IPeerChallengeRequest _peerChallengeRequest;
         private readonly PeerSettings _peerSettings;
 
@@ -101,7 +100,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             var signature = Substitute.For<ISignature>();
             keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
 
-            _peerService = new PeerService(new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
+            _peerService = new PeerNetworkService(new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
                 new PeerServerChannelFactory(ContainerProvider.Container.Resolve<IPeerMessageCorrelationManager>(),
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
                     keySigner,

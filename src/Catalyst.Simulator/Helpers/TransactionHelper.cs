@@ -49,24 +49,21 @@ namespace Catalyst.Simulator.Helpers
             var cryptoWrapper = new FfiWrapper();
             var privateKey = cryptoWrapper.GeneratePrivateKey();
             var publicKey = ByteString.CopyFrom(privateKey.GetPublicKey().Bytes);
-            
+
             var transaction = new TransactionBroadcast
             {
-                PublicEntries =
+                PublicEntry = new PublicEntry
                 {
-                    new PublicEntry
+                    Amount = ((UInt256)amount).ToUint256ByteString(),
+                    Base = new BaseEntry
                     {
-                        Amount = ((UInt256) amount).ToUint256ByteString(),
-                        Base = new BaseEntry
-                        {
-                            Nonce = (ulong) nonce,
-                            SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString(),
-                            ReceiverPublicKey = publicKey,
-                            TransactionFees = ((UInt256) fee).ToUint256ByteString()
-                        }
-                    }
-                },
-                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
+                        Nonce = (ulong)nonce,
+                        SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString(),
+                        ReceiverPublicKey = publicKey,
+                        TransactionFees = ((UInt256)fee).ToUint256ByteString()
+                    },
+                    Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                }
             };
 
             var signedTransaction = transaction.Sign(cryptoWrapper, privateKey, DevNetPublicTransactionContext);
