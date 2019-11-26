@@ -155,7 +155,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                 _serverChannel.WriteInbound(sentBytes);
                 _serverCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
 
-                _serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
+                _serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, default(byte[]), null);
 
                 _testScheduler.Start();
 

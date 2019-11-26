@@ -93,14 +93,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [Fact]
         public void VerifyMessageRequestObserver_Can_Send_True_If_Valid_Signature()
         {
-            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(true);
+            _keySigner.Verify(default, default(byte[]), default).ReturnsForAnyArgs(true);
             AssertVerifyResponse(true);
         }
 
         [Fact]
         public void VerifyMessageRequestObserver_Can_Send_False_Response_If_Verify_Fails()
         {
-            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(false);
+            _keySigner.Verify(default, default(byte[]), default).ReturnsForAnyArgs(false);
             AssertVerifyResponse(false);
         }
 

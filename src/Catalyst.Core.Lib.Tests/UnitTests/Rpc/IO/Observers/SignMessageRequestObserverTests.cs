@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
 
-            _keySigner.Sign(default, default).ReturnsForAnyArgs(_signature);
+            _keySigner.Sign(default(byte[]), default).ReturnsForAnyArgs(_signature);
         }
 
         [Theory]

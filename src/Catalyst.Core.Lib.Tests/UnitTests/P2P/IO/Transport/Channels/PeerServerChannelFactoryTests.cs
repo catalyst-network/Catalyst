@@ -141,7 +141,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
 
-                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, default(byte[]), null);
 
                 _testScheduler.Start();
 

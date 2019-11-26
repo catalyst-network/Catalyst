@@ -144,7 +144,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
                 _clientChannel.ReadInbound<ProtocolMessage>();
                 _clientCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(Arg.Any<ProtocolMessage>());
 
-                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
+                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, default(byte[]), null);
 
                 _testScheduler.Start();
 

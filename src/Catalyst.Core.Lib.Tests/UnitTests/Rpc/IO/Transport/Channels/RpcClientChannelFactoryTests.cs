@@ -136,7 +136,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 
                 _correlationManager.Received(1).TryMatchResponse(protocolMessage);
 
-                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, default(byte[]), null);
 
                 _testScheduler.Start();
 
