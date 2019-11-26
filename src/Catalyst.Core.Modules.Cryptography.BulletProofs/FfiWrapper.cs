@@ -40,14 +40,24 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 
         public ISignature Sign(IPrivateKey privateKey, byte[] messageBytes, byte[] contextBytes)
         {
-            return NativeBinding.StdSign(privateKey.Bytes, messageBytes, contextBytes);           
+            return NativeBinding.StdSign(privateKey.Bytes, messageBytes, messageBytes.Length, contextBytes, contextBytes.Length);           
+        }
+        
+        public ISignature Sign(IPrivateKey privateKey, byte[] messageBytes, int messageLength, byte[] contextBytes, int contextLength)
+        {
+            return NativeBinding.StdSign(privateKey.Bytes, messageBytes, messageLength, contextBytes, contextLength);           
         }
 
         public bool Verify(ISignature signature, byte[] message, byte[] context)
         {
-            return NativeBinding.StdVerify(signature.SignatureBytes, signature.PublicKeyBytes, message, context);
+            return NativeBinding.StdVerify(signature.SignatureBytes, signature.PublicKeyBytes, message, message.Length, context, context.Length);
         }
-        
+
+        public bool Verify(ISignature signature, byte[] message, int messageLength, byte[] context, int contextLength)
+        {
+            return NativeBinding.StdVerify(signature.SignatureBytes, signature.PublicKeyBytes, message, messageLength, context, contextLength);
+        }
+
         public IPrivateKey GeneratePrivateKey()
         {           
             return NativeBinding.GeneratePrivateKey();

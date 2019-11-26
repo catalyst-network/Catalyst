@@ -14,9 +14,9 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
 {
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.CoreRt30)]
-    public class HashProviderBenchmark
+    public class HashingBenchmark
     {
-        static HashProviderBenchmark()
+        static HashingBenchmark()
         {
             const string name = nameof(NoopHash);
 

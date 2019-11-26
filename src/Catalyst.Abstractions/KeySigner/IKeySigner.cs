@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Protocol.Cryptography;
+using Google.Protobuf;
 using ISignature = Catalyst.Abstractions.Cryptography.ISignature;
 
 namespace Catalyst.Abstractions.KeySigner
@@ -42,8 +43,14 @@ namespace Catalyst.Abstractions.KeySigner
         
         ISignature Sign(byte[] data, SigningContext signingContext);
 
+        ISignature Sign(IMessage data, SigningContext signingContext);
+
         /// <summary>Verifies a message signature.</summary>
         /// <returns></returns>
         bool Verify(ISignature signature, byte[] message, SigningContext signingContext);
+
+        /// <summary>Verifies a message signature.</summary>
+        /// <returns></returns>
+        bool Verify(ISignature signature, IMessage message, SigningContext signingContext);
     }
 }

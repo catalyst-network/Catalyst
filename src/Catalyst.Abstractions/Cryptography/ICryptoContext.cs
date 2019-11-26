@@ -103,6 +103,19 @@ namespace Catalyst.Abstractions.Cryptography
         /// <returns></returns>
         ISignature Sign(IPrivateKey privateKey, byte[] message, byte[] context);
 
+        /// <summary>
+        ///     Signs message using provided private key and returns the signature.
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name="message"></param>
+        /// <param name="messageLength"></param>
+        /// <param name="context"></param>
+        /// <param name="contextLength"></param>
+        /// <returns></returns>
+        ISignature Sign(IPrivateKey privateKey, byte[] message, int messageLength, byte[] context, int contextLength);
+
         bool Verify(ISignature signature, byte[] message, byte[] context);
+        
+        bool Verify(ISignature signature, byte[] message, int messageLength, byte[] context, int contextLength);
     }
 }

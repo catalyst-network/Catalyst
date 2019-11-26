@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int std_sign(byte[] signature, byte[] publicKey, byte[] privateKey, byte[] message, int messageLength, byte[] context, int contextLength);
 
-        internal static ISignature StdSign(byte[] privateKey, byte[] message, byte[] context)
+        internal static ISignature StdSign(byte[] privateKey, byte[] message, int messageLength, byte[] context, int contextLength)
         {
             if (privateKey.Length != PrivateKeyLength)
             {
@@ -62,8 +62,8 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             var signature = new byte[SignatureLength];
             var publicKey = new byte[PublicKeyLength];
 
-            var error_code = std_sign(signature, publicKey, privateKey, message, message.Length, context, context.Length);
-            
+            var error_code = std_sign(signature, publicKey, privateKey, message, messageLength, context, contextLength);
+
             if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
             {
                 Error.ThrowErrorFromErrorCode(errorCode);
@@ -71,11 +71,11 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 
             return new Signature(signature, publicKey);
         }
-        
+
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int std_verify(byte[] signature, byte[] publicKey, byte[] message, int messageLength, byte[] context, int contextLength);
 
-        internal static bool StdVerify(byte[] signature, byte[] publicKey, byte[] message, byte[] context)
+        internal static bool StdVerify(byte[] signature, byte[] publicKey, byte[] message, int messageLength, byte[] context, int contextLength)
         {
             if (signature.Length != SignatureLength)
             {
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
                 Error.ThrowArgumentExceptionPublicKeyLength(PublicKeyLength);
             }
 
-            var error_code = std_verify(signature, publicKey, message, message.Length, context, context.Length);
+            var error_code = std_verify(signature, publicKey, message, messageLength, context, contextLength);
 
             ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
 
@@ -110,9 +110,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         internal static void ValidatePublicKeyOrThrow(byte[] publicKey)
         {
             if (publicKey.Length != PublicKeyLength)
-            { 
+            {
                 Error.ThrowArgumentExceptionPublicKeyLength(PublicKeyLength);
-            } 
+            }
 
             var error_code = validate_public_key(publicKey);
 
@@ -134,7 +134,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 
             var publicKeyBytes = new byte[PublicKeyLength];
             publickey_from_private(publicKeyBytes, privateKey);
-            
+
             return new PublicKey(publicKeyBytes);
         }
 
@@ -158,7 +158,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             {
                 if (_privateKeyLength == 0)
                 {
-                    _privateKeyLength = get_private_key_length(); 
+                    _privateKeyLength = get_private_key_length();
                 }
 
                 return _privateKeyLength;
@@ -173,7 +173,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             {
                 if (_publicKeyLength == 0)
                 {
-                    _publicKeyLength = get_public_key_length(); 
+                    _publicKeyLength = get_public_key_length();
                 }
 
                 return _publicKeyLength;
@@ -188,7 +188,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             {
                 if (_signatureLength == 0)
                 {
-                    _signatureLength = get_signature_length(); 
+                    _signatureLength = get_signature_length();
                 }
 
                 return _signatureLength;
@@ -203,7 +203,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             {
                 if (_signatureContextMaxLength == 0)
                 {
-                    _signatureContextMaxLength = get_max_context_length(); 
+                    _signatureContextMaxLength = get_max_context_length();
                 }
 
                 return _signatureContextMaxLength;

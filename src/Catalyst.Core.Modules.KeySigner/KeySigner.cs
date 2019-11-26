@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.KeySigner
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        private ISignature Sign(byte[] data, SigningContext signingContext, KeyRegistryTypes keyIdentifier)
+        IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier)
         {
             var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
             if (privateKey == null && !TryPopulateRegistryFromKeyStore(keyIdentifier, out privateKey))
@@ -86,23 +86,31 @@ namespace Catalyst.Core.Modules.KeySigner
                 throw new SignatureException("The signature cannot be created because the key does not exist");
             }
 
-            return Sign(data, signingContext, privateKey);
+            return privateKey;
         }
 
         public ISignature Sign(byte[] data, SigningContext signingContext)
         {
-            return Sign(data, signingContext, KeyRegistryTypes.DefaultKey);
+            var privateKey = GetPrivateKey(KeyRegistryTypes.DefaultKey);
+            return _cryptoContext.Sign(privateKey, data, signingContext.ToByteArray());
         }
 
-        private ISignature Sign(byte[] data, SigningContext signingContext, IPrivateKey privateKey)
+        public ISignature Sign(IMessage data, SigningContext signingContext)
         {
-            return _cryptoContext.Sign(privateKey, data, signingContext.ToByteArray());
+            var privateKey = GetPrivateKey(KeyRegistryTypes.DefaultKey);
+            return _cryptoContext.Sign(privateKey, data, signingContext);
         }
 
         /// <inheritdoc/>
         public bool Verify(ISignature signature, byte[] message, SigningContext signingContext)
         {
             return _cryptoContext.Verify(signature, message, signingContext.ToByteArray());
+        }
+
+        /// <inheritdoc/>
+        public bool Verify(ISignature signature, IMessage message, SigningContext signingContext)
+        {
+            return _cryptoContext.Verify(signature, message, signingContext);
         }
 
         public void ExportKey()
