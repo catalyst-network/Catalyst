@@ -27,6 +27,7 @@ using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Core.Lib.Mempool.Models;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;

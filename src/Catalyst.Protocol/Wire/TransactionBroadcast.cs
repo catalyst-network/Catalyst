@@ -37,11 +37,9 @@ namespace Catalyst.Protocol.Wire
 
         partial void OnConstruction()
         {
-            IsContractDeployment = PublicEntries.Any(c => c.IsValidDeploymentEntry);
-            IsContractCall = PublicEntries.Any(c => c.IsValidCallEntry);
-            IsPublicTransaction = PublicEntries.Any() && PublicEntries.All(e => e.IsValid());
-            IsConfidentialTransaction = ConfidentialEntries.Any()
-             && ConfidentialEntries.All(e => e.IsValid());
+            IsContractDeployment = PublicEntry.IsValidDeploymentEntry;
+            IsContractCall = PublicEntry.IsValidCallEntry;
+            IsPublicTransaction = PublicEntry.IsValid();
         }
 
         /// <summary>
@@ -49,53 +47,51 @@ namespace Catalyst.Protocol.Wire
         /// </summary>
         public void AfterConstruction()
         {
-            IsContractDeployment = PublicEntries.Any(c => c.IsValidDeploymentEntry);
-            IsContractCall = PublicEntries.Any(c => c.IsValidCallEntry);
-            IsPublicTransaction = PublicEntries.Any() && PublicEntries.All(e => e.IsValid());
-            IsConfidentialTransaction = ConfidentialEntries.Any()
-             && ConfidentialEntries.All(e => e.IsValid());
+            IsContractDeployment = PublicEntry.IsValidDeploymentEntry;
+            IsContractCall = PublicEntry.IsValidCallEntry;
+            IsPublicTransaction = PublicEntry.IsValid();
         }
 
         // why TransactionBroadcastTest is commented out? if brought back - this needs to have a test coverage there too
-        public UInt256 AverageGasPrice
-        {
-            get
-            {
-                var averagePrice = BigInteger.Zero;
-                ulong totalLimit = 0;
-                var count = PublicEntries.Count;
-                for (var i = 0; i < count; i++)
-                {
-                    var limit = PublicEntries[i].GasLimit;
-                    totalLimit += limit;
-                    averagePrice += limit * PublicEntries[i].GasPrice;
-                }
+        //public UInt256 AverageGasPrice
+        //{
+        //    get
+        //    {
+        //        var averagePrice = BigInteger.Zero;
+        //        ulong totalLimit = 0;
+        //        var count = PublicEntries.Count;
+        //        for (var i = 0; i < count; i++)
+        //        {
+        //            var limit = PublicEntries[i].GasLimit;
+        //            totalLimit += limit;
+        //            averagePrice += limit * PublicEntries[i].GasPrice;
+        //        }
 
-                if (totalLimit == 0)
-                {
-                    return UInt256.Zero;
-                }
+        //        if (totalLimit == 0)
+        //        {
+        //            return UInt256.Zero;
+        //        }
 
-                UInt256.Create(out var result, averagePrice / totalLimit);
-                return result;
-            }
-        }
+        //        UInt256.Create(out var result, averagePrice / totalLimit);
+        //        return result;
+        //    }
+        //}
 
         // why TransactionBroadcastTest is commented out? if brought back - this needs to have a test coverage there too
-        public ulong TotalGasLimit
-        {
-            get
-            {
-                ulong totalLimit = 0;
-                var count = PublicEntries.Count;
-                for (var i = 0; i < count; i++)
-                {
-                    totalLimit += PublicEntries[i].GasLimit;
-                }
+        //public ulong TotalGasLimit
+        //{
+        //    get
+        //    {
+        //        ulong totalLimit = 0;
+        //        var count = PublicEntries.Count;
+        //        for (var i = 0; i < count; i++)
+        //        {
+        //            totalLimit += PublicEntries[i].GasLimit;
+        //        }
 
-                return totalLimit;
-            }
-        }
+        //        return totalLimit;
+        //    }
+        //}
 
         public bool IsContractDeployment { get; private set; }
         public bool IsContractCall { get; private set; }
@@ -116,14 +112,14 @@ namespace Catalyst.Protocol.Wire
 
         public bool IsValid()
         {
-            var isTimestampValid = Timestamp != default(Timestamp) && Timestamp != new Timestamp();
+            var isTimestampValid = PublicEntry.Timestamp != default(Timestamp) && PublicEntry.Timestamp != new Timestamp();
             if (!isTimestampValid)
             {
                 Logger.Debug("{timestamp} cannot be null or 0.");
                 return false;
             }
 
-            var hasValidSignature = Signature.IsValid(IsConfidentialTransaction
+            var hasValidSignature = PublicEntry.Signature.IsValid(IsConfidentialTransaction
                 ? SignatureType.TransactionConfidential
                 : SignatureType.TransactionPublic);
 

@@ -27,13 +27,14 @@ namespace Catalyst.Abstractions.Mempool.Models
 {
     public interface IMempoolItem
     {
-        string Signature { get; set; } // is the ed25519ph context signature
+        string Id { set; get; }
+        byte[] Signature { get; set; } // is the ed25519ph context signature
         DateTime Timestamp { get; set; } //  records the transaction creation time
         string Amount { get; set; } // uint256 amount
         ulong Nonce { get; set; } // A nonce, similar to Ethereum, incremented on each transaction on the account issuing the transaction
-        string ReceiverAddress { get; set; } // PublicKey of receiver.
-        string SenderAddress { get; set; } // PublicKey of sender.
+        byte[] ReceiverAddress { get; set; } // PublicKey of receiver.
+        byte[] SenderAddress { get; set; } // PublicKey of sender.
         string Fee { get; set; } // 8 bytes, clear text, fees * 10^12
-        string Data { get; set; } // Smart contract data.
+        byte[] Data { get; set; } // Smart contract data.
     }
 }

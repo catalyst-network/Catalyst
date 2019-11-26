@@ -38,26 +38,26 @@ namespace Catalyst.Protocol.Transaction
         /// Gas limit for the entry expressed in gas units.
         /// </summary>
         public ulong GasLimit { get; set; }
-        
+
         // add to proto
         /// <summary>
         /// Gas price to use as a multiplier of gas cost expressed in units
         /// to arrive at the total gas cost expressed in ETH.
         /// </summary>
         public UInt256 GasPrice { get; set; }
-        
+
         /// <summary>
         /// If this is an entry that is about to deploy a smart contract then <value>true</value>,
         /// otherwise <value>false</value>.
         /// </summary>
-        public bool IsValidDeploymentEntry => IsValid() && Base.ReceiverPublicKey.IsEmpty;
-        
+        public bool IsValidDeploymentEntry => IsValid() && ReceiverPublicKey.IsEmpty;
+
         /// <summary>
         /// If this is an entry that is about to call a smart contract then <value>true</value>,
         /// otherwise <value>false</value>.
         /// </summary>
-        public bool IsValidCallEntry => IsValid() && !Base.ReceiverPublicKey.IsEmpty;
-        
+        public bool IsValidCallEntry => IsValid() && !ReceiverPublicKey.IsEmpty;
+
         public byte[] TargetContract { get; set; }
     }
 }

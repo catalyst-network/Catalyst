@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.DAO
             var mempoolItems = this.PublicEntries.Select(x =>
             {
                 var mempoolItem = x.ToMempoolItem(mapperProvider);
-                mempoolItem.Signature = Signature.ToProtoBuff<SignatureDao, Signature>(mapperProvider).ToByteArray().ToBase32();
+                mempoolItem.Signature = Signature.ToProtoBuff<SignatureDao, Signature>(mapperProvider).ToByteArray();
                 return mempoolItem;
             }).ToList();
 
@@ -83,8 +83,8 @@ namespace Catalyst.Core.Lib.DAO
             cfg.AllowNullDestinationValues = true;
 
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
-               .ForMember(e => e.PublicEntries, opt => opt.UseDestinationValue())
-               .ForMember(e => e.ConfidentialEntries, opt => opt.UseDestinationValue());
+               .ForMember(e => e.PublicEntry, opt => opt.UseDestinationValue());
+               //.ForMember(e => e.ConfidentialEntries, opt => opt.UseDestinationValue());
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
@@ -100,10 +100,10 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<MempoolItem, PublicEntry>()
             .ForMember(d => d.Amount, opt => opt.MapFrom(src => src.Amount))
             .ForMember(d => d.Data, opt => opt.MapFrom(src => src.Amount))
-            .ForMember(d => d.Base.TransactionFees, opt => opt.MapFrom(src => src.Fee))
-            .ForMember(d => d.Base.Nonce, opt => opt.MapFrom(s => s.Nonce))
-            .ForMember(d => d.Base.SenderPublicKey, opt => opt.MapFrom(src => src.SenderAddress))
-            .ForMember(d => d.Base.ReceiverPublicKey, opt => opt.MapFrom(src => src.ReceiverAddress));
+            .ForMember(d => d.TransactionFees, opt => opt.MapFrom(src => src.Fee))
+            .ForMember(d => d.Nonce, opt => opt.MapFrom(s => s.Nonce))
+            .ForMember(d => d.SenderPublicKey, opt => opt.MapFrom(src => src.SenderAddress))
+            .ForMember(d => d.ReceiverPublicKey, opt => opt.MapFrom(src => src.ReceiverAddress));
         }
     }
 }

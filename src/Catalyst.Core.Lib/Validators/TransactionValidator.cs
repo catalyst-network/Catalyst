@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Protocol.Wire;
@@ -50,21 +49,21 @@ namespace Catalyst.Core.Lib.Validators
         
         private bool ValidateTransactionSignature(TransactionBroadcast transactionBroadcast)
         {
-            if (transactionBroadcast.Signature.RawBytes == ByteString.Empty)
+            if (transactionBroadcast.PublicEntry.Signature.RawBytes == ByteString.Empty)
             {
                 _logger.Error("Transaction signature is null");
                 return false;
             }
 
-            var transactionSignature = _cryptoContext.GetSignatureFromBytes(transactionBroadcast.Signature.RawBytes.ToByteArray(),
-                transactionBroadcast.PublicEntries.First().Base.SenderPublicKey.ToByteArray());
+            var transactionSignature = _cryptoContext.GetSignatureFromBytes(transactionBroadcast.PublicEntry.Signature.RawBytes.ToByteArray(),
+                transactionBroadcast.PublicEntry.SenderPublicKey.ToByteArray());
 
-            var signingContext = transactionBroadcast.Signature.SigningContext.ToByteArray();
+            var signingContext = transactionBroadcast.PublicEntry.Signature.SigningContext.ToByteArray();
 
             // we need to verify the signature matches the message, but transactionBroadcast contains the signature and original data,
             // passing message+sig will mean your verifying an incorrect message and always return false, so just null the sig.
             var transactionBroadcastClone = transactionBroadcast.Clone();
-            transactionBroadcastClone.Signature = null;
+            transactionBroadcastClone.PublicEntry.Signature = null;
 
             if (_cryptoContext.Verify(transactionSignature, transactionBroadcastClone.ToByteArray(), signingContext))
             {

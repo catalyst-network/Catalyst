@@ -65,10 +65,12 @@ namespace Catalyst.Core.Lib.DAO.Transaction
 
                 cfg.CreateMap<MempoolItem, PublicEntry>()
                   .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
-                  .ForMember(d => d.Base.SenderPublicKey, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.SenderAddress))
-                  .ForMember(d => d.Base.ReceiverPublicKey, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.ReceiverAddress))
-                  .ForMember(d => d.Base.Nonce, opt => opt.MapFrom(src => src.Nonce))
-                  .ForMember(d => d.Base.TransactionFees, opt => opt.MapFrom(src => src.Fee))
+                   //.ForMember(d => d.Base.SenderPublicKey, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.SenderAddress))
+                   //.ForMember(d => d.Base.ReceiverPublicKey, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.ReceiverAddress))
+                  .ForMember(d => d.SenderPublicKey, opt => opt.MapFrom(s => s.SenderAddress))
+                  .ForMember(d => d.ReceiverPublicKey, opt => opt.MapFrom(s => s.ReceiverAddress))
+                  .ForMember(d => d.Nonce, opt => opt.MapFrom(src => src.Nonce))
+                  .ForMember(d => d.TransactionFees, opt => opt.MapFrom(src => src.Fee))
                   .ForMember(e => e.Data, opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
             }
         }

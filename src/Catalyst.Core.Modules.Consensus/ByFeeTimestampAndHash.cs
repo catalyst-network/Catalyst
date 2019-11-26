@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus
                 return timeStampComparison;
             }
 
-            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.Signature.FromBase32(), y.Signature.FromBase32());
+            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.Id.FromBase32(), y.Id.FromBase32());
         }
 
         public static ITransactionComparer Default { get; } = new TransactionComparerByFeeTimestampAndHash();

@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.IO.Events
             }
 
             //var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-            var mempoolItems = MempoolHelper.GetMempoolItems(transaction, _hashProvider);
+            //var mempoolItems = MempoolHelper.GetMempoolItems(transaction, _hashProvider);
 
             //var transactionSignature = transactionBroadcastDao.Signature;
             //_logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);

@@ -44,6 +44,7 @@
         <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
     </ItemGroup>
     <ItemGroup>
+      <Folder Include="Mempool\Documents\" />
       <Folder Include="Mempool\Models\" />
     </ItemGroup>
 </Project>

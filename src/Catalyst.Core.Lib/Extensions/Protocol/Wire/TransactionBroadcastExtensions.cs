@@ -26,7 +26,6 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
-using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
@@ -35,12 +34,12 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static UInt256 SummedEntryFees(this TransactionBroadcast transaction)
-        {
-            var sum = transaction.PublicEntries.Sum(e => e.Base.TransactionFees.ToUInt256())
-              + transaction.ConfidentialEntries.Sum(e => e.Base.TransactionFees.ToUInt256());
-            return sum;
-        }
+        //public static UInt256 SummedEntryFees(this TransactionBroadcast transaction)
+        //{
+        //    var sum = transaction.PublicEntries.Sum(e => e.Base.TransactionFees.ToUInt256())
+        //      + transaction.ConfidentialEntries.Sum(e => e.Base.TransactionFees.ToUInt256());
+        //    return sum;
+        //}
 
         public static TransactionBroadcast Sign(this TransactionBroadcast transaction,
             ICryptoContext cryptoContext,
@@ -49,17 +48,17 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
         {
             var clone = transaction.Clone();
 
-            if (transaction.Signature?.RawBytes.Length == cryptoContext.SignatureLength)
+            if (transaction.PublicEntry.Signature?.RawBytes.Length == cryptoContext.SignatureLength)
             {
                 Logger.Debug("The transaction was already signed, returning a clone.");
                 return clone;
             }
 
-            clone.Signature = null;
+            clone.PublicEntry.Signature = null;
             var signatureBytes = cryptoContext.Sign(privateKey, clone.ToByteArray(),
                 context.ToByteArray()).SignatureBytes;
 
-            clone.Signature = new Signature
+            clone.PublicEntry.Signature = new Signature
             {
                 RawBytes = signatureBytes.ToByteString(),
                 SigningContext = context

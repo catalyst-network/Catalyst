@@ -27,7 +27,6 @@ using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Core.Lib.DAO.Deltas;
 using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.DAO.Transaction;
-using Catalyst.Core.Lib.Mempool.Models;
 
 namespace Catalyst.TestUtils
 {

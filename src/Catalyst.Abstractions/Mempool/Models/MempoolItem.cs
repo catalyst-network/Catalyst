@@ -28,13 +28,13 @@ namespace Catalyst.Abstractions.Mempool.Models
     public class MempoolItem : IMempoolItem
     {
         public string Id { set; get; }
-        public string Signature { set; get; }
+        public byte[] Signature { set; get; }
         public DateTime Timestamp { set; get; }
         public string Amount { set; get; }
         public ulong Nonce { set; get; }
-        public string ReceiverAddress { set; get; }
-        public string SenderAddress { set; get; }
+        public byte[] ReceiverAddress { set; get; }
+        public byte[] SenderAddress { set; get; }
         public string Fee { set; get; }
-        public string Data { set; get; }
+        public byte[] Data { set; get; }
     }
 }

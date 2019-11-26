@@ -29,4 +29,7 @@
     <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
     <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mempool\Documents\" />
+  </ItemGroup>
 </Project>
