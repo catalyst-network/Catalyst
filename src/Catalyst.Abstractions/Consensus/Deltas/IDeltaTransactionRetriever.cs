@@ -22,7 +22,6 @@
 #endregion
 
 using System.Collections.Generic;
-
 using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
