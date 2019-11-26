@@ -37,7 +37,6 @@ using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
-using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
 namespace Catalyst.Modules.POA.Consensus.Deltas

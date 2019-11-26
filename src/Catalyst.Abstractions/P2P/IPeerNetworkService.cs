@@ -28,7 +28,7 @@ using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.P2P
 {
-    public interface IPeerService : IObservableMessageStreamer<ProtocolMessage>, ISocket
+    public interface IPeerNetworkService : IObservableMessageStreamer<ProtocolMessage>, ISocket
     {
         /// <summary>
         ///     The discovery mechanism for the peer network.

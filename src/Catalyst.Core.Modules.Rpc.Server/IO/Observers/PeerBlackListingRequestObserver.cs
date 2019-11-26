@@ -1,4 +1,3 @@
-
 #region LICENSE
 
 /**
@@ -35,7 +34,6 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
-using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {

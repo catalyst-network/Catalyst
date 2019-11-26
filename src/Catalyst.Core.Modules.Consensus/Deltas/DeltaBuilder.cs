@@ -95,7 +95,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var includedTransactions = GetValidTransactionsForDelta(allTransactions);
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
-            var rawAndSaltedEntriesBySignature = includedTransactions.Select(
+            var publicEntries = includedTransactions.Select(x => x.ToProtoBuff<MempoolItem, PublicEntry>(_mapperProvider));
+
+            var rawAndSaltedEntriesBySignature = publicEntries.Select(
                 x => new RawEntryWithSaltedAndHashedEntry(x, salt, _hashProvider));
 
             //var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
@@ -143,7 +145,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             _logger.Debug("Building full delta locally");
 
-            var publicEntries = includedTransactions.Select(x => x.ToProtoBuff<MempoolItem, PublicEntry>(_mapperProvider));
+            //var publicEntries = includedTransactions.Select(x => x.ToProtoBuff<MempoolItem, PublicEntry>(_mapperProvider));
 
             var producedDelta = new Delta
             {

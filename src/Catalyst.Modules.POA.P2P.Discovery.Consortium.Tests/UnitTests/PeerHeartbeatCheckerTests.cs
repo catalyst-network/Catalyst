@@ -34,7 +34,6 @@ using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {

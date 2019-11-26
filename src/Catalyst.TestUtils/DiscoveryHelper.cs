@@ -51,7 +51,6 @@ using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.TestUtils
 {

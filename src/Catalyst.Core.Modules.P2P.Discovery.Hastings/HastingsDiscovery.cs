@@ -44,7 +44,6 @@ using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Serilog;
-using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 {

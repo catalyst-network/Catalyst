@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
@@ -42,7 +41,6 @@ using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
 using Xunit;
-using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {

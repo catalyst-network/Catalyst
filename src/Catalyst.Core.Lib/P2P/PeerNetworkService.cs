@@ -37,7 +37,7 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public sealed class PeerService : UdpServer, IPeerService
+    public sealed class PeerNetworkService : UdpServer, IPeerNetworkService
     {
         private readonly IEnumerable<IP2PMessageObserver> _messageHandlers;
         private readonly IPeerSettings _peerSettings;
@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.P2P
         public IPeerDiscovery Discovery { get; }
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; private set; }
 
-        public PeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
+        public PeerNetworkService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
             IUdpServerChannelFactory serverChannelFactory,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageObserver> messageHandlers,

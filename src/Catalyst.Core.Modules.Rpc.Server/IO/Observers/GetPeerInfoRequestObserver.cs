@@ -33,7 +33,6 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
-using IPeerService = Catalyst.Core.Lib.P2P.Service.IPeerService;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
