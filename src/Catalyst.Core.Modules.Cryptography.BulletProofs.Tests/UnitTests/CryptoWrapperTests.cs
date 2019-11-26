@@ -126,8 +126,8 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
         {
             IPrivateKey privateKey = _wrapper.GeneratePrivateKey();
 
-            BaseEntry message1 = new BaseEntry { Nonce = 123 };
-            BaseEntry message2 = new BaseEntry { Nonce = 34534908 };
+            BaseEntry message1 = new BaseEntry {Nonce = 123};
+            BaseEntry message2 = new BaseEntry {Nonce = 34534908};
 
             ISignature expected = _wrapper.Sign(privateKey, message1.ToByteArray(), message2.ToByteArray());
             ISignature actual = _wrapper.Sign(privateKey, message1, message2);

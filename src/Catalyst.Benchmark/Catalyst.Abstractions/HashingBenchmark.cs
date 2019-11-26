@@ -95,7 +95,10 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
                 return true;
             }
 
-            protected override void HashCore(ReadOnlySpan<byte> source) { }
+            protected override void HashCore(ReadOnlySpan<byte> source)
+            {
+                // this is a noop hasher that is used only for benchmarking purposes, to shaw the overhead of non-hashing operations
+            }
         }
     }
 }

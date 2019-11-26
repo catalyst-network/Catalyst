@@ -156,19 +156,5 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
             result.Should().BeFalse();
         }
-
-        class StubMessage : IMessage
-        {
-            public void MergeFrom(CodedInputStream input) { throw new System.NotImplementedException(); }
-
-            public void WriteTo(CodedOutputStream output)
-            {
-                output.WriteTag(1, WireFormat.WireType.Varint);
-                output.WriteInt32(1);
-            }
-
-            public int CalculateSize() => 2;
-            public MessageDescriptor Descriptor => throw new System.NotImplementedException();
-        }
     }
 }
