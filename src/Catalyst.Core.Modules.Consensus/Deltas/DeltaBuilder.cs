@@ -51,7 +51,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private const ulong DeltaGasLimit = 8_000_000;
         private const ulong MinTransactionEntryGasLimit = 21_000;
-        
+
         private readonly IDeltaTransactionRetriever _transactionRetriever;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
@@ -139,8 +139,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
-                CoinbaseEntries = {coinbaseEntry},
-                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x)},
+                CoinbaseEntries = { coinbaseEntry },
+                PublicEntries = { includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x) },
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -151,7 +151,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             return candidate;
         }
 
-        private IEnumerable<byte> GetSaltFromPreviousDelta(Cid previousDeltaHash)
+        private byte[] GetSaltFromPreviousDelta(Cid previousDeltaHash)
         {
             var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash.ToArray());
             return BitConverter.GetBytes(isaac.NextInt());
@@ -164,11 +164,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             public byte[] SaltedAndHashedEntry { get; }
 
             public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry,
-                IEnumerable<byte> salt,
+                byte[] salt,
                 IHashProvider hashProvider)
             {
                 RawEntry = rawEntry;
-                SaltedAndHashedEntry = hashProvider.ComputeMultiHash(rawEntry.ToByteArray().Concat(salt)).ToArray();
+                SaltedAndHashedEntry = hashProvider.ComputeMultiHash(rawEntry, salt).ToArray();
             }
         }
 
@@ -177,18 +177,18 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             private readonly int _multiplier;
 
             private AveragePriceComparer(int multiplier) { _multiplier = multiplier; }
-            
+
             public int Compare(TransactionBroadcast x, TransactionBroadcast y)
             {
                 return _multiplier * Comparer<UInt256?>.Default.Compare(x?.AverageGasPrice, y?.AverageGasPrice);
             }
-            
+
             public static AveragePriceComparer InstanceDesc { get; } = new AveragePriceComparer(-1);
             public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
         }
-        
+
         private static bool IsTransactionOfAcceptedType(TransactionBroadcast transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
-        
+
         /// <summary>
         ///     Gets the valid transactions for delta.
         ///     This method can be used to extract the collection of transactions that meet the criteria for validating delta.
@@ -213,7 +213,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
                 validTransactionsForDelta.Add(currentItem);
             }
-            
+
             validTransactionsForDelta.Sort(AveragePriceComparer.InstanceDesc);
 
             var totalLimit = 0UL;
@@ -228,12 +228,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     for (var j = i; j < allValidCount; j++)
                     {
                         currentItem = validTransactionsForDelta[j];
-                        rejectedTransactions.Add(currentItem);    
+                        rejectedTransactions.Add(currentItem);
                     }
-                    
+
                     break;
                 }
-                
+
                 var currentItemGasLimit = currentItem.TotalGasLimit;
                 if (remainingLimit < currentItemGasLimit)
                 {
@@ -241,7 +241,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 }
                 else
                 {
-                    totalLimit += validTransactionsForDelta[i].TotalGasLimit;    
+                    totalLimit += validTransactionsForDelta[i].TotalGasLimit;
                 }
             }
 
@@ -249,10 +249,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 validTransactionsForDelta.Remove(rejectedTransactions[i]);
             }
-            
+
             _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}",
                 rejectedTransactions);
-            
+
             return validTransactionsForDelta;
         }
     }
