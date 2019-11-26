@@ -41,11 +41,6 @@ namespace Catalyst.Core.Lib.DAO.Transaction
 
         // ReSharper disable once UnusedMember.Local
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
-
-        //public MempoolItem ToMempoolItem(IMapperProvider mapperProvider)
-        //{
-        //    return mapperProvider.Mapper.Map<MempoolItem>(this);
-        //}
     }
 
     public sealed class PublicEntryMapperInitialiser : IMapperInitializer
@@ -62,16 +57,6 @@ namespace Catalyst.Core.Lib.DAO.Transaction
                    .ForMember(d => d.Amount,
                         opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
                    .ForMember(e => e.Data, opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
-
-                //cfg.CreateMap<MempoolItem, PublicEntry>()
-                //  .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
-                //   //.ForMember(d => d.Base.SenderPublicKey, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.SenderAddress))
-                //   //.ForMember(d => d.Base.ReceiverPublicKey, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.ReceiverAddress))
-                //  .ForMember(d => d.Base.SenderPublicKey, opt => opt.MapFrom(s => s.SenderAddress))
-                //  .ForMember(d => d.Base.ReceiverPublicKey, opt => opt.MapFrom(s => s.ReceiverAddress))
-                //  .ForMember(d => d.Base.Nonce, opt => opt.MapFrom(src => src.Nonce))
-                //  .ForMember(d => d.Base.TransactionFees, opt => opt.MapFrom(src => src.Fee))
-                //  .ForMember(e => e.Data, opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
             }
         }
     }

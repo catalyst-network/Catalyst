@@ -81,7 +81,7 @@ namespace Catalyst.Core.Lib
                .WithProperty("UdpClientHandlerWorkerThreads", 2);
 
             // Register P2P
-            builder.RegisterType<P2P.Service.PeerService>().As<P2P.Service.IPeerService>().SingleInstance();
+            builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
             builder.RegisterType<PeerSettings>().As<IPeerSettings>();
             builder.RegisterType<Peer>().As<IPeer>();
 
