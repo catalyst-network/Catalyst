@@ -24,7 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -45,7 +45,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _random = new Random();
         }
 
-        //todo
         [Fact]
         public void Comparer_should_Order_By_Fees_First()
         {
@@ -60,12 +59,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
                .ToArray();
 
-            //ordered.Select(o => o.SummedEntryFees()).Should().BeInDescendingOrder(t => t);
+            ordered.Select(o => o.Base.TransactionFees.ToUInt256()).Should().BeInDescendingOrder(t => t);
             ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeAscendingInOrder();
             ordered.Should().NotBeInDescendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
 
-        //todo
         [Fact]
         public void Comparer_should_Order_By_Fees_First_Then_By_TimeStamp()
         {
@@ -80,17 +78,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
                .ToArray();
 
-            //ordered.Select(o => o.SummedEntryFees()).Should().BeInDescendingOrder(t => t);
+            ordered.Select(o => o.Base.TransactionFees.ToUInt256()).Should().BeInDescendingOrder(t => t);
             ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeDescendingInOrder();
 
-            //Enumerable.Range(0, 3).ToList().ForEach(i =>
-            //    ordered.Where(t => t.SummedEntryFees() == (ulong)i)
-            //       .Select(t => t.Timestamp.ToDateTime()).Should().BeInAscendingOrder());
+            Enumerable.Range(0, 3).ToList().ForEach(i =>
+                ordered.Where(t => t.Base.TransactionFees.ToUInt256() == (ulong)i)
+                   .Select(t => t.Timestamp.ToDateTime()).Should().BeInAscendingOrder());
 
             ordered.Should().NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
 
-        //todo
         [Fact]
         public void Comparer_should_Order_By_Fees_First_Then_By_TimeStamp_Then_By_Signature()
         {
@@ -105,32 +102,32 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
                .ToArray();
 
-            //ordered.Select(s =>
-            //        s.SummedEntryFees() + "|" + s.Timestamp + "|" +
-            //        s.Signature.RawBytes.ToBase64())
-            //   .ToList().ForEach(x => _output.WriteLine(x));
+            ordered.Select(s =>
+                    s.Base.TransactionFees + "|" + s.Timestamp + "|" +
+                    s.Signature.RawBytes.ToBase64())
+               .ToList().ForEach(x => _output.WriteLine(x));
 
-            //ordered.Select(o => o.SummedEntryFees()).Should().BeInDescendingOrder(t => t);
+            ordered.Select(o => o.Base.TransactionFees.ToUInt256()).Should().BeInDescendingOrder(t => t);
 
-            //Enumerable.Range(0, 2).ToList().ForEach(i =>
-            //{
-            //    ordered
-            //       .Select(t => t.SummedEntryFees() == (ulong)i ? t.Timestamp.Seconds : int.MaxValue)
-            //       .ToArray()
-            //       .Where(z => z != int.MaxValue)
-            //       .Should().BeInAscendingOrder();
+            Enumerable.Range(0, 2).ToList().ForEach(i =>
+            {
+                ordered
+                   .Select(t => t.Base.TransactionFees.ToUInt256() == (ulong)i ? t.Timestamp.Seconds : int.MaxValue)
+                   .ToArray()
+                   .Where(z => z != int.MaxValue)
+                   .Should().BeInAscendingOrder();
 
-            //    Enumerable.Range(0, 3).ToList().ForEach(j =>
-            //        ordered.Where(t => t.SummedEntryFees() == (ulong)i
-            //             && t.Timestamp.ToDateTime() == DateTime.FromOADate(j)).ToArray()
-            //           .Select(t => t.Signature.ToByteArray())
-            //           .Should().BeInAscendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default));
-            //});
+                Enumerable.Range(0, 3).ToList().ForEach(j =>
+                    ordered.Where(t => t.Base.TransactionFees.ToUInt256() == (ulong)i
+                         && t.Timestamp.ToDateTime() == DateTime.FromOADate(j)).ToArray()
+                       .Select(t => t.Signature.ToByteArray())
+                       .Should().BeInAscendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default));
+            });
 
-            //ordered.Select(s =>
-            //        s.SummedEntryFees() + "|" + s.Timestamp + "|" +
-            //        s.Signature.RawBytes.ToBase64())
-            //   .ToList().ForEach(x => _output.WriteLine(x));
+            ordered.Select(s =>
+                    s.Base.TransactionFees.ToUInt256() + "|" + s.Timestamp + "|" +
+                    s.Signature.RawBytes.ToBase64())
+               .ToList().ForEach(x => _output.WriteLine(x));
 
             ordered.Should()
                .NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);

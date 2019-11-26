@@ -37,9 +37,9 @@ namespace Catalyst.Protocol.Wire
 
         partial void OnConstruction()
         {
-            IsContractDeployment = PublicEntry.IsValidDeploymentEntry;
-            IsContractCall = PublicEntry.IsValidCallEntry;
-            IsPublicTransaction = PublicEntry.IsValid();
+            //IsContractDeployment = PublicEntry.IsValidDeploymentEntry;
+            //IsContractCall = PublicEntry.IsValidCallEntry;
+            //IsPublicTransaction = PublicEntry.IsValid();
         }
 
         /// <summary>
