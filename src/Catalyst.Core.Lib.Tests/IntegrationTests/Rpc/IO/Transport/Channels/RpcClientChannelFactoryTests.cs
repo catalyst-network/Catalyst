@@ -42,6 +42,7 @@ using Catalyst.TestUtils;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -113,7 +114,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _clientKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
+            _clientKeySigner.Sign(Arg.Any<IMessage>(), default).ReturnsForAnyArgs(signature);
 
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -134,11 +135,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                 Arg.Is<CorrelatableMessage<ProtocolMessage>>(c =>
                     c.Content.CorrelationId.ToCorrelationId().Equals(correlationId)));
 
-            _clientKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Is(signature.SignatureBytes), default);
+            _clientKeySigner.ReceivedWithAnyArgs(1).Sign(default(IMessage), default);
 
             _serverKeySigner.Verify(
                     Arg.Any<ISignature>(),
-                    Arg.Any<byte[]>(),
+                    Arg.Any<IMessage>(),
                     default
                 )
                .ReturnsForAnyArgs(true);
@@ -155,7 +156,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                 _serverChannel.WriteInbound(sentBytes);
                 _serverCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
 
-                _serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, default(byte[]), null);
+                _serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, default(IMessage), null);
 
                 _testScheduler.Start();
 

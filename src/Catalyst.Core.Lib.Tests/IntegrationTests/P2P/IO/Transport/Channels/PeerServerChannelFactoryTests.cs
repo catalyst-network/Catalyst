@@ -40,6 +40,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
 using FluentAssertions;
+using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -112,7 +113,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             var signature = Substitute.For<ISignature>();
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
             _serverKeySigner.CryptoContext.SignatureLength.Returns(64);
-            _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
+            _serverKeySigner.Sign(Arg.Any<IMessage>(), default).ReturnsForAnyArgs(signature);
 
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -130,11 +131,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             _serverCorrelationManager.DidNotReceiveWithAnyArgs()
                .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
 
-            _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>(), default);
+            _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<IMessage>(), default);
 
             _clientKeySigner.Verify(
                     Arg.Any<ISignature>(),
-                    Arg.Any<byte[]>(),
+                    Arg.Any<IMessage>(),
                     default)
                .ReturnsForAnyArgs(true);
 
@@ -149,7 +150,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
                 _clientChannel.ReadInbound<ProtocolMessage>();
                 _clientCorrelationManager.ReceivedWithAnyArgs(1).TryMatchResponse(Arg.Any<ProtocolMessage>());
 
-                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, default(byte[]), null);
+                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, default(IMessage), null);
 
                 _testScheduler.Start();
 

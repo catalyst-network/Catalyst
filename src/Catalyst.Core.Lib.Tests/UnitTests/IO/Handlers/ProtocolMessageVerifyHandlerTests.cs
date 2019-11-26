@@ -32,6 +32,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using NSubstitute;
 using Xunit;
 
@@ -62,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         [Fact]
         private void CanFireNextPipelineOnValidSignature()
         {
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<IMessage>(), default)
                .ReturnsForAnyArgs(true);
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
@@ -75,7 +76,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         [Fact]
         private void CanFireNextPipelineOnInvalidSignature()
         {
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<IMessage>(), default)
                .ReturnsForAnyArgs(false);
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);

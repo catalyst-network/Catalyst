@@ -33,6 +33,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels.Embedded;
+using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
@@ -52,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         public BroadcastHandlerTests()
         {
             _keySigner = Substitute.For<IKeySigner>();
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<IMessage>(), default).ReturnsForAnyArgs(true);
             _fakeBroadcastManager = Substitute.For<IBroadcastManager>();
             _broadcastHandler = new BroadcastHandler(_fakeBroadcastManager);
 

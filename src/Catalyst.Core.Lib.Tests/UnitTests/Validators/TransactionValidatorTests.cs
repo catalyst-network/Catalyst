@@ -30,6 +30,7 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using FluentAssertions;
 using Google.Protobuf;
+using Google.Protobuf.Reflection;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -66,10 +67,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             subbedContext.GetSignatureFromBytes(Arg.Any<byte[]>(), Arg.Any<byte[]>())
                .ReturnsForAnyArgs(Substitute.For<ISignature>());
 
-            subbedContext.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<byte[]>())
+            subbedContext.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<byte[]>(), Arg.Any<int>())
                .Returns(true);
 
-            subbedContext.Sign(Arg.Any<IPrivateKey>(), Arg.Any<byte[]>(), Arg.Any<byte[]>())
+            subbedContext.Sign(Arg.Any<IPrivateKey>(), Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<byte[]>(), Arg.Any<int>())
                .SignatureBytes.Returns(new byte[64]);
 
             var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
@@ -92,8 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             var signature = new Signature
             {
                 // sign an actual TransactionBroadcast object
-                RawBytes = subbedContext.Sign(privateKey, validTransactionBroadcast.ToByteArray(), Arg.Any<byte[]>())
-                   .SignatureBytes.ToByteString(),
+                RawBytes = subbedContext.Sign(privateKey, validTransactionBroadcast, new SigningContext()).SignatureBytes.ToByteString(),
                 SigningContext = new SigningContext
                 {
                     NetworkType = NetworkType.Devnet,
@@ -142,14 +142,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             
             subbedContext.GetSignatureFromBytes(Arg.Is(txSig.ToByteArray()), Arg.Is(privateKey.GetPublicKey().Bytes))
                .ReturnsForAnyArgs(Substitute.For<ISignature>());
-            
-            subbedContext.Verify(Arg.Any<ISignature>(), // @TODO be more specific
-                    Arg.Is(validTransactionBroadcast.ToByteArray()),
-                    Arg.Is(txSig.SigningContext.ToByteArray())
-                )
+
+            subbedContext.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<byte[]>(), Arg.Any<int>())
                .Returns(false);
-            
-            subbedContext.Sign(Arg.Is(privateKey), validTransactionBroadcast.ToByteArray(), txSig.SigningContext.ToByteArray())
+
+            subbedContext.Sign(Arg.Is(privateKey), validTransactionBroadcast, txSig.SigningContext)
                .SignatureBytes.Returns(new byte[64]);
             
             var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
@@ -159,6 +156,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
             result.Should().BeFalse();
         }
+
+        class StubMessage : IMessage
+        {
+            public void MergeFrom(CodedInputStream input) { throw new System.NotImplementedException(); }
+
+            public void WriteTo(CodedOutputStream output)
+            {
+                output.WriteTag(1, WireFormat.WireType.Varint);
+                output.WriteInt32(1);
+            }
+
+            public int CalculateSize() => 2;
+            public MessageDescriptor Descriptor => throw new System.NotImplementedException();
+        }
     }
 }
-

@@ -44,6 +44,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -103,7 +104,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
             _signature = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<IMessage>(), default)
                .ReturnsForAnyArgs(true);
         }
 
@@ -141,7 +142,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
 
-                _keySigner.ReceivedWithAnyArgs(1).Verify(null, default(byte[]), null);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, default(IMessage), null);
 
                 _testScheduler.Start();
 

@@ -45,6 +45,7 @@ using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -127,7 +128,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var signatureBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<SigningContext>())
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<IMessage>(), Arg.Any<SigningContext>())
                .Returns(true);
             var protocolMessage = new PingRequest().ToSignedProtocolMessage(senderId, signatureBytes, correlationId: correlationId);
 
@@ -140,7 +141,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             {
                 testingChannel.WriteInbound(protocolMessage);
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
-                _keySigner.ReceivedWithAnyArgs(1).Verify(null, default(byte[]), null);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, default(IMessage), null);
                 _testScheduler.Start();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
@@ -162,6 +163,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
             
             _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), default);
+            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<IMessage>(), default);
 
             testingChannel.ReadOutbound<IByteBuffer>();
         }
