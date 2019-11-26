@@ -24,15 +24,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.Mempool;
-
 using Catalyst.Core.Lib.DAO.Transaction;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using NSubstitute;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 

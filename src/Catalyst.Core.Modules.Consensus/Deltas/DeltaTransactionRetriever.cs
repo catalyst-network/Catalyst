@@ -26,11 +26,9 @@ using System.Linq;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
-
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Protocol.Transaction;
-using Catalyst.Protocol.Wire;
 using Dawn;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas

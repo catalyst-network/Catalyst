@@ -23,9 +23,11 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Protocol.Transaction;
 using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
@@ -61,12 +63,11 @@ namespace Catalyst.TestUtils
 
         public new IEnumerable<PublicEntryDao> GetAll()
         {
-            return null;
-            //var utcNow = DateTime.UtcNow;
-            //var tenSecondSlot = 1 + utcNow.Second / 10;
-            //var tx = TransactionHelper.GetPublicTransaction(timestamp: (long) utcNow.ToOADate());
-            //return Enumerable.Repeat(tx, tenSecondSlot)
-            //   .Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider));
+            var utcNow = DateTime.UtcNow;
+            var tenSecondSlot = 1 + utcNow.Second / 10;
+            var tx = TransactionHelper.GetPublicTransaction(timestamp: (long)utcNow.ToOADate());
+            return Enumerable.Repeat(tx, tenSecondSlot)
+               .Select(x => x.PublicEntry.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
         }
 
         public void Delete(IEnumerable<PublicEntryDao> mempoolItem)

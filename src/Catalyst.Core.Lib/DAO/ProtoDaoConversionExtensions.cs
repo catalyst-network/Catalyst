@@ -21,7 +21,6 @@
 
 #endregion
 
-
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO

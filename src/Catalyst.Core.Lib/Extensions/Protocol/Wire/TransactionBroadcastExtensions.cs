@@ -34,13 +34,6 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        //public static UInt256 SummedEntryFees(this TransactionBroadcast transaction)
-        //{
-        //    var sum = transaction.PublicEntries.Sum(e => e.Base.TransactionFees.ToUInt256())
-        //      + transaction.ConfidentialEntries.Sum(e => e.Base.TransactionFees.ToUInt256());
-        //    return sum;
-        //}
-
         public static TransactionBroadcast Sign(this TransactionBroadcast transaction,
             ICryptoContext cryptoContext,
             IPrivateKey privateKey,
