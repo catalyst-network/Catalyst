@@ -64,7 +64,6 @@ namespace Catalyst.Core.Lib.DAO
 
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
                .ForMember(e => e.PublicEntry, opt => opt.UseDestinationValue());
-               //.ForMember(e => e.ConfidentialEntries, opt => opt.UseDestinationValue());
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
