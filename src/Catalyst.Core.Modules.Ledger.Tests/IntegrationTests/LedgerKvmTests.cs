@@ -315,7 +315,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             balanceOf1Tracer.StatusCode.Should().Be(1);
             balanceOf1Tracer.ReturnValue.Should().Equal(Bytes.FromHexString("0x7a120").PadLeft(32));
 
-            // potential bug in Nethermind
+            // potential bug in Nethermind (call should not raise nonce)
             _stateProvider.GetAccount(sender.ToKvmAddress()).Nonce.Should().Be(6);
 
             // balance should be 500_000 0x7a120
@@ -328,7 +328,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             balanceOf2Tracer.StatusCode.Should().Be(1);
             balanceOf2Tracer.ReturnValue.Should().Equal(Bytes.FromHexString("0x7a120").PadLeft(32));
 
-            // potential bug in Nethermind
+            // potential bug in Nethermind (call should not raise nonce)
             _stateProvider.GetAccount(sender.ToKvmAddress()).Nonce.Should().Be(7);
         }
     }
