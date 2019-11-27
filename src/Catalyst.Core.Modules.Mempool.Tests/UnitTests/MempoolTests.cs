@@ -58,43 +58,11 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
         public MempoolTests()
         {
-            var ffiWrapper = new FfiWrapper();
-            var privateKey = ffiWrapper.GeneratePrivateKey();
-            var publicKey = privateKey.GetPublicKey();
-
-            var signingContext = new SigningContext { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic };
-
-            var transaction = new TransactionBroadcast
-            {
-                PublicEntry = new PublicEntry
-                {
-                    Base = new BaseEntry()
-                    {
-                        Nonce = 10,
-                        ReceiverPublicKey = publicKey.Bytes.ToByteString(),
-                        SenderPublicKey = publicKey.Bytes.ToByteString(),
-                        TransactionFees = ((UInt256)1).ToUint256ByteString()
-                    },
-                    Amount = ((UInt256)10).ToUint256ByteString(),
-                    Data = publicKey.Bytes.ToByteString(),
-                    Timestamp = new Timestamp { Seconds = 10 }
-                }
-            };
-
-            transaction.PublicEntry.Signature = new Signature
-            {
-                SigningContext = signingContext,
-                RawBytes = ffiWrapper.Sign(privateKey, transaction.ToByteArray(), signingContext.ToByteArray()).SignatureBytes.ToByteString()
-            };
-
-            var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-            _mempoolItem = transactionBroadcastDao.PublicEntry;
-
             _memPool = new Mempool(Substitute.For<IMempoolService<PublicEntryDao>>());
             _mapperProvider = new TestMapperProvider();
-            _transactionBroadcast = TransactionHelper
-               .GetPublicTransaction()
-               .ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
+            _mempoolItem = TransactionHelper
+               .GetPublicTransaction().PublicEntry
+               .ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
         }
 
         private void AddKeyValueStoreEntryExpectation(PublicEntryDao mempoolItem)
@@ -107,58 +75,17 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         }
 
         [Fact]
-        public void TransactionBroadcastDao_should_be_convertable_to_MempoolItems()
-        {
-            var ffiWrapper = new FfiWrapper();
-            var privateKey = ffiWrapper.GeneratePrivateKey();
-            var publicKey = privateKey.GetPublicKey();
-
-            var signingContext = new SigningContext { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic };
-
-            var transaction = new TransactionBroadcast
-            {
-                PublicEntry =
-                    new PublicEntry
-                    {
-                        Base = new BaseEntry()
-                        {
-                            Nonce = 10,
-                            ReceiverPublicKey = publicKey.Bytes.ToByteString(),
-                            SenderPublicKey = publicKey.Bytes.ToByteString(),
-                            TransactionFees = ((UInt256)1).ToUint256ByteString()
-                        },
-                        Amount = ((UInt256)10).ToUint256ByteString(),
-                        Data = publicKey.Bytes.ToByteString(),
-                        Timestamp = new Timestamp { Seconds = 10 },
-                    }
-            };
-
-            transaction.PublicEntry.Signature = new Signature
-            {
-                SigningContext = signingContext,
-                RawBytes = ffiWrapper.Sign(privateKey, transaction.ToByteArray(), signingContext.ToByteArray()).SignatureBytes.ToByteString()
-            };
-
-            var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-
-            //var b = transactionBroadcastDao.ToMempoolItems(_mapperProvider);
-            //var id = b.First().ToProtoBuff<MempoolItem, TransactionBroadcast>(_mapperProvider);
-            //var a = 0;
-        }
-
-        [Fact]
         public void Get_should_retrieve_a_saved_transaction()
         {
             _memPool.Service.CreateItem(_mempoolItem);
             AddKeyValueStoreEntryExpectation(_mempoolItem);
-
+            
             var mempoolDocument = _memPool.Service.ReadItem(_mempoolItem.Id).ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
-            var expectedTransaction = _transactionBroadcast.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
+            var expectedTransaction = _mempoolItem.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
 
-            mempoolDocument.Amount.ToUInt256().Should()
-               .Be(expectedTransaction.PublicEntry.Amount.ToUInt256());
-            mempoolDocument.Signature.RawBytes.SequenceEqual(expectedTransaction.PublicEntry.Signature.RawBytes).Should().BeTrue();
-            mempoolDocument.Timestamp.Should().Be(expectedTransaction.PublicEntry.Timestamp);
+            mempoolDocument.Amount.ToUInt256().Should().Be(expectedTransaction.Amount.ToUInt256());
+            mempoolDocument.Signature.RawBytes.SequenceEqual(expectedTransaction.Signature.RawBytes).Should().BeTrue();
+            mempoolDocument.Timestamp.Should().Be(expectedTransaction.Timestamp);
             //mempoolDocument.PublicEntry.SummedEntryFees().Should().Be(expectedTransaction.SummedEntryFees());
         }
 

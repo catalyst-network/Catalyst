@@ -28,7 +28,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class ByteStringToStringPubKeyConverter : IValueConverter<ByteString, string>
+    public class ByteStringToBase32Converter : IValueConverter<ByteString, string>
     {
         public string Convert(ByteString sourceMember, ResolutionContext context)
         {
@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.DAO.Converters
         }
     }
 
-    public class StringKeyUtilsToByteStringFormatter : IValueConverter<string, ByteString>
+    public class Base32ToByteStringFormatter : IValueConverter<string, ByteString>
     {
         public ByteString Convert(string sourceMember, ResolutionContext context)
         {
