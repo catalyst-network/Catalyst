@@ -40,11 +40,11 @@ namespace Catalyst.Core.Lib.DAO.Cryptography
         {
             cfg.CreateMap<Signature, SignatureDao>()
                .ForMember(d => d.RawBytes,
-                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.RawBytes));
+                    opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.RawBytes));
 
             cfg.CreateMap<SignatureDao, Signature>()
                .ForMember(d => d.RawBytes,
-                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.RawBytes));
+                    opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.RawBytes));
         }
     }
 }

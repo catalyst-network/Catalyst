@@ -35,10 +35,20 @@ namespace Catalyst.Core.Lib.DAO.Transaction
 {
     public class PublicEntryDao : DaoBase
     {
+        private SignatureDao _signature;
+        public SignatureDao Signature
+        {
+            get => _signature;
+            set
+            {
+                _signature = value;
+                Id = value.RawBytes;
+            }
+        }
+
         public BaseEntryDao Base { get; set; }
         public string Data { get; set; }
         public string Amount { get; set; }
-        public SignatureDao Signature { set; get; }
 
         [Column]
 

@@ -52,8 +52,6 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
     {
         private readonly Mempool _memPool;
         private readonly PublicEntryDao _mempoolItem;
-
-        private readonly TransactionBroadcastDao _transactionBroadcast;
         private readonly TestMapperProvider _mapperProvider;
 
         public MempoolTests()
@@ -183,7 +181,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         [Fact]
         public void SaveMempoolDocument_Should_Throw_On_Document_With_Null_Transaction()
         {
-            _transactionBroadcast.Signature.RawBytes = null;
+            _mempoolItem.Signature.RawBytes = null;
 
             _memPool.Service.CreateItem(_mempoolItem).Throws<ArgumentNullException>();
 
@@ -244,7 +242,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         public void ContainsDocument_Should_Return_True_On_Known_DocumentId()
         {
             AddKeyValueStoreEntryExpectation(_mempoolItem);
-            _memPool.Service.TryReadItem(_transactionBroadcast.Signature.RawBytes).Should().BeTrue();
+            _memPool.Service.TryReadItem(_mempoolItem.Id).Should().BeTrue();
         }
 
         [Fact]
