@@ -88,6 +88,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             mempoolDocument.Amount.ToUInt256().Should().Be(expectedTransaction.Amount.ToUInt256());
             mempoolDocument.Signature.RawBytes.SequenceEqual(expectedTransaction.Signature.RawBytes).Should().BeTrue();
             mempoolDocument.Timestamp.Should().Be(expectedTransaction.Timestamp);
+            mempoolDocument.Base.TransactionFees.ToUInt256().Should().Be(expectedTransaction.Base.TransactionFees.ToUInt256());
         }
 
         [Fact]
@@ -138,34 +139,29 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         {
             // this test seems pointless like this
 
-            //var expectedAmount = _transactionBroadcast
-            //   .ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider)
-            //   .PublicEntries.Single().Amount;
+            var expectedAmount = _mempoolItem.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider).Amount;
 
-            //_memPool.Service.CreateItem(Arg.Is(_mempoolItem))
-            //   .Returns(true);
+            _memPool.Service.CreateItem(Arg.Is(_mempoolItem))
+               .Returns(true);
 
-            //var saved = _memPool.Service.CreateItem(_mempoolItem);
-            //saved.Should().BeTrue();
+            var saved = _memPool.Service.CreateItem(_mempoolItem);
+            saved.Should().BeTrue();
 
-            //var overridingTransaction = _transactionBroadcast
-            //   .ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider).Clone();
+            var overridingTransaction = _mempoolItem.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider).Clone();
 
-            //overridingTransaction.PublicEntries.Single().Amount =
-            //    (expectedAmount.ToUInt256() + (UInt256)100).ToUint256ByteString();
+            overridingTransaction.Amount = (expectedAmount.ToUInt256() + (UInt256)100).ToUint256ByteString();
 
-            //var overridingTransactionDao = overridingTransaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-            //_memPool.Service.CreateItem(Arg.Is(overridingTransactionDao))
-            //   .Returns(false);
-            //var overriden = _memPool.Service.CreateItem(overridingTransactionDao);
+            var overridingTransactionDao = overridingTransaction.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            _memPool.Service.CreateItem(Arg.Is(overridingTransactionDao)).Returns(false);
+            var overriden = _memPool.Service.CreateItem(overridingTransactionDao);
 
-            //overriden.Should().BeFalse();
+            overriden.Should().BeFalse();
 
-            //_memPool.Service.TryReadItem(Arg.Is(_transactionBroadcast.Signature.RawBytes))
-            //   .Returns(true);
+            _memPool.Service.TryReadItem(Arg.Is(_mempoolItem.Signature.RawBytes))
+               .Returns(true);
 
-            //var retrievedTransaction = _memPool.Service.TryReadItem(_transactionBroadcast.Signature.RawBytes);
-            //retrievedTransaction.Should().BeTrue();
+            var retrievedTransaction = _memPool.Service.TryReadItem(_mempoolItem.Signature.RawBytes);
+            retrievedTransaction.Should().BeTrue();
         }
 
         [Fact]
