@@ -90,13 +90,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             Guard.Argument(allTransactions, nameof(allTransactions))
                .NotNull("Mempool content returned null, check the mempool is actively running");
 
-            var includedTransactions = allTransactions;
-                //GetValidTransactionsForDelta(allTransactions);
+            var includedTransactions = GetValidTransactionsForDelta(allTransactions);
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
-            var publicEntries = includedTransactions;
-
-            var rawAndSaltedEntriesBySignature = publicEntries.Select(
+            var rawAndSaltedEntriesBySignature = includedTransactions.Select(
                 x => new RawEntryWithSaltedAndHashedEntry(x, salt, _hashProvider));
 
             // (Eα;Oα)
@@ -113,7 +110,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                .ToArray();
 
             // xf
-            var summedFees = allTransactions.Sum(t => t.Base.TransactionFees.ToUInt256());
+            var summedFees = includedTransactions.Sum(t => t.Base.TransactionFees.ToUInt256());
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)
             var coinbaseEntry = new CoinbaseEntry
@@ -144,7 +141,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
                 CoinbaseEntries = {coinbaseEntry},
-                PublicEntries = {publicEntries},
+                PublicEntries = { includedTransactions },
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -191,73 +188,39 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
         }
         
-        //private static bool IsTransactionOfAcceptedType(MempoolItem transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
-        
+        private static bool IsTransactionOfAcceptedType(PublicEntry transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
+
         /// <summary>
         ///     Gets the valid transactions for delta.
         ///     This method can be used to extract the collection of transactions that meet the criteria for validating delta.
         /// </summary>
-        //private IList<PublicEntry> GetValidTransactionsForDelta(IList<PublicEntry> allTransactions)
-        //{
-        //    //lock time equals 0 or less than ledger cycle time
-        //    //we assume all transactions are of type non-confidential for now
+        private IList<PublicEntry> GetValidTransactionsForDelta(IList<PublicEntry> allTransactions)
+        {
+            //lock time equals 0 or less than ledger cycle time
+            //we assume all transactions are of type non-confidential for now
 
-        //    var validTransactionsForDelta = new List<PublicEntry>();
-        //    var rejectedTransactions = new List<PublicEntry>();
+            var validTransactionsForDelta = new List<PublicEntry>();
+            var rejectedTransactions = new List<PublicEntry>();
 
-        //    var allTransactionsCount = allTransactions.Count;
-        //    for (var i = 0; i < allTransactionsCount; i++)
-        //    {
-        //        var currentItem = allTransactions[i];
-        //        //if (!IsTransactionOfAcceptedType(currentItem) || !currentItem.HasValidEntries())
-        //        //{
-        //        //    rejectedTransactions.Add(currentItem);
-        //        //    continue;
-        //        //}
+            var allTransactionsCount = allTransactions.Count;
+            for (var i = 0; i < allTransactionsCount; i++)
+            {
+                var currentItem = allTransactions[i];
+                if (!IsTransactionOfAcceptedType(currentItem) || !currentItem.HasValidEntries())
+                {
+                    rejectedTransactions.Add(currentItem);
+                    continue;
+                }
 
-        //        validTransactionsForDelta.Add(currentItem);
-        //    }
-            
-        //    validTransactionsForDelta.Sort(AveragePriceComparer.InstanceDesc);
+                validTransactionsForDelta.Add(currentItem);
+            }
 
-        //    var totalLimit = 0UL;
-        //    var allValidCount = validTransactionsForDelta.Count;
-        //    var rejectedCountBeforeLimitChecks = rejectedTransactions.Count;
-        //    for (var i = 0; i < allValidCount; i++)
-        //    {
-        //        var currentItem = validTransactionsForDelta[i];
-        //        var remainingLimit = DeltaGasLimit - totalLimit;
-        //        if (remainingLimit < MinTransactionEntryGasLimit)
-        //        {
-        //            for (var j = i; j < allValidCount; j++)
-        //            {
-        //                currentItem = validTransactionsForDelta[j];
-        //                rejectedTransactions.Add(currentItem);    
-        //            }
-                    
-        //            break;
-        //        }
-                
-        //        var currentItemGasLimit = currentItem.TotalGasLimit;
-        //        if (remainingLimit < currentItemGasLimit)
-        //        {
-        //            rejectedTransactions.Add(currentItem);
-        //        }
-        //        else
-        //        {
-        //            totalLimit += validTransactionsForDelta[i].TotalGasLimit;    
-        //        }
-        //    }
+            validTransactionsForDelta.Sort(AveragePriceComparer.InstanceDesc);
 
-        //    for (var i = rejectedCountBeforeLimitChecks; i < rejectedTransactions.Count; i++)
-        //    {
-        //        validTransactionsForDelta.Remove(rejectedTransactions[i]);
-        //    }
-            
-        //    _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}",
-        //        rejectedTransactions);
-            
-        //    return validTransactionsForDelta;
-        //}
+            _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}",
+                rejectedTransactions);
+
+            return validTransactionsForDelta;
+        }
     }
 }

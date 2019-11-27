@@ -29,7 +29,6 @@ using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
@@ -38,7 +37,6 @@ using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
@@ -53,7 +51,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         public TransactionReceivedEventTests()
         {
             var mapperProvider = new TestMapperProvider();
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
             _broadcastManager = Substitute.For<IBroadcastManager>();
@@ -61,7 +58,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                 _mempool,
                 _broadcastManager,
                 mapperProvider,
-                hashProvider,
                 Substitute.For<ILogger>());
         }
 

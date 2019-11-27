@@ -27,6 +27,7 @@ using System.Linq;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Transaction;
@@ -89,39 +90,38 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Should().Throw<ArgumentException>();
         }
 
-        //[Fact]
-        //public void GetMempoolTransactionsByPriority_should_return_transactions_in_decreasing_priority_order()
-        //{
-        //    var maxCount = _transactions.Count / 2;
-        //    var expectedTransactions = _transactions
-        //       .OrderByDescending(t => t, _transactionRetriever.TransactionComparer)
-        //       .Take(maxCount).ToList();
+        [Fact]
+        public void GetMempoolTransactionsByPriority_should_return_transactions_in_decreasing_priority_order()
+        {
+            var maxCount = _transactions.Count / 2;
+            var expectedTransactions = _transactions
+               .OrderByDescending(t => t, _transactionRetriever.TransactionComparer)
+               .Take(maxCount).ToList();
 
-        //    var retrievedTransactions = _transactionRetriever
-        //       .GetMempoolTransactionsByPriority(maxCount);
+            var retrievedTransactions = _transactionRetriever
+               .GetMempoolTransactionsByPriority(maxCount);
 
-        //    var excludedTransactionCount = _transactions.Count - maxCount;
+            var excludedTransactionCount = _transactions.Count - maxCount;
 
-        //    var unexpectedTransactions = _transactions.OrderBy(t => t, _transactionRetriever.TransactionComparer)
-        //       .Take(excludedTransactionCount).ToList();
+            var unexpectedTransactions = _transactions.OrderBy(t => t, _transactionRetriever.TransactionComparer)
+               .Take(excludedTransactionCount).ToList();
 
-        //    unexpectedTransactions
-        //       .ForEach(t => retrievedTransactions.Any(r => t.Signature == r.Signature).Should()
-        //           .BeFalse("No unexpected transactions should have been retrieved"));
+            unexpectedTransactions
+               .ForEach(t => retrievedTransactions.Any(r => t.Signature == r.Signature).Should()
+                   .BeFalse("No unexpected transactions should have been retrieved"));
 
-        //    for (var i = 0; i < maxCount; i++)
-        //    {
-        //        retrievedTransactions[i].IsPublicTransaction.Should().Be(expectedTransactions[i].IsPublicTransaction);
-        //        if (i == 0)
-        //        {
-        //            continue;
-        //        }
+            for (var i = 0; i < maxCount; i++)
+            {
+                retrievedTransactions[i].IsPublicTransaction.Should().Be(expectedTransactions[i].IsPublicTransaction);
+                if (i == 0)
+                {
+                    continue;
+                }
 
-        //        // just a sanity check to make sure that the order is not opposite of what was intended in
-        //        // TransactionComparerByFeeTimestampAndHash
-        //        retrievedTransactions[i - 1].SummedEntryFees().Should()
-        //           .BeGreaterOrEqualTo(retrievedTransactions[i].SummedEntryFees());
-        //    }
-        //}
+                // just a sanity check to make sure that the order is not opposite of what was intended in
+                // TransactionComparerByFeeTimestampAndHash
+                retrievedTransactions[i - 1].Base.TransactionFees.ToUInt256().Should().BeGreaterOrEqualTo(retrievedTransactions[i].Base.TransactionFees.ToUInt256());
+            }
+        }
     }
 }

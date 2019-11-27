@@ -84,7 +84,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [MemberData(nameof(MempoolTransactions))]
         public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<PublicEntryDao> mempoolTransactions)
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             var testScheduler = new TestScheduler();
             var mempool = Substitute.For<IMempool<PublicEntryDao>>();
             mempool.Service.GetAll().Returns(mempoolTransactions);

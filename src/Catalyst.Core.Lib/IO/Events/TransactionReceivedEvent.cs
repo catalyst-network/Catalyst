@@ -43,20 +43,17 @@ namespace Catalyst.Core.Lib.IO.Events
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IMapperProvider _mapperProvider;
-        private readonly IHashProvider _hashProvider;
 
         public TransactionReceivedEvent(ITransactionValidator validator,
             IMempool<PublicEntryDao> mempool,
             IBroadcastManager broadcastManager,
             IMapperProvider mapperProvider,
-            IHashProvider hashProvider,
             ILogger logger)
         {
             _mapperProvider = mapperProvider;
             _broadcastManager = broadcastManager;
             _mempool = mempool;
             _validator = validator;
-            _hashProvider = hashProvider;
             _logger = logger;
         }
 
