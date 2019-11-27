@@ -21,10 +21,10 @@
 
 #endregion
 
+using System;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Protocol.Cryptography;
-using Google.Protobuf;
 using ISignature = Catalyst.Abstractions.Cryptography.ISignature;
 
 namespace Catalyst.Abstractions.KeySigner
@@ -40,17 +40,11 @@ namespace Catalyst.Abstractions.KeySigner
         ///     Takes the crypto library implementation the nodes using.
         /// </summary>
         ICryptoContext CryptoContext { get; }
-        
-        ISignature Sign(byte[] data, SigningContext signingContext);
 
-        ISignature Sign(IMessage data, SigningContext signingContext);
+        ISignature Sign(ReadOnlySpan<byte> data, SigningContext signingContext);
 
         /// <summary>Verifies a message signature.</summary>
         /// <returns></returns>
-        bool Verify(ISignature signature, byte[] message, SigningContext signingContext);
-
-        /// <summary>Verifies a message signature.</summary>
-        /// <returns></returns>
-        bool Verify(ISignature signature, IMessage message, SigningContext signingContext);
+        bool Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext);
     }
 }

@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Buffers;
 using Google.Protobuf;
 
@@ -42,25 +43,18 @@ namespace Catalyst.Abstractions.Cryptography
             ProtoPreconditions.CheckNotNull(context, nameof(context));
 
             var messageSize = message.CalculateSize();
-            var messageArray = ArrayPool<byte>.Shared.Rent(messageSize);
-            
             var contextSize = context.CalculateSize();
-            var contextArray = ArrayPool<byte>.Shared.Rent(contextSize);
-
-            using (var output = new CodedOutputStream(messageArray))
+            var array = ArrayPool<byte>.Shared.Rent(messageSize + contextSize);
+            
+            using (var output = new CodedOutputStream(array))
             {
                 message.WriteTo(output);
-            } 
-            
-            using (var output = new CodedOutputStream(contextArray))
-            {
                 context.WriteTo(output);
-            }
+            } 
 
-            var signature = crypto.Sign(privateKey, messageArray, messageSize, contextArray, contextSize);
+            var signature = crypto.Sign(privateKey, array.AsSpan(0, messageSize), array.AsSpan(messageSize, contextSize));
 
-            ArrayPool<byte>.Shared.Return(messageArray);
-            ArrayPool<byte>.Shared.Return(contextArray);
+            ArrayPool<byte>.Shared.Return(array);
 
             return signature;
         }
@@ -71,25 +65,18 @@ namespace Catalyst.Abstractions.Cryptography
             ProtoPreconditions.CheckNotNull(context, nameof(context));
 
             var messageSize = message.CalculateSize();
-            var messageArray = ArrayPool<byte>.Shared.Rent(messageSize);
-
             var contextSize = context.CalculateSize();
-            var contextArray = ArrayPool<byte>.Shared.Rent(contextSize);
+            var array = ArrayPool<byte>.Shared.Rent(messageSize + contextSize);
 
-            using (var output = new CodedOutputStream(messageArray))
+            using (var output = new CodedOutputStream(array))
             {
                 message.WriteTo(output);
-            }
-
-            using (var output = new CodedOutputStream(contextArray))
-            {
                 context.WriteTo(output);
             }
 
-            var result = crypto.Verify(signature, messageArray, messageSize, contextArray, contextSize);
+            var result = crypto.Verify(signature, array.AsSpan(0, messageSize), array.AsSpan(messageSize, contextSize));
 
-            ArrayPool<byte>.Shared.Return(messageArray);
-            ArrayPool<byte>.Shared.Return(contextArray);
+            ArrayPool<byte>.Shared.Return(array);
 
             return result;
         }

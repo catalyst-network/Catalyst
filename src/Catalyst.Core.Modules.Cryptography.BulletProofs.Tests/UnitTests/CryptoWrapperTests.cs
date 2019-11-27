@@ -26,6 +26,8 @@ using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Exceptions;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Google.Protobuf;
@@ -88,40 +90,6 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
         }
 
         [Fact]
-        public void TestSigningMethodEquivalence()
-        {
-            IPrivateKey privateKey = _wrapper.GeneratePrivateKey();
-            byte[] message = Encoding.UTF8.GetBytes("fa la la la");
-            byte[] context = Encoding.UTF8.GetBytes("any old context");
-
-            int messageLength = message.Length - 1;
-            int contextLength = context.Length - 1;
-
-            ISignature expected = _wrapper.Sign(privateKey, message.Take(messageLength).ToArray(), context.Take(contextLength).ToArray());
-            ISignature actual = _wrapper.Sign(privateKey, message, messageLength, context, contextLength);
-
-            actual.SignatureBytes.Should().BeEquivalentTo(expected.SignatureBytes);
-            actual.PublicKeyBytes.Should().BeEquivalentTo(expected.PublicKeyBytes);
-        }
-
-        [Fact]
-        public void TestVerifyMethodEquivalence()
-        {
-            IPrivateKey privateKey = _wrapper.GeneratePrivateKey();
-            byte[] message = Encoding.UTF8.GetBytes("fa la la la");
-            byte[] context = Encoding.UTF8.GetBytes("context");
-
-            int messageLength = message.Length - 1;
-            int contextLength = context.Length - 1;
-
-            ISignature signature = _wrapper.Sign(privateKey, message.Take(messageLength).ToArray(), context.Take(contextLength).ToArray());
-            bool isVerified = _wrapper.Verify(signature, message.Take(messageLength).ToArray(), context.Take(contextLength).ToArray());
-            bool shouldBe = _wrapper.Verify(signature, message, messageLength, context, contextLength);
-         
-            shouldBe.Should().Be(isVerified);
-        }
-
-        [Fact]
         public void TestSigningForMessagesMethodEquivalence()
         {
             IPrivateKey privateKey = _wrapper.GeneratePrivateKey();
@@ -172,6 +140,22 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             };
 
             action.Should().Throw<SignatureException>();
+        }
+
+        [Fact]
+        public void TestVerifyingForMessagesMethodEquivalence()
+        {
+            IPrivateKey privateKey = _wrapper.GeneratePrivateKey();
+
+            BaseEntry message1 = new BaseEntry {Nonce = 123};
+            SigningContext context = new SigningContext {NetworkType = NetworkType.Mainnet};
+
+            ISignature signature = _wrapper.Sign(privateKey, message1.ToByteArray(), context.ToByteArray());
+            
+            var expected = _wrapper.Verify(signature, message1.ToByteArray(), context.ToByteArray());
+            var actual = _wrapper.Verify(signature, message1, context);
+
+            actual.Should().Be(expected);
         }
 
         [Fact]

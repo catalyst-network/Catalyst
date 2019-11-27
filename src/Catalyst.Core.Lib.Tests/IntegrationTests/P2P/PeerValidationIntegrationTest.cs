@@ -39,6 +39,8 @@ using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Protocols;
+using Catalyst.Core.Lib.Tests.Fakes;
+using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
@@ -96,10 +98,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 UdpClientHandlerWorkerThreads = 5
             };
 
-            var keySigner = Substitute.For<IKeySigner>();
-            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
-            var signature = Substitute.For<ISignature>();
-            keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
+            var keySigner = FakeKeySigner.SignAndVerify(true);
 
             _peerService = new PeerService(new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
                 new PeerServerChannelFactory(ContainerProvider.Container.Resolve<IPeerMessageCorrelationManager>(),

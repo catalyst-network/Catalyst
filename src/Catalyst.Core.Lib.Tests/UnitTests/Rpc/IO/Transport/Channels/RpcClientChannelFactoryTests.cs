@@ -31,6 +31,8 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Tests.Fakes;
+using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
@@ -74,13 +76,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
         private readonly TestScheduler _testScheduler;
         private readonly IRpcMessageCorrelationManager _correlationManager;
         private readonly TestRpcClientChannelFactory _factory;
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
 
         public RpcClientChannelFactoryTests()
         {
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
-            _keySigner = Substitute.For<IKeySigner>();
+            _keySigner = FakeKeySigner.VerifyOnly();
 
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
@@ -122,9 +124,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             var protocolMessage = new PingResponse()
                .ToSignedProtocolMessage(senderId, signatureBytes, correlationId: correlationId);
 
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<IMessage>(), Arg.Any<SigningContext>())
-               .Returns(true);
-
             _correlationManager.TryMatchResponse(protocolMessage).Returns(true);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
@@ -137,7 +136,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 
                 _correlationManager.Received(1).TryMatchResponse(protocolMessage);
 
-                _keySigner.ReceivedWithAnyArgs(1).Verify(null, default(IMessage), null);
+                _keySigner.VerifyCount.Should().Be(1);
 
                 _testScheduler.Start();
 
@@ -160,9 +159,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 
             _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(default);
             
-            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), default);
-            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<IMessage>(), default);
-
             testingChannel.ReadOutbound<IByteBuffer>();
         }
     }

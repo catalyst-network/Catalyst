@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Validators;
@@ -29,8 +30,6 @@ using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using FluentAssertions;
-using Google.Protobuf;
-using Google.Protobuf.Reflection;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -62,19 +61,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             TransactionValidator_ValidateTransactionSignature_returns_true_for_valid_transaction_signature_verification()
         {
             var subbedLogger = Substitute.For<ILogger>();
-            var subbedContext = Substitute.For<ICryptoContext>();
+            var signatureResult = Substitute.For<ISignature>();
+            var subbedContext = new FakeContext(signatureResult, true);
 
-            subbedContext.GetSignatureFromBytes(Arg.Any<byte[]>(), Arg.Any<byte[]>())
-               .ReturnsForAnyArgs(Substitute.For<ISignature>());
-
-            subbedContext.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<byte[]>(), Arg.Any<int>())
-               .Returns(true);
-
-            subbedContext.Sign(Arg.Any<IPrivateKey>(), Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<byte[]>(), Arg.Any<int>())
-               .SignatureBytes.Returns(new byte[64]);
+            signatureResult.SignatureBytes.Returns(new byte[64]);
 
             var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
-            var privateKey = subbedContext.GeneratePrivateKey();
+            var privateKey = Substitute.For<IPrivateKey>();
 
             var validTransactionBroadcast = new TransactionBroadcast
             {
@@ -106,14 +99,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
             result.Should().BeTrue();
         }
-        
+
         [Fact]
         public void TransactionValidator_ValidateTransactionSignature_returns_false_for_invalid_transaction_signature_verification()
         {
             var subbedLogger = Substitute.For<ILogger>();
-            var subbedContext = Substitute.For<ICryptoContext>();
-            
-            var privateKey = subbedContext.GeneratePrivateKey();
+            var signatureResult = Substitute.For<ISignature>();
+            var subbedContext = new FakeContext(signatureResult, false);
+
+            signatureResult.SignatureBytes.Returns(new byte[64]);
+
+            var privateKey = Substitute.For<IPrivateKey>();
 
             // raw un-signed tx message
             var validTransactionBroadcast = new TransactionBroadcast
@@ -139,22 +135,40 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
                     SignatureType = SignatureType.TransactionPublic
                 }
             };
-            
-            subbedContext.GetSignatureFromBytes(Arg.Is(txSig.ToByteArray()), Arg.Is(privateKey.GetPublicKey().Bytes))
-               .ReturnsForAnyArgs(Substitute.For<ISignature>());
 
-            subbedContext.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<byte[]>(), Arg.Any<int>())
-               .Returns(false);
-
-            subbedContext.Sign(Arg.Is(privateKey), validTransactionBroadcast, txSig.SigningContext)
-               .SignatureBytes.Returns(new byte[64]);
-            
             var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
 
             validTransactionBroadcast.Signature = txSig;
 
             var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
             result.Should().BeFalse();
+        }
+
+        sealed class FakeContext : ICryptoContext
+        {
+            readonly ISignature _signature;
+            readonly bool _verifyResult;
+
+            public FakeContext(ISignature signature, bool verifyResult)
+            {
+                _signature = signature;
+                _verifyResult = verifyResult;
+            }
+
+            public int PrivateKeyLength { get; }
+            public int PublicKeyLength { get; }
+            public int SignatureLength { get; }
+            public int SignatureContextMaxLength { get; }
+            public IPrivateKey GeneratePrivateKey() { throw new NotImplementedException(); }
+            public IPublicKey GetPublicKeyFromPrivateKey(IPrivateKey privateKey) { throw new NotImplementedException(); }
+            public IPublicKey GetPublicKeyFromBytes(byte[] publicKeyBytes) { throw new NotImplementedException(); }
+            public IPrivateKey GetPrivateKeyFromBytes(byte[] privateKeyBytes) { throw new NotImplementedException(); }
+            public byte[] ExportPrivateKey(IPrivateKey privateKey) { throw new NotImplementedException(); }
+            public byte[] ExportPublicKey(IPublicKey publicKey) { throw new NotImplementedException(); }
+            
+            public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) => _signature;
+            public ISignature GetSignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes) => Substitute.For<ISignature>();
+            public bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) => _verifyResult;
         }
     }
 }

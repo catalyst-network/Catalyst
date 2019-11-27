@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Types;
@@ -38,24 +39,14 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 
         public int SignatureContextMaxLength => NativeBinding.SignatureContextMaxLength;
 
-        public ISignature Sign(IPrivateKey privateKey, byte[] messageBytes, byte[] contextBytes)
+        public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context)
         {
-            return NativeBinding.StdSign(privateKey.Bytes, messageBytes, messageBytes.Length, contextBytes, contextBytes.Length);           
-        }
-        
-        public ISignature Sign(IPrivateKey privateKey, byte[] messageBytes, int messageLength, byte[] contextBytes, int contextLength)
-        {
-            return NativeBinding.StdSign(privateKey.Bytes, messageBytes, messageLength, contextBytes, contextLength);           
+            return NativeBinding.StdSign(privateKey.Bytes, message, context);           
         }
 
-        public bool Verify(ISignature signature, byte[] message, byte[] context)
+        public bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context)
         {
-            return NativeBinding.StdVerify(signature.SignatureBytes, signature.PublicKeyBytes, message, message.Length, context, context.Length);
-        }
-
-        public bool Verify(ISignature signature, byte[] message, int messageLength, byte[] context, int contextLength)
-        {
-            return NativeBinding.StdVerify(signature.SignatureBytes, signature.PublicKeyBytes, message, messageLength, context, contextLength);
+            return NativeBinding.StdVerify(signature.SignatureBytes, signature.PublicKeyBytes, message, context);
         }
 
         public IPrivateKey GeneratePrivateKey()

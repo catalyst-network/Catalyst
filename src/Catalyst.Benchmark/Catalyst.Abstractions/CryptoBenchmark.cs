@@ -92,10 +92,8 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
 
         internal class NoopCryptoContext : ICryptoContext
         {
-            public ISignature Sign(IPrivateKey privateKey, byte[] message, byte[] context) => null;
-            public ISignature Sign(IPrivateKey privateKey, byte[] message, int messageLength, byte[] context, int contextLength) => null;
-            public bool Verify(ISignature signature, byte[] message, byte[] context) => true;
-            public bool Verify(ISignature signature, byte[] message, int messageLength, byte[] context, int contextLength) => true;
+            public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) => null;
+            public bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) => true;
 
             public int PrivateKeyLength => throw new NotImplementedException();
             public int PublicKeyLength => throw new NotImplementedException();

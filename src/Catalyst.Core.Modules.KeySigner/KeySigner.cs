@@ -89,28 +89,16 @@ namespace Catalyst.Core.Modules.KeySigner
             return privateKey;
         }
 
-        public ISignature Sign(byte[] data, SigningContext signingContext)
+        public ISignature Sign(ReadOnlySpan<byte> data, SigningContext signingContext)
         {
             var privateKey = GetPrivateKey(KeyRegistryTypes.DefaultKey);
             return _cryptoContext.Sign(privateKey, data, signingContext.ToByteArray());
         }
 
-        public ISignature Sign(IMessage data, SigningContext signingContext)
-        {
-            var privateKey = GetPrivateKey(KeyRegistryTypes.DefaultKey);
-            return _cryptoContext.Sign(privateKey, data, signingContext);
-        }
-
         /// <inheritdoc/>
-        public bool Verify(ISignature signature, byte[] message, SigningContext signingContext)
+        public bool Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext)
         {
-            return _cryptoContext.Verify(signature, message, signingContext.ToByteArray());
-        }
-
-        /// <inheritdoc/>
-        public bool Verify(ISignature signature, IMessage message, SigningContext signingContext)
-        {
-            return _cryptoContext.Verify(signature, message, signingContext);
+            return _cryptoContext.Verify(signature, data, signingContext.ToByteArray());
         }
 
         public void ExportKey()

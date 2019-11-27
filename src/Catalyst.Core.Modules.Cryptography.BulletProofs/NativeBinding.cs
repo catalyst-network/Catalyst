@@ -21,6 +21,8 @@
 
 #endregion
 
+using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Types;
@@ -50,9 +52,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         }
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int std_sign(byte[] signature, byte[] publicKey, byte[] privateKey, byte[] message, int messageLength, byte[] context, int contextLength);
+        private static extern unsafe int std_sign(byte[] signature, byte[] publicKey, byte[] privateKey, byte* message, int messageLength, byte* context, int contextLength);
 
-        internal static ISignature StdSign(byte[] privateKey, byte[] message, int messageLength, byte[] context, int contextLength)
+        internal static unsafe ISignature StdSign(byte[] privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context)
         {
             if (privateKey.Length != PrivateKeyLength)
             {
@@ -62,20 +64,29 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             var signature = new byte[SignatureLength];
             var publicKey = new byte[PublicKeyLength];
 
-            var error_code = std_sign(signature, publicKey, privateKey, message, messageLength, context, contextLength);
+            byte b = 0;
+            var empty = (byte*)Unsafe.AsPointer(ref b); // ffi requires a valid memory location even if buffer is empty, this creates a valid pointer to the stack
 
-            if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+            fixed (byte* messageHandle = message)
             {
-                Error.ThrowErrorFromErrorCode(errorCode);
-            }
+                fixed (byte* contextHandle = context)
+                {
+                    var error_code = std_sign(signature, publicKey, privateKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
 
-            return new Signature(signature, publicKey);
+                    if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+                    {
+                        Error.ThrowErrorFromErrorCode(errorCode);
+                    }
+
+                    return new Signature(signature, publicKey);
+                }
+            }
         }
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int std_verify(byte[] signature, byte[] publicKey, byte[] message, int messageLength, byte[] context, int contextLength);
+        private static extern unsafe int std_verify(byte[] signature, byte[] publicKey, byte* message, int messageLength, byte* context, int contextLength);
 
-        internal static bool StdVerify(byte[] signature, byte[] publicKey, byte[] message, int messageLength, byte[] context, int contextLength)
+        internal static unsafe bool StdVerify(byte[] signature, byte[] publicKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context)
         {
             if (signature.Length != SignatureLength)
             {
@@ -87,18 +98,27 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
                 Error.ThrowArgumentExceptionPublicKeyLength(PublicKeyLength);
             }
 
-            var error_code = std_verify(signature, publicKey, message, messageLength, context, contextLength);
+            byte b = 0;
+            var empty = (byte*) Unsafe.AsPointer(ref b); // ffi requires a valid memory location even if buffer is empty, this creates a valid pointer to the stack
 
-            ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
-
-            if (errorCode == ErrorCode.NoError)
+            fixed (byte* messageHandle = message)
             {
-                return true;
-            }
+                fixed (byte* contextHandle = context)
+                {
+                    var error_code = std_verify(signature, publicKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
 
-            if (errorCode != ErrorCode.SignatureVerificationFailure)
-            {
-                Error.ThrowErrorFromErrorCode(errorCode);
+                    ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
+
+                    if (errorCode == ErrorCode.NoError)
+                    {
+                        return true;
+                    }
+
+                    if (errorCode != ErrorCode.SignatureVerificationFailure)
+                    {
+                        Error.ThrowErrorFromErrorCode(errorCode);
+                    }
+                }
             }
 
             return false;
