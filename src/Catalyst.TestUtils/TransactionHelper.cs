@@ -67,7 +67,7 @@ namespace Catalyst.TestUtils
                 }
             };
 
-            transaction.PublicEntry.Id = hashProvider.ComputeMultiHash(transaction.PublicEntry.ToByteArray()).ToArray();
+            transaction.PublicEntry.GenerateId(hashProvider);
             return transaction;
         }
 

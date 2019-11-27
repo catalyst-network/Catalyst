@@ -27,9 +27,12 @@ using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -37,6 +40,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -48,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private readonly TestMapperProvider _mapperProvider;
 
         public GetMempoolRequestObserverTests()
-        {   
+        {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
@@ -61,27 +65,28 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             new List<object[]>
             {
                 new object[] {CreateTestTransactions()},
-                new object[] {new List<TransactionBroadcastDao>()}
+                new object[] {new List<PublicEntryDao>()}
             };
 
-        private static List<TransactionBroadcastDao> CreateTestTransactions()
+        private static List<PublicEntryDao> CreateTestTransactions()
         {
             var mapperProvider = new TestMapperProvider();
             var txLst = new List<TransactionBroadcast>
             {
                 TransactionHelper.GetPublicTransaction(234, "standardPubKey", "sign1"),
                 TransactionHelper.GetPublicTransaction(567, "standardPubKey", "sign2")
-            }.Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(mapperProvider)).ToList();
+            }.Select(x => x.PublicEntry.ToDao<PublicEntry, PublicEntryDao>(mapperProvider)).ToList();
 
             return txLst;
         }
 
         [Theory]
         [MemberData(nameof(MempoolTransactions))]
-        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcastDao> mempoolTransactions)
+        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<PublicEntryDao> mempoolTransactions)
         {
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             var testScheduler = new TestScheduler();
-            var mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
+            var mempool = Substitute.For<IMempool<PublicEntryDao>>();
             mempool.Service.GetAll().Returns(mempoolTransactions);
 
             var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender_key"));
@@ -99,11 +104,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>)receivedCalls.Single().GetArguments().Single();
 
             var responseContent = sentResponseDto.Content.FromProtocolMessage<GetMempoolResponse>();
+            var transactions = responseContent.Transactions.Select(x => { x.GenerateId(hashProvider); return x; });
 
-            responseContent.Transactions.Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider)).Should()
+            transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider)).Should()
                .BeEquivalentTo(mempoolTransactions);
         }
     }

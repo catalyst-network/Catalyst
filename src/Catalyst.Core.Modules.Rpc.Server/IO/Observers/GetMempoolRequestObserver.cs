@@ -28,9 +28,11 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -42,11 +44,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         : RequestObserverBase<GetMempoolRequest, GetMempoolResponse>,
             IRpcRequestObserver
     {
-        private readonly IMempool<TransactionBroadcastDao> _mempool;
+        private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IMapperProvider _mappingProvider;
 
         public GetMempoolRequestObserver(IPeerSettings peerSettings,
-            IMempool<TransactionBroadcastDao> mempool,
+            IMempool<PublicEntryDao> mempool,
             IMapperProvider mappingProvider,
             ILogger logger)
             : base(logger, peerSettings)
@@ -77,7 +79,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 Logger.Debug("Received GetMempoolRequest message with content {0}", getMempoolRequest);
 
                 var mempoolTransactions = _mempool.Service.GetAll()
-                   .Select(x => x.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mappingProvider));
+                   .Select(x => x.ToProtoBuff<PublicEntryDao, PublicEntry>(_mappingProvider));
 
                 return new GetMempoolResponse
                 {
