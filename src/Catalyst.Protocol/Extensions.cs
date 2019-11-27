@@ -23,37 +23,33 @@
 
 using System;
 using System.Buffers;
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Protocol;
-using Catalyst.Protocol.Cryptography;
 using Google.Protobuf;
 
-namespace Catalyst.Abstractions.KeySigner
+namespace Catalyst.Protocol
 {
-    public static class KeySignerExtensions
+    /// <summary>
+    /// Provides various extensions for serialization.
+    /// </summary>
+    public static class Extensions
     {
-        static readonly ArrayPool<byte> Pool = ArrayPool<byte>.Shared;
-
-        public static ISignature Sign(this IKeySigner crypto, IMessage message, SigningContext context)
+        /// <summary>
+        /// Serializes a message using the passed array pool.
+        /// </summary>
+        /// <param name="pool"></param>
+        /// <param name="message"></param>
+        /// <param name="arrayToReturn"></param>
+        /// <returns></returns>
+        public static ReadOnlySpan<byte> Serialize(this ArrayPool<byte> pool, IMessage message, out byte[] arrayToReturn)
         {
-            var span = Pool.Serialize(message, out var array);
+            var messageSize = message.CalculateSize();
+            arrayToReturn = pool.Rent(messageSize);
 
-            var result = crypto.Sign(span, context);
+            using (var output = new CodedOutputStream(arrayToReturn))
+            {
+                message.WriteTo(output);
+            }
 
-            Pool.Return(array);
-
-            return result;
-        }
-
-        public static bool Verify(this IKeySigner crypto, ISignature signature, IMessage message, SigningContext context)
-        {
-            var span = Pool.Serialize(message, out var array);
-            
-            var result = crypto.Verify(signature, span, context);
-
-            Pool.Return(array);
-
-            return result;
+            return arrayToReturn.AsSpan(0, messageSize);
         }
     }
 }

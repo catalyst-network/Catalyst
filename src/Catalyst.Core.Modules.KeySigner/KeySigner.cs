@@ -22,11 +22,13 @@
 #endregion
 
 using System;
+using System.Buffers;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Google.Protobuf;
@@ -40,6 +42,7 @@ namespace Catalyst.Core.Modules.KeySigner
         private readonly ICryptoContext _cryptoContext;
         private readonly IKeyRegistry _keyRegistry;
         private readonly KeyRegistryTypes _defaultKey = KeyRegistryTypes.DefaultKey;
+        static readonly ArrayPool<byte> Pool = ArrayPool<byte>.Shared;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
@@ -92,13 +95,24 @@ namespace Catalyst.Core.Modules.KeySigner
         public ISignature Sign(ReadOnlySpan<byte> data, SigningContext signingContext)
         {
             var privateKey = GetPrivateKey(KeyRegistryTypes.DefaultKey);
-            return _cryptoContext.Sign(privateKey, data, signingContext.ToByteArray());
+
+            var span = Pool.Serialize(signingContext, out var array);
+
+            var result = _cryptoContext.Sign(privateKey, data, span);
+            
+            Pool.Return(array);
+            return result;
         }
 
         /// <inheritdoc/>
         public bool Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext)
         {
-            return _cryptoContext.Verify(signature, data, signingContext.ToByteArray());
+            var span = Pool.Serialize(signingContext, out var array);
+            
+            var result = _cryptoContext.Verify(signature, data, span);
+            
+            Pool.Return(array);
+            return result;
         }
 
         public void ExportKey()
