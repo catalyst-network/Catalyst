@@ -83,8 +83,6 @@ namespace Catalyst.Protocol.Transaction
 
         public byte[] TargetContract { get; set; }
 
-        public byte[] Id { set; get; }
-
         public void BeforeConstruction()
         {
             IsContractDeployment = IsValidDeploymentEntry;

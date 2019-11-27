@@ -63,8 +63,6 @@ namespace Catalyst.Core.Lib.IO.Events
         public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
         {
             var transaction = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
-            transaction.PublicEntry.Id = _hashProvider.ComputeMultiHash(transaction.PublicEntry.ToByteArray()).ToArray();
-
             var transactionValid = _validator.ValidateTransaction(transaction);
             if (!transactionValid)
             {

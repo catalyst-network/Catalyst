@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new DeltaDfsHashBroadcastMapperInitialiser(),
                 new FavouriteDeltaBroadcastMapperInitialiser(),
                 new CoinbaseEntryMapperInitialiser(),
-                new PublicEntryMapperInitialiser(),
+                new PublicEntryMapperInitialiser(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"))),
                 new ConfidentialEntryMapperInitialiser(),
                 new TransactionBroadcastMapperInitialiser(),
                 new SignatureMapperInitialiser(),

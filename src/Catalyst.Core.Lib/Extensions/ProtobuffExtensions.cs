@@ -178,10 +178,5 @@ namespace Catalyst.Core.Lib.Extensions
         {
             return ByteString.CopyFrom(ipAddress.To16Bytes());
         }
-
-        public static void GenerateId(this PublicEntry publicEntry, IHashProvider hashProvider)
-        {
-            publicEntry.Id = hashProvider.ComputeMultiHash(publicEntry.ToByteArray()).ToArray();
-        }
     }
 }

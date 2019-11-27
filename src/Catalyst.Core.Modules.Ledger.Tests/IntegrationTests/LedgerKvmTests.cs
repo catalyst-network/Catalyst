@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
@@ -58,6 +59,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private readonly ILogger _logger;
         private readonly MultiHash _genesisHash;
         private readonly IHashProvider _hashProvider;
+        private readonly IMapperProvider _mapperProvider;
         private readonly ISpecProvider _specProvider;
         private readonly TestScheduler _testScheduler;
         private readonly StateProvider _stateProvider;
@@ -77,6 +79,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _cryptoContext = new FfiWrapper();
             _fakeRepository = Substitute.For<IAccountRepository>();
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _mapperProvider = new TestMapperProvider();
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
 
             _logger = Substitute.For<ILogger>();
@@ -125,7 +128,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid)h).ToObservable(_testScheduler));
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
-            var classUnderTest = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
+            var classUnderTest = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb, _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
 
             _testScheduler.Start();
         }

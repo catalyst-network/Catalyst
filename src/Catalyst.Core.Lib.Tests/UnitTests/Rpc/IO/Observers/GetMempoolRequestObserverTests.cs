@@ -107,9 +107,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var sentResponseDto = (IMessageDto<ProtocolMessage>)receivedCalls.Single().GetArguments().Single();
 
             var responseContent = sentResponseDto.Content.FromProtocolMessage<GetMempoolResponse>();
-            var transactions = responseContent.Transactions.Select(x => { x.GenerateId(hashProvider); return x; });
 
-            transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider)).Should()
+            responseContent.Transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider)).Should()
                .BeEquivalentTo(mempoolTransactions);
         }
     }
