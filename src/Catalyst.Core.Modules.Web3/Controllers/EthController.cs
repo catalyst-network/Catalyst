@@ -24,99 +24,31 @@
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Microsoft.AspNetCore.Mvc;
-using Nethermind.Core;
-using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
+using Serilog;
 
 namespace Catalyst.Core.Modules.Web3.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class EthController : Controller, IEthRpcService
+    public class EthController : Controller
     {
         private readonly IEthRpcService _ethRpcService;
+        private readonly ILogger _logger = Log.Logger.ForContext(typeof(EthController));
 
-        public EthController(IEthRpcService ethRpcService) { _ethRpcService = ethRpcService; }
-
-        [HttpGet]
-        public long? eth_blockNumber()
+        public EthController(IEthRpcService ethRpcService)
         {
-            return _ethRpcService.eth_blockNumber();
+            _ethRpcService = ethRpcService;
         }
 
-        [HttpGet]
-        public UInt256? eth_getBalance(Address address, BlockParameter blockParameter)
+        public EthController()
         {
-            return _ethRpcService.eth_getBalance(address, blockParameter);
         }
 
-        [HttpGet]
-        public ResultWrapper<byte[]> eth_getStorageAt(Address address,
-            UInt256 positionIndex,
-            BlockParameter blockParameter)
+        [HttpPost]
+        public JsonRpcResponse<int> Request([FromBody] JsonRpcRequest request)
         {
-            return _ethRpcService.eth_getStorageAt(address, positionIndex, blockParameter);
-        }
-
-        [HttpGet]
-        public UInt256? eth_getTransactionCount(Address address, BlockParameter blockParameter)
-        {
-            return _ethRpcService.eth_getTransactionCount(address, blockParameter);
-        }
-
-        [HttpGet]
-        public ResultWrapper<byte[]> eth_getCode(Address address, BlockParameter blockParameter)
-        {
-            return _ethRpcService.eth_getCode(address, blockParameter);
-        }
-
-        [HttpGet]
-        public Keccak eth_sendRawTransaction(byte[] transaction)
-        {
-            return _ethRpcService.eth_sendRawTransaction(transaction);
-        }
-
-        [HttpGet]
-        public ResultWrapper<byte[]> eth_call(TransactionForRpc transactionCall, BlockParameter blockParameter = null)
-        {
-            return _ethRpcService.eth_call(transactionCall, blockParameter);
-        }
-
-        [HttpGet]
-        public UInt256? eth_estimateGas(TransactionForRpc transactionCall)
-        {
-            return _ethRpcService.eth_estimateGas(transactionCall);
-        }
-
-        [HttpGet]
-        public BlockForRpc eth_getBlockByNumber(BlockParameter blockParameter, bool returnFullTransactionObjects)
-        {
-            return _ethRpcService.eth_getBlockByNumber(blockParameter, returnFullTransactionObjects);
-        }
-
-        [HttpGet]
-        public TransactionForRpc eth_getTransactionByHash(Keccak transactionHash)
-        {
-            return _ethRpcService.eth_getTransactionByHash(transactionHash);
-        }
-
-        [HttpGet]
-        public TransactionForRpc eth_getTransactionByBlockNumberAndIndex(BlockParameter blockParameter,
-            UInt256 positionIndex)
-        {
-            return _ethRpcService.eth_getTransactionByBlockNumberAndIndex(blockParameter, positionIndex);
-        }
-
-        [HttpGet]
-        public ReceiptForRpc eth_getTransactionReceipt(Keccak txHashData)
-        {
-            return _ethRpcService.eth_getTransactionReceipt(txHashData);
-        }
-
-        [HttpGet]
-        public BlockForRpc eth_getUncleByBlockHashAndIndex(Keccak blockHashData, UInt256 positionIndex)
-        {
-            return _ethRpcService.eth_getUncleByBlockHashAndIndex(blockHashData, positionIndex);
+            _logger.Information("ETH JSON RPC request {id} {method}", request.Id, request.Method);
+            return new JsonRpcResponse<int> {Id = request.Id, Result = 1, JsonRpc = request.JsonRpc};
         }
     }
 }
