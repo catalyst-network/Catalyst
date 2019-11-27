@@ -34,6 +34,7 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
     public class MempoolRepository : IMempoolRepository<TransactionBroadcastDao>
     {
         private readonly IRepository<TransactionBroadcastDao, string> _repository;
+        
         public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository)
         {
             _repository = repository;

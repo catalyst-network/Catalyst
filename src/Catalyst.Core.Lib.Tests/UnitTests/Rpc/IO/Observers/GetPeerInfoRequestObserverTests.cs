@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             yield return new Peer
             {
                 PeerId =
-                   PeerIdHelper.GetPeerId("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
+                    PeerIdHelper.GetPeerId("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,
                 Created = DateTime.UtcNow

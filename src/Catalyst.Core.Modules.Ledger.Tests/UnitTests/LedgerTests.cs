@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
-                var account = AccountHelper.GetAccount((UInt256)i * 5);
+                var account = AccountHelper.GetAccount((UInt256) i * 5);
                 _ledger.SaveAccountState(account);
             }
 
@@ -96,10 +96,10 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         {
             var hash1 = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update"));
             var hash2 = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update again"));
-            var updates = new[] { hash1, hash2 };
+            var updates = new[] {hash1, hash2};
 
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
-               .ReturnsForAnyArgs(new[] { hash2, hash1, _genesisHash });
+               .ReturnsForAnyArgs(new[] {hash2, hash1, _genesisHash});
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 

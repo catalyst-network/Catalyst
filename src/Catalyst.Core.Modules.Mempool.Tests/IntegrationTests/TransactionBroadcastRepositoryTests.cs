@@ -99,8 +99,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
             transactionBroadcastDao.ConfidentialEntries = ConfidentialEntryHelper.GetConfidentialEntriesDao(10);
 
-            transactionBroadcastDao.Signature = new SignatureDao
-            { RawBytes = "mplwifwfjfw", SigningContext = signingContextDao };
+            transactionBroadcastDao.Signature = new SignatureDao {RawBytes = "mplwifwfjfw", SigningContext = signingContextDao};
 
             transactBroadcastRepo.Add(transactionBroadcastDao);
 
@@ -184,7 +183,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             {
                 var contextDb = scope.Resolve<IDbContext>();
 
-                ((DbContext)contextDb).Database.EnsureCreated();
+                ((DbContext) contextDb).Database.EnsureCreated();
             }
         }
 

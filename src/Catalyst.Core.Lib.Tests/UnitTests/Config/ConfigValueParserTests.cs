@@ -80,5 +80,4 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Config
             endPoints.Should().HaveCount(0);
         }
     }
-
 }

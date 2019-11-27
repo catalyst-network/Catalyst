@@ -49,7 +49,6 @@ using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
@@ -77,7 +76,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _randomFactory = Substitute.For<IDeterministicRandomFactory>();
             _randomFactory.GetDeterministicRandomFromSeed(Arg.Any<byte[]>())
-               .Returns(ci => new IsaacRandom(((byte[])ci[0]).ToHex()));
+               .Returns(ci => new IsaacRandom(((byte[]) ci[0]).ToHex()));
 
             _producerId = PeerIdHelper.GetPeerId("producer");
             _peerSettings = _producerId.ToSubstitutedPeerSettings();
@@ -150,9 +149,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var transactions = Enumerable.Range(0, 20).Select(i =>
             {
                 var transaction = TransactionHelper.GetPublicTransaction(
-                    (uint)i,
+                    (uint) i,
                     receiverPublicKey: i.ToString(),
-                    transactionFees: (ulong)_random.Next(),
+                    transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
                 return transaction;
@@ -210,7 +209,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     (20 + i).GFul(),
                     Bytes.Empty,
                     receiverPublicKey: i.ToString(),
-                    transactionFees: (ulong)_random.Next(),
+                    transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
                 return transaction;
@@ -259,11 +258,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             {
                 var transaction = TransactionHelper.GetContractTransaction(ByteString.Empty,
                     UInt256.Zero,
-                    i > 10 ? (uint)DeltaGasLimit / 8U - 10000U : 70000U, // to test scenarios when both single transaction is ignored and all remaining
+                    i > 10 ? (uint) DeltaGasLimit / 8U - 10000U : 70000U, // to test scenarios when both single transaction is ignored and all remaining
                     (20 + i).GFul(),
                     Bytes.Empty,
                     receiverPublicKey: i.ToString(),
-                    transactionFees: (ulong)_random.Next(),
+                    transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
                 return transaction;
