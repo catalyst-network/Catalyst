@@ -21,16 +21,39 @@
 
 #endregion
 
+using Catalyst.Protocol.Cryptography;
+using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
+using Serilog;
+using System.Reflection;
 
 namespace Catalyst.Protocol.Transaction
 {
     public partial class PublicEntry
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         public bool IsValid()
         {
-            // data can be empty
-            return GasLimit >= 21000; // make it a constant - MIN_GAS_LIMIT
+            // make it a constant - MIN_GAS_LIMIT
+            if (GasLimit < 21000)
+            {
+                return false;
+            }
+            return true;
+
+            var isTimestampValid = Timestamp != default(Timestamp) && Timestamp != new Timestamp();
+            if (!isTimestampValid)
+            {
+                Logger.Debug("{timestamp} cannot be null or 0.");
+                return false;
+            }
+
+            var hasValidSignature = Signature.IsValid(IsConfidentialTransaction
+                ? SignatureType.TransactionConfidential
+                : SignatureType.TransactionPublic);
+
+            return hasValidSignature && HasValidEntries();
         }
 
         // add to proto
@@ -60,9 +83,37 @@ namespace Catalyst.Protocol.Transaction
 
         public byte[] TargetContract { get; set; }
 
-        public byte[] GetId()
+        public byte[] Id { set; get; }
+
+        public void BeforeConstruction()
         {
-            return new byte[10];
+            IsContractDeployment = IsValidDeploymentEntry;
+            IsContractCall = IsValidCallEntry;
+            IsPublicTransaction = IsValid();
+        }
+
+        public void AfterConstruction()
+        {
+            IsContractDeployment = IsValidDeploymentEntry;
+            IsContractCall = IsValidCallEntry;
+            IsPublicTransaction = IsValid();
+        }
+
+        public bool IsContractDeployment { get; private set; }
+        public bool IsContractCall { get; private set; }
+        public bool IsPublicTransaction { get; private set; }
+        public bool IsConfidentialTransaction { get; private set; }
+
+        public bool HasValidEntries()
+        {
+            var hasSingleType = IsContractDeployment ^ IsContractCall ^ IsConfidentialTransaction;
+            if (hasSingleType)
+            {
+                return true;
+            }
+
+            Logger.Debug("{instance} can only be of a single type", nameof(PublicEntry));
+            return false;
         }
     }
 }

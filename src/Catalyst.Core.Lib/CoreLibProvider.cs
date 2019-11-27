@@ -106,8 +106,8 @@ namespace Catalyst.Core.Lib
             //  Register P2P.Messaging.Broadcast
             builder.RegisterType<BroadcastManager>().As<IBroadcastManager>().SingleInstance();
             
-            //  Register P2P.Repository
-            builder.RegisterType<P2P.Service.PeerService>().As<P2P.Service.IPeerService>().SingleInstance();
+            //  Register P2P.Service
+            builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
             
             //  Register P2P.ReputationSystem
             builder.RegisterType<ReputationManager>().As<IReputationManager>().SingleInstance();

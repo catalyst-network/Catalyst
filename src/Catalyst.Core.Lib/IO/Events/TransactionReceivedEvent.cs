@@ -31,6 +31,7 @@ using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
+using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Events
@@ -55,12 +56,15 @@ namespace Catalyst.Core.Lib.IO.Events
             _broadcastManager = broadcastManager;
             _mempool = mempool;
             _validator = validator;
+            _hashProvider = hashProvider;
             _logger = logger;
         }
 
         public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
         {
             var transaction = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
+            transaction.PublicEntry.Id = _hashProvider.ComputeMultiHash(transaction.PublicEntry.ToByteArray()).ToArray();
+
             var transactionValid = _validator.ValidateTransaction(transaction);
             if (!transactionValid)
             {
@@ -68,31 +72,18 @@ namespace Catalyst.Core.Lib.IO.Events
             }
 
             var transactionBroadcastDao = transaction.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-            //var mempoolItems = MempoolHelper.GetMempoolItems(transaction, _hashProvider);
+            var mempoolItem = transactionBroadcastDao.PublicEntry;
 
-            //var transactionSignature = transactionBroadcastDao.Signature;
-            //_logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
+            _logger.Verbose("Adding transaction {id} to mempool", mempoolItem.Id);
 
             // https://github.com/catalyst-network/Catalyst.Node/issues/910 - should we fail or succeed if we already have the transaction in the ledger?
+            if (_mempool.Service.TryReadItem(mempoolItem.Id))
+            {
+                _logger.Information("Transaction {id} already exists in mempool", mempoolItem.Id);
+                return ResponseCode.Error;
+            }
 
-            //foreach(var mempoolItem in mempoolItems)
-            //{
-                //if (_mempool.Service.TryReadItem(mempoolItem.Id))
-                //{
-                //    _logger.Information("Transaction {id} already exists in mempool", mempoolItem.Id);
-                //    return ResponseCode.Error;
-                //}
-
-                //_mempool.Service.CreateItem(mempoolItem);
-            //}
-
-            //if (_mempool.Repository.TryReadItem(transactionSignature.RawBytes))
-            //{
-            //    _logger.Information("Transaction {signature} already exists in mempool", transactionSignature);
-            //    return ResponseCode.Error;
-            //}
-
-            //_mempool.Repository.CreateItem(transactionBroadcastDao);
+            _mempool.Service.CreateItem(mempoolItem);
 
             _logger.Information("Broadcasting {signature} transaction", protocolMessage);
             _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);

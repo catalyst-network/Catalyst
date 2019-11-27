@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.Hashing;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO

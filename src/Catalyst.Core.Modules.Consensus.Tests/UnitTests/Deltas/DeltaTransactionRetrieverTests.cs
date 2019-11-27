@@ -24,11 +24,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Abstractions.Mempool;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using NSubstitute;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
@@ -36,7 +40,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaTransactionRetrieverTests
     {
-        private readonly IList<PublicEntryDao> _transactions;
+        private readonly IList<PublicEntry> _transactions;
         private readonly DeltaTransactionRetriever _transactionRetriever;
 
         public DeltaTransactionRetrieverTests()
@@ -46,20 +50,17 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var random = new Random();
 
-            //todo
-            //var mempool = Substitute.For<IMempool<MempoolItem>>();
-            //_transactions = Enumerable.Range(0, 20).Select(i =>
-            //    TransactionHelper.GetPublicTransaction(
-            //        transactionFees: (ulong) random.Next(),
-            //        timestamp: random.Next(),
-            //        signature: i.ToString())
-            //).SelectMany(x=> MempoolHelper.GetMempoolItems(x, hashProvider)).ToList();
+            var mempool = Substitute.For<IMempool<PublicEntryDao>>();
+            _transactions = Enumerable.Range(0, 20).Select(i =>
+                TransactionHelper.GetPublicTransaction(
+                    transactionFees: (ulong)random.Next(),
+                    timestamp: random.Next(),
+                    signature: i.ToString())
+            ).Select(x => x.PublicEntry).ToList();
 
-            //mempool.Service.GetAll().Returns(_transactions);
-            ////   .Select(x => x.ToDao<TransactionBroadcast, MempoolItem>(mapperProvider)));
+            mempool.Service.GetAll().Returns(_transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(mapperProvider)));
 
-            //_transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider,
-            //    TransactionComparerByFeeTimestampAndHash.Default);
+            _transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider, TransactionComparerByFeeTimestampAndHash.Default);
         }
 
         [Fact]
@@ -88,39 +89,39 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Should().Throw<ArgumentException>();
         }
 
-        [Fact]
-        public void GetMempoolTransactionsByPriority_should_return_transactions_in_decreasing_priority_order()
-        {
-            //var maxCount = _transactions.Count / 2;
-            //var expectedTransactions = _transactions
-            //   .OrderByDescending(t => t, _transactionRetriever.TransactionComparer)
-            //   .Take(maxCount).ToList();
+        //[Fact]
+        //public void GetMempoolTransactionsByPriority_should_return_transactions_in_decreasing_priority_order()
+        //{
+        //    var maxCount = _transactions.Count / 2;
+        //    var expectedTransactions = _transactions
+        //       .OrderByDescending(t => t, _transactionRetriever.TransactionComparer)
+        //       .Take(maxCount).ToList();
 
-            //var retrievedTransactions = _transactionRetriever
-            //   .GetMempoolTransactionsByPriority(maxCount);
+        //    var retrievedTransactions = _transactionRetriever
+        //       .GetMempoolTransactionsByPriority(maxCount);
 
-            //var excludedTransactionCount = _transactions.Count - maxCount;
+        //    var excludedTransactionCount = _transactions.Count - maxCount;
 
-            //var unexpectedTransactions = _transactions.OrderBy(t => t, _transactionRetriever.TransactionComparer)
-            //   .Take(excludedTransactionCount).ToList();
+        //    var unexpectedTransactions = _transactions.OrderBy(t => t, _transactionRetriever.TransactionComparer)
+        //       .Take(excludedTransactionCount).ToList();
 
-            //unexpectedTransactions
-            //   .ForEach(t => retrievedTransactions.Any(r => t.Signature == r.Signature).Should()
-            //       .BeFalse("No unexpected transactions should have been retrieved"));
+        //    unexpectedTransactions
+        //       .ForEach(t => retrievedTransactions.Any(r => t.Signature == r.Signature).Should()
+        //           .BeFalse("No unexpected transactions should have been retrieved"));
 
-            //for (var i = 0; i < maxCount; i++)
-            //{
-            //    retrievedTransactions[i].IsPublicTransaction.Should().Be(expectedTransactions[i].IsPublicTransaction);
-            //    if (i == 0)
-            //    {
-            //        continue;
-            //    }
+        //    for (var i = 0; i < maxCount; i++)
+        //    {
+        //        retrievedTransactions[i].IsPublicTransaction.Should().Be(expectedTransactions[i].IsPublicTransaction);
+        //        if (i == 0)
+        //        {
+        //            continue;
+        //        }
 
-            //    // just a sanity check to make sure that the order is not opposite of what was intended in
-            //    // TransactionComparerByFeeTimestampAndHash
-            //    retrievedTransactions[i - 1].SummedEntryFees().Should()
-            //       .BeGreaterOrEqualTo(retrievedTransactions[i].SummedEntryFees());
-            //}
-        }
+        //        // just a sanity check to make sure that the order is not opposite of what was intended in
+        //        // TransactionComparerByFeeTimestampAndHash
+        //        retrievedTransactions[i - 1].SummedEntryFees().Should()
+        //           .BeGreaterOrEqualTo(retrievedTransactions[i].SummedEntryFees());
+        //    }
+        //}
     }
 }

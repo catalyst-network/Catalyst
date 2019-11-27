@@ -31,6 +31,7 @@ using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -69,7 +70,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         {
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>())
                .Returns(false);
-            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()
+            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast() { PublicEntry = new PublicEntry() }
                    .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
                .Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);

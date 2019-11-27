@@ -25,7 +25,6 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Transaction;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus
 {
@@ -61,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus
                 return timeStampComparison;
             }
 
-            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.GetId(), y.GetId());
+            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.Id, y.Id);
         }
 
         public static ITransactionComparer Default { get; } = new TransactionComparerByFeeTimestampAndHash();

@@ -25,13 +25,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;
@@ -44,18 +45,21 @@ using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using TheDotNetLeague.MultiFormats.MultiBase;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 {
     public sealed class MempoolTests
     {
+        private readonly IHashProvider _hashProvider;
         private readonly Mempool _memPool;
         private readonly PublicEntryDao _mempoolItem;
         private readonly TestMapperProvider _mapperProvider;
 
         public MempoolTests()
         {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _memPool = new Mempool(Substitute.For<IMempoolService<PublicEntryDao>>());
             _mapperProvider = new TestMapperProvider();
             _mempoolItem = TransactionHelper
@@ -84,7 +88,6 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             mempoolDocument.Amount.ToUInt256().Should().Be(expectedTransaction.Amount.ToUInt256());
             mempoolDocument.Signature.RawBytes.SequenceEqual(expectedTransaction.Signature.RawBytes).Should().BeTrue();
             mempoolDocument.Timestamp.Should().Be(expectedTransaction.Timestamp);
-            //mempoolDocument.PublicEntry.SummedEntryFees().Should().Be(expectedTransaction.SummedEntryFees());
         }
 
         [Fact]
@@ -96,9 +99,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
             for (var i = 0; i < numTx; i++)
             {
-                var id = Encoding.UTF8.GetBytes($"key{i}").ToBase32();
-                //var mempoolDocument = _memPool.Service.ReadItem(id).ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
-                //mempoolDocument.PublicEntries.Single().Amount.ToUInt256().Should().Be((UInt256)i);
+                var mempoolDocument = _memPool.Service.ReadItem(documents[i].Id).ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
+                mempoolDocument.Amount.ToUInt256().Should().Be((UInt256)i);
             }
         }
 

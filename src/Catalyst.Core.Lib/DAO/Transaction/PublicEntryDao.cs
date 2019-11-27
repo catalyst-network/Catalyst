@@ -30,25 +30,17 @@ using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.DAO.Transaction
 {
     public class PublicEntryDao : DaoBase
     {
-        private SignatureDao _signature;
-        public SignatureDao Signature
-        {
-            get => _signature;
-            set
-            {
-                _signature = value;
-                Id = value.RawBytes;
-            }
-        }
-
+        public SignatureDao Signature { set; get; }
         public BaseEntryDao Base { get; set; }
         public string Data { get; set; }
         public string Amount { get; set; }
+        public DateTime TimeStamp { get; set; }
 
         [Column]
 
@@ -60,18 +52,20 @@ namespace Catalyst.Core.Lib.DAO.Transaction
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            {
-                cfg.CreateMap<PublicEntry, PublicEntryDao>()
-                   .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
-                   .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToBase32Converter, ByteString>());
+            cfg.AllowNullDestinationValues = true;
 
-                cfg.CreateMap<PublicEntryDao, PublicEntry>()
-                   .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
-                   .ForMember(e => e.Data, opt => opt.ConvertUsing<Base32ToByteStringFormatter, string>());
+            cfg.CreateMap<PublicEntry, PublicEntryDao>()
+               .ForMember(d => d.Id, opt => opt.MapFrom(src => src.Id.ToBase32()))
+               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
+               .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToBase32Converter, ByteString>());
 
-                cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
-                cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
-            }
+            cfg.CreateMap<PublicEntryDao, PublicEntry>()
+               .ForMember(d => d.Id, opt => opt.MapFrom(src => src.Id.FromBase32()))
+               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
+               .ForMember(e => e.Data, opt => opt.ConvertUsing<Base32ToByteStringFormatter, string>());
+
+            cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
+            cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
         }
     }
 }

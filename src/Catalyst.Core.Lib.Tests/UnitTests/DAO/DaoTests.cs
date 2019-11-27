@@ -48,6 +48,7 @@ using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
@@ -78,7 +79,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new ConfidentialEntryMapperInitialiser(),
                 new TransactionBroadcastMapperInitialiser(),
                 new SignatureMapperInitialiser(),
-                new BaseEntryMapperInitialiser(), 
+                new BaseEntryMapperInitialiser(),
             };
 
             _mapperProvider = new MapperProvider(_initialisers);
@@ -86,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
         // ReSharper disable once UnusedMember.Local
         private TDao GetMapper<TDao>() where TDao : IMapperInitializer => _initialisers.OfType<TDao>().First();
-        
+
         [Fact]
         public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
         {
@@ -104,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             messageDao.TypeUrl.Should().Be("cleanurl");
             messageDao.CorrelationId.Should().Be(newGuid.ToString());
-            messageDao.PeerId.Port.Should().Be((ushort) peerId.Port);
+            messageDao.PeerId.Port.Should().Be((ushort)peerId.Port);
             messageDao.PeerId.Ip.Should().Be(new IPAddress(peerId.Ip.ToByteArray()).MapToIPv6().ToString());
 
             var reconverted = messageDao.ToProtoBuff<ProtocolMessageDao, ProtocolMessage>(_mapperProvider);
@@ -164,7 +165,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         [Fact]
         public void BaseEntryDao_And_BaseEntry_Should_Be_Convertible()
         {
-            var original = new BaseEntry    
+            var original = new BaseEntry
             {
                 ReceiverPublicKey = "hello".ToUtf8ByteString(),
                 SenderPublicKey = "bye bye".ToUtf8ByteString(),
@@ -269,7 +270,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 {
                     SenderPublicKey = pubKeyBytes.ToByteString(),
                     TransactionFees = UInt256.Zero.ToUint256ByteString()
-                }
+                },
+                Signature = new Signature()
+                {
+                    RawBytes = new byte[] { 0x0 }.ToByteString(),
+                    SigningContext = new SigningContext() { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
+                },
+                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
             };
 
             var transactionEntryDao = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);

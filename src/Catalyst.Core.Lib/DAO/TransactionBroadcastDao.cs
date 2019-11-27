@@ -24,10 +24,8 @@
 using System;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Protocol.Wire;
-using Google.Protobuf.WellKnownTypes;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Catalyst.Core.Lib.DAO
@@ -39,7 +37,6 @@ namespace Catalyst.Core.Lib.DAO
     [BsonIgnoreExtraElements]
     public class TransactionBroadcastDao : DaoBase
     {
-        public DateTime TimeStamp { get; set; }
         public PublicEntryDao PublicEntry { get; set; }
     }
 
@@ -52,9 +49,6 @@ namespace Catalyst.Core.Lib.DAO
 
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
                .ForMember(e => e.PublicEntry, opt => opt.UseDestinationValue());
-
-            cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
-            cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
         }
     }
 }
