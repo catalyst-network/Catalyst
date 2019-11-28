@@ -42,7 +42,6 @@ namespace Catalyst.Core.Modules.KeySigner
         private readonly ICryptoContext _cryptoContext;
         private readonly IKeyRegistry _keyRegistry;
         private readonly KeyRegistryTypes _defaultKey = KeyRegistryTypes.DefaultKey;
-        static readonly ArrayPool<byte> Pool = ArrayPool<byte>.Shared;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
@@ -104,7 +103,7 @@ namespace Catalyst.Core.Modules.KeySigner
         /// <inheritdoc/>
         public bool Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext)
         {
-            var pooled = signingContext.SerializeToPooledBytes();
+            using var pooled = signingContext.SerializeToPooledBytes();
 
             return _cryptoContext.Verify(signature, data, pooled.Span);
         }
