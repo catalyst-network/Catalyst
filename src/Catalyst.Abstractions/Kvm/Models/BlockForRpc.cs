@@ -28,7 +28,9 @@ using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Encoding;
 using Nethermind.Core.Extensions;
+using Nethermind.Core.Json;
 using Nethermind.Dirichlet.Numerics;
+using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {
@@ -36,6 +38,10 @@ namespace Catalyst.Abstractions.Kvm.Models
     {
         private readonly BlockDecoder _blockDecoder = new BlockDecoder();
 
+        public BlockForRpc()
+        {
+        }
+        
         public BlockForRpc(Block block, bool includeFullTransactionData)
         {
             var isAuRaBlock = block.Header.AuRaSignature != null;
@@ -75,28 +81,72 @@ namespace Catalyst.Abstractions.Kvm.Models
             Uncles = block.Ommers.Select(o => o.Hash);
         }
 
+        [JsonConverter(typeof(AddressConverter))]
         public Address Author { get; set; }
+        
+        [JsonConverter(typeof(UInt256Converter))]
         public UInt256 Difficulty { get; set; }
+        
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] ExtraData { get; set; }
+        
+        [JsonConverter(typeof(LongConverter))]
         public long GasLimit { get; set; }
+        
+        [JsonConverter(typeof(LongConverter))]
         public long GasUsed { get; set; }
+        
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak Hash { get; set; }
+        
+        [JsonConverter(typeof(BloomConverter))]
         public Bloom LogsBloom { get; set; }
+        
+        [JsonConverter(typeof(AddressConverter))]
         public Address Miner { get; set; }
+        
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak MixHash { get; set; }
+        
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Nonce { get; set; }
+        
+        [JsonConverter(typeof(LongConverter))]
         public long Number { get; set; }
+        
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak ParentHash { get; set; }
+        
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak ReceiptsRoot { get; set; }
+        
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak Sha3Uncles { get; set; }
+        
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Signature { get; set; }
+        
+        [JsonConverter(typeof(LongConverter))]
         public long Size { get; set; }
+        
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak StateRoot { get; set; }
+        
+        [JsonConverter(typeof(NullableLongConverter))]
         public long? Step { get; set; }
+        
+        [JsonConverter(typeof(UInt256Converter))]
         public UInt256 TotalDifficulty { get; set; }
+        
+        [JsonConverter(typeof(UInt256Converter))]
         public UInt256 Timestamp { get; set; }
+        
         public IEnumerable<object> Transactions { get; set; }
+        
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak TransactionsRoot { get; set; }
+        
+        [JsonProperty(ItemConverterType = typeof(KeccakConverter))]
         public IEnumerable<Keccak> Uncles { get; set; }
     }
 }
