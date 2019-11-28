@@ -31,6 +31,7 @@ using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
@@ -105,7 +106,10 @@ namespace Catalyst.Core.Modules.Web3
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<Web3HandlerResolver>().As<IWeb3HandlerResolver>().SingleInstance();
-            builder.RegisterType<EthereumJsonSerializer>().As<IJsonSerializer>().SingleInstance();
+            
+            EthereumJsonSerializer serializer = new EthereumJsonSerializer();
+            serializer.RegisterConverter(new BlockParameterConverter());
+            builder.RegisterInstance(serializer).As<IJsonSerializer>().SingleInstance();
             
             //Mempool repo
             builder.RegisterInstance(_container.Resolve<IRepository<TransactionBroadcastDao, string>>())

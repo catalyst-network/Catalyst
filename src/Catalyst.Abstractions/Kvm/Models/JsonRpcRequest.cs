@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {
+    
+    
     public class IdConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

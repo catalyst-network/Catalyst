@@ -28,11 +28,11 @@ namespace Catalyst.Abstractions.Kvm.Models
 {
     public sealed class BlockParameter
     {
-        private static readonly BlockParameter Earliest = new BlockParameter(BlockParameterType.Earliest);
+        public static readonly BlockParameter Earliest = new BlockParameter(BlockParameterType.Earliest);
 
-        private static readonly BlockParameter Pending = new BlockParameter(BlockParameterType.Pending);
+        public static readonly BlockParameter Pending = new BlockParameter(BlockParameterType.Pending);
 
-        private static readonly BlockParameter Latest = new BlockParameter(BlockParameterType.Latest);
+        public static readonly BlockParameter Latest = new BlockParameter(BlockParameterType.Latest);
 
         public BlockParameterType Type { get; set; }
         public long? BlockNumber { get; set; }
@@ -43,6 +43,12 @@ namespace Catalyst.Abstractions.Kvm.Models
         {
             Type = type;
             BlockNumber = null;
+        }
+        
+        public BlockParameter(long number)
+        {
+            Type = BlockParameterType.BlockNumber;
+            BlockNumber = number;
         }
 
         public void FromJson(string jsonValue)

@@ -21,8 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.Kvm;
-using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
@@ -32,7 +30,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override long Handle(IWeb3EthApi api)
         {
-            throw new System.NotImplementedException();
+            return 6022;
         }
     }
 }
