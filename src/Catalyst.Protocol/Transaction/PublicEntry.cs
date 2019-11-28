@@ -49,7 +49,6 @@ namespace Catalyst.Protocol.Transaction
             }
 
             var hasValidSignature = Signature.IsValid(SignatureType.TransactionPublic);
-
             return hasValidSignature;
         }
 
@@ -80,34 +79,8 @@ namespace Catalyst.Protocol.Transaction
 
         public byte[] TargetContract { get; set; }
 
-        //public void BeforeConstruction()
-        //{
-        //    IsContractDeployment = IsValidDeploymentEntry;
-        //    IsContractCall = IsValidCallEntry;
-        //    IsPublicTransaction = IsValid();
-        //}
-
-        //public void AfterConstruction()
-        //{
-        //    IsContractDeployment = IsValidDeploymentEntry;
-        //    IsContractCall = IsValidCallEntry;
-        //    IsPublicTransaction = IsValid();
-        //}
-
         public bool IsContractDeployment => IsValidDeploymentEntry;
         public bool IsContractCall => IsValidCallEntry;
         public bool IsPublicTransaction => IsValid();
-
-        public bool HasValidEntries()
-        {
-            var hasSingleType = IsContractDeployment ^ IsContractCall ^ IsPublicTransaction;
-            if (hasSingleType)
-            {
-                return true;
-            }
-
-            Logger.Debug("{instance} can only be of a single type", nameof(PublicEntry));
-            return false;
-        }
     }
 }
