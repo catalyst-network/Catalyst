@@ -206,7 +206,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             for (var i = 0; i < allTransactionsCount; i++)
             {
                 var currentItem = allTransactions[i];
-                if (!IsTransactionOfAcceptedType(currentItem) || !currentItem.HasValidEntries())
+                if (!IsTransactionOfAcceptedType(currentItem))
                 {
                     rejectedTransactions.Add(currentItem);
                     continue;

@@ -40,7 +40,6 @@ namespace Catalyst.Protocol.Transaction
             {
                 return false;
             }
-            return true;
 
             var isTimestampValid = Timestamp != default(Timestamp) && Timestamp != new Timestamp();
             if (!isTimestampValid)
@@ -49,11 +48,9 @@ namespace Catalyst.Protocol.Transaction
                 return false;
             }
 
-            var hasValidSignature = Signature.IsValid(IsConfidentialTransaction
-                ? SignatureType.TransactionConfidential
-                : SignatureType.TransactionPublic);
+            var hasValidSignature = Signature.IsValid(SignatureType.TransactionPublic);
 
-            return hasValidSignature && HasValidEntries();
+            return hasValidSignature;
         }
 
         // add to proto
@@ -83,28 +80,27 @@ namespace Catalyst.Protocol.Transaction
 
         public byte[] TargetContract { get; set; }
 
-        public void BeforeConstruction()
-        {
-            IsContractDeployment = IsValidDeploymentEntry;
-            IsContractCall = IsValidCallEntry;
-            IsPublicTransaction = IsValid();
-        }
+        //public void BeforeConstruction()
+        //{
+        //    IsContractDeployment = IsValidDeploymentEntry;
+        //    IsContractCall = IsValidCallEntry;
+        //    IsPublicTransaction = IsValid();
+        //}
 
-        public void AfterConstruction()
-        {
-            IsContractDeployment = IsValidDeploymentEntry;
-            IsContractCall = IsValidCallEntry;
-            IsPublicTransaction = IsValid();
-        }
+        //public void AfterConstruction()
+        //{
+        //    IsContractDeployment = IsValidDeploymentEntry;
+        //    IsContractCall = IsValidCallEntry;
+        //    IsPublicTransaction = IsValid();
+        //}
 
-        public bool IsContractDeployment { get; private set; }
-        public bool IsContractCall { get; private set; }
-        public bool IsPublicTransaction { get; private set; }
-        public bool IsConfidentialTransaction { get; private set; }
+        public bool IsContractDeployment => IsValidDeploymentEntry;
+        public bool IsContractCall => IsValidCallEntry;
+        public bool IsPublicTransaction => IsValid();
 
         public bool HasValidEntries()
         {
-            var hasSingleType = IsContractDeployment ^ IsContractCall ^ IsConfidentialTransaction;
+            var hasSingleType = IsContractDeployment ^ IsContractCall ^ IsPublicTransaction;
             if (hasSingleType)
             {
                 return true;

@@ -63,13 +63,12 @@ namespace Catalyst.Simulator.Helpers
                         TransactionFees = ((UInt256)fee).ToUint256ByteString()
                     },
                     Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
-                }
+                }.Sign(cryptoWrapper, privateKey, DevNetPublicTransactionContext)
             };
 
-            var signedTransaction = transaction.Sign(cryptoWrapper, privateKey, DevNetPublicTransactionContext);
             var broadcastRawTransactionRequest = new BroadcastRawTransactionRequest
             {
-                Transaction = signedTransaction
+                Transaction = transaction
             };
 
             return broadcastRawTransactionRequest;

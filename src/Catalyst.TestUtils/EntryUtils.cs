@@ -35,7 +35,7 @@ namespace Catalyst.TestUtils
 {
     public static class EntryUtils
     {
-        public static PublicEntry PrepareContractEntry(IPublicKey recipient, IPublicKey sender, UInt256 amount, string dataHex = "0x", ulong nonce = 0)
+        public static PublicEntry PrepareContractEntry(IPublicKey recipient, IPublicKey sender, UInt256 amount,  string dataHex = "0x", ulong nonce = 0)
         {
             return new PublicEntry
             {
@@ -48,7 +48,8 @@ namespace Catalyst.TestUtils
                 Amount = amount.ToUint256ByteString(),
                 Data = ByteString.CopyFrom(Bytes.FromHexString(dataHex)),
                 GasLimit = 21000,
-                GasPrice = 0
+                GasPrice = 0,
+                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
             };
         }
         
@@ -86,7 +87,8 @@ namespace Catalyst.TestUtils
                     SenderPublicKey = ByteString.CopyFrom(sender.Bytes),
                 },
                 Amount = amount.ToUint256ByteString(),
-                GasLimit = 21000
+                GasLimit = 21000,
+                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
             };
         }
     }
