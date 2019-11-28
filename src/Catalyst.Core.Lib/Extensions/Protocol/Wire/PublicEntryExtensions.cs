@@ -25,56 +25,21 @@ using System.Reflection;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Transaction;
-using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
 {
-    public static class TransactionBroadcastExtensions
+    public static class PublicEntryExtensions
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
-        public static TransactionBroadcast Sign(this TransactionBroadcast transaction,
-            ICryptoContext cryptoContext,
-            IPrivateKey privateKey,
-            SigningContext context)
-        {
-            var clone = transaction.Clone();
-
-            if (transaction.PublicEntry.Signature?.RawBytes.Length == cryptoContext.SignatureLength)
-            {
-                Logger.Debug("The transaction was already signed, returning a clone.");
-                return clone;
-            }
-
-            clone.PublicEntry.Signature = null;
-            var signatureBytes = cryptoContext.Sign(privateKey, clone.ToByteArray(),
-                context.ToByteArray()).SignatureBytes;
-
-            clone.PublicEntry.Signature = new Signature
-            {
-                RawBytes = signatureBytes.ToByteString(),
-                SigningContext = context
-            };
-
-            return clone;
-        }
 
         public static Signature GenerateSignature(this PublicEntry publicEntry,
             ICryptoContext cryptoContext,
             IPrivateKey privateKey,
             SigningContext context)
         {
-            var clone = publicEntry.Clone();
-            clone.Signature = null;
-            var signatureBytes = cryptoContext.Sign(privateKey, clone.ToByteArray(),
-                context.ToByteArray()).SignatureBytes;
-            return new Signature
-            {
-                RawBytes = signatureBytes.ToByteString(),
-                SigningContext = context
-            };
+            return GeneratePublicEntrySignature(publicEntry.Clone(), cryptoContext, privateKey, context);
         }
 
         public static PublicEntry Sign(this PublicEntry publicEntry,
@@ -87,20 +52,26 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
             if (publicEntry.Signature?.RawBytes.Length == cryptoContext.SignatureLength)
             {
                 Logger.Debug("The transaction was already signed, returning a clone.");
-                return publicEntry;
+                return clone;
             }
 
-            clone.Signature = null;
-            var signatureBytes = cryptoContext.Sign(privateKey, clone.ToByteArray(),
-                context.ToByteArray()).SignatureBytes;
+            clone.Signature = GeneratePublicEntrySignature(clone, cryptoContext, privateKey, context);
+            return clone;
+        }
 
-            clone.Signature = new Signature
+        private static Signature GeneratePublicEntrySignature(PublicEntry publicEntry,
+            ICryptoContext cryptoContext,
+            IPrivateKey privateKey,
+            SigningContext context)
+        {
+            publicEntry.Signature = null;
+            var signatureBytes = cryptoContext.Sign(privateKey, publicEntry.ToByteArray(),
+                context.ToByteArray()).SignatureBytes;
+            return new Signature
             {
                 RawBytes = signatureBytes.ToByteString(),
                 SigningContext = context
             };
-
-            return clone;
         }
     }
 }
