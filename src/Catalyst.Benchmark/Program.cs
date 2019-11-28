@@ -21,22 +21,16 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.IO;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using System;
+using BenchmarkDotNet.Running;
 
-namespace Catalyst.Abstractions.Hashing
+namespace Catalyst.Benchmark
 {
-    public interface IHashProvider
+    public static class Program
     {
-        HashingAlgorithm HashingAlgorithm { set; get; }
-
-        MultiHash ComputeUtf8MultiHash(string data);
-        MultiHash ComputeMultiHash(Stream data);
-        MultiHash ComputeMultiHash(byte[] data);
-        MultiHash ComputeMultiHash(IEnumerable<byte> content);
-        MultiHash Cast(byte[] data);
-        bool IsValidHash(byte[] data);
-        MultiHash ComputeMultiHash(byte[] data, int offset, int count);
+        public static void Main(string[] args)
+        {
+            BenchmarkRunner.Run(typeof(Program).Assembly);
+        }
     }
 }

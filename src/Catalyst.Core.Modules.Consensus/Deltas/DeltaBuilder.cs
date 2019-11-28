@@ -51,7 +51,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private const ulong DeltaGasLimit = 8_000_000;
         private const ulong MinTransactionEntryGasLimit = 21_000;
-        
+
         private readonly IDeltaTransactionRetriever _transactionRetriever;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
@@ -127,7 +127,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var candidate = new CandidateDeltaBroadcast
             {
                 // h∆j
-                Hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate))).ToByteString(),
+                Hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate)))
+                   .ToByteString(),
 
                 // Idj
                 ProducerId = _producerUniqueId,
@@ -141,7 +142,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
                 CoinbaseEntries = {coinbaseEntry},
-                PublicEntries = { includedTransactions },
+                PublicEntries = {includedTransactions},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -152,7 +153,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             return candidate;
         }
 
-        private IEnumerable<byte> GetSaltFromPreviousDelta(Cid previousDeltaHash)
+        private byte[] GetSaltFromPreviousDelta(Cid previousDeltaHash)
         {
             var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash.ToArray());
             return BitConverter.GetBytes(isaac.NextInt());
@@ -165,11 +166,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             public byte[] SaltedAndHashedEntry { get; }
 
             public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry,
-                IEnumerable<byte> salt,
+                byte[] salt,
                 IHashProvider hashProvider)
             {
                 RawEntry = rawEntry;
-                SaltedAndHashedEntry = hashProvider.ComputeMultiHash(rawEntry.ToByteArray().Concat(salt)).ToArray();
+                SaltedAndHashedEntry = hashProvider.ComputeMultiHash(rawEntry, salt).ToArray();
             }
         }
 
@@ -178,17 +179,20 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             private readonly int _multiplier;
 
             private AveragePriceComparer(int multiplier) { _multiplier = multiplier; }
-            
+
             public int Compare(PublicEntry x, PublicEntry y)
             {
                 return _multiplier * Comparer<UInt256?>.Default.Compare(x?.GasPrice, y?.GasPrice);
             }
-            
+
             public static AveragePriceComparer InstanceDesc { get; } = new AveragePriceComparer(-1);
             public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
         }
-        
-        private static bool IsTransactionOfAcceptedType(PublicEntry transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
+
+        private static bool IsTransactionOfAcceptedType(PublicEntry transaction)
+        {
+            return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment;
+        }
 
         /// <summary>
         ///     Gets the valid transactions for delta.

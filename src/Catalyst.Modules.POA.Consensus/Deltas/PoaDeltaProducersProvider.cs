@@ -88,10 +88,11 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
 
             var allPeers = PeerService.GetAll().Concat(new[] {_selfAsPeer});
 
+            var previous = previousDeltaHash.ToArray();
+
             var peerIdsInPriorityOrder = allPeers.Select(p =>
                 {
-                    var array = p.PeerId.ToByteArray().Concat(previousDeltaHash.ToArray()).ToArray();
-                    var ranking = _hashProvider.ComputeMultiHash(array).ToArray();
+                    var ranking = _hashProvider.ComputeMultiHash(p.PeerId, previous).ToArray();
                     return new
                     {
                         p.PeerId,

@@ -23,9 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
@@ -33,6 +31,7 @@ using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.Tests.Fakes;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -48,16 +47,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
     {
         private readonly IPeerService _peers;
         private readonly IMemoryCache _cache;
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
         private readonly PeerId _senderPeerId;
         private readonly IPeerSettings _peerSettings;
 
         public BroadcastManagerTests()
         {
             _senderPeerId = PeerIdHelper.GetPeerId("sender");
-            _keySigner = Substitute.For<IKeySigner>();
-            var fakeSignature = Substitute.For<ISignature>();
-            _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(fakeSignature);
+            _keySigner = FakeKeySigner.SignOnly();
             _keySigner.CryptoContext.SignatureLength.Returns(64);
             _peers = new PeerService(new InMemoryRepository<Peer, string>());
             _cache = new MemoryCache(new MemoryCacheOptions());
@@ -74,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         [Fact]
         public async Task Can_Increase_Broadcast_Count_When_Broadcasting()
         {
-            await TestBroadcast(100, 
+            await TestBroadcast(100,
                 PeerIdHelper.GetPeerId("AnotherBroadcaster"),
                 BroadcastManager.MaxGossipPeersPerRound).ConfigureAwait(false);
         }
@@ -113,8 +110,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             IBroadcastManager broadcastMessageHandler = new BroadcastManager(
                 _peers,
                 _peerSettings,
-                _cache, 
-                Substitute.For<IPeerClient>(), 
+                _cache,
+                Substitute.For<IPeerClient>(),
                 _keySigner,
                 Substitute.For<ILogger>());
 
@@ -143,12 +140,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         private async Task<ICorrelationId> BroadcastMessage(PeerId broadcaster)
         {
             var gossipMessageHandler = new
-                BroadcastManager( 
+                BroadcastManager(
                     _peers,
                     _peerSettings,
-                    _cache, 
-                    Substitute.For<IPeerClient>(), 
-                    _keySigner, 
+                    _cache,
+                    Substitute.For<IPeerClient>(),
+                    _keySigner,
                     Substitute.For<ILogger>());
 
             var innerMessage = TransactionHelper.GetPublicTransaction()

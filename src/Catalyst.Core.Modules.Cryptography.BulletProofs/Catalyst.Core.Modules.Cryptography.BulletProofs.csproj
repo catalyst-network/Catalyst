@@ -6,6 +6,7 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Cryptography.BulletProofs.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />

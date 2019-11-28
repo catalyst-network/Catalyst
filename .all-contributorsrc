@@ -95,6 +95,15 @@
         "code",
         "ideas"
       ]
+    },
+    {
+      "login": "Scooletz",
+      "name": "Szymon Kulec",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/519707?v=4",
+      "profile": "http://blog.scooletz.com/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

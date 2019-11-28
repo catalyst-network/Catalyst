@@ -68,7 +68,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
             var signature = new Signature
             {
                 // sign an actual TransactionBroadcast object
-                RawBytes = cryptoContext.Sign(privateKey, validTransactionBroadcast.ToByteArray(), signingContext.ToByteArray())
+                RawBytes = cryptoContext.Sign(privateKey, validTransactionBroadcast.PublicEntry.ToByteArray(), signingContext.ToByteArray())
                    .SignatureBytes.ToByteString(),
                 SigningContext = signingContext
             };

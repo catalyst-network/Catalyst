@@ -186,7 +186,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
-        private static IDeltaTransactionRetriever BuildRetriever(List<PublicEntry> transactions)
+        private static IDeltaTransactionRetriever BuildRetriever(IList<PublicEntry> transactions)
         {
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(transactions);

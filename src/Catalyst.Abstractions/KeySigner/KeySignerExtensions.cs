@@ -21,22 +21,27 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.IO;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Protocol;
+using Catalyst.Protocol.Cryptography;
+using Google.Protobuf;
 
-namespace Catalyst.Abstractions.Hashing
+namespace Catalyst.Abstractions.KeySigner
 {
-    public interface IHashProvider
+    public static class KeySignerExtensions
     {
-        HashingAlgorithm HashingAlgorithm { set; get; }
+        public static ISignature Sign(this IKeySigner crypto, IMessage message, SigningContext context)
+        {
+            using var pooled = message.SerializeToPooledBytes();
 
-        MultiHash ComputeUtf8MultiHash(string data);
-        MultiHash ComputeMultiHash(Stream data);
-        MultiHash ComputeMultiHash(byte[] data);
-        MultiHash ComputeMultiHash(IEnumerable<byte> content);
-        MultiHash Cast(byte[] data);
-        bool IsValidHash(byte[] data);
-        MultiHash ComputeMultiHash(byte[] data, int offset, int count);
+            return crypto.Sign(pooled.Span, context);
+        }
+
+        public static bool Verify(this IKeySigner crypto, ISignature signature, IMessage message, SigningContext context)
+        {
+            using var pooled = message.SerializeToPooledBytes();
+
+            return crypto.Verify(signature, pooled.Span, context);
+        }
     }
 }

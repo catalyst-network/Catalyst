@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
             }
 
             protocolMessage.Signature = null;
-            var signatureBytes = keySigner.Sign(protocolMessage.ToByteArray(),
+            var signatureBytes = keySigner.Sign(protocolMessage,
                 signingContext).SignatureBytes;
             var signature = new Signature
             {

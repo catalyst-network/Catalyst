@@ -34,6 +34,8 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
+using Catalyst.Core.Lib.Tests.Fakes;
+using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Wire;
@@ -44,6 +46,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -75,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
         private readonly TestScheduler _testScheduler;
         private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IBroadcastManager _gossipManager;
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
         private readonly TestPeerServerChannelFactory _factory;
         private readonly PeerId _senderId;
         private readonly ICorrelationId _correlationId;
@@ -86,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _gossipManager = Substitute.For<IBroadcastManager>();
-            _keySigner = Substitute.For<IKeySigner>();
+            _keySigner = FakeKeySigner.VerifyOnly();
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
@@ -103,8 +106,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
             _signature = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
-               .ReturnsForAnyArgs(true);
         }
 
         [Fact]
@@ -141,7 +142,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
 
-                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
+                _keySigner.VerifyCount.Should().Be(1);
 
                 _testScheduler.Start();
 
