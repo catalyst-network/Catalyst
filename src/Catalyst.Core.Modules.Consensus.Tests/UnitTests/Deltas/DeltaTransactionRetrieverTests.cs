@@ -106,13 +106,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Take(excludedTransactionCount).ToList();
 
             unexpectedTransactions
-               .ForEach(t => retrievedTransactions.Any(r => t.Signature == r.Signature).Should()
+               .ForEach(t => retrievedTransactions.Any(r => t.Signature.Equals(r.Signature)).Should()
                    .BeFalse("No unexpected transactions should have been retrieved"));
 
             for (var i = 0; i < maxCount; i++)
             {
                 retrievedTransactions[i].IsPublicTransaction.Should().Be(expectedTransactions[i].IsPublicTransaction);
-                if (i == 0) continue;
+                if (i == 0)
+                {
+                    continue;
+                }
 
                 // just a sanity check to make sure that the order is not opposite of what was intended in
                 // TransactionComparerByFeeTimestampAndHash

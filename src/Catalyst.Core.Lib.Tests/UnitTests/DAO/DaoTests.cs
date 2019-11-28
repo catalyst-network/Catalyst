@@ -85,9 +85,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             _mapperProvider = new MapperProvider(_initialisers);
         }
 
-        // ReSharper disable once UnusedMember.Local
-        private TDao GetMapper<TDao>() where TDao : IMapperInitializer { return _initialisers.OfType<TDao>().First(); }
-
         [Fact]
         public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
         {
@@ -335,7 +332,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void TransactionBroadcastDao_TransactionBroadcast_Should_Be_Convertible()
         {
             var original = TransactionHelper.GetPublicTransaction();
-
             var transactionEntryDao = original.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
             var reconverted =
                 transactionEntryDao.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
