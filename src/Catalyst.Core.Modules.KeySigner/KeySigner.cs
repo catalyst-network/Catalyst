@@ -96,23 +96,17 @@ namespace Catalyst.Core.Modules.KeySigner
         {
             var privateKey = GetPrivateKey(KeyRegistryTypes.DefaultKey);
 
-            var span = Pool.Serialize(signingContext, out var array);
+            using var pooled = signingContext.SerializeToPooledBytes();
 
-            var result = _cryptoContext.Sign(privateKey, data, span);
-            
-            Pool.Return(array);
-            return result;
+            return _cryptoContext.Sign(privateKey, data, pooled.Span);
         }
 
         /// <inheritdoc/>
         public bool Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext)
         {
-            var span = Pool.Serialize(signingContext, out var array);
-            
-            var result = _cryptoContext.Verify(signature, data, span);
-            
-            Pool.Return(array);
-            return result;
+            var pooled = signingContext.SerializeToPooledBytes();
+
+            return _cryptoContext.Verify(signature, data, pooled.Span);
         }
 
         public void ExportKey()

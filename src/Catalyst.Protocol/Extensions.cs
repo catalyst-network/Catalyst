@@ -32,24 +32,46 @@ namespace Catalyst.Protocol
     /// </summary>
     public static class Extensions
     {
+        static readonly ArrayPool<byte> Pool = ArrayPool<byte>.Shared;
+
         /// <summary>
-        /// Serializes a message using the passed array pool.
+        /// Serializes a message using a pooled array.
         /// </summary>
-        /// <param name="pool"></param>
-        /// <param name="message"></param>
-        /// <param name="arrayToReturn"></param>
-        /// <returns></returns>
-        public static ReadOnlySpan<byte> Serialize(this ArrayPool<byte> pool, IMessage message, out byte[] arrayToReturn)
+        /// <param name="message">The message to be serialized.</param>
+        /// <returns>By-ref struct that should be disposed at the end of the usage.</returns>
+        public static PooledSerializedMessage SerializeToPooledBytes(this IMessage message)
         {
             var messageSize = message.CalculateSize();
-            arrayToReturn = pool.Rent(messageSize);
+            var array = Pool.Rent(messageSize);
 
-            using (var output = new CodedOutputStream(arrayToReturn))
+            using (var output = new CodedOutputStream(array))
             {
                 message.WriteTo(output);
             }
 
-            return arrayToReturn.AsSpan(0, messageSize);
+            return new PooledSerializedMessage(array, messageSize);
+        }
+
+        /// <summary>
+        /// The serialized message wrapped in a scope, a disposable-like by-ref struct.
+        /// </summary>
+        public ref struct PooledSerializedMessage
+        {
+            readonly byte[] _array;
+            readonly int _size;
+
+            public PooledSerializedMessage(byte[] array, int size)
+            {
+                _array = array;
+                _size = size;
+            }
+
+            public ReadOnlySpan<byte> Span => _array.AsSpan(0, _size);
+
+            /// <summary>
+            /// Returns the underlying pool to array.
+            /// </summary>
+            public void Dispose() => Pool.Return(_array);
         }
     }
 }

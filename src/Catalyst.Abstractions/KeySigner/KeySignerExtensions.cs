@@ -21,8 +21,6 @@
 
 #endregion
 
-using System;
-using System.Buffers;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Cryptography;
@@ -32,28 +30,18 @@ namespace Catalyst.Abstractions.KeySigner
 {
     public static class KeySignerExtensions
     {
-        static readonly ArrayPool<byte> Pool = ArrayPool<byte>.Shared;
-
         public static ISignature Sign(this IKeySigner crypto, IMessage message, SigningContext context)
         {
-            var span = Pool.Serialize(message, out var array);
+            using var pooled = message.SerializeToPooledBytes();
 
-            var result = crypto.Sign(span, context);
-
-            Pool.Return(array);
-
-            return result;
+            return crypto.Sign(pooled.Span, context);
         }
 
         public static bool Verify(this IKeySigner crypto, ISignature signature, IMessage message, SigningContext context)
         {
-            var span = Pool.Serialize(message, out var array);
-            
-            var result = crypto.Verify(signature, span, context);
+            using var pooled = message.SerializeToPooledBytes();
 
-            Pool.Return(array);
-
-            return result;
+            return crypto.Verify(signature, pooled.Span, context);
         }
     }
 }

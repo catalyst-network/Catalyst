@@ -63,13 +63,13 @@ namespace Catalyst.Core.Lib.Tests.Fakes
 
         public ISignature Sign(ReadOnlySpan<byte> data, SigningContext signingContext)
         {
-            if (_allowSign == false)
+            if (_allowSign)
             {
-                throw new NotImplementedException();
+                SignCount++;
+                return Signature;
             }
 
-            SignCount++;
-            return Signature;
+            throw new NotImplementedException();
         }
 
         public bool Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext)
