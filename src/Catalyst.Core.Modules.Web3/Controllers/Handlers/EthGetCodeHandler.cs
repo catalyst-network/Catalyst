@@ -21,14 +21,19 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Kvm.Models;
+using Catalyst.Abstractions.Ledger;
+using Nethermind.Core;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    [EthWeb3RequestHandler("eth", "getCode")]
+    public class EthGetCodeHandler : EthWeb3RequestHandler<Address, byte[]>
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        protected override byte[] Handle(Address param1, IWeb3EthApi api)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

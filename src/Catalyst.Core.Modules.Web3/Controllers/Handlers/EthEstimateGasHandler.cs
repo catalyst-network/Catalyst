@@ -21,14 +21,18 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Kvm.Models;
+using Catalyst.Abstractions.Ledger;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    [EthWeb3RequestHandler("eth", "estimateGas")]
+    public class EthEstimateGasHandler :EthWeb3RequestHandler<TransactionForRpc, long>
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        protected override long Handle(TransactionForRpc param1, IWeb3EthApi api)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

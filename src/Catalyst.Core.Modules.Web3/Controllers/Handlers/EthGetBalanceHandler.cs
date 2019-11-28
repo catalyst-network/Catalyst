@@ -21,14 +21,23 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using Catalyst.Abstractions.Ledger;
+using Catalyst.Protocol.Deltas;
+using Nethermind.Core;
+using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    [EthWeb3RequestHandler("eth", "getBalance")]
+    public class EthGetBalanceHandler : EthWeb3RequestHandler<Address, UInt256>
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        protected override UInt256 Handle(Address address, IWeb3EthApi api)
+        {
+            // change to appropriate hash
+            Delta delta = api.DeltaResolver.Latest;
+            // Keccak stateRoot = api.StateRootResolver.Resolve(delta.Hash); <-- we need a delta hash
+            // return api.StateReader.GetBalance(stateRoot, address);
+            return new UInt256(1000000);
+        }
     }
 }

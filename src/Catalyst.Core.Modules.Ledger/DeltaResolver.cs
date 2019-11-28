@@ -21,31 +21,21 @@
 
 #endregion
 
-using Catalyst.Abstractions.Repository;
-using Catalyst.Abstractions.Types;
-using Nethermind.Dirichlet.Numerics;
+using Catalyst.Abstractions.Kvm;
+using Catalyst.Protocol.Deltas;
+using Nethermind.Core.Crypto;
 
-namespace Catalyst.Core.Modules.Ledger.Models
+namespace Catalyst.Core.Modules.Ledger
 {
-    /// <summary>
-    /// This class represent a user account of which there can be the following types:
-    /// confidential account, non-confidential account and smart contract account
-    /// </summary>
-    public interface IAccount : IDocument
+    public class DeltaResolver : IDeltaResolver
     {
-        /// <summary>
-        /// The address used to identify the account.
-        /// </summary>
-        string PublicAddress { get; }
+        public Keccak Resolve(int deltaNumber)
+        {
+            throw new System.NotImplementedException();
+        }
 
-        /// <summary>
-        /// Type of the account: public or confidential.
-        /// </summary>
-        AccountTypes AccountType { get; }
-
-        /// <summary>
-        /// The balance of the account.
-        /// </summary>
-        UInt256 Balance { get; set; }
+        public Delta Latest { get; }
+        public Delta Earliest { get; }
+        public Delta Pending { get; }
     }
 }

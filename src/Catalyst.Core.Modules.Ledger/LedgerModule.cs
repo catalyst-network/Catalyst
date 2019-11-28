@@ -22,8 +22,12 @@
 #endregion
 
 using Autofac;
-using Catalyst.Core.Modules.Ledger.Models;
+using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
+using Catalyst.Protocol.Deltas;
+using Nethermind.Store;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 
@@ -39,6 +43,9 @@ namespace Catalyst.Core.Modules.Ledger
 
             builder.RegisterType<LedgerSynchroniser>().As<ILedgerSynchroniser>();
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
+            builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();
+            builder.RegisterType<StateRootResolver>().As<IStateRootResolver>().SingleInstance();
+            builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance();
             builder.RegisterType<Ledger>().As<ILedger>().SingleInstance();
         }  
     }

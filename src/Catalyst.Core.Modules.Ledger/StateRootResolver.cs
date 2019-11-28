@@ -21,14 +21,16 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using Catalyst.Abstractions.Kvm;
+using Nethermind.Core.Crypto;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Core.Modules.Ledger
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    public class StateRootResolver : IStateRootResolver
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        public Keccak Resolve(Keccak deltaHash)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

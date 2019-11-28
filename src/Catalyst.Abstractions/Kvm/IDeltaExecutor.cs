@@ -21,14 +21,15 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using Catalyst.Protocol.Deltas;
+using Nethermind.Evm.Tracing;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Abstractions.Kvm
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    public interface IDeltaExecutor
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        void Execute(Delta delta, ITxTracer txTracer);
+        
+        void CallAndRestore(Delta delta, ITxTracer txTracer);
     }
 }

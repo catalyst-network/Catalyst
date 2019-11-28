@@ -23,12 +23,12 @@
 
 using System.Text;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.Extensions;
+using Google.Protobuf;
 using Nethermind.Dirichlet.Numerics;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
 
-namespace Catalyst.Core.Modules.Ledger.Models
+namespace Catalyst.Abstractions.Ledger.Models
 {
     /// <inheritdoc />
     public sealed class Account : IAccount
@@ -60,7 +60,6 @@ namespace Catalyst.Core.Modules.Ledger.Models
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
         public string DocumentId =>
-            Encoding.UTF8.GetBytes($"{PublicAddress}-{AccountType?.Name}")
-              ?.ToByteString()?.ToBase64();
+            ByteString.CopyFrom(Encoding.UTF8.GetBytes($"{PublicAddress}-{AccountType?.Name}"))?.ToBase64();
     }
 }

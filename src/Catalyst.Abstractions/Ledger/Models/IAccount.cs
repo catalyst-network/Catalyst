@@ -21,14 +21,31 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using Catalyst.Abstractions.Repository;
+using Catalyst.Abstractions.Types;
+using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Abstractions.Ledger.Models
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    /// <summary>
+    /// This class represent a user account of which there can be the following types:
+    /// confidential account, non-confidential account and smart contract account
+    /// </summary>
+    public interface IAccount : IDocument
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        /// <summary>
+        /// The address used to identify the account.
+        /// </summary>
+        string PublicAddress { get; }
+
+        /// <summary>
+        /// Type of the account: public or confidential.
+        /// </summary>
+        AccountTypes AccountType { get; }
+
+        /// <summary>
+        /// The balance of the account.
+        /// </summary>
+        UInt256 Balance { get; set; }
     }
 }

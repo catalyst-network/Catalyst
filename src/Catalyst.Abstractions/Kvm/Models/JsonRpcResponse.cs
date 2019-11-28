@@ -11,9 +11,21 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonProperty(PropertyName = "data")]
         public string Data { get; set; }
     }
-    
+
     public class JsonRpcResponse
     {
+        public JsonRpcResponse()
+        {
+            
+        }
+        
+        public JsonRpcResponse(JsonRpcRequest request, object result)
+        {
+            JsonRpc = request.JsonRpc;
+            Id = request.Id;
+            Result = result;
+        }
+        
         [JsonProperty(PropertyName = "jsonrpc", Order = 1)]
         public string JsonRpc { get; set; }
 

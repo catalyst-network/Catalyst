@@ -23,6 +23,9 @@
 
 using Autofac;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Ledger;
+using Nethermind.Core;
+using Nethermind.Core.Json;
 using Nethermind.Core.Specs;
 using Nethermind.Evm;
 using Nethermind.Logging;
@@ -45,7 +48,8 @@ namespace Catalyst.Core.Modules.Kvm
             
             builder.RegisterInstance(new MemDb()).As<IDb>(); // code db
             builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>(); // state db
-            builder.RegisterType<EthRpcService>().As<IEthRpcService>().SingleInstance();
+            
+            builder.RegisterType<StateReader>().As<IStateReader>(); // state db
         }  
     }
 }

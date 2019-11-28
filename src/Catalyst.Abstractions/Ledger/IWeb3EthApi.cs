@@ -21,14 +21,16 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using Catalyst.Abstractions.Kvm;
+using Nethermind.Store;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Abstractions.Ledger
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    public interface IWeb3EthApi
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        IDeltaExecutor DeltaExecutor { get; }
+        IStateReader StateReader { get; }
+        IDeltaResolver DeltaResolver { get; }
+        IStateRootResolver StateRootResolver { get; }
     }
 }

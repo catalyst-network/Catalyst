@@ -21,10 +21,10 @@
 
 #endregion
 
-using Catalyst.Core.Modules.Ledger.Models;
+using Catalyst.Abstractions.Ledger.Models;
 using LibP2P;
 
-namespace Catalyst.Core.Modules.Ledger
+namespace Catalyst.Abstractions.Ledger
 {
     /// <summary>
     ///     This represents the ledger used to represent and store the state of the Catalyst

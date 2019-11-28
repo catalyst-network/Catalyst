@@ -21,15 +21,20 @@
 
 #endregion
 
-using Catalyst.Protocol.Deltas;
-using Nethermind.Evm.Tracing;
+using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Kvm.Models;
+using Catalyst.Abstractions.Ledger;
+using Nethermind.Core;
 
-namespace Catalyst.Core.Modules.Kvm
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    public interface IDeltaExecutor
+    [EthWeb3RequestHandler("eth", "blockNumber")]
+    public class EthBlockNumberHandler : EthWeb3RequestHandler<long>
     {
-        void Execute(Delta delta, ITxTracer txTracer);
-        
-        void CallAndRestore(Delta delta, ITxTracer txTracer);
+        protected override long Handle(IWeb3EthApi api)
+        {
+            // return api.DeltaResolver.Latest.Number;
+            return 1;
+        }
     }
 }

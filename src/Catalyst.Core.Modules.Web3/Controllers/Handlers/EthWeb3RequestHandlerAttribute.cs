@@ -21,14 +21,20 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
+using System;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    public class EthWeb3RequestHandlerAttribute : Attribute
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        private readonly string _module;
+        private readonly string _method;
+        public string FullMethod => $"{_module}_{_method}";
+
+        public EthWeb3RequestHandlerAttribute(string module, string method)
+        {
+            _module = module;
+            _method = method;
+        }
     }
 }

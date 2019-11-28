@@ -21,14 +21,20 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.Repository;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+using Catalyst.Protocol.Deltas;
+using Nethermind.Core.Crypto;
+
+namespace Catalyst.Abstractions.Kvm
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    public interface IDeltaResolver
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        Keccak Resolve(int deltaNumber);
+
+        Delta Latest { get; }
+
+        Delta Earliest { get; }
+        
+        Delta Pending { get; }
     }
 }
