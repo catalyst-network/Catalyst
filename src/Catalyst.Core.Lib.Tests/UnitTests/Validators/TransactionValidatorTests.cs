@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             var invalidSignature = new Signature();
             var invalidTransactionBroadcast = new TransactionBroadcast
             {
-                PublicEntry = new PublicEntry() { Signature = invalidSignature }
+                PublicEntry = new PublicEntry {Signature = invalidSignature}
             };
 
             var result = transactionValidator.ValidateTransaction(invalidTransactionBroadcast);
@@ -105,7 +105,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
         }
 
         [Fact]
-        public void TransactionValidator_ValidateTransactionSignature_returns_false_for_invalid_transaction_signature_verification()
+        public void
+            TransactionValidator_ValidateTransactionSignature_returns_false_for_invalid_transaction_signature_verification()
         {
             var subbedLogger = Substitute.For<ILogger>();
             var subbedContext = Substitute.For<ICryptoContext>();
@@ -126,7 +127,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
 
             var txSig = new Signature
             {
-                RawBytes = new byte[64].ToByteString(), //random bytes that are not of a signed TransactionBroadcast Object
+                RawBytes = new byte[64]
+                   .ToByteString(), //random bytes that are not of a signed TransactionBroadcast Object
                 SigningContext = new SigningContext
                 {
                     NetworkType = NetworkType.Devnet,
@@ -143,7 +145,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
                 )
                .Returns(false);
 
-            subbedContext.Sign(Arg.Is(privateKey), validTransactionBroadcast.ToByteArray(), txSig.SigningContext.ToByteArray())
+            subbedContext.Sign(Arg.Is(privateKey), validTransactionBroadcast.ToByteArray(),
+                    txSig.SigningContext.ToByteArray())
                .SignatureBytes.Returns(new byte[64]);
 
             var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
@@ -155,4 +158,3 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
         }
     }
 }
-

@@ -36,6 +36,7 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Kvm;
+using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using Catalyst.Protocol.Cryptography;
@@ -54,7 +55,6 @@ using Serilog;
 using SharpRepository.InMemoryRepository;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
-using Account = Catalyst.Core.Modules.Ledger.Models.Account;
 using LedgerService = Catalyst.Core.Modules.Ledger.Ledger;
 
 namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
@@ -104,11 +104,12 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         [Fact]
         public void Save_Account_State_To_Ledger_Repository()
         {
-            _ledger = new LedgerService(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(), _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
+            _ledger = new LedgerService(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
+                _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
-                var account = AccountHelper.GetAccount((UInt256)i * 5);
+                var account = AccountHelper.GetAccount((UInt256) i * 5);
                 _ledger.SaveAccountState(account);
             }
 
@@ -120,14 +121,15 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         {
             var hash1 = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update"));
             var hash2 = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update again"));
-            var updates = new[] { hash1, hash2 };
+            var updates = new[] {hash1, hash2};
 
             _ledgerSynchroniser.CacheDeltasBetween(Arg.Is(_genesisHash), Arg.Is(hash1), default)
-               .ReturnsForAnyArgs(new[] { hash2, hash1, _genesisHash });
+               .ReturnsForAnyArgs(new[] {hash2, hash1, _genesisHash});
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 
-            _ledger = new LedgerService(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(), _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
+            _ledger = new LedgerService(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
+                _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
 
             _testScheduler.Start();
 
@@ -153,28 +155,34 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _mempool.Service.Returns(new MempoolService(new InMemoryRepository<PublicEntryDao, string>()));
 
             var hash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update"));
-            var updates = new[] { hash };
+            var updates = new[] {hash};
 
             _ledgerSynchroniser.CacheDeltasBetween(Arg.Is(_genesisHash), Arg.Is(hash), default)
-               .ReturnsForAnyArgs(new[] { hash, _genesisHash });
+               .ReturnsForAnyArgs(new[] {hash, _genesisHash});
 
             var allPublicEntries = GenerateSamplePublicTransactions(sampleSize * 2).ToList();
 
             //Add all public entries to the mempool
-            allPublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider)).ToList().ForEach(x => _mempool.Service.CreateItem(x));
+            allPublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider)).ToList()
+               .ForEach(x => _mempool.Service.CreateItem(x));
 
             //Only add half of all public entries to the delta
-            var delta = new Delta()
+            var delta = new Delta
             {
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
-                PublicEntries = { allPublicEntries.Take(sampleSize) }
+                PublicEntries = {allPublicEntries.Take(sampleSize)}
             };
 
-            _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Is(hash), out Arg.Any<Delta>()).Returns(x => { x[1] = delta; return true; });
+            _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Is(hash), out Arg.Any<Delta>()).Returns(x =>
+            {
+                x[1] = delta;
+                return true;
+            });
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 
-            _ledger = new LedgerService(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(), _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
+            _ledger = new LedgerService(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
+                _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
 
             _testScheduler.Start();
 

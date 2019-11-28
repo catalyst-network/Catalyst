@@ -29,12 +29,10 @@ using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Consensus.Deltas;
-using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
@@ -46,7 +44,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaTransactionRetrieverTests()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             var mapperProvider = new TestMapperProvider();
 
             var random = new Random();
@@ -54,14 +51,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _transactions = Enumerable.Range(0, 20).Select(i =>
                 TransactionHelper.GetPublicTransaction(
-                    transactionFees: (ulong)random.Next(),
+                    transactionFees: (ulong) random.Next(),
                     timestamp: random.Next(),
                     signature: i.ToString())
             ).Select(x => x.PublicEntry).ToList();
 
-            mempool.Service.GetAll().Returns(_transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(mapperProvider)));
+            mempool.Service.GetAll()
+               .Returns(_transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(mapperProvider)));
 
-            _transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider, TransactionComparerByFeeTimestampAndHash.Default);
+            _transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider,
+                TransactionComparerByFeeTimestampAndHash.Default);
         }
 
         [Fact]
@@ -113,14 +112,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             for (var i = 0; i < maxCount; i++)
             {
                 retrievedTransactions[i].IsPublicTransaction.Should().Be(expectedTransactions[i].IsPublicTransaction);
-                if (i == 0)
-                {
-                    continue;
-                }
+                if (i == 0) continue;
 
                 // just a sanity check to make sure that the order is not opposite of what was intended in
                 // TransactionComparerByFeeTimestampAndHash
-                retrievedTransactions[i - 1].Base.TransactionFees.ToUInt256().Should().BeGreaterOrEqualTo(retrievedTransactions[i].Base.TransactionFees.ToUInt256());
+                retrievedTransactions[i - 1].Base.TransactionFees.ToUInt256().Should()
+                   .BeGreaterOrEqualTo(retrievedTransactions[i].Base.TransactionFees.ToUInt256());
             }
         }
     }
