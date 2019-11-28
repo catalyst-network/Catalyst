@@ -244,61 +244,60 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
-        //[Fact]
-        //public void When_contract_entries_exceed_delta_gas_limit_some_entries_are_ignored()
-        //{
-        //    // each entry at 1 million gas
-        //    // so only 8 entries allowed
-        //    var transactions = Enumerable.Range(0, 20).Select(i =>
-        //    {
-        //        var transaction = TransactionHelper.GetContractTransaction(ByteString.Empty,
-        //            UInt256.Zero,
-        //            i > 10
-        //                ? (uint) DeltaGasLimit / 8U - 10000U
-        //                : 70000U, // to test scenarios when both single transaction is ignored and all remaining
-        //            (20 + i).GFul(),
-        //            Bytes.Empty,
-        //            receiverPublicKey: i.ToString(),
-        //            transactionFees: (ulong) _random.Next(),
-        //            timestamp: _random.Next(),
-        //            signature: i.ToString());
-        //        return transaction.PublicEntry;
-        //    }).ToList();
+        [Fact]
+        public void When_contract_entries_exceed_delta_gas_limit_some_entries_are_ignored()
+        {
+            // each entry at 1 million gas
+            // so only 8 entries allowed
+            var transactions = Enumerable.Range(0, 20).Select(i =>
+            {
+                var transaction = TransactionHelper.GetContractTransaction(ByteString.Empty,
+                    UInt256.Zero,
+                    i > 10
+                        ? (uint)DeltaGasLimit / 8U - 10000U
+                        : 70000U, // to test scenarios when both single transaction is ignored and all remaining
+                    (20 + i).GFul(),
+                    Bytes.Empty,
+                    receiverPublicKey: i.ToString(),
+                    transactionFees: (ulong)_random.Next(),
+                    timestamp: _random.Next(),
+                    signature: i.ToString());
+                return transaction.PublicEntry;
+            }).ToList();
 
-        //    var transactionRetriever = BuildRetriever(transactions);
-        //    var expectedSelectedTransactions =
-        //        BuildSelectedTransactions(transactions.Skip(10).Take(1).Union(transactions.Skip(12).Take(8)).ToList());
-        //    var publicEntries = expectedSelectedTransactions;
+            var transactionRetriever = BuildRetriever(transactions);
+            var expectedSelectedTransactions =
+                BuildSelectedTransactions(transactions.Skip(10).Take(1).Union(transactions.Skip(12).Take(8)).ToList());
 
-        //    var salt = BitConverter.GetBytes(
-        //        _randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash.ToArray()).NextInt());
+            var salt = BitConverter.GetBytes(
+                _randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash.ToArray()).NextInt());
 
-        //    var rawAndSaltedEntriesBySignature = publicEntries.Select(e =>
-        //    {
-        //        var contractEntriesProtoBuff = e;
-        //        return new
-        //        {
-        //            RawEntry = contractEntriesProtoBuff,
-        //            SaltedAndHashedEntry =
-        //                _hashProvider.ComputeMultiHash(contractEntriesProtoBuff.ToByteArray().Concat(salt))
-        //        };
-        //    }).ToArray();
+            var rawAndSaltedEntriesBySignature = expectedSelectedTransactions.Select(e =>
+            {
+                var contractEntriesProtoBuff = e;
+                return new
+                {
+                    RawEntry = contractEntriesProtoBuff,
+                    SaltedAndHashedEntry =
+                        _hashProvider.ComputeMultiHash(contractEntriesProtoBuff.ToByteArray().Concat(salt))
+                };
+            }).ToArray();
 
-        //    var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
-        //       .OrderBy(v => v.SaltedAndHashedEntry.ToArray(), ByteUtil.ByteListComparer.Default)
-        //       .SelectMany(v => v.RawEntry.ToByteArray())
-        //       .ToArray();
+            var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
+               .OrderBy(v => v.SaltedAndHashedEntry.ToArray(), ByteUtil.ByteListComparer.Default)
+               .SelectMany(v => v.RawEntry.ToByteArray())
+               .ToArray();
 
-        //    var expectedBytesToHash = BuildExpectedBytesToHash(expectedSelectedTransactions, shuffledEntriesBytes);
+            var expectedBytesToHash = BuildExpectedBytesToHash(expectedSelectedTransactions, shuffledEntriesBytes);
 
-        //    var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-        //        _cache, _dateTimeProvider, _mapperProvider, _logger);
-        //    var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
+            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
+                _cache, _dateTimeProvider, _mapperProvider, _logger);
+            var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
-        //    ValidateDeltaCandidate(candidate, expectedBytesToHash);
+            ValidateDeltaCandidate(candidate, expectedBytesToHash);
 
-        //    _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
-        //}
+            _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
+        }
 
         private static PublicEntry[] BuildSelectedTransactions(IEnumerable<PublicEntry> transactions)
         {
