@@ -14,6 +14,7 @@
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Kvm\Catalyst.Core.Modules.Kvm.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />

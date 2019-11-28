@@ -43,6 +43,7 @@ namespace Catalyst.TestUtils
                 {
                     ReceiverPublicKey = recipient == null ? ByteString.Empty : ByteString.CopyFrom(recipient.Bytes),
                     SenderPublicKey = ByteString.CopyFrom(sender.Bytes),
+                    TransactionFees = ByteString.CopyFrom(1),
                     Nonce = nonce
                 },
                 Amount = amount.ToUint256ByteString(),
@@ -85,6 +86,8 @@ namespace Catalyst.TestUtils
                 {
                     ReceiverPublicKey = ByteString.CopyFrom(recipient.Bytes),
                     SenderPublicKey = ByteString.CopyFrom(sender.Bytes),
+                    TransactionFees = ByteString.CopyFrom(1),
+                    Nonce = 0
                 },
                 Amount = amount.ToUint256ByteString(),
                 GasLimit = 21000,

@@ -94,12 +94,14 @@ namespace Catalyst.Core.Modules.Ledger
             LatestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
         }
 
-        private void FlushTransactionsFromDelta()
+        private void FlushTransactionsFromDelta(Cid deltaHash)
         {
-            _synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(LatestKnownDelta, out var delta);
-            //var deltaTransactions = delta.PublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
-            //_mempool.Service.Delete(deltaTransactions);
-            _mempool.Service.Delete(_mempool.Service.GetAll());
+            _synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var delta);
+            if (delta != null)
+            {
+                var deltaTransactions = delta.PublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
+                _mempool.Service.Delete(deltaTransactions);
+            }
         }
 
         /// <inheritdoc />
@@ -145,8 +147,7 @@ namespace Catalyst.Core.Modules.Ledger
                     }
                 }
 
-                //https://github.com/catalyst-network/Catalyst.Node/issues/871
-                FlushTransactionsFromDelta();
+                FlushTransactionsFromDelta(deltaHash);
             }
             catch (Exception exception)
             {
