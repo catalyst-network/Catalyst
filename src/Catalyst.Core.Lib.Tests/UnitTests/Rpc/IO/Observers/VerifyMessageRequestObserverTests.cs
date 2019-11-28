@@ -34,6 +34,8 @@ using NSubstitute;
 using Serilog;
 using System.Linq;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Tests.Fakes;
+using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
@@ -43,7 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class VerifyMessageRequestObserverTests
     {
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
         private readonly VerifyMessageRequestObserver _verifyMessageRequestObserver;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly PeerId _testPeerId;
@@ -62,8 +64,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
 
-            _keySigner = Substitute.For<IKeySigner>();
-            _keySigner.CryptoContext.Returns(new FfiWrapper());
+            _keySigner = FakeKeySigner.SignAndVerify();
+            _keySigner.CryptoContext = new FfiWrapper();
 
             var logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -93,14 +95,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [Fact]
         public void VerifyMessageRequestObserver_Can_Send_True_If_Valid_Signature()
         {
-            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(true);
+            _keySigner.EnableVerification(true);
             AssertVerifyResponse(true);
         }
 
         [Fact]
         public void VerifyMessageRequestObserver_Can_Send_False_Response_If_Verify_Fails()
         {
-            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(false);
+            _keySigner.EnableVerification(false);
             AssertVerifyResponse(false);
         }
 

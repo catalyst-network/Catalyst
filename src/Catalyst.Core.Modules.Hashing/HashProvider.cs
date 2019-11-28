@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Hashing;
 using Google.Protobuf;
+using Org.BouncyCastle.Crypto.Tls;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Hashing
@@ -41,28 +42,28 @@ namespace Catalyst.Core.Modules.Hashing
         /// <param name="buffer"></param>
         /// <returns></returns>
         public static MultiHash Parse(string buffer) { return new MultiHash(buffer); }
-        
+
         /// <summary>
         ///     Parse a byte array representation of a multihash
         /// </summary>
         /// <param name="buffer"></param>
         /// <returns></returns>
         public static MultiHash Parse(byte[] buffer) { return new MultiHash(buffer); }
-        
+
         /// <summary>
         ///     Parse a memory stream representation of a multihash
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
         public static MultiHash Parse(MemoryStream stream) { return new MultiHash(stream); }
-        
+
         /// <summary>
         ///     Parse a protobuff coded input stream representation of a multihash
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
         public static MultiHash Parse(CodedInputStream stream) { return new MultiHash(stream); }
-        
+
         public HashProvider(HashingAlgorithm hashingAlgorithm) { HashingAlgorithm = hashingAlgorithm; }
 
         public MultiHash Cast(byte[] data) { return CastIfHashIsValid(data); }
@@ -87,24 +88,20 @@ namespace Catalyst.Core.Modules.Hashing
             }
         }
 
-        public MultiHash ComputeUtf8MultiHash(string data)
-        {
-            return ComputeMultiHash(Encoding.UTF8.GetBytes(data));
-        }
+        public MultiHash ComputeUtf8MultiHash(string data) { return ComputeMultiHash(Encoding.UTF8.GetBytes(data)); }
 
-        public MultiHash ComputeMultiHash(IEnumerable<byte> data)
-        {
-            return ComputeMultiHash(data.ToArray());
-        }
+        public MultiHash ComputeMultiHash(IEnumerable<byte> data) { return ComputeMultiHash(data.ToArray()); }
 
-        public MultiHash ComputeMultiHash(byte[] data)
-        {
-            return MultiHash.ComputeHash(data, HashingAlgorithm.Name);
-        }
+        public MultiHash ComputeMultiHash(byte[] data) { return MultiHash.ComputeHash(data, HashingAlgorithm.Name); }
 
-        public MultiHash ComputeMultiHash(Stream data)
+        public MultiHash ComputeMultiHash(Stream data) { return MultiHash.ComputeHash(data, HashingAlgorithm.Name); }
+
+        public MultiHash ComputeMultiHash(byte[] data, int offset, int count)
         {
-            return MultiHash.ComputeHash(data, HashingAlgorithm.Name);
+            using (var algorithm = HashingAlgorithm.Hasher())
+            {
+                return new MultiHash(HashingAlgorithm.Name, algorithm.ComputeHash(data, offset, count));
+            }
         }
     }
 }

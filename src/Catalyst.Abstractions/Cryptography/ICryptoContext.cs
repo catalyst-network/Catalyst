@@ -21,6 +21,8 @@
 
 #endregion
 
+using System;
+
 namespace Catalyst.Abstractions.Cryptography
 {
     public interface ICryptoContext
@@ -101,8 +103,8 @@ namespace Catalyst.Abstractions.Cryptography
         /// <param name="message"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        ISignature Sign(IPrivateKey privateKey, byte[] message, byte[] context);
+        ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context);
 
-        bool Verify(ISignature signature, byte[] message, byte[] context);
+        bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context);
     }
 }

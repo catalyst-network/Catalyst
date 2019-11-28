@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
 
-            GenesisHash = CidHelper.CreateCid(hashProvider.ComputeMultiHash(genesisDelta.ToByteArray()));
+            GenesisHash = CidHelper.CreateCid(hashProvider.ComputeMultiHash(genesisDelta));
 
             _dfsReader = dfsReader;
             _logger = logger;

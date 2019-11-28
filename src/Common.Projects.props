@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
     <PropertyGroup>
         <Company>catalystnet.org</Company>
         <Copyright>Copyright © 2019 Catalyst Network</Copyright>
@@ -7,7 +7,7 @@
         <RepositoryUrl>https://github.com/Catalyst-network/Catalyst.Node</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <RuntimeFrameworkVersion>3.0.0</RuntimeFrameworkVersion>
-        <LangVersion>7.3</LangVersion>
+        <LangVersion>8.0</LangVersion>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Deterministic>true</Deterministic>
         <PlatformTarget>AnyCPU</PlatformTarget>

@@ -56,8 +56,7 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
             }
 
             clone.Signature = null;
-            var signatureBytes = cryptoContext.Sign(privateKey, clone.ToByteArray(),
-                context.ToByteArray()).SignatureBytes;
+            var signatureBytes = cryptoContext.Sign(privateKey, clone, context).SignatureBytes;
 
             clone.Signature = new Signature
             {
