@@ -39,7 +39,7 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
     [SimpleJob(RuntimeMoniker.CoreRt30)]
     public class HashingBenchmark
     {
-        static HashingBenchmark()
+        public HashingBenchmark()
         {
             const string name = nameof(NoopHash);
 
@@ -48,7 +48,7 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
             var bytes = ByteString.CopyFrom(Enumerable.Range(1, 32).Select(i => (byte)i).ToArray());
             var amount = ByteString.CopyFrom(343434.ToByteArray(Bytes.Endianness.Big));
 
-            Entry = new PublicEntry
+            _entry = new PublicEntry
             {
                 Amount = amount,
                 Base = new BaseEntry
@@ -59,23 +59,23 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
                 }
             };
 
-            Provider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata(name));
+            _provider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata(name));
         }
 
-        static readonly HashProvider Provider;
-        static readonly PublicEntry Entry;
-        static readonly byte[] Salt = {1, 2, 3, 4};
+        readonly HashProvider _provider;
+        readonly PublicEntry _entry;
+        readonly byte[] _salt = {1, 2, 3, 4};
 
         [Benchmark]
         public MultiHash Concat_manual()
         {
-            return Provider.ComputeMultiHash(Entry.ToByteArray().Concat(Salt));
+            return _provider.ComputeMultiHash(_entry.ToByteArray().Concat(_salt));
         }
 
         [Benchmark]
         public MultiHash Concat_embedded()
         {
-            return Provider.ComputeMultiHash(Entry, Salt);
+            return _provider.ComputeMultiHash(_entry, _salt);
         }
 
         internal class NoopHash : HashAlgorithm

@@ -38,9 +38,9 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
     [SimpleJob(RuntimeMoniker.CoreRt30)]
     public class CryptoBenchmark
     {
-        static CryptoBenchmark()
+        public CryptoBenchmark()
         {
-            Context = new SigningContext
+            _context = new SigningContext
             {
                 NetworkType = NetworkType.Mainnet,
                 SignatureType = SignatureType.TransactionConfidential
@@ -49,7 +49,7 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
             var key = ByteString.CopyFrom(new byte[32]);
             var amount = ByteString.CopyFrom(new byte[32]);
 
-            Transaction = new TransactionBroadcast
+            _transaction = new TransactionBroadcast
             {
                 PublicEntries =
                 {
@@ -68,26 +68,25 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
                 Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
             };
 
-            Crypto = new NoopCryptoContext();
+            _crypto = new NoopCryptoContext();
         }
 
-        static readonly SigningContext Context;
-        static readonly TransactionBroadcast Transaction;
-        static readonly ICryptoContext Crypto;
-        static readonly IPrivateKey PrivateKey = null;
+        readonly SigningContext _context;
+        readonly TransactionBroadcast _transaction;
+        readonly ICryptoContext _crypto;
 
         [Benchmark]
         public bool SignVerify_with_ToByteArray()
         {
-            var signature = Crypto.Sign(PrivateKey, Transaction.ToByteArray(), Context.ToByteArray());
-            return Crypto.Verify(signature, Transaction.ToByteArray(), Context.ToByteArray());
+            var signature = _crypto.Sign(null, _transaction.ToByteArray(), _context.ToByteArray());
+            return _crypto.Verify(signature, _transaction.ToByteArray(), _context.ToByteArray());
         }
         
         [Benchmark]
         public bool SignVerify_with_embedded_serialization()
         {
-            var signature = Crypto.Sign(PrivateKey, Transaction, Context);
-            return Crypto.Verify(signature, Transaction, Context);
+            var signature = _crypto.Sign(null, _transaction, _context);
+            return _crypto.Verify(signature, _transaction, _context);
         }
 
         internal class NoopCryptoContext : ICryptoContext
