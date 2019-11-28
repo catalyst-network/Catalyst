@@ -47,18 +47,19 @@ namespace Catalyst.TestUtils
             {
                 PublicEntry = new PublicEntry
                 {
-                    Amount = ((UInt256)amount).ToUint256ByteString(),
+                    Amount = ((UInt256) amount).ToUint256ByteString(),
                     Base = new BaseEntry
                     {
                         Nonce = nonce,
                         ReceiverPublicKey = receiverPublicKey.ToUtf8ByteString(),
                         SenderPublicKey = senderPublicKey.ToUtf8ByteString(),
-                        TransactionFees = ((UInt256)transactionFees).ToUint256ByteString(),
+                        TransactionFees = ((UInt256) transactionFees).ToUint256ByteString()
                     },
-                    Timestamp = new Timestamp { Seconds = timestamp },
+                    Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {
-                        SigningContext = new SigningContext { NetworkType = networkType, SignatureType = SignatureType.TransactionPublic },
+                        SigningContext = new SigningContext
+                            {NetworkType = networkType, SignatureType = SignatureType.TransactionPublic},
                         RawBytes = signature.ToUtf8ByteString()
                     }
                 }
@@ -90,12 +91,13 @@ namespace Catalyst.TestUtils
                         Nonce = nonce,
                         ReceiverPublicKey = receiverPublicKey.ToUtf8ByteString(),
                         SenderPublicKey = senderPublicKey.ToUtf8ByteString(),
-                        TransactionFees = ((UInt256)transactionFees).ToUint256ByteString(),
+                        TransactionFees = ((UInt256) transactionFees).ToUint256ByteString()
                     },
-                    Timestamp = new Timestamp { Seconds = timestamp },
+                    Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {
-                        SigningContext = new SigningContext { NetworkType = networkType, SignatureType = SignatureType.TransactionPublic },
+                        SigningContext = new SigningContext
+                            {NetworkType = networkType, SignatureType = SignatureType.TransactionPublic},
                         RawBytes = signature.ToUtf8ByteString()
                     },
                     Data = data,
@@ -103,7 +105,6 @@ namespace Catalyst.TestUtils
                     GasPrice = gasPrice,
                     TargetContract = targetContract
                 }
-
             };
 
             return transaction;
