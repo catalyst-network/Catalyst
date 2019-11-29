@@ -38,17 +38,17 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using FluentAssertions;
 using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
 using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
     {
         private readonly IMapperInitializer[] _initialisers;
         private readonly HashProvider _hashProvider;
-        private MapperProvider _mapperProvider;
+        private readonly MapperProvider _mapperProvider;
 
         public DaoTests()
         {
@@ -79,15 +79,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new ConfidentialEntryMapperInitialiser(),
                 new TransactionBroadcastMapperInitialiser(),
                 new SignatureMapperInitialiser(),
-                new BaseEntryMapperInitialiser(), 
+                new BaseEntryMapperInitialiser()
             };
 
             _mapperProvider = new MapperProvider(_initialisers);
         }
 
         // ReSharper disable once UnusedMember.Local
-        private TDao GetMapper<TDao>() where TDao : IMapperInitializer => _initialisers.OfType<TDao>().First();
-        
+        private TDao GetMapper<TDao>() where TDao : IMapperInitializer { return _initialisers.OfType<TDao>().First(); }
+
         [Fact]
         public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
         {
@@ -131,7 +131,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             };
 
             var errorMessageSignedDao = original.ToDao<ProtocolErrorMessage, ProtocolErrorMessageDao>(_mapperProvider);
-            var reconverted = errorMessageSignedDao.ToProtoBuff<ProtocolErrorMessageDao, ProtocolErrorMessage>(_mapperProvider);
+            var reconverted =
+                errorMessageSignedDao.ToProtoBuff<ProtocolErrorMessageDao, ProtocolErrorMessage>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
@@ -165,7 +166,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         [Fact]
         public void BaseEntryDao_And_BaseEntry_Should_Be_Convertible()
         {
-            var original = new BaseEntry    
+            var original = new BaseEntry
             {
                 ReceiverPublicKey = "hello".ToUtf8ByteString(),
                 SenderPublicKey = "bye bye".ToUtf8ByteString(),
@@ -202,8 +203,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 PreviousDeltaDfsHash = MultiBase.Decode(CidHelper.CreateCid(previousHash)).ToByteString()
             };
 
-            var candidateDeltaBroadcast = original.ToDao<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>(_mapperProvider);
-            var reconverted = candidateDeltaBroadcast.ToProtoBuff<CandidateDeltaBroadcastDao, CandidateDeltaBroadcast>(_mapperProvider);
+            var candidateDeltaBroadcast =
+                original.ToDao<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>(_mapperProvider);
+            var reconverted =
+                candidateDeltaBroadcast.ToProtoBuff<CandidateDeltaBroadcastDao, CandidateDeltaBroadcast>(
+                    _mapperProvider);
             reconverted.Should().Be(original);
         }
 
@@ -211,7 +215,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void DeltaDfsHashBroadcastDao_DeltaDfsHashBroadcast_Should_Be_Convertible()
         {
             var hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("this hash")));
-            var previousDfsHash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousDfsHash")));
+            var previousDfsHash =
+                MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousDfsHash")));
 
             var original = new DeltaDfsHashBroadcast
             {
@@ -234,7 +239,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             };
 
             var contextDao = original.ToDao<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>(_mapperProvider);
-            var reconverted = contextDao.ToProtoBuff<FavouriteDeltaBroadcastDao, FavouriteDeltaBroadcast>(_mapperProvider);
+            var reconverted =
+                contextDao.ToProtoBuff<FavouriteDeltaBroadcastDao, FavouriteDeltaBroadcast>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
@@ -270,7 +276,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 {
                     SenderPublicKey = pubKeyBytes.ToByteString(),
                     TransactionFees = UInt256.Zero.ToUint256ByteString()
-                }
+                },
+                Signature = new Signature
+                {
+                    RawBytes = new byte[] {0x0}.ToByteString(),
+                    SigningContext = new SigningContext
+                        {NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic}
+                },
+                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
             };
 
             var transactionEntryDao = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
@@ -323,7 +336,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var original = TransactionHelper.GetPublicTransaction();
 
             var transactionEntryDao = original.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-            var reconverted = transactionEntryDao.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
+            var reconverted =
+                transactionEntryDao.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
             reconverted.Should().Be(original);
         }
     }
