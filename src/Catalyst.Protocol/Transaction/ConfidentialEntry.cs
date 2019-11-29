@@ -32,14 +32,14 @@ namespace Catalyst.Protocol.Transaction
 
         public bool IsValid()
         {
-            if (!RangeProof.IsEmpty && !PedersenCommitment.IsEmpty) return true;
+            if (RangeProof != null && !PedersenCommitment.IsEmpty) return true;
 
             if (PedersenCommitment.IsEmpty)
             {
                 Logger.Debug("{field} cannot be empty", nameof(PedersenCommitment));
             }
 
-            if (RangeProof.IsEmpty)
+            if (RangeProof != null)
             {
                 Logger.Debug("{field} cannot be empty", nameof(RangeProof));
             }
