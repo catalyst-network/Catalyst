@@ -154,12 +154,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var transactionRetriever = BuildRetriever(transactions);
             var selectedTransactions = BuildSelectedTransactions(transactions);
-            var publicEntries = selectedTransactions;
 
             var salt = BitConverter.GetBytes(_randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash.ToArray())
                .NextInt());
 
-            var rawAndSaltedEntriesBySignature = publicEntries.Select(e =>
+            var rawAndSaltedEntriesBySignature = selectedTransactions.Select(e =>
             {
                 var publicEntriesProtoBuff = e;
                 return new
@@ -212,12 +211,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var transactionRetriever = BuildRetriever(transactions);
             var selectedTransactions = BuildSelectedTransactions(transactions);
-            var publicEntries = selectedTransactions;
 
             var salt = BitConverter.GetBytes(
                 _randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash.ToArray()).NextInt());
 
-            var rawAndSaltedEntriesBySignature = publicEntries.Select(e =>
+            var rawAndSaltedEntriesBySignature = selectedTransactions.Select(e =>
             {
                 var contractEntriesProtoBuff = e;
                 return new
@@ -254,12 +252,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 var transaction = TransactionHelper.GetContractTransaction(ByteString.Empty,
                     UInt256.Zero,
                     i > 10
-                        ? (uint)DeltaGasLimit / 8U - 10000U
+                        ? (uint) DeltaGasLimit / 8U - 10000U
                         : 70000U, // to test scenarios when both single transaction is ignored and all remaining
                     (20 + i).GFul(),
                     Bytes.Empty,
                     receiverPublicKey: i.ToString(),
-                    transactionFees: (ulong)_random.Next(),
+                    transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
                 return transaction.PublicEntry;
@@ -268,6 +266,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var transactionRetriever = BuildRetriever(transactions);
             var expectedSelectedTransactions =
                 BuildSelectedTransactions(transactions.Skip(10).Take(1).Union(transactions.Skip(12).Take(8)).ToList());
+
+            var gas = expectedSelectedTransactions.Sum((x => x.GasLimit));
 
             var salt = BitConverter.GetBytes(
                 _randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash.ToArray()).NextInt());
