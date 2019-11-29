@@ -6,18 +6,17 @@ namespace Catalyst.Abstractions.Kvm.Models
     {
         [JsonProperty(PropertyName = "code")]
         public int Code { get; set; }
+        
         [JsonProperty(PropertyName = "message")]
         public string Message { get; set; }
+        
         [JsonProperty(PropertyName = "data")]
         public string Data { get; set; }
     }
 
     public class JsonRpcResponse
     {
-        public JsonRpcResponse()
-        {
-            
-        }
+        public JsonRpcResponse() { }
         
         public JsonRpcResponse(JsonRpcRequest request, object result)
         {

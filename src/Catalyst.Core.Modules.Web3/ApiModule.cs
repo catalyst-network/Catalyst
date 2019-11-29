@@ -131,8 +131,8 @@ namespace Catalyst.Core.Modules.Web3
                .As<IMapperProvider>()
                .SingleInstance();
             builder.RegisterInstance(_container.Resolve<IWeb3EthApi>())
-                .As<IWeb3EthApi>()
-                .SingleInstance();
+               .As<IWeb3EthApi>()
+               .SingleInstance();
             builder.RegisterInstance(_container.Resolve<ILogger>())
                .As<ILogger>()
                .SingleInstance();

@@ -4,8 +4,6 @@ using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {
-    
-    
     public class IdConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -61,7 +59,7 @@ namespace Catalyst.Abstractions.Kvm.Models
 
         public override string ToString()
         {
-            string paramsString =  Params == null ? "" : $"{string.Join(",", Params)}";
+            var paramsString = Params == null ? "" : $"{string.Join(",", Params)}";
             return $"ID {Id}, version {JsonRpc}, {Method}({paramsString})";
         }
     }
