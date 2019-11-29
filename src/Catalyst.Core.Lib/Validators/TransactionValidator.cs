@@ -23,7 +23,7 @@
 
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Serilog;
 
@@ -41,31 +41,31 @@ namespace Catalyst.Core.Lib.Validators
             _logger = logger;
         }
 
-        public bool ValidateTransaction(TransactionBroadcast transactionBroadcast)
+        public bool ValidateTransaction(PublicEntry transaction)
         {
             // will add more checks
-            return ValidateTransactionSignature(transactionBroadcast);
+            return ValidateTransactionSignature(transaction);
         }
         
-        private bool ValidateTransactionSignature(TransactionBroadcast transactionBroadcast)
+        private bool ValidateTransactionSignature(PublicEntry transaction)
         {
-            if (transactionBroadcast.PublicEntry.Signature.RawBytes == ByteString.Empty)
+            if (transaction.Signature.RawBytes == ByteString.Empty)
             {
                 _logger.Error("Transaction signature is null");
                 return false;
             }
 
-            var transactionSignature = _cryptoContext.GetSignatureFromBytes(transactionBroadcast.PublicEntry.Signature.RawBytes.ToByteArray(),
-                transactionBroadcast.PublicEntry.Base.SenderPublicKey.ToByteArray());
+            var transactionSignature = _cryptoContext.GetSignatureFromBytes(transaction.Signature.RawBytes.ToByteArray(),
+                transaction.Base.SenderPublicKey.ToByteArray());
 
-            var signingContext = transactionBroadcast.PublicEntry.Signature.SigningContext.ToByteArray();
+            var signingContext = transaction.Signature.SigningContext.ToByteArray();
 
             // we need to verify the signature matches the message, but transactionBroadcast contains the signature and original data,
             // passing message+sig will mean your verifying an incorrect message and always return false, so just null the sig.
-            var transactionBroadcastClone = transactionBroadcast.Clone();
-            transactionBroadcastClone.PublicEntry.Signature = null;
+            var transactionClone = transaction.Clone();
+            transactionClone.Signature = null;
 
-            if (_cryptoContext.Verify(transactionSignature, transactionBroadcastClone.PublicEntry.ToByteArray(), signingContext))
+            if (_cryptoContext.Verify(transactionSignature, transactionClone.ToByteArray(), signingContext))
             {
                 return true;
             }
