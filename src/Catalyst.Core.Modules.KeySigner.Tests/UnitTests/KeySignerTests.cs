@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
@@ -41,7 +42,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
         private readonly ISignature _signature;
         private readonly IPrivateKey _privateKey;
         private readonly SigningContext _signingContext;
-        private ICryptoContext _cryptoContext;
+        private readonly ICryptoContext _cryptoContext;
 
         public KeySignerTests()
         {
@@ -49,9 +50,8 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _keyRegistry = Substitute.For<IKeyRegistry>();
             _signature = Substitute.For<ISignature>();
             _privateKey = Substitute.For<IPrivateKey>();
-            _cryptoContext = Substitute.For<ICryptoContext>();
+            _cryptoContext = new CryptoContext(_signature);
 
-            _cryptoContext.Sign(default, default, default).ReturnsForAnyArgs(_signature);
             _privateKey.Bytes.Returns(ByteUtil.GenerateRandomByteArray(32));
 
             _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs(_privateKey);
@@ -127,6 +127,27 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
 
             Assert.Equal(_signature, actualSignature);
+        }
+
+        class CryptoContext : ICryptoContext
+        {
+            readonly ISignature _signature;
+            public CryptoContext(ISignature signature) { _signature = signature; }
+
+            public int PrivateKeyLength { get; }
+            public int PublicKeyLength { get; }
+            public int SignatureLength { get; }
+            public int SignatureContextMaxLength { get; }
+            public IPrivateKey GeneratePrivateKey() { throw new NotImplementedException(); }
+            public IPublicKey GetPublicKeyFromPrivateKey(IPrivateKey privateKey) { throw new NotImplementedException(); }
+            public IPublicKey GetPublicKeyFromBytes(byte[] publicKeyBytes) { throw new NotImplementedException(); }
+            public IPrivateKey GetPrivateKeyFromBytes(byte[] privateKeyBytes) { throw new NotImplementedException(); }
+            public ISignature GetSignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes) { throw new NotImplementedException(); }
+            public byte[] ExportPrivateKey(IPrivateKey privateKey) { throw new NotImplementedException(); }
+            public byte[] ExportPublicKey(IPublicKey publicKey) { throw new NotImplementedException(); }
+
+            public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) => _signature;
+            public bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) { throw new NotImplementedException(); }
         }
     }
 }

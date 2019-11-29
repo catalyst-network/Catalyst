@@ -276,7 +276,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         [Fact]
         public async Task Can_Throw_Exception_In_WalkBack_When_Last_State_Has_No_Neighbours_To_Continue_Walk_Forward()
         {
-            var ctp = new CancellationTokenProvider();
+            var ctp = new CancellationTokenProvider(true);
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithScheduler(_testScheduler)

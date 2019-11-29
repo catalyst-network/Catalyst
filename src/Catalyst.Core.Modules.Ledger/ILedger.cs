@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Core.Modules.Ledger.Models;
 using LibP2P;
 
 namespace Catalyst.Core.Modules.Ledger
@@ -33,17 +32,6 @@ namespace Catalyst.Core.Modules.Ledger
     /// </summary>
     public interface ILedger
     {
-        /// <summary>
-        ///     Saves the new state of a give <see cref="IAccount" /> on the ledger.
-        /// </summary>
-        /// <remarks>
-        ///     This might need to become private if we consider that accounts should only be updated through
-        ///     deltas as they emerge from the consensus mechanism.
-        /// </remarks>
-        /// <param name="account">The new state of the account, to be inserted or updated in the ledger.</param>
-        /// <returns><c>true</c> if the update succeeded, <c>false</c> otherwise.</returns>
-        bool SaveAccountState(Account account);
-
         /// <summary>
         ///     Digests the information contained in a Delta object and uses it to update the various accounts involved
         ///     in the transactions it contains. An update will trigger a potentially long running synchronisation if

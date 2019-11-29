@@ -38,7 +38,6 @@ using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository.Specifications;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
@@ -62,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             IPeerRepository store)
         {
             store.Add(peer);
-            store.FindAll(Arg.Any<Specification<Peer>>()).Returns(peer);
+            store.GetActivePeers(Arg.Any<int>()).Returns(peer);
         }
 
         [Fact]

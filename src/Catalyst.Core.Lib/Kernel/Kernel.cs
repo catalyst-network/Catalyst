@@ -84,7 +84,7 @@ namespace Catalyst.Core.Lib.Kernel
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-            CancellationTokenProvider = cancellationTokenProvider ?? new CancellationTokenProvider();
+            CancellationTokenProvider = cancellationTokenProvider ?? new CancellationTokenProvider(true);
 
             _fileName = fileName;
             ContainerBuilder = new ContainerBuilder();

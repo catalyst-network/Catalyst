@@ -44,13 +44,13 @@ namespace Catalyst.Protocol.Wire
                 return false;
             }
 
-            if (Hash == null || Hash.IsEmpty)
+            if (Hash != null && !Hash.IsEmpty)
             {
-                Logger.Debug("{field} cannot be null or empty", nameof(Hash));
-                return false;
+                return true;
             }
-
-            return true;
+            
+            Logger.Debug("{field} cannot be null or empty", nameof(Hash));
+            return false;
         }
     }
 }

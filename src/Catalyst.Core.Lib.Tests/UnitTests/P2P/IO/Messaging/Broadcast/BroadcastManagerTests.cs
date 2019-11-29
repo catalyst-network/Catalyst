@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
@@ -35,12 +34,15 @@ using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.Tests.Fakes;
+using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
+using SharpRepository.InMemoryRepository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
@@ -49,18 +51,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
     {
         private readonly IPeerRepository _peers;
         private readonly IMemoryCache _cache;
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
         private readonly PeerId _senderPeerId;
         private readonly IPeerSettings _peerSettings;
 
         public BroadcastManagerTests()
         {
             _senderPeerId = PeerIdHelper.GetPeerId("sender");
-            _keySigner = Substitute.For<IKeySigner>();
-            var fakeSignature = Substitute.For<ISignature>();
-            _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(fakeSignature);
+            _keySigner = FakeKeySigner.SignOnly();
             _keySigner.CryptoContext.SignatureLength.Returns(64);
-            _peers = Substitute.For<IPeerRepository>();
+            _peers = new PeerRepository(new InMemoryRepository<Peer, string>());
             _cache = new MemoryCache(new MemoryCacheOptions());
             _peerSettings = _senderPeerId.ToSubstitutedPeerSettings();
         }
@@ -161,18 +161,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 
         private void PopulatePeers(int count)
         {
-            var peerList = new List<Peer>();
             for (var i = 10; i < count + 10; i++)
             {
-                var peer = new Peer
+                _peers.Add(new Peer
                 {
                     PeerId = PeerIdHelper.GetPeerId(i.ToString())
-                };
-                peerList.Add(peer);
-                _peers.Get(peer.DocumentId).Returns(peer);
+                });
             }
-
-            _peers.AsQueryable().Returns(peerList.AsQueryable());
         }
 
         public void Dispose()

@@ -1,5 +1,4 @@
 #region LICENSE
-
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -18,13 +17,14 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
-
 #endregion
 
-using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Modules.Ledger.Models;
+using System;
 
 namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    public interface IAccountRepository : IRepositoryWrapper<Account> { }
+    public interface IAccountRepository : IDisposable {
+        void Add(Account account);
+    }
 }

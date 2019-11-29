@@ -37,8 +37,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Dto
 
         public PeerClientMessageDto(IMessage message, PeerId sender, ICorrelationId correlationId)
         {
+            var ns = message.GetType().Namespace;
             Guard.Argument(message, nameof(message))
-               .Require(message.GetType().Namespace.Contains("IPPN"));
+               .Require(ns != null && ns.Contains("IPPN"));
             Message = message;
             Sender = sender;
             CorrelationId = correlationId;

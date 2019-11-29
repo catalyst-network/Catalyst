@@ -72,10 +72,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             
             Logger.Debug("PeerNeighborsRequest Message Received");
 
-            var activePeersList = _repository
-               .FindAll(new Specification<Peer>(p => !p.IsAwolPeer))
-               .Take(Constants.NumberOfRandomPeers) // 😂
-               .ToList();
+            var activePeersList = _repository.GetActivePeers(Constants.NumberOfRandomPeers);
             
             Guard.Argument(activePeersList).MinCount(1);
 

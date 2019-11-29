@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;

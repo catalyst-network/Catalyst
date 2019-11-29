@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Peer;
 using SharpRepository.EfCoreRepository;
 using SharpRepository.Repository.Caching;
 

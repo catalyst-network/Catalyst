@@ -26,6 +26,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Cryptography;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Repository;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
@@ -66,7 +68,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
                 transactBroadcastRepo.Get(criteriaId).Id.Should().Be(criteriaId);
 
-                transactBroadcastRepo.Get(criteriaId).ContractEntries.FirstOrDefault().Data
+                transactBroadcastRepo.Get(criteriaId).PublicEntries.FirstOrDefault().Data
                    .Should().Be(contractEntryDaoList.FirstOrDefault().Data);
 
                 transactBroadcastRepo.Get(criteriaId).PublicEntries.FirstOrDefault().Amount
@@ -76,7 +78,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
         private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope,
             out string id,
-            out IEnumerable<ContractEntryDao> contractEntryDaoList,
+            out IEnumerable<PublicEntryDao> contractEntryDaoList,
             out IEnumerable<PublicEntryDao> publicEntryDaoList)
         {
             var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
@@ -84,11 +86,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             var transactionBroadcastDao = TransactionHelper.GetPublicTransaction().ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
             id = transactionBroadcastDao.Id;
 
-            transactionBroadcastDao.ContractEntries = ContractEntryHelper.GetContractEntriesDao(10);
-            contractEntryDaoList = transactionBroadcastDao.ContractEntries;
+            contractEntryDaoList = ContractEntryHelper.GetContractEntriesDao(10);
+            publicEntryDaoList = PublicEntryHelper.GetPublicEntriesDao(10);
 
-            transactionBroadcastDao.PublicEntries = PublicEntryHelper.GetPublicEntriesDao(10);
-            publicEntryDaoList = transactionBroadcastDao.PublicEntries;
+            transactionBroadcastDao.PublicEntries = publicEntryDaoList.Concat(contractEntryDaoList);
 
             var signingContextDao = new SigningContextDao
             {
@@ -99,7 +100,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             transactionBroadcastDao.ConfidentialEntries = ConfidentialEntryHelper.GetConfidentialEntriesDao(10);
 
             transactionBroadcastDao.Signature = new SignatureDao
-                {RawBytes = "mplwifwfjfw", SigningContext = signingContextDao};
+            { RawBytes = "mplwifwfjfw", SigningContext = signingContextDao };
 
             transactBroadcastRepo.Add(transactionBroadcastDao);
 
@@ -120,7 +121,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 var retrievedTransactionDaoModified = transactBroadcastRepo.Get(criteriaId);
 
                 var dateComparer = retrievedTransactionDaoModified.TimeStamp.Date.ToString("MM/dd/yyyy");
-                
+
                 // ReSharper disable once SuspiciousTypeConversion.Global
                 // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                 dateComparer.Should()?.Equals("02/02/1999");
@@ -183,7 +184,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             {
                 var contextDb = scope.Resolve<IDbContext>();
 
-                ((DbContext) contextDb).Database.EnsureCreated();
+                ((DbContext)contextDb).Database.EnsureCreated();
             }
         }
 

@@ -24,6 +24,8 @@
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.IO.Handlers;
+using Catalyst.Core.Lib.Tests.Fakes;
+using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
@@ -32,6 +34,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using NSubstitute;
 using Xunit;
 
@@ -41,13 +44,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
     {
         private readonly IChannelHandlerContext _fakeContext;
         private readonly ProtocolMessage _protocolMessageSigned;
-        private readonly IKeySigner _keySigner;
         private readonly SigningContext _signingContext;
 
         public ProtocolMessageVerifyHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _keySigner = Substitute.For<IKeySigner>();
             _signingContext = DevNetPeerSigningContext.Instance;
 
             var signatureBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
@@ -62,10 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         [Fact]
         private void CanFireNextPipelineOnValidSignature()
         {
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
-               .ReturnsForAnyArgs(true);
-
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
+            var signatureHandler = new ProtocolMessageVerifyHandler(FakeKeySigner.VerifyOnly());
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
@@ -75,10 +73,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         [Fact]
         private void CanFireNextPipelineOnInvalidSignature()
         {
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
-               .ReturnsForAnyArgs(false);
-
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
+            var signatureHandler = new ProtocolMessageVerifyHandler(FakeKeySigner.VerifyOnly(false));
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
             
