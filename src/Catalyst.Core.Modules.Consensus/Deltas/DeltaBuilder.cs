@@ -221,6 +221,40 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             validTransactionsForDelta.Sort(AveragePriceComparer.InstanceDesc);
 
+            var totalLimit = 0UL;
+            var allValidCount = validTransactionsForDelta.Count;
+            var rejectedCountBeforeLimitChecks = rejectedTransactions.Count;
+            for (var i = 0; i < allValidCount; i++)
+            {
+                var currentItem = validTransactionsForDelta[i];
+                var remainingLimit = DeltaGasLimit - totalLimit;
+                if (remainingLimit < MinTransactionEntryGasLimit)
+                {
+                    for (var j = i; j < allValidCount; j++)
+                    {
+                        currentItem = validTransactionsForDelta[j];
+                        rejectedTransactions.Add(currentItem);
+                    }
+
+                    break;
+                }
+
+                var currentItemGasLimit = currentItem.GasLimit;
+                if (remainingLimit < currentItemGasLimit)
+                {
+                    rejectedTransactions.Add(currentItem);
+                }
+                else
+                {
+                    totalLimit += validTransactionsForDelta[i].GasLimit;
+                }
+            }
+
+            for (var i = rejectedCountBeforeLimitChecks; i < rejectedTransactions.Count; i++)
+            {
+                validTransactionsForDelta.Remove(rejectedTransactions[i]);
+            }
+
             _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}",
                 rejectedTransactions);
 

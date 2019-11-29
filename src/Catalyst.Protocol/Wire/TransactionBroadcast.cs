@@ -21,18 +21,7 @@
 
 #endregion
 
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using Catalyst.Protocol.Cryptography;
-using Google.Protobuf.WellKnownTypes;
-using Nethermind.Dirichlet.Numerics;
-using Serilog;
-
 namespace Catalyst.Protocol.Wire
 {
-    public partial class TransactionBroadcast
-    {
-
-    }
+    public partial class TransactionBroadcast { }
 }
