@@ -61,14 +61,13 @@ namespace Catalyst.Core.Lib.IO.Events
         public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
         {
             var transactionBroadcast = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
-            var transaction = transactionBroadcast.PublicEntry;
             var transactionValid = _validator.ValidateTransaction(transactionBroadcast.PublicEntry);
             if (!transactionValid)
             {
                 return ResponseCode.Error;
             }
 
-            var transactionDao = transaction.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            var transactionDao = transactionBroadcast.PublicEntry.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
 
             _logger.Verbose("Adding transaction {id} to mempool", transactionDao.Id);
 

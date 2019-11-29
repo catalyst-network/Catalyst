@@ -27,7 +27,6 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;
-using Catalyst.Protocol.Wire;
 using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
@@ -48,14 +47,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
             // build a valid transaction
             var privateKey = cryptoContext.GeneratePrivateKey();
 
-            var validTransactionBroadcast = new TransactionBroadcast
+            var validTransaction = new PublicEntry
             {
-                PublicEntry = new PublicEntry
+                Base = new BaseEntry
                 {
-                    Base = new BaseEntry
-                    {
-                        SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
-                    }
+                    SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
                 }
             };
 
@@ -68,14 +64,14 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
             var signature = new Signature
             {
                 // sign an actual TransactionBroadcast object
-                RawBytes = cryptoContext.Sign(privateKey, validTransactionBroadcast.PublicEntry.ToByteArray(), signingContext.ToByteArray())
+                RawBytes = cryptoContext.Sign(privateKey, validTransaction.ToByteArray(), signingContext.ToByteArray())
                    .SignatureBytes.ToByteString(),
                 SigningContext = signingContext
             };
 
-            validTransactionBroadcast.PublicEntry.Signature = signature;
+            validTransaction.Signature = signature;
 
-            var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
+            var result = transactionValidator.ValidateTransaction(validTransaction);
             result.Should().BeTrue();
         }
     }
