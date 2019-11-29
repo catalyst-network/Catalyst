@@ -26,7 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
@@ -41,20 +41,19 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             IRpcRequestObserver
     {
         /// <summary>
-        /// The PeerReputationRequestHandler 
+        ///     The PeerReputationRequestHandler
         /// </summary>
-        private readonly IPeerService _peerRepository;
+        private readonly IPeerRepository _peerRepository;
 
         public PeerReputationRequestObserver(IPeerSettings peerSettings,
             ILogger logger,
-            IPeerService peerRepository)
+            IPeerRepository peerRepository)
             : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getPeerReputationRequest"></param>
         /// <param name="channelHandlerContext"></param>
@@ -80,5 +79,3 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         }
     }
 }
-
-

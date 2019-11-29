@@ -30,7 +30,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
@@ -47,21 +47,21 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly PeerId _peerId;
-        private readonly IPeerService _subbedPeerService;
+        private readonly IPeerRepository _subbedPeerRepository;
 
         public GetNeighbourRequestObserverTests()
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
-            _subbedPeerService = Substitute.For<IPeerService>();
+            _subbedPeerRepository = Substitute.For<IPeerRepository>();
             _peerId = PeerIdHelper.GetPeerId("testPeer");
         }
-        
+
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
-            IPeerService service)
+            IPeerRepository repository)
         {
-            service.Add(peer);
-            service.GetActivePeers(Arg.Any<int>()).Returns(peer);
+            repository.Add(peer);
+            repository.GetActivePeers(Arg.Any<int>()).Returns(peer);
         }
 
         [Fact]
@@ -79,24 +79,26 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             };
 
             // add them to the mocked repository, and set return expectation
-            AddMockPeerToDbAndSetReturnExpectation(randomPeers, _subbedPeerService);
+            AddMockPeerToDbAndSetReturnExpectation(randomPeers, _subbedPeerRepository);
 
             var peerSettings = _peerId.ToSubstitutedPeerSettings();
             var neighbourRequestHandler = new GetNeighbourRequestObserver(peerSettings,
-                _subbedPeerService,
+                _subbedPeerRepository,
                 _subbedLogger
             );
-            
+
             var peerNeighbourRequestMessage = new PeerNeighborsRequest();
-            
+
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ObserverDto(fakeContext, peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
+            var channeledAny = new ObserverDto(fakeContext,
+                peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                    CorrelationId.GenerateCorrelationId()));
             var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
-            
+
             neighbourRequestHandler.StartObserving(observableStream);
-            
+
             var peerNeighborsResponseMessage = new PeerNeighborsResponse();
-            
+
             for (var i = 0; i < 5; i++)
             {
                 peerNeighborsResponseMessage.Peers.Add(PeerIdHelper.GetPeerId());
@@ -105,12 +107,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler.Start();
 
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()));
+               .WriteAndFlushAsync(
+                    peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()));
         }
 
-        public void Dispose()
-        {
-            _subbedPeerService?.Dispose();
-        }
+        public void Dispose() { _subbedPeerRepository?.Dispose(); }
     }
 }

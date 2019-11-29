@@ -22,7 +22,7 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -33,15 +33,15 @@ namespace Catalyst.Core.Modules.Web3.Controllers
     [Route("api/[controller]/[action]")]
     public sealed class PeerController : Controller
     {
-        private readonly IPeerService _peerService;
+        private readonly IPeerRepository _peerRepository;
 
-        public PeerController(IPeerService peerService) { _peerService = peerService; }
+        public PeerController(IPeerRepository peerRepository) { _peerRepository = peerRepository; }
 
         // GET: api/values
         [HttpGet]
         public JsonResult GetAllPeers()
         {
-            return Json(_peerService.GetAll(), new JsonSerializerSettings
+            return Json(_peerRepository.GetAll(), new JsonSerializerSettings
             {
                 Converters = JsonConverterProviders.Converters.ToList()
             });

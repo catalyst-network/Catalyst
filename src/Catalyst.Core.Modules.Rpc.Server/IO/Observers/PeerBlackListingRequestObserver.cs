@@ -26,7 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
@@ -42,20 +42,19 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             IRpcRequestObserver
     {
         /// <summary>
-        /// The PeerBlackListingRequestHandler 
+        ///     The PeerBlackListingRequestHandler
         /// </summary>
-        private readonly IPeerService _peerRepository;
-        
+        private readonly IPeerRepository _peerRepository;
+
         public PeerBlackListingRequestObserver(IPeerSettings peerSettings,
             ILogger logger,
-            IPeerService peerRepository)
+            IPeerRepository peerRepository)
             : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="setPeerBlackListRequest"></param>
         /// <param name="channelHandlerContext"></param>
@@ -71,18 +70,19 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
-            
+
             var peerItem = _peerRepository.GetAll()
-               .FirstOrDefault(m => m.PeerId.Ip == setPeerBlackListRequest.Ip             
+               .FirstOrDefault(m => m.PeerId.Ip == setPeerBlackListRequest.Ip
                  && m.PeerId.PublicKey.KeyToString() == setPeerBlackListRequest.PublicKey.KeyToString());
 
             return peerItem == null
-                ? ReturnResponse(false, ByteString.Empty, ByteString.Empty) 
-                : ReturnResponse(setPeerBlackListRequest.Blacklist, setPeerBlackListRequest.PublicKey, setPeerBlackListRequest.Ip);
+                ? ReturnResponse(false, ByteString.Empty, ByteString.Empty)
+                : ReturnResponse(setPeerBlackListRequest.Blacklist, setPeerBlackListRequest.PublicKey,
+                    setPeerBlackListRequest.Ip);
         }
 
         /// <summary>
-        /// Returns the response.
+        ///     Returns the response.
         /// </summary>
         /// <param name="blacklist">if set to <c>true</c> [blacklist].</param>
         /// <param name="publicKey">The public key.</param>

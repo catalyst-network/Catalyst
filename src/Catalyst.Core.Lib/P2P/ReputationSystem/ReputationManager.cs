@@ -28,7 +28,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using Catalyst.Abstractions.P2P.ReputationSystem;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Dawn;
 using Serilog;
 
@@ -37,23 +37,23 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
     public sealed class ReputationManager : IReputationManager, IDisposable
     {
         private readonly ILogger _logger;
-        public IPeerService PeerService { get; }
+        public IPeerRepository PeerRepository { get; }
         public readonly ReplaySubject<IPeerReputationChange> ReputationEvent;
         public IObservable<IPeerReputationChange> ReputationEventStream => ReputationEvent.AsObservable();
         public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
-        static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
+        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
 
-        public ReputationManager(IPeerService peerService, ILogger logger)
+        public ReputationManager(IPeerRepository peerRepository, ILogger logger)
         {
             _logger = logger;
-            PeerService = peerService;
+            PeerRepository = peerRepository;
             ReputationEvent = new ReplaySubject<IPeerReputationChange>(0);
-            
+
             ReputationEventStream
                .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
-        
+
         /// <summary>
         ///     Allows passing a reputation streams to merge with the MasterReputationEventStream
         /// </summary>
@@ -64,15 +64,9 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             MergedEventStream = ReputationEventStream.Merge(reputationChangeStream);
         }
 
-        private void OnCompleted()
-        {
-            _logger.Debug("Message stream ended.");
-        }
+        private void OnCompleted() { _logger.Debug("Message stream ended."); }
 
-        private void OnError(Exception obj)
-        {
-            _logger.Error("Message stream ended.");
-        }
+        private void OnError(Exception obj) { _logger.Error("Message stream ended."); }
 
         // ReSharper disable once VSTHRD100
         public async void OnNext(IPeerReputationChange peerReputationChange)
@@ -81,12 +75,12 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             {
                 await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
 
-                var peer = PeerService.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
+                var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
                 Guard.Argument(peer, nameof(peer)).NotNull();
 
                 // ReSharper disable once PossibleNullReferenceException
                 peer.Reputation += peerReputationChange.ReputationEvent.Amount;
-                PeerService.Update(peer);
+                PeerRepository.Update(peer);
             }
             catch (Exception e)
             {
@@ -97,11 +91,11 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
                 SemaphoreSlim.Release();
             }
         }
-        
+
         public void Dispose()
         {
             ReputationEvent?.Dispose();
-            PeerService?.Dispose();    
+            PeerRepository?.Dispose();
         }
     }
 }

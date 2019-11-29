@@ -21,33 +21,24 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
 using Google.Protobuf;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Specifications;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Catalyst.Core.Lib.P2P.Service
+namespace Catalyst.Core.Lib.P2P.Repository
 {
-    public class PeerService : IPeerService
+    public class PeerRepository : IPeerRepository
     {
         private readonly IRepository<Peer, string> _repository;
-        public PeerService(IRepository<Peer, string> repository)
-        {
-            _repository = repository;
-        }
+        public PeerRepository(IRepository<Peer, string> repository) { _repository = repository; }
 
-        public Peer Get(string id)
-        {
-            return _repository.Get(id);
-        }
+        public Peer Get(string id) { return _repository.Get(id); }
 
-        public IEnumerable<Peer> GetAll()
-        {
-            return _repository.GetAll();
-        }
+        public IEnumerable<Peer> GetAll() { return _repository.GetAll(); }
 
         public IEnumerable<Peer> GetActivePeers(int count)
         {
@@ -56,33 +47,23 @@ namespace Catalyst.Core.Lib.P2P.Service
 
         public IEnumerable<Peer> GetRandomPeers(int count)
         {
-            return _repository.AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(_repository.Get).ToList();
+            return _repository.AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(_repository.Get)
+               .ToList();
         }
 
         public IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
         {
-            return _repository.FindAll(m => m.PeerId.Ip == ip && (publicKey.IsEmpty || m.PeerId.PublicKey == publicKey));
+            return _repository.FindAll(m =>
+                m.PeerId.Ip == ip && (publicKey.IsEmpty || m.PeerId.PublicKey == publicKey));
         }
 
-        public void Add(Peer peer)
-        {
-            _repository.Add(peer);
-        }
+        public void Add(Peer peer) { _repository.Add(peer); }
 
-        public void Add(IEnumerable<Peer> peer)
-        {
-            _repository.Add(peer);
-        }
+        public void Add(IEnumerable<Peer> peer) { _repository.Add(peer); }
 
-        public bool Exists(string id)
-        {
-            return _repository.Exists(id);
-        }
+        public bool Exists(string id) { return _repository.Exists(id); }
 
-        public void Update(Peer peer)
-        {
-            _repository.Update(peer);
-        }
+        public void Update(Peer peer) { _repository.Update(peer); }
 
         public uint DeletePeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
         {
@@ -98,24 +79,12 @@ namespace Catalyst.Core.Lib.P2P.Service
             return peerDeletedCount;
         }
 
-        public void Delete(Peer peer)
-        {
-            _repository.Delete(peer);
-        }
+        public void Delete(Peer peer) { _repository.Delete(peer); }
 
-        public void Delete(string id)
-        {
-            _repository.Delete(id);
-        }
+        public void Delete(string id) { _repository.Delete(id); }
 
-        public int Count()
-        {
-            return _repository.Count();
-        }
+        public int Count() { return _repository.Count(); }
 
-        public void Dispose()
-        {
-            _repository.Dispose();
-        }
+        public void Dispose() { _repository.Dispose(); }
     }
 }

@@ -40,7 +40,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Serilog;
@@ -60,13 +60,13 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
         private readonly PeerId _ownNode;
         private readonly IDisposable _pingResponseSubscriptions;
         protected readonly int PeerDiscoveryBurnIn;
-        public readonly IPeerService PeerService;
+        public readonly IPeerRepository PeerRepository;
         private int _discoveredPeerInCurrentWalk;
 
         private bool _isDiscovering;
 
         public HastingsDiscovery(ILogger logger,
-            IPeerService peerService,
+            IPeerRepository peerRepository,
             IDns dns,
             IPeerSettings peerSettings,
             IPeerClient peerClient,
@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             _cancellationTokenProvider = cancellationTokenProvider;
 
             PeerClient = peerClient;
-            PeerService = peerService;
+            PeerRepository = peerRepository;
             PeerDiscoveryBurnIn = peerDiscoveryBurnIn;
             _millisecondsTimeout = millisecondsTimeout;
             _hasValidCandidatesCheckMillisecondsFrequency = hasValidCandidatesCheckMillisecondsFrequency;
@@ -314,7 +314,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = new MessageDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode, StepProposal.PnrCorrelationId),
+            var peerNeighbourRequestDto = new MessageDto(
+                new PeerNeighborsRequest().ToProtocolMessage(_ownNode, StepProposal.PnrCorrelationId),
                 StepProposal.Peer
             );
 
@@ -416,7 +417,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                 {
                     try
                     {
-                        var pingRequestDto = new MessageDto(new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
+                        var pingRequestDto = new MessageDto(
+                            new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
                             n.PeerId);
 
                         PeerClient.SendMessage(pingRequestDto);
@@ -480,7 +482,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                 return;
             }
 
-            PeerService.Add(new Peer
+            PeerRepository.Add(new Peer
             {
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,

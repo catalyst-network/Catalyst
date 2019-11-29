@@ -27,12 +27,11 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Peer;
 using Dawn;
-using Google.Protobuf;
 using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -53,9 +52,9 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         private readonly IHashProvider _hashProvider;
 
         /// <inheritdoc />
-        public IPeerService PeerService { get; }
+        public IPeerRepository PeerRepository { get; }
 
-        public PoaDeltaProducersProvider(IPeerService peerService,
+        public PoaDeltaProducersProvider(IPeerRepository peerRepository,
             IPeerSettings peerSettings,
             IMemoryCache producersByPreviousDelta,
             IHashProvider hashProvider,
@@ -63,7 +62,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         {
             _logger = logger;
             _selfAsPeer = new Peer {PeerId = peerSettings.PeerId};
-            PeerService = peerService;
+            PeerRepository = peerRepository;
             _hashProvider = hashProvider;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(
@@ -86,7 +85,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             _logger.Information("Calculating favourite delta producers for the successor of {0}.",
                 previousDeltaHash);
 
-            var allPeers = PeerService.GetAll().Concat(new[] {_selfAsPeer});
+            var allPeers = PeerRepository.GetAll().Concat(new[] {_selfAsPeer});
 
             var previous = previousDeltaHash.ToArray();
 

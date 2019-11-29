@@ -25,7 +25,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -35,7 +35,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     /// <summary>
-    /// Remove Peer handler
+    ///     Remove Peer handler
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class RemovePeerRequestObserver
@@ -43,21 +43,20 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
-        private readonly IPeerService _peerRepository;
+        private readonly IPeerRepository _peerRepository;
 
-        /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestObserver"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestObserver" /> class.</summary>
         /// <param name="peerSettings"></param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
         public RemovePeerRequestObserver(IPeerSettings peerSettings,
-            IPeerService peerRepository,
+            IPeerRepository peerRepository,
             ILogger logger) : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="removePeerRequest"></param>
         /// <param name="channelHandlerContext"></param>
@@ -74,7 +73,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            var peerDeletedCount = _peerRepository.DeletePeersByIpAndPublicKey(removePeerRequest.PeerIp, removePeerRequest.PublicKey);
+            var peerDeletedCount =
+                _peerRepository.DeletePeersByIpAndPublicKey(removePeerRequest.PeerIp, removePeerRequest.PublicKey);
 
             return new RemovePeerResponse
             {

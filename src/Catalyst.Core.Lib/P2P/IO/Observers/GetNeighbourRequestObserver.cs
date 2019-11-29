@@ -27,7 +27,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
@@ -40,14 +40,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : RequestObserverBase<PeerNeighborsRequest, PeerNeighborsResponse>,
             IP2PMessageObserver
     {
-        private readonly IPeerService _service;
+        private readonly IPeerRepository _repository;
 
         public GetNeighbourRequestObserver(IPeerSettings peerSettings,
-            IPeerService service,
+            IPeerRepository repository,
             ILogger logger)
             : base(logger, peerSettings)
         {
-            _service = service;
+            _repository = repository;
         }
 
         /// <summary>
@@ -66,15 +66,15 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             Guard.Argument(peerNeighborsRequest, nameof(peerNeighborsRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
-            
+
             Logger.Debug("PeerNeighborsRequest Message Received");
 
-            var activePeersList = _service.GetActivePeers(Constants.NumberOfRandomPeers);
-            
+            var activePeersList = _repository.GetActivePeers(Constants.NumberOfRandomPeers);
+
             Guard.Argument(activePeersList).MinCount(1);
 
             var peerNeighborsResponseMessage = new PeerNeighborsResponse();
-            
+
             for (var i = 0; i < Constants.NumberOfRandomPeers; i++)
             {
                 peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerId);

@@ -28,9 +28,10 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -38,14 +39,13 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
 using SharpRepository.InMemoryRepository;
-using Catalyst.Core.Lib.P2P.Service;
+using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     /// <summary>
-    /// Tests remove peer CLI and RPC calls
+    ///     Tests remove peer CLI and RPC calls
     /// </summary>
     public sealed class RemovePeerRequestObserverTests
     {
@@ -56,10 +56,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private readonly IChannelHandlerContext _fakeContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see>
-        ///     <cref>RemovePeerRequestObserverTest</cref>
-        /// </see>
-        /// class.
+        ///     Initializes a new instance of the
+        ///     <see>
+        ///         <cref>RemovePeerRequestObserverTest</cref>
+        ///     </see>
+        ///     class.
         /// </summary>
         public RemovePeerRequestObserverTests()
         {
@@ -70,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         }
 
         /// <summary>
-        /// Tests the peer list request and response.
+        ///     Tests the peer list request and response.
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
         [Theory]
@@ -79,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void TestRemovePeer(params string[] fakePeers) { ExecuteTestCase(fakePeers, true); }
 
         /// <summary>
-        /// Tests peer removal via IP only.
+        ///     Tests peer removal via IP only.
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
         [Theory]
@@ -93,7 +94,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
             var testScheduler = new TestScheduler();
-            IPeerService peerService = new PeerService(new InMemoryRepository<Peer, string>());
+            IPeerRepository peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             var fakePeerList = fakePeers.ToList().Select(fakePeer =>
             {
                 return new Peer
@@ -104,10 +105,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 };
             }).ToList();
 
-            Peer targetPeerToDelete = fakePeerList[0];
+            var targetPeerToDelete = fakePeerList[0];
 
-            peerService.Add(fakePeerList);
-            
+            peerRepository.Add(fakePeerList);
+
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
@@ -121,10 +122,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var protocolMessage = removePeerRequest.ToProtocolMessage(peerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
+            var messageStream =
+                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = peerId.ToSubstitutedPeerSettings();
-            var handler = new RemovePeerRequestObserver(peerSettings, peerService, _logger);
+            var handler = new RemovePeerRequestObserver(peerSettings, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
             testScheduler.Start();

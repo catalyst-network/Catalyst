@@ -26,7 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -37,24 +37,24 @@ using Serilog;
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     /// <summary>
-    /// The GetPeerInfoRequestObserver 
+    ///     The GetPeerInfoRequestObserver
     /// </summary>
     public sealed class GetPeerInfoRequestObserver
         : RequestObserverBase<GetPeerInfoRequest, GetPeerInfoResponse>,
             IRpcRequestObserver
     {
-        private readonly IPeerService _peerService;
+        private readonly IPeerRepository _peerRepository;
 
         public GetPeerInfoRequestObserver(IPeerSettings peerSettings,
             ILogger logger,
-            IPeerService peerService)
+            IPeerRepository peerRepository)
             : base(logger, peerSettings)
         {
-            _peerService = peerService;
+            _peerRepository = peerRepository;
         }
 
         /// <summary>
-        /// Handle the request for GetPeerInfo
+        ///     Handle the request for GetPeerInfo
         /// </summary>
         /// <param name="getPeerInfoRequest">The request</param>
         /// <param name="channelHandlerContext">The channel handler context</param>
@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             var ip = getPeerInfoRequest.Ip;
 
-            var peerInfo = _peerService.GetPeersByIpAndPublicKey(ip, getPeerInfoRequest.PublicKey)
+            var peerInfo = _peerRepository.GetPeersByIpAndPublicKey(ip, getPeerInfoRequest.PublicKey)
                .Select(x =>
                     new PeerInfo
                     {
@@ -93,5 +93,3 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         }
     }
 }
-
-

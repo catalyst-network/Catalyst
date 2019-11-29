@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     public sealed class PeerValidationIntegrationTest : FileSystemBasedTest
     {
-        private IPeerNetworkService _peerService;
+        private IPeerService _peerService;
         private IPeerChallengeRequest _peerChallengeRequest;
         private readonly PeerSettings _peerSettings;
 
@@ -97,7 +97,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
             var keySigner = FakeKeySigner.SignAndVerify();
 
-            _peerService = new PeerNetworkService(
+            _peerService = new PeerService(
                 new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
                 new PeerServerChannelFactory(ContainerProvider.Container.Resolve<IPeerMessageCorrelationManager>(),
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),

@@ -23,13 +23,13 @@
 
 using System;
 using Catalyst.Abstractions.P2P.ReputationSystem;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Lib.P2P.ReputationSystem
 {
     public interface IReputationManager
     {
-        IPeerService PeerService { get; }
+        IPeerRepository PeerRepository { get; }
 
         IObservable<IPeerReputationChange> ReputationEventStream { get; }
 

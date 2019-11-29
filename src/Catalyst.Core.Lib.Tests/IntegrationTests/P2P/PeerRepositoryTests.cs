@@ -38,7 +38,7 @@ using Catalyst.TestUtils.Repository;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
-    public sealed class PeerServiceTests : FileSystemBasedTest
+    public sealed class PeerRepositoryTests : FileSystemBasedTest
     {
         private readonly TestMapperProvider _mapperProvider;
 
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 new object[] {new MongoDbTestModule<PeerDao>()}
             };
 
-        public PeerServiceTests(ITestOutputHelper output) : base(output)
+        public PeerRepositoryTests(ITestOutputHelper output) : base(output)
         {
             _mapperProvider = new TestMapperProvider();
         }

@@ -22,14 +22,14 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using LibP2P;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
     /// <summary>
-    ///     This is the service in charge of providing the list of PeerIdentifiers that are eligible for the
+    ///     This is the repository in charge of providing the list of PeerIdentifiers that are eligible for the
     ///     production of the next delta.
     /// </summary>
     public interface IDeltaProducersProvider
@@ -47,6 +47,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         /// <summary>
         ///     A peer repository containing peers eligible for the production of the next delta.
         /// </summary>
-        IPeerService PeerService { get; }
+        IPeerRepository PeerRepository { get; }
     }
 }

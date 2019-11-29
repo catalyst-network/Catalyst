@@ -40,8 +40,8 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
-using Catalyst.Core.Lib.P2P.Service;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings;
 using Catalyst.Protocol.Peer;
@@ -67,7 +67,7 @@ namespace Catalyst.TestUtils
                         // don't run again for at least 200 milliseconds
                         await Task.Delay(200);
                     }
-                
+
                     // ReSharper disable once FunctionNeverReturns
                 });
             }
@@ -211,9 +211,9 @@ namespace Catalyst.TestUtils
             return new DevDnsClient(settings);
         }
 
-        public static IPeerService MockPeerRepository()
+        public static IPeerRepository MockPeerRepository()
         {
-            return new PeerService(new InMemoryRepository<Peer, string>());
+            return new PeerRepository(new InMemoryRepository<Peer, string>());
         }
 
         public static IPeerClientMessageDto SubDto(Type discoveryMessage,

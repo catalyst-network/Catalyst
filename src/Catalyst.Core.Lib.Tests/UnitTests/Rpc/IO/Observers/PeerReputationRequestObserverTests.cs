@@ -26,10 +26,11 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -37,7 +38,6 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Catalyst.Core.Lib.P2P.Service;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly TestScheduler _testScheduler;
-        private readonly IPeerService _peerService;
+        private readonly IPeerRepository _peerRepository;
         private readonly PeerId _senderId;
 
         public PeerReputationRequestObserverTests()
@@ -59,10 +59,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
             _testScheduler = new TestScheduler();
-            _peerService = Substitute.For<IPeerService>();
+            _peerRepository = Substitute.For<IPeerRepository>();
 
             var fakePeers = PreparePeerRepositoryContent();
-            _peerService.GetAll().Returns(fakePeers);
+            _peerRepository.GetAll().Returns(fakePeers);
 
             _senderId = PeerIdHelper.GetPeerId("sender");
         }
@@ -97,10 +97,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private GetPeerReputationResponse GetGetPeerReputationResponse(GetPeerReputationRequest request)
         {
             var protocolMessage = request.ToProtocolMessage(_senderId);
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
+            var messageStream =
+                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var peerSettings = _senderId.ToSubstitutedPeerSettings();
-            var handler = new PeerReputationRequestObserver(peerSettings, _logger, _peerService);
+            var handler = new PeerReputationRequestObserver(peerSettings, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();

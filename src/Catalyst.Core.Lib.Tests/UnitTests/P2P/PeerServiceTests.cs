@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         private readonly List<IP2PMessageObserver> _p2PMessageHandlers;
         private readonly EmbeddedObservableChannel _serverChannel;
         private readonly IPeerSettings _peerSettings;
-        private IPeerNetworkService _peerService;
+        private IPeerService _peerService;
 
         public PeerServiceTests(ITestOutputHelper output) : base(output)
         {
@@ -135,7 +135,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             _p2PMessageHandlers.Add(pingRequestHandler);
 
-            _peerService = new PeerNetworkService(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
+            _peerService = new PeerService(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
                 _udpServerServerChannelFactory,
                 _peerDiscovery,
                 _p2PMessageHandlers,

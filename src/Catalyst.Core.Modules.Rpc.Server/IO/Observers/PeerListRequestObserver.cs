@@ -26,7 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -46,24 +46,23 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>
         ///     repository interface to storage
         /// </summary>
-        private readonly IPeerService _peerRepository;
+        private readonly IPeerRepository _peerRepository;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="PeerListRequestObserver"/> class.
+        ///     Initializes a new instance of the <see cref="PeerListRequestObserver" /> class.
         /// </summary>
         /// <param name="peerSettings"></param>
         /// <param name="logger">The logger.</param>
         /// <param name="peerRepository"></param>
         public PeerListRequestObserver(IPeerSettings peerSettings,
             ILogger logger,
-            IPeerService peerRepository)
+            IPeerRepository peerRepository)
             : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getPeerListRequest"></param>
         /// <param name="channelHandlerContext"></param>

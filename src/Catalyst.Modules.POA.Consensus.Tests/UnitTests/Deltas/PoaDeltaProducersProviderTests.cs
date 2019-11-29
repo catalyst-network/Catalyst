@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Modules.POA.Consensus.Deltas;
@@ -69,10 +69,11 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var logger = Substitute.For<ILogger>();
 
-            var peerRepository = Substitute.For<IPeerService>();
+            var peerRepository = Substitute.For<IPeerRepository>();
             peerRepository.GetAll().Returns(_ => _peers);
 
-            _previousDeltaHash = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)));
+            _previousDeltaHash =
+                CidHelper.CreateCid(_hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)));
 
             _producersByPreviousDelta = Substitute.For<IMemoryCache>();
 

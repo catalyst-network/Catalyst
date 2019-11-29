@@ -26,7 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Service;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -36,7 +36,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     /// <summary>
-    /// Peer count request handler
+    ///     Peer count request handler
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerCountRequestObserver
@@ -44,22 +44,21 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
-        private readonly IPeerService _peerRepository;
+        private readonly IPeerRepository _peerRepository;
 
-        /// <summary>Initializes a new instance of the <see cref="PeerCountRequestObserver"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="PeerCountRequestObserver" /> class.</summary>
         /// <param name="peerSettings"></param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
         public PeerCountRequestObserver(IPeerSettings peerSettings,
-            IPeerService peerRepository,
+            IPeerRepository peerRepository,
             ILogger logger) :
             base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getPeerCountRequest"></param>
         /// <param name="channelHandlerContext"></param>
