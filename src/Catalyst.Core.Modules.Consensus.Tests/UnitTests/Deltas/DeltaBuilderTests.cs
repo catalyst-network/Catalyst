@@ -67,11 +67,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ILogger _logger;
         private readonly IPeerSettings _peerSettings;
-        private readonly IMapperProvider _mapperProvider;
 
         public DeltaBuilderTests()
         {
-            _mapperProvider = new TestMapperProvider();
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _random = new Random();
@@ -105,7 +103,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Returns(new List<PublicEntry>());
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-                _cache, _dateTimeProvider, _mapperProvider, _logger);
+                _cache, _dateTimeProvider, _logger);
 
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
@@ -130,7 +128,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(invalidTransactionList);
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-                _cache, _dateTimeProvider, _mapperProvider, _logger);
+                _cache, _dateTimeProvider, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, _zeroCoinbaseEntry.ToByteArray());
@@ -177,7 +175,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var expectedBytesToHash = BuildExpectedBytesToHash(selectedTransactions, shuffledEntriesBytes);
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-                _cache, _dateTimeProvider, _mapperProvider, _logger);
+                _cache, _dateTimeProvider, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, expectedBytesToHash);
@@ -234,7 +232,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var expectedBytesToHash = BuildExpectedBytesToHash(selectedTransactions, shuffledEntriesBytes);
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-                _cache, _dateTimeProvider, _mapperProvider, _logger);
+                _cache, _dateTimeProvider, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, expectedBytesToHash);
@@ -289,7 +287,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var expectedBytesToHash = BuildExpectedBytesToHash(expectedSelectedTransactions, shuffledEntriesBytes);
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-                _cache, _dateTimeProvider, _mapperProvider, _logger);
+                _cache, _dateTimeProvider, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, expectedBytesToHash);
