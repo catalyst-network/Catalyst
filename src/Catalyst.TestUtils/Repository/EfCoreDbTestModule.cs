@@ -23,6 +23,7 @@
 
 using Autofac;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.Repository;
 using SharpRepository.Repository;
 

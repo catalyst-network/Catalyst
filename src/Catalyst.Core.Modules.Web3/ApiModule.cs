@@ -30,7 +30,6 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;

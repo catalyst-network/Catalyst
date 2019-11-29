@@ -26,7 +26,6 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Handlers
@@ -76,8 +75,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
             var messageWithoutSig = signedMessage.Clone();
             messageWithoutSig.Signature = null;
 
-            return _keySigner.Verify(signature, messageWithoutSig.ToByteArray(),
-                signedMessage.Signature.SigningContext);
+            return _keySigner.Verify(signature, messageWithoutSig, signedMessage.Signature.SigningContext);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 
         public CancellationTokenProviderTests()
         {
-            _cancellationTokenProvider = new CancellationTokenProvider();
+            _cancellationTokenProvider = new CancellationTokenProvider(true);
         }
 
         [Fact]

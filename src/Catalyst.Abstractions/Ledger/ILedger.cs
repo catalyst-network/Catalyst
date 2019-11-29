@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Abstractions.Ledger.Models;
 using LibP2P;
 
@@ -31,7 +32,7 @@ namespace Catalyst.Abstractions.Ledger
     ///     network. It acts a unique source of truth which can be queried to retrieve account
     ///     balances and which can only be updated by Delta / Ledger State Update objects.
     /// </summary>
-    public interface ILedger
+    public interface ILedger : IDisposable
     {
         /// <summary>
         ///     Saves the new state of a give <see cref="IAccount" /> on the ledger.

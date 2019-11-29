@@ -22,10 +22,9 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Tests.Fakes;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
@@ -45,22 +44,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     public sealed class SignMessageRequestObserverTests
     {
         private readonly ILogger _logger;
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly ISignature _signature;
 
         public SignMessageRequestObserverTests()
         {
-            _keySigner = Substitute.For<IKeySigner>();
-            _signature = Substitute.For<ISignature>();
-            _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength));
-            _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength));
+            _keySigner = FakeKeySigner.SignOnly();
+            _keySigner.Signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength));
+            _keySigner.Signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength));
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-
-            _keySigner.Sign(default, default).ReturnsForAnyArgs(_signature);
         }
 
         [Theory]
@@ -97,8 +92,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
 
             signResponseMessage.OriginalMessage.Should().Equal(message);
-            signResponseMessage.Signature.ToByteArray().Should().Equal(_signature.SignatureBytes);
-            signResponseMessage.PublicKey.ToByteArray().Should().Equal(_signature.PublicKeyBytes);
+            signResponseMessage.Signature.ToByteArray().Should().Equal(_keySigner.Signature.SignatureBytes);
+            signResponseMessage.PublicKey.ToByteArray().Should().Equal(_keySigner.Signature.PublicKeyBytes);
         }
     }
 }

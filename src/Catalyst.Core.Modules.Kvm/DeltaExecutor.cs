@@ -99,7 +99,7 @@ namespace Catalyst.Core.Modules.Kvm
         /// <param name="entry"></param>
         /// <param name="releaseSpec"></param>
         /// <returns>Total intrinsic cost of the <paramref name="entry" /></returns>
-        public static ulong CalculateIntrinsicGas(ContractEntry entry, IReleaseSpec releaseSpec)
+        public static ulong CalculateIntrinsicGas(PublicEntry entry, IReleaseSpec releaseSpec)
         {
             ulong result = GasCostOf.Transaction; // the basic entry cost
             if (entry.Data != null)
@@ -151,7 +151,7 @@ namespace Catalyst.Core.Modules.Kvm
             return publicKey.ToKvmAddress();
         }
 
-        private static void QuickFail(ContractEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
+        private static void QuickFail(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
             // here we need to propagate back to Delta
             env.CurrentBlock.GasUsed += (long) entry.GasLimit;
@@ -164,19 +164,11 @@ namespace Catalyst.Core.Modules.Kvm
         private void Execute(Delta delta, ITxTracer txTracer, bool readOnly)
         {
             var stateUpdate = ToStateUpdate(delta);
-            foreach (var publicEntry in delta.PublicEntries)
-            {
-                var contractEntry = new ContractEntry
-                {
-                    Base = publicEntry.Base, Amount = publicEntry.Amount, Data = ByteString.Empty, GasLimit = 21000
-                };
-                Execute(contractEntry, stateUpdate, txTracer, readOnly);
-            }
 
             // revert state if any fails (take snapshot)
-            foreach (var contractEntry in delta.ContractEntries)
+            foreach (var publicEntry in delta.PublicEntries)
             {
-                Execute(contractEntry, stateUpdate, txTracer, readOnly);
+                Execute(publicEntry, stateUpdate, txTracer, readOnly);
             }
 
             if (!readOnly)
@@ -197,7 +189,7 @@ namespace Catalyst.Core.Modules.Kvm
         /// </summary>
         /// <param name="entry"></param>
         /// <param name="reason"></param>
-        private void TraceLogInvalidTx(ContractEntry entry, string reason)
+        private void TraceLogInvalidTx(PublicEntry entry, string reason)
         {
             if (_logger.IsEnabled(LogEventLevel.Verbose))
             {
@@ -214,7 +206,7 @@ namespace Catalyst.Core.Modules.Kvm
         /// <param name="readOnly">Defines whether the state should be reverted after the execution.</param>
         /// <exception cref="TransactionCollisionException">Thrown when deployment address already has some code.</exception>
         /// <exception cref="OutOfGasException">Thrown when not enough gas is available for deposit.</exception>
-        private void Execute(ContractEntry entry, StateUpdate stateUpdate, ITxTracer txTracer, bool readOnly)
+        private void Execute(PublicEntry entry, StateUpdate stateUpdate, ITxTracer txTracer, bool readOnly)
         {
             var spec = _specProvider.GetSpec(stateUpdate.Number);
 
@@ -415,7 +407,7 @@ namespace Catalyst.Core.Modules.Kvm
             unspentGas -= codeDepositGasCost;
         }
 
-        private (Address sender, Address recipient) ExtractSenderAndRecipient(ContractEntry entry)
+        private (Address sender, Address recipient) ExtractSenderAndRecipient(PublicEntry entry)
         {
             var sender = GetAccountAddress(entry.Base.SenderPublicKey);
             var recipient = entry.TargetContract == null
@@ -429,7 +421,7 @@ namespace Catalyst.Core.Modules.Kvm
             return (sender, recipient);
         }
 
-        private ExecutionEnvironment PrepareEnv(ContractEntry entry,
+        private ExecutionEnvironment PrepareEnv(PublicEntry entry,
             Address sender,
             Address recipient,
             StateUpdate stateUpdate,
@@ -459,7 +451,7 @@ namespace Catalyst.Core.Modules.Kvm
             return env;
         }
 
-        private bool ValidateDeltaGasLimit(ContractEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
+        private bool ValidateDeltaGasLimit(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
             if (entry.GasLimit <= (ulong) (env.CurrentBlock.GasLimit - env.CurrentBlock.GasUsed))
             {
@@ -471,7 +463,7 @@ namespace Catalyst.Core.Modules.Kvm
             return false;
         }
 
-        private bool ValidateIntrinsicGas(ContractEntry entry,
+        private bool ValidateIntrinsicGas(PublicEntry entry,
             ExecutionEnvironment env,
             ulong intrinsicGas,
             ITxTracer txTracer)
@@ -491,7 +483,7 @@ namespace Catalyst.Core.Modules.Kvm
             return false;
         }
 
-        private bool ValidateSender(ContractEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
+        private bool ValidateSender(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
             if (env.Sender != null)
             {
@@ -503,7 +495,7 @@ namespace Catalyst.Core.Modules.Kvm
             return false;
         }
 
-        private bool ValidateNonce(ContractEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
+        private bool ValidateNonce(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
             if (entry.Base.Nonce == _stateProvider.GetNonce(env.Sender))
             {
@@ -515,7 +507,7 @@ namespace Catalyst.Core.Modules.Kvm
             return false;
         }
 
-        private bool ValidateSenderBalance(ContractEntry entry,
+        private bool ValidateSenderBalance(PublicEntry entry,
             ExecutionEnvironment env,
             ulong intrinsicGas,
             ITxTracer txTracer)

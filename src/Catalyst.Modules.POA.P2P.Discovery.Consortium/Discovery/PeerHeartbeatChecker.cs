@@ -25,8 +25,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.Repository;
 using Serilog;
 
@@ -36,7 +36,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
     {
         private readonly TimeSpan _checkHeartbeatInterval;
         private readonly IPeerRepository _peerRepository;
-        private readonly IPeerChallenger _peerChallenger;
+        private readonly IPeerChallengeRequest _peerChallengeRequest;
         private readonly int _maxNonResponsiveCounter;
         private readonly ConcurrentDictionary<string, int> _nonResponsivePeerMap;
         private readonly ILogger _logger;
@@ -44,7 +44,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
 
         public PeerHeartbeatChecker(ILogger logger,
             IPeerRepository peerRepository,
-            IPeerChallenger peerChallenger,
+            IPeerChallengeRequest peerChallengeRequest,
             int checkHeartbeatIntervalSeconds,
             int maxNonResponsiveCounter)
         {
@@ -52,7 +52,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             _nonResponsivePeerMap = new ConcurrentDictionary<string, int>();
             _peerRepository = peerRepository;
             _maxNonResponsiveCounter = maxNonResponsiveCounter;
-            _peerChallenger = peerChallenger;
+            _peerChallengeRequest = peerChallengeRequest;
             _checkHeartbeatInterval = TimeSpan.FromSeconds(checkHeartbeatIntervalSeconds);
         }
 
@@ -70,7 +70,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             {
                 Task.Run(async () =>
                 {
-                    var result = await _peerChallenger.ChallengePeerAsync(peer.PeerId).ConfigureAwait(false);
+                    var result = await _peerChallengeRequest.ChallengePeerAsync(peer.PeerId);
                     var counterValue = _nonResponsivePeerMap.GetOrAdd(peer.DocumentId, 0);
                     _logger.Verbose(
                         $"Heartbeat result: {result.ToString()} Peer: {peer.PeerId} Non-Responsive Counter: {counterValue}");

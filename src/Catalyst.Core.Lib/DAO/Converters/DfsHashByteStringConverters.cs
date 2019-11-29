@@ -30,8 +30,10 @@ namespace Catalyst.Core.Lib.DAO.Converters
 {
     public class ByteStringToDfsHashConverter : IValueConverter<ByteString, string>
     {
+        // @TODO we should return a valid CID object rather than string.
         public string Convert(ByteString sourceMember, ResolutionContext context)
         {
+            // @TODO we need to get the algorithm name from encoder provider.
             return MultiBase.Encode(sourceMember.ToByteArray(), "base32");
         }
     }

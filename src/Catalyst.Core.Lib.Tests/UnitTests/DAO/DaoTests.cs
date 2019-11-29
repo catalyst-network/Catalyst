@@ -27,7 +27,10 @@ using System.Net;
 using System.Text;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Core.Lib.DAO.Deltas;
+using Catalyst.Core.Lib.DAO.Peer;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
@@ -74,7 +77,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new PublicEntryMapperInitialiser(),
                 new ConfidentialEntryMapperInitialiser(),
                 new TransactionBroadcastMapperInitialiser(),
-                new ContractEntryMapperInitialiser(),
                 new SignatureMapperInitialiser(),
                 new BaseEntryMapperInitialiser(), 
             };

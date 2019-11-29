@@ -21,12 +21,17 @@
 
 #endregion
 
-using Catalyst.Abstractions.Repository;
+using System;
+using System.Collections.Generic;
 
 namespace Catalyst.Abstractions.Mempool.Repositories
 {
-    public interface IMempoolRepository<T> : IRepositoryWrapper<T> where T : class
+    public interface IMempoolRepository<T> : IDisposable where T : class
     {
+        IEnumerable<T> GetAll();
+
+        void Delete(IEnumerable<T> transactionBroadcasts);
+
         bool TryReadItem(string signature);
 
         T ReadItem(string signature);

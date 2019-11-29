@@ -29,11 +29,26 @@ namespace Catalyst.Core.Lib.Util
 {
     public sealed class CancellationTokenProvider : ICancellationTokenProvider, IDisposable
     {
-        public CancellationTokenSource CancellationTokenSource { get; set; }
+        public CancellationTokenSource CancellationTokenSource { get; }
 
-        public CancellationTokenProvider()
+        public CancellationTokenProvider(bool goodTillCancel)
         {
+            if (!goodTillCancel) 
+            {
+                CancellationTokenSource = new CancellationTokenSource(10);
+            }
+            
             CancellationTokenSource = new CancellationTokenSource();
+        }
+        
+        public CancellationTokenProvider(TimeSpan timeToLiveInMs)
+        {
+            CancellationTokenSource = new CancellationTokenSource(timeToLiveInMs);
+        }
+        
+        public CancellationTokenProvider(int seconds)
+        {
+            CancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(seconds));
         }
 
         public bool HasTokenCancelled()

@@ -22,6 +22,7 @@
 #endregion
 
 using Autofac;
+using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using TheDotNetLeague.Ipfs.Core.Lib;
 
@@ -31,6 +32,7 @@ namespace Catalyst.Core.Modules.Dfs
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<DeltaDfsReader>().As<IDeltaDfsReader>().SingleInstance();
             builder.RegisterType<IpfsAdapter>().As<IIpfsAdapter>().As<ICoreApi>().SingleInstance();
             builder.RegisterType<Dfs>().As<IDfs>().SingleInstance();
         }  
