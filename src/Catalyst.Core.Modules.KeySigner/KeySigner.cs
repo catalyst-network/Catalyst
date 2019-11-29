@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Buffers;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
@@ -31,7 +30,6 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
-using Google.Protobuf;
 using Org.BouncyCastle.Security;
 
 namespace Catalyst.Core.Modules.KeySigner

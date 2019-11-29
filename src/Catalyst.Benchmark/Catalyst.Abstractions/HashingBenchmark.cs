@@ -45,7 +45,7 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
 
             HashingAlgorithm.Register(name, 1234123421, NoopHash.DigestSize, () => new NoopHash());
 
-            var bytes = ByteString.CopyFrom(Enumerable.Range(1, 32).Select(i => (byte)i).ToArray());
+            var bytes = ByteString.CopyFrom(Enumerable.Range(1, 32).Select(i => (byte) i).ToArray());
             var amount = ByteString.CopyFrom(343434.ToByteArray(Bytes.Endianness.Big));
 
             _entry = new PublicEntry

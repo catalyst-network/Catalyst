@@ -22,11 +22,8 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
@@ -35,7 +32,6 @@ using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Tests.Fakes;
-using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;

@@ -23,8 +23,6 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
@@ -33,7 +31,6 @@ using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Tests.Fakes;
-using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
@@ -42,7 +39,6 @@ using Catalyst.TestUtils;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
-using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;

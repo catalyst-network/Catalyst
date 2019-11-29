@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
@@ -35,7 +34,6 @@ using Serilog;
 using System.Linq;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Tests.Fakes;
-using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;

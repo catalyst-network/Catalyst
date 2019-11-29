@@ -23,11 +23,9 @@
 
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.Tests.Fakes;
-using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
@@ -35,7 +33,6 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels.Embedded;
-using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;

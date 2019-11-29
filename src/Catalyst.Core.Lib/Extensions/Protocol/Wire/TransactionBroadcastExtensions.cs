@@ -25,7 +25,6 @@ using System.Reflection;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
-using Google.Protobuf;
 using Nethermind.Dirichlet.Numerics;
 using Serilog;
 

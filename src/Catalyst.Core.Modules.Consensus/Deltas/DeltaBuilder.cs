@@ -139,8 +139,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
-                CoinbaseEntries = { coinbaseEntry },
-                PublicEntries = { includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x) },
+                CoinbaseEntries =
+                {
+                    coinbaseEntry
+                },
+                PublicEntries =
+                {
+                    includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x)
+                },
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 

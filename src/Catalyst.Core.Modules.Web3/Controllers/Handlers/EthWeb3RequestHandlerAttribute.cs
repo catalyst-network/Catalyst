@@ -21,15 +21,20 @@
 
 #endregion
 
-using Catalyst.Protocol.Deltas;
-using Nethermind.Evm.Tracing;
+using System;
 
-namespace Catalyst.Core.Modules.Kvm
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    public interface IDeltaExecutor
+    public class EthWeb3RequestHandlerAttribute : Attribute
     {
-        void Execute(Delta delta, ITxTracer txTracer);
-        
-        void CallAndRestore(Delta delta, ITxTracer txTracer);
+        private readonly string _module;
+        private readonly string _method;
+        public string FullMethod => $"{_module}_{_method}";
+
+        public EthWeb3RequestHandlerAttribute(string module, string method)
+        {
+            _module = module;
+            _method = method;
+        }
     }
 }

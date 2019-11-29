@@ -21,11 +21,8 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.Tests.Fakes;
-using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
@@ -34,7 +31,6 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
 using NSubstitute;
 using Xunit;
 
