@@ -47,6 +47,8 @@ namespace Catalyst.Core.Modules.Kvm
             builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>(); // state db
             
             builder.RegisterType<StateReader>().As<IStateReader>(); // state db
+            
+            // builder.RegisterType<EthRpcService>().As<IEthRpcService>().SingleInstance();
         }  
     }
 }

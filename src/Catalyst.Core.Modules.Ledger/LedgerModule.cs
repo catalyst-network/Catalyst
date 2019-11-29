@@ -35,6 +35,7 @@ namespace Catalyst.Core.Modules.Ledger
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
             builder.Register(c => new InMemoryRepository<Account, string>())
                .As<IRepository<Account, string>>()
                .SingleInstance();
