@@ -35,6 +35,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             // change to appropriate hash
             Delta delta = api.DeltaResolver.Latest;
+
             // Keccak stateRoot = api.StateRootResolver.Resolve(delta.Hash); <-- we need a delta hash
             // return api.StateReader.GetBalance(stateRoot, address);
             return new UInt256(1000000);

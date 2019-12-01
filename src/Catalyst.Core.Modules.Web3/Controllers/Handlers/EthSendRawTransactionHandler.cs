@@ -21,8 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.Kvm;
-using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Nethermind.Core.Crypto;
 

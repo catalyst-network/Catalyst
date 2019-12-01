@@ -21,7 +21,6 @@
 
 #endregion
 
-
 using Nethermind.Core.Crypto;
 
 namespace Catalyst.Abstractions.Kvm

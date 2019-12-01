@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Nethermind.Core;
@@ -42,7 +41,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             {
                 BlockParameter blockParameter = new BlockParameter();
                 blockParameter.FromJson(parameter);
-                return (TParam)Convert.ChangeType(blockParameter, typeof(TParam));
+                return (TParam) Convert.ChangeType(blockParameter, typeof(TParam));
             }
 
             return serializer.Deserialize<TParam>(parameter);

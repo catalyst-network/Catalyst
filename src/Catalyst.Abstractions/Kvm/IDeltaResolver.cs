@@ -21,7 +21,6 @@
 
 #endregion
 
-
 using Catalyst.Protocol.Deltas;
 using Nethermind.Core.Crypto;
 

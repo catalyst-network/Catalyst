@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <Title>Catalyst CLI</Title>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <PackageDescription>CLI tool to interact with Catalyst Nodes via RPC</PackageDescription>
+        <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+        <OutputType>Exe</OutputType>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Node.POA.CE.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <RootNamespace>Catalyst.Node.POA.CE</RootNamespace>
+    </PropertyGroup>
+    <Import Project="../Common.Projects.props" />
+    <ItemGroup>
+      <None Remove="Config\nodes.json" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="CommandLineParser" Version="2.5.0" />
+        <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
+        <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />
+        <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.3" />
+        <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Core.Modules.Authentication\Catalyst.Core.Modules.Authentication.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.KeySigner\Catalyst.Core.Modules.KeySigner.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Ledger\Catalyst.Core.Modules.Ledger.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.P2P.Discovery.Hastings\Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Server\Catalyst.Core.Modules.Rpc.Server.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Web3\Catalyst.Core.Modules.Web3.csproj" />
+        <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
+        <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.POA.Consensus\Catalyst.Modules.POA.Consensus.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.POA.P2P.Discovery.Consortium\Catalyst.Modules.POA.P2P.Discovery.Consortium.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="Config\**\*.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Config\*.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Config.*.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+      <None Update="Config\AuthCredentials.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+</Project>

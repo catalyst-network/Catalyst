@@ -26,8 +26,6 @@ using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
-using Catalyst.Protocol.Deltas;
-using Nethermind.Store;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 

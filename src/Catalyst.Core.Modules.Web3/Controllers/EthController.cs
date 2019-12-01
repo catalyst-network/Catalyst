@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;

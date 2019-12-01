@@ -21,14 +21,13 @@
 
 #endregion
 
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "estimateGas")]
-    public class EthEstimateGasHandler :EthWeb3RequestHandler<TransactionForRpc, long>
+    public class EthEstimateGasHandler : EthWeb3RequestHandler<TransactionForRpc, long>
     {
         protected override long Handle(TransactionForRpc param1, IWeb3EthApi api)
         {

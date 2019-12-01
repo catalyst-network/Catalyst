@@ -1,0 +1,22 @@
+{
+    "CatalystCliRpcNodes": {
+        "nodes": [
+          {
+            "nodeId": "node1",
+            "host": "127.0.0.1",
+            "Port": 42066,
+            "PfxFileName": "mycert.pfx",
+            "SslCertPassword": "test",
+            "PublicKey": "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq"
+          },
+          {
+            "nodeId": "node2",
+            "host": "127.0.0.2",
+            "Port": 42066,
+            "PfxFileName": "mycert.pfx",
+            "SslCertPassword": "test",
+            "PublicKey": "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq"
+          }
+        ]
+    }
+}

@@ -1,0 +1,21 @@
+{
+  "defaultAssembly": "Catalyst.Core",
+    "components": [
+        {
+            "type": "Catalyst.Core.Ledger.Ledger",
+            "services": [
+                {
+                    "type": "Catalyst.Core.Ledger.ILedger, Catalyst.Core"
+                }
+            ]
+        },
+        {
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Core.Ledger.Models.Account, Catalyst.Core], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
+            "services": [
+                {
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Core.Ledger.Models.Account, Catalyst.Core], [System.String, mscorlib]], SharpRepository.Repository"
+                }
+            ]
+        }
+    ]
+}
