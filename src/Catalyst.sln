@@ -178,6 +178,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.POA.CE", "Cat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.POA.CE.Tests", "Catalyst.Node.POA.CE.Tests\Catalyst.Node.POA.CE.Tests.csproj", "{36F415B5-4101-476A-9BD2-F18A5879F388}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.Server.Blazor", "Catalyst.Modules.Server.Blazor\Catalyst.Modules.Server.Blazor.csproj", "{A2B05AD3-06DA-46E6-8662-DD9757F547B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -400,6 +402,10 @@ Global
 		{36F415B5-4101-476A-9BD2-F18A5879F388}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36F415B5-4101-476A-9BD2-F18A5879F388}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36F415B5-4101-476A-9BD2-F18A5879F388}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2B05AD3-06DA-46E6-8662-DD9757F547B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2B05AD3-06DA-46E6-8662-DD9757F547B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2B05AD3-06DA-46E6-8662-DD9757F547B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2B05AD3-06DA-46E6-8662-DD9757F547B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

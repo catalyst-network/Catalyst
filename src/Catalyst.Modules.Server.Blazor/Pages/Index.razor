@@ -1,0 +1,8 @@
+﻿@page "/"
+
+@inject IPeerSettings PeerSettings
+<h1>Peer Settings</h1>
+
+<p>Peer Public Key: @PeerSettings.PublicKey</p>
+<p>IP Bind Address: @PeerSettings.BindAddress</p>
+<p>Network Type: @PeerSettings.NetworkType</p>
