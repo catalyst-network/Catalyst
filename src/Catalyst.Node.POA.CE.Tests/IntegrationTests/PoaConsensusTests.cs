@@ -76,13 +76,13 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Run_Consensus()
+        public async Task Run_ConsensusAsync()
         {
             _nodes.AsParallel()
                .ForAll(n =>
                 {
-                    n.RunAsync(_endOfTestCancellationSource.Token);
-                    n.Consensus.StartProducing();
+                    n?.RunAsync(_endOfTestCancellationSource.Token);
+                    n?.Consensus.StartProducing();
                 });
 
             await Task.Delay(Debugger.IsAttached

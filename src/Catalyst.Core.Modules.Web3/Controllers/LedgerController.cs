@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetLatestDelta(DateTime? asOf)
+        public async Task<JsonResult> GetLatestDeltaAsync(DateTime? asOf)
         {
             var latest = _deltaHashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());
             try

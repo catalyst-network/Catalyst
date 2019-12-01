@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
@@ -119,13 +120,13 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
         }
 
         [Fact]
-        public void Can_Copy_Overridden_Network_File()
+        public async Task Can_Copy_Overridden_Network_File()
         {
             var overrideFile = "TestOverride.json";
             var currentDirectory = FileSystem.GetCatalystDataDir();
-            FileSystem.WriteTextFileToCddAsync(overrideFile,
+            await FileSystem.WriteTextFileToCddAsync(overrideFile,
                 File.ReadAllText(Path.Combine(Constants.ConfigSubFolder,
-                    Constants.NetworkConfigFile(NetworkType.Devnet))));
+                    Constants.NetworkConfigFile(NetworkType.Devnet)))).ConfigureAwait(false);
             new TestConfigCopier().RunConfigStartUp(currentDirectory.FullName, NetworkType.Devnet, null, true,
                 overrideFile);
             File.Exists(Path.Combine(currentDirectory.FullName, overrideFile)).Should().BeTrue();
