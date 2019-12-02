@@ -1,0 +1,12 @@
+﻿@inherits SendTransactionFormBase
+
+<EditForm Model="@Model" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <p>
+        <label for="amount">Amount: </label>
+        <InputNumber @bind-Value="Model.Amount"/>
+    </p>
+
+    <button type="submit">Submit</button>
+</EditForm>

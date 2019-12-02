@@ -30,7 +30,6 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
@@ -127,8 +126,8 @@ namespace Catalyst.Core.Modules.Web3
                .As<IMapperProvider>()
                .SingleInstance();
             builder.RegisterInstance(_container.Resolve<IWeb3EthApi>())
-                .As<IWeb3EthApi>()
-                .SingleInstance();
+               .As<IWeb3EthApi>()
+               .SingleInstance();
             builder.RegisterInstance(_container.Resolve<ILogger>())
                .As<ILogger>()
                .SingleInstance();

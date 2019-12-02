@@ -56,7 +56,10 @@ namespace Catalyst.Core.Lib.Tests
             copyingText.Should().StartWith(@"#region LICENSE");
 
             var getWrongFiles = sourceDirectory.EnumerateFiles("*.cs", SearchOption.AllDirectories)
+               .Where(f => !f.Name.Contains(".g.cs"))
+               .Where(f => !f.Name.Contains(".AssemblyInfo.cs"))
                .Where(f => f.Directory?.Parent?.Parent?.Name != "obj")
+               .Where(f => f.Directory?.Parent?.Parent?.Name != "bin")
                .Select(async f =>
                 {
                     var allText = (await File.ReadAllTextAsync(f.FullName)).TrimEndOfLines();

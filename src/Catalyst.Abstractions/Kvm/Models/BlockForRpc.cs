@@ -38,9 +38,7 @@ namespace Catalyst.Abstractions.Kvm.Models
     {
         private readonly BlockDecoder _blockDecoder = new BlockDecoder();
 
-        public BlockForRpc()
-        {
-        }
+        public BlockForRpc() { }
         
         public BlockForRpc(Block block, bool includeFullTransactionData)
         {

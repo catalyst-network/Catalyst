@@ -38,8 +38,8 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         public Web3HandlerResolver()
         {
             var handlers = typeof(EthController).Assembly.GetTypes()
-                .Select(t => new {HandlerType = t, HandlerDetails = t.GetCustomAttribute<EthWeb3RequestHandlerAttribute>()})
-                .Where(h => h.HandlerDetails != null);
+               .Select(t => new {HandlerType = t, HandlerDetails = t.GetCustomAttribute<EthWeb3RequestHandlerAttribute>()})
+               .Where(h => h.HandlerDetails != null);
 
             foreach (var handler in handlers)
             {
