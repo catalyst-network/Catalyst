@@ -102,7 +102,7 @@ namespace Catalyst.TestUtils
                     },
                     Data = data,
                     GasLimit = gasLimit,
-                    GasPrice = gasPrice,
+                    GasPrice = gasPrice.ToUint256ByteString(),
                     TargetContract = targetContract
                 }
             };

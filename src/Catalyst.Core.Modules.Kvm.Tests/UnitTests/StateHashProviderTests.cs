@@ -31,9 +31,9 @@ namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
         [Fact(Skip = "Not implemented yet")]
         public void Can_provide_a_latest_state_update_hash()
         {
-            StateUpdate stateUpdate = new StateUpdate();
-            
-            StateUpdateHashProvider stateUpdateHashProvider = new StateUpdateHashProvider();
+            var stateUpdate = new StateUpdate();
+
+            var stateUpdateHashProvider = new StateUpdateHashProvider();
             stateUpdateHashProvider.GetHash(stateUpdate, 1);
         }
     }

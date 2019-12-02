@@ -24,7 +24,6 @@
 using System.Collections.Generic;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
-using Google.Protobuf;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {

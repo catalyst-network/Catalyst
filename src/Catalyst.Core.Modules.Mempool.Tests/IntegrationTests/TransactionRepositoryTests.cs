@@ -91,7 +91,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             };
 
             transaction.Signature = new SignatureDao
-            { RawBytes = "mplwifwfjfw", SigningContext = signingContextDao };
+            {
+                RawBytes = "mplwifwfjfw", SigningContext = signingContextDao
+            };
 
             transactionRepository.Add(transaction);
 
@@ -174,7 +176,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             {
                 var contextDb = scope.Resolve<IDbContext>();
 
-                ((DbContext)contextDb).Database.EnsureCreated();
+                ((DbContext) contextDb).Database.EnsureCreated();
             }
         }
 

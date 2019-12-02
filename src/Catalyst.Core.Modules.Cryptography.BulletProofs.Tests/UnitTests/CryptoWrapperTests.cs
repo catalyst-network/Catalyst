@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Exceptions;

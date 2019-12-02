@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Dawn;
 using Serilog;
@@ -34,6 +34,7 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
     public class MempoolService : IMempoolService<PublicEntryDao>
     {
         private readonly IRepository<PublicEntryDao, string> _repository;
+
         public MempoolService(IRepository<PublicEntryDao, string> repository)
         {
             _repository = repository;

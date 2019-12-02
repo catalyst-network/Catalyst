@@ -22,7 +22,7 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Mempool.Repositories;
@@ -40,7 +40,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
 
         public MempoolController(IMempoolService<PublicEntryDao> mempoolService)
         {
-            _mempoolService = (MempoolService)mempoolService;
+            _mempoolService = (MempoolService) mempoolService;
         }
 
         [HttpGet("{id}")]

@@ -29,7 +29,6 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
@@ -179,7 +178,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             public int Compare(PublicEntry x, PublicEntry y)
             {
-                return _multiplier * Comparer<UInt256?>.Default.Compare(x?.GasPrice, y?.GasPrice);
+                return _multiplier * Comparer<UInt256?>.Default.Compare(x?.GasPrice.ToUInt256(), y?.GasPrice.ToUInt256());
             }
 
             public static AveragePriceComparer InstanceDesc { get; } = new AveragePriceComparer(-1);

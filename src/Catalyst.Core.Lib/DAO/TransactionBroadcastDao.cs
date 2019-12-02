@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;

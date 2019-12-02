@@ -54,13 +54,13 @@ namespace Catalyst.Simulator.Helpers
             {
                 PublicEntry = new PublicEntry
                 {
-                    Amount = ((UInt256)amount).ToUint256ByteString(),
+                    Amount = ((UInt256) amount).ToUint256ByteString(),
                     Base = new BaseEntry
                     {
-                        Nonce = (ulong)nonce,
+                        Nonce = (ulong) nonce,
                         SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString(),
                         ReceiverPublicKey = publicKey,
-                        TransactionFees = ((UInt256)fee).ToUint256ByteString()
+                        TransactionFees = ((UInt256) fee).ToUint256ByteString()
                     },
                     Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
                 }.Sign(cryptoWrapper, privateKey, DevNetPublicTransactionContext)

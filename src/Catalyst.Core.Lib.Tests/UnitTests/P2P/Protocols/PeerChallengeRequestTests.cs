@@ -31,7 +31,6 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;

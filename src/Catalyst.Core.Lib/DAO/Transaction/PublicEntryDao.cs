@@ -31,7 +31,6 @@ using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.DAO.Transaction
 {
@@ -52,6 +51,7 @@ namespace Catalyst.Core.Lib.DAO.Transaction
     public sealed class PublicEntryMapperInitialiser : IMapperInitializer
     {
         private readonly IHashProvider _hashProvider;
+
         public PublicEntryMapperInitialiser(IHashProvider hashProvider)
         {
             _hashProvider = hashProvider;

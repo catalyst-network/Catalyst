@@ -23,7 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using SharpRepository.InMemoryRepository;

@@ -24,7 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Protocol.Transaction;
@@ -65,7 +65,7 @@ namespace Catalyst.TestUtils
         {
             var utcNow = DateTime.UtcNow;
             var tenSecondSlot = 1 + utcNow.Second / 10;
-            var tx = TransactionHelper.GetPublicTransaction(timestamp: (long)utcNow.ToOADate());
+            var tx = TransactionHelper.GetPublicTransaction(timestamp: (long) utcNow.ToOADate());
             return Enumerable.Repeat(tx, tenSecondSlot)
                .Select(x => x.PublicEntry.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
         }

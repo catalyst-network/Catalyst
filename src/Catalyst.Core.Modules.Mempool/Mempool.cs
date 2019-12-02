@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Dawn;
 

@@ -99,7 +99,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         {
             var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
-            var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcClientConfig);
+            var nodeRpcClient = await nodeRpcClientFactory.GetClientAsync(null, _rpcClientConfig);
             var receivedResponse = false;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
             var protocolMessage =
@@ -118,7 +118,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         {
             var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
-            var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcClientConfig);
+            var nodeRpcClient = await nodeRpcClientFactory.GetClientAsync(null, _rpcClientConfig);
             VersionResponse returnedVersionResponse = null;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
             var protocolMessage =
@@ -137,7 +137,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         {
             var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver>());
-            var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcClientConfig);
+            var nodeRpcClient = await nodeRpcClientFactory.GetClientAsync(null, _rpcClientConfig);
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());

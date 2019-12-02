@@ -42,11 +42,11 @@ namespace Catalyst.Core.Modules.Kvm
             builder.RegisterType<StorageProvider>().As<IStorageProvider>().SingleInstance();
             builder.RegisterType<StateUpdateHashProvider>().As<IStateUpdateHashProvider>().SingleInstance();
             builder.RegisterInstance(LimboLogs.Instance).As<ILogManager>();
-            
-            builder.RegisterInstance(new MemDb()).As<IDb>(); // code db
+
+            builder.RegisterInstance(new MemDb()).As<IDb>();               // code db
             builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>(); // state db
             builder.RegisterType<CatalystGenesisSpec>().As<IReleaseSpec>();
             builder.RegisterType<EthRpcService>().As<IEthRpcService>().SingleInstance();
-        }  
+        }
     }
 }

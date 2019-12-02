@@ -38,14 +38,17 @@ namespace Catalyst.Core.Modules.Kvm
         /// 65535 (0xffff) will be registered for Ethereum, so we can start after that
         /// </summary>
         public Address Address => AddressInKvm;
-        
+
         public static Address AddressInKvm { get; } = Address.FromNumber(1 + EthereumPrecompilesAddressingSpace);
 
         /// <inheritdoc />
         public long BaseGasCost(IReleaseSpec releaseSpec) { return 200000; } // numbers need to be benchmarked
 
         /// <inheritdoc />
-        public long DataGasCost(byte[] inputData, IReleaseSpec releaseSpec) { return 0; } // numbers need to be benchmarked
+        public long DataGasCost(byte[] inputData, IReleaseSpec releaseSpec)
+        {
+            return 0;
+        } // numbers need to be benchmarked
 
         /// <inheritdoc />
         public (byte[], bool) Run(byte[] inputData) { return (new byte[32], true); }

@@ -24,27 +24,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
-using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
@@ -101,7 +93,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             for (var i = 0; i < numTx; i++)
             {
                 var mempoolDocument = _memPool.Service.ReadItem(documents[i].Id).ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
-                mempoolDocument.Amount.ToUInt256().Should().Be((UInt256)i);
+                mempoolDocument.Amount.ToUInt256().Should().Be((UInt256) i);
             }
         }
 
@@ -149,7 +141,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
             var overridingTransaction = _mempoolItem.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider).Clone();
 
-            overridingTransaction.Amount = (expectedAmount.ToUInt256() + (UInt256)100).ToUint256ByteString();
+            overridingTransaction.Amount = (expectedAmount.ToUInt256() + (UInt256) 100).ToUint256ByteString();
 
             var overridingTransactionDao = overridingTransaction.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
             _memPool.Service.CreateItem(Arg.Is(overridingTransactionDao)).Returns(false);
@@ -217,7 +209,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         private List<PublicEntryDao> GetTestingMempoolDocuments(int documentCount)
         {
             return Enumerable.Range(0, documentCount).Select(i =>
-                    TransactionHelper.GetPublicTransaction((uint)i, signature: $"key{i}").ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider)).Select(x => x.PublicEntry).ToList();
+                TransactionHelper.GetPublicTransaction((uint) i, signature: $"key{i}").ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider)).Select(x => x.PublicEntry).ToList();
         }
 
         [Fact]

@@ -26,13 +26,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
@@ -52,7 +50,7 @@ namespace Catalyst.Core.Lib.Extensions
         private static readonly Dictionary<string, string> ProtoToClrNameMapper =
             typeof(ProtocolMessage).Assembly.ExportedTypes
                .Where(t => typeof(IMessage).IsAssignableFrom(t))
-               .Select(t => ((IMessage)Activator.CreateInstance(t)).Descriptor)
+               .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
                .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
 
         private static readonly List<string> ProtoBroadcastAllowedMessages =
@@ -75,9 +73,9 @@ namespace Catalyst.Core.Lib.Extensions
             Guard.Argument(protoType, nameof(protoType)).Require(t => typeof(IMessage).IsAssignableFrom(t));
 
             //get the static field Descriptor from T
-            var descriptor = (MessageDescriptor)protoType
+            var descriptor = (MessageDescriptor) protoType
                .GetProperty("Descriptor", BindingFlags.Static | BindingFlags.Public)
-               .GetValue(null);
+              ?.GetValue(null);
             return ShortenedFullName(descriptor);
         }
 
@@ -107,8 +105,8 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static T FromProtocolMessage<T>(this ProtocolMessage message) where T : IMessage<T>
         {
-            var empty = (T)Activator.CreateInstance(typeof(T));
-            var typed = (T)empty.Descriptor.Parser.ParseFrom(message.Value);
+            var empty = (T) Activator.CreateInstance(typeof(T));
+            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Value);
             return typed;
         }
 
@@ -168,7 +166,7 @@ namespace Catalyst.Core.Lib.Extensions
 
             var validBytes = bytes?.Length == CorrelationId.GuidByteLength
                 ? bytes
-                : (bytes ?? new byte[0]).Concat(Enumerable.Repeat((byte)0, CorrelationId.GuidByteLength))
+                : (bytes ?? new byte[0]).Concat(Enumerable.Repeat((byte) 0, CorrelationId.GuidByteLength))
                .Take(CorrelationId.GuidByteLength).ToArray();
 
             return new CorrelationId(new Guid(validBytes));

@@ -27,7 +27,6 @@ using System.Runtime.InteropServices;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Types;
 using Catalyst.Protocol.Cryptography;
-using Google.Protobuf.WellKnownTypes;
 using Signature = Catalyst.Core.Modules.Cryptography.BulletProofs.Types.Signature;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs
@@ -65,7 +64,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             var publicKey = new byte[PublicKeyLength];
 
             byte b = 0;
-            var empty = (byte*)Unsafe.AsPointer(ref b); // ffi requires a valid memory location even if buffer is empty, this creates a valid pointer to the stack
+            var empty = (byte*) Unsafe.AsPointer(ref b); // ffi requires a valid memory location even if buffer is empty, this creates a valid pointer to the stack
 
             fixed (byte* messageHandle = message)
             {

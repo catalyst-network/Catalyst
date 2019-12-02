@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;

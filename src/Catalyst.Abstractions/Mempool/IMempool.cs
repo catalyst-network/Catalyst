@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Abstractions.Mempool.Services;
 
 namespace Catalyst.Abstractions.Mempool
 {

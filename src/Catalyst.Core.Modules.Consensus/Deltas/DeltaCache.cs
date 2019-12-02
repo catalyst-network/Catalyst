@@ -28,7 +28,6 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
-using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using LibP2P;
 using Microsoft.Extensions.Caching.Memory;

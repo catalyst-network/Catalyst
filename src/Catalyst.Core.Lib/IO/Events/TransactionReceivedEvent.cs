@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
@@ -32,7 +31,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
-using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Events

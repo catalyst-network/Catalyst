@@ -34,7 +34,11 @@ namespace Catalyst.Core.Modules.Kvm
 {
     public sealed class KatVirtualMachine : VirtualMachine, IKvm
     {
-        public KatVirtualMachine(IStateProvider stateProvider, IStorageProvider storageProvider, IStateUpdateHashProvider blockhashProvider, ISpecProvider specProvider, ILogManager logManager)
+        public KatVirtualMachine(IStateProvider stateProvider,
+            IStorageProvider storageProvider,
+            IStateUpdateHashProvider blockhashProvider,
+            ISpecProvider specProvider,
+            ILogManager logManager)
             : base(stateProvider, storageProvider, blockhashProvider, specProvider, logManager) { }
 
         protected override void InitializePrecompiledContracts()
@@ -43,15 +47,16 @@ namespace Catalyst.Core.Modules.Kvm
             Precompiles[RangeProofPrecompile.AddressInKvm] = new RangeProofPrecompile();
         }
 
-        private static readonly BigInteger RangeProofAddressAsInt = RangeProofPrecompile.AddressInKvm.Bytes.ToUnsignedBigInteger();
-        
+        private static readonly BigInteger RangeProofAddressAsInt =
+            RangeProofPrecompile.AddressInKvm.Bytes.ToUnsignedBigInteger();
+
         /// <summary>
         /// This will probably be removed
         /// </summary>
         protected override bool IsPrecompiled(Address address, IReleaseSpec releaseSpec)
         {
             // this will be optimized
-            BigInteger asInt = address.Bytes.ToUnsignedBigInteger();
+            var asInt = address.Bytes.ToUnsignedBigInteger();
             return base.IsPrecompiled(address, releaseSpec) || asInt == RangeProofAddressAsInt;
         }
     }

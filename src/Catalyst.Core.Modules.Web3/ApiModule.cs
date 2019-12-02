@@ -31,7 +31,7 @@ using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Microsoft.AspNetCore.Builder;
@@ -143,12 +143,10 @@ namespace Catalyst.Core.Modules.Web3
             mvcBuilder.AddControllersAsServices();
 
             if (_addSwagger)
-            {
                 services.AddSwaggerGen(swagger =>
                 {
                     swagger.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalyst API", Description = "Catalyst"});
                 });
-            }
         }
 
         public void Configure(IApplicationBuilder app)

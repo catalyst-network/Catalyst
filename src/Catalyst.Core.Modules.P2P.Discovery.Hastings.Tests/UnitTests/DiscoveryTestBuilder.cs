@@ -154,8 +154,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             return this;
         }
 
-        public DiscoveryTestBuilder WithPeerMessageCorrelationManager(
-            IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
+        public DiscoveryTestBuilder WithPeerMessageCorrelationManager(IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
             IReputationManager reputationManager = default,
             IMemoryCache memoryCache = default,
             IChangeTokenProvider changeTokenProvider = default)
@@ -215,10 +214,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             PeerId peer = default,
             INeighbours neighbours = default)
         {
-            if (_careTaker == null)
-            {
-                WithCareTaker();
-            }
+            if (_careTaker == null) WithCareTaker();
 
             var memento = mock
                 ? currentStep ?? DiscoveryHelper.MockMemento(peer, neighbours)

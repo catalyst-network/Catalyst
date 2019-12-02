@@ -32,7 +32,7 @@ using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
-namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
+namespace Catalyst.Benchmark.Catalyst.Abstractions
 {
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.CoreRt30)]
