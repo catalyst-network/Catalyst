@@ -40,4 +40,3 @@ namespace Catalyst.Core.Modules.Kvm
         public static UInt256 GFul(this int @this) { return (uint) @this * CatalystUnit.Gmol; }
     }
 }
-

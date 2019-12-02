@@ -27,6 +27,8 @@ using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Core.Lib.DAO.Deltas;
 using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Modules.Hashing;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.TestUtils
 {
@@ -45,11 +47,11 @@ namespace Catalyst.TestUtils
             new DeltaDfsHashBroadcastMapperInitialiser(),
             new FavouriteDeltaBroadcastMapperInitialiser(),
             new CoinbaseEntryMapperInitialiser(),
-            new PublicEntryMapperInitialiser(),
+            new PublicEntryMapperInitialiser(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"))),
             new ConfidentialEntryMapperInitialiser(),
             new TransactionBroadcastMapperInitialiser(),
             new SignatureMapperInitialiser(),
-            new BaseEntryMapperInitialiser(),
+            new BaseEntryMapperInitialiser()
         }) { }
     }
 }

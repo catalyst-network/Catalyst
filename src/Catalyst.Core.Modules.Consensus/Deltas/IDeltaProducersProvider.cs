@@ -29,7 +29,7 @@ using LibP2P;
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
     /// <summary>
-    ///     This is the service in charge of providing the list of PeerIdentifiers that are eligible for the
+    ///     This is the repository in charge of providing the list of PeerIdentifiers that are eligible for the
     ///     production of the next delta.
     /// </summary>
     public interface IDeltaProducersProvider

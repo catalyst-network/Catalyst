@@ -31,7 +31,7 @@ using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Repository;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.ProtocolHelpers;
 using Catalyst.TestUtils.Repository;
@@ -43,53 +43,46 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
-    public sealed class TransactionBroadcastRepositoryTests : FileSystemBasedTest
+    public sealed class TransactionRepositoryTests : FileSystemBasedTest
     {
         private readonly IMapperProvider _mapperProvider;
 
         public static IEnumerable<object[]> ModulesList =>
             new List<object[]>
             {
-                new object[] {new InMemoryTestModule<TransactionBroadcastDao>()},
-                new object[] {new MongoDbTestModule<TransactionBroadcastDao>()}
+                new object[] {new InMemoryTestModule<PublicEntryDao>()},
+                new object[] {new MongoDbTestModule<PublicEntryDao>()}
             };
 
-        public TransactionBroadcastRepositoryTests(ITestOutputHelper output) : base(output)
+        public TransactionRepositoryTests(ITestOutputHelper output) : base(output)
         {
             _mapperProvider = new TestMapperProvider();
         }
 
-        private void TransactionBroadcastRepo_Can_Save_And_Retrieve()
+        private void TransactionRepository_Can_Save_And_Retrieve()
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId,
-                    out var contractEntryDaoList, out var publicEntryDaoList);
+                var transactBroadcastRepo = PopulateTransactionRepository(scope, out var criteriaId, out var publicEntryDaoList);
 
                 transactBroadcastRepo.Get(criteriaId).Id.Should().Be(criteriaId);
 
-                transactBroadcastRepo.Get(criteriaId).PublicEntries.FirstOrDefault().Data
-                   .Should().Be(contractEntryDaoList.FirstOrDefault().Data);
-
-                transactBroadcastRepo.Get(criteriaId).PublicEntries.FirstOrDefault().Amount
-                   .Should().Be(publicEntryDaoList.FirstOrDefault().Amount);
+                transactBroadcastRepo.Get(criteriaId).Amount.Should().Be(publicEntryDaoList.FirstOrDefault().Amount);
             }
         }
 
-        private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope,
+        private IRepository<PublicEntryDao, string> PopulateTransactionRepository(ILifetimeScope scope,
             out string id,
-            out IEnumerable<PublicEntryDao> contractEntryDaoList,
             out IEnumerable<PublicEntryDao> publicEntryDaoList)
         {
-            var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
+            var transactionRepository = scope.Resolve<IRepository<PublicEntryDao, string>>();
 
-            var transactionBroadcastDao = TransactionHelper.GetPublicTransaction().ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-            id = transactionBroadcastDao.Id;
+            var transaction = TransactionHelper.GetPublicTransaction().PublicEntry.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            id = transaction.Id;
 
-            contractEntryDaoList = ContractEntryHelper.GetContractEntriesDao(10);
             publicEntryDaoList = PublicEntryHelper.GetPublicEntriesDao(10);
 
-            transactionBroadcastDao.PublicEntries = publicEntryDaoList.Concat(contractEntryDaoList);
+            transaction = publicEntryDaoList.First();
 
             var signingContextDao = new SigningContextDao
             {
@@ -97,28 +90,27 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 SignatureType = SignatureType.TransactionPublic
             };
 
-            transactionBroadcastDao.ConfidentialEntries = ConfidentialEntryHelper.GetConfidentialEntriesDao(10);
+            transaction.Signature = new SignatureDao
+            {
+                RawBytes = "mplwifwfjfw", SigningContext = signingContextDao
+            };
 
-            transactionBroadcastDao.Signature = new SignatureDao
-            { RawBytes = "mplwifwfjfw", SigningContext = signingContextDao };
+            transactionRepository.Add(transaction);
 
-            transactBroadcastRepo.Add(transactionBroadcastDao);
-
-            return transactBroadcastRepo;
+            return transactionRepository;
         }
 
-        private void TransactionBroadcast_Update_And_Retrieve()
+        private void Transaction_Update_And_Retrieve()
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var transactBroadcastRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId,
-                    out _, out _);
+                var transactionRepository = PopulateTransactionRepository(scope, out var criteriaId, out _);
 
-                var retrievedTransactionDao = transactBroadcastRepo.Get(criteriaId);
+                var retrievedTransactionDao = transactionRepository.Get(criteriaId);
                 retrievedTransactionDao.TimeStamp = new DateTime(1999, 2, 2);
-                transactBroadcastRepo.Update(retrievedTransactionDao);
+                transactionRepository.Update(retrievedTransactionDao);
 
-                var retrievedTransactionDaoModified = transactBroadcastRepo.Get(criteriaId);
+                var retrievedTransactionDaoModified = transactionRepository.Get(criteriaId);
 
                 var dateComparer = retrievedTransactionDaoModified.TimeStamp.Date.ToString("MM/dd/yyyy");
 
@@ -131,26 +123,26 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         [Theory(Skip = "Setup to run in pipeline only")]
         [Trait(Traits.TestType, Traits.E2EMongoDb)]
         [MemberData(nameof(ModulesList))]
-        public void TransactionBroadcastRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
+        public void TransactionRepository_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
 
-            TransactionBroadcast_Update_And_Retrieve();
+            Transaction_Update_And_Retrieve();
         }
 
         [Theory(Skip = "Setup to run in pipeline only")]
         [Trait(Traits.TestType, Traits.E2EMongoDb)]
         [MemberData(nameof(ModulesList))]
-        public void TransactionBroadcastRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
+        public void TransactionBroadcastRepository_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
 
-            TransactionBroadcastRepo_Can_Save_And_Retrieve();
+            TransactionRepository_Can_Save_And_Retrieve();
         }
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.E2EMssql)]
-        public void TransactionBroadcastRepo_EfCore_Dbs_Update_And_Retrieve()
+        public void TransactionRepository_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString")
@@ -160,12 +152,12 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
             CheckForDatabaseCreation();
 
-            TransactionBroadcast_Update_And_Retrieve();
+            Transaction_Update_And_Retrieve();
         }
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.E2EMssql)]
-        public void TransactionBroadcastRepo_EfCore_Dbs_Can_Save_And_Retrieve()
+        public void TransactionBroadcastRepository_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString")
@@ -175,7 +167,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
             CheckForDatabaseCreation();
 
-            TransactionBroadcastRepo_Can_Save_And_Retrieve();
+            TransactionRepository_Can_Save_And_Retrieve();
         }
 
         private void CheckForDatabaseCreation()
@@ -184,7 +176,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             {
                 var contextDb = scope.Resolve<IDbContext>();
 
-                ((DbContext)contextDb).Database.EnsureCreated();
+                ((DbContext) contextDb).Database.EnsureCreated();
             }
         }
 

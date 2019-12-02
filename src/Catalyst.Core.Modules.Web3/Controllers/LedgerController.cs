@@ -44,7 +44,10 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         private readonly IMapperProvider _mapperProvider;
         private readonly ILogger _logger;
 
-        public LedgerController(IDeltaHashProvider deltaHashProvider, IDfs dfs, IMapperProvider mapperProvider, ILogger logger)
+        public LedgerController(IDeltaHashProvider deltaHashProvider,
+            IDfs dfs,
+            IMapperProvider mapperProvider,
+            ILogger logger)
         {
             _deltaHashProvider = deltaHashProvider;
             _dfs = dfs;

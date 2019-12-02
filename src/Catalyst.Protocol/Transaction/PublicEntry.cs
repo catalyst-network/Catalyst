@@ -21,43 +21,65 @@
 
 #endregion
 
-using Nethermind.Dirichlet.Numerics;
+using Catalyst.Protocol.Cryptography;
+using Google.Protobuf.WellKnownTypes;
+using Serilog;
+using System.Reflection;
 
 namespace Catalyst.Protocol.Transaction
 {
     public partial class PublicEntry
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         public bool IsValid()
         {
-            // data can be empty
-            return GasLimit >= 21000; // make it a constant - MIN_GAS_LIMIT
+            // make it a constant - MIN_GAS_LIMIT
+            if (GasLimit < 21000)
+            {
+                return false;
+            }
+
+            var isTimestampValid = Timestamp != default(Timestamp) && Timestamp != new Timestamp();
+            if (!isTimestampValid)
+            {
+                Logger.Debug("{timestamp} cannot be null or 0.");
+                return false;
+            }
+
+            var hasValidSignature = Signature.IsValid(SignatureType.TransactionPublic);
+            return hasValidSignature;
         }
 
-        // add to proto
-        /// <summary>
-        /// Gas limit for the entry expressed in gas units.
-        /// </summary>
-        public ulong GasLimit { get; set; }
-        
-        // add to proto
-        /// <summary>
-        /// Gas price to use as a multiplier of gas cost expressed in units
-        /// to arrive at the total gas cost expressed in ETH.
-        /// </summary>
-        public UInt256 GasPrice { get; set; }
-        
-        /// <summary>
+        // // add to proto
+        // /// <summary>
+        // /// Gas limit for the entry expressed in gas units.
+        // /// </summary>
+        // public ulong GasLimit { get; set; }
+        //
+        // // add to proto
+        // /// <summary>
+        // /// Gas price to use as a multiplier of gas cost expressed in units
+        // /// to arrive at the total gas cost expressed in ETH.
+        // /// </summary>
+        // public UInt256 GasPrice { get; set; }
+
+        /// <summary>bytes
         /// If this is an entry that is about to deploy a smart contract then <value>true</value>,
         /// otherwise <value>false</value>.
         /// </summary>
         public bool IsValidDeploymentEntry => IsValid() && Base.ReceiverPublicKey.IsEmpty;
-        
+
         /// <summary>
         /// If this is an entry that is about to call a smart contract then <value>true</value>,
         /// otherwise <value>false</value>.
         /// </summary>
         public bool IsValidCallEntry => IsValid() && !Base.ReceiverPublicKey.IsEmpty;
-        
+
         public byte[] TargetContract { get; set; }
+
+        public bool IsContractDeployment => IsValidDeploymentEntry;
+        public bool IsContractCall => IsValidCallEntry;
+        public bool IsPublicTransaction => IsValid();
     }
 }

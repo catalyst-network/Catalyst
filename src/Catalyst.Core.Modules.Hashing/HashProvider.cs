@@ -27,7 +27,6 @@ using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Hashing;
 using Google.Protobuf;
-using Org.BouncyCastle.Crypto.Tls;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Hashing

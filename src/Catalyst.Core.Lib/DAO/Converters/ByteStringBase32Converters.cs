@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,24 +18,29 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
-using System;
-using System.Collections.Generic;
-namespace Catalyst.Abstractions.Mempool.Repositories
+using AutoMapper;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
+using Google.Protobuf;
+
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public interface IMempoolRepository<T> : IDisposable where T : class
+    public class ByteStringToBase32Converter : IValueConverter<ByteString, string>
     {
-        IEnumerable<T> GetAll();
+        public string Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            return sourceMember.ToByteArray().KeyToString();
+        }
+    }
 
-        void Delete(IEnumerable<T> transactionBroadcasts);
-
-        bool TryReadItem(string signature);
-
-        T ReadItem(string signature);
-
-        bool DeleteItem(params string[] transactionSignatures);
-
-        bool CreateItem(T transactionBroadcast);
+    public class Base32ToByteStringFormatter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context)
+        {
+            return sourceMember.KeyToBytes().ToByteString();
+        }
     }
 }

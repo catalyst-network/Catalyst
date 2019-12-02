@@ -38,7 +38,7 @@ namespace Catalyst.Core.Lib.DAO.Transaction
         public string RangeProof { get; set; }
 
         [Column]
-        
+
         // ReSharper disable once UnusedMember.Local
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
     }
@@ -49,13 +49,13 @@ namespace Catalyst.Core.Lib.DAO.Transaction
         {
             cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>()
                .ForMember(e => e.RangeProof,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
+                    opt => opt.MapFrom(x => x.RangeProof.ToByteString().ToBase64()))
                .ForMember(e => e.PedersenCommitment,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
             cfg.CreateMap<ConfidentialEntryDao, ConfidentialEntry>()
                .ForMember(e => e.RangeProof,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
+                    opt => opt.MapFrom(x => RangeProof.Parser.ParseFrom(ByteString.FromBase64(x.RangeProof))))
                .ForMember(e => e.PedersenCommitment,
                     opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }

@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IPeerRepository _peerRepository;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="PeerListRequestObserver"/> class.
+        ///     Initializes a new instance of the <see cref="PeerListRequestObserver" /> class.
         /// </summary>
         /// <param name="peerSettings"></param>
         /// <param name="logger">The logger.</param>
@@ -61,9 +61,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         {
             _peerRepository = peerRepository;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getPeerListRequest"></param>
         /// <param name="channelHandlerContext"></param>

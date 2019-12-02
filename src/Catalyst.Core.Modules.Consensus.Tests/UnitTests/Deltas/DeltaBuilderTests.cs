@@ -31,7 +31,6 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Hashing;
@@ -49,7 +48,6 @@ using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
@@ -77,7 +75,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _randomFactory = Substitute.For<IDeterministicRandomFactory>();
             _randomFactory.GetDeterministicRandomFromSeed(Arg.Any<byte[]>())
-               .Returns(ci => new IsaacRandom(((byte[])ci[0]).ToHex()));
+               .Returns(ci => new IsaacRandom(((byte[]) ci[0]).ToHex()));
 
             _producerId = PeerIdHelper.GetPeerId("producer");
             _peerSettings = _producerId.ToSubstitutedPeerSettings();
@@ -101,7 +99,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority()
-               .Returns(new List<TransactionBroadcast>());
+               .Returns(new List<PublicEntry>());
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
                 _cache, _dateTimeProvider, _logger);
@@ -122,14 +120,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     transactionFees: 954,
                     timestamp: 157,
                     signature: i.ToString());
-                transaction.ConfidentialEntries.Add(new ConfidentialEntry
-                {
-                    Base = new BaseEntry
-                    {
-                        ReceiverPublicKey = "this entry makes the transaction invalid".ToUtf8ByteString()
-                    }
-                });
-                return transaction;
+                return transaction.PublicEntry;
             }).ToList();
 
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
@@ -150,30 +141,30 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var transactions = Enumerable.Range(0, 20).Select(i =>
             {
                 var transaction = TransactionHelper.GetPublicTransaction(
-                    (uint)i,
+                    (uint) i,
                     receiverPublicKey: i.ToString(),
-                    transactionFees: (ulong)_random.Next(),
+                    transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
-                return transaction;
+                return transaction.PublicEntry;
             }).ToList();
 
             var transactionRetriever = BuildRetriever(transactions);
             var selectedTransactions = BuildSelectedTransactions(transactions);
 
-            var salt = BitConverter.GetBytes(_randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash.ToArray()).NextInt());
+            var salt = BitConverter.GetBytes(_randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash.ToArray())
+               .NextInt());
 
-            var rawAndSaltedEntriesBySignature = selectedTransactions.SelectMany(
-                t => t.PublicEntries.Select(e =>
+            var rawAndSaltedEntriesBySignature = selectedTransactions.Select(e =>
+            {
+                var publicEntriesProtoBuff = e;
+                return new
                 {
-                    var publicEntriesProtoBuff = e;
-                    return new
-                    {
-                        RawEntry = publicEntriesProtoBuff,
-                        SaltedAndHashedEntry =
-                            _hashProvider.ComputeMultiHash(publicEntriesProtoBuff.ToByteArray().Concat(salt))
-                    };
-                }));
+                    RawEntry = publicEntriesProtoBuff,
+                    SaltedAndHashedEntry =
+                        _hashProvider.ComputeMultiHash(publicEntriesProtoBuff.ToByteArray().Concat(salt))
+                };
+            });
 
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
                .OrderBy(v => v.SaltedAndHashedEntry.ToArray(), ByteUtil.ByteListComparer.Default)
@@ -191,9 +182,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
-        private static IDeltaTransactionRetriever BuildRetriever(List<TransactionBroadcast> transactions)
+        private static IDeltaTransactionRetriever BuildRetriever(IList<PublicEntry> transactions)
         {
-            transactions.ForEach(t => t.AfterConstruction());
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(transactions);
             return transactionRetriever;
@@ -210,10 +200,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     (20 + i).GFul(),
                     Bytes.Empty,
                     receiverPublicKey: i.ToString(),
-                    transactionFees: (ulong)_random.Next(),
+                    transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
-                return transaction;
+                return transaction.PublicEntry;
             }).ToList();
 
             var transactionRetriever = BuildRetriever(transactions);
@@ -222,17 +212,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var salt = BitConverter.GetBytes(
                 _randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash.ToArray()).NextInt());
 
-            var rawAndSaltedEntriesBySignature = selectedTransactions.SelectMany(
-                t => t.PublicEntries.Select(e =>
+            var rawAndSaltedEntriesBySignature = selectedTransactions.Select(e =>
+            {
+                var contractEntriesProtoBuff = e;
+                return new
                 {
-                    var contractEntriesProtoBuff = e;
-                    return new
-                    {
-                        RawEntry = contractEntriesProtoBuff,
-                        SaltedAndHashedEntry =
-                            _hashProvider.ComputeMultiHash(contractEntriesProtoBuff.ToByteArray().Concat(salt))
-                    };
-                }));
+                    RawEntry = contractEntriesProtoBuff,
+                    SaltedAndHashedEntry =
+                        _hashProvider.ComputeMultiHash(contractEntriesProtoBuff.ToByteArray().Concat(salt))
+                };
+            });
 
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
                .OrderBy(v => v.SaltedAndHashedEntry.ToArray(), ByteUtil.ByteListComparer.Default)
@@ -259,33 +248,35 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             {
                 var transaction = TransactionHelper.GetContractTransaction(ByteString.Empty,
                     UInt256.Zero,
-                    i > 10 ? (uint)DeltaGasLimit / 8U - 10000U : 70000U, // to test scenarios when both single transaction is ignored and all remaining
+                    i > 10
+                        ? (uint) DeltaGasLimit / 8U - 10000U
+                        : 70000U, // to test scenarios when both single transaction is ignored and all remaining
                     (20 + i).GFul(),
                     Bytes.Empty,
                     receiverPublicKey: i.ToString(),
-                    transactionFees: (ulong)_random.Next(),
+                    transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
-                return transaction;
+                return transaction.PublicEntry;
             }).ToList();
 
             var transactionRetriever = BuildRetriever(transactions);
-            var expectedSelectedTransactions = BuildSelectedTransactions(transactions.Skip(10).Take(1).Union(transactions.Skip(12).Take(8)).ToList());
+            var expectedSelectedTransactions =
+                BuildSelectedTransactions(transactions.Skip(10).Take(1).Union(transactions.Skip(12).Take(8)).ToList());
 
             var salt = BitConverter.GetBytes(
                 _randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash.ToArray()).NextInt());
 
-            var rawAndSaltedEntriesBySignature = expectedSelectedTransactions.SelectMany(
-                t => t.PublicEntries.Select(e =>
+            var rawAndSaltedEntriesBySignature = expectedSelectedTransactions.Select(e =>
+            {
+                var contractEntriesProtoBuff = e;
+                return new
                 {
-                    var contractEntriesProtoBuff = e;
-                    return new
-                    {
-                        RawEntry = contractEntriesProtoBuff,
-                        SaltedAndHashedEntry =
-                            _hashProvider.ComputeMultiHash(contractEntriesProtoBuff.ToByteArray().Concat(salt))
-                    };
-                })).ToArray();
+                    RawEntry = contractEntriesProtoBuff,
+                    SaltedAndHashedEntry =
+                        _hashProvider.ComputeMultiHash(contractEntriesProtoBuff.ToByteArray().Concat(salt))
+                };
+            }).ToArray();
 
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
                .OrderBy(v => v.SaltedAndHashedEntry.ToArray(), ByteUtil.ByteListComparer.Default)
@@ -303,13 +294,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
-        private static TransactionBroadcast[] BuildSelectedTransactions(List<TransactionBroadcast> transactions)
+        private static PublicEntry[] BuildSelectedTransactions(IEnumerable<PublicEntry> transactions)
         {
-            var selectedTransactions = transactions.Where(t => (t.IsPublicTransaction || t.IsContractCall || t.IsContractDeployment) && t.HasValidEntries()).ToArray();
-            return selectedTransactions;
+            return transactions.Where(t => t.IsPublicTransaction || t.IsContractCall || t.IsContractDeployment)
+               .ToArray();
         }
 
-        private byte[] BuildExpectedBytesToHash(TransactionBroadcast[] selectedTransactions, byte[] shuffledEntriesBytes)
+        private byte[] BuildExpectedBytesToHash(PublicEntry[] selectedTransactions, byte[] shuffledEntriesBytes)
         {
             var signaturesInOrder = selectedTransactions
                .Select(p => p.Signature.ToByteArray())
@@ -319,7 +310,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var expectedCoinBase = new CoinbaseEntry
             {
-                Amount = selectedTransactions.Sum(t => t.SummedEntryFees()).ToUint256ByteString(),
+                Amount = selectedTransactions.Sum(t => t.Base.TransactionFees.ToUInt256()).ToUint256ByteString(),
                 ReceiverPublicKey = _producerId.PublicKey.ToByteString()
             };
 

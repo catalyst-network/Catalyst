@@ -24,47 +24,54 @@
 using System.Reflection;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
-using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
 {
-    public static class TransactionBroadcastExtensions
+    public static class PublicEntryExtensions
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static UInt256 SummedEntryFees(this TransactionBroadcast transaction)
-        {
-            var sum = transaction.PublicEntries.Sum(e => e.Base.TransactionFees.ToUInt256())
-              + transaction.ConfidentialEntries.Sum(e => e.Base.TransactionFees.ToUInt256());
-            return sum;
-        }
-
-        public static TransactionBroadcast Sign(this TransactionBroadcast transaction,
+        public static Signature GenerateSignature(this PublicEntry publicEntry,
             ICryptoContext cryptoContext,
             IPrivateKey privateKey,
             SigningContext context)
         {
-            var clone = transaction.Clone();
+            return GeneratePublicEntrySignature(publicEntry.Clone(), cryptoContext, privateKey, context);
+        }
 
-            if (transaction.Signature?.RawBytes.Length == cryptoContext.SignatureLength)
+        public static PublicEntry Sign(this PublicEntry publicEntry,
+            ICryptoContext cryptoContext,
+            IPrivateKey privateKey,
+            SigningContext context)
+        {
+            var clone = publicEntry.Clone();
+
+            if (publicEntry.Signature?.RawBytes.Length == cryptoContext.SignatureLength)
             {
                 Logger.Debug("The transaction was already signed, returning a clone.");
                 return clone;
             }
 
-            clone.Signature = null;
-            var signatureBytes = cryptoContext.Sign(privateKey, clone, context).SignatureBytes;
+            clone.Signature = GeneratePublicEntrySignature(clone, cryptoContext, privateKey, context);
+            return clone;
+        }
 
-            clone.Signature = new Signature
+        private static Signature GeneratePublicEntrySignature(PublicEntry publicEntry,
+            ICryptoContext cryptoContext,
+            IPrivateKey privateKey,
+            SigningContext context)
+        {
+            publicEntry.Signature = null;
+            var signatureBytes = cryptoContext.Sign(privateKey, publicEntry.ToByteArray(),
+                context.ToByteArray()).SignatureBytes;
+            return new Signature
             {
                 RawBytes = signatureBytes.ToByteString(),
                 SigningContext = context
             };
-
-            return clone;
         }
     }
 }

@@ -35,7 +35,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     /// <summary>
-    /// Remove Peer handler
+    ///     Remove Peer handler
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class RemovePeerRequestObserver
@@ -45,7 +45,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>The peer discovery</summary>
         private readonly IPeerRepository _peerRepository;
 
-        /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestObserver"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestObserver" /> class.</summary>
         /// <param name="peerSettings"></param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
@@ -57,7 +57,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="removePeerRequest"></param>
         /// <param name="channelHandlerContext"></param>
@@ -74,7 +73,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            var peerDeletedCount = _peerRepository.DeletePeersByIpAndPublicKey(removePeerRequest.PeerIp, removePeerRequest.PublicKey);
+            var peerDeletedCount =
+                _peerRepository.DeletePeersByIpAndPublicKey(removePeerRequest.PeerIp, removePeerRequest.PublicKey);
 
             return new RemovePeerResponse
             {

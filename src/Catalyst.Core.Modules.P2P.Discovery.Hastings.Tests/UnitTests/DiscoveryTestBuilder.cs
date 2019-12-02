@@ -126,9 +126,10 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         {
             _dnsClient = dnsClient == default(IDns) && mock == false
                 ? Substitute.For<IDns>()
-                : DiscoveryHelper.MockDnsClient(_peerSettings = _peerSettings == null && peerSettings == default(IPeerSettings)
-                    ? PeerSettingsHelper.TestPeerSettings()
-                    : peerSettings);
+                : DiscoveryHelper.MockDnsClient(_peerSettings =
+                    _peerSettings == null && peerSettings == default(IPeerSettings)
+                        ? PeerSettingsHelper.TestPeerSettings()
+                        : peerSettings);
 
             return this;
         }
@@ -213,10 +214,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             PeerId peer = default,
             INeighbours neighbours = default)
         {
-            if (_careTaker == null)
-            {
-                WithCareTaker();
-            }
+            if (_careTaker == null) WithCareTaker();
 
             var memento = mock
                 ? currentStep ?? DiscoveryHelper.MockMemento(peer, neighbours)

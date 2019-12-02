@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using BenchmarkDotNet.Running;
 
 namespace Catalyst.Benchmark

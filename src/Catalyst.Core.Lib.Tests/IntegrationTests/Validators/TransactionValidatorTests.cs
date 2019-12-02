@@ -27,7 +27,6 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;
-using Catalyst.Protocol.Wire;
 using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
@@ -44,21 +43,15 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
             var subbedLogger = Substitute.For<ILogger>();
             var cryptoContext = new FfiWrapper();
             var transactionValidator = new TransactionValidator(subbedLogger, cryptoContext);
-            
+
             // build a valid transaction
             var privateKey = cryptoContext.GeneratePrivateKey();
 
-            var validTransactionBroadcast = new TransactionBroadcast
+            var validTransaction = new PublicEntry
             {
-                PublicEntries =
+                Base = new BaseEntry
                 {
-                    new PublicEntry
-                    {
-                        Base = new BaseEntry
-                        {
-                            SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
-                        }
-                    }
+                    SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
                 }
             };
 
@@ -71,14 +64,14 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
             var signature = new Signature
             {
                 // sign an actual TransactionBroadcast object
-                RawBytes = cryptoContext.Sign(privateKey, validTransactionBroadcast.ToByteArray(), signingContext.ToByteArray())
+                RawBytes = cryptoContext.Sign(privateKey, validTransaction.ToByteArray(), signingContext.ToByteArray())
                    .SignatureBytes.ToByteString(),
                 SigningContext = signingContext
             };
-            
-            validTransactionBroadcast.Signature = signature;
 
-            var result = transactionValidator.ValidateTransaction(validTransactionBroadcast);
+            validTransaction.Signature = signature;
+
+            var result = transactionValidator.ValidateTransaction(validTransaction);
             result.Should().BeTrue();
         }
     }

@@ -21,20 +21,26 @@
 
 #endregion
 
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.DAO.Converters;
+using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Core.Lib.DAO.Transaction
 {
     public class PublicEntryDao : DaoBase
     {
+        public SignatureDao Signature { set; get; }
         public BaseEntryDao Base { get; set; }
         public string Data { get; set; }
         public string Amount { get; set; }
+        public DateTime TimeStamp { get; set; }
 
         [Column]
 
@@ -44,19 +50,28 @@ namespace Catalyst.Core.Lib.DAO.Transaction
 
     public sealed class PublicEntryMapperInitialiser : IMapperInitializer
     {
+        private readonly IHashProvider _hashProvider;
+
+        public PublicEntryMapperInitialiser(IHashProvider hashProvider)
+        {
+            _hashProvider = hashProvider;
+        }
+
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            {
-                cfg.CreateMap<PublicEntry, PublicEntryDao>()
-                   .ForMember(d => d.Amount,
-                        opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
-                   .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+            cfg.AllowNullDestinationValues = true;
 
-                cfg.CreateMap<PublicEntryDao, PublicEntry>()
-                   .ForMember(d => d.Amount,
-                        opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
-                   .ForMember(e => e.Data, opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-            }
+            cfg.CreateMap<PublicEntry, PublicEntryDao>()
+               .ForMember(d => d.Id, opt => opt.MapFrom(src => _hashProvider.ComputeMultiHash(src.ToByteArray())))
+               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
+               .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToBase32Converter, ByteString>());
+
+            cfg.CreateMap<PublicEntryDao, PublicEntry>()
+               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
+               .ForMember(e => e.Data, opt => opt.ConvertUsing<Base32ToByteStringFormatter, string>());
+
+            cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
+            cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
         }
     }
 }

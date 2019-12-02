@@ -26,9 +26,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
+using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Consensus.Deltas;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -38,7 +39,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaTransactionRetrieverTests
     {
-        private readonly IList<TransactionBroadcast> _transactions;
+        private readonly IList<PublicEntry> _transactions;
         private readonly DeltaTransactionRetriever _transactionRetriever;
 
         public DeltaTransactionRetrieverTests()
@@ -47,16 +48,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var random = new Random();
 
-            var mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
+            var mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _transactions = Enumerable.Range(0, 20).Select(i =>
                 TransactionHelper.GetPublicTransaction(
                     transactionFees: (ulong) random.Next(),
                     timestamp: random.Next(),
                     signature: i.ToString())
-            ).ToList();
+            ).Select(x => x.PublicEntry).ToList();
 
-            mempool.Repository.GetAll().Returns(_transactions
-               .Select(x => x.ToDao<TransactionBroadcast, TransactionBroadcastDao>(mapperProvider)));
+            mempool.Service.GetAll()
+               .Returns(_transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(mapperProvider)));
 
             _transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider,
                 TransactionComparerByFeeTimestampAndHash.Default);
@@ -105,7 +106,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Take(excludedTransactionCount).ToList();
 
             unexpectedTransactions
-               .ForEach(t => retrievedTransactions.Any(r => t.Signature == r.Signature).Should()
+               .ForEach(t => retrievedTransactions.Any(r => t.Signature.Equals(r.Signature)).Should()
                    .BeFalse("No unexpected transactions should have been retrieved"));
 
             for (var i = 0; i < maxCount; i++)
@@ -118,8 +119,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 // just a sanity check to make sure that the order is not opposite of what was intended in
                 // TransactionComparerByFeeTimestampAndHash
-                retrievedTransactions[i - 1].SummedEntryFees().Should()
-                   .BeGreaterOrEqualTo(retrievedTransactions[i].SummedEntryFees());
+                retrievedTransactions[i - 1].Base.TransactionFees.ToUInt256().Should()
+                   .BeGreaterOrEqualTo(retrievedTransactions[i].Base.TransactionFees.ToUInt256());
             }
         }
     }

@@ -51,17 +51,17 @@ namespace Catalyst.Core.Lib.DAO.Transaction
 
             cfg.CreateMap<BaseEntry, BaseEntryDao>()
                .ForMember(d => d.ReceiverPublicKey,
-                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
+                    opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.ReceiverPublicKey))
                .ForMember(d => d.SenderPublicKey,
-                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.SenderPublicKey))
+                    opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.SenderPublicKey))
                .ForMember(d => d.TransactionFees,
                     opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.TransactionFees));
 
             cfg.CreateMap<BaseEntryDao, BaseEntry>()
                .ForMember(d => d.ReceiverPublicKey,
-                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey))
+                    opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.ReceiverPublicKey))
                .ForMember(d => d.SenderPublicKey,
-                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.SenderPublicKey))
+                    opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.SenderPublicKey))
                .ForMember(d => d.TransactionFees,
                     opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.TransactionFees));
         }

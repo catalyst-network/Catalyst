@@ -22,8 +22,8 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.DAO;
+using Catalyst.Abstractions.Mempool.Services;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -36,24 +36,24 @@ namespace Catalyst.Core.Modules.Web3.Controllers
     [Route("api/[controller]/[action]")]
     public sealed class MempoolController : BaseController
     {
-        private readonly MempoolRepository _mempoolRepository;
+        private readonly MempoolService _mempoolService;
 
-        public MempoolController(IMempoolRepository<TransactionBroadcastDao> mempoolRepository)
+        public MempoolController(IMempoolService<PublicEntryDao> mempoolService)
         {
-            _mempoolRepository = (MempoolRepository) mempoolRepository;
+            _mempoolService = (MempoolService) mempoolService;
         }
 
         [HttpGet("{id}")]
-        public TransactionBroadcastDao Get(string id)
+        public PublicEntryDao Get(string id)
         {
             id = id.ToLowerInvariant();
-            return _mempoolRepository.ReadItem(id);
+            return _mempoolService.ReadItem(id);
         }
 
         [HttpGet]
         public JsonResult GetMempool()
         {
-            return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
+            return Json(_mempoolService.GetAll(), new JsonSerializerSettings
             {
                 Converters = JsonConverterProviders.Converters.ToList()
             });

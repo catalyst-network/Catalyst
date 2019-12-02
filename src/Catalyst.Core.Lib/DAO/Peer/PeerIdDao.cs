@@ -42,13 +42,13 @@ namespace Catalyst.Core.Lib.DAO.Peer
         {
             cfg.CreateMap<PeerId, PeerIdDao>()
                .ForMember(e => e.PublicKey,
-                    opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>())
+                    opt => opt.ConvertUsing<ByteStringToBase32Converter, ByteString>())
                .ForMember(e => e.Ip,
                     opt => opt.ConvertUsing<ByteStringToIpAddressConverter, ByteString>());
 
             cfg.CreateMap<PeerIdDao, PeerId>()
                .ForMember(e => e.PublicKey,
-                    opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>())
+                    opt => opt.ConvertUsing<Base32ToByteStringFormatter, string>())
                .ForMember(e => e.Ip,
                     opt => opt.ConvertUsing<IpAddressToByteStringConverter, string>());
         }

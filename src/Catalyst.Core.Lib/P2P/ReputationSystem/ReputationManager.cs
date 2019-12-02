@@ -41,19 +41,19 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
         public readonly ReplaySubject<IPeerReputationChange> ReputationEvent;
         public IObservable<IPeerReputationChange> ReputationEventStream => ReputationEvent.AsObservable();
         public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
-        static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
+        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
 
         public ReputationManager(IPeerRepository peerRepository, ILogger logger)
         {
             _logger = logger;
             PeerRepository = peerRepository;
             ReputationEvent = new ReplaySubject<IPeerReputationChange>(0);
-            
+
             ReputationEventStream
                .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
-        
+
         /// <summary>
         ///     Allows passing a reputation streams to merge with the MasterReputationEventStream
         /// </summary>
@@ -64,15 +64,9 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             MergedEventStream = ReputationEventStream.Merge(reputationChangeStream);
         }
 
-        private void OnCompleted()
-        {
-            _logger.Debug("Message stream ended.");
-        }
+        private void OnCompleted() { _logger.Debug("Message stream ended."); }
 
-        private void OnError(Exception obj)
-        {
-            _logger.Error("Message stream ended.");
-        }
+        private void OnError(Exception obj) { _logger.Error("Message stream ended."); }
 
         // ReSharper disable once VSTHRD100
         public async void OnNext(IPeerReputationChange peerReputationChange)
@@ -97,11 +91,11 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
                 SemaphoreSlim.Release();
             }
         }
-        
+
         public void Dispose()
         {
             ReputationEvent?.Dispose();
-            PeerRepository?.Dispose();    
+            PeerRepository?.Dispose();
         }
     }
 }

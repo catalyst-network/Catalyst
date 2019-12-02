@@ -32,7 +32,7 @@ using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
-namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
+namespace Catalyst.Benchmark.Catalyst.Abstractions
 {
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.CoreRt30)]
@@ -51,29 +51,26 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
 
             _transaction = new TransactionBroadcast
             {
-                PublicEntries =
+                PublicEntry = new PublicEntry
                 {
-                    new PublicEntry
+                    Amount = amount,
+                    Base = new BaseEntry
                     {
-                        Amount = amount,
-                        Base = new BaseEntry
-                        {
-                            Nonce = 1,
-                            SenderPublicKey = key,
-                            ReceiverPublicKey = key,
-                            TransactionFees = amount
-                        }
-                    }
-                },
-                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
+                        Nonce = 1,
+                        SenderPublicKey = key,
+                        ReceiverPublicKey = key,
+                        TransactionFees = amount
+                    },
+                    Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                }
             };
 
             _crypto = new NoopCryptoContext();
         }
 
-        readonly SigningContext _context;
-        readonly TransactionBroadcast _transaction;
-        readonly ICryptoContext _crypto;
+        private readonly SigningContext _context;
+        private readonly TransactionBroadcast _transaction;
+        private readonly ICryptoContext _crypto;
 
         [Benchmark]
         public bool SignVerify_with_ToByteArray()
@@ -81,7 +78,7 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
             var signature = _crypto.Sign(null, _transaction.ToByteArray(), _context.ToByteArray());
             return _crypto.Verify(signature, _transaction.ToByteArray(), _context.ToByteArray());
         }
-        
+
         [Benchmark]
         public bool SignVerify_with_embedded_serialization()
         {
@@ -91,18 +88,35 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
 
         internal class NoopCryptoContext : ICryptoContext
         {
-            public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) => null;
-            public bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) => true;
+            public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context)
+            {
+                return null;
+            }
+
+            public bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context)
+            {
+                return true;
+            }
 
             public int PrivateKeyLength => throw new NotImplementedException();
             public int PublicKeyLength => throw new NotImplementedException();
             public int SignatureLength => throw new NotImplementedException();
             public int SignatureContextMaxLength => throw new NotImplementedException();
             public IPrivateKey GeneratePrivateKey() { throw new NotImplementedException(); }
-            public IPublicKey GetPublicKeyFromPrivateKey(IPrivateKey privateKey) { throw new NotImplementedException(); }
+
+            public IPublicKey GetPublicKeyFromPrivateKey(IPrivateKey privateKey)
+            {
+                throw new NotImplementedException();
+            }
+
             public IPublicKey GetPublicKeyFromBytes(byte[] publicKeyBytes) { throw new NotImplementedException(); }
             public IPrivateKey GetPrivateKeyFromBytes(byte[] privateKeyBytes) { throw new NotImplementedException(); }
-            public ISignature GetSignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes) { throw new NotImplementedException(); }
+
+            public ISignature GetSignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes)
+            {
+                throw new NotImplementedException();
+            }
+
             public byte[] ExportPrivateKey(IPrivateKey privateKey) { throw new NotImplementedException(); }
             public byte[] ExportPublicKey(IPublicKey publicKey) { throw new NotImplementedException(); }
         }

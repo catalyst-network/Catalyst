@@ -34,11 +34,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
         [Fact]
         public void Catalyst_virtual_machine_can_be_initialized()
         {
-            KatVirtualMachine virtualMachine = new KatVirtualMachine(
+            var virtualMachine = new KatVirtualMachine(
                 Substitute.For<IStateProvider>(),
                 Substitute.For<IStorageProvider>(),
                 Substitute.For<IStateUpdateHashProvider>(),
-                new CatalystSpecProvider(), 
+                new CatalystSpecProvider(),
                 LimboLogs.Instance);
             Assert.NotNull(virtualMachine);
         }

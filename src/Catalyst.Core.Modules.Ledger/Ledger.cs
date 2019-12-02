@@ -27,9 +27,11 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Transaction;
 using Dawn;
 using LibP2P;
 using Nethermind.Core.Crypto;
@@ -55,7 +57,8 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ISnapshotableDb _stateDb;
         private readonly ISnapshotableDb _codeDb;
         private readonly ILedgerSynchroniser _synchroniser;
-        private readonly IMempool<TransactionBroadcastDao> _mempool;
+        private readonly IMempool<PublicEntryDao> _mempool;
+        private readonly IMapperProvider _mapperProvider;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
@@ -72,7 +75,8 @@ namespace Catalyst.Core.Modules.Ledger
             IAccountRepository accounts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
-            IMempool<TransactionBroadcastDao> mempool,
+            IMempool<PublicEntryDao> mempool,
+            IMapperProvider mapperProvider,
             ILogger logger)
         {
             Accounts = accounts;
@@ -83,16 +87,21 @@ namespace Catalyst.Core.Modules.Ledger
             _codeDb = codeDb;
             _synchroniser = synchroniser;
             _mempool = mempool;
+            _mapperProvider = mapperProvider;
             _logger = logger;
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
             LatestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
         }
 
-        private void FlushTransactionsFromDelta()
+        private void FlushTransactionsFromDelta(Cid deltaHash)
         {
-            var transactionsToFlush = _mempool.Repository.GetAll(); //@TOD0 no get alls
-            _mempool.Repository.Delete(transactionsToFlush);
+            _synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var delta);
+            if (delta != null)
+            {
+                var deltaTransactions = delta.PublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
+                _mempool.Service.Delete(deltaTransactions);
+            }
         }
 
         /// <inheritdoc />
@@ -138,8 +147,7 @@ namespace Catalyst.Core.Modules.Ledger
                     }
                 }
 
-                //https://github.com/catalyst-network/Catalyst.Node/issues/871
-                FlushTransactionsFromDelta();
+                FlushTransactionsFromDelta(deltaHash);
             }
             catch (Exception exception)
             {
@@ -156,14 +164,14 @@ namespace Catalyst.Core.Modules.Ledger
             {
                 if (_logger.IsEnabled(LogEventLevel.Error))
                 {
-                    _logger.Error("Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}", 
+                    _logger.Error("Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}",
                         stateSnapshot,
                         codeSnapshot,
                         null,
                         deltaHash);
                 }
             }
-            
+
             var snapshotStateRoot = _stateProvider.StateRoot;
 
             // this code should be brought in / used as a reference if reorganization behaviour is known
@@ -175,7 +183,7 @@ namespace Catalyst.Core.Modules.Ledger
             ////     _stateProvider.Reset();
             ////     _stateProvider.StateRoot = branchStateRoot;
             //// }
-            
+
             try
             {
                 if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out Delta nextDeltaInChain))
@@ -200,7 +208,7 @@ namespace Catalyst.Core.Modules.Ledger
                 ////   _stateDb.Commit();
                 ////   _codeDb.Commit();
                 //// }
-                
+
                 _stateDb.Commit();
                 _codeDb.Commit();
 
@@ -211,14 +219,14 @@ namespace Catalyst.Core.Modules.Ledger
                 Restore(stateSnapshot, codeSnapshot, snapshotStateRoot);
             }
         }
-        
+
         private void Restore(int stateSnapshot, int codeSnapshot, Keccak snapshotStateRoot)
         {
             if (_logger.IsEnabled(LogEventLevel.Verbose))
             {
                 _logger.Verbose("Reverting deltas {stateRoot}", _stateProvider.StateRoot);
             }
-            
+
             _stateDb.Restore(stateSnapshot);
             _codeDb.Restore(codeSnapshot);
             _storageProvider.Reset();

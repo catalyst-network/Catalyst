@@ -39,10 +39,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         public EthController(IEthRpcService ethRpcService) { _ethRpcService = ethRpcService; }
 
         [HttpGet]
-        public long? eth_blockNumber()
-        {
-            return _ethRpcService.eth_blockNumber();
-        }
+        public long? eth_blockNumber() { return _ethRpcService.eth_blockNumber(); }
 
         [HttpGet]
         public UInt256? eth_getBalance(Address address, BlockParameter blockParameter)

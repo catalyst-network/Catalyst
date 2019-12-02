@@ -82,9 +82,9 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
             var peers = new List<Peer> {_testPeer};
             var peerSettings = _testPeer.PeerId.ToSubstitutedPeerSettings();
             var peerChallenger = new PeerChallengeRequest(
-                Substitute.For<ILogger>(), 
+                Substitute.For<ILogger>(),
                 _peerClient,
-                peerSettings, 
+                peerSettings,
                 PeerChallengeTimeoutSeconds);
 
             if (sendResponse)
@@ -101,12 +101,10 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
                 maxNonResponsiveCounter);
 
             _peerHeartbeatChecker.Run();
-            await Task.Delay(TimeSpan.FromSeconds(PeerHeartbeatCheckSeconds * (maxNonResponsiveCounter + 1)).Add(TimeSpan.FromSeconds(1))).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(PeerHeartbeatCheckSeconds * (maxNonResponsiveCounter + 1))
+               .Add(TimeSpan.FromSeconds(1))).ConfigureAwait(false);
         }
 
-        void IDisposable.Dispose()
-        {
-            _peerHeartbeatChecker?.Dispose();
-        }
+        void IDisposable.Dispose() { _peerHeartbeatChecker?.Dispose(); }
     }
 }

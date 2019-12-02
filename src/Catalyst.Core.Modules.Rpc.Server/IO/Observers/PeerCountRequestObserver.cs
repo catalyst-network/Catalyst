@@ -36,7 +36,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     /// <summary>
-    /// Peer count request handler
+    ///     Peer count request handler
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerCountRequestObserver
@@ -46,7 +46,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>The peer discovery</summary>
         private readonly IPeerRepository _peerRepository;
 
-        /// <summary>Initializes a new instance of the <see cref="PeerCountRequestObserver"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="PeerCountRequestObserver" /> class.</summary>
         /// <param name="peerSettings"></param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
@@ -57,9 +57,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         {
             _peerRepository = peerRepository;
         }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getPeerCountRequest"></param>
         /// <param name="channelHandlerContext"></param>

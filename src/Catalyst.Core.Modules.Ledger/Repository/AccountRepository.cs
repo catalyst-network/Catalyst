@@ -29,6 +29,7 @@ namespace Catalyst.Core.Modules.Ledger.Repository
     public class AccountRepository : IAccountRepository
     {
         private readonly IRepository<Account, string> _repository;
+
         public AccountRepository(IRepository<Account, string> repository)
         {
             _repository = repository;

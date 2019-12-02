@@ -37,7 +37,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     /// <summary>
-    /// The GetPeerInfoRequestObserver 
+    ///     The GetPeerInfoRequestObserver
     /// </summary>
     public sealed class GetPeerInfoRequestObserver
         : RequestObserverBase<GetPeerInfoRequest, GetPeerInfoResponse>,
@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         }
 
         /// <summary>
-        /// Handle the request for GetPeerInfo
+        ///     Handle the request for GetPeerInfo
         /// </summary>
         /// <param name="getPeerInfoRequest">The request</param>
         /// <param name="channelHandlerContext">The channel handler context</param>
@@ -93,5 +93,3 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         }
     }
 }
-
-

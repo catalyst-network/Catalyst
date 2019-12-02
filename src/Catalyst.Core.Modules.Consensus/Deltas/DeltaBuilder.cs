@@ -30,7 +30,6 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
@@ -90,9 +89,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var includedTransactions = GetValidTransactionsForDelta(allTransactions);
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
-            var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
-                t => t.PublicEntries.Select(e =>
-                    new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
+            var rawAndSaltedEntriesBySignature = includedTransactions.Select(
+                x => new RawEntryWithSaltedAndHashedEntry(x, salt, _hashProvider));
 
             // (Eα;Oα)
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
@@ -108,7 +106,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                .ToArray();
 
             // xf
-            var summedFees = includedTransactions.Sum(t => t.SummedEntryFees());
+            var summedFees = includedTransactions.Sum(t => t.Base.TransactionFees.ToUInt256());
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)
             var coinbaseEntry = new CoinbaseEntry
@@ -139,8 +137,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
-                CoinbaseEntries = { coinbaseEntry },
-                PublicEntries = { includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x) },
+                CoinbaseEntries = {coinbaseEntry},
+                PublicEntries = {includedTransactions},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -172,40 +170,43 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
         }
 
-        private sealed class AveragePriceComparer : IComparer<TransactionBroadcast>
+        private sealed class AveragePriceComparer : IComparer<PublicEntry>
         {
             private readonly int _multiplier;
 
             private AveragePriceComparer(int multiplier) { _multiplier = multiplier; }
 
-            public int Compare(TransactionBroadcast x, TransactionBroadcast y)
+            public int Compare(PublicEntry x, PublicEntry y)
             {
-                return _multiplier * Comparer<UInt256?>.Default.Compare(x?.AverageGasPrice, y?.AverageGasPrice);
+                return _multiplier * Comparer<UInt256?>.Default.Compare(x?.GasPrice.ToUInt256(), y?.GasPrice.ToUInt256());
             }
 
             public static AveragePriceComparer InstanceDesc { get; } = new AveragePriceComparer(-1);
             public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
         }
 
-        private static bool IsTransactionOfAcceptedType(TransactionBroadcast transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
+        private static bool IsTransactionOfAcceptedType(PublicEntry transaction)
+        {
+            return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment;
+        }
 
         /// <summary>
         ///     Gets the valid transactions for delta.
         ///     This method can be used to extract the collection of transactions that meet the criteria for validating delta.
         /// </summary>
-        private IList<TransactionBroadcast> GetValidTransactionsForDelta(IList<TransactionBroadcast> allTransactions)
+        private IList<PublicEntry> GetValidTransactionsForDelta(IList<PublicEntry> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            var validTransactionsForDelta = new List<TransactionBroadcast>();
-            var rejectedTransactions = new List<TransactionBroadcast>();
+            var validTransactionsForDelta = new List<PublicEntry>();
+            var rejectedTransactions = new List<PublicEntry>();
 
             var allTransactionsCount = allTransactions.Count;
             for (var i = 0; i < allTransactionsCount; i++)
             {
                 var currentItem = allTransactions[i];
-                if (!IsTransactionOfAcceptedType(currentItem) || !currentItem.HasValidEntries())
+                if (!IsTransactionOfAcceptedType(currentItem))
                 {
                     rejectedTransactions.Add(currentItem);
                     continue;
@@ -234,14 +235,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     break;
                 }
 
-                var currentItemGasLimit = currentItem.TotalGasLimit;
+                var currentItemGasLimit = currentItem.GasLimit;
                 if (remainingLimit < currentItemGasLimit)
                 {
                     rejectedTransactions.Add(currentItem);
                 }
                 else
                 {
-                    totalLimit += validTransactionsForDelta[i].TotalGasLimit;
+                    totalLimit += validTransactionsForDelta[i].GasLimit;
                 }
             }
 

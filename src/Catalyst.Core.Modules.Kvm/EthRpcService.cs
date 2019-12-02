@@ -28,22 +28,64 @@ using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.Modules.Kvm 
+namespace Catalyst.Core.Modules.Kvm
 {
     public class EthRpcService : IEthRpcService
     {
         public long? eth_blockNumber() { throw new NotImplementedException(); }
-        public UInt256? eth_getBalance(Address address, BlockParameter blockParameter) { throw new NotImplementedException(); }
-        public ResultWrapper<byte[]> eth_getStorageAt(Address address, UInt256 positionIndex, BlockParameter blockParameter) { throw new NotImplementedException(); }
-        public UInt256? eth_getTransactionCount(Address address, BlockParameter blockParameter) { throw new NotImplementedException(); }
-        public ResultWrapper<byte[]> eth_getCode(Address address, BlockParameter blockParameter) { throw new NotImplementedException(); }
+
+        public UInt256? eth_getBalance(Address address, BlockParameter blockParameter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ResultWrapper<byte[]> eth_getStorageAt(Address address,
+            UInt256 positionIndex,
+            BlockParameter blockParameter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UInt256? eth_getTransactionCount(Address address, BlockParameter blockParameter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ResultWrapper<byte[]> eth_getCode(Address address, BlockParameter blockParameter)
+        {
+            throw new NotImplementedException();
+        }
+
         public Keccak eth_sendRawTransaction(byte[] transaction) { throw new NotImplementedException(); }
-        public ResultWrapper<byte[]> eth_call(TransactionForRpc transactionCall, BlockParameter blockParameter = null) { throw new NotImplementedException(); }
+
+        public ResultWrapper<byte[]> eth_call(TransactionForRpc transactionCall, BlockParameter blockParameter = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public UInt256? eth_estimateGas(TransactionForRpc transactionCall) { throw new NotImplementedException(); }
-        public BlockForRpc eth_getBlockByNumber(BlockParameter blockParameter, bool returnFullTransactionObjects) { throw new NotImplementedException(); }
-        public TransactionForRpc eth_getTransactionByHash(Keccak transactionHash) { throw new NotImplementedException(); }
-        public TransactionForRpc eth_getTransactionByBlockNumberAndIndex(BlockParameter blockParameter, UInt256 positionIndex) { throw new NotImplementedException(); }
+
+        public BlockForRpc eth_getBlockByNumber(BlockParameter blockParameter, bool returnFullTransactionObjects)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TransactionForRpc eth_getTransactionByHash(Keccak transactionHash)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TransactionForRpc eth_getTransactionByBlockNumberAndIndex(BlockParameter blockParameter,
+            UInt256 positionIndex)
+        {
+            throw new NotImplementedException();
+        }
+
         public ReceiptForRpc eth_getTransactionReceipt(Keccak txHashData) { throw new NotImplementedException(); }
-        public BlockForRpc eth_getUncleByBlockHashAndIndex(Keccak blockHashData, UInt256 positionIndex) { throw new NotImplementedException(); }
+
+        public BlockForRpc eth_getUncleByBlockHashAndIndex(Keccak blockHashData, UInt256 positionIndex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

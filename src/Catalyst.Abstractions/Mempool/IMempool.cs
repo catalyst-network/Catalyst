@@ -21,12 +21,12 @@
 
 #endregion
 
-using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Abstractions.Mempool.Services;
 
 namespace Catalyst.Abstractions.Mempool
 {
     public interface IMempool<T> where T : class
     {
-        IMempoolRepository<T> Repository { get; }
+        IMempoolService<T> Service { get; }
     }
 }

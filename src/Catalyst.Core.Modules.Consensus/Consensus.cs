@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus
             _deltaHub = deltaHub;
             _deltaCache = deltaCache;
             _logger = logger;
-            logger.Information("Consensus service initialised.");
+            logger.Information("Consensus repository initialised.");
         }
 
         public void StartProducing()

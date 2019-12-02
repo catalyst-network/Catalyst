@@ -21,12 +21,23 @@
 
 #endregion
 
-using Catalyst.Protocol.Wire;
+using System;
+using System.Collections.Generic;
 
-namespace Catalyst.Abstractions.Mempool.Models
+namespace Catalyst.Abstractions.Mempool.Services
 {
-    public interface IMempoolItem
+    public interface IMempoolService<T> : IDisposable where T : class
     {
-        TransactionBroadcast Transaction { get; set; }
+        IEnumerable<T> GetAll();
+
+        void Delete(IEnumerable<T> mempoolItem);
+
+        bool TryReadItem(string id);
+
+        T ReadItem(string id);
+
+        bool DeleteItem(params string[] ids);
+
+        bool CreateItem(T mempoolItem);
     }
 }

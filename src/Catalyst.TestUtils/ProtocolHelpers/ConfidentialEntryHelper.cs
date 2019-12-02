@@ -40,7 +40,7 @@ namespace Catalyst.TestUtils.ProtocolHelpers
             return new ConfidentialEntry
             {
                 PedersenCommitment = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                RangeProof = ByteUtil.GenerateRandomByteArray(256).ToByteString(),
+                RangeProof = new RangeProof(),
                 Base = BaseEntryHelper.GetBaseEntry()
             };
         }

@@ -23,69 +23,69 @@
 
 using System;
 using System.Collections.Generic;
-using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Lib.DAO;
+using Catalyst.Abstractions.Mempool.Services;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Dawn;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Repositories
 {
-    public class MempoolRepository : IMempoolRepository<TransactionBroadcastDao>
+    public class MempoolService : IMempoolService<PublicEntryDao>
     {
-        private readonly IRepository<TransactionBroadcastDao, string> _repository;
-        public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository)
+        private readonly IRepository<PublicEntryDao, string> _repository;
+
+        public MempoolService(IRepository<PublicEntryDao, string> repository)
         {
             _repository = repository;
         }
 
-        public IEnumerable<TransactionBroadcastDao> GetAll()
+        public IEnumerable<PublicEntryDao> GetAll()
         {
             return _repository.GetAll();
         }
 
         /// <inheritdoc />
-        public bool TryReadItem(string signature)
+        public bool TryReadItem(string id)
         {
-            Guard.Argument(signature, nameof(signature)).NotNull();
-            return _repository.TryGet(signature, out _);
+            Guard.Argument(id, nameof(id)).NotNull();
+            return _repository.TryGet(id, out _);
         }
 
-        public TransactionBroadcastDao ReadItem(string signature)
+        public PublicEntryDao ReadItem(string id)
         {
-            Guard.Argument(signature, nameof(signature)).NotNull();
-            return _repository.Get(signature);
+            Guard.Argument(id, nameof(id)).NotNull();
+            return _repository.Get(id);
         }
 
-        public void Delete(IEnumerable<TransactionBroadcastDao> transactionBroadcasts)
+        public void Delete(IEnumerable<PublicEntryDao> mempoolItems)
         {
-            _repository.Delete(transactionBroadcasts);
+            _repository.Delete(mempoolItems);
         }
 
         /// <inheritdoc />
-        public bool DeleteItem(params string[] transactionSignatures)
+        public bool DeleteItem(params string[] ids)
         {
             try
             {
-                _repository.Delete(transactionSignatures);
+                _repository.Delete(ids);
             }
             catch (Exception exception)
             {
-                Log.Logger.Error(exception, "Failed to delete transactions from the mempool {transactionSignatures}",
-                    transactionSignatures);
+                Log.Logger.Error(exception, "Failed to delete transactions from the mempool {ids}", ids);
                 return false;
             }
 
             return true;
         }
 
-        public bool CreateItem(TransactionBroadcastDao transactionBroadcast)
+        public bool CreateItem(PublicEntryDao mempoolItem)
         {
-            Guard.Argument(transactionBroadcast.Signature, nameof(transactionBroadcast.Signature)).NotNull();
+            Guard.Argument(mempoolItem.Id, nameof(mempoolItem.Id)).NotNull();
 
             try
             {
-                _repository.Add(transactionBroadcast);
+                _repository.Add(mempoolItem);
             }
             catch (Exception e)
             {

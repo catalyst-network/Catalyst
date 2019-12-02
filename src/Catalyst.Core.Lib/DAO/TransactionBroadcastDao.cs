@@ -21,14 +21,10 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Protocol.Wire;
-using Google.Protobuf.WellKnownTypes;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Catalyst.Core.Lib.DAO
@@ -40,21 +36,7 @@ namespace Catalyst.Core.Lib.DAO
     [BsonIgnoreExtraElements]
     public class TransactionBroadcastDao : DaoBase
     {
-        private SignatureDao _signature;
-
-        public SignatureDao Signature
-        {
-            get => _signature;
-            set
-            {
-                _signature = value;
-                Id = value.RawBytes;
-            }
-        }
-
-        public DateTime TimeStamp { get; set; }
-        public IEnumerable<PublicEntryDao> PublicEntries { get; set; }
-        public IEnumerable<ConfidentialEntryDao> ConfidentialEntries { get; set; }
+        public PublicEntryDao PublicEntry { get; set; }
     }
 
     public class TransactionBroadcastMapperInitialiser : IMapperInitializer
@@ -65,11 +47,7 @@ namespace Catalyst.Core.Lib.DAO
             cfg.AllowNullDestinationValues = true;
 
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
-               .ForMember(e => e.PublicEntries, opt => opt.UseDestinationValue())
-               .ForMember(e => e.ConfidentialEntries, opt => opt.UseDestinationValue());
-
-            cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
-            cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
+               .ForMember(e => e.PublicEntry, opt => opt.UseDestinationValue());
         }
     }
 }

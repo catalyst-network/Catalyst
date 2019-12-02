@@ -56,12 +56,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _subbedPeerRepository = Substitute.For<IPeerRepository>();
             _peerId = PeerIdHelper.GetPeerId("testPeer");
         }
-        
+
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
-            IPeerRepository store)
+            IPeerRepository repository)
         {
-            store.Add(peer);
-            store.GetActivePeers(Arg.Any<int>()).Returns(peer);
+            repository.Add(peer);
+            repository.GetActivePeers(Arg.Any<int>()).Returns(peer);
         }
 
         [Fact]
@@ -86,17 +86,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
                 _subbedPeerRepository,
                 _subbedLogger
             );
-            
+
             var peerNeighbourRequestMessage = new PeerNeighborsRequest();
-            
+
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ObserverDto(fakeContext, peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
+            var channeledAny = new ObserverDto(fakeContext,
+                peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                    CorrelationId.GenerateCorrelationId()));
             var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
-            
+
             neighbourRequestHandler.StartObserving(observableStream);
-            
+
             var peerNeighborsResponseMessage = new PeerNeighborsResponse();
-            
+
             for (var i = 0; i < 5; i++)
             {
                 peerNeighborsResponseMessage.Peers.Add(PeerIdHelper.GetPeerId());
@@ -105,12 +107,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler.Start();
 
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()));
+               .WriteAndFlushAsync(
+                    peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()));
         }
 
-        public void Dispose()
-        {
-            _subbedPeerRepository?.Dispose();
-        }
+        public void Dispose() { _subbedPeerRepository?.Dispose(); }
     }
 }

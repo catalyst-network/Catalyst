@@ -35,11 +35,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
     {
         private readonly PeerId _ownNode;
 
-        public HastingsCareTakerTests()
-        {
-            _ownNode = PeerIdHelper.GetPeerId("own_node");
-        }
-        
+        public HastingsCareTakerTests() { _ownNode = PeerIdHelper.GetPeerId("own_node"); }
+
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Add_New_Mementos_To_Caretaker()
@@ -48,9 +45,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
             var stack = new Stack<IHastingsMemento>();
             stack.Push(DiscoveryHelper.SubMemento(_ownNode));
-            
+
             var history = DiscoveryHelper.MockMementoHistory(stack);
-            
+
             history.ToList().ForEach(m => careTaker.Add(m));
 
             careTaker.HastingMementoList.Should().Contain(history);
@@ -64,9 +61,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
             var stack = new Stack<IHastingsMemento>();
             stack.Push(DiscoveryHelper.SubMemento(_ownNode));
-            
+
             var history = DiscoveryHelper.MockMementoHistory(stack);
-            
+
             history.ToList().ForEach(m => careTaker.Add(m));
 
             careTaker.Get().Should().Be(history.Last());
