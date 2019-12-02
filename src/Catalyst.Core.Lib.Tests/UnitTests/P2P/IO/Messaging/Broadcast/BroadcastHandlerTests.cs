@@ -26,8 +26,6 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.IO.Handlers;
-using Catalyst.Core.Lib.Tests.Fakes;
-using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
@@ -35,7 +33,6 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels.Embedded;
-using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
@@ -48,13 +45,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
     {
         private readonly IBroadcastManager _fakeBroadcastManager;
         private readonly BroadcastHandler _broadcastHandler;
-        private readonly FakeKeySigner _keySigner;
+        private readonly IKeySigner _keySigner;
         private readonly ProtocolMessage _broadcastMessageSigned;
         private readonly SigningContext _signingContext;
 
         public BroadcastHandlerTests()
         {
-            _keySigner = FakeKeySigner.VerifyOnly();
+            _keySigner = Substitute.For<FakeKeySigner>();
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
             _fakeBroadcastManager = Substitute.For<IBroadcastManager>();
             _broadcastHandler = new BroadcastHandler(_fakeBroadcastManager);
 

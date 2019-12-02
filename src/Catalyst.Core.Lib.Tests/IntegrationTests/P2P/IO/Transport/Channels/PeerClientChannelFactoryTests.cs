@@ -32,7 +32,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.Tests.Fakes;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Network;
@@ -41,7 +40,6 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
 using FluentAssertions;
-using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -56,16 +54,17 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
         private readonly IPeerMessageCorrelationManager _clientCorrelationManager;
-        private readonly FakeKeySigner _clientKeySigner;
+        private readonly IKeySigner _clientKeySigner;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly FakeKeySigner _serverKeySigner;
+        private readonly IKeySigner _serverKeySigner;
         private readonly IPeerMessageCorrelationManager _serverCorrelationManager;
+        private readonly ISignature _signature;
 
         public PeerClientChannelFactoryTests()
         {
             _testScheduler = new TestScheduler();
             _serverCorrelationManager = Substitute.For<IPeerMessageCorrelationManager>();
-            _serverKeySigner = FakeKeySigner.SignOnly();
+            _serverKeySigner = Substitute.For<FakeKeySigner>();
             _serverKeySigner.CryptoContext.SignatureLength.Returns(64);
             var broadcastManager = Substitute.For<IBroadcastManager>();
 
@@ -82,8 +81,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
                 peerSettings,
                 _testScheduler);
 
+            _signature = Substitute.For<ISignature>();
+
             _clientCorrelationManager = Substitute.For<IPeerMessageCorrelationManager>();
-            _clientKeySigner = FakeKeySigner.VerifyOnly();
+            _clientKeySigner = Substitute.For<FakeKeySigner>();
             _clientKeySigner.CryptoContext.SignatureLength.Returns(64);
 
             _clientFactory = new UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory(
@@ -109,6 +110,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             var sender = PeerIdHelper.GetPeerId("sender");
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
+            _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);
+            
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var protocolMessage = new PingRequest().ToProtocolMessage(sender, correlationId);
@@ -121,8 +124,15 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 
             _serverCorrelationManager.ReceivedWithAnyArgs(1)
                .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
-
-            _serverKeySigner.SignCount.Should().Be(1);
+            
+            _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>(), default);
+            
+            _clientKeySigner.Verify(
+                    Arg.Any<ISignature>(),
+                    Arg.Any<byte[]>(), 
+                    default
+                )
+               .ReturnsForAnyArgs(true);
             
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 
@@ -134,7 +144,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
                 _clientChannel.ReadInbound<ProtocolMessage>();
                 _clientCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(Arg.Any<ProtocolMessage>());
 
-                _clientKeySigner.VerifyCount.Should().Be(1);
+                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
                 _testScheduler.Start();
 
