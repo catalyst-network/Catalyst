@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
         private readonly TestScheduler _testScheduler;
         private readonly IRpcMessageCorrelationManager _correlationManager;
         private readonly TestRpcServerChannelFactory _factory;
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
 
         public RpcServerChannelFactoryTests()
         {

@@ -41,7 +41,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
     {
         private readonly IChannelHandlerContext _fakeContext;
         private readonly ProtocolMessage _protocolMessageSigned;
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
         private readonly SigningContext _signingContext;
 
         public ProtocolMessageVerifyHandlerTests()

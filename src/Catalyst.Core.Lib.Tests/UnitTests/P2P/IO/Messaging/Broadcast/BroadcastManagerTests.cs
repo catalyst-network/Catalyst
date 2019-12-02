@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
     {
         private readonly IPeerRepository _peers;
         private readonly IMemoryCache _cache;
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
         private readonly PeerId _senderPeerId;
         private readonly IPeerSettings _peerSettings;
 

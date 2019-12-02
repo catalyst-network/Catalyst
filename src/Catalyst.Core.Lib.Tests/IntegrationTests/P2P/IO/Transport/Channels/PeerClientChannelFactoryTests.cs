@@ -54,9 +54,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
         private readonly IPeerMessageCorrelationManager _clientCorrelationManager;
-        private readonly IKeySigner _clientKeySigner;
+        private readonly FakeKeySigner _clientKeySigner;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly IKeySigner _serverKeySigner;
+        private readonly FakeKeySigner _serverKeySigner;
         private readonly IPeerMessageCorrelationManager _serverCorrelationManager;
         private readonly ISignature _signature;
 

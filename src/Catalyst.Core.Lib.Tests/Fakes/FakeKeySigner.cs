@@ -26,12 +26,11 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Protocol.Cryptography;
-using NSubstitute;
 
 namespace Catalyst.Core.Lib.Tests 
 {
     /// <summary>
-    /// A fake <see cref="IKeySigner"/> that enables to use NSubstite for faking instances of it.
+    /// A fake <see cref="IKeySigner"/> that enables to use NSubstitute for faking instances of it.
     /// </summary>
     public abstract class FakeKeySigner : IKeySigner
     {
@@ -39,11 +38,11 @@ namespace Catalyst.Core.Lib.Tests
         public abstract ICryptoContext CryptoContext { get; }
         
         // The reimplemented span-based method
-        public ISignature Sign(ReadOnlySpan<byte> data, SigningContext signingContext) => Sign(data.ToArray(), signingContext);
+        ISignature IKeySigner.Sign(ReadOnlySpan<byte> data, SigningContext signingContext) => Sign(data.ToArray(), signingContext);
         public abstract ISignature Sign(byte[] data, SigningContext signingContext);
         
         // The reimplemented span-based method
-        public bool Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext) => Verify(signature, data.ToArray(), signingContext);
+        bool IKeySigner.Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext) => Verify(signature, data.ToArray(), signingContext);
         public abstract bool Verify(ISignature signature, byte[] data, SigningContext signingContext);
     }
 }

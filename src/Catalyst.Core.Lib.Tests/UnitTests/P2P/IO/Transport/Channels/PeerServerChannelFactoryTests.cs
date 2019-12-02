@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
         private readonly TestScheduler _testScheduler;
         private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IBroadcastManager _gossipManager;
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
         private readonly TestPeerServerChannelFactory _factory;
         private readonly PeerId _senderId;
         private readonly ICorrelationId _correlationId;
