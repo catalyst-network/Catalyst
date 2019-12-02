@@ -32,8 +32,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.Tests.Fakes;
-using Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Server.Transport.Channels;
@@ -47,7 +45,6 @@ using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
-using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -84,7 +81,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
         {
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
-            _keySigner = FakeKeySigner.VerifyOnly();
+            _keySigner = Substitute.For<FakeKeySigner>();
             _keySigner.CryptoContext.SignatureLength.Returns(64);
 
             var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
@@ -130,7 +127,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var signatureBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
-        
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<SigningContext>())
+               .Returns(true);
             var protocolMessage = new PingRequest().ToSignedProtocolMessage(senderId, signatureBytes, correlationId: correlationId);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
@@ -142,7 +140,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             {
                 testingChannel.WriteInbound(protocolMessage);
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
-                _keySigner.VerifyCount.Should().Be(1);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
                 _testScheduler.Start();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
@@ -163,6 +161,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 
             _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
             
+            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), default);
+
             testingChannel.ReadOutbound<IByteBuffer>();
         }
     }
