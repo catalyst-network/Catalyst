@@ -40,27 +40,15 @@ namespace Catalyst.TestUtils
             _mapperProvider = new TestMapperProvider();
         }
 
-        public bool TryReadItem(string key)
-        {
-            throw new NotImplementedException();
-        }
+        public bool TryReadItem(string key) { throw new NotImplementedException(); }
 
-        public TransactionBroadcastDao ReadItem(string key)
-        {
-            throw new NotImplementedException();
-        }
+        public TransactionBroadcastDao ReadItem(string key) { throw new NotImplementedException(); }
 
-        public bool DeleteItem(params string[] transactionSignatures)
-        {
-            throw new NotImplementedException();
-        }
+        public bool DeleteItem(params string[] transactionSignatures) { throw new NotImplementedException(); }
 
-        public bool CreateItem(TransactionBroadcastDao transactionBroadcast)
-        {
-            throw new NotImplementedException();
-        }
+        public bool CreateItem(TransactionBroadcastDao transactionBroadcast) { throw new NotImplementedException(); }
 
-        public new IEnumerable<TransactionBroadcastDao> GetAll()
+        public IEnumerable<TransactionBroadcastDao> GetAll()
         {
             var utcNow = DateTime.UtcNow;
             var tenSecondSlot = 1 + utcNow.Second / 10;
@@ -74,9 +62,7 @@ namespace Catalyst.TestUtils
             throw new NotImplementedException();
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+        public int Count() { throw new NotImplementedException(); }
+        public void Dispose() { throw new NotImplementedException(); }
     }
 }

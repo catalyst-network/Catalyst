@@ -22,22 +22,25 @@
 #endregion
 
 using Autofac;
-using Catalyst.Core.Modules.Ledger.Models;
+using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Core.Modules.Ledger.Repository;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Ledger
 {
-    public class LedgerModule : Module 
+    public class LedgerModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<AccountRepository>().As<IAccountRepository>();
             builder.Register(c => new InMemoryRepository<Account, string>())
                .As<IRepository<Account, string>>()
                .SingleInstance();
 
             builder.RegisterType<LedgerSynchroniser>().As<ILedgerSynchroniser>();
             builder.RegisterType<Ledger>().As<ILedger>().SingleInstance();
-        }  
+        }
     }
 }

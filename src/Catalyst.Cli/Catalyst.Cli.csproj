@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <Title>Catalyst CLI</Title>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <PackageDescription>CLI tool to interact with Catalyst Nodes via RPC</PackageDescription>
+        <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+        <OutputType>Exe</OutputType>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Ctalyst.Cli.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+    <Import Project="../Common.Projects.props" />
+    <ItemGroup>
+        <PackageReference Include="CommandLineParser" Version="2.5.0" />
+        <PackageReference Include="TheDotNetLeague.Ipfs.Abstractions" Version="0.0.1" />
+        <PackageReference Include="TheDotNetLeague.Ipfs.Core.Lib" Version="0.0.1" />
+        <PackageReference Include="TheDotNetLeague.MultiFormats.MultiHash" Version="0.0.2" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="Config\*.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.KeySigner\Catalyst.Core.Modules.KeySigner.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj" />
+    </ItemGroup>
+</Project>

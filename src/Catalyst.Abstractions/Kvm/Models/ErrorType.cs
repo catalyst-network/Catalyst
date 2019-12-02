@@ -25,14 +25,12 @@ namespace Catalyst.Abstractions.Kvm.Models
 {
     public enum ErrorType
     {
-        None,
-        ParseError,
-        InvalidRequest,
-        MethodNotFound,
-        InvalidParams,
-        InternalError,
-        ExecutionError,
-        ServerError,
-        NotFound
+        None = 0,
+        InvalidRequest = -32600,
+        NotFound = -32601,
+        MethodNotFound = -32601,
+        InvalidParams = -32602,
+        InternalError = -32603,
+        ParseError = -32700,
     }
 }

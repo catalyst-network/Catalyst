@@ -1,0 +1,46 @@
+﻿@page "/mempool"
+@using System.Threading
+@using Catalyst.Abstractions.Mempool.Repositories
+@using Catalyst.Core.Lib.DAO
+
+@implements IDisposable
+@inject IMempoolRepository<TransactionBroadcastDao> MempoolRepository
+
+<h1>Mempool Viewer</h1>
+
+<p>Current count: @MempoolRepository.Count()</p>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Timestamp</th>
+        <th scope="col">Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var dao in _mempoolList)
+    {
+        <TransactionTableComponent Model="@dao"/>
+    }
+    </tbody>
+</table>
+
+
+@code
+{
+    private Timer _timer;
+    private List<TransactionBroadcastDao> _mempoolList;
+
+    protected override void OnInitialized()
+    {
+        _mempoolList = new List<TransactionBroadcastDao>();
+        _timer = new Timer((_) =>
+        {
+            _mempoolList = MempoolRepository.GetAll().ToList();
+            InvokeAsync(StateHasChanged).ConfigureAwait(false);
+        }, null, 1000, 1000);
+    }
+
+    public void Dispose() { _timer?.Dispose(); }
+}

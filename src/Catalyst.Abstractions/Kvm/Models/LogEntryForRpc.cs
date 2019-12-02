@@ -21,9 +21,10 @@
 
 #endregion
 
-using System.Numerics;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
+using Nethermind.Core.Json;
+using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {
@@ -53,13 +54,29 @@ namespace Catalyst.Abstractions.Kvm.Models
         }
 
         public bool? Removed { get; set; }
-        public BigInteger? LogIndex { get; set; }
-        public BigInteger? TransactionIndex { get; set; }
+        
+        [JsonConverter(typeof(NullableLongConverter))]
+        public long? LogIndex { get; set; }
+        
+        [JsonConverter(typeof(NullableLongConverter))]
+        public long? TransactionIndex { get; set; }
+        
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak TransactionHash { get; set; }
+        
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak BlockHash { get; set; }
-        public BigInteger? BlockNumber { get; set; }
+        
+        [JsonConverter(typeof(NullableLongConverter))]
+        public long? BlockNumber { get; set; }
+        
+        [JsonConverter(typeof(AddressConverter))]
         public Address Address { get; set; }
+        
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Data { get; set; }
+        
+        [JsonProperty(ItemConverterType = typeof(KeccakConverter))]
         public Keccak[] Topics { get; set; }
     }
 }

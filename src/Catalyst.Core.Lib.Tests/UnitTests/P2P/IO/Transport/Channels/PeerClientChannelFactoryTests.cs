@@ -110,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             handlers[5].Should().BeOfType<ObservableServiceHandler>();
         }
 
-        [Fact(Skip = "true")]
+        // [Fact(Skip = "true")]
         public async Task PeerClientChannelFactory_should_put_the_correct_handlers_on_the_inbound_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),

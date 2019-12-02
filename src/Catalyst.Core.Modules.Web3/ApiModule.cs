@@ -30,14 +30,18 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Nethermind.Core;
+using Nethermind.Core.Json;
 using Serilog;
 using SharpRepository.Repository;
 using Module = Autofac.Module;
@@ -99,6 +103,9 @@ namespace Catalyst.Core.Modules.Web3
         //todo Clean up - find a better way to reuse the ContainerBuilder loaded into the module
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            builder.RegisterType<Web3HandlerResolver>().As<IWeb3HandlerResolver>().SingleInstance();
+            builder.RegisterType<EthereumJsonSerializer>().As<IJsonSerializer>().SingleInstance();
+            
             //Mempool repo
             builder.RegisterInstance(_container.Resolve<IRepository<TransactionBroadcastDao, string>>())
                .As<IRepository<TransactionBroadcastDao, string>>()
@@ -117,6 +124,9 @@ namespace Catalyst.Core.Modules.Web3
                .SingleInstance();
             builder.RegisterInstance(_container.Resolve<IMapperProvider>())
                .As<IMapperProvider>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IWeb3EthApi>())
+               .As<IWeb3EthApi>()
                .SingleInstance();
             builder.RegisterInstance(_container.Resolve<ILogger>())
                .As<ILogger>()

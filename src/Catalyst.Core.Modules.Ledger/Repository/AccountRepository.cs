@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Core.Modules.Ledger.Models;
+using Catalyst.Abstractions.Ledger.Models;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Ledger.Repository
@@ -29,19 +29,10 @@ namespace Catalyst.Core.Modules.Ledger.Repository
     public class AccountRepository : IAccountRepository
     {
         private readonly IRepository<Account, string> _repository;
-        public AccountRepository(IRepository<Account, string> repository)
-        {
-            _repository = repository;
-        }
+        public AccountRepository(IRepository<Account, string> repository) { _repository = repository; }
 
-        public void Add(Account account)
-        {
-            _repository.Add(account);
-        }
+        public void Add(Account account) { _repository.Add(account); }
 
-        public void Dispose()
-        {
-            _repository.Dispose();
-        }
+        public void Dispose() { _repository.Dispose(); }
     }
 }

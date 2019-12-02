@@ -34,15 +34,9 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
     public class MempoolRepository : IMempoolRepository<TransactionBroadcastDao>
     {
         private readonly IRepository<TransactionBroadcastDao, string> _repository;
-        public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository)
-        {
-            _repository = repository;
-        }
+        public MempoolRepository(IRepository<TransactionBroadcastDao, string> repository) { _repository = repository; }
 
-        public IEnumerable<TransactionBroadcastDao> GetAll()
-        {
-            return _repository.GetAll();
-        }
+        public IEnumerable<TransactionBroadcastDao> GetAll() { return _repository.GetAll(); }
 
         /// <inheritdoc />
         public bool TryReadItem(string signature)
@@ -96,9 +90,8 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
             return true;
         }
 
-        public void Dispose()
-        {
-            _repository.Dispose();
-        }
+        public int Count() { return _repository.Count(); }
+
+        public void Dispose() { _repository.Dispose(); }
     }
 }

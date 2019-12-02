@@ -53,16 +53,13 @@ namespace Catalyst.TestUtils.ProtocolHelpers
         {
             var contractList = new List<PublicEntry>();
 
-            Enumerable.Range(0, count).ToList().ForEach(i =>
-            {
-                contractList.Add(ContractEntryHelper.GetContractEntry());
-            });
+            Enumerable.Range(0, count).ToList().ForEach(i => { contractList.Add(GetContractEntry()); });
             return contractList;
         }
 
         public static IEnumerable<PublicEntryDao> GetContractEntriesDao(int count)
         {
-            var contractList = GetContractEntries(count).Select(i => 
+            var contractList = GetContractEntries(count).Select(i =>
                 i.ToDao<PublicEntry, PublicEntryDao>(MapperProvider));
 
             return contractList;

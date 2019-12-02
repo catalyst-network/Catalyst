@@ -1,0 +1,140 @@
+strategy:
+  matrix:
+    Windows-VS2019:
+      imageName: 'windows-2019'
+      netcore_sdk: 3.0.100
+      rustup_toolchain: stable
+    Osx-Mojave:
+      imageName: 'macos-10.14'
+      netcore_sdk: 3.0.100
+      rustup_toolchain: stable
+    Ubuntu-1604:
+      imageName: 'ubuntu-16.04'
+      netcore_sdk: 3.0.100
+      rustup_toolchain: stable
+  maxParallel: 3
+
+variables:
+  release.type: '-beta'
+  BuildPlatform: 'any cpu'
+  BuildConfiguration: 'Debug'
+
+pool:
+  vmImage: $(imageName)
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - develop
+    exclude:
+      - master/*
+      - release/*
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - develop
+      - feature/*
+    exclude:
+      - master/*
+      - release/*
+
+schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily midnight build
+    branches:
+      include:
+        - master
+        - develop
+        - releases/*
+        - feature/*
+    always: true
+
+steps:
+  - task: InstallSSHKey@0
+    inputs:
+      knownHostsEntry: 'ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts'
+      sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrLDdJA3U1bx1dmLIulqY078VUr3i4ofPxEokCGdchsDirDAKK4nQVnkaenYMbTndcE+/3+RDEAzy4h75Y3CU8J5FoSjOjKzOi/IPl6Ssj9IKtOVBt8YP+qUHsVnEvm+m9ITAJfqQY9ctKH/0CdBxopMfRHR2BHYbMtGjNtTRO5JZ6rEpbFU8jAYLYBZd0HMBnjpKOACPhRl1Ql3eRwrpEwtW9WHc2GzO4G4nbTvtd2jiT07B/kaCyr27p8K1+waftZ/5aPE0Ou5e41d1knbE7djoA2d218nLQe4DK+5LZJNrGHmJIMwLfXV71e0zeCdaLV8/GypbUZDJ+tJQLPTDx nsh@shenron'
+      sshKeySecureFile: 'id_rsa'
+
+  - task: DotNetCoreInstaller@0
+    displayName: 'Install .NetCore SDK'
+    inputs:
+      version: 3.0.100
+
+  - bash: |
+      git submodule update --init --force --recursive
+    displayName: 'Clone submodules'
+  - script: |
+      curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain $RUSTUP_TOOLCHAIN
+      echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
+    displayName: Install rust
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+  - script: |
+      curl -sSf -o rustup-init.exe https://win.rustup.rs
+      rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
+      echo "##vso[task.setvariable variable=PATH;]%PATH%;%USERPROFILE%\.cargo\bin"
+    displayName: Windows install rust
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+        
+  - task: DotNetCoreCLI@2
+    displayName: 'Build solution'
+    inputs:
+      projects: 'src/**/*.csproj'
+      arguments: '--configuration $(BuildConfiguration)'
+      failOnStandardError: 'true'
+
+  - script: 'dotnet tool install --global dotnet-reportgenerator-globaltool'
+    displayName: 'Install coverage tools'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run unit tests'
+    inputs:
+      command: test
+      projects: 'src/*[Tt]ests/*.csproj'
+      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run unit tests with coverage'
+    inputs:
+      command: test
+      projects: 'src/*[Tt]ests/*.csproj'
+      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Include="\"[Catalyst.Core.Lib*]Catalyst.Core.Lib*\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run integration tests'
+    inputs:
+      command: test
+      projects: 'src/*[Tt]ests/*.csproj'
+      arguments: '--filter TestType=IntegrationTest --configuration $(BuildConfiguration)'
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
+
+  - script: |
+      reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:$(Build.ArtifactStagingDirectory)" -reporttypes:HtmlInline_AzurePipelines;Cobertura;SonarQube;Badges "-assemblyfilters:+Catalyst.Core.Lib*;+Catalyst.Core.Modules.Kvm*;"
+    displayName: 'Generate unit test coverage'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  - task: PublishBuildArtifacts@1
+    displayName: 'Store coverage report'
+    inputs:
+      ArtifactName: 'coverage-report'
+      failOnStandardError: 'true'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish coverage report'
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '$(Build.ArtifactStagingDirectory)/Cobertura.xml'
+      reportDirectory: '$(Build.ArtifactStagingDirectory)'
+      failOnStandardError: 'true'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
