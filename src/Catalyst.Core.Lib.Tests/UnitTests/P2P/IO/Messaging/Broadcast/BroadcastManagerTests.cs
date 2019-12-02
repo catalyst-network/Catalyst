@@ -54,7 +54,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         public BroadcastManagerTests()
         {
             _senderPeerId = PeerIdHelper.GetPeerId("sender");
-            _keySigner = FakeKeySigner.SignOnly();
+            _keySigner = Substitute.For<FakeKeySigner>();
+            var fakeSignature = Substitute.For<ISignature>();
+            _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(fakeSignature);
             _keySigner.CryptoContext.SignatureLength.Returns(64);
             _peers = new PeerRepository(new InMemoryRepository<Peer, string>());
             _cache = new MemoryCache(new MemoryCacheOptions());
