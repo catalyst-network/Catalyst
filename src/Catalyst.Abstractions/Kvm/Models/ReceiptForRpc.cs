@@ -25,6 +25,8 @@ using System.Linq;
 using System.Numerics;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
+using Nethermind.Core.Json;
+using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {
@@ -50,15 +52,33 @@ namespace Catalyst.Abstractions.Kvm.Models
             Error = receipt.Error;
         }
 
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak TransactionHash { get; set; }
-        public BigInteger TransactionIndex { get; set; }
+        
+        [JsonConverter(typeof(LongConverter))]
+        public long TransactionIndex { get; set; }
+        
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak BlockHash { get; set; }
-        public BigInteger BlockNumber { get; set; }
-        public BigInteger CumulativeGasUsed { get; set; }
-        public BigInteger GasUsed { get; set; }
+        
+        [JsonConverter(typeof(LongConverter))]
+        public long BlockNumber { get; set; }
+        
+        [JsonConverter(typeof(LongConverter))]
+        public long CumulativeGasUsed { get; set; }
+        
+        [JsonConverter(typeof(LongConverter))]
+        public long GasUsed { get; set; }
+        
+        [JsonConverter(typeof(AddressConverter))]
         public Address From { get; set; }
+        
+        [JsonConverter(typeof(AddressConverter))]
         public Address To { get; set; }
+        
+        [JsonConverter(typeof(AddressConverter))]
         public Address ContractAddress { get; set; }
+        
         public LogEntryForRpc[] Logs { get; set; }
         public Bloom LogsBloom { get; set; }
         public Keccak Root { get; set; }

@@ -10,7 +10,7 @@
 
 <div align="center">
   
-[![Build Status](https://dev.azure.com/catalyst-network/catalyst.core/_apis/build/status/Dev%20Test%20Suite?branchName=develop)](https://dev.azure.com/catalyst-network/catalyst.core/_build/latest?definitionId=3&branchName=develop)
+[![Build Status](https://dev.azure.com/catalyst-network/catalyst.framework/_apis/build/status/pr-tests-master?branchName=develop)](https://dev.azure.com/catalyst-network/catalyst.framework/_build/latest?definitionId=22&branchName=develop)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/08cb016d7489471eadd0192ce4d7b26e)](https://www.codacy.com/manual/catalyst-network/Catalyst.Framework?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=catalyst-network/Catalyst.Framework&amp;utm_campaign=Badge_Grade)
 [![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors)
 

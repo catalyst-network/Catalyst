@@ -89,12 +89,18 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<Peer>().As<IPeer>();
 
             builder.RegisterType<PeerIdValidator>().As<IPeerIdValidator>();
-            builder.RegisterType<PeerChallengeResponse>().As<IPeerChallengeResponse>();
             builder.RegisterType<PeerClient>().As<IPeerClient>().SingleInstance();
 
             builder.RegisterType<PeerChallengeRequest>().As<IPeerChallengeRequest>()
-               .WithParameter("peerChallengeWaitTimeSeconds", 5)
+               .WithParameter("ttl", 5)
                .SingleInstance();
+            builder.RegisterType<PeerChallengeResponse>().As<IPeerChallengeResponse>();
+            
+            builder.RegisterType<PeerQueryTipRequestRequest>().As<IPeerQueryTipRequest>();
+            builder.RegisterType<PeerQueryTipResponse>().As<IPeerQueryTipResponse>();
+
+            builder.RegisterType<PeerDeltaHistoryRequest>().As<IPeerDeltaHistoryRequest>();
+            builder.RegisterType<PeerDeltaHistoryResponse>().As<IPeerDeltaHistoryResponse>();
 
             // Register P2P.Discovery
             builder.RegisterType<HealthChecker>().As<IHealthChecker>();
@@ -132,7 +138,8 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<RpcMessageCorrelationManager>().As<IRpcMessageCorrelationManager>().SingleInstance();
 
             // Register Utils
-            builder.RegisterType<CancellationTokenProvider>().As<ICancellationTokenProvider>();
+            builder.RegisterType<CancellationTokenProvider>().As<ICancellationTokenProvider>()
+               .WithParameter("goodTillCancel", true);
             builder.RegisterType<TtlChangeTokenProvider>().As<IChangeTokenProvider>()
                .WithParameter("timeToLiveInMs", 8000);
 

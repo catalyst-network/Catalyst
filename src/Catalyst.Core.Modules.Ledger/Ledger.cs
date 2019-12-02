@@ -25,6 +25,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
@@ -39,7 +41,7 @@ using Nethermind.Evm.Tracing;
 using Nethermind.Store;
 using Serilog;
 using Serilog.Events;
-using Account = Catalyst.Core.Modules.Ledger.Models.Account;
+using Account = Catalyst.Abstractions.Ledger.Models.Account;
 
 namespace Catalyst.Core.Modules.Ledger
 {
