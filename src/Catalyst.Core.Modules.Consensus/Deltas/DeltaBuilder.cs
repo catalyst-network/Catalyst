@@ -139,8 +139,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
-                CoinbaseEntries = { coinbaseEntry },
-                PublicEntries = { includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x) },
+                CoinbaseEntries = {coinbaseEntry},
+                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x)},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -187,7 +187,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
         }
 
-        private static bool IsTransactionOfAcceptedType(TransactionBroadcast transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
+        private static bool IsTransactionOfAcceptedType(TransactionBroadcast transaction)
+        {
+            return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment;
+        }
 
         /// <summary>
         ///     Gets the valid transactions for delta.

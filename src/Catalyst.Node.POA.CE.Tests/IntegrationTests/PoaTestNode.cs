@@ -158,10 +158,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
-            var keySigner = Substitute.For<IKeySigner>();
-            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
-            keySigner.CryptoContext.SignatureLength.Returns(64);
-            _containerProvider.ContainerBuilder.RegisterInstance(keySigner).As<IKeySigner>();
         }
 
         protected virtual void Dispose(bool disposing)
