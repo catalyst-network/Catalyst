@@ -33,7 +33,6 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
@@ -41,13 +40,11 @@ using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
-using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileSystem;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
-using Catalyst.Core.Lib.Tests;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Mempool;
@@ -111,7 +108,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     Constants.NetworkConfigFile(NetworkType.Devnet),
                     Constants.SerilogJsonConfigFile
                 }
-               .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, output);
+                .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, output);
 
             Program.RegisterNodeDependencies(_containerProvider.ContainerBuilder,
                 excludedModules: new List<Type>
@@ -132,8 +129,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, privateKey);
 
             keyStore.KeyStoreEncryptAsync(privateKey, nodeSettings.NetworkType, KeyRegistryTypes.DefaultKey)
-               .ConfigureAwait(false).GetAwaiter()
-               .GetResult();
+                .ConfigureAwait(false).GetAwaiter()
+                .GetResult();
         }
 
         public string Name { get; }
@@ -145,9 +142,15 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false);
         }
 
-        public async Task StartSocketsAsync() { await _node.StartSocketsAsync(); }
+        public async Task StartSocketsAsync()
+        {
+            await _node.StartSocketsAsync();
+        }
 
-        public void Dispose() { Dispose(true); }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
 
         protected void OverrideContainerBuilderRegistrations()
         {
@@ -159,9 +162,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _containerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
-               .WithParameter("rootPath", _nodeDirectory.FullName);
+                .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
-            _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<FakeKeySigner>()).As<IKeySigner>();
         }
 
         protected virtual void Dispose(bool disposing)
