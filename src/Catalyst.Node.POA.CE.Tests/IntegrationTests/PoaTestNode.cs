@@ -99,18 +99,12 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             _memPool = new Mempool(
                 new TestMempoolRepository(new InMemoryRepository<PublicEntryDao, string>()));
-            _peerRepository = Substitute.For<IPeerRepository>();
+            _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             var peersInRepo = knownPeerIds.Select(p => new Peer
             {
                 PeerId = p
             }).ToList();
-            
-            // _peerRepository.AsQueryable().Returns(peersInRepo.AsQueryable());
-            _peerRepository.GetAll().Returns(peersInRepo);
-            _peerRepository.Get(Arg.Any<string>()).Returns(ci =>
-            {
-                return peersInRepo.First(p => p.DocumentId.Equals((string) ci[0]));
-            });
+            _peerRepository.Add(peersInRepo);
 
             _containerProvider = new ContainerProvider(new[]
                 {
@@ -134,6 +128,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             var keyStore = _scope.Resolve<IKeyStore>();
             var keyRegistry = _scope.Resolve<IKeyRegistry>();
+            keyRegistry.RemoveItemFromRegistry(KeyRegistryTypes.DefaultKey);
             keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, privateKey);
 
             keyStore.KeyStoreEncryptAsync(privateKey, nodeSettings.NetworkType, KeyRegistryTypes.DefaultKey)
@@ -166,10 +161,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
-
-            // var keySigner = Substitute.For<IKeySigner>();
-            // keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
-            // keySigner.CryptoContext.SignatureLength.Returns(64);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<FakeKeySigner>()).As<IKeySigner>();
         }
 
