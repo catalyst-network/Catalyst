@@ -54,13 +54,10 @@ namespace Catalyst.Benchmark.Catalyst.Abstractions
                 PublicEntry = new PublicEntry
                 {
                     Amount = amount,
-                    Base = new BaseEntry
-                    {
-                        Nonce = 1,
-                        SenderPublicKey = key,
-                        ReceiverPublicKey = key,
-                        TransactionFees = amount
-                    },
+                    Nonce = 1,
+                    SenderAddress = key,
+                    ReceiverAddress = key,
+                    TransactionFees = amount,
                     Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
                 }
             };

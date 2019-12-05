@@ -48,13 +48,10 @@ namespace Catalyst.TestUtils
                 PublicEntry = new PublicEntry
                 {
                     Amount = ((UInt256) amount).ToUint256ByteString(),
-                    Base = new BaseEntry
-                    {
-                        Nonce = nonce,
-                        ReceiverPublicKey = receiverPublicKey.ToUtf8ByteString(),
-                        SenderPublicKey = senderPublicKey.ToUtf8ByteString(),
-                        TransactionFees = ((UInt256) transactionFees).ToUint256ByteString()
-                    },
+                    Nonce = nonce,
+                    ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
+                    SenderAddress = senderPublicKey.ToUtf8ByteString(),
+                    TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
                     Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {
@@ -86,13 +83,10 @@ namespace Catalyst.TestUtils
                 PublicEntry = new PublicEntry
                 {
                     Amount = amount.ToUint256ByteString(),
-                    Base = new BaseEntry
-                    {
-                        Nonce = nonce,
-                        ReceiverPublicKey = receiverPublicKey.ToUtf8ByteString(),
-                        SenderPublicKey = senderPublicKey.ToUtf8ByteString(),
-                        TransactionFees = ((UInt256) transactionFees).ToUint256ByteString()
-                    },
+                    Nonce = nonce,
+                    ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
+                    SenderAddress = senderPublicKey.ToUtf8ByteString(),
+                    TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
                     Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {

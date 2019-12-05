@@ -49,10 +49,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
 
             var validTransaction = new PublicEntry
             {
-                Base = new BaseEntry
-                {
-                    SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
-                }
+                SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString()
             };
 
             var signingContext = new SigningContext
