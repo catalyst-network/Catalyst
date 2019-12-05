@@ -17,7 +17,7 @@ namespace Lib.P2P.PubSub
     /// <remarks>
     ///   Relies upon the router(s) to deliver and receive messages from other peers.
     /// </remarks>
-    public class NotificationService : IService, IPubSubApi
+    public class NotificationService : IService, IPubSub
     {
         private static ILog log = LogManager.GetLogger(typeof(NotificationService));
 

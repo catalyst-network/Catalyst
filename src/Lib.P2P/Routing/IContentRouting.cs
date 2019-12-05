@@ -15,7 +15,7 @@ namespace Lib.P2P.Routing
     public interface IContentRouting
     {
         /// <summary>
-        ///    Adds the <see cref="Lib.P2P.Cid"/> to the content routing system.
+        ///    Adds the <see cref="Cid"/> to the content routing system.
         /// </summary>
         /// <param name="cid">
         ///   The ID of some content that the peer contains.
@@ -35,7 +35,7 @@ namespace Lib.P2P.Routing
         ///   Find the providers for the specified content.
         /// </summary>
         /// <param name="id">
-        ///   The <see cref="Lib.P2P.Cid"/> of the content.
+        ///   The <see cref="Cid"/> of the content.
         /// </param>
         /// <param name="limit">
         ///   The maximum number of peers to return.  Defaults to 20.

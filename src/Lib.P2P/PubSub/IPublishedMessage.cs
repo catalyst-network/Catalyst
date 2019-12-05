@@ -6,7 +6,7 @@ namespace Lib.P2P.PubSub
     ///   A published message.
     /// </summary>
     /// <remarks>
-    ///   The <see cref="IPubSubApi"/> is used to publish and subsribe to a message.
+    ///   The <see cref="IPubSub"/> is used to publish and subsribe to a message.
     /// </remarks>
     public interface IPublishedMessage : IDataBlock
     {
