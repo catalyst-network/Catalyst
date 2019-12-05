@@ -26,7 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 
-            var cid = CidHelper.Cast(getDeltaRequest.DeltaDfsHash.ToByteArray());
+            var cid = getDeltaRequest.DeltaDfsHash.ToByteArray().ToCid();
 
             _deltaCache.TryGetOrAddConfirmedDelta(cid, out var delta);
 

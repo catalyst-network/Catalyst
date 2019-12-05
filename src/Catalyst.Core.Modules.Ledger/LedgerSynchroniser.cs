@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using LibP2P;
 using Serilog;
 
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Ledger
                     yield break;
                 }
 
-                var previousDfsHash = CidHelper.Cast(retrievedDelta.PreviousDeltaDfsHash.ToByteArray());
+                var previousDfsHash = retrievedDelta.PreviousDeltaDfsHash.ToByteArray().ToCid();
 
                 _logger.Debug("Retrieved delta {previous} as predecessor of {current}",
                     previousDfsHash, thisHash);

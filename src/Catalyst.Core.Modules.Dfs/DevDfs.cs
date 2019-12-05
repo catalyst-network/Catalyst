@@ -29,7 +29,7 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Config;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Dawn;
 using LibP2P;
 
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.Dfs
         /// <inheritdoc />
         public async Task<Cid> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {
-            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash(utf8Content));
+            var cid = _hashProvider.ComputeUtf8MultiHash(utf8Content).CreateCid();
             var filePath = Path.Combine(_baseFolder.FullName, cid);
 
             await _fileSystem.File.WriteAllTextAsync(
@@ -100,7 +100,7 @@ namespace Catalyst.Core.Modules.Dfs
             string name = "",
             CancellationToken cancellationToken = default)
         {
-            var cid = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(content));
+            var cid = _hashProvider.ComputeMultiHash(content).CreateCid();
             var filePath = Path.Combine(_baseFolder.FullName, cid);
 
             using (var file = _fileSystem.File.Create(filePath))

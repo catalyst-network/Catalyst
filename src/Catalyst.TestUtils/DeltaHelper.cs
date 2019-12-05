@@ -25,6 +25,7 @@ using System;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
@@ -43,7 +44,7 @@ namespace Catalyst.TestUtils
             DateTime? timestamp = default)
         {
             var previousHash = previousDeltaHash ??
-                CidHelper.CreateCid(hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)));
+                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
             var root = merkleRoot ?? ByteUtil.GenerateRandomByteArray(32);
             var poda = merklePoda ?? ByteUtil.GenerateRandomByteArray(32);
             var nonNullTimestamp =
@@ -66,9 +67,9 @@ namespace Catalyst.TestUtils
             PeerId producerId = null)
         {
             var candidateHash = hash ??
-                CidHelper.CreateCid(hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)));
+                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
             var previousHash = previousDeltaHash ??
-                CidHelper.CreateCid(hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)));
+                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
             var producer = producerId
              ?? PeerIdHelper.GetPeerId(ByteUtil.GenerateRandomByteArray(32));
 

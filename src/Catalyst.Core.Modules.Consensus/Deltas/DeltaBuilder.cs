@@ -31,6 +31,7 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
@@ -123,7 +124,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var candidate = new CandidateDeltaBroadcast
             {
                 // h∆j
-                Hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate)))
+                Hash = MultiBase.Decode(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate).CreateCid())
                    .ToByteString(),
 
                 // Idj
