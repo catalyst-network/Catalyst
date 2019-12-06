@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Validators
             }
 
             var transactionSignature = _cryptoContext.GetSignatureFromBytes(transaction.Signature.RawBytes.ToByteArray(),
-                transaction.Base.SenderPublicKey.ToByteArray());
+                transaction.SenderAddress.ToByteArray());
 
             var signingContext = transaction.Signature.SigningContext.ToByteArray();
 

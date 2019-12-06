@@ -33,7 +33,10 @@ namespace Catalyst.Core.Lib.DAO.Transaction
 {
     public class ConfidentialEntryDao : DaoBase
     {
-        public BaseEntryDao Base { get; set; }
+        public ulong Nonce { get; set; }
+        public string ReceiverPublicKey { get; set; }
+        public string SenderPublicKey { get; set; }
+        public string TransactionFees { get; set; }
         public string PedersenCommitment { get; set; }
         public string RangeProof { get; set; }
 
@@ -51,13 +54,25 @@ namespace Catalyst.Core.Lib.DAO.Transaction
                .ForMember(e => e.RangeProof,
                     opt => opt.MapFrom(x => x.RangeProof.ToByteString().ToBase64()))
                .ForMember(e => e.PedersenCommitment,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
+               .ForMember(d => d.ReceiverPublicKey,
+                    opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.ReceiverPublicKey))
+               .ForMember(d => d.SenderPublicKey,
+                    opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.SenderPublicKey))
+               .ForMember(d => d.TransactionFees,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.TransactionFees));
 
             cfg.CreateMap<ConfidentialEntryDao, ConfidentialEntry>()
                .ForMember(e => e.RangeProof,
                     opt => opt.MapFrom(x => RangeProof.Parser.ParseFrom(ByteString.FromBase64(x.RangeProof))))
                .ForMember(e => e.PedersenCommitment,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
+               .ForMember(d => d.ReceiverPublicKey,
+                    opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.ReceiverPublicKey))
+               .ForMember(d => d.SenderPublicKey,
+                    opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.SenderPublicKey))
+               .ForMember(d => d.TransactionFees,
+                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.TransactionFees));
         }
     }
 }

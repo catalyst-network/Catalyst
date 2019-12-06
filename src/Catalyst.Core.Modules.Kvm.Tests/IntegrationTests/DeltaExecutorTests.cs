@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         public void Fails_when_sender_not_specified()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _senderPublicKey, 3);
-            delta.PublicEntries[0].Base.SenderPublicKey = ByteString.Empty;
+            delta.PublicEntries[0].SenderAddress = ByteString.Empty;
             delta.PublicEntries[0].Signature = delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
 
@@ -191,7 +191,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,
                 "0x60016000526001601FF300");
             delta.PublicEntries[0].GasLimit = 1_000_000L;
-            delta.PublicEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
+            delta.PublicEntries[0].ReceiverAddress = ByteString.Empty;
             delta.PublicEntries[0].Signature = delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
 
@@ -210,7 +210,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,
                 "0x730001020304050607080910111213141516171819ff");
             delta.PublicEntries[0].GasLimit = 1_000_000L;
-            delta.PublicEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
+            delta.PublicEntries[0].ReceiverAddress = ByteString.Empty;
             delta.PublicEntries[0].Signature = delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
 
@@ -229,7 +229,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,
                 "0x60016000526001601FF300");
             delta.PublicEntries[0].GasLimit = 53369;
-            delta.PublicEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
+            delta.PublicEntries[0].ReceiverAddress = ByteString.Empty;
             delta.PublicEntries[0].Signature = delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
 
@@ -254,7 +254,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,
                 "0x60016000526001601FF300");
             delta.PublicEntries[0].GasLimit = 1_000_000L;
-            delta.PublicEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
+            delta.PublicEntries[0].ReceiverAddress = ByteString.Empty;
             delta.PublicEntries[0].Signature = delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
 
@@ -276,7 +276,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,
                 "0x60016000526001601FF300");
             delta.PublicEntries[0].GasLimit = 1_000_000L;
-            delta.PublicEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
+            delta.PublicEntries[0].ReceiverAddress = ByteString.Empty;
             delta.PublicEntries[0].Signature = delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
 
@@ -294,7 +294,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,
                 "0x60016000526001601FF300");
             delta.PublicEntries[0].GasLimit = 1_000_000L;
-            delta.PublicEntries[0].Base.ReceiverPublicKey = ByteString.Empty;
+            delta.PublicEntries[0].ReceiverAddress = ByteString.Empty;
             delta.PublicEntries[0].Signature = delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
 

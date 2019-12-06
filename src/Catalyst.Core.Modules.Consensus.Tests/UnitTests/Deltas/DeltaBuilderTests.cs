@@ -311,7 +311,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var expectedCoinBase = new CoinbaseEntry
             {
-                Amount = selectedTransactions.Sum(t => t.Base.TransactionFees.ToUInt256()).ToUint256ByteString(),
+                Amount = selectedTransactions.Sum(t => t.TransactionFees.ToUInt256()).ToUint256ByteString(),
                 ReceiverPublicKey = _producerId.PublicKey.ToByteString()
             };
 
