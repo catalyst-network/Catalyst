@@ -28,7 +28,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
 using Serilog;
 
@@ -52,14 +52,14 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 var deserialized = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
-                var previousDeltaDfsHashCid = CidHelper.Cast(deserialized.Candidate.PreviousDeltaDfsHash.ToByteArray());
+                var previousDeltaDfsHashCid = deserialized.Candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
                 if (!_hashProvider.IsValidHash(previousDeltaDfsHashCid.Hash.ToArray()))
                 {
                     Logger.Error("PreviousDeltaDfsHash is not a valid hash");
                     return;
                 }
 
-                var hashCid = CidHelper.Cast(deserialized.Candidate.Hash.ToByteArray());
+                var hashCid = deserialized.Candidate.Hash.ToByteArray().ToCid();
                 if (!_hashProvider.IsValidHash(hashCid.Hash.ToArray()))
                 {
                     Logger.Error("Hash is not a valid hash");

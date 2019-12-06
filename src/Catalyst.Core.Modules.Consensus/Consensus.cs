@@ -26,7 +26,7 @@ using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Serilog;
 
@@ -111,7 +111,7 @@ namespace Catalyst.Core.Modules.Consensus
 
                     var newCid = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
                        .ConfigureAwait(false).GetAwaiter().GetResult();
-                    var previousHash = CidHelper.Cast(d.PreviousDeltaDfsHash.ToByteArray());
+                    var previousHash = d.PreviousDeltaDfsHash.ToByteArray().ToCid();
 
                     _deltaHashProvider.TryUpdateLatestHash(previousHash, newCid.Hash);
                 });

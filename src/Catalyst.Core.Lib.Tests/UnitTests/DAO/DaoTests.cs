@@ -32,6 +32,7 @@ using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Deltas;
@@ -177,9 +178,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new CandidateDeltaBroadcast
             {
-                Hash = MultiBase.Decode(CidHelper.CreateCid(hash)).ToByteString(),
+                Hash = MultiBase.Decode(hash.CreateCid()).ToByteString(),
                 ProducerId = PeerIdHelper.GetPeerId("test"),
-                PreviousDeltaDfsHash = MultiBase.Decode(CidHelper.CreateCid(previousHash)).ToByteString()
+                PreviousDeltaDfsHash = MultiBase.Decode(previousHash.CreateCid()).ToByteString()
             };
 
             var candidateDeltaBroadcast =
@@ -193,9 +194,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         [Fact]
         public void DeltaDfsHashBroadcastDao_DeltaDfsHashBroadcast_Should_Be_Convertible()
         {
-            var hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("this hash")));
+            var hash = MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("this hash").CreateCid());
             var previousDfsHash =
-                MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousDfsHash")));
+                MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("previousDfsHash").CreateCid());
 
             var original = new DeltaDfsHashBroadcast
             {

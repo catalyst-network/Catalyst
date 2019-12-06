@@ -34,8 +34,8 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Core.Modules.Mempool.Repositories;
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
-            _genesisHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("genesis"));
+            _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis").CreateCid();
             _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
             _executor = Substitute.For<IDeltaExecutor>();
             _stateProvider = Substitute.For<IStateProvider>();
@@ -119,8 +119,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         [Fact]
         public void Should_Reconcile_On_New_Delta_Hash()
         {
-            var hash1 = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update"));
-            var hash2 = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update again"));
+            var hash1 = _hashProvider.ComputeUtf8MultiHash("update").CreateCid();
+            var hash2 = _hashProvider.ComputeUtf8MultiHash("update again").CreateCid();
             var updates = new[] {hash1, hash2};
 
             _ledgerSynchroniser.CacheDeltasBetween(Arg.Is(_genesisHash), Arg.Is(hash1), default)
@@ -154,7 +154,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             var sampleSize = 5;
             _mempool.Service.Returns(new MempoolService(new InMemoryRepository<PublicEntryDao, string>()));
 
-            var hash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("update"));
+            var hash = _hashProvider.ComputeUtf8MultiHash("update").CreateCid();
             var updates = new[] {hash};
 
             _ledgerSynchroniser.CacheDeltasBetween(Arg.Is(_genesisHash), Arg.Is(hash), default)
