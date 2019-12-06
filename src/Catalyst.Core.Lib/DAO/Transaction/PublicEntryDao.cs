@@ -36,11 +36,14 @@ namespace Catalyst.Core.Lib.DAO.Transaction
 {
     public class PublicEntryDao : DaoBase
     {
-        public SignatureDao Signature { set; get; }
-        public BaseEntryDao Base { get; set; }
+        public ulong Nonce { get; set; }
+        public string ReceiverAddress { get; set; }
+        public string SenderAddress { get; set; }
+        public string TransactionFees { get; set; }
         public string Data { get; set; }
         public string Amount { get; set; }
         public DateTime TimeStamp { get; set; }
+        public SignatureDao Signature { set; get; }
 
         [Column]
 
@@ -52,10 +55,7 @@ namespace Catalyst.Core.Lib.DAO.Transaction
     {
         private readonly IHashProvider _hashProvider;
 
-        public PublicEntryMapperInitialiser(IHashProvider hashProvider)
-        {
-            _hashProvider = hashProvider;
-        }
+        public PublicEntryMapperInitialiser(IHashProvider hashProvider) { _hashProvider = hashProvider; }
 
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
@@ -63,12 +63,26 @@ namespace Catalyst.Core.Lib.DAO.Transaction
 
             cfg.CreateMap<PublicEntry, PublicEntryDao>()
                .ForMember(d => d.Id, opt => opt.MapFrom(src => _hashProvider.ComputeMultiHash(src.ToByteArray())))
-               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
-               .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToBase32Converter, ByteString>());
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
+               .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToBase32Converter, ByteString>())
+               .ForMember(d => d.ReceiverAddress,
+                    opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.ReceiverAddress))
+               .ForMember(d => d.SenderAddress,
+                    opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.SenderAddress))
+               .ForMember(d => d.TransactionFees,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.TransactionFees));
 
             cfg.CreateMap<PublicEntryDao, PublicEntry>()
-               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
-               .ForMember(e => e.Data, opt => opt.ConvertUsing<Base32ToByteStringFormatter, string>());
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
+               .ForMember(e => e.Data, opt => opt.ConvertUsing<Base32ToByteStringFormatter, string>())
+               .ForMember(d => d.ReceiverAddress,
+                    opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.ReceiverAddress))
+               .ForMember(d => d.SenderAddress,
+                    opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.SenderAddress))
+               .ForMember(d => d.TransactionFees,
+                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.TransactionFees));
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());

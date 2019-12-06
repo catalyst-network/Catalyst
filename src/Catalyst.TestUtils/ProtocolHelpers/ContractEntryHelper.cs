@@ -40,12 +40,15 @@ namespace Catalyst.TestUtils.ProtocolHelpers
         public static PublicEntry GetContractEntry()
         {
             var amount = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
+            var fees = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
 
             return new PublicEntry
             {
                 Data = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                 Amount = amount.ToByteString(),
-                Base = BaseEntryHelper.GetBaseEntry()
+                TransactionFees = fees.ToByteString(),
+                ReceiverAddress = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                SenderAddress = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
             };
         }
 

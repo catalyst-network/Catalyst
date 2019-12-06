@@ -51,41 +51,32 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
             _entry = new PublicEntry
             {
                 Amount = amount,
-                Base = new BaseEntry
-                {
-                    TransactionFees = amount,
-                    ReceiverPublicKey = bytes,
-                    SenderPublicKey = bytes,
-                }
+                TransactionFees = amount,
+                ReceiverAddress = bytes,
+                SenderAddress = bytes
             };
 
             _provider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata(name));
         }
 
-        readonly HashProvider _provider;
-        readonly PublicEntry _entry;
-        readonly byte[] _salt = {1, 2, 3, 4};
+        private readonly HashProvider _provider;
+        private readonly PublicEntry _entry;
+        private readonly byte[] _salt = {1, 2, 3, 4};
 
         [Benchmark]
-        public MultiHash Concat_manual()
-        {
-            return _provider.ComputeMultiHash(_entry.ToByteArray().Concat(_salt));
-        }
+        public MultiHash Concat_manual() { return _provider.ComputeMultiHash(_entry.ToByteArray().Concat(_salt)); }
 
         [Benchmark]
-        public MultiHash Concat_embedded()
-        {
-            return _provider.ComputeMultiHash(_entry, _salt);
-        }
+        public MultiHash Concat_embedded() { return _provider.ComputeMultiHash(_entry, _salt); }
 
         internal class NoopHash : HashAlgorithm
         {
             public const int DigestSize = 32;
-            static readonly byte[] Value = new byte[DigestSize];
+            private static readonly byte[] Value = new byte[DigestSize];
 
             protected override void HashCore(byte[] array, int ibStart, int cbSize) { }
 
-            protected override byte[] HashFinal() => Value;
+            protected override byte[] HashFinal() { return Value; }
 
             public override void Initialize() { }
 

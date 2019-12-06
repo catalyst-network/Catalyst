@@ -50,8 +50,7 @@ namespace Catalyst.TestUtils
             new PublicEntryMapperInitialiser(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"))),
             new ConfidentialEntryMapperInitialiser(),
             new TransactionBroadcastMapperInitialiser(),
-            new SignatureMapperInitialiser(),
-            new BaseEntryMapperInitialiser()
+            new SignatureMapperInitialiser()
         }) { }
     }
 }

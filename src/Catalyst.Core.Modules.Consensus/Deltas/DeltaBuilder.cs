@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                .ToArray();
 
             // xf
-            var summedFees = includedTransactions.Sum(t => t.Base.TransactionFees.ToUInt256());
+            var summedFees = includedTransactions.Sum(t => t.TransactionFees.ToUInt256());
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)
             var coinbaseEntry = new CoinbaseEntry
