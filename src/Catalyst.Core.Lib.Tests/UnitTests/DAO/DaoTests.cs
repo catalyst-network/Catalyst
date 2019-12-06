@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Net;
 using System.Text;
 using Catalyst.Abstractions.DAO;
@@ -55,7 +54,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
     public class DaoTests
     {
-        private readonly IMapperInitializer[] _initialisers;
         private readonly HashProvider _hashProvider;
         private readonly MapperProvider _mapperProvider;
 
@@ -63,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
-            _initialisers = new IMapperInitializer[]
+            var initialisers = new IMapperInitializer[]
             {
                 new ProtocolMessageMapperInitialiser(),
                 new ConfidentialEntryMapperInitialiser(),
@@ -82,11 +80,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new SignatureMapperInitialiser()
             };
 
-            _mapperProvider = new MapperProvider(_initialisers);
+            _mapperProvider = new MapperProvider(initialisers);
         }
-
-        // ReSharper disable once UnusedMember.Local
-        private TDao GetMapper<TDao>() where TDao : IMapperInitializer { return _initialisers.OfType<TDao>().First(); }
 
         [Fact]
         public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
