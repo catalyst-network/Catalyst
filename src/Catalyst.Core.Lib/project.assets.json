@@ -693,10 +693,10 @@
           "System.Runtime.Numerics": "4.3.0"
         },
         "compile": {
-          "lib/netstandard1.6/Multiformats.Base.dll": {}
+          "lib/netstandard1.6/Multiformats.dll": {}
         },
         "runtime": {
-          "lib/netstandard1.6/Multiformats.Base.dll": {}
+          "lib/netstandard1.6/Multiformats.dll": {}
         }
       },
       "Multiformats.Hash/1.5.0": {
@@ -3939,10 +3939,10 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net461/Multiformats.Base.dll",
-        "lib/netstandard1.6/Multiformats.Base.dll",
-        "multiformats.base.2.0.1.nupkg.sha512",
-        "multiformats.base.nuspec"
+        "lib/net461/Multiformats.dll",
+        "lib/netstandard1.6/Multiformats.dll",
+        "multiformats.2.0.1.nupkg.sha512",
+        "multiformats.nuspec"
       ]
     },
     "Multiformats.Hash/1.5.0": {

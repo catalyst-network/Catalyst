@@ -67,10 +67,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
 
             var validTransaction = new PublicEntry
             {
-                Base = new BaseEntry
-                {
-                    SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
-                }
+                SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString()
             };
 
             var signature = new Signature
@@ -106,10 +103,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             // raw un-signed tx message
             var validTransaction = new PublicEntry
             {
-                Base = new BaseEntry
-                {
-                    SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString()
-                }
+                SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString()
             };
 
             var txSig = new Signature
