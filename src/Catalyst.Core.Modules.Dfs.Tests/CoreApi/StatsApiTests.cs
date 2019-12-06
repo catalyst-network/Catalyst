@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
-    [TestClass]
     public class StatsApiTest
     {
-        Dfs ipfs = TestFixture.Ipfs;
+        IDfs ipfs = TestFixture.Ipfs;
 
         [Fact]
         public void Exists() { Assert.NotNull(ipfs.Stats); }

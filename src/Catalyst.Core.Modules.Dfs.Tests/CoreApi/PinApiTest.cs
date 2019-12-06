@@ -4,13 +4,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using FluentAssertions;
 using Lib.P2P;
 using MultiFormats;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
-    [TestClass]
     public class PinApiTest
     {
         [Fact]
@@ -49,14 +49,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                 Hash = MultiHash.ComputeHash(new byte[] {1, 2, 3}, "identity")
             };
             var pins = await ipfs.Pin.AddAsync(cid, recursive: false);
-            Assert.Contains(pins.ToArray(), cid);
+            pins.ToArray().Should().Contain(cid);
             var all = await ipfs.Pin.ListAsync();
-            Assert.Contains(all.ToArray(), cid);
+            all.ToArray().Should().Contain(cid);
 
             var removals = await ipfs.Pin.RemoveAsync(cid, recursive: false);
-            Assert.Contains(removals.ToArray(), cid);
+            removals.ToArray().Should().Contain(cid);
             all = await ipfs.Pin.ListAsync();
-            Assert.DoesNotContain(all.ToArray(), cid);
+            all.ToArray().Should().Contain(cid);
         }
 
         [Fact]

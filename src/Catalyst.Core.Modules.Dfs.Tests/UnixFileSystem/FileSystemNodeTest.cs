@@ -3,7 +3,6 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.UnixFileSystem
 {
-    [TestClass]
     public class FileSystemNodeTest
     {
         [Fact]

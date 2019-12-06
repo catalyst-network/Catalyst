@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
 using ProtoBuf;
@@ -41,7 +42,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
         /// </remarks>
         public static Task<Stream> CreateReadStreamAsync(Cid id,
             IBlockApi blockService,
-            KeyChain keyChain,
+            IKeyApi keyChain,
             CancellationToken cancel)
         {
             // TODO: A content-type registry should be used.
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
 
         static async Task<Stream> CreateRawStreamAsync(Cid id,
             IBlockApi blockService,
-            KeyChain keyChain,
+            IKeyApi keyChain,
             CancellationToken cancel)
         {
             var block = await blockService.GetAsync(id, cancel).ConfigureAwait(false);
@@ -66,7 +67,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
 
         static async Task<Stream> CreateDagProtoBufStreamAsync(Cid id,
             IBlockApi blockService,
-            KeyChain keyChain,
+            IKeyApi keyChain,
             CancellationToken cancel)
         {
             var block = await blockService.GetAsync(id, cancel).ConfigureAwait(false);
@@ -94,7 +95,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
 
         static async Task<Stream> CreateCmsStreamAsync(Cid id,
             IBlockApi blockService,
-            KeyChain keyChain,
+            IKeyApi keyChain,
             CancellationToken cancel)
         {
             var block = await blockService.GetAsync(id, cancel).ConfigureAwait(false);

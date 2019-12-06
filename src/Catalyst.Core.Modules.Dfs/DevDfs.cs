@@ -26,6 +26,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Config;
@@ -46,7 +47,7 @@ namespace Catalyst.Core.Modules.Dfs
     ///     in integration tests
     /// </remarks>
     /// <inheritdoc cref="IDfs" />
-    public sealed class DevDfs : IDfs
+    public sealed class DevDfs : Dfs, IDfs
     {
         private readonly DirectoryInfo _baseFolder;
         private readonly IFileSystem _fileSystem;
@@ -54,7 +55,7 @@ namespace Catalyst.Core.Modules.Dfs
 
         public DevDfs(IFileSystem fileSystem,
             IHashProvider hashProvider,
-            string baseFolder = null)
+            string baseFolder = null) : base()
         {
             Guard.Argument(hashProvider.HashingAlgorithm, nameof(hashProvider.HashingAlgorithm))
                .Require(h => h.DigestSize <= 159, h =>
@@ -73,50 +74,15 @@ namespace Catalyst.Core.Modules.Dfs
             _fileSystem = fileSystem;
             _hashProvider = hashProvider;
         }
-
-        /// <inheritdoc />
-        public async Task<Cid> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
+        
+        internal override AddFileOptions AddFileOptions()
         {
-            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash(utf8Content));
-            var filePath = Path.Combine(_baseFolder.FullName, cid);
-
-            await _fileSystem.File.WriteAllTextAsync(
-                filePath,
-                utf8Content, Encoding.UTF8, cancellationToken);
-
-            return cid;
-        }
-
-        /// <inheritdoc />
-        public async Task<string> ReadAllTextAsync(Cid cid, CancellationToken cancellationToken = default)
-        {
-            return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, cid),
-                Encoding.UTF8,
-                cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public async Task<Cid> AddAsync(Stream content,
-            string name = "",
-            CancellationToken cancellationToken = default)
-        {
-            var cid = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(content));
-            var filePath = Path.Combine(_baseFolder.FullName, cid);
-
-            using (var file = _fileSystem.File.Create(filePath))
+            return new AddFileOptions
             {
-                content.Position = 0;
-                await content.CopyToAsync(file, cancellationToken).ConfigureAwait(false);
-            }
-
-            return cid;
-        }
-
-        /// <inheritdoc />
-        public async Task<Stream> ReadFileAsync(Cid cid, CancellationToken cancellationToken = default)
-        {
-            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, cid)))
-               .ConfigureAwait(false);
+                Hash = _hashProvider.HashingAlgorithm.Name,
+                RawLeaves = true,
+                OnlyHash = true,
+            };
         }
     }
 }

@@ -55,7 +55,7 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs
 {
-    public sealed class Dfs : IDfs
+    public class Dfs : IDfs
     {
         static ILog log = LogManager.GetLogger(typeof(Dfs));
 
@@ -85,7 +85,7 @@ namespace Catalyst.Core.Modules.Dfs
             Init();
         }
 
-        private AddFileOptions AddFileOptions()
+        internal virtual AddFileOptions AddFileOptions()
         {
             return new AddFileOptions
             {
@@ -685,7 +685,7 @@ namespace Catalyst.Core.Modules.Dfs
         ///   <b>true</b> to release both managed and unmanaged resources; <b>false</b> 
         ///   to release only unmanaged resources.
         /// </param>
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (disposedValue)
             {

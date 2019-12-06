@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Modules.Hashing;
@@ -43,7 +44,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     public sealed class DfsTests : FileSystemBasedTest
     {
-        private readonly IpfsAdapter _ipfs;
+        private readonly IDfs _ipfs;
         private readonly ILogger _logger;
         private readonly ITestOutputHelper _output;
         private readonly IHashProvider _hashProvider;
@@ -58,7 +59,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                .Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 
             _logger = Substitute.For<ILogger>();
-            _ipfs = new IpfsAdapter(passwordReader, FileSystem, _logger);
+            _ipfs = new Dfs();
 
             // Starting IPFS takes a few seconds.  Do it here, so that individual
             // test times are not affected.
@@ -75,9 +76,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
 
             const string text = "good morning";
-            var dfs = new Dfs(_ipfs, _hashProvider, _logger);
-            var id = await dfs.AddTextAsync(text, cts.Token);
-            var content = await dfs.ReadAllTextAsync(id, cts.Token);
+            var dfs = new Dfs();
+            var id = await dfs.FileSystem.AddTextAsync(text, cancel: cts.Token);
+            var content = await dfs.FileSystem?.ReadAllTextAsync(id.Id, cts.Token);
 
             content.Should().Be(text);
         }
@@ -92,9 +93,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 1, 2, 3
             };
             var ms = new MemoryStream(binary);
-            var dfs = new Dfs(_ipfs, _hashProvider, _logger);
-            var id = await dfs.AddAsync(ms, "", cts.Token);
-            using (var stream = await dfs.ReadFileAsync(id, cts.Token))
+            var dfs = new Dfs();
+            var id = await dfs.FileSystem.AddAsync(ms, "", cancel: cts.Token);
+            using (var stream = await dfs.FileSystem.ReadFileAsync(id.Id, cts.Token))
             {
                 var content = new byte[binary.Length];
                 await stream.ReadAsync(content, 0, content.Length, cts.Token);

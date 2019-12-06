@@ -178,5 +178,12 @@ namespace Catalyst.Abstractions.Keystore
         ///   an <see cref="Microsoft.EntityFrameworkCore.Metadata.IKey"/> or <b>null</b> if the the key is not defined.
         /// </returns>
         Task<IKey> FindKeyByNameAsync(string name, CancellationToken cancel = default(CancellationToken));
+
+        Task<byte[]> CreateProtectedDataAsync(string keyName,
+            byte[] plainText,
+            CancellationToken cancel = default(CancellationToken));
+
+        Task<byte[]> ReadProtectedDataAsync(byte[] cipherText,
+            CancellationToken cancel = default(CancellationToken));
     }
 }

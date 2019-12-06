@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Lib.P2P.PubSub;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
-    [TestClass]
     public class PubSubApiTest
     {
         [Fact]
@@ -40,7 +40,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                 await ipfs.PubSub.SubscribeAsync(topic, msg => { }, cs.Token);
                 var topics = ipfs.PubSub.SubscribedTopicsAsync().Result.ToArray();
                 Assert.True(topics.Length > 0);
-                Assert.Contains(topics, topic);
+                topics.Should().Contain(topic);
             }
             finally
             {

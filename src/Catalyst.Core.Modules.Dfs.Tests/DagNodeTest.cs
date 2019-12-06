@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using Catalyst.Abstractions.Dfs;
 using Google.Protobuf;
 using MultiFormats;
 using Xunit;
@@ -245,7 +246,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests
             RoundtripTest(b);
         }
 
-        void RoundtripTest(DagNode a)
+        void RoundtripTest(IDagNode a)
         {
             var ms = new MemoryStream();
             a.Write(ms);

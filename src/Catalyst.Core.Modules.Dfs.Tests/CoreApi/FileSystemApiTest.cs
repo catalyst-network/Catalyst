@@ -481,7 +481,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                     using (var reader = new StreamReader(data))
                     {
                         var s = reader.ReadToEnd();
-                        Assert.Equal(text.Substring(offset, Math.Min(11 - offset, length)), s,
+                        text.Substring(offset, Math.Min(11 - offset, length)).Should().Contain(
                             $"o={offset} l={length}");
                     }
                 }
@@ -505,7 +505,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                 using (var reader = new StreamReader(data))
                 {
                     var s = reader.ReadToEnd();
-                    Assert.Equal(text.Substring(0, Math.Min(11, length)), s, $"l={length}");
+                    text.Substring(0, Math.Min(11, length)).Should().Contain($"l={length}");
                 }
             }
         }
@@ -529,7 +529,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                     using (var reader = new StreamReader(data))
                     {
                         var s = reader.ReadToEnd();
-                        Assert.Equal(text.Substring(offset, Math.Min(11 - offset, length)), s, $"o={offset} l={length}");
+                        text.Substring(offset, Math.Min(11 - offset, length)).Should().Contain($"o={offset} l={length}");
                     }
                 }
             }
@@ -555,7 +555,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                     using (var reader = new StreamReader(data))
                     {
                         var s = reader.ReadToEnd();
-                        Assert.Equal(text.Substring(offset, Math.Min(11 - offset, length)), s, "o={offset} l={length}");
+                        text.Substring(offset, Math.Min(11 - offset, length)).Should().Contain("o={offset} l={length}");
                     }
                 }
             }

@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
 using ProtoBuf;
@@ -35,7 +37,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
         /// <param name="blockService"></param>
         /// <param name="keyChain"></param>
         /// <param name="dag"></param>
-        public ChunkedStream(IBlockApi blockService, KeyChain keyChain, DagNode dag)
+        public ChunkedStream(IBlockApi blockService, IKeyApi keyChain, IDagNode dag)
         {
             BlockService = blockService;
             KeyChain = keyChain;
@@ -55,7 +57,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
         }
 
         IBlockApi BlockService { get; set; }
-        KeyChain KeyChain { get; set; }
+        IKeyApi KeyChain { get; set; }
 
         /// <inheritdoc />
         public override long Length => fileSize;

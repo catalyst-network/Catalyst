@@ -2,22 +2,23 @@
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
 using Lib.P2P.Cryptography;
 using MultiFormats;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
 {
-    [TestClass]
     public class DfsTest
     {
         [Fact]
         public void Can_Create()
         {
-            var ipfs = new Dfs("this is not a secure pass phrase".ToCharArray());
+            var ipfs = new Dfs();
             Assert.NotNull(ipfs);
         }
 
@@ -34,13 +35,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         public async Task SecureString_Passphrase()
         {
             var secret = "this is not a secure pass phrase";
-            var ipfs = new Dfs(secret.ToCharArray());
+            var ipfs = new Dfs();
             ipfs.Options = TestFixture.Ipfs.Options;
             await ipfs.KeyChainAsync();
 
             var passphrase = new SecureString();
             foreach (var c in secret) passphrase.AppendChar(c);
-            ipfs = new Dfs(passphrase);
+            ipfs = new Dfs();
             ipfs.Options = TestFixture.Ipfs.Options;
             await ipfs.KeyChainAsync();
         }
@@ -49,7 +50,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         public async Task IpfsPass_Passphrase()
         {
             var secret = "this is not a secure pass phrase";
-            var ipfs = new Dfs(secret.ToCharArray());
+            var ipfs = new Dfs();
             ipfs.Options = TestFixture.Ipfs.Options;
             await ipfs.KeyChainAsync();
 
@@ -72,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests
             var ipfs1 = TestFixture.Ipfs;
             await ipfs1.KeyChainAsync();
 
-            var ipfs2 = new Dfs("the wrong pass phrase".ToCharArray())
+            var ipfs2 = new Dfs()
             {
                 Options = ipfs1.Options
             };
@@ -82,12 +83,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests
             });
         }
 
-        [Fact]
-        [ExpectedException(typeof(Exception))]
-        public void IpfsPass_Missing()
-        {
-            var _ = new Dfs();
-        }
+        // [Fact]
+        // [ExpectedException(typeof(Exception))]
+        // public void IpfsPass_Missing()
+        // {
+        //     var _ = new Dfs();
+        // }
 
         [Fact]
         public async Task Can_Start_And_Stop()
@@ -158,20 +159,20 @@ namespace Catalyst.Core.Modules.Dfs.Tests
                 Task.Run(async () => await ipfs.LocalPeer)
             };
             var r = await Task.WhenAll(tasks);
-            Assert.AreSame(r[0], r[1]);
+            Assert.Equal(r[0], r[1]);
         }
 
         [Fact]
         public async Task KeyChain()
         {
             var ipfs = TestFixture.Ipfs;
-            Task<KeyChain>[] tasks = new Task<KeyChain>[]
+            Task<IKeyApi>[] tasks = new Task<IKeyApi>[]
             {
                 Task.Run(async () => await ipfs.KeyChainAsync()),
                 Task.Run(async () => await ipfs.KeyChainAsync())
             };
             var r = await Task.WhenAll(tasks);
-            Assert.AreSame(r[0], r[1]);
+            Assert.Equal(r[0], r[1]);
         }
 
         [Fact]
@@ -198,9 +199,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests
                 while (true)
                 {
                     if (DateTime.Now > endTime)
-                        Assert.Fail("Bootstrap peers are not known.");
+                    {
+                        throw new XunitException("Bootstrap peers are not known.");
+                    }
+
                     if (bootPeers.All(a => knownPeers.Contains(a)))
+                    {
                         break;
+                    }
 
                     await Task.Delay(50);
                     knownPeers = swarm.KnownPeerAddresses.ToArray();

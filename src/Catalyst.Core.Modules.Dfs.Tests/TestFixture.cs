@@ -9,8 +9,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests
     public class TestFixture
     {
         const string passphrase = "this is not a secure pass phrase";
-        public static IDfs Ipfs = new Dfs(passphrase.ToCharArray());
-        public static IDfs IpfsOther = new Dfs(passphrase.ToCharArray());
+        public static IDfs Ipfs = new Dfs();
+        public static IDfs IpfsOther = new Dfs();
 
         static TestFixture()
         {
@@ -36,32 +36,32 @@ namespace Catalyst.Core.Modules.Dfs.Tests
             Assert.NotNull(IpfsOther);
         }
 
-        [AssemblyInitialize]
-        public static void AssemblyInitialize(TestContext context)
-        {
-            // set logger factory
-            var properties = new Common.Logging.Configuration.NameValueCollection
-            {
-                ["level"] = "DEBUG",
-                ["showLogName"] = "true",
-                ["showDateTime"] = "true",
-                ["dateTimeFormat"] = "HH:mm:ss.fff"
-            };
-            LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(properties);
-        }
-
-        [AssemblyCleanup]
-        public static void Cleanup()
-        {
-            if (Directory.Exists(Ipfs.Options.Repository.Folder))
-            {
-                Directory.Delete(Ipfs.Options.Repository.Folder, true);
-            }
-
-            if (Directory.Exists(IpfsOther.Options.Repository.Folder))
-            {
-                Directory.Delete(IpfsOther.Options.Repository.Folder, true);
-            }
-        }
+        // [AssemblyInitialize]
+        // public static void AssemblyInitialize(TestContext context)
+        // {
+        //     // set logger factory
+        //     var properties = new Common.Logging.Configuration.NameValueCollection
+        //     {
+        //         ["level"] = "DEBUG",
+        //         ["showLogName"] = "true",
+        //         ["showDateTime"] = "true",
+        //         ["dateTimeFormat"] = "HH:mm:ss.fff"
+        //     };
+        //     LogManager.Adapter = new ConsoleOutLoggerFactoryAdapter(properties);
+        // }
+        //
+        // [AssemblyCleanup]
+        // public static void Cleanup()
+        // {
+        //     if (Directory.Exists(Ipfs.Options.Repository.Folder))
+        //     {
+        //         Directory.Delete(Ipfs.Options.Repository.Folder, true);
+        //     }
+        //
+        //     if (Directory.Exists(IpfsOther.Options.Repository.Folder))
+        //     {
+        //         Directory.Delete(IpfsOther.Options.Repository.Folder, true);
+        //     }
+        // }
     }
 }

@@ -150,7 +150,7 @@ namespace Catalyst.Core.Modules.Dfs
         /// <remarks>
         ///   A <b>DagNode</b> is immutable.
         /// </remarks>
-        public DagNode AddLinks(IEnumerable<IMerkleLink> links)
+        public IDagNode AddLinks(IEnumerable<IMerkleLink> links)
         {
             var all = Links.Union(links);
             return new DagNode(DataBytes, all, hashAlgorithm);

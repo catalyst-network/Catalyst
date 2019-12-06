@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.Migration
 {
-    [TestClass]
     public class MigrationManagerTest
     {
         [Fact]

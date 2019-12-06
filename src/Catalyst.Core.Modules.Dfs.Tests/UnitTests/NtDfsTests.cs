@@ -68,8 +68,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             _fileSystem.File.Create(Arg.Any<string>()).Returns(new MemoryStream());
             var contentStream = Substitute.For<Stream>();
             var cancellationToken = new CancellationToken();
-            await _dfs.AddAsync(contentStream,
-                cancellationToken: cancellationToken);
+            await _dfs.FileSystem.AddAsync(contentStream, cancel: cancellationToken);
 
             await contentStream.Received(1).CopyToAsync(Arg.Any<Stream>(), Arg.Is(cancellationToken));
         }
@@ -84,7 +83,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
 
             var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(contentBytes));
 
-            var cid = await _dfs.AddAsync(contentStream);
+            var cid = await _dfs.FileSystem.AddAsync(contentStream);
 
             cid.Should().Be(expectedCid);
         }
@@ -104,7 +103,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
 
             _fileSystem.File.Create(Arg.Any<string>()).Returns(mockFileStream);
 
-            await _dfs.AddAsync(contentStream);
+            await _dfs.FileSystem.AddAsync(contentStream);
 
             var resultBytes = await resultStream.ReadAllBytesAsync(CancellationToken.None);
             var resultContent = Encoding.UTF8.GetString(resultBytes);
@@ -115,7 +114,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         public async Task AddTextAsync_Should_Be_Cancellable()
         {
             var cancellationToken = new CancellationToken();
-            await _dfs.AddTextAsync("good morning", cancellationToken);
+            await _dfs.FileSystem.AddTextAsync("good morning", cancel: cancellationToken);
             await _fileSystem.File.Received(1).WriteAllTextAsync(
                 Arg.Any<string>(),
                 Arg.Any<string>(),
@@ -128,7 +127,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         {
             var someGoodUtf8Content = "some good utf8 content!";
 
-            var cid = await _dfs.AddTextAsync(someGoodUtf8Content);
+            var cid = await _dfs.FileSystem.AddTextAsync(someGoodUtf8Content);
             var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash(someGoodUtf8Content));
 
             await _fileSystem.File.Received(1).WriteAllTextAsync(
@@ -145,7 +144,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         {
             var someGoodUtf8Content = "some good utf8 content!";
 
-            var cid = await _dfs.AddTextAsync(someGoodUtf8Content);
+            var cid = await _dfs.FileSystem.AddTextAsync(someGoodUtf8Content);
 
             await _fileSystem.File.Received(1).WriteAllTextAsync(
                 Arg.Any<string>(),
@@ -156,8 +155,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             var utf8Hash = _hashProvider.ComputeUtf8MultiHash(someGoodUtf8Content);
             var uf32Hash = _hashProvider.ComputeMultiHash(Encoding.UTF32.GetBytes(someGoodUtf8Content));
 
-            cid.Hash.Should().Be(utf8Hash);
-            cid.Hash.Should().NotBe(uf32Hash);
+            cid.Id.Hash.Should().Be(utf8Hash);
+            cid.Id.Hash.Should().NotBe(uf32Hash);
         }
 
         [Fact]
@@ -182,7 +181,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         public async Task ReadAsync_Should_Point_To_The_Correct_File()
         {
             var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
-            await _dfs.ReadFileAsync(cid);
+            await _dfs.FileSystem.ReadFileAsync(cid);
             _fileSystem.File.Received(1)
                .OpenRead(Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, cid.Encode()))));
         }
@@ -191,8 +190,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         public async Task ReadTextAsync_Be_Cancellable()
         {
             var cancellationToken = new CancellationToken();
-            await _dfs.ReadAllTextAsync(
-                _hashProvider.ComputeUtf8MultiHash(@"https://media.giphy.com/media/KZwQMLTSx7M8bJ9OkZ/giphy.gif"),
+            await _dfs.FileSystem.ReadAllTextAsync(
+                _hashProvider.ComputeUtf8MultiHash(@"https://media.giphy.com/media/KZwQMLTSx7M8bJ9OkZ/giphy.gif").ToString(),
                 cancellationToken);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
                 Arg.Any<string>(),
@@ -204,7 +203,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         public async Task ReadTextAsync_Should_Assume_UTF8_Content()
         {
             var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
-            await _dfs.ReadAllTextAsync(cid);
+            await _dfs.FileSystem.ReadAllTextAsync(cid);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
                 Arg.Any<string>(),
                 Arg.Is(Encoding.UTF8),
@@ -215,7 +214,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         public async Task ReadTextAsync_Should_Point_To_The_Correct_File()
         {
             var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
-            await _dfs.ReadAllTextAsync(cid);
+            await _dfs.FileSystem.ReadAllTextAsync(cid);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
                 Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, cid.Encode()))),
                 Arg.Any<Encoding>(),

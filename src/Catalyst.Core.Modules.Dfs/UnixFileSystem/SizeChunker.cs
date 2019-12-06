@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Modules.Keystore;
 
 namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
@@ -42,7 +43,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
             string name,
             AddFileOptions options,
             IBlockApi blockService,
-            KeyChain keyChain,
+            IKeyApi keyChain,
             CancellationToken cancel)
         {
             var protecting = !string.IsNullOrWhiteSpace(options.ProtectionKey);

@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Constructor_should_read_seed_servers_addresses_from_peerSettings()
         {
-            using (var ipfs = new IpfsAdapter(_passwordManager, FileSystem, _logger))
+            using (var ipfs = new Dfs())
             {
                 ipfs.Options.Discovery.BootstrapPeers.Count().Should().NotBe(0);
             }
@@ -63,7 +63,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public void Constructor_should_read_a_password()
         {
-            using (new IpfsAdapter(_passwordManager, FileSystem, _logger))
+            using (new Dfs())
             {
                 _passwordManager.ReceivedWithAnyArgs(1)
                    .RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword);
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Constructor_should_use_ipfs_subfolder()
         {
-            using (var ipfs = new IpfsAdapter(_passwordManager, FileSystem, _logger))
+            using (var ipfs = new Dfs())
             {
                 ipfs.Options.Repository.Folder.Should()
                    .Be(Path.Combine(FileSystem.GetCatalystDataDir().FullName, Constants.DfsDataSubDir));
@@ -85,7 +85,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Constructor_should_use_ipfs_private_network()
         {
-            using (var ipfs = new IpfsAdapter(_passwordManager, FileSystem, _logger))
+            using (var ipfs = new Dfs())
             {
                 ipfs.Options.Swarm.PrivateNetworkKey.Should().NotBeNull();
             }

@@ -52,11 +52,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public async Task AddTextAsync_Can_Be_Retrieved_With_ReadTextAsync()
         {
             var content = "Lorem Ipsum or something";
-            var fileName = await _dfs.AddTextAsync(content, _cancellationToken);
+            var fileName = await _dfs.FileSystem.AddTextAsync(content, cancel: _cancellationToken);
 
             Thread.Sleep(100);
 
-            var retrievedContent = await _dfs.ReadAllTextAsync(fileName, _cancellationToken);
+            var retrievedContent = await _dfs.FileSystem.ReadAllTextAsync(fileName.Id, _cancellationToken);
 
             retrievedContent.Should().Be(content);
         }
@@ -66,11 +66,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public async Task AddAsync_Can_Be_Retrieved_With_ReadAsync()
         {
             var content = BitConverter.GetBytes(123456);
-            var fileName = await _dfs.AddAsync(content.ToMemoryStream(), cancellationToken: _cancellationToken);
+            var fileName = await _dfs.FileSystem.AddAsync(content.ToMemoryStream(), cancel: _cancellationToken);
 
             Thread.Sleep(100);
 
-            var retrievedContent = await _dfs.ReadFileAsync(fileName, _cancellationToken);
+            var retrievedContent = await _dfs.FileSystem.ReadFileAsync(fileName.Id, _cancellationToken);
             var fileContent = await retrievedContent.ReadAllBytesAsync(_cancellationToken);
 
             fileContent.Should().BeEquivalentTo(content);

@@ -66,10 +66,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                .RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, Arg.Any<string>())
                .Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 
-            var ipfsEngine = new IpfsAdapter(passwordManager, FileSystem, _logger);
+            var ipfsEngine = new Dfs();
 
             _logger = Substitute.For<ILogger>();
-            _dfs = new Dfs(ipfsEngine, hashProvider, _logger);
+            _dfs = new Dfs();
         }
 
         [Fact]
@@ -162,7 +162,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             Assert.NotNull(fileTransferInformation.DfsHash);
 
             long ipfsCrcValue;
-            using (var ipfsStream = await _dfs.ReadFileAsync(fileTransferInformation.DfsHash).ConfigureAwait(false))
+            using (var ipfsStream = await _dfs.FileSystem.ReadFileAsync(fileTransferInformation.DfsHash).ConfigureAwait(false))
             {
                 ipfsCrcValue = FileHelper.GetCrcValue(ipfsStream);
             }

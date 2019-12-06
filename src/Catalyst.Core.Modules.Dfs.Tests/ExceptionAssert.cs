@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
 {
@@ -21,7 +22,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests
                 if (match != null)
                 {
                     if (expectedMessage != null)
-                        Assert.Equal(expectedMessage, match.Message, "Wrong exception message.");
+                    {
+                        Assert.Equal(expectedMessage, match.Message);
+                    }
+                    
                     return match;
                 }
 
@@ -34,7 +38,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests
                 return e;
             }
 
-            Assert.Fail("Exception of type {0} should be thrown.", typeof(T));
+            throw new XunitException($"Exception of type {typeof(T)}should be thrown.");
 
             //  The compiler doesn't know that Assert.Fail will always throw an exception
             return null;

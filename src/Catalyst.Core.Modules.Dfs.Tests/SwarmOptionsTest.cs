@@ -3,7 +3,6 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
 {
-    [TestClass]
     public class SwarmOptionsTest
     {
         [Fact]

@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.LinkedData
 {
-    [TestClass]
     public class RawFormatTest
     {
         ILinkedDataFormat formatter = new RawFormat();

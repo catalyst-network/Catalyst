@@ -31,7 +31,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <value>
         ///   Defaults to <see cref="Bitswap11"/> and <see cref="Bitswap1"/>.
         /// </value>
-        public IBitswapProtocol[] Protocols;
+        public IBitswapProtocol[] Protocols { get; set; }
 
         /// <summary>
         ///   The number of blocks sent by other peers.

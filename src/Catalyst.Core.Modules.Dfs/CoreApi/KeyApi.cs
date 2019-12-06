@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Core.Modules.Keystore;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    class KeyApi : IKeyApi
+    class KeyApi : KeyChain, IKeyApi
     {
         IDfs ipfs;
 

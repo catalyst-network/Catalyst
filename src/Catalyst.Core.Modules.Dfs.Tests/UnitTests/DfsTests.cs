@@ -64,7 +64,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             _addedRecord.Id.ReturnsForAnyArgs(_expectedCid);
             _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(DelayInMs));
 
-            _dfs = new Dfs(_ipfsEngine, _hashProvider, logger);
+            _dfs = new Dfs();
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             _ipfsEngine.FileSystem.AddTextAsync("good morning", Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c => Task.FromResult(_addedRecord));
 
-            var record = await _dfs.AddTextAsync("good morning");
+            var record = await _dfs.FileSystem.AddTextAsync("good morning");
             record.Should().Be(_expectedCid);
         }
 
@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
                     Arg.Any<CancellationToken>())
                .Returns(c => Task.FromResult(_addedRecord));
 
-            var record = await _dfs.AddAsync(Stream.Null);
+            var record = await _dfs.FileSystem.AddAsync(Stream.Null);
             record.Should().Be(_expectedCid);
         }
 
@@ -96,7 +96,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
                .ReadFileAsync(cid.Encode(), Arg.Any<CancellationToken>())
                .Returns(c => "the content".ToMemoryStream());
 
-            using (var stream = await _dfs.ReadFileAsync(cid.Encode()))
+            using (var stream = await _dfs.FileSystem.ReadFileAsync(cid.Encode()))
             {
                 stream.ReadAllAsUtf8String(false).Should().Be("the content");
             }
@@ -110,7 +110,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
                .ReadAllTextAsync(cid.Encode(), Arg.Any<CancellationToken>())
                .Returns(c => "the other content");
 
-            var text = await _dfs.ReadAllTextAsync(cid.Encode());
+            var text = await _dfs.FileSystem.ReadAllTextAsync(cid.Encode());
             text.Should().Be("the other content");
         }
 

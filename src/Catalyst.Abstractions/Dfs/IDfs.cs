@@ -83,5 +83,8 @@ namespace Catalyst.Abstractions.Dfs
         AsyncLazy<Dht1> DhtService { get; }
 
         Task<IKeyApi> KeyChainAsync(CancellationToken cancel = default(CancellationToken));
+
+        Task<Cid> ResolveIpfsPathToCidAsync(string path,
+            CancellationToken cancel = default(CancellationToken));
     }
 }

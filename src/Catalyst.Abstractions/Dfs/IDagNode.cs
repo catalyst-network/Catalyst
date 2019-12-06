@@ -21,6 +21,9 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.IO;
+using Google.Protobuf;
 using Lib.P2P;
 
 namespace Catalyst.Abstractions.Dfs
@@ -31,5 +34,10 @@ namespace Catalyst.Abstractions.Dfs
         byte[] ToArray();
 
         IDagNode AddLink(IMerkleLink link);
+
+        void Write(CodedOutputStream stream);
+        void Write(Stream stream);
+
+        IDagNode AddLinks(IEnumerable<IMerkleLink> links);
     }
 }

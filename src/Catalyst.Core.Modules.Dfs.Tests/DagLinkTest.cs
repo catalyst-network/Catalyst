@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Google.Protobuf;
+using MultiFormats;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests

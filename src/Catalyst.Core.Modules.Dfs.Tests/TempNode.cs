@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Catalyst.Abstractions.Dfs;
 using Newtonsoft.Json.Linq;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
@@ -10,12 +11,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests
     ///   A temporary node has its own repository and listening address.
     ///   When it is disposed, the repository is deleted.
     /// </remarks>
-    class TempNode : Dfs
+    class TempNode : Dfs, IDfs
     {
         static int nodeNumber;
 
         public TempNode()
-            : base("xyzzy".ToCharArray())
+            : base()
         {
             Options.Repository.Folder = Path.Combine(Path.GetTempPath(), $"ipfs-{nodeNumber++}");
             Options.KeyChain.DefaultKeyType = "ed25519";
