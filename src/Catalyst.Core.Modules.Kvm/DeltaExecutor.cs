@@ -145,7 +145,10 @@ namespace Catalyst.Core.Modules.Kvm
 
         private Address GetAccountAddress(ByteString publicKeyByteString)
         {
-            if (publicKeyByteString == null || publicKeyByteString.IsEmpty) return null;
+            if (publicKeyByteString == null || publicKeyByteString.IsEmpty)
+            {
+                return null;
+            }
 
             var publicKey = _cryptoContext.GetPublicKeyFromBytes(publicKeyByteString.ToByteArray());
             return publicKey.ToKvmAddress();
