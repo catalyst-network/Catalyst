@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
 
         private void OnCompleted() { _logger.Debug("Message stream ended."); }
 
-        private void OnError(Exception obj) { _logger.Error("Message stream ended."); }
+        private void OnError(Exception exc) { _logger.Error("ReputationManager error: {@Exc}", exc); }
 
         // ReSharper disable once VSTHRD100
         public async void OnNext(IPeerReputationChange peerReputationChange)
