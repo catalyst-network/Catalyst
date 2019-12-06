@@ -45,10 +45,5 @@ namespace Catalyst.Modules.Server.Blazor.Components
 
         [Inject]
         public ITransactionReceivedEvent TransactionReceivedEvent { get; set; }
-
-        public void HandleValidSubmit()
-        {
-            // TODO: Currently there is no method to actually set the transaction amount
-        }
     }
 }
