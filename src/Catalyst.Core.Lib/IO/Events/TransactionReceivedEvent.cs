@@ -69,11 +69,10 @@ namespace Catalyst.Core.Lib.IO.Events
 
             _logger.Verbose("Adding transaction {id} to mempool", transactionDao.Id);
 
-            // https://github.com/catalyst-network/Catalyst.Node/issues/910 - should we fail or succeed if we already have the transaction in the ledger?
             if (_mempool.Service.TryReadItem(transactionDao.Id))
             {
                 _logger.Information("Transaction {id} already exists in mempool", transactionDao.Id);
-                return ResponseCode.Error;
+                return ResponseCode.Exists;
             }
 
             _mempool.Service.CreateItem(transactionDao);
