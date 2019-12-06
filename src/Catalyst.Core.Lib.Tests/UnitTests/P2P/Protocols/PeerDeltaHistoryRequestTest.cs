@@ -127,23 +127,5 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             var response = await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeNull();   
         }
-
-        // [Fact]
-        // public async Task Can_Dispose_Class()
-        // {
-        //     using (_peerQueryTipRequest)
-        //     {
-        //         Debug.Assert(!_peerQueryTipRequest.Disposing); // Best not be disposed yet.
-        //     }
-        //
-        //     try
-        //     {
-        //         Debug.Assert(_peerQueryTipRequest.Disposing); // Expecting an exception.
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Debug.Assert(ex is ObjectDisposedException); // Better be the right one.
-        //     }
-        // }
     }
 }
