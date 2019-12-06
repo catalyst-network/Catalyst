@@ -73,7 +73,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         }
 
         [Fact]
-        public void Can_Send_Error_If_Mempool_Contains_Transaction()
+        public void Can_Send_Exists_If_Mempool_Contains_Transaction()
         {
             var transaction = TransactionHelper.GetPublicTransaction();
 
@@ -85,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionReceivedEvent
                .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
                     CorrelationId.GenerateCorrelationId()))
-               .Should().Be(ResponseCode.Error);
+               .Should().Be(ResponseCode.Exists);
             _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
             _mempool.Service.DidNotReceiveWithAnyArgs().CreateItem(default);
         }
