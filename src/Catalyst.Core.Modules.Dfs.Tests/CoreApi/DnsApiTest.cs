@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class DnsApiTest
     {
-        IpfsEngine ipfs = TestFixture.Ipfs;
+        IDfs ipfs = TestFixture.Ipfs;
 
         [Fact]
         public async Task Resolve()

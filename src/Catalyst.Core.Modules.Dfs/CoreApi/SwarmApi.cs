@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Common.Logging;
 using Lib.P2P;
@@ -13,11 +14,11 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     class SwarmApi : ISwarmApi
     {
         static ILog log = LogManager.GetLogger(typeof(SwarmApi));
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
         static MultiAddress[] defaultFilters = new MultiAddress[] { };
 
-        public SwarmApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public SwarmApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<MultiAddress> AddAddressFilterAsync(MultiAddress address,
             bool persist = false,

@@ -21,52 +21,67 @@
 
 #endregion
 
-using System.IO;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs.BlockExchange;
+using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Dfs.Migration;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
 using Lib.P2P;
+using Lib.P2P.Protocols;
+using Lib.P2P.PubSub;
+using Lib.P2P.Routing;
+using Nito.AsyncEx;
 
 namespace Catalyst.Abstractions.Dfs
 {
     /// <summary>
     ///   Provides read-write access to a distributed file system.
     /// </summary>
-    public interface IDfs
+    public interface IDfs : ICoreApi, IService, IDisposable
     {
+        bool IsStarted { get; }
+
+        MigrationManager MigrationManager { get; set; }
+        
         /// <summary>
-        /// Add some text to the distributed file system.
+        ///   Provides access to the local peer.
         /// </summary>
-        /// <param name="content">The text to add to the DFS.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used to cancel the work.</param>
-        /// <returns>The unique ID to the content created on the DFS.</returns>
-        Task<Cid> AddTextAsync(string content, CancellationToken cancellationToken = default);
+        /// <returns>
+        ///   A task that represents the asynchronous operation. The task's result is
+        ///   a <see cref="Peer"/>.
+        /// </returns>
+        AsyncLazy<Peer> LocalPeer { get; }
+        
+        DfsOptions Options { get; set; }
+        
+        /// <summary>
+        ///   Determines latency to a peer.
+        /// </summary>
+        AsyncLazy<Ping1> PingService { get; }
+        
+        /// <summary>
+        ///   Manages communication with other peers.
+        /// </summary>
+        AsyncLazy<Swarm> SwarmService { get; }
 
         /// <summary>
-        /// Reads the content of an existing file on the DFS as a UTF8 string.
+        ///   Manages publishng and subscribing to messages.
         /// </summary>
-        /// <param name="cid">Dfs content address</param>
-        /// <param name="cancellationToken">A cancellation token that can be used to cancel the work.</param>
-        /// <returns>The content of the DFS file as a UTF8 encoded string.</returns>
-        Task<string> ReadTextAsync(Cid cid, CancellationToken cancellationToken = default);
+        AsyncLazy<NotificationService> PubSubService { get; }
 
         /// <summary>
-        /// Adds content from a stream of data to the DFS.
+        ///   Exchange blocks with other peers.
         /// </summary>
-        /// <param name="content">A stream containing the data to be stored on the DFS.</param>
-        /// <param name="name">A name for the <paramref name="content"/></param>
-        /// <param name="cancellationToken">A cancellation token that can be used to cancel the work.</param>
-        /// <returns>The unique ID to the newly added content on the DFS.</returns>
-        Task<Cid> AddAsync(Stream content, string name = "", CancellationToken cancellationToken = default);
-
+        AsyncLazy<IBitswapService> BitswapService { get; }
+        
         /// <summary>
-        /// Streams the content of an existing file on the DFS.
+        ///   Finds information with a distributed hash table.
         /// </summary>
-        /// <param name="cid">Dfs content address</param>
-        /// <param name="cancellationToken">A cancellation token that can be used to cancel the work.</param>
-        /// <returns>A <see cref="T:System.IO.Stream" /> to the content of the file.</returns>
-        /// <remarks>
-        ///   The returned <see cref="T:System.IO.Stream" /> must be disposed.
-        /// </remarks>
-        Task<Stream> ReadAsync(Cid cid, CancellationToken cancellationToken = default);
+        AsyncLazy<Dht1> DhtService { get; }
+
+        Task<IKeyApi> KeyChainAsync(CancellationToken cancel = default(CancellationToken));
     }
 }

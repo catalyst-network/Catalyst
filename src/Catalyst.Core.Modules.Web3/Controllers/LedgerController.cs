@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             var latest = _deltaHashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());
             try
             {
-                using (var fullContentStream = await _dfs.ReadAsync(latest).ConfigureAwait(false))
+                using (var fullContentStream = await _dfs.FileSystem.ReadFileAsync(latest).ConfigureAwait(false))
                 {
                     var contentBytes = await fullContentStream.ReadAllBytesAsync(CancellationToken.None)
                        .ConfigureAwait(false);

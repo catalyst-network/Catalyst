@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 
-                fileStream = await _dfs.ReadAsync(addedIpfsHash);
+                fileStream = await _dfs.FileSystem.ReadFileAsync(addedIpfsHash.ToString());
                 IUploadFileInformation fileUploadInformation = new UploadFileTransferInformation(
                     fileStream,
                     rpcPeer,
@@ -137,7 +137,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var fakeId = _hashProvider.ComputeUtf8MultiHash(CorrelationId.GenerateCorrelationId().ToString());
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             stream = new MemoryStream(File.ReadAllBytes(fileToTransfer));
-            _dfs.ReadAsync(fakeId).Returns(stream);
+            _dfs.FileSystem.ReadFileAsync(fakeId.ToString()).Returns(stream);
             return fakeId;
         }
     }

@@ -105,11 +105,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             CancellationToken cancellationToken = default)
         {
             var newAddress = await PublishDeltaToDfs(delta, cancellationToken).ConfigureAwait(false);
-            await BroadcastNewDfsFileAddressAsync(newAddress, delta.PreviousDeltaDfsHash).ConfigureAwait(false);
-            return newAddress;
+            await BroadcastNewDfsFileAddressAsync(newAddress.Id, delta.PreviousDeltaDfsHash).ConfigureAwait(false);
+            return newAddress.Id;
         }
 
-        private async Task<Cid> PublishDeltaToDfs(Delta delta, CancellationToken cancellationToken)
+        private async Task<IFileSystemNode> PublishDeltaToDfs(Delta delta, CancellationToken cancellationToken)
         {
             try
             {
@@ -155,7 +155,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
         }
 
-        private async Task<Cid> PublishDfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)
+        private async Task<IFileSystemNode> PublishDfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -164,7 +164,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                return await _dfs.AddAsync(memoryStream, cancellationToken: cancellationToken).ConfigureAwait(false);
+                return await _dfs.FileSystem.AddAsync(memoryStream, cancel: cancellationToken).ConfigureAwait(false);
             }
         }
     }

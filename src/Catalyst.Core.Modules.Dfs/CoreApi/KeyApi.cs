@@ -2,15 +2,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Keystore;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     class KeyApi : IKeyApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
-        public KeyApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public KeyApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<IKey> CreateAsync(string name,
             string keyType,

@@ -162,7 +162,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             Assert.NotNull(fileTransferInformation.DfsHash);
 
             long ipfsCrcValue;
-            using (var ipfsStream = await _dfs.ReadAsync(fileTransferInformation.DfsHash).ConfigureAwait(false))
+            using (var ipfsStream = await _dfs.ReadFileAsync(fileTransferInformation.DfsHash).ConfigureAwait(false))
             {
                 ipfsCrcValue = FileHelper.GetCrcValue(ipfsStream);
             }

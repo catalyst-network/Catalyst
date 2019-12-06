@@ -387,7 +387,7 @@ MC4CAQAwBQYDK2VwBCIEIGJnyy3U4ksTQoRBz3mf1dxeFDPXZBrwh7gD7SqMg+/i
 
             var keychain = await ipfs.KeyChainAsync();
             var privateKey = await keychain.GetPrivateKeyAsync("oed1");
-            Assert.IsInstanceOfType(privateKey, typeof(Ed25519PrivateKeyParameters));
+            Assert.IsType(typeof(Ed25519PrivateKeyParameters), privateKey);
         }
     }
 }

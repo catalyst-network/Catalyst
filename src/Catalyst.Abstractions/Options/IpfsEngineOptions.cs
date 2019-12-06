@@ -1,14 +1,12 @@
-﻿using Catalyst.Core.Lib.FileSystem;
-using Catalyst.Core.Modules.Keystore;
-using Makaretu.Dns;
+﻿using Makaretu.Dns;
 
-namespace Catalyst.Core.Modules.Dfs
+namespace Catalyst.Abstractions.Options
 {
     /// <summary>
-    ///   Configuration options for the <see cref="IpfsEngine"/>.
+    ///   Configuration options for the <see cref="Catalyst.Core.Modules.Dfs.Dfs"/>.
     /// </summary>
-    /// <seealso cref="IpfsEngine.Options"/>
-    public class IpfsEngineOptions
+    /// <seealso cref="Microsoft.Extensions.Options.Options"/>
+    public class DfsOptions
     {
         /// <summary>
         ///   Repository options.
@@ -24,7 +22,7 @@ namespace Catalyst.Core.Modules.Dfs
         ///   Provides access to the Domain Name System.
         /// </summary>
         /// <value>
-        ///   Defaults to <see cref="DotClient"/>, DNS over TLS.
+        ///   Defaults to <see cref="Makaretu.Dns.DotClient"/>, DNS over TLS.
         /// </value>
         public IDnsClient Dns { get; set; } = new DotClient();
 

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
+using Org.BouncyCastle.Crypto;
 
 namespace Catalyst.Abstractions.Keystore
 {
@@ -126,5 +127,56 @@ namespace Catalyst.Abstractions.Keystore
             string pem,
             char[] password = null,
             CancellationToken cancel = default(CancellationToken));
+        
+        /// <summary>
+        ///   Gets the IPFS encoded public key for the specified key.
+        /// </summary>
+        /// <param name="name">
+        ///   The local name of the key.
+        /// </param>
+        /// <param name="cancel">
+        ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
+        /// </param>
+        /// <returns>
+        ///   A task that represents the asynchronous operation. The task's result is
+        ///   the IPFS encoded public key.
+        /// </returns>
+        /// <remarks>
+        ///   The IPFS public key is the base-64 encoding of a protobuf encoding containing 
+        ///   a type and the DER encoding of the PKCS Subject Public Key Info.
+        /// </remarks>
+        /// <seealso href="https://tools.ietf.org/html/rfc5280#section-4.1.2.7"/>
+        Task<string> GetPublicKeyAsync(string name, CancellationToken cancel = default(CancellationToken));
+        
+        /// <summary>
+        ///   Gets the Bouncy Castle representation of the private key.
+        /// </summary>
+        /// <param name="name">
+        ///   The local name of key.
+        /// </param>
+        /// <param name="cancel">
+        ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
+        /// </param>
+        /// <returns>
+        ///   A task that represents the asynchronous operation. The task's result is
+        ///   the private key as an <b>AsymmetricKeyParameter</b>.
+        /// </returns>
+        Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string name,
+            CancellationToken cancel = default(CancellationToken));
+
+        /// <summary>
+        ///   Find a key by its name.
+        /// </summary>
+        /// <param name="name">
+        ///   The local name of the key.
+        /// </param>
+        /// <param name="cancel">
+        ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
+        /// </param>
+        /// <returns>
+        ///   A task that represents the asynchronous operation. The task's result is
+        ///   an <see cref="Microsoft.EntityFrameworkCore.Metadata.IKey"/> or <b>null</b> if the the key is not defined.
+        /// </returns>
+        Task<IKey> FindKeyByNameAsync(string name, CancellationToken cancel = default(CancellationToken));
     }
 }

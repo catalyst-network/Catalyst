@@ -16,7 +16,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         internal static IDagNode EmptyNode;
         internal static IDagNode EmptyDirectory;
 
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
         static ObjectApi()
         {
@@ -36,7 +36,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             _ = EmptyDirectory.Id;
         }
 
-        public ObjectApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public ObjectApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<Stream> DataAsync(Cid id, CancellationToken cancel = default(CancellationToken))
         {

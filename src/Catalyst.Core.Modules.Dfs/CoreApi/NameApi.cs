@@ -10,9 +10,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     class NameApi : INameApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
-        public NameApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public NameApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public Task<NamedContent> PublishAsync(string path,
             bool resolve = true,

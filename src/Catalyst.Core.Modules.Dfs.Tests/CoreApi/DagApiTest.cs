@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper.Configuration.Annotations;
+using Catalyst.Abstractions.Dfs;
 using Lib.P2P;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class DagApiTest
     {
-        IpfsEngine ipfs = TestFixture.Ipfs;
+        IDfs ipfs = TestFixture.Ipfs;
         byte[] blob = Encoding.UTF8.GetBytes("blorb");
         string blob64 = "YmxvcmI"; // base 64 encoded with no padding
 

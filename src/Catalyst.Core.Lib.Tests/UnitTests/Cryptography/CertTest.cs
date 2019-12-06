@@ -1,5 +1,6 @@
 ﻿using System.Security;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Keystore;
 using MultiFormats;
@@ -17,7 +18,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         {
             keyChain = new KeyChain
             {
-                Options = new IpfsEngineOptions().KeyChain
+                Options = new DfsOptions().KeyChain
             };
             var securePassword = new SecureString();
 

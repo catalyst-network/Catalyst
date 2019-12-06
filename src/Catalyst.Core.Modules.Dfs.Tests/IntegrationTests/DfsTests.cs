@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             const string text = "good morning";
             var dfs = new Dfs(_ipfs, _hashProvider, _logger);
             var id = await dfs.AddTextAsync(text, cts.Token);
-            var content = await dfs.ReadTextAsync(id, cts.Token);
+            var content = await dfs.ReadAllTextAsync(id, cts.Token);
 
             content.Should().Be(text);
         }
@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var ms = new MemoryStream(binary);
             var dfs = new Dfs(_ipfs, _hashProvider, _logger);
             var id = await dfs.AddAsync(ms, "", cts.Token);
-            using (var stream = await dfs.ReadAsync(id, cts.Token))
+            using (var stream = await dfs.ReadFileAsync(id, cts.Token))
             {
                 var content = new byte[binary.Length];
                 await stream.ReadAsync(content, 0, content.Length, cts.Token);

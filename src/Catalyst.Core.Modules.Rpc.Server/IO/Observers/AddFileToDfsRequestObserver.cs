@@ -135,14 +135,14 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             try
             {
-                Cid cid;
+                IFileSystemNode fileSystemNode;
 
                 using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    cid = await _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
+                    fileSystemNode = await _dfs.FileSystem.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
                 }
 
-                fileTransferInformation.DfsHash = cid.Encode();
+                fileTransferInformation.DfsHash = fileSystemNode.Id.Encode();
 
                 Logger.Information($"Added File Name {fileTransferInformation.FileOutputPath} to DFS, Hash: {fileTransferInformation.DfsHash}");
             }

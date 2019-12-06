@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             using (GetFakeDfsStream(FileTransferResponseCodeTypes.Successful))
             {
                 _observer.OnNext(GetFileFromDfsRequestMessage());
-                _dfs.Received(1)?.ReadAsync(Arg.Any<Cid>());
+                _dfs.Received(1)?.FileSystem.ReadFileAsync(Arg.Any<Cid>());
                 _fileTransferFactory.Received(1)?
                    .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
             }
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var fakeStream = new MemoryStream();
             fakeStream.Write(new byte[50]);
-            _dfs.ReadAsync(Arg.Any<Cid>()).Returns(fakeStream);
+            _dfs.FileSystem.ReadFileAsync(Arg.Any<Cid>()).Returns(fakeStream);
             _fileTransferFactory.RegisterTransfer(Arg.Any<IUploadFileInformation>()).Returns(fakeResponse);
             return fakeStream;
         }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.LinkedData;
 using Lib.P2P;
@@ -22,9 +23,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             useCamelCase: false
         );
 
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
-        public DagApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public DagApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<JObject> GetAsync(Cid id,
             CancellationToken cancel = default(CancellationToken))

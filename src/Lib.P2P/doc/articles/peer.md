@@ -1,6 +1,6 @@
 ﻿# Peer
 
-A [peer](xref:Ipfs.Peer) is a node in the IPFS network; the [IpfsEngine](https://github.com/richardschneider/net-ipfs-engine) is a C# implementation.
+A [peer](xref:Ipfs.Peer) is a node in the IPFS network; the [Dfs](https://github.com/richardschneider/net-ipfs-engine) is a C# implementation.
 Among other properties, it has an [unique identifier](xref:Ipfs.Peer.Id) and [addresses](xref:Ipfs.Peer.Addresses) that it responds to.
 
 ## Sending a message

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
 using MultiFormats;
@@ -10,9 +11,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     class DhtApi : IDhtApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
-        public DhtApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public DhtApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<Peer> FindPeerAsync(MultiHash id, CancellationToken cancel = default(CancellationToken))
         {

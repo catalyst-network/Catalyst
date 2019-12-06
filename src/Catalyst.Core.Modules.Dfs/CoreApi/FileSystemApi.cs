@@ -19,11 +19,11 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     class FileSystemApi : IFileSystemApi
     {
         static ILog log = LogManager.GetLogger(typeof(FileSystemApi));
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
         static readonly int DefaultLinksPerBlock = 174;
 
-        public FileSystemApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public FileSystemApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<IFileSystemNode> AddFileAsync(string path,
             AddFileOptions options = default(AddFileOptions),

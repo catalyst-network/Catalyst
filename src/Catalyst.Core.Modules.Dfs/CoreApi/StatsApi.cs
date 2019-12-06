@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
 using Lib.P2P.Transports;
@@ -8,9 +9,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     class StatsApi : IStatsApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
-        public StatsApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public StatsApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public Task<BandwidthData> BandwidthAsync(CancellationToken cancel = default(CancellationToken))
         {

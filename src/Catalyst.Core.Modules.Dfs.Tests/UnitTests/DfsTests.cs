@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         }
 
         [Fact]
-        public async Task AddTextAsync_Should_Rely_On_IpfsEngine_And_Return_Record_Id()
+        public async Task AddTextAsync_Should_Rely_On_Dfs_And_Return_Record_Id()
         {
             _ipfsEngine.FileSystem.AddTextAsync("good morning", Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c => Task.FromResult(_addedRecord));
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         }
 
         [Fact]
-        public async Task AddAsync_Should_Rely_On_IpfsEngine_And_Return_Record_Id()
+        public async Task AddAsync_Should_Rely_On_Dfs_And_Return_Record_Id()
         {
             _ipfsEngine.FileSystem.AddAsync(Stream.Null, Arg.Any<string>(), Arg.Any<AddFileOptions>(),
                     Arg.Any<CancellationToken>())
@@ -89,28 +89,28 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         }
 
         [Fact]
-        public async Task ReadAsync_Should_Rely_On_IpfsEngine_And_Return_Streamed_Content()
+        public async Task ReadAsync_Should_Rely_On_Dfs_And_Return_Streamed_Content()
         {
             var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
             _ipfsEngine.FileSystem
                .ReadFileAsync(cid.Encode(), Arg.Any<CancellationToken>())
                .Returns(c => "the content".ToMemoryStream());
 
-            using (var stream = await _dfs.ReadAsync(cid.Encode()))
+            using (var stream = await _dfs.ReadFileAsync(cid.Encode()))
             {
                 stream.ReadAllAsUtf8String(false).Should().Be("the content");
             }
         }
 
         [Fact]
-        public async Task ReadTextAsync_Should_Rely_On_IpfsEngine_And_Return_Text_Content()
+        public async Task ReadTextAsync_Should_Rely_On_Dfs_And_Return_Text_Content()
         {
             var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
             _ipfsEngine.FileSystem
                .ReadAllTextAsync(cid.Encode(), Arg.Any<CancellationToken>())
                .Returns(c => "the other content");
 
-            var text = await _dfs.ReadTextAsync(cid.Encode());
+            var text = await _dfs.ReadAllTextAsync(cid.Encode());
             text.Should().Be("the other content");
         }
 

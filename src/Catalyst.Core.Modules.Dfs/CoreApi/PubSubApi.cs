@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
 using Lib.P2P.PubSub;
@@ -11,9 +12,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     class PubSubApi : IPubSubApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
-        public PubSubApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public PubSubApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<IEnumerable<Peer>> PeersAsync(string topic = null,
             CancellationToken cancel = default(CancellationToken))

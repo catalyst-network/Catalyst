@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using MultiFormats;
 using Xunit;
 
@@ -7,7 +8,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class BootstapApiTest
     {
-        IpfsEngine ipfs = TestFixture.Ipfs;
+        IDfs ipfs = TestFixture.Ipfs;
         MultiAddress somewhere = "/ip4/127.0.0.1/tcp/4009/ipfs/QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
 
         [Fact]

@@ -21,28 +21,68 @@
 
 #endregion
 
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
+using Catalyst.Core.Modules.Dfs.CoreApi;
+using Catalyst.Core.Modules.Keystore;
+using Common.Logging;
 using Lib.P2P;
+using Lib.P2P.Cryptography;
+using Lib.P2P.Discovery;
+using Lib.P2P.Protocols;
+using Lib.P2P.PubSub;
+using Lib.P2P.Routing;
+using Lib.P2P.SecureCommunication;
+using Makaretu.Dns;
+using MultiFormats;
+using Nito.AsyncEx;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs
 {
     public sealed class Dfs : IDfs
     {
-        private readonly ICoreApi _ipfs;
-        private readonly IHashProvider _hashProvider;
-        private readonly ILogger _logger;
+        static ILog log = LogManager.GetLogger(typeof(Dfs));
 
-        public Dfs(ICoreApi ipfsAdapter, IHashProvider hashProvider, ILogger logger)
+        /// <summary>
+        ///   Determines if the engine has started.
+        /// </summary>
+        /// <value>
+        ///   <b>true</b> if the engine has started; otherwise, <b>false</b>.
+        /// </value>
+        /// <seealso cref="Start"/>
+        /// <seealso cref="StartAsync"/>
+        public bool IsStarted => stopTasks.Count > 0;
+        
+        private KeyChain keyChain;
+        private SecureString passphrase;
+        private readonly ILogger _logger;
+        private IPasswordManager _passwordManager;
+        private readonly IHashProvider _hashProvider;
+        private ConcurrentBag<Func<Task>> stopTasks = new ConcurrentBag<Func<Task>>();
+
+        public Dfs(IHashProvider hashProvider, ILogger logger, IPasswordManager passwordManager)
         {
-            _ipfs = ipfsAdapter;
             _hashProvider = hashProvider;
             _logger = logger;
+            _passwordManager = passwordManager;
+            
+            Init();
         }
 
         private AddFileOptions AddFileOptions()
@@ -54,43 +94,623 @@ namespace Catalyst.Core.Modules.Dfs
             };
         }
 
-        /// <inheritdoc />
-        public async Task<Cid> AddTextAsync(string content, CancellationToken cancellationToken = default)
+        /// <summary>
+        ///   The configuration options.
+        /// </summary>
+        public DfsOptions Options { get; set; } = new DfsOptions();
+
+        void Init()
         {
-            var node = await _ipfs.FileSystem.AddTextAsync(
-                content,
-                AddFileOptions(),
-                cancellationToken);
-            _logger.Debug("Text added to Dfs with id {0}", node.Id);
-            return node.Id;
+            // Init the core api inteface.
+            Bitswap = new BitswapApi(this);
+            Block = new BlockApi(this);
+            BlockRepository = new BlockRepositoryApi(this);
+            Bootstrap = new BootstrapApi(this);
+            Config = new ConfigApi(this);
+            Dag = new DagApi(this);
+            Dht = new DhtApi(this);
+            Dns = new DnsApi(this);
+            FileSystem = new FileSystemApi(this);
+            Generic = new GenericApi(this);
+            Key = new KeyApi(this);
+            Name = new NameApi(this);
+            Object = new ObjectApi(this);
+            Pin = new PinApi(this);
+            PubSub = new PubSubApi(this);
+            Stats = new StatsApi(this);
+            Swarm = new SwarmApi(this);
+
+            MigrationManager = new MigrationManager(this);
+
+            // Async properties
+            LocalPeer = new AsyncLazy<Peer>(async () =>
+            {
+                log.Debug("Building local peer");
+                var keyChain = await KeyChainAsync().ConfigureAwait(false);
+                log.Debug("Getting key info about self");
+                var self = await keyChain.FindKeyByNameAsync("self").ConfigureAwait(false);
+                var localPeer = new Peer
+                {
+                    Id = self.Id,
+                    PublicKey = await keyChain.GetPublicKeyAsync("self").ConfigureAwait(false),
+                    ProtocolVersion = "ipfs/0.1.0"
+                };
+                var version = typeof(Dfs).GetTypeInfo().Assembly.GetName().Version;
+                localPeer.AgentVersion = $"net-ipfs/{version.Major}.{version.Minor}.{version.Revision}";
+                log.Debug("Built local peer");
+                return localPeer;
+            });
+            
+            SwarmService = new AsyncLazy<Swarm>(async () =>
+            {
+                log.Debug("Building swarm service");
+                
+                if (Options.Swarm.PrivateNetworkKey == null)
+                {
+                    var path = Path.Combine(Options.Repository.Folder, "swarm.key");
+                    if (File.Exists(path))
+                    {
+                        using (var x = File.OpenText(path))
+                        {
+                            Options.Swarm.PrivateNetworkKey = new PreSharedKey();
+                            Options.Swarm.PrivateNetworkKey.Import(x);
+                        }
+                    }
+                }
+
+                var peer = await LocalPeer.ConfigureAwait(false);
+                var keyChain = await KeyChainAsync().ConfigureAwait(false);
+                var self = await keyChain.GetPrivateKeyAsync("self").ConfigureAwait(false);
+                
+                var swarm = new Swarm
+                {
+                    LocalPeer = peer,
+                    LocalPeerKey = global::Lib.P2P.Cryptography.Key.CreatePrivateKey(self),
+                    NetworkProtector = Options.Swarm.PrivateNetworkKey == null
+                        ? null
+                        : new Psk1Protector
+                        {
+                            Key = Options.Swarm.PrivateNetworkKey
+                        }
+                };
+                
+                if (Options.Swarm.PrivateNetworkKey != null)
+                {
+                    log.Debug($"Private network {Options.Swarm.PrivateNetworkKey.Fingerprint().ToHexString()}");
+                }
+
+                log.Debug("Built swarm service");
+                return swarm;
+            });
+            
+            BitswapService = new AsyncLazy<IBitswapService>(async () =>
+            {
+                log.Debug("Building bitswap service");
+                var bitswap = new BlockExchange.BitswapService
+                {
+                    Swarm = await SwarmService.ConfigureAwait(false),
+                    BlockService = Block
+                };
+                log.Debug("Built bitswap service");
+                return bitswap;
+            });
+            
+            DhtService = new AsyncLazy<Dht1>(async () =>
+            {
+                log.Debug("Building DHT service");
+                var dht = new Dht1
+                {
+                    Swarm = await SwarmService.ConfigureAwait(false)
+                };
+                dht.Swarm.Router = dht;
+                log.Debug("Built DHT service");
+                return dht;
+            });
+            
+            PingService = new AsyncLazy<Ping1>(async () =>
+            {
+                log.Debug("Building Ping service");
+                var ping = new Ping1
+                {
+                    Swarm = await SwarmService.ConfigureAwait(false)
+                };
+                log.Debug("Built Ping service");
+                return ping;
+            });
+            
+            PubSubService = new AsyncLazy<NotificationService>(async () =>
+            {
+                log.Debug("Building PubSub service");
+                var pubsub = new NotificationService
+                {
+                    LocalPeer = await LocalPeer.ConfigureAwait(false)
+                };
+                pubsub.Routers.Add(new FloodRouter
+                {
+                    Swarm = await SwarmService.ConfigureAwait(false)
+                });
+                log.Debug("Built PubSub service");
+                return pubsub;
+            });
+        }
+        
+        /// <summary>
+        ///   Resolve an "IPFS path" to a content ID.
+        /// </summary>
+        /// <param name="path">
+        ///   A IPFS path, such as "Qm...", "Qm.../a/b/c" or "/ipfs/QM..."
+        /// </param>
+        /// <param name="cancel">
+        ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
+        /// </param>
+        /// <returns>
+        ///   The content ID of <paramref name="path"/>.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        ///   The <paramref name="path"/> cannot be resolved.
+        /// </exception>
+        public async Task<Cid> ResolveIpfsPathToCidAsync(string path,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var r = await Generic.ResolveAsync(path, true, cancel).ConfigureAwait(false);
+            return Cid.Decode(r.Remove(0, 6)); // strip '/ipfs/'.
+        }
+        
+        /// <summary>
+        ///   Starts the network services.
+        /// </summary>
+        /// <returns>
+        ///   A task that represents the asynchronous operation.
+        /// </returns>
+        /// <remarks>
+        ///   Starts the various IPFS and Lib.P2P network services.  This should
+        ///   be called after any configuration changes.
+        /// </remarks>
+        /// <exception cref="Exception">
+        ///   When the engine is already started.
+        /// </exception>
+        public async Task StartAsync()
+        {
+            if (stopTasks.Count > 0)
+            {
+                throw new Exception("IPFS engine is already started.");
+            }
+
+            // Repository must be at the correct version.
+            await MigrationManager.MirgrateToVersionAsync(MigrationManager.LatestVersion).ConfigureAwait(false);
+
+            var localPeer = await LocalPeer.ConfigureAwait(false);
+            log.Debug("starting " + localPeer.Id);
+
+            // Everybody needs the swarm.
+            var swarm = await SwarmService.ConfigureAwait(false);
+            stopTasks.Add(async () => { await swarm.StopAsync().ConfigureAwait(false); });
+            await swarm.StartAsync().ConfigureAwait(false);
+
+            var peerManager = new PeerManager
+            {
+                Swarm = swarm
+            };
+            await peerManager.StartAsync().ConfigureAwait(false);
+            stopTasks.Add(async () => { await peerManager.StopAsync().ConfigureAwait(false); });
+
+            // Start the primary services.
+            var tasks = new List<Func<Task>>
+            {
+                async () =>
+                {
+                    var bitswap = await BitswapService.ConfigureAwait(false);
+                    stopTasks.Add(async () => await bitswap.StopAsync().ConfigureAwait(false));
+                    await bitswap.StartAsync().ConfigureAwait(false);
+                },
+                async () =>
+                {
+                    var dht = await DhtService.ConfigureAwait(false);
+                    stopTasks.Add(async () => await dht.StopAsync().ConfigureAwait(false));
+                    await dht.StartAsync().ConfigureAwait(false);
+                },
+                async () =>
+                {
+                    var ping = await PingService.ConfigureAwait(false);
+                    stopTasks.Add(async () => await ping.StopAsync().ConfigureAwait(false));
+                    await ping.StartAsync().ConfigureAwait(false);
+                },
+                async () =>
+                {
+                    var pubsub = await PubSubService.ConfigureAwait(false);
+                    stopTasks.Add(async () => await pubsub.StopAsync().ConfigureAwait(false));
+                    await pubsub.StartAsync().ConfigureAwait(false);
+                },
+            };
+
+            log.Debug("waiting for services to start");
+            await Task.WhenAll(tasks.Select(t => t())).ConfigureAwait(false);
+
+            // Starting listening to the swarm.
+            var json = await Config.GetAsync("Addresses.Swarm").ConfigureAwait(false);
+            var numberListeners = 0;
+            foreach (string a in json)
+            {
+                try
+                {
+                    await swarm.StartListeningAsync(a).ConfigureAwait(false);
+                    ++numberListeners;
+                }
+                catch (Exception e)
+                {
+                    log.Warn($"Listener failure for '{a}'", e);
+
+                    // eat the exception
+                }
+            }
+
+            if (numberListeners == 0)
+            {
+                log.Error("No listeners were created.");
+            }
+
+            // Now that the listener addresses are established, the discovery 
+            // services can begin.
+            MulticastService multicast = null;
+            if (!Options.Discovery.DisableMdns)
+            {
+                multicast = new MulticastService();
+#pragma warning disable CS1998
+                stopTasks.Add(async () => multicast.Dispose());
+#pragma warning restore CS1998
+            }
+
+            var autodialer = new AutoDialer(swarm)
+            {
+                MinConnections = Options.Swarm.MinConnections
+            };
+#pragma warning disable CS1998
+            stopTasks.Add(async () => autodialer.Dispose());
+#pragma warning restore CS1998
+
+            tasks = new List<Func<Task>>
+            {
+                // Bootstrap discovery
+                async () =>
+                {
+                    var bootstrap = new Bootstrap
+                    {
+                        Addresses = await this.Bootstrap.ListAsync()
+                    };
+                    bootstrap.PeerDiscovered += OnPeerDiscovered;
+                    stopTasks.Add(async () => await bootstrap.StopAsync().ConfigureAwait(false));
+                    await bootstrap.StartAsync().ConfigureAwait(false);
+                },
+
+                // New multicast DNS discovery
+                async () =>
+                {
+                    if (Options.Discovery.DisableMdns)
+                        return;
+                    var mdns = new MdnsNext
+                    {
+                        LocalPeer = localPeer,
+                        MulticastService = multicast
+                    };
+                    if (Options.Swarm.PrivateNetworkKey != null)
+                    {
+                        mdns.ServiceName = $"_p2p-{Options.Swarm.PrivateNetworkKey.Fingerprint().ToHexString()}._udp";
+                    }
+
+                    mdns.PeerDiscovered += OnPeerDiscovered;
+                    stopTasks.Add(async () => await mdns.StopAsync().ConfigureAwait(false));
+                    await mdns.StartAsync().ConfigureAwait(false);
+                },
+
+                // Old style JS multicast DNS discovery
+                async () =>
+                {
+                    if (Options.Discovery.DisableMdns || Options.Swarm.PrivateNetworkKey != null)
+                        return;
+                    var mdns = new MdnsJs
+                    {
+                        LocalPeer = localPeer,
+                        MulticastService = multicast
+                    };
+                    mdns.PeerDiscovered += OnPeerDiscovered;
+                    stopTasks.Add(async () => await mdns.StopAsync().ConfigureAwait(false));
+                    await mdns.StartAsync().ConfigureAwait(false);
+                },
+
+                // Old style GO multicast DNS discovery
+                async () =>
+                {
+                    if (Options.Discovery.DisableMdns || Options.Swarm.PrivateNetworkKey != null)
+                        return;
+                    var mdns = new MdnsGo
+                    {
+                        LocalPeer = localPeer,
+                        MulticastService = multicast
+                    };
+                    mdns.PeerDiscovered += OnPeerDiscovered;
+                    stopTasks.Add(async () => await mdns.StopAsync().ConfigureAwait(false));
+                    await mdns.StartAsync().ConfigureAwait(false);
+                },
+                async () =>
+                {
+                    if (Options.Discovery.DisableRandomWalk)
+                        return;
+                    var randomWalk = new RandomWalk {Dht = Dht};
+                    stopTasks.Add(async () => await randomWalk.StopAsync().ConfigureAwait(false));
+                    await randomWalk.StartAsync().ConfigureAwait(false);
+                }
+            };
+            log.Debug("waiting for discovery services to start");
+            await Task.WhenAll(tasks.Select(t => t())).ConfigureAwait(false);
+
+            multicast?.Start();
+
+            log.Debug("started");
         }
 
-        /// <inheritdoc />
-        public async Task<string> ReadTextAsync(Cid cid,
-            CancellationToken cancellationToken = default)
+        /// <summary>
+        ///   Stops the running services.
+        /// </summary>
+        /// <returns>
+        ///   A task that represents the asynchronous operation.
+        /// </returns>
+        /// <remarks>
+        ///   Multiple calls are okay.
+        /// </remarks>
+        public async Task StopAsync()
         {
-            _logger.Debug("Reading content at path {0} from Dfs", cid);
-            return await _ipfs.FileSystem.ReadAllTextAsync(cid, cancellationToken).ConfigureAwait(false);
+            log.Debug("stopping");
+            try
+            {
+                var tasks = stopTasks.ToArray();
+                stopTasks = new ConcurrentBag<Func<Task>>();
+                await Task.WhenAll(tasks.Select(t => t())).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                log.Error("Failure when stopping the engine", e);
+            }
+
+            // Many services use cancellation to stop.  A cancellation may not run
+            // immediately, so we need to give them some.
+            // TODO: Would be nice to make this deterministic.
+            await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
+
+            log.Debug("stopped");
         }
 
-        /// <inheritdoc />
-        public async Task<Cid> AddAsync(Stream content,
-            string name = "",
-            CancellationToken cancellationToken = default)
+        /// <summary>
+        ///   A synchronous start.
+        /// </summary>
+        /// <remarks>
+        ///   Calls <see cref="StartAsync"/> and waits for it to complete.
+        /// </remarks>
+        public void Start() { StartAsync().ConfigureAwait(false).GetAwaiter().GetResult(); }
+
+        /// <summary>
+        ///   A synchronous stop.
+        /// </summary>
+        /// <remarks>
+        ///   Calls <see cref="StopAsync"/> and waits for it to complete.
+        /// </remarks>
+        public void Stop()
         {
-            var node = await _ipfs.FileSystem
-               .AddAsync(content, name, AddFileOptions(), cancellationToken).ConfigureAwait(false);
-            _logger.Debug("Content {1} added to Dfs with id {0}",
-                node.Id, name + " ");
-            return node.Id;
+            log.Debug("stopping");
+            try
+            {
+                var tasks = stopTasks.ToArray();
+                stopTasks = new ConcurrentBag<Func<Task>>();
+                foreach (var task in tasks)
+                {
+                    task().ConfigureAwait(false).GetAwaiter().GetResult();
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Failure when stopping the engine", e);
+            }
+        }
+        
+#pragma warning disable VSTHRD100 // Avoid async void methods
+        /// <summary>
+        ///   Fired when a peer is discovered.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="peer"></param>
+        /// <remarks>
+        ///   Registers the peer with the <see cref="SwarmService"/>.
+        /// </remarks>
+        async void OnPeerDiscovered(object sender, Peer peer)
+#pragma warning restore VSTHRD100 // Avoid async void methods
+        {
+            try
+            {
+                var swarm = await SwarmService.ConfigureAwait(false);
+                swarm.RegisterPeer(peer);
+            }
+            catch (Exception ex)
+            {
+                log.Warn("failed to register peer " + peer, ex);
+
+                // eat it, nothing we can do.
+            }
         }
 
-        /// <inheritdoc />
-        public async Task<Stream> ReadAsync(Cid cid,
-            CancellationToken cancellationToken = default)
+        /// <summary>
+        /// @TODO this should reeally go lower down in the kernal when we load keystores
+        ///   Provides access to the <see cref="KeyChain"/>.
+        /// </summary>
+        /// <param name="cancel">
+        ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
+        /// </param>
+        /// <returns>
+        ///   A task that represents the asynchronous operation. The task's result is
+        ///   the <see cref="KeyChain"/>.
+        /// </returns>
+        public async Task<IKeyApi> KeyChainAsync(CancellationToken cancel = default(CancellationToken))
         {
-            _logger.Debug("Reading content at path {0} from Dfs", cid);
-            return await _ipfs.FileSystem.ReadFileAsync(cid, cancellationToken).ConfigureAwait(false);
+            // TODO: this should be a LazyAsync property.
+            if (keyChain == null)
+            {
+                lock (this)
+                {
+                    if (keyChain == null)
+                    {
+                        keyChain = new KeyChain
+                        {
+                            Options = Options.KeyChain
+                        };
+                    }
+                }
+
+                await keyChain.SetPassphraseAsync(passphrase, cancel).ConfigureAwait(false);
+
+                // Maybe create "self" key, this is the local peer's id.
+                var self = await keyChain.FindKeyByNameAsync("self", cancel).ConfigureAwait(false) ?? await keyChain.CreateAsync("self", null, 0, cancel).ConfigureAwait(false);
+            }
+
+            return keyChain;
         }
+
+        #region Class members
+
+        /// <summary>
+        ///   Determines latency to a peer.
+        /// </summary>
+        public AsyncLazy<Ping1> PingService { get; private set; }
+        
+        /// <summary>
+        ///   Provides access to the local peer.
+        /// </summary>
+        /// <returns>
+        ///   A task that represents the asynchronous operation. The task's result is
+        ///   a <see cref="Peer"/>.
+        /// </returns>
+        public AsyncLazy<Peer> LocalPeer { get; private set; }
+        
+        /// <summary>
+        ///   Manages the version of the repository.
+        /// </summary>
+        public MigrationManager MigrationManager { get; set; }
+
+        #region Dfs Services
+        
+        /// <summary>
+        ///   Manages communication with other peers.
+        /// </summary>
+        public AsyncLazy<Swarm> SwarmService { get; private set; }
+
+        /// <summary>
+        ///   Manages publishng and subscribing to messages.
+        /// </summary>
+        public AsyncLazy<NotificationService> PubSubService { get; private set; }
+
+        /// <summary>
+        ///   Exchange blocks with other peers.
+        /// </summary>
+        public AsyncLazy<IBitswapService> BitswapService { get; private set; }
+        
+        /// <summary>
+        ///   Finds information with a distributed hash table.
+        /// </summary>
+        public AsyncLazy<Dht1> DhtService { get; private set; }
+        
+        #endregion
+
+        #region CoreAPI Support
+
+        /// <inheritdoc />
+        public IBitswapApi Bitswap { get; set; }
+
+        /// <inheritdoc />
+        public IBlockApi Block { get; set; }
+
+        /// <inheritdoc />
+        public IBlockRepositoryApi BlockRepository { get; set; }
+
+        /// <inheritdoc />
+        public IBootstrapApi Bootstrap { get; set; }
+
+        /// <inheritdoc />
+        public IConfigApi Config { get; set; }
+
+        /// <inheritdoc />
+        public IDagApi Dag { get; set; }
+
+        /// <inheritdoc />
+        public IDhtApi Dht { get; set; }
+
+        /// <inheritdoc />
+        public IDnsApi Dns { get; set; }
+
+        /// <inheritdoc />
+        public IFileSystemApi FileSystem { get; set; }
+
+        /// <inheritdoc />
+        public IGenericApi Generic { get; set; }
+
+        /// <inheritdoc />
+        public IKeyApi Key { get; set; }
+
+        /// <inheritdoc />
+        public INameApi Name { get; set; }
+
+        /// <inheritdoc />
+        public IObjectApi Object { get; set; }
+
+        /// <inheritdoc />
+        public IPinApi Pin { get; set; }
+
+        /// <inheritdoc />
+        public IPubSubApi PubSub { get; set; }
+
+        /// <inheritdoc />
+        public ISwarmApi Swarm { get; set; }
+
+        /// <inheritdoc />
+        public IStatsApi Stats { get; set; }
+
+        #endregion
+        
+        #endregion
+        
+        #region IDisposable Support
+
+        bool disposedValue = false; // To detect redundant calls
+
+        /// <summary>
+        ///  Releases the unmanaged and optionally managed resources.
+        /// </summary>
+        /// <param name="disposing">
+        ///   <b>true</b> to release both managed and unmanaged resources; <b>false</b> 
+        ///   to release only unmanaged resources.
+        /// </param>
+        private void Dispose(bool disposing)
+        {
+            if (disposedValue)
+            {
+                return;
+            }
+            
+            disposedValue = true;
+
+            if (!disposing)
+            {
+                return;
+            }
+            
+            passphrase?.Dispose();
+            Stop();
+        }
+
+        /// <summary>
+        ///   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        #endregion
     }
 }

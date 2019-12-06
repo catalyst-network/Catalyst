@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -23,10 +24,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
   },
 }");
 
-        IpfsEngine ipfs;
+        IDfs ipfs;
         JObject configuration;
 
-        public ConfigApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public ConfigApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<JObject> GetAsync(CancellationToken cancel = default(CancellationToken))
         {

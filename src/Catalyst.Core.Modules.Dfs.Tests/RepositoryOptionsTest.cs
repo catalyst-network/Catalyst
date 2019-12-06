@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.FileSystem;
 using Xunit;
 

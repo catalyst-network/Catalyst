@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
 using Makaretu.Dns;
@@ -10,9 +11,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     class DnsApi : IDnsApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
-        public DnsApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public DnsApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<string> ResolveAsync(string name,
             bool recursive = false,

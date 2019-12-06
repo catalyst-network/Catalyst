@@ -100,7 +100,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 {
                     responseCodeType = await Task.Run(async () =>
                     {
-                        var stream = await _dfs.ReadAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
+                        var stream = await _dfs.FileSystem.ReadFileAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
                            .ConfigureAwait(false);
                         fileLen = stream.Length;
                         using (var fileTransferInformation = new UploadFileTransferInformation(

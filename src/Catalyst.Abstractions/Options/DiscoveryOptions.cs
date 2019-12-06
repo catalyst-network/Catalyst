@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using MultiFormats;
 
-namespace Catalyst.Core.Modules.Dfs
+namespace Catalyst.Abstractions.Options
 {
     /// <summary>
     ///   Configuration options for discovering other peers.
     /// </summary>
-    /// <seealso cref="IpfsEngineOptions"/>
+    /// <seealso cref="DfsOptions"/>
     public class DiscoveryOptions
     {
         /// <summary>

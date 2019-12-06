@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
             Thread.Sleep(100);
 
-            var retrievedContent = await _dfs.ReadTextAsync(fileName, _cancellationToken);
+            var retrievedContent = await _dfs.ReadAllTextAsync(fileName, _cancellationToken);
 
             retrievedContent.Should().Be(content);
         }
@@ -70,7 +70,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
             Thread.Sleep(100);
 
-            var retrievedContent = await _dfs.ReadAsync(fileName, _cancellationToken);
+            var retrievedContent = await _dfs.ReadFileAsync(fileName, _cancellationToken);
             var fileContent = await retrievedContent.ReadAllBytesAsync(_cancellationToken);
 
             fileContent.Should().BeEquivalentTo(content);

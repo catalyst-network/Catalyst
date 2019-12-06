@@ -57,10 +57,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests
             }
         }
 
-        async Task<IpfsEngine> CreateNode()
+        async Task<Dfs> CreateNode()
         {
             const string passphrase = "this is not a secure pass phrase";
-            var ipfs = new IpfsEngine(passphrase.ToCharArray());
+            var ipfs = new Dfs(passphrase.ToCharArray());
             ipfs.Options.Repository.Folder = Path.Combine(Path.GetTempPath(), "ipfs-ed255129-test");
             ipfs.Options.KeyChain.DefaultKeyType = "ed25519";
             await ipfs.Config.SetAsync(
@@ -70,7 +70,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests
             return ipfs;
         }
 
-        void DeleteNode(IpfsEngine ipfs)
+        void DeleteNode(Dfs ipfs)
         {
             if (Directory.Exists(ipfs.Options.Repository.Folder))
             {

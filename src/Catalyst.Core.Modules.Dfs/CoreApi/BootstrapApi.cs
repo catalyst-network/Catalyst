@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using MultiFormats;
 using Newtonsoft.Json.Linq;
@@ -10,7 +11,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     class BootstrapApi : IBootstrapApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
         // From https://github.com/libp2p/go-libp2p-daemon/blob/master/bootstrap.go#L14
         // TODO: Missing the /dnsaddr/... addresses
@@ -27,7 +28,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             "/ip6/2a03:b0c0:0:1010::23:1001/tcp/4001/ipfs/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd", // earth.i.ipfs.io
         };
 
-        public BootstrapApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public BootstrapApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<MultiAddress> AddAsync(MultiAddress address,
             CancellationToken cancel = default(CancellationToken))

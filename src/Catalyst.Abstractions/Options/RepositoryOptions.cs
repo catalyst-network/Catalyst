@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
 
-namespace Catalyst.Core.Lib.FileSystem
+namespace Catalyst.Abstractions.Options
 {
     /// <summary>
     ///   Configuration options for the repository.
     /// </summary>
-    /// <seealso cref="Catalyst.Ipfs.Engine.IpfsEngineOptions"/>
+    /// <seealso cref="Catalyst.Ipfs.Engine.DfsOptions"/>
     public class RepositoryOptions
     {
         /// <summary>

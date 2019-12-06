@@ -14,7 +14,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
     [TestClass]
     public class SwarmApiTest
     {
-        IpfsEngine ipfs = TestFixture.Ipfs;
+        Dfs ipfs = TestFixture.Ipfs;
         readonly MultiAddress somewhere = "/ip4/127.0.0.1";
 
         [Fact]
@@ -150,10 +150,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 
         static int nodeNumber = 0;
 
-        IpfsEngine CreateNode()
+        Dfs CreateNode()
         {
             const string passphrase = "this is not a secure pass phrase";
-            var ipfs = new IpfsEngine(passphrase.ToCharArray());
+            var ipfs = new Dfs(passphrase.ToCharArray());
             ipfs.Options.Repository.Folder = Path.Combine(Path.GetTempPath(), $"swarm-{nodeNumber++}");
             ipfs.Options.KeyChain.DefaultKeySize = 512;
             ipfs.Config.SetAsync(

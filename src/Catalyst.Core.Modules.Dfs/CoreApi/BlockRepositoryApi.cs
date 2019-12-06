@@ -3,15 +3,16 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     class BlockRepositoryApi : IBlockRepositoryApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
-        public BlockRepositoryApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public BlockRepositoryApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task RemoveGarbageAsync(CancellationToken cancel = default(CancellationToken))
         {

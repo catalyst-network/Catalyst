@@ -6,7 +6,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
     [TestClass]
     public class StatsApiTest
     {
-        IpfsEngine ipfs = TestFixture.Ipfs;
+        Dfs ipfs = TestFixture.Ipfs;
 
         [Fact]
         public void Exists() { Assert.NotNull(ipfs.Stats); }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
 using MultiFormats;
@@ -9,9 +10,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     class BitswapApi : IBitswapApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
-        public BitswapApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public BitswapApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default(CancellationToken))
         {

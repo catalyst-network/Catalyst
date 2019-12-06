@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Catalyst.Abstractions.Options;
+using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
 {

@@ -130,7 +130,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
                .Returns(FileTransferResponseCodeTypes.Successful);
 
             var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("expectedHash"));
-            _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(expectedCid);
+            var fakeBlock = Substitute.For<IFileSystemNode>();
+            fakeBlock.Id.Returns(expectedCid);
+            _fakeDfs.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(fakeBlock);
 
             var protocolMessage = GenerateProtocolMessage();
 
@@ -163,7 +165,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Throws(new Exception());
+            _fakeDfs.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Throws(new Exception());
 
             var protocolMessage = GenerateProtocolMessage();
 

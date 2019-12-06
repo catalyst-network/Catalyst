@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.BlockExchange;
+using Catalyst.Abstractions.Dfs.BlockExchange.Protocols;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Core.Modules.Dfs.BlockExchange.Protocols;
 using Common.Logging;
 using Lib.P2P;
 using MultiFormats;
@@ -14,9 +18,9 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
     /// <summary>
     ///   Exchange blocks with other peers.
     /// </summary>
-    public class Bitswap : IService
+    public class BitswapService : IBitswapService
     {
-        static ILog log = LogManager.GetLogger(typeof(Bitswap));
+        static ILog log = LogManager.GetLogger(typeof(BitswapService));
 
         ConcurrentDictionary<Cid, WantedBlock> wants = new ConcurrentDictionary<Cid, WantedBlock>();
         ConcurrentDictionary<Peer, BitswapLedger> peerLedgers = new ConcurrentDictionary<Peer, BitswapLedger>();
@@ -68,14 +72,14 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         ulong DupDataReceived;
 
         /// <summary>
-        ///   Creates a new instance of the <see cref="Bitswap"/> class.
+        ///   Creates a new instance of the <see cref="BitswapService"/> class.
         /// </summary>
-        public Bitswap()
+        public BitswapService()
         {
             Protocols = new IBitswapProtocol[]
             {
-                new Bitswap11 {Bitswap = this},
-                new Bitswap1 {Bitswap = this}
+                new Bitswap11 {BitswapService = this},
+                new Bitswap1 {BitswapService = this}
             };
         }
 

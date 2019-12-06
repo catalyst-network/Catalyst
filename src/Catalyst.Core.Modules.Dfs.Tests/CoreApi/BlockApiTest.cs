@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Lib.P2P;
 using MultiFormats;
 using Xunit;
@@ -12,7 +13,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class BlockApiTest
     {
-        IpfsEngine ipfs = TestFixture.Ipfs;
+        IDfs ipfs = TestFixture.Ipfs;
         string id = "QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
         byte[] blob = Encoding.UTF8.GetBytes("blorb");
 

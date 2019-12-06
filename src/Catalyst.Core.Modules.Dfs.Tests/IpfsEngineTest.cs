@@ -12,12 +12,12 @@ using Xunit;
 namespace Catalyst.Core.Modules.Dfs.Tests
 {
     [TestClass]
-    public class IpfsEngineTest
+    public class DfsTest
     {
         [Fact]
         public void Can_Create()
         {
-            var ipfs = new IpfsEngine("this is not a secure pass phrase".ToCharArray());
+            var ipfs = new Dfs("this is not a secure pass phrase".ToCharArray());
             Assert.NotNull(ipfs);
         }
 
@@ -34,13 +34,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         public async Task SecureString_Passphrase()
         {
             var secret = "this is not a secure pass phrase";
-            var ipfs = new IpfsEngine(secret.ToCharArray());
+            var ipfs = new Dfs(secret.ToCharArray());
             ipfs.Options = TestFixture.Ipfs.Options;
             await ipfs.KeyChainAsync();
 
             var passphrase = new SecureString();
             foreach (var c in secret) passphrase.AppendChar(c);
-            ipfs = new IpfsEngine(passphrase);
+            ipfs = new Dfs(passphrase);
             ipfs.Options = TestFixture.Ipfs.Options;
             await ipfs.KeyChainAsync();
         }
@@ -49,14 +49,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         public async Task IpfsPass_Passphrase()
         {
             var secret = "this is not a secure pass phrase";
-            var ipfs = new IpfsEngine(secret.ToCharArray());
+            var ipfs = new Dfs(secret.ToCharArray());
             ipfs.Options = TestFixture.Ipfs.Options;
             await ipfs.KeyChainAsync();
 
             Environment.SetEnvironmentVariable("IPFS_PASS", secret);
             try
             {
-                ipfs = new IpfsEngine();
+                ipfs = new Dfs();
                 ipfs.Options = TestFixture.Ipfs.Options;
                 await ipfs.KeyChainAsync();
             }
@@ -72,7 +72,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests
             var ipfs1 = TestFixture.Ipfs;
             await ipfs1.KeyChainAsync();
 
-            var ipfs2 = new IpfsEngine("the wrong pass phrase".ToCharArray())
+            var ipfs2 = new Dfs("the wrong pass phrase".ToCharArray())
             {
                 Options = ipfs1.Options
             };
@@ -86,7 +86,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         [ExpectedException(typeof(Exception))]
         public void IpfsPass_Missing()
         {
-            var _ = new IpfsEngine();
+            var _ = new Dfs();
         }
 
         [Fact]

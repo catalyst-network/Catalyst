@@ -1,11 +1,11 @@
 ﻿using Catalyst.Abstractions.Dfs.CoreApi;
 
-namespace Catalyst.Core.Modules.Dfs
+namespace Catalyst.Abstractions.Options
 {
     /// <summary>
     ///   Configuration options for a <see cref="IBlockApi">block service</see>.
     /// </summary>
-    /// <seealso cref="IpfsEngineOptions"/>
+    /// <seealso cref="DfsOptions"/>
     public class BlockOptions
     {
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
 using Lib.P2P.Protocols;
@@ -13,9 +14,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     class GenericApi : IGenericApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
 
-        public GenericApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public GenericApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public async Task<Peer> IdAsync(MultiHash peer = null, CancellationToken cancel = default(CancellationToken))
         {

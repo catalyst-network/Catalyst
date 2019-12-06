@@ -192,17 +192,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiFormats", "MultiFormat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiFormats.Tests", "MultiFormats.Tests\MultiFormats.Tests.csproj", "{F6142130-599A-452E-92E9-348D0560E3E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Core", "ipfs\net-ipfs-core\src\Catalyst.Ipfs.Core.csproj", "{1DFCF187-7707-4F56-8190-DE2C8262BA74}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Core.Tests", "ipfs\net-ipfs-core\test\Catalyst.Ipfs.Core.Tests.csproj", "{DD424E8C-03F9-44BB-ABC4-E41612B1193F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Cli", "ipfs\net-ipfs-engine\Catalyst.Ipfs.Cli\Catalyst.Ipfs.Cli.csproj", "{D231200C-6D03-4A1E-A60E-D382E289B893}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Http.Server", "ipfs\net-ipfs-engine\Catalyst.Ipfs.Http.Server\Catalyst.Ipfs.Http.Server.csproj", "{1A57E586-2879-4136-A66D-CF9823FC640A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Engine", "ipfs\net-ipfs-engine\src\Catalyst.Ipfs.Engine.csproj", "{56328E06-341B-4C2C-B92A-443F7E43695E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Engine.Tests", "ipfs\net-ipfs-engine\test\Catalyst.Ipfs.Engine.Tests.csproj", "{E9BCBDC0-3DE2-47CE-B4A3-325B31A81B4D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Http.Client", "ipfs\net-ipfs-http-client\src\Catalyst.Ipfs.Http.Client.csproj", "{E06CAF62-40C9-47AA-A60E-FB9595CE96E6}"
 EndProject
@@ -458,14 +450,6 @@ Global
 		{F6142130-599A-452E-92E9-348D0560E3E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6142130-599A-452E-92E9-348D0560E3E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6142130-599A-452E-92E9-348D0560E3E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1DFCF187-7707-4F56-8190-DE2C8262BA74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1DFCF187-7707-4F56-8190-DE2C8262BA74}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1DFCF187-7707-4F56-8190-DE2C8262BA74}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1DFCF187-7707-4F56-8190-DE2C8262BA74}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD424E8C-03F9-44BB-ABC4-E41612B1193F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD424E8C-03F9-44BB-ABC4-E41612B1193F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD424E8C-03F9-44BB-ABC4-E41612B1193F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD424E8C-03F9-44BB-ABC4-E41612B1193F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D231200C-6D03-4A1E-A60E-D382E289B893}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D231200C-6D03-4A1E-A60E-D382E289B893}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D231200C-6D03-4A1E-A60E-D382E289B893}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -474,14 +458,6 @@ Global
 		{1A57E586-2879-4136-A66D-CF9823FC640A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A57E586-2879-4136-A66D-CF9823FC640A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A57E586-2879-4136-A66D-CF9823FC640A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56328E06-341B-4C2C-B92A-443F7E43695E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56328E06-341B-4C2C-B92A-443F7E43695E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56328E06-341B-4C2C-B92A-443F7E43695E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56328E06-341B-4C2C-B92A-443F7E43695E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E9BCBDC0-3DE2-47CE-B4A3-325B31A81B4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E9BCBDC0-3DE2-47CE-B4A3-325B31A81B4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E9BCBDC0-3DE2-47CE-B4A3-325B31A81B4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E9BCBDC0-3DE2-47CE-B4A3-325B31A81B4D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E06CAF62-40C9-47AA-A60E-FB9595CE96E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E06CAF62-40C9-47AA-A60E-FB9595CE96E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E06CAF62-40C9-47AA-A60E-FB9595CE96E6}.Release|Any CPU.ActiveCfg = Release|Any CPU

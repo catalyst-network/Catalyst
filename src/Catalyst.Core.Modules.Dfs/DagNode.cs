@@ -135,7 +135,7 @@ namespace Catalyst.Core.Modules.Dfs
         /// <remarks>
         ///   A <b>DagNode</b> is immutable.
         /// </remarks>
-        public DagNode AddLink(IMerkleLink link) { return AddLinks(new[] {link}); }
+        public IDagNode AddLink(IMerkleLink link) { return AddLinks(new[] {link}); }
 
         /// <summary>
         ///   Adds a sequence of links.

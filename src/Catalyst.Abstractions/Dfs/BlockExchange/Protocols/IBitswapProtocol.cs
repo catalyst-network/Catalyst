@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Lib.P2P.Protocols;
 
-namespace Catalyst.Core.Modules.Dfs.BlockExchange
+namespace Catalyst.Abstractions.Dfs.BlockExchange.Protocols
 {
     /// <summary>
     ///   Features of a bitswap protocol.
@@ -18,7 +18,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         ///   The destination of the want list.
         /// </param>
         /// <param name="wants">
-        ///   A sequence of <see cref="WantedBlock"/>.
+        ///   A sequence of <see cref="Catalyst.Core.Modules.Dfs.BlockExchange.WantedBlock"/>.
         /// </param>
         /// <param name="full">
         ///   <b>true</b> if <paramref name="wants"/> is the full want list.

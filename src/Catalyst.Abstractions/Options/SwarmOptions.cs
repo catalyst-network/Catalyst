@@ -1,12 +1,12 @@
 ﻿using Lib.P2P;
 using Lib.P2P.Cryptography;
 
-namespace Catalyst.Core.Modules.Dfs
+namespace Catalyst.Abstractions.Options
 {
     /// <summary>
     ///   Configuration options for communication with other peers.
     /// </summary>
-    /// <seealso cref="IpfsEngineOptions"/>
+    /// <seealso cref="DfsOptions"/>
     public class SwarmOptions
     {
         /// <summary>

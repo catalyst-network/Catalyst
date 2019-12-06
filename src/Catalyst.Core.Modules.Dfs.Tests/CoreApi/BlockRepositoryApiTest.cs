@@ -1,12 +1,13 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class BlockRepositoryApiTest
     {
-        IpfsEngine ipfs = TestFixture.Ipfs;
+        IDfs ipfs = TestFixture.Ipfs;
 
         [Fact]
         public void Exists() { Assert.NotNull(ipfs.BlockRepository); }

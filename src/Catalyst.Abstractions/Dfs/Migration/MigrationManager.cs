@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 
-namespace Catalyst.Core.Modules.Dfs.Migration
+namespace Catalyst.Abstractions.Dfs.Migration
 {
     /// <summary>
     ///   Allows migration of the repository. 
@@ -16,13 +16,13 @@ namespace Catalyst.Core.Modules.Dfs.Migration
     {
         static ILog log = LogManager.GetLogger(typeof(MigrationManager));
 
-        readonly IpfsEngine ipfs;
+        readonly IDfs ipfs;
 
         /// <summary>
         ///   Creates a new instance of the <see cref="MigrationManager"/> class
-        ///   for the specifed <see cref="IpfsEngine"/>.
+        ///   for the specifed <see cref="Catalyst.Core.Modules.Dfs.Dfs"/>.
         /// </summary>
-        public MigrationManager(IpfsEngine ipfs)
+        public MigrationManager(IDfs ipfs)
         {
             this.ipfs = ipfs;
 

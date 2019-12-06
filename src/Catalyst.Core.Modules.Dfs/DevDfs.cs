@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<string> ReadTextAsync(Cid cid, CancellationToken cancellationToken = default)
+        public async Task<string> ReadAllTextAsync(Cid cid, CancellationToken cancellationToken = default)
         {
             return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, cid),
                 Encoding.UTF8,
@@ -113,7 +113,7 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <inheritdoc />
-        public async Task<Stream> ReadAsync(Cid cid, CancellationToken cancellationToken = default)
+        public async Task<Stream> ReadFileAsync(Cid cid, CancellationToken cancellationToken = default)
         {
             return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, cid)))
                .ConfigureAwait(false);

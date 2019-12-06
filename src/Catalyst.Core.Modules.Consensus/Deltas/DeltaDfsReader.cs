@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             try
             {
-                using (var responseStream = _dfs.ReadAsync(cid, cancellationToken)
+                using (var responseStream = _dfs.FileSystem.ReadFileAsync(cid, cancellationToken)
                    .ConfigureAwait(false)
                    .GetAwaiter()
                    .GetResult()

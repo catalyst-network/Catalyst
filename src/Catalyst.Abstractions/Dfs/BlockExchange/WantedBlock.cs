@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Lib.P2P;
 using MultiFormats;
 
-namespace Catalyst.Core.Modules.Dfs.BlockExchange
+namespace Catalyst.Abstractions.Dfs.BlockExchange
 {
     /// <summary>
     ///   A content addressable block that is wanted by a peer.

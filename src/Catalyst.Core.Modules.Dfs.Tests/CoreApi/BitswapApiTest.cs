@@ -3,7 +3,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.BlockExchange.Protocols;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
+using Catalyst.Core.Modules.Dfs.BlockExchange.Protocols;
 using FluentAssertions;
 using Lib.P2P;
 using MultiFormats;
@@ -13,8 +17,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class BitswapApiTest
     {
-        IpfsEngine ipfs = TestFixture.Ipfs;
-        IpfsEngine ipfsOther = TestFixture.IpfsOther;
+        IDfs ipfs = TestFixture.Ipfs;
+        IDfs ipfsOther = TestFixture.IpfsOther;
 
         [Fact]
         public async Task Wants()
@@ -192,7 +196,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 
             (await ipfs.BitswapService).Protocols = new IBitswapProtocol[]
             {
-                new Bitswap1 {Bitswap = (await ipfs.BitswapService)}
+                new Bitswap1
+                {
+                    BitswapService = (await ipfs.BitswapService)
+                }
             };
             ipfs.Options.Discovery.DisableMdns = true;
             ipfs.Options.Discovery.BootstrapPeers = new MultiAddress[0];
@@ -200,7 +207,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 
             (await ipfsOther.BitswapService).Protocols = new IBitswapProtocol[]
             {
-                new Bitswap1 {Bitswap = (await ipfsOther.BitswapService)}
+                new Bitswap1 {BitswapService = (await ipfsOther.BitswapService)}
             };
             ipfsOther.Options.Discovery.DisableMdns = true;
             ipfsOther.Options.Discovery.BootstrapPeers = new MultiAddress[0];
@@ -264,7 +271,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 
             (await ipfs.BitswapService).Protocols = new IBitswapProtocol[]
             {
-                new Bitswap11 {Bitswap = (await ipfs.BitswapService)}
+                new Bitswap11 {BitswapService = (await ipfs.BitswapService)}
             };
             ipfs.Options.Discovery.DisableMdns = true;
             ipfs.Options.Discovery.BootstrapPeers = new MultiAddress[0];
@@ -272,7 +279,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 
             (await ipfsOther.BitswapService).Protocols = new IBitswapProtocol[]
             {
-                new Bitswap11 {Bitswap = (await ipfsOther.BitswapService)}
+                new Bitswap11 {BitswapService = (await ipfsOther.BitswapService)}
             };
             ipfsOther.Options.Discovery.DisableMdns = true;
             ipfsOther.Options.Discovery.BootstrapPeers = new MultiAddress[0];

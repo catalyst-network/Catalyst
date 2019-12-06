@@ -63,7 +63,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void TryReadDeltaFromDfs_Should_Return_False_And_Log_When_Hash_Not_Found_On_Dfs()
         {
             var exception = new FileNotFoundException("that hash is not good");
-            _dfs.ReadAsync(Arg.Any<Cid>(), Arg.Any<CancellationToken>())
+            _dfs.FileSystem.ReadFileAsync(Arg.Any<Cid>(), Arg.Any<CancellationToken>())
                .Throws(exception);
 
             var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("bad hash"));
@@ -79,7 +79,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("good hash"));
             var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
 
-            _dfs.ReadAsync(cid, CancellationToken.None)
+            _dfs.FileSystem.ReadFileAsync(cid, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());
 
             var found = _dfsReader.TryReadDeltaFromDfs(cid, out var delta, CancellationToken.None);
@@ -98,7 +98,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             new Action(() => matchingDelta.IsValid()).Should()
                .Throw<InvalidDataException>("otherwise this test is useless");
 
-            _dfs.ReadAsync(cid, CancellationToken.None)
+            _dfs.FileSystem.ReadFileAsync(cid, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());
 
             var found = _dfsReader.TryReadDeltaFromDfs(cid, out var delta, CancellationToken.None);
@@ -114,12 +114,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var cancellationToken = new CancellationToken();
 
             var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
-            _dfs.ReadAsync(cid, CancellationToken.None)
+            _dfs.FileSystem.ReadFileAsync(cid, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());
 
             _dfsReader.TryReadDeltaFromDfs(cid, out _, CancellationToken.None);
 
-            _dfs.Received(1)?.ReadAsync(Arg.Is(cid), Arg.Is(cancellationToken));
+            _dfs.Received(1)?.FileSystem.ReadFileAsync(Arg.Is(cid), Arg.Is(cancellationToken));
         }
     }
 }

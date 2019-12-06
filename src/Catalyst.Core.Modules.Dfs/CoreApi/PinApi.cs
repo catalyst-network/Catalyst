@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.FileSystem;
 using Lib.P2P;
@@ -18,10 +19,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
     class PinApi : IPinApi
     {
-        IpfsEngine ipfs;
+        IDfs ipfs;
         FileStore<Cid, Pin> store;
 
-        public PinApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public PinApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         FileStore<Cid, Pin> Store
         {

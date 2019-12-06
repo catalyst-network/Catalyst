@@ -29,5 +29,7 @@ namespace Catalyst.Abstractions.Dfs
     {
         Cid Id { get; set; }
         byte[] ToArray();
+
+        IDagNode AddLink(IMerkleLink link);
     }
 }

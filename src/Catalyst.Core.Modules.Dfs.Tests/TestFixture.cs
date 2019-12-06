@@ -1,16 +1,16 @@
 ﻿using System.IO;
+using Catalyst.Abstractions.Dfs;
 using Common.Logging;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
 {
-    [TestClass]
     public class TestFixture
     {
         const string passphrase = "this is not a secure pass phrase";
-        public static IpfsEngine Ipfs = new IpfsEngine(passphrase.ToCharArray());
-        public static IpfsEngine IpfsOther = new IpfsEngine(passphrase.ToCharArray());
+        public static IDfs Ipfs = new Dfs(passphrase.ToCharArray());
+        public static IDfs IpfsOther = new Dfs(passphrase.ToCharArray());
 
         static TestFixture()
         {

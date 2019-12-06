@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs.BlockExchange;
+using Catalyst.Abstractions.Dfs.BlockExchange.Protocols;
 using Common.Logging;
 using Lib.P2P;
 using MultiFormats;
@@ -14,7 +16,7 @@ using ProtoBufHelper = Lib.P2P.ProtoBufHelper;
 #pragma warning disable 0649 // disable warning about unassinged fields
 #pragma warning disable 0169// disable warning about unassinged fields
 
-namespace Catalyst.Core.Modules.Dfs.BlockExchange
+namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
 {
     /// <summary>
     ///   Bitswap Protocol version 1.0.0 
@@ -33,9 +35,9 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         public override string ToString() { return $"/{Name}/{Version}"; }
 
         /// <summary>
-        ///   The <see cref="Bitswap"/> service.
+        ///   The <see cref="BitswapService"/> service.
         /// </summary>
-        public Bitswap Bitswap { get; set; }
+        public IBitswapService BitswapService { get; set; }
 
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,
@@ -61,7 +63,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                     if (entry.cancel)
                     {
                         // TODO: Unwant specific to remote peer
-                        Bitswap.Unwant(cid);
+                        BitswapService.Unwant(cid);
                     }
                     else
                     {
@@ -79,7 +81,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 log.Debug("got some blocks");
                 foreach (var sentBlock in request.blocks)
                 {
-                    await Bitswap.OnBlockReceivedAsync(connection.RemotePeer, sentBlock);
+                    await BitswapService.OnBlockReceivedAsync(connection.RemotePeer, sentBlock);
                 }
             }
         }
@@ -90,22 +92,22 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
             try
             {
                 IDataBlock block;
-                if (null != await Bitswap.BlockService.StatAsync(cid, cancel).ConfigureAwait(false))
+                if (null != await BitswapService.BlockService.StatAsync(cid, cancel).ConfigureAwait(false))
                 {
-                    block = await Bitswap.BlockService.GetAsync(cid, cancel).ConfigureAwait(false);
+                    block = await BitswapService.BlockService.GetAsync(cid, cancel).ConfigureAwait(false);
                 }
                 else
                 {
-                    block = await Bitswap.WantAsync(cid, remotePeer.Id, cancel).ConfigureAwait(false);
+                    block = await BitswapService.WantAsync(cid, remotePeer.Id, cancel).ConfigureAwait(false);
                 }
 
                 // Send block to remote.
-                using (var stream = await Bitswap.Swarm.DialAsync(remotePeer, this.ToString()).ConfigureAwait(false))
+                using (var stream = await BitswapService.Swarm.DialAsync(remotePeer, this.ToString()).ConfigureAwait(false))
                 {
                     await SendAsync(stream, block, cancel).ConfigureAwait(false);
                 }
 
-                await Bitswap.OnBlockSentAsync(remotePeer, block).ConfigureAwait(false);
+                await BitswapService.OnBlockSentAsync(remotePeer, block).ConfigureAwait(false);
             }
             catch (Exception e)
             {

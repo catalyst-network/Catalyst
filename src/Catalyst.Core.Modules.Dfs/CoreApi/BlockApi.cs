@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.FileSystem;
 using Common.Logging;
@@ -45,10 +46,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             Size = ObjectApi.EmptyNode.ToArray().Length
         };
 
-        IpfsEngine ipfs;
+        IDfs ipfs;
         FileStore<Cid, DataBlock> store;
 
-        public BlockApi(IpfsEngine ipfs) { this.ipfs = ipfs; }
+        public BlockApi(IDfs ipfs) { this.ipfs = ipfs; }
 
         public FileStore<Cid, DataBlock> Store
         {

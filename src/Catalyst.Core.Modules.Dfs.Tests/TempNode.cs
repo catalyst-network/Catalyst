@@ -10,7 +10,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests
     ///   A temporary node has its own repository and listening address.
     ///   When it is disposed, the repository is deleted.
     /// </remarks>
-    class TempNode : IpfsEngine
+    class TempNode : Dfs
     {
         static int nodeNumber;
 

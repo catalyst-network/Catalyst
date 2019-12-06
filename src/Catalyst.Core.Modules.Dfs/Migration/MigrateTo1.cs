@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Core.Lib.FileSystem;
 using Lib.P2P;
 using MultiFormats;
@@ -21,7 +23,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
 
         public bool CanDowngrade => true;
 
-        public async Task DowngradeAsync(IpfsEngine ipfs, CancellationToken cancel = default(CancellationToken))
+        public async Task DowngradeAsync(IDfs ipfs, CancellationToken cancel = default(CancellationToken))
         {
             var path = Path.Combine(ipfs.Options.Repository.Folder, "pins");
             var folder = new DirectoryInfo(path);
@@ -34,7 +36,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
             {
                 Folder = path,
                 NameToKey = (cid) => cid.Hash.ToBase32(),
-                KeyToName = (key) => new MultiHash(key.FromBase32())
+                KeyToName = (key) => new MultiHash(Base32.FromBase32(key))
             };
 
             var files = folder.EnumerateFiles().Where(fi => fi.Length != 0);
@@ -51,7 +53,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
             }
         }
 
-        public async Task UpgradeAsync(IpfsEngine ipfs, CancellationToken cancel = default(CancellationToken))
+        public async Task UpgradeAsync(IDfs ipfs, CancellationToken cancel = default(CancellationToken))
         {
             var path = Path.Combine(ipfs.Options.Repository.Folder, "pins");
             var folder = new DirectoryInfo(path);
@@ -64,7 +66,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
             {
                 Folder = path,
                 NameToKey = (cid) => cid.Hash.ToBase32(),
-                KeyToName = (key) => new MultiHash(key.FromBase32())
+                KeyToName = (key) => new MultiHash(Base32.FromBase32(key))
             };
 
             var files = folder.EnumerateFiles().Where(fi => fi.Length == 0);

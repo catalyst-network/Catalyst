@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.FileSystem;
 using Common.Logging;

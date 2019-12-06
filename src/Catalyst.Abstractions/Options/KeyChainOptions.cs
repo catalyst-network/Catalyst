@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
 
-namespace Catalyst.Core.Modules.Keystore
+namespace Catalyst.Abstractions.Options
 {
     /// <summary>
-    ///   Configuration options for the <see cref="KeyChain"/>.
+    ///   Configuration options for the <see cref="Catalyst.Core.Modules.Keystore.KeyChain"/>.
     /// </summary>
-    /// <seealso cref="Options"/>
+    /// <seealso cref="Microsoft.Extensions.Options.Options"/>
     public class KeyChainOptions
     {
         /// <summary>

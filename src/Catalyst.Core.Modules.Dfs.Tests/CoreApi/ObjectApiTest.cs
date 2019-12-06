@@ -4,13 +4,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
-    [TestClass]
     public class ObjectApiTest
     {
-        IpfsEngine ipfs = TestFixture.Ipfs;
+        IDfs ipfs = TestFixture.Ipfs;
 
         [Fact]
         public async Task New_Template_Null()
@@ -122,7 +122,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             try
             {
                 var _ = await ipfs.Object.GetAsync(id, cs.Token);
-                Assert.Fail("Did not throw TaskCanceledException");
+                throw new XunitException("Did not throw TaskCanceledException");
             }
             catch (TaskCanceledException)
             {
