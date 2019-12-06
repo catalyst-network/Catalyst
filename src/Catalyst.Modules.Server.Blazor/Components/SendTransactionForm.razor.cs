@@ -45,5 +45,7 @@ namespace Catalyst.Modules.Server.Blazor.Components
 
         [Inject]
         public ITransactionReceivedEvent TransactionReceivedEvent { get; set; }
+
+        public void HandleValidSubmit() { }
     }
 }
