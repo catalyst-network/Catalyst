@@ -35,11 +35,11 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas

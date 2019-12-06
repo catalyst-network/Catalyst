@@ -28,9 +28,8 @@ using Catalyst.Cli.Options;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Rpc.Node;
+using MultiFormats;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Cli.Commands
 {

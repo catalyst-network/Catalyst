@@ -30,7 +30,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Dawn;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;

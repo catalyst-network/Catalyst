@@ -34,8 +34,8 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 

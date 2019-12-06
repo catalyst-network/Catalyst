@@ -13,6 +13,8 @@
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+        <ProjectReference Include="..\ipfs\net-ipfs-core\src\Catalyst.Ipfs.Core.csproj" />
+        <ProjectReference Include="..\ipfs\net-ipfs-engine\src\Catalyst.Ipfs.Engine.csproj" />
     </ItemGroup>
 
     <ItemGroup>

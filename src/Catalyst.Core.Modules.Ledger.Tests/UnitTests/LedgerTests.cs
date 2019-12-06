@@ -35,11 +35,12 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.TestUtils;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
+using MultiFormats.Registry;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Store;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using LedgerService = Catalyst.Core.Modules.Ledger.Ledger;
 

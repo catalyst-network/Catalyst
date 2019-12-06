@@ -29,10 +29,10 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

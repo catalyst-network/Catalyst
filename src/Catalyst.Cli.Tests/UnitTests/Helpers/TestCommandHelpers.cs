@@ -40,8 +40,8 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Google.Protobuf;
+using MultiFormats.Registry;
 using NSubstitute;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Cli.Tests.UnitTests.Helpers
 {

@@ -40,9 +40,9 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using FluentAssertions;
+using MultiFormats;
+using MultiFormats.Registry;
 using Nethermind.Dirichlet.Numerics;
-using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 

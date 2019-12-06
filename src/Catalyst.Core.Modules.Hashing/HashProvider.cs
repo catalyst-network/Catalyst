@@ -26,7 +26,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Hashing;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using MultiFormats;
+using MultiFormats.Registry;
 
 namespace Catalyst.Core.Modules.Hashing
 {

@@ -34,10 +34,10 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using LibP2P;
+using Lib.P2P;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers

@@ -25,8 +25,8 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using MultiFormats;
+using MultiFormats.Registry;
 using Xunit;
 using Xunit.Abstractions;
 

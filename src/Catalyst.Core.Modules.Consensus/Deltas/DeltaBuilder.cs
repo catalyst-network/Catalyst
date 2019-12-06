@@ -39,10 +39,10 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
+using Lib.P2P;
+using MultiFormats;
 using Nethermind.Dirichlet.Numerics;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

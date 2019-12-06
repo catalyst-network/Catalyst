@@ -14,5 +14,6 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+        <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
     </ItemGroup>
 </Project>

@@ -21,9 +21,8 @@
 
 #endregion
 
-using LibP2P;
-using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using Lib.P2P;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Util
 {

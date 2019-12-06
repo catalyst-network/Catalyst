@@ -13,9 +13,9 @@
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.5.0" />
-        <PackageReference Include="TheDotNetLeague.Ipfs.Abstractions" Version="0.0.1" />
-        <PackageReference Include="TheDotNetLeague.Ipfs.Core.Lib" Version="0.0.1" />
-        <PackageReference Include="TheDotNetLeague.MultiFormats.MultiHash" Version="0.0.2" />
+<!--        <PackageReference Include="TheDotNetLeague.Ipfs.Abstractions" Version="0.0.1" />-->
+<!--        <PackageReference Include="TheDotNetLeague.Ipfs.Core.Lib" Version="0.0.1" />-->
+<!--        <PackageReference Include="TheDotNetLeague.MultiFormats.MultiHash" Version="0.0.2" />-->
     </ItemGroup>
     <ItemGroup>
         <None Update="Config\*.json">

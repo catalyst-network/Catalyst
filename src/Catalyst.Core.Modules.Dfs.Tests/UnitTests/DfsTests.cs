@@ -25,17 +25,16 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
-using LibP2P;
+using Lib.P2P;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.Ipfs.Abstractions;
-using TheDotNetLeague.Ipfs.Core.Lib;
-using TheDotNetLeague.Ipfs.Core.Lib.CoreApi;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests

@@ -39,13 +39,13 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using Lib.P2P;
+using MultiFormats.Registry;
 using NSubstitute;
 using Polly;
 using Polly.Retry;
 using Serilog;
 using Xunit;
-using LibP2P;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {

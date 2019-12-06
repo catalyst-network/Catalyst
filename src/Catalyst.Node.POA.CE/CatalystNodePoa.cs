@@ -35,8 +35,8 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.DAO;
+using MultiFormats;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Node.POA.CE
 {

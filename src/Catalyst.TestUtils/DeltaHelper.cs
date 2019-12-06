@@ -29,8 +29,8 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
-using TheDotNetLeague.MultiFormats.MultiBase;
+using Lib.P2P;
+using MultiFormats;
 
 namespace Catalyst.TestUtils
 {

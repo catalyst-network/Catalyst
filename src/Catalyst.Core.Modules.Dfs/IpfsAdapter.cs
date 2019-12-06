@@ -26,18 +26,16 @@ using System.IO;
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Common.Logging;
 using Common.Logging.Serilog;
-using LibP2P;
-using LibP2P.Cryptography;
+using Lib.P2P.Cryptography;
+using MultiFormats;
 using Serilog;
-using TheDotNetLeague.Ipfs.Abstractions;
-using TheDotNetLeague.Ipfs.Core.Lib;
-using TheDotNetLeague.MultiFormats.MultiAddress;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Dfs
 {

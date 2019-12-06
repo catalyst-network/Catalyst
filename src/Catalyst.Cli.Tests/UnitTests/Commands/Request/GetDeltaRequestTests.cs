@@ -27,9 +27,9 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Request

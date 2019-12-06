@@ -32,7 +32,7 @@ using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
 using Dawn;
-using LibP2P;
+using Lib.P2P;
 using Nethermind.Core.Crypto;
 using Nethermind.Evm.Tracing;
 using Nethermind.Store;

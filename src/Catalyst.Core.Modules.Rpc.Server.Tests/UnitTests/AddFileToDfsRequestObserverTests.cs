@@ -41,10 +41,10 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 //@TODO should be in rpc module test

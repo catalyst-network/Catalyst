@@ -33,11 +33,11 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 

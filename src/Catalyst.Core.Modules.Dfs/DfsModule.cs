@@ -23,7 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.Dfs;
-using TheDotNetLeague.Ipfs.Core.Lib;
+using Catalyst.Abstractions.Dfs.CoreApi;
 
 namespace Catalyst.Core.Modules.Dfs
 {
