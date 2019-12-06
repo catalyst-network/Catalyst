@@ -51,19 +51,6 @@ namespace Catalyst.Protocol.Transaction
             return hasValidSignature;
         }
 
-        // // add to proto
-        // /// <summary>
-        // /// Gas limit for the entry expressed in gas units.
-        // /// </summary>
-        // public ulong GasLimit { get; set; }
-        //
-        // // add to proto
-        // /// <summary>
-        // /// Gas price to use as a multiplier of gas cost expressed in units
-        // /// to arrive at the total gas cost expressed in ETH.
-        // /// </summary>
-        // public UInt256 GasPrice { get; set; }
-
         /// <summary>bytes
         /// If this is an entry that is about to deploy a smart contract then <value>true</value>,
         /// otherwise <value>false</value>.

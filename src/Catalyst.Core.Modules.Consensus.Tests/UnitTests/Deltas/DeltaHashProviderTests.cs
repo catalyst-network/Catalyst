@@ -26,8 +26,8 @@ using System.Linq;
 using System.Reflection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
@@ -62,14 +62,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _deltaCache.GenesisHash.Returns(
-                CidHelper.CreateCid(_hashProvider.ComputeMultiHash(new Delta().ToByteArray())));
+                _hashProvider.ComputeMultiHash(new Delta().ToByteArray()).CreateCid());
         }
 
         [Fact]
         public void Generate_Genesis_Hash()
         {
             var emptyDelta = new Delta();
-            var hash = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(emptyDelta.ToByteArray()));
+            var hash = _hashProvider.ComputeMultiHash(emptyDelta.ToByteArray()).CreateCid();
 
             Output.WriteLine(hash);
         }

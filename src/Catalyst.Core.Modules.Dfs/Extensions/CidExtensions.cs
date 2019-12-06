@@ -25,17 +25,17 @@ using LibP2P;
 using TheDotNetLeague.MultiFormats.MultiBase;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Core.Lib.Util
+namespace Catalyst.Core.Modules.Dfs.Extensions
 {
-    public static class CidHelper
+    public static class CidExtensions
     {
-        public static readonly string Encoding = "base32";
+        private static readonly string Encoding = "base32";
 
-        public static Cid CreateCid(MultiHash multiHash)
+        public static Cid CreateCid(this MultiHash multiHash)
         {
             return new Cid {Version = 1, Hash = multiHash, ContentType = "raw", Encoding = Encoding};
         }
 
-        public static Cid Cast(byte[] cid) { return Cid.Decode(MultiBase.Encode(cid, Encoding)); }
+        public static Cid ToCid(this byte[] cid) { return Cid.Decode(MultiBase.Encode(cid, Encoding)); }
     }
 }

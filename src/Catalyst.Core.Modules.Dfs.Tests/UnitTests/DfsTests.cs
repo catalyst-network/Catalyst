@@ -26,7 +26,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
 using LibP2P;
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             _ipfsEngine.FileSystem.Returns(fileSystem);
 
             var logger = Substitute.For<ILogger>();
-            _expectedCid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("data"));
+            _expectedCid = _hashProvider.ComputeUtf8MultiHash("data").CreateCid();
 
             _addedRecord = Substitute.For<IFileSystemNode>();
             _addedRecord.Id.ReturnsForAnyArgs(_expectedCid);
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadAsync_Should_Rely_On_IpfsEngine_And_Return_Streamed_Content()
         {
-            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
+            var cid = _hashProvider.ComputeUtf8MultiHash("file").CreateCid();
             _ipfsEngine.FileSystem
                .ReadFileAsync(cid.Encode(), Arg.Any<CancellationToken>())
                .Returns(c => "the content".ToMemoryStream());
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadTextAsync_Should_Rely_On_IpfsEngine_And_Return_Text_Content()
         {
-            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
+            var cid = _hashProvider.ComputeUtf8MultiHash("file").CreateCid();
             _ipfsEngine.FileSystem
                .ReadAllTextAsync(cid.Encode(), Arg.Any<CancellationToken>())
                .Returns(c => "the other content");

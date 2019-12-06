@@ -30,6 +30,7 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
@@ -169,8 +170,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             {
                 var producers = "abc".Select(c => PeerIdHelper.GetPeerId(c.ToString()))
                    .ToArray();
-                var hashProduced = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("newHash"));
-                var previousHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("prevHash"));
+                var hashProduced = _hashProvider.ComputeUtf8MultiHash("newHash").CreateCid();
+                var previousHash = _hashProvider.ComputeUtf8MultiHash("prevHash").CreateCid();
                 var candidates = producers.Select((p, i) =>
                     DeltaHelper.GetCandidateDelta(_hashProvider, previousHash, hashProduced, producers[i])
                 ).ToArray();
@@ -211,8 +212,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             {
                 var producers = "ab".Select(c => PeerIdHelper.GetPeerId(c.ToString()))
                    .ToArray();
-                var previousHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousHash"));
-                var newHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("newHash"));
+                var previousHash = _hashProvider.ComputeUtf8MultiHash("previousHash").CreateCid();
+                var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").CreateCid();
                 var candidates = producers.Select((p, i) =>
                     DeltaHelper.GetCandidateDelta(_hashProvider, previousHash, newHash, producers[i])
                 ).ToArray();
@@ -253,7 +254,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _logger);
 
-            var previousHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previous"));
+            var previousHash = _hashProvider.ComputeUtf8MultiHash("previous").CreateCid();
 
             var popular = elector.GetMostPopularCandidateDelta(previousHash);
 

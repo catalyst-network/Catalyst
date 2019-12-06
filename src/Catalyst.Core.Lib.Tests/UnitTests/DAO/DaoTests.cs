@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Net;
 using System.Text;
 using Catalyst.Abstractions.DAO;
@@ -33,6 +32,7 @@ using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Deltas;
@@ -54,7 +54,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
     public class DaoTests
     {
-        private readonly IMapperInitializer[] _initialisers;
         private readonly HashProvider _hashProvider;
         private readonly MapperProvider _mapperProvider;
 
@@ -62,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
-            _initialisers = new IMapperInitializer[]
+            var initialisers = new IMapperInitializer[]
             {
                 new ProtocolMessageMapperInitialiser(),
                 new ConfidentialEntryMapperInitialiser(),
@@ -81,11 +80,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new SignatureMapperInitialiser()
             };
 
-            _mapperProvider = new MapperProvider(_initialisers);
+            _mapperProvider = new MapperProvider(initialisers);
         }
-
-        // ReSharper disable once UnusedMember.Local
-        private TDao GetMapper<TDao>() where TDao : IMapperInitializer { return _initialisers.OfType<TDao>().First(); }
 
         [Fact]
         public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
@@ -182,9 +178,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new CandidateDeltaBroadcast
             {
-                Hash = MultiBase.Decode(CidHelper.CreateCid(hash)).ToByteString(),
+                Hash = MultiBase.Decode(hash.CreateCid()).ToByteString(),
                 ProducerId = PeerIdHelper.GetPeerId("test"),
-                PreviousDeltaDfsHash = MultiBase.Decode(CidHelper.CreateCid(previousHash)).ToByteString()
+                PreviousDeltaDfsHash = MultiBase.Decode(previousHash.CreateCid()).ToByteString()
             };
 
             var candidateDeltaBroadcast =
@@ -198,9 +194,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         [Fact]
         public void DeltaDfsHashBroadcastDao_DeltaDfsHashBroadcast_Should_Be_Convertible()
         {
-            var hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("this hash")));
+            var hash = MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("this hash").CreateCid());
             var previousDfsHash =
-                MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("previousDfsHash")));
+                MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("previousDfsHash").CreateCid());
 
             var original = new DeltaDfsHashBroadcast
             {

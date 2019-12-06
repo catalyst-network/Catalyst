@@ -112,7 +112,9 @@ namespace Catalyst.Core.Modules.Kvm
                     : GasCostOf.TxDataNonZero;
                 var length = entry.Data.Length;
                 for (var i = 0; i < length; i++)
+                {
                     result += entry.Data[i] == 0 ? GasCostOf.TxDataZero : (ulong) txDataNonZeroGasCost;
+                }
             }
 
             if (entry.IsValidDeploymentEntry && releaseSpec.IsEip2Enabled)
@@ -143,7 +145,10 @@ namespace Catalyst.Core.Modules.Kvm
 
         private Address GetAccountAddress(ByteString publicKeyByteString)
         {
-            if (publicKeyByteString == null || publicKeyByteString.IsEmpty) return null;
+            if (publicKeyByteString == null || publicKeyByteString.IsEmpty)
+            {
+                return null;
+            }
 
             var publicKey = _cryptoContext.GetPublicKeyFromBytes(publicKeyByteString.ToByteArray());
             return publicKey.ToKvmAddress();
