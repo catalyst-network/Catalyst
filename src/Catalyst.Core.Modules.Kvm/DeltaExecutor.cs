@@ -409,9 +409,9 @@ namespace Catalyst.Core.Modules.Kvm
 
         private (Address sender, Address recipient) ExtractSenderAndRecipient(PublicEntry entry)
         {
-            var sender = GetAccountAddress(entry.Base.SenderPublicKey);
+            var sender = GetAccountAddress(entry.SenderAddress);
             var recipient = entry.TargetContract == null
-                ? GetAccountAddress(entry.Base.ReceiverPublicKey)
+                ? GetAccountAddress(entry.ReceiverAddress)
                 : new Address(entry.TargetContract);
             if (entry.IsValidDeploymentEntry)
             {
@@ -499,13 +499,13 @@ namespace Catalyst.Core.Modules.Kvm
 
         private bool ValidateNonce(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
-            if (entry.Base.Nonce == _stateProvider.GetNonce(env.Sender))
+            if (entry.Nonce == _stateProvider.GetNonce(env.Sender))
             {
                 return true;
             }
 
             TraceLogInvalidTx(entry,
-                $"WRONG_TRANSACTION_NONCE: {entry.Base.Nonce.ToString()} (expected {_stateProvider.GetNonce(env.Sender).ToString()})");
+                $"WRONG_TRANSACTION_NONCE: {entry.Nonce.ToString()} (expected {_stateProvider.GetNonce(env.Sender).ToString()})");
             QuickFail(entry, env, txTracer);
             return false;
         }

@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
         public void Hashes_messages()
         {
             var hashProvider = _container.Resolve<IHashProvider>();
-            var entry = new BaseEntry();
+            var entry = new PublicEntry();
 
             var arrayHash = hashProvider.ComputeMultiHash(entry.ToByteArray());
             var messageHash = hashProvider.ComputeMultiHash(entry);
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
         public void Hashes_messages_with_suffix()
         {
             var hashProvider = _container.Resolve<IHashProvider>();
-            var entry = new BaseEntry();
+            var entry = new PublicEntry();
 
             var suffix = new byte[1];
 

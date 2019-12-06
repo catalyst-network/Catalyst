@@ -79,8 +79,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new PublicEntryMapperInitialiser(_hashProvider),
                 new ConfidentialEntryMapperInitialiser(),
                 new TransactionBroadcastMapperInitialiser(),
-                new SignatureMapperInitialiser(),
-                new BaseEntryMapperInitialiser()
+                new SignatureMapperInitialiser()
             };
 
             _mapperProvider = new MapperProvider(_initialisers);
@@ -161,21 +160,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var contextDao = original.ToDao<SigningContext, SigningContextDao>(_mapperProvider);
             var reconverted = contextDao.ToProtoBuff<SigningContextDao, SigningContext>(_mapperProvider);
-            reconverted.Should().Be(original);
-        }
-
-        [Fact]
-        public void BaseEntryDao_And_BaseEntry_Should_Be_Convertible()
-        {
-            var original = new BaseEntry
-            {
-                ReceiverPublicKey = "hello".ToUtf8ByteString(),
-                SenderPublicKey = "bye bye".ToUtf8ByteString(),
-                TransactionFees = UInt256.MaxValue.ToUint256ByteString()
-            };
-
-            var contextDao = original.ToDao<BaseEntry, BaseEntryDao>(_mapperProvider);
-            var reconverted = contextDao.ToProtoBuff<BaseEntryDao, BaseEntry>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
@@ -273,11 +257,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var original = new PublicEntry
             {
                 Amount = 8855274.ToUint256ByteString(),
-                Base = new BaseEntry
-                {
-                    SenderPublicKey = pubKeyBytes.ToByteString(),
-                    TransactionFees = UInt256.Zero.ToUint256ByteString()
-                },
+                SenderAddress = pubKeyBytes.ToByteString(),
+                TransactionFees = UInt256.Zero.ToUint256ByteString(),
                 Signature = new Signature
                 {
                     RawBytes = new byte[] {0x0}.ToByteString(),
@@ -289,11 +270,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var transactionEntryDao = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
 
-            transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
+            transactionEntryDao.SenderAddress.Should().Be(pubKeyBytes.KeyToString());
             transactionEntryDao.Amount.Should().Be(8855274.ToString());
 
             var reconverted = transactionEntryDao.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
-            reconverted.Base.TransactionFees.ToUInt256().Should().Be(UInt256.Zero);
+            reconverted.TransactionFees.ToUInt256().Should().Be(UInt256.Zero);
             reconverted.Should().Be(original);
         }
 
@@ -310,20 +291,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new ConfidentialEntry
             {
-                Base = new BaseEntry
-                {
-                    Nonce = ulong.MaxValue,
-                    SenderPublicKey = pubKeyBytes.ToByteString(),
-                    TransactionFees = UInt256.Zero.ToUint256ByteString()
-                },
+                Nonce = ulong.MaxValue,
+                SenderPublicKey = pubKeyBytes.ToByteString(),
+                TransactionFees = UInt256.Zero.ToUint256ByteString(),
                 PedersenCommitment = pedersenCommitBytes.ToByteString(),
                 RangeProof = rangeProof
             };
 
             var transactionEntryDao = original.ToDao<ConfidentialEntry, ConfidentialEntryDao>(_mapperProvider);
 
-            transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
-            transactionEntryDao.Base.Nonce.Should().Be(ulong.MaxValue);
+            transactionEntryDao.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
+            transactionEntryDao.Nonce.Should().Be(ulong.MaxValue);
             transactionEntryDao.PedersenCommitment.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
             transactionEntryDao.RangeProof.Should().Be(rangeProof.ToByteString().ToBase64());
 

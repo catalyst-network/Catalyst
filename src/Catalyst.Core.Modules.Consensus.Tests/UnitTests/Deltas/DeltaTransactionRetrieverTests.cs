@@ -119,8 +119,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 // just a sanity check to make sure that the order is not opposite of what was intended in
                 // TransactionComparerByFeeTimestampAndHash
-                retrievedTransactions[i - 1].Base.TransactionFees.ToUInt256().Should()
-                   .BeGreaterOrEqualTo(retrievedTransactions[i].Base.TransactionFees.ToUInt256());
+                retrievedTransactions[i - 1].TransactionFees.ToUInt256().Should()
+                   .BeGreaterOrEqualTo(retrievedTransactions[i].TransactionFees.ToUInt256());
             }
         }
     }
