@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Dfs.UnixFileSystem;
 using Common.Logging;
 using ICSharpCode.SharpZipLib.Tar;

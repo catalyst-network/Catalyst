@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Options;
 using Lib.P2P;
 
 namespace Catalyst.Abstractions.Dfs.CoreApi

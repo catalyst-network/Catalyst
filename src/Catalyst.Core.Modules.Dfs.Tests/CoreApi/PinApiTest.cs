@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Options;
 using FluentAssertions;
 using Lib.P2P;
 using MultiFormats;

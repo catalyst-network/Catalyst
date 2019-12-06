@@ -44,7 +44,4 @@
         <ProjectReference Include="..\Lib.P2P\Lib.P2P.csproj" />
         <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="UnixFileSystem" />
-    </ItemGroup>
 </Project>

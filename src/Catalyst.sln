@@ -192,14 +192,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiFormats", "MultiFormat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiFormats.Tests", "MultiFormats.Tests\MultiFormats.Tests.csproj", "{F6142130-599A-452E-92E9-348D0560E3E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Cli", "ipfs\net-ipfs-engine\Catalyst.Ipfs.Cli\Catalyst.Ipfs.Cli.csproj", "{D231200C-6D03-4A1E-A60E-D382E289B893}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Http.Server", "ipfs\net-ipfs-engine\Catalyst.Ipfs.Http.Server\Catalyst.Ipfs.Http.Server.csproj", "{1A57E586-2879-4136-A66D-CF9823FC640A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Http.Client", "ipfs\net-ipfs-http-client\src\Catalyst.Ipfs.Http.Client.csproj", "{E06CAF62-40C9-47AA-A60E-FB9595CE96E6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Ipfs.Http.Client.Tests", "ipfs\net-ipfs-http-client\test\Catalyst.Ipfs.Http.Client.Tests.csproj", "{7C48B5EA-2946-4D08-AC3B-C62AD2A820AF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -450,22 +442,6 @@ Global
 		{F6142130-599A-452E-92E9-348D0560E3E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6142130-599A-452E-92E9-348D0560E3E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6142130-599A-452E-92E9-348D0560E3E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D231200C-6D03-4A1E-A60E-D382E289B893}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D231200C-6D03-4A1E-A60E-D382E289B893}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D231200C-6D03-4A1E-A60E-D382E289B893}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D231200C-6D03-4A1E-A60E-D382E289B893}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1A57E586-2879-4136-A66D-CF9823FC640A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A57E586-2879-4136-A66D-CF9823FC640A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A57E586-2879-4136-A66D-CF9823FC640A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A57E586-2879-4136-A66D-CF9823FC640A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E06CAF62-40C9-47AA-A60E-FB9595CE96E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E06CAF62-40C9-47AA-A60E-FB9595CE96E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E06CAF62-40C9-47AA-A60E-FB9595CE96E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E06CAF62-40C9-47AA-A60E-FB9595CE96E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7C48B5EA-2946-4D08-AC3B-C62AD2A820AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C48B5EA-2946-4D08-AC3B-C62AD2A820AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C48B5EA-2946-4D08-AC3B-C62AD2A820AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C48B5EA-2946-4D08-AC3B-C62AD2A820AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

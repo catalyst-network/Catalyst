@@ -18,9 +18,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         byte[] blob = Encoding.UTF8.GetBytes("blorb");
 
         [Fact]
-        public void Put_Bytes()
+        public async Task Put_Bytes()
         {
-            var cid = ipfs.Block.PutAsync(blob).Result;
+            var cid = await ipfs.Block.PutAsync(blob);
             Assert.Equal(id, (string) cid);
 
             var data = ipfs.Block.GetAsync(cid).Result;

@@ -13,8 +13,8 @@
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
-        <ProjectReference Include="..\ipfs\net-ipfs-core\src\Catalyst.Ipfs.Core.csproj" />
-        <ProjectReference Include="..\ipfs\net-ipfs-engine\src\Catalyst.Ipfs.Engine.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
+        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -24,6 +24,7 @@
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" />
         <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
+        <PackageReference Include="PeterO.Cbor" Version="3.1.0" />
     </ItemGroup>
 
 </Project>

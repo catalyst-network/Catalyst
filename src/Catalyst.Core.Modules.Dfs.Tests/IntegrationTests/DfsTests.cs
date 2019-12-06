@@ -31,6 +31,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -59,7 +60,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                .Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 
             _logger = Substitute.For<ILogger>();
-            _ipfs = new Dfs();
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
+            _ipfs = new Dfs(hashProvider, testPasswordManager);
 
             // Starting IPFS takes a few seconds.  Do it here, so that individual
             // test times are not affected.
@@ -76,7 +79,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
 
             const string text = "good morning";
-            var dfs = new Dfs();
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
+            var dfs = new Dfs(hashProvider, testPasswordManager);
             var id = await dfs.FileSystem.AddTextAsync(text, cancel: cts.Token);
             var content = await dfs.FileSystem?.ReadAllTextAsync(id.Id, cts.Token);
 
@@ -93,7 +98,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 1, 2, 3
             };
             var ms = new MemoryStream(binary);
-            var dfs = new Dfs();
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
+            var dfs = new Dfs(hashProvider, testPasswordManager);
             var id = await dfs.FileSystem.AddAsync(ms, "", cancel: cts.Token);
             using (var stream = await dfs.FileSystem.ReadFileAsync(id.Id, cts.Token))
             {

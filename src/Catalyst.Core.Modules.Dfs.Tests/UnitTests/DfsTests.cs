@@ -27,9 +27,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Lib.P2P;
 using MultiFormats.Registry;
@@ -64,7 +67,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             _addedRecord.Id.ReturnsForAnyArgs(_expectedCid);
             _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(DelayInMs));
 
-            _dfs = new Dfs();
+            _dfs = new Dfs(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")), new PasswordManager(new TestPasswordReader(), new PasswordRegistry()));
         }
 
         [Fact]

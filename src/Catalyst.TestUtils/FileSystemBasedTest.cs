@@ -108,7 +108,7 @@ namespace Catalyst.TestUtils
 
         private IFileSystem GetFileSystemStub()
         {
-            var fileSystem = Substitute.ForPartsOf<FileSystem>();
+            var fileSystem = Substitute.For<IFileSystem>();
             fileSystem.GetCatalystDataDir().Returns(_testDirectory);
             return fileSystem;
         }

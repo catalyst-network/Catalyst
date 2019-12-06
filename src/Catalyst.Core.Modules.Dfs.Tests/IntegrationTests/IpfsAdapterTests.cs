@@ -26,8 +26,11 @@ using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -54,7 +57,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Constructor_should_read_seed_servers_addresses_from_peerSettings()
         {
-            using (var ipfs = new Dfs())
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
+            
+            using (var ipfs = new Dfs(hashProvider, testPasswordManager))
             {
                 ipfs.Options.Discovery.BootstrapPeers.Count().Should().NotBe(0);
             }
@@ -63,7 +69,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public void Constructor_should_read_a_password()
         {
-            using (new Dfs())
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
+            
+            using (var ipfs = new Dfs(hashProvider, testPasswordManager))
             {
                 _passwordManager.ReceivedWithAnyArgs(1)
                    .RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword);
@@ -74,7 +83,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Constructor_should_use_ipfs_subfolder()
         {
-            using (var ipfs = new Dfs())
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
+            
+            using (var ipfs = new Dfs(hashProvider, testPasswordManager))
             {
                 ipfs.Options.Repository.Folder.Should()
                    .Be(Path.Combine(FileSystem.GetCatalystDataDir().FullName, Constants.DfsDataSubDir));
@@ -85,7 +97,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Constructor_should_use_ipfs_private_network()
         {
-            using (var ipfs = new Dfs())
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
+            
+            using (var ipfs = new Dfs(hashProvider, testPasswordManager))
             {
                 ipfs.Options.Swarm.PrivateNetworkKey.Should().NotBeNull();
             }

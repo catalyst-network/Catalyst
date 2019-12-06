@@ -1,12 +1,13 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper.Configuration.Annotations;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Modules.Hashing;
+using Catalyst.TestUtils;
 using Lib.P2P.Cryptography;
 using MultiFormats;
+using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -152,8 +153,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 
         Dfs CreateNode()
         {
-            const string passphrase = "this is not a secure pass phrase";
-            var ipfs = new Dfs();
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
+            var ipfs = new Dfs(hashProvider, testPasswordManager);
             ipfs.Options.Repository.Folder = Path.Combine(Path.GetTempPath(), $"swarm-{nodeNumber++}");
             ipfs.Options.KeyChain.DefaultKeySize = 512;
             ipfs.Config.SetAsync(

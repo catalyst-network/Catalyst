@@ -1,6 +1,10 @@
 ﻿using System.IO;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Modules.Hashing;
+using Catalyst.TestUtils;
 using Common.Logging;
+using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -9,8 +13,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests
     public class TestFixture
     {
         const string passphrase = "this is not a secure pass phrase";
-        public static IDfs Ipfs = new Dfs();
-        public static IDfs IpfsOther = new Dfs();
+        public static IDfs Ipfs = new Dfs(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")), new PasswordManager(new TestPasswordReader(), new PasswordRegistry()));
+        public static IDfs IpfsOther = new Dfs(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")), new PasswordManager(new TestPasswordReader(), new PasswordRegistry()));
 
         static TestFixture()
         {

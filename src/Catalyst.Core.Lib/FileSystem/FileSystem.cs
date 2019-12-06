@@ -28,12 +28,11 @@ using System.Threading.Tasks;
 using Catalyst.Core.Lib.Config;
 using Polly;
 using Polly.Retry;
-using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
 namespace Catalyst.Core.Lib.FileSystem
 {
     // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-    public class FileSystem : System.IO.Abstractions.FileSystem, IFileSystem
+    public class FileSystem : System.IO.Abstractions.FileSystem, Catalyst.Abstractions.FileSystem.IFileSystem
     {
         // private readonly string _currentDataDirPointer;
         private string _dataDir;
@@ -118,8 +117,8 @@ namespace Catalyst.Core.Lib.FileSystem
         {
             return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
-
-        private static string GetUserHomeDir()
+        
+        public static string GetUserHomeDir()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }

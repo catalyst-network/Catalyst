@@ -44,7 +44,7 @@ namespace Catalyst.Abstractions.Dfs
     {
         bool IsStarted { get; }
 
-        MigrationManager MigrationManager { get; set; }
+        IMigrationManager MigrationManager { get; set; }
         
         /// <summary>
         ///   Provides access to the local peer.

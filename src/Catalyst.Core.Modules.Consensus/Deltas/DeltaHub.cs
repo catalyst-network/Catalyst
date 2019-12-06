@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IDfs _dfs;
         private readonly ILogger _logger;
 
-        protected virtual AsyncRetryPolicy<Cid> DfsRetryPolicy { get; }
+        protected virtual AsyncRetryPolicy<IFileSystemNode> DfsRetryPolicy { get; }
 
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerSettings peerSettings,
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _dfs = dfs;
             _logger = logger;
 
-            DfsRetryPolicy = Polly.Policy<Cid>.Handle<Exception>()
+            DfsRetryPolicy = Polly.Policy<IFileSystemNode>.Handle<Exception>()
                .WaitAndRetryAsync(4, retryAttempt =>
                     TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }

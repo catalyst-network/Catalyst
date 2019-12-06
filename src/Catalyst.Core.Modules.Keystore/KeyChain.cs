@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.FileSystem;
 using Common.Logging;
@@ -50,7 +51,7 @@ namespace Catalyst.Core.Modules.Keystore
                 if (store == null)
                 {
                     var options = new RepositoryOptions();
-                    var folder = Path.Combine(options.Folder, "keys");
+                    var folder = Path.Combine(Constants.KeyStoreDataSubDir, "keys");
                     if (!Directory.Exists(folder))
                         Directory.CreateDirectory(folder);
                     store = new FileStore<string, EncryptedKey>

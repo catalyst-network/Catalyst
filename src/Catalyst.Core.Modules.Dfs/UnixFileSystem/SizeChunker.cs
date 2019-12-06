@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Keystore;
 
 namespace Catalyst.Core.Modules.Dfs.UnixFileSystem

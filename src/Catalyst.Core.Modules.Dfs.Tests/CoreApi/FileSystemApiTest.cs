@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper.Configuration.Annotations;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Dfs.UnixFileSystem;
 using FluentAssertions;
 using ICSharpCode.SharpZipLib.Tar;

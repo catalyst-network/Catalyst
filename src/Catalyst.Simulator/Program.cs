@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.FileSystem;
@@ -51,7 +52,7 @@ namespace Catalyst.Simulator
             var fileSystem = new FileSystem();
             var userInput = new ConsoleUserInput();
             var consolePasswordReader = new ConsolePasswordReader(userOutput, userInput);
-            var certificateStore = new CertificateStore(fileSystem, new PasswordManager(consolePasswordReader, passwordRegistry));
+            var certificateStore = new CertificateStore((IFileSystem) fileSystem, new PasswordManager(consolePasswordReader, passwordRegistry));
             var certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
             var signingContext = new SigningContext {NetworkType = NetworkType.Devnet, SignatureType = SignatureType.ProtocolPeer};
 

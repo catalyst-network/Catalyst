@@ -121,7 +121,7 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<PasswordManager>().As<IPasswordManager>().SingleInstance();
 
             // Register FileSystem
-            builder.RegisterType<FileSystem.FileSystem>().As<IFileSystem>().SingleInstance();
+            builder.RegisterType<Catalyst.Core.Lib.FileSystem.FileSystem>().As<IFileSystem>().SingleInstance();
             
             // Register Rpc.IO.Messaging.Correlation
             builder.RegisterType<RpcMessageCorrelationManager>().As<IRpcMessageCorrelationManager>().SingleInstance();

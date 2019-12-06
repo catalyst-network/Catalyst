@@ -1,5 +1,6 @@
 ﻿using System;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Options;
 using MultiFormats;
 using Xunit;
 

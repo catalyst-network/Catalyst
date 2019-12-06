@@ -68,7 +68,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             {
                 var json = await ipfs.Config.GetAsync("Bootstrap", cancel);
                 if (json == null)
+                {
                     return new MultiAddress[0];
+                }
 
                 return json.Select(a => MultiAddress.TryCreate((string) a)).Where(a => a != null);
             }

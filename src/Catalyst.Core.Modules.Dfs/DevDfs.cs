@@ -29,10 +29,15 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Hashing;
+using Catalyst.TestUtils;
 using Dawn;
 using Lib.P2P;
+using MultiFormats.Registry;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -55,7 +60,7 @@ namespace Catalyst.Core.Modules.Dfs
 
         public DevDfs(IFileSystem fileSystem,
             IHashProvider hashProvider,
-            string baseFolder = null) : base()
+            string baseFolder = null) : base(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")), new PasswordManager(new TestPasswordReader(), new PasswordRegistry()))
         {
             Guard.Argument(hashProvider.HashingAlgorithm, nameof(hashProvider.HashingAlgorithm))
                .Require(h => h.DigestSize <= 159, h =>

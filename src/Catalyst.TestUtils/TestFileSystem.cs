@@ -41,7 +41,7 @@ namespace Catalyst.TestUtils
         public TestFileSystem(string rootPath)
         {
             var rootDirectory = new DirectoryInfo(rootPath);
-            _fileSystem = Substitute.ForPartsOf<FileSystem>();
+            _fileSystem = Substitute.ForPartsOf<IFileSystem>();
             _fileSystem.GetCatalystDataDir().Returns(rootDirectory);
             _retryPolicy = Policy.Handle<IOException>()
                .WaitAndRetry(5, i => TimeSpan.FromMilliseconds(500).Multiply(i));

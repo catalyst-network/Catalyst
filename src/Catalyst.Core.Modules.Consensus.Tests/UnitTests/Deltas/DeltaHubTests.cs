@@ -64,8 +64,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 IDfs dfs, 
                 ILogger logger) : base(broadcastManager, peerSettings, dfs, logger) { }
 
-            protected override AsyncRetryPolicy<Cid> DfsRetryPolicy =>
-                Polly.Policy<Cid>.Handle<Exception>()
+            protected override AsyncRetryPolicy<IFileSystemNode> DfsRetryPolicy =>
+                Polly.Policy<IFileSystemNode>.Handle<Exception>()
                    .WaitAndRetryAsync(4, retryAttempt => 
                         TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt)));
         }

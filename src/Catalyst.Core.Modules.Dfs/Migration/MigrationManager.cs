@@ -5,14 +5,16 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.Migration;
 using Common.Logging;
 
-namespace Catalyst.Abstractions.Dfs.Migration
+namespace Catalyst.Core.Modules.Dfs.Migration
 {
     /// <summary>
     ///   Allows migration of the repository. 
     /// </summary>
-    public class MigrationManager
+    public class MigrationManager : IMigrationManager
     {
         static ILog log = LogManager.GetLogger(typeof(MigrationManager));
 

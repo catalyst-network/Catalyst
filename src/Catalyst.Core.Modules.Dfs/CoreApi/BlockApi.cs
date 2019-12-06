@@ -192,6 +192,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 ContentType = contentType,
                 Hash = MultiHash.ComputeHash(data, multiHash)
             };
+            
             if (encoding != "base58btc")
             {
                 cid.Encoding = encoding;
@@ -203,7 +204,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 Id = cid,
                 Size = data.Length
             };
-            if (await Store.ExistsAsync(cid).ConfigureAwait(false))
+            if (await Store.ExistsAsync(cid, cancel).ConfigureAwait(false))
             {
                 log.DebugFormat("Block '{0}' already present", cid);
             }

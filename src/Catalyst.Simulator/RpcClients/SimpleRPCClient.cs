@@ -28,6 +28,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
@@ -90,7 +91,7 @@ namespace Catalyst.Simulator.RpcClients
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(signingContextProvider.NetworkType);
 
-            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, fileSystem, hashProvider, _logger);
+            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, (IFileSystem) fileSystem, hashProvider, _logger);
 
             var keyRegistry = new KeyRegistry();
             var keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);

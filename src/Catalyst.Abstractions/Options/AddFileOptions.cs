@@ -1,8 +1,9 @@
 ﻿using System;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
 using MultiFormats;
 
-namespace Catalyst.Abstractions.Dfs.CoreApi
+namespace Catalyst.Abstractions.Options
 {
     /// <summary>
     ///   The options when adding data to the IPFS file system.

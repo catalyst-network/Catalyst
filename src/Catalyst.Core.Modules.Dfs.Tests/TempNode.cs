@@ -1,5 +1,9 @@
 ﻿using System.IO;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Modules.Hashing;
+using Catalyst.TestUtils;
+using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
@@ -16,7 +20,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         static int nodeNumber;
 
         public TempNode()
-            : base()
+            : base(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")), new PasswordManager(new TestPasswordReader(), new PasswordRegistry()))
         {
             Options.Repository.Folder = Path.Combine(Path.GetTempPath(), $"ipfs-{nodeNumber++}");
             Options.KeyChain.DefaultKeyType = "ed25519";

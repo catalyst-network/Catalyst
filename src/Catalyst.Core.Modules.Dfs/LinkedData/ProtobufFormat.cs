@@ -22,7 +22,8 @@ namespace Catalyst.Core.Modules.Dfs.LinkedData
                 var links = node.Links
                    .Select(link => CBORObject.NewMap()
                        .Add("Cid", CBORObject.NewMap()
-                           .Add("/", link.Id.Encode()))
+                           .Add("/", link.Id.Encode())
+                        )
                        .Add("Name", link.Name)
                        .Add("Size", link.Size))
                    .ToArray();

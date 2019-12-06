@@ -1,6 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Modules.Hashing;
+using Catalyst.TestUtils;
+using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -58,8 +62,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests
 
         async Task<Dfs> CreateNode()
         {
-            const string passphrase = "this is not a secure pass phrase";
-            var ipfs = new Dfs();
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
+            var ipfs = new Dfs(hashProvider, testPasswordManager);
             ipfs.Options.Repository.Folder = Path.Combine(Path.GetTempPath(), "ipfs-ed255129-test");
             ipfs.Options.KeyChain.DefaultKeyType = "ed25519";
             await ipfs.Config.SetAsync(
