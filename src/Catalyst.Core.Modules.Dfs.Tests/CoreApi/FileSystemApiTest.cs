@@ -23,11 +23,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class FileSystemApiTest
     {
+        private readonly ITestOutputHelper _testOutputHelper;
         private IDfs ipfs;
 
-        public FileSystemApiTest(ITestOutputHelper output)
+        public FileSystemApiTest(ITestOutputHelper output, ITestOutputHelper testOutputHelper)
         {
-            ipfs = new TestFixture(output).Ipfs;      
+            _testOutputHelper = testOutputHelper;
+            ipfs = new TestFixture(output).Ipfs;
         }
         
         [Fact]
@@ -203,7 +205,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             stopWatch.Start();
             var node = ipfs.FileSystem.AddFileAsync(path).Result;
             stopWatch.Stop();
-            Console.WriteLine("Add file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
+            
+            // _testOutputHelper.WriteLine("Add file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
 
             Assert.Equal("QmeZkAUfUFPq5YWGBan2ZYNd9k59DD1xW62pGJrU3C6JRo", (string) node.Id);
 
@@ -230,7 +233,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             }
 
             stopWatch.Stop();
-            Console.WriteLine("Readfile file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
+            
+            // _testOutputHelper.WriteLine("Readfile file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
         }
 
         /// <seealso href="https://github.com/richardschneider/net-ipfs-engine/issues/125"/>
@@ -446,8 +450,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                 using (var data = await ipfs.FileSystem.ReadFileAsync(node.Id, offset))
                 using (var reader = new StreamReader(data))
                 {
-                    var s = reader.ReadToEnd();
-                    Assert.Equal(text.Substring(offset), s);
+                    var readData = reader.ReadToEnd();
+                    Assert.Equal(text.Substring(offset), readData);
                 }
             }
         }
@@ -469,9 +473,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                     using (var data = await ipfs.FileSystem.ReadFileAsync(node.Id, offset, length))
                     using (var reader = new StreamReader(data))
                     {
-                        var s = reader.ReadToEnd();
-                        text.Substring(offset, Math.Min(11 - offset, length)).Should().Contain(
-                            $"o={offset} l={length}");
+                        var readData = reader.ReadToEnd();
+                        Assert.Equal(text.Substring(offset, Math.Min(11 - offset, length)), readData);
                     }
                 }
             }
@@ -492,8 +495,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                 using (var data = await ipfs.FileSystem.ReadFileAsync(node.Id, 0, length))
                 using (var reader = new StreamReader(data))
                 {
-                    var s = reader.ReadToEnd();
-                    text.Substring(0, Math.Min(11, length)).Should().Contain($"l={length}");
+                    var readData = reader.ReadToEnd();
+                    Assert.Equal(text.Substring(0, Math.Min(11, length)), readData);
                 }
             }
         }
@@ -515,8 +518,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                     using (var data = await ipfs.FileSystem.ReadFileAsync(node.Id, offset, length))
                     using (var reader = new StreamReader(data))
                     {
-                        var s = reader.ReadToEnd();
-                        text.Substring(offset, Math.Min(11 - offset, length)).Should().Contain($"o={offset} l={length}");
+                        var readData = reader.ReadToEnd();
+                        Assert.Equal(text.Substring(offset, Math.Min(11 - offset, length)), readData);
                     }
                 }
             }
@@ -540,8 +543,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                     using (var data = await ipfs.FileSystem.ReadFileAsync(node.Id, offset, length))
                     using (var reader = new StreamReader(data))
                     {
-                        var s = reader.ReadToEnd();
-                        text.Substring(offset, Math.Min(11 - offset, length)).Should().Contain("o={offset} l={length}");
+                        var readData = reader.ReadToEnd();
+                        Assert.Equal(text.Substring(offset, Math.Min(11 - offset, length)), readData);
                     }
                 }
             }

@@ -544,7 +544,10 @@ namespace Lib.P2P
         /// <remarks>
         ///    Equivalent to <code>Cid.Encode()</code>
         /// </remarks>
-        public static implicit operator string(Cid id) { return id.Encode(); }
+        public static implicit operator string(Cid id)
+        {
+            return id.Encode();
+        }
 
         /// <summary>
         ///   Conversion of a <see cref="Cid"/> to and from JSON.

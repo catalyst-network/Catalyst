@@ -53,17 +53,20 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             var cid = new Cid
             {
                 ContentType = "raw",
-                Hash = MultiHash.ComputeHash(new byte[] {1, 2, 3}, "identity")
+                Hash = MultiHash.ComputeHash(new byte[]
+                {
+                    1, 2, 3
+                }, "identity")
             };
             var pins = await ipfs.Pin.AddAsync(cid, recursive: false);
-            pins.ToArray().Should().Contain(cid);
+            Assert.Contains(cid, pins.ToArray());
             var all = await ipfs.Pin.ListAsync();
-            all.ToArray().Should().Contain(cid);
+            Assert.Contains(cid, all.ToArray());
 
             var removals = await ipfs.Pin.RemoveAsync(cid, recursive: false);
-            removals.ToArray().Should().Contain(cid);
+            Assert.Contains(cid, removals.ToArray());
             all = await ipfs.Pin.ListAsync();
-            all.ToArray().Should().Contain(cid);
+            Assert.DoesNotContain(cid, all.ToArray());
         }
 
         [Fact]

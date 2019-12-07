@@ -475,7 +475,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <summary>
         ///   Send our want list to the connected peers.
         /// </summary>
-        async Task SendWantListToAllAsync(IEnumerable<WantedBlock> wants, bool full)
+        async Task SendWantListToAllAsync(IEnumerable<WantedBlock> wantedBlocks, bool full)
         {
             if (Swarm == null)
                 return;
@@ -484,7 +484,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
             {
                 var tasks = Swarm.KnownPeers
                    .Where(p => p.ConnectedAddress != null)
-                   .Select(p => SendWantListAsync(p, wants, full))
+                   .Select(p => SendWantListAsync(p, wantedBlocks, full))
                    .ToArray();
                 if (log.IsDebugEnabled)
                     log.Debug($"Spamming {tasks.Count()} connected peers");

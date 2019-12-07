@@ -31,11 +31,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests
 
                 Environment.SetEnvironmentVariable("HOME", $"{sep}home1");
                 var options = new RepositoryOptions();
-                Assert.Equal($"{sep}home1{sep}.csipfs", options.Folder);
+                Assert.Equal($"{sep}home1{sep}.catalyst", options.Folder);
 
                 Environment.SetEnvironmentVariable("HOME", $"{sep}home2{sep}");
                 options = new RepositoryOptions();
-                Assert.Equal($"{sep}home2{sep}.csipfs", options.Folder);
+                Assert.Equal($"{sep}home2{sep}.catalyst", options.Folder);
             }
             finally
             {
@@ -62,11 +62,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests
 
                 Environment.SetEnvironmentVariable("HOMEPATH", $"{sep}home1");
                 var options = new RepositoryOptions();
-                Assert.Equal($"{sep}home1{sep}.csipfs", options.Folder);
+                Assert.Equal($"{sep}home1{sep}.catalyst", options.Folder);
 
                 Environment.SetEnvironmentVariable("HOMEPATH", $"{sep}home2{sep}");
                 options = new RepositoryOptions();
-                Assert.Equal($"{sep}home2{sep}.csipfs", options.Folder);
+                Assert.Equal($"{sep}home2{sep}.catalyst", options.Folder);
             }
             finally
             {
