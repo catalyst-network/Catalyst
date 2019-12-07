@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                     if (w.Contains(block.Id))
                         break;
                 }
-
+                
                 cts.Cancel();
                 var wants = await ipfs.Bitswap.WantsAsync(cancel: cts.Token);
                 wants.ToArray().Should().NotContain(block.Id);

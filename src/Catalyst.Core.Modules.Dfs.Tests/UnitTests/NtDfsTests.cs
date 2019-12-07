@@ -57,6 +57,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             _fileSystem.GetCatalystDataDir()
                .Returns(new DirectoryInfo("correct-information"));
             _dfs = new DevDfs(_fileSystem, _hashProvider);
+            _dfs.StartAsync();
 
             _baseFolder = Path.Combine(_fileSystem.GetCatalystDataDir().FullName,
                 Constants.DfsDataSubDir);
