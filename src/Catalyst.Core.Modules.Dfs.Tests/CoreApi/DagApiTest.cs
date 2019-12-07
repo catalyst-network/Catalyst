@@ -6,14 +6,20 @@ using Catalyst.Abstractions.Dfs;
 using Lib.P2P;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class DagApiTest
     {
-        IDfs ipfs = TestFixture.Ipfs;
         byte[] blob = Encoding.UTF8.GetBytes("blorb");
         string blob64 = "YmxvcmI"; // base 64 encoded with no padding
+        private IDfs ipfs;
+
+        public DagApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
 
         [Fact]
         public async Task Get_Raw()

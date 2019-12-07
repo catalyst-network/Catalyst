@@ -16,16 +16,23 @@ using Lib.P2P;
 using Lib.P2P.Cryptography;
 using MultiFormats;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class FileSystemApiTest
     {
+        private IDfs ipfs;
+
+        public FileSystemApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
+        
         [Fact]
         public async Task AddText()
         {
-            var ipfs = TestFixture.Ipfs;
             var node = (FileSystemNode) await ipfs.FileSystem.AddTextAsync("hello world");
             Assert.Equal("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", (string) node.Id);
             Assert.Equal("", node.Name);
@@ -44,7 +51,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task AddEmptyText()
         {
-            var ipfs = TestFixture.Ipfs;
             var node = (FileSystemNode) await ipfs.FileSystem.AddTextAsync("");
             Assert.Equal("QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH", (string) node.Id);
             Assert.Equal("", node.Name);
@@ -64,7 +70,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task AddEmpty_Check_Object()
         {
             // see https://github.com/ipfs/js-ipfs-unixfs/pull/25
-            var ipfs = TestFixture.Ipfs;
             var node = await ipfs.FileSystem.AddTextAsync("");
             var block = await ipfs.Object.GetAsync(node.Id);
             var expected = new byte[] {0x08, 0x02, 0x18, 0x00};
@@ -75,7 +80,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task AddDuplicateWithPin()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 Pin = true
@@ -96,7 +100,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Add_SizeChunking()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 ChunkSize = 3
@@ -119,7 +122,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task StreamBehaviour()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 ChunkSize = 3,
@@ -136,7 +138,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Add_HashAlgorithm()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 Hash = "blake2b-256",
@@ -156,7 +157,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             File.WriteAllText(path, "hello world");
             try
             {
-                var ipfs = TestFixture.Ipfs;
                 var node = (FileSystemNode) ipfs.FileSystem.AddFileAsync(path).Result;
                 Assert.Equal("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", (string) node.Id);
                 Assert.Equal(0, node.Links.Count());
@@ -175,7 +175,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             File.WriteAllText(path, "hello world");
             try
             {
-                var ipfs = TestFixture.Ipfs;
                 var options = new AddFileOptions
                 {
                     Encoding = "base32"
@@ -200,7 +199,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             AddFile(); // warm up
 
             var path = "star_trails.mp4";
-            var ipfs = TestFixture.Ipfs;
             var stopWatch = new Stopwatch();
             stopWatch.Start();
             var node = ipfs.FileSystem.AddFileAsync(path).Result;
@@ -242,7 +240,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             AddFile(); // warm up
 
             var path = "starx2.mp4";
-            var ipfs = TestFixture.Ipfs;
             var stopWatch = new Stopwatch();
             stopWatch.Start();
             var node = ipfs.FileSystem.AddFileAsync(path).Result;
@@ -284,7 +281,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             File.WriteAllText(path, "hello world");
             try
             {
-                var ipfs = TestFixture.Ipfs;
                 var options = new AddFileOptions
                 {
                     Wrap = true
@@ -306,7 +302,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Add_Raw()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 RawLeaves = true
@@ -324,7 +319,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Add_Inline()
         {
-            var ipfs = TestFixture.Ipfs;
             var original = ipfs.Options.Block.AllowInlineCid;
             try
             {
@@ -349,7 +343,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Add_RawAndChunked()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 RawLeaves = true,
@@ -372,7 +365,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Add_Protected()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 ProtectionKey = "self"
@@ -389,7 +381,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Add_Protected_Chunked()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 ProtectionKey = "self",
@@ -406,7 +397,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Add_OnlyHash()
         {
-            var ipfs = TestFixture.Ipfs;
             var nodes = new string[]
             {
                 "QmVVZXWrYzATQdsKWM4knbuH5dgHFmrRqW3nJfDgdWrBjn",
@@ -445,7 +435,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task ReadWithOffset()
         {
             var text = "hello world";
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 ChunkSize = 3
@@ -467,7 +456,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task Read_RawWithLength()
         {
             var text = "hello world";
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 RawLeaves = true
@@ -493,7 +481,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task Read_ChunkedWithLength()
         {
             var text = "hello world";
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 ChunkSize = 3
@@ -515,7 +502,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task Read_ProtectedWithLength()
         {
             var text = "hello world";
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 ProtectionKey = "self"
@@ -540,7 +526,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task Read_ProtectedChunkedWithLength()
         {
             var text = "hello world";
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 ChunkSize = 3,
@@ -566,7 +551,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task Read_ProtectedMissingKey()
         {
             var text = "hello world";
-            var ipfs = TestFixture.Ipfs;
             var key = await ipfs.Key.CreateAsync("alice", "rsa", 512);
             try
             {
@@ -593,7 +577,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             File.WriteAllText(path, "hello world");
             try
             {
-                var ipfs = TestFixture.Ipfs;
                 TransferProgress lastProgress = null;
                 var options = new AddFileOptions
                 {
@@ -622,7 +605,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public void AddDirectory()
         {
-            var ipfs = TestFixture.Ipfs;
             var temp = MakeTemp();
             try
             {
@@ -649,7 +631,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public void AddDirectoryRecursive()
         {
-            var ipfs = TestFixture.Ipfs;
             var temp = MakeTemp();
             try
             {
@@ -691,7 +672,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public void AddDirectory_WithHashAlgorithm()
         {
-            var ipfs = TestFixture.Ipfs;
             var alg = "keccak-512";
             var options = new AddFileOptions {Hash = alg};
             var temp = MakeTemp();
@@ -715,7 +695,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public void AddDirectory_WithCidEncoding()
         {
-            var ipfs = TestFixture.Ipfs;
             var encoding = "base32z";
             var options = new AddFileOptions {Encoding = encoding};
             var temp = MakeTemp();
@@ -739,7 +718,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task AddDirectoryRecursive_ObjectLinks()
         {
-            var ipfs = TestFixture.Ipfs;
             var temp = MakeTemp();
             try
             {
@@ -841,7 +819,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task GetTar()
         {
-            var ipfs = TestFixture.Ipfs;
             var temp = MakeTemp();
             try
             {
@@ -871,7 +848,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task GetTar_RawLeaves()
         {
-            var ipfs = TestFixture.Ipfs;
             var temp = MakeTemp();
             try
             {
@@ -905,7 +881,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task GetTar_EmptyDirectory()
         {
-            var ipfs = TestFixture.Ipfs;
             var temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(temp);
             try
@@ -925,7 +900,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Isssue108()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 Hash = "blake2b-256",
@@ -941,7 +915,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Read_SameFile_DifferentCids()
         {
-            var ipfs = TestFixture.Ipfs;
             var text = "\"hello world\" \r\n";
             var node = await ipfs.FileSystem.AddTextAsync(text);
             var cids = new Cid[]

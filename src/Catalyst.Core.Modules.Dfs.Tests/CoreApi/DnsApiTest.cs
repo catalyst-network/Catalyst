@@ -2,12 +2,18 @@
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class DnsApiTest
     {
-        IDfs ipfs = TestFixture.Ipfs;
+        private IDfs ipfs;
+
+        public DnsApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
 
         [Fact]
         public async Task Resolve()
@@ -29,7 +35,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task Resolve_Recursive()
         {
             var path = await ipfs.Dns.ResolveAsync("ipfs.io", true);
-            Assert.StartsWith(path, "/ipfs/");
+            Assert.StartsWith("/ipfs/", path);
         }
     }
 }

@@ -8,15 +8,21 @@ using Catalyst.Abstractions.Dfs;
 using Lib.P2P;
 using MultiFormats;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class BlockApiTest
     {
-        IDfs ipfs = TestFixture.Ipfs;
+        private IDfs ipfs;
         string id = "QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
         byte[] blob = Encoding.UTF8.GetBytes("blorb");
 
+        public BlockApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;    
+        }
+        
         [Fact]
         public async Task Put_Bytes()
         {
@@ -236,23 +242,34 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Put_Informs_Bitswap()
         {
-            var data = Guid.NewGuid().ToByteArray();
-            var cid = new Cid {Hash = MultiHash.ComputeHash(data)};
-            var wantTask = ipfs.Bitswap.GetAsync(cid);
+            await ipfs.StartAsync();
 
-            var cid1 = await ipfs.Block.PutAsync(data);
-            Assert.Equal(cid, cid1);
-            Assert.True(wantTask.IsCompleted);
-            Assert.Equal(cid, wantTask.Result.Id);
-            Assert.Equal(data.Length, wantTask.Result.Size);
-            Assert.Equal(data, wantTask.Result.DataBytes);
+            try
+            {
+                var data = Guid.NewGuid().ToByteArray();
+                var cid = new Cid
+                {
+                    Hash = MultiHash.ComputeHash(data)
+                };
+
+                var wantTask = ipfs.Bitswap.GetAsync(cid);
+
+                var cid1 = await ipfs.Block.PutAsync(data);
+                Assert.Equal(cid, cid1);
+                Assert.Equal(cid, wantTask.Result.Id);
+                Assert.Equal(data.Length, wantTask.Result.Size);
+                Assert.Equal(data, wantTask.Result.DataBytes);
+            }
+            finally
+            {
+                await ipfs.StopAsync();
+            }
         }
 
         [Fact]
         public async Task Put_Informs_Dht()
         {
             var data = Guid.NewGuid().ToByteArray();
-            var ipfs = TestFixture.Ipfs;
             await ipfs.StartAsync();
             try
             {

@@ -204,6 +204,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 Id = cid,
                 Size = data.Length
             };
+            
             if (await Store.ExistsAsync(cid, cancel).ConfigureAwait(false))
             {
                 log.DebugFormat("Block '{0}' already present", cid);

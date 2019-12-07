@@ -576,7 +576,7 @@ namespace Catalyst.Core.Modules.Dfs
                 {
                     if (_keyChain == null)
                     {
-                        _keyChain = new KeyChain
+                        _keyChain = new KeyChain(Options.Repository.Folder)
                         {
                             Options = Options.KeyChain
                         };

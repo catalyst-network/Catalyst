@@ -25,7 +25,7 @@ namespace Catalyst.Abstractions.Options
                 Folder = Path.Combine(
                     Environment.GetEnvironmentVariable("HOME") ??
                     Environment.GetEnvironmentVariable("HOMEPATH"),
-                    ".csipfs");
+                    ".catalyst");
             }
         }
 

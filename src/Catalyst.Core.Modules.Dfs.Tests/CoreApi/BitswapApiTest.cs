@@ -12,13 +12,20 @@ using FluentAssertions;
 using Lib.P2P;
 using MultiFormats;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class BitswapApiTest
     {
-        IDfs ipfs = TestFixture.Ipfs;
-        IDfs ipfsOther = TestFixture.IpfsOther;
+        private IDfs ipfs;
+        private IDfs ipfsOther;
+        
+        public BitswapApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;
+            ipfsOther = new TestFixture(output).IpfsOther;       
+        }
 
         [Fact]
         public async Task Wants()
@@ -34,15 +41,18 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
                 while (true)
                 {
                     if (DateTime.Now > endTime)
+                    {
                         throw new Xunit.Sdk.XunitException("wanted block is missing");
+                    }
+                    
                     await Task.Delay(100);
-                    var w = await ipfs.Bitswap.WantsAsync();
+                    var w = await ipfs.Bitswap.WantsAsync(cancel: cts.Token);
                     if (w.Contains(block.Id))
                         break;
                 }
 
                 cts.Cancel();
-                var wants = await ipfs.Bitswap.WantsAsync();
+                var wants = await ipfs.Bitswap.WantsAsync(cancel: cts.Token);
                 wants.ToArray().Should().NotContain(block.Id);
                 Assert.True(wantTask.IsCanceled);
             }
@@ -58,30 +68,36 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
             await ipfs.StartAsync();
             try
             {
+                var cts = new CancellationTokenSource();
                 var block = new DagNode(Encoding.UTF8.GetBytes("BitswapApiTest unknown block 2"));
-                Task wantTask = ipfs.Bitswap.GetAsync(block.Id);
+                Task wantTask = ipfs.Bitswap.GetAsync(block.Id, cts.Token);
 
                 var endTime = DateTime.Now.AddSeconds(10);
                 while (true)
                 {
                     if (DateTime.Now > endTime)
+                    {
                         throw new Xunit.Sdk.XunitException("wanted block is missing");
+                    }
 
-                    // Assert.Fail("wanted block is missing");
-                    await Task.Delay(100);
-                    var w = await ipfs.Bitswap.WantsAsync();
+                    await Task.Delay(100, cts.Token);
+                    var w = await ipfs.Bitswap.WantsAsync(cancel: cts.Token);
                     if (w.Contains(block.Id))
+                    {
                         break;
+                    }
                 }
 
-                await ipfs.Bitswap.UnwantAsync(block.Id);
-                var wants = await ipfs.Bitswap.WantsAsync();
+                await ipfs.Bitswap.UnwantAsync(block.Id, cts.Token);
+                var wants = await ipfs.Bitswap.WantsAsync(cancel: cts.Token);
                 wants.ToArray().Should().NotContain(block.Id);
                 Assert.True(wantTask.IsCanceled);
             }
             finally
             {
                 await ipfs.StopAsync();
+
+                ipfs.Options.Discovery = new DiscoveryOptions();
             }
         }
 

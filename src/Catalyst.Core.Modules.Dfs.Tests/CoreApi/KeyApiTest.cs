@@ -2,25 +2,32 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Lib.P2P;
 using Org.BouncyCastle.Crypto.Parameters;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class KeyApiTest
     {
+        private IDfs ipfs;
+
+        public KeyApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
+        
         [Fact]
         public void Api_Exists()
         {
-            var ipfs = TestFixture.Ipfs;
             Assert.NotNull(ipfs.Key);
         }
 
         [Fact]
         public async Task Self_Key_Exists()
         {
-            var ipfs = TestFixture.Ipfs;
             var keys = await ipfs.Key.ListAsync();
             var self = keys.Single(k => k.Name == "self");
             var me = await ipfs.Generic.IdAsync();
@@ -32,9 +39,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task Export_Import()
         {
             var password = "password".ToCharArray();
-            var ipfs = TestFixture.Ipfs;
             var pem = await ipfs.Key.ExportAsync("self", password);
-            Assert.StartsWith(pem, "-----BEGIN ENCRYPTED PRIVATE KEY-----");
+            Assert.StartsWith("-----BEGIN ENCRYPTED PRIVATE KEY-----", pem);
 
             var keys = await ipfs.Key.ListAsync();
             var self = keys.Single(k => k.Name == "self");
@@ -49,7 +55,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public void Export_Unknown_Key()
         {
             var password = "password".ToCharArray();
-            var ipfs = TestFixture.Ipfs;
             ExceptionAssert.Throws<Exception>(() =>
             {
                 var x = ipfs.Key.ExportAsync("unknow", password).Result;
@@ -60,7 +65,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task Import_Wrong_Password()
         {
             var password = "password".ToCharArray();
-            var ipfs = TestFixture.Ipfs;
             var pem = await ipfs.Key.ExportAsync("self", password);
 
             var wrong = "wrong password".ToCharArray();
@@ -107,7 +111,6 @@ Rw==
             var spki =
                 "CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCfBYU9c0n28u02N/XCJY8yIsRqRVO5Zw+6kDHCremt2flHT4AaWnwGLAG9YyQJbRTvWN9nW2LK7Pv3uoIlvUSTnZEP0SXB5oZeqtxUdi6tuvcyqTIfsUSanLQucYITq8Qw3IMBzk+KpWNm98g9A/Xy30MkUS8mrBIO9pHmIZa55fvclDkTvLxjnGWA2avaBfJvHgMSTu0D2CQcmJrvwyKMhLCSIbQewZd2V7vc6gtxbRovKlrIwDTmDBXbfjbLljOuzg2yBLyYxXlozO9blpttbnOpU4kTspUVJXglmjsv7YSIJS3UKt3544l/srHbqlwC5CgOgjlwNfYPadO8kmBfAgMBAAE=";
             var password = "password".ToCharArray();
-            var ipfs = TestFixture.Ipfs;
 
             await ipfs.Key.RemoveAsync("jsipfs");
             var key = await ipfs.Key.ImportAsync("jsipfs", pem, password);
@@ -124,7 +127,6 @@ Rw==
         {
             string pem = @"this is not PEM";
             var password = "password".ToCharArray();
-            var ipfs = TestFixture.Ipfs;
             ExceptionAssert.Throws<InvalidDataException>(() =>
             {
                 var x = ipfs.Key.ImportAsync("bad", pem, password).Result;
@@ -139,7 +141,6 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
 -----END ENCRYPTED PRIVATE KEY-----
 ";
             var password = "password".ToCharArray();
-            var ipfs = TestFixture.Ipfs;
             ExceptionAssert.Throws<Exception>(() =>
             {
                 var x = ipfs.Key.ImportAsync("bad", pem, password).Result;
@@ -150,7 +151,6 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
         public async Task Create_RSA_Key()
         {
             var name = "net-engine-test-create";
-            var ipfs = TestFixture.Ipfs;
             var key = await ipfs.Key.CreateAsync(name, "rsa", 512);
             try
             {
@@ -173,7 +173,6 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
         public async Task Create_Bitcoin_Key()
         {
             var name = "test-bitcoin";
-            var ipfs = TestFixture.Ipfs;
             var key = await ipfs.Key.CreateAsync(name, "secp256k1", 0);
             try
             {
@@ -218,7 +217,6 @@ MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgdLWY3WZqWESiYl+yrDuc
 IyIjAQyiOZZ5e8ozKAp5QFjQ/StM1uInn0v7Oi3vQRfbOOXcLXJL
 -----END PRIVATE KEY-----
 ";
-            var ipfs = TestFixture.Ipfs;
 
             await ipfs.Key.RemoveAsync("ob1");
             var key = await ipfs.Key.ImportAsync("ob1", pem);
@@ -234,7 +232,6 @@ IyIjAQyiOZZ5e8ozKAp5QFjQ/StM1uInn0v7Oi3vQRfbOOXcLXJL
         public async Task Remove_Key()
         {
             var name = "net-engine-test-remove";
-            var ipfs = TestFixture.Ipfs;
             var key = await ipfs.Key.CreateAsync(name, "secp256k1", 0);
             var keys = await ipfs.Key.ListAsync();
             var clone = keys.Single(k => k.Name == name);
@@ -254,7 +251,6 @@ IyIjAQyiOZZ5e8ozKAp5QFjQ/StM1uInn0v7Oi3vQRfbOOXcLXJL
         {
             var name = "net-engine-test-rename0";
             var newName = "net-engine-test-rename1";
-            var ipfs = TestFixture.Ipfs;
 
             await ipfs.Key.RemoveAsync(name);
             await ipfs.Key.RemoveAsync(newName);
@@ -272,7 +268,6 @@ IyIjAQyiOZZ5e8ozKAp5QFjQ/StM1uInn0v7Oi3vQRfbOOXcLXJL
         public async Task Remove_Unknown_Key()
         {
             var name = "net-engine-test-remove-unknown";
-            var ipfs = TestFixture.Ipfs;
 
             var removed = await ipfs.Key.RemoveAsync(name);
             Assert.Null(removed);
@@ -282,7 +277,6 @@ IyIjAQyiOZZ5e8ozKAp5QFjQ/StM1uInn0v7Oi3vQRfbOOXcLXJL
         public async Task Rename_Unknown_Key()
         {
             var name = "net-engine-test-rename-unknown";
-            var ipfs = TestFixture.Ipfs;
 
             var renamed = await ipfs.Key.RenameAsync(name, "foobar");
             Assert.Null(renamed);
@@ -291,8 +285,6 @@ IyIjAQyiOZZ5e8ozKAp5QFjQ/StM1uInn0v7Oi3vQRfbOOXcLXJL
         [Fact]
         public void Create_Unknown_KeyType()
         {
-            var ipfs = TestFixture.Ipfs;
-
             ExceptionAssert.Throws<Exception>(() =>
             {
                 var _ = ipfs.Key.CreateAsync("unknown", "unknown", 0).Result;
@@ -303,7 +295,6 @@ IyIjAQyiOZZ5e8ozKAp5QFjQ/StM1uInn0v7Oi3vQRfbOOXcLXJL
         public async Task UnsafeKeyName()
         {
             var name = "../../../../../../../foo.key";
-            var ipfs = TestFixture.Ipfs;
             var key = await ipfs.Key.CreateAsync(name, "secp256k1", 0);
             try
             {
@@ -326,7 +317,6 @@ IyIjAQyiOZZ5e8ozKAp5QFjQ/StM1uInn0v7Oi3vQRfbOOXcLXJL
         public async Task Create_Ed25519_Key()
         {
             var name = "test-ed25519";
-            var ipfs = TestFixture.Ipfs;
             var key = await ipfs.Key.CreateAsync(name, "ed25519", 0);
             try
             {
@@ -363,7 +353,6 @@ IyIjAQyiOZZ5e8ozKAp5QFjQ/StM1uInn0v7Oi3vQRfbOOXcLXJL
         public async Task Ed25519_Id_IdentityHash_of_PublicKey()
         {
             var name = "test-ed25519-id-hash";
-            var ipfs = TestFixture.Ipfs;
             var key = await ipfs.Key.CreateAsync(name, "ed25519", 0);
             Assert.Equal("identity", key.Id.Algorithm.Name);
         }
@@ -378,7 +367,6 @@ IyIjAQyiOZZ5e8ozKAp5QFjQ/StM1uInn0v7Oi3vQRfbOOXcLXJL
 MC4CAQAwBQYDK2VwBCIEIGJnyy3U4ksTQoRBz3mf1dxeFDPXZBrwh7gD7SqMg+/i
 -----END PRIVATE KEY-----
 ";
-            var ipfs = TestFixture.Ipfs;
 
             await ipfs.Key.RemoveAsync("oed1");
             var key = await ipfs.Key.ImportAsync("oed1", pem);

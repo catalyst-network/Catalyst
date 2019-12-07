@@ -3,20 +3,22 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Keystore;
+using Catalyst.TestUtils;
 using Microsoft.Extensions.Options;
 using MultiFormats;
 using Org.BouncyCastle.Crypto.Parameters;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
-    public class Rfc8410Test
+    public class Rfc8410Test : FileSystemBasedTest
     {
         private readonly KeyChain keyChain;
         
-        public Rfc8410Test()
+        public Rfc8410Test(ITestOutputHelper output) : base(output)
         {
-            keyChain = new KeyChain
+            keyChain = new KeyChain(FileSystem.Path.ToString())
             {
                 Options = new DfsOptions().KeyChain
             };

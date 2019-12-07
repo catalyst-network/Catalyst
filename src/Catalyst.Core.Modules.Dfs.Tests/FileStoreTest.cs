@@ -4,13 +4,22 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Lib.FileSystem;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
 {
     public class FileStoreTest
     {
+        private IDfs ipfs;
+
+        public FileStoreTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
+        
         class Entity
         {
             public int Number;
@@ -24,7 +33,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         {
             get
             {
-                var folder = Path.Combine(TestFixture.Ipfs.Options.Repository.Folder, "test-filestore");
+                var folder = Path.Combine(ipfs.Options.Repository.Folder, "test-filestore");
                 if (!Directory.Exists(folder))
                     Directory.CreateDirectory(folder);
 

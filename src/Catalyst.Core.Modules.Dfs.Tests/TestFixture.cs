@@ -1,31 +1,45 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using Common.Logging;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
 {
     public class TestFixture
     {
-        const string passphrase = "this is not a secure pass phrase";
-        public static IDfs Ipfs = new Dfs(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")), new PasswordManager(new TestPasswordReader(), new PasswordRegistry()));
-        public static IDfs IpfsOther = new Dfs(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")), new PasswordManager(new TestPasswordReader(), new PasswordRegistry()));
+        public IDfs Ipfs;
+        public IDfs IpfsOther;
 
-        static TestFixture()
+        private class TestDfsFileSystem : FileSystemBasedTest
         {
-            Ipfs.Options.Repository.Folder = Path.Combine(Path.GetTempPath(), "ipfs-test");
+            protected internal TestDfsFileSystem(ITestOutputHelper output) : base(output) { }
+        }
+
+        public TestFixture(ITestOutputHelper output)
+        {
+            var filesystem = new TestDfsFileSystem(output);
+            
+            Ipfs = new Dfs(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")), new PasswordManager(new TestPasswordReader(), new PasswordRegistry()));
+            Ipfs.Options.Repository.Folder = Path.Combine(filesystem.FileSystem.GetCatalystDataDir().FullName, "ipfs-test");
             Ipfs.Options.KeyChain.DefaultKeySize = 512;
             Ipfs.Config.SetAsync(
                 "Addresses.Swarm",
                 JToken.FromObject(new string[] {"/ip4/0.0.0.0/tcp/0"})
             ).Wait();
+            
+            IpfsOther = new Dfs(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")), new PasswordManager(new TestPasswordReader(), new PasswordRegistry()));
 
-            IpfsOther.Options.Repository.Folder = Path.Combine(Path.GetTempPath(), "ipfs-other");
+            IpfsOther.Options.Repository.Folder = Path.Combine(filesystem.FileSystem.GetCatalystDataDir().FullName, "ipfs-other");
             IpfsOther.Options.KeyChain.DefaultKeySize = 512;
             IpfsOther.Config.SetAsync(
                 "Addresses.Swarm",

@@ -3,20 +3,22 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Keystore;
+using Catalyst.TestUtils;
 using MultiFormats;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.X509.Extension;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
-    public class CertTest
+    public class CertTest : FileSystemBasedTest
     {
         private readonly KeyChain keyChain;
 
-        public CertTest()
+        public CertTest(ITestOutputHelper output) : base(output)
         {
-            keyChain = new KeyChain
+            keyChain = new KeyChain(FileSystem.Path.ToString())
             {
                 Options = new DfsOptions().KeyChain
             };

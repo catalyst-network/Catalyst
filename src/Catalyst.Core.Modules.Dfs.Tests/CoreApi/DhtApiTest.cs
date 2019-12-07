@@ -3,17 +3,25 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper.Configuration.Annotations;
+using Catalyst.Abstractions.Dfs;
 using Lib.P2P;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class DhtApiTest
     {
+        private IDfs ipfs;
+
+        public DhtApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
+        
         [Fact]
         public async Task Local_Info()
         {
-            var ipfs = TestFixture.Ipfs;
             var locaId = (await ipfs.LocalPeer).Id;
             var peer = await ipfs.Dht.FindPeerAsync(locaId);
 

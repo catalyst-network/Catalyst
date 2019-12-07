@@ -1,46 +1,53 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
+using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class ConfigApiTest
     {
+        private IDfs ipfs;
+
         const string apiAddress = "/ip4/127.0.0.1/tcp/";
         const string gatewayAddress = "/ip4/127.0.0.1/tcp/";
 
+        public ConfigApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
+        
         [Fact]
         public async Task Get_Entire_Config()
         {
-            var ipfs = TestFixture.Ipfs;
             var config = await ipfs.Config.GetAsync();
-            Assert.StartsWith(config["Addresses"]["API"].Value<string>(), apiAddress);
+            
+            Assert.StartsWith(apiAddress, config["Addresses"]["API"].Value<string>());
         }
 
         [Fact]
         public async Task Get_Scalar_Key_Value()
         {
-            var ipfs = TestFixture.Ipfs;
             var api = await ipfs.Config.GetAsync("Addresses.API");
-            Assert.StartsWith(api.Value<string>(), apiAddress);
+            Assert.StartsWith(apiAddress, api.Value<string>());
         }
 
         [Fact]
         public async Task Get_Object_Key_Value()
         {
-            var ipfs = TestFixture.Ipfs;
             var addresses = await ipfs.Config.GetAsync("Addresses");
-            Assert.StartsWith(addresses["API"].Value<string>(), apiAddress);
-            Assert.StartsWith(addresses["Gateway"].Value<string>(), gatewayAddress);
+            Assert.StartsWith(apiAddress, addresses["API"].Value<string>());
+            Assert.StartsWith(gatewayAddress, addresses["Gateway"].Value<string>());
         }
 
         [Fact]
         public void Keys_are_Case_Sensitive()
         {
-            var ipfs = TestFixture.Ipfs;
             var api = ipfs.Config.GetAsync("Addresses.API").Result;
-            Assert.StartsWith(api.Value<string>(), apiAddress);
+            Assert.StartsWith(apiAddress, api.Value<string>());
 
             ExceptionAssert.Throws<Exception>(() =>
             {
@@ -53,7 +60,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         {
             const string key = "foo";
             const string value = "foobar";
-            var ipfs = TestFixture.Ipfs;
             await ipfs.Config.SetAsync(key, value);
             Assert.Equal(value, await ipfs.Config.GetAsync(key));
         }
@@ -63,7 +69,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         {
             const string key = "API.HTTPHeaders.Access-Control-Allow-Origin";
             JToken value = JToken.Parse("['http://example.io']");
-            var ipfs = TestFixture.Ipfs;
             await ipfs.Config.SetAsync(key, value);
             Assert.Equal("http://example.io", ipfs.Config.GetAsync(key).Result[0]);
         }

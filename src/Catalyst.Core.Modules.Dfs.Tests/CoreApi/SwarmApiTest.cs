@@ -10,12 +10,19 @@ using MultiFormats;
 using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class SwarmApiTest
     {
-        IDfs ipfs = TestFixture.Ipfs;
+        private IDfs ipfs;
+
+        public SwarmApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
+        
         readonly MultiAddress somewhere = "/ip4/127.0.0.1";
 
         [Fact]

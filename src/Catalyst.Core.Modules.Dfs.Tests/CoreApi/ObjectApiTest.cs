@@ -5,13 +5,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class ObjectApiTest
     {
-        IDfs ipfs = TestFixture.Ipfs;
+        private IDfs ipfs;
+
+        public ObjectApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
 
         [Fact]
         public async Task New_Template_Null()

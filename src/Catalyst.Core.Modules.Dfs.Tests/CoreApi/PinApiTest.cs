@@ -3,21 +3,29 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Options;
 using FluentAssertions;
 using Lib.P2P;
 using MultiFormats;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class PinApiTest
     {
+        private IDfs ipfs;
+
+        public PinApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
+
         [Fact]
         public async Task Add_Remove()
         {
-            var ipfs = TestFixture.Ipfs;
             var result = await ipfs.FileSystem.AddTextAsync("I am pinned");
             var id = result.Id;
 
@@ -35,7 +43,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Remove_Unknown()
         {
-            var ipfs = TestFixture.Ipfs;
             var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"));
             await ipfs.Pin.RemoveAsync(dag.Id, true);
         }
@@ -43,7 +50,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Inline_Cid()
         {
-            var ipfs = TestFixture.Ipfs;
             var cid = new Cid
             {
                 ContentType = "raw",
@@ -63,7 +69,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public void Add_Unknown()
         {
-            var ipfs = TestFixture.Ipfs;
             var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"));
             ExceptionAssert.Throws<Exception>(() =>
             {
@@ -75,7 +80,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Add_Recursive()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 ChunkSize = 3,
@@ -91,7 +95,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Remove_Recursive()
         {
-            var ipfs = TestFixture.Ipfs;
             var options = new AddFileOptions
             {
                 ChunkSize = 3,

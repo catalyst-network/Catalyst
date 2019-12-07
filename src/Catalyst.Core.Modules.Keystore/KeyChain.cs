@@ -31,6 +31,7 @@ namespace Catalyst.Core.Modules.Keystore
     /// </summary>
     public partial class KeyChain : IKeyApi
     {
+        private readonly string _folder;
         static ILog log = LogManager.GetLogger(typeof(KeyChain));
 
         private char[] _dek;
@@ -42,7 +43,7 @@ namespace Catalyst.Core.Modules.Keystore
         /// <param name="ipfs">
         ///   The IPFS Engine associated with the key chain.
         /// </param>
-        public KeyChain() { }
+        public KeyChain(string folder) { _folder = folder; }
 
         FileStore<string, EncryptedKey> Store
         {
@@ -50,8 +51,7 @@ namespace Catalyst.Core.Modules.Keystore
             {
                 if (store == null)
                 {
-                    var options = new RepositoryOptions();
-                    var folder = Path.Combine(Constants.KeyStoreDataSubDir, "keys");
+                    var folder = Path.Combine(_folder, "keys");
                     if (!Directory.Exists(folder))
                         Directory.CreateDirectory(folder);
                     store = new FileStore<string, EncryptedKey>

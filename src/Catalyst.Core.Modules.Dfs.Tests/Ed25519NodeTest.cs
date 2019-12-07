@@ -1,17 +1,26 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
 {
     public class Ed25519NodeTest
     {
+        private IDfs ipfs;
+
+        public Ed25519NodeTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
+        
         [Fact]
         public async Task Can_Create()
         {
@@ -38,8 +47,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests
                 var node = await ed.LocalPeer;
                 Assert.NotEqual(0, node.Addresses.Count());
                 var addr = node.Addresses.First();
-
-                var ipfs = TestFixture.Ipfs;
                 await ipfs.StartAsync();
                 try
                 {

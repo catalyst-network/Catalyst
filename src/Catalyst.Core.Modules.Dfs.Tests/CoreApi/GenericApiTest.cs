@@ -3,23 +3,31 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.Configuration.Annotations;
+using Catalyst.Abstractions.Dfs;
 using Lib.P2P;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class GenericApiTest
     {
+        private IDfs ipfs;
+
+        public GenericApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
+        
         [Fact]
         public async Task Local_Info()
         {
-            var ipfs = TestFixture.Ipfs;
             var peer = await ipfs.Generic.IdAsync();
             Assert.IsType(typeof(Peer), peer);
             Assert.NotNull(peer.Addresses);
-            Assert.StartsWith(peer.AgentVersion, "net-ipfs/");
+            Assert.StartsWith("net-ipfs/", peer.AgentVersion);
             Assert.NotNull(peer.Id);
-            Assert.StartsWith(peer.ProtocolVersion, "ipfs/");
+            Assert.StartsWith("ipfs/", peer.ProtocolVersion);
             Assert.NotNull(peer.PublicKey);
 
             Assert.True(peer.IsValid());
@@ -30,7 +38,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         {
             var marsId = "QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
             var marsAddr = $"/ip6/::1/p2p/{marsId}";
-            var ipfs = TestFixture.Ipfs;
             var swarm = await ipfs.SwarmService;
             var mars = swarm.RegisterPeerAddress(marsAddr);
 
@@ -42,7 +49,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Version_Info()
         {
-            var ipfs = TestFixture.Ipfs;
             var versions = await ipfs.Generic.VersionAsync();
             Assert.NotNull(versions);
             Assert.True(versions.ContainsKey("Version"));
@@ -52,7 +58,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Shutdown()
         {
-            var ipfs = TestFixture.Ipfs;
             await ipfs.StartAsync();
             await ipfs.Generic.ShutdownAsync();
         }
@@ -60,7 +65,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Resolve_Cid()
         {
-            var ipfs = TestFixture.Ipfs;
             var actual = await ipfs.Generic.ResolveAsync("QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao");
             Assert.Equal("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", actual);
 
@@ -71,7 +75,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Resolve_Cid_Path()
         {
-            var ipfs = TestFixture.Ipfs;
             var temp = FileSystemApiTest.MakeTemp();
             try
             {
@@ -89,7 +92,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public void Resolve_Cid_Invalid()
         {
-            var ipfs = TestFixture.Ipfs;
             ExceptionAssert.Throws<FormatException>(() =>
             {
                 var _ = ipfs.Generic.ResolveAsync("QmHash").Result;
@@ -99,7 +101,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Resolve_DnsLink()
         {
-            var ipfs = TestFixture.Ipfs;
             var path = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io");
             Assert.NotNull(path);
         }

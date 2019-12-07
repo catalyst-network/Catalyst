@@ -323,6 +323,9 @@ namespace Catalyst.Core.Lib.FileSystem
         /// <summary>
         ///   Local file system path to the name.
         /// </summary>
-        public string GetPath(TName name) { return Path.Combine(Folder, NameToKey(name)); }
+        public string GetPath(TName name)
+        {
+            return Path.Combine(Folder, NameToKey(name));
+        }
     }
 }

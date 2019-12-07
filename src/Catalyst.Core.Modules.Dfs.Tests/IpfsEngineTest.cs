@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Modules.Hashing;
@@ -13,12 +14,23 @@ using MultiFormats;
 using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Tests
 {
     public class DfsTest
     {
+        private IDfs ipfs;
+        private IDfs ipfsOther;
+
+        public DfsTest(ITestOutputHelper output)
+        {
+            var testFixture = new TestFixture(output);
+            ipfs = testFixture.Ipfs;
+            ipfsOther = testFixture.IpfsOther;
+        }
+        
         [Fact]
         public void Can_Create()
         {
@@ -61,16 +73,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         // [Fact]
         // public async Task Wrong_Passphrase()
         // {
-        //     var ipfs1 = TestFixture.Ipfs;
-        //     await ipfs1.KeyChainAsync();
+        //     var ipfs = TestFixture.Ipfs;
+        //     await ipfs.KeyChainAsync();
         //
-        //     var ipfs2 = new Dfs()
+        //     var ipfsOther = new Dfs()
         //     {
-        //         Options = ipfs1.Options
+        //         Options = ipfs.Options
         //     };
         //     ExceptionAssert.Throws<UnauthorizedAccessException>(() =>
         //     {
-        //         var _ = ipfs2.KeyChainAsync().Result;
+        //         var _ = ipfsOther.KeyChainAsync().Result;
         //     });
         // }
 
@@ -84,7 +96,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         [Fact]
         public async Task Can_Start_And_Stop()
         {
-            var ipfs = TestFixture.Ipfs;
             var peer = await ipfs.LocalPeer;
 
             Assert.False(ipfs.IsStarted);
@@ -110,21 +121,19 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         [Fact]
         public async Task Can_Start_And_Stop_MultipleEngines()
         {
-            var ipfs1 = TestFixture.Ipfs;
-            var ipfs2 = TestFixture.IpfsOther;
-            var peer1 = await ipfs1.LocalPeer;
-            var peer2 = await ipfs2.LocalPeer;
+            var peer1 = await ipfs.LocalPeer;
+            var peer2 = await ipfsOther.LocalPeer;
 
             for (int n = 0; n < 3; ++n)
             {
-                await ipfs1.StartAsync();
+                await ipfs.StartAsync();
                 Assert.NotEqual(0, peer1.Addresses.Count());
-                await ipfs2.StartAsync();
+                await ipfsOther.StartAsync();
                 Assert.NotEqual(0, peer2.Addresses.Count());
 
-                await ipfs2.StopAsync();
+                await ipfsOther.StopAsync();
                 Assert.Equal(0, peer2.Addresses.Count());
-                await ipfs1.StopAsync();
+                await ipfs.StopAsync();
                 Assert.Equal(0, peer1.Addresses.Count());
             }
         }
@@ -143,7 +152,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         [Fact]
         public async Task LocalPeer()
         {
-            var ipfs = TestFixture.Ipfs;
             Task<Peer>[] tasks = new Task<Peer>[]
             {
                 Task.Run(async () => await ipfs.LocalPeer),
@@ -156,7 +164,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         [Fact]
         public async Task KeyChain()
         {
-            var ipfs = TestFixture.Ipfs;
             Task<IKeyApi>[] tasks = new Task<IKeyApi>[]
             {
                 Task.Run(async () => await ipfs.KeyChainAsync()),
@@ -169,7 +176,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         [Fact]
         public async Task KeyChain_GetKey()
         {
-            var ipfs = TestFixture.Ipfs;
             var keyChain = await ipfs.KeyChainAsync();
             var key = await keyChain.GetPrivateKeyAsync("self");
             Assert.NotNull(key);
@@ -179,7 +185,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         [Fact]
         public async Task Swarm_Gets_Bootstrap_Peers()
         {
-            var ipfs = TestFixture.Ipfs;
             var bootPeers = (await ipfs.Bootstrap.ListAsync()).ToArray();
             await ipfs.StartAsync();
             try
@@ -212,7 +217,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         [Fact]
         public async Task Start_NoListeners()
         {
-            var ipfs = TestFixture.Ipfs;
             var swarm = await ipfs.Config.GetAsync("Addresses.Swarm");
             try
             {
@@ -229,7 +233,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests
         [Fact]
         public async Task Start_InvalidListener()
         {
-            var ipfs = TestFixture.Ipfs;
             var swarm = await ipfs.Config.GetAsync("Addresses.Swarm");
             try
             {

@@ -48,7 +48,7 @@ namespace Catalyst.TestUtils
     public class FileSystemBasedTest : IDisposable
     {
         protected readonly string CurrentTestName;
-        protected IFileSystem FileSystem;
+        public IFileSystem FileSystem;
         protected readonly ITestOutputHelper Output;
         private DirectoryInfo _testDirectory;
         protected List<string> ConfigFilesUsed { get; }

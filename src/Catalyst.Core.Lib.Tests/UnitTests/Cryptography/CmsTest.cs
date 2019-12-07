@@ -9,16 +9,17 @@ using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
-    public class CmsTest
+    public class CmsTest : FileSystemBasedTest
     {
         private readonly KeyChain keyChain;
 
-        public CmsTest()
+        public CmsTest(ITestOutputHelper output) : base(output)
         {
-            keyChain = new KeyChain
+            keyChain = new KeyChain(FileSystem.Path.ToString())
             {
                 Options = new DfsOptions().KeyChain
             };

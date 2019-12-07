@@ -4,25 +4,32 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using FluentAssertions;
 using Lib.P2P.PubSub;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
 {
     public class PubSubApiTest
     {
+        private IDfs ipfs;
+
+        public PubSubApiTest(ITestOutputHelper output)
+        {
+            ipfs = new TestFixture(output).Ipfs;      
+        }
+        
         [Fact]
         public void Api_Exists()
         {
-            var ipfs = TestFixture.Ipfs;
             Assert.NotNull(ipfs.PubSub);
         }
 
         [Fact]
         public void Peers_Unknown_Topic()
         {
-            var ipfs = TestFixture.Ipfs;
             var topic = "net-ipfs-http-client-test-unknown" + Guid.NewGuid().ToString();
             var peers = ipfs.PubSub.PeersAsync(topic).Result.ToArray();
             Assert.Equal(0, peers.Length);
@@ -31,7 +38,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         [Fact]
         public async Task Subscribed_Topics()
         {
-            var ipfs = TestFixture.Ipfs;
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
             await ipfs.StartAsync();
@@ -55,7 +61,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task Subscribe()
         {
             messageCount = 0;
-            var ipfs = TestFixture.Ipfs;
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
             await ipfs.StartAsync();
@@ -79,7 +84,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         {
             messageCount = 0;
             var messages = "hello world this is pubsub".Split();
-            var ipfs = TestFixture.Ipfs;
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
             await ipfs.StartAsync();
@@ -106,7 +110,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         {
             messageCount = 0;
             var messages = "hello world this is pubsub".Split();
-            var ipfs = TestFixture.Ipfs;
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
 
@@ -137,7 +140,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         public async Task Unsubscribe()
         {
             messageCount1 = 0;
-            var ipfs = TestFixture.Ipfs;
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
             await ipfs.StartAsync();
@@ -164,7 +166,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         {
             var messages = new List<IPublishedMessage>();
             var expected = new byte[] {0, 1, 2, 4, (byte) 'a', (byte) 'b', 0xfe, 0xff};
-            var ipfs = TestFixture.Ipfs;
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
             await ipfs.StartAsync();
@@ -189,7 +190,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.CoreApi
         {
             var messages = new List<IPublishedMessage>();
             var expected = new byte[] {0, 1, 2, 4, (byte) 'a', (byte) 'b', 0xfe, 0xff};
-            var ipfs = TestFixture.Ipfs;
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
             await ipfs.StartAsync();

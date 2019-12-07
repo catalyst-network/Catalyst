@@ -12,7 +12,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         IDfs ipfs;
 
-        public KeyApi(IDfs ipfs) { this.ipfs = ipfs; }
+        public KeyApi(IDfs ipfs) : base(ipfs.Options.Repository.Folder)
+        {
+            this.ipfs = ipfs;
+        }
 
         public async Task<IKey> CreateAsync(string name,
             string keyType,
