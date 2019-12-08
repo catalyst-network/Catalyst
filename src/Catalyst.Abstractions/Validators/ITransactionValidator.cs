@@ -21,12 +21,12 @@
 
 #endregion
 
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Abstractions.Validators
 {
     public interface ITransactionValidator
     {
-        bool ValidateTransaction(TransactionBroadcast transactionBroadcast);
+        bool ValidateTransaction(PublicEntry transaction);
     }
 }

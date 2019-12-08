@@ -22,9 +22,9 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Abstractions.Consensus
 {
-    public interface ITransactionComparer : IComparer<TransactionBroadcast> { }
+    public interface ITransactionComparer : IComparer<PublicEntry> { }
 }

@@ -22,10 +22,13 @@
 #endregion
 
 using System;
+using System.Linq;
 using Autofac;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.Protocol.Transaction;
 using FluentAssertions;
+using Google.Protobuf;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
@@ -60,6 +63,32 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             var data = BitConverter.GetBytes(0xDEADBEEF);
             var multiHash = hashProvider.ComputeMultiHash(data);
             multiHash.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Hashes_messages()
+        {
+            var hashProvider = _container.Resolve<IHashProvider>();
+            var entry = new PublicEntry();
+
+            var arrayHash = hashProvider.ComputeMultiHash(entry.ToByteArray());
+            var messageHash = hashProvider.ComputeMultiHash(entry);
+
+            arrayHash.ToArray().Should().BeEquivalentTo(messageHash.ToArray());
+        }
+
+        [Fact]
+        public void Hashes_messages_with_suffix()
+        {
+            var hashProvider = _container.Resolve<IHashProvider>();
+            var entry = new PublicEntry();
+
+            var suffix = new byte[1];
+
+            var arrayHash = hashProvider.ComputeMultiHash(entry.ToByteArray().Concat(suffix).ToArray());
+            var messageHash = hashProvider.ComputeMultiHash(entry, suffix);
+
+            arrayHash.ToArray().Should().BeEquivalentTo(messageHash.ToArray());
         }
     }
 }

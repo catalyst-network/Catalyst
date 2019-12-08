@@ -24,7 +24,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
@@ -54,9 +53,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
         private readonly IPeerMessageCorrelationManager _clientCorrelationManager;
-        private readonly IKeySigner _clientKeySigner;
+        private readonly FakeKeySigner _clientKeySigner;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly IKeySigner _serverKeySigner;
+        private readonly FakeKeySigner _serverKeySigner;
         private readonly IPeerMessageCorrelationManager _serverCorrelationManager;
         private readonly ISignature _signature;
 
@@ -64,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
         {
             _testScheduler = new TestScheduler();
             _serverCorrelationManager = Substitute.For<IPeerMessageCorrelationManager>();
-            _serverKeySigner = Substitute.For<IKeySigner>();
+            _serverKeySigner = Substitute.For<FakeKeySigner>();
             _serverKeySigner.CryptoContext.SignatureLength.Returns(64);
             var broadcastManager = Substitute.For<IBroadcastManager>();
 
@@ -84,7 +83,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             _signature = Substitute.For<ISignature>();
 
             _clientCorrelationManager = Substitute.For<IPeerMessageCorrelationManager>();
-            _clientKeySigner = Substitute.For<IKeySigner>();
+            _clientKeySigner = Substitute.For<FakeKeySigner>();
             _clientKeySigner.CryptoContext.SignatureLength.Returns(64);
 
             _clientFactory = new UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory(

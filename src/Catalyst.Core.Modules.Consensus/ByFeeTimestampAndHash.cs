@@ -22,9 +22,9 @@
 #endregion
 
 using Catalyst.Abstractions.Consensus;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Modules.Consensus
@@ -32,7 +32,7 @@ namespace Catalyst.Core.Modules.Consensus
     /// <inheritdoc />
     public class TransactionComparerByFeeTimestampAndHash : ITransactionComparer
     {
-        public int Compare(TransactionBroadcast x, TransactionBroadcast y)
+        public int Compare(PublicEntry x, PublicEntry y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Consensus
                 return -1;
             }
 
-            var feeComparison = x.SummedEntryFees().CompareTo(y.SummedEntryFees());
+            var feeComparison = x.TransactionFees.ToUInt256().CompareTo(y.TransactionFees.ToUInt256());
             if (feeComparison != 0)
             {
                 return feeComparison;

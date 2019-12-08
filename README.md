@@ -12,7 +12,7 @@
   
 [![Build Status](https://dev.azure.com/catalyst-network/catalyst.framework/_apis/build/status/pr-tests-master?branchName=develop)](https://dev.azure.com/catalyst-network/catalyst.framework/_build/latest?definitionId=22&branchName=develop)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/08cb016d7489471eadd0192ce4d7b26e)](https://www.codacy.com/manual/catalyst-network/Catalyst.Framework?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=catalyst-network/Catalyst.Framework&amp;utm_campaign=Badge_Grade)
-[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors)
 
 </div>
 
@@ -187,6 +187,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://burntfen.com"><img src="https://avatars3.githubusercontent.com/u/910753?v=4" width="100px;" alt="Richard Littauer"/><br /><sub><b>Richard Littauer</b></sub></a><br /><a href="https://github.com/catalyst-network/Catalyst.Framework/commits?author=RichardLitt" title="Documentation">📖</a></td>
     <td align="center"><a href="http://nethermind.io"><img src="https://avatars1.githubusercontent.com/u/498913?v=4" width="100px;" alt="Tomasz Kajetan Stańczak"/><br /><sub><b>Tomasz Kajetan Stańczak</b></sub></a><br /><a href="https://github.com/catalyst-network/Catalyst.Framework/commits?author=tkstanczak" title="Code">💻</a> <a href="#ideas-tkstanczak" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://blog.scooletz.com/"><img src="https://avatars1.githubusercontent.com/u/519707?v=4" width="100px;" alt="Szymon Kulec"/><br /><sub><b>Szymon Kulec</b></sub></a><br /><a href="https://github.com/catalyst-network/Catalyst.Framework/commits?author=Scooletz" title="Code">💻</a></td>
   </tr>
 </table>
 

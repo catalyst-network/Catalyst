@@ -30,8 +30,8 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
@@ -51,7 +51,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private const ulong DeltaGasLimit = 8_000_000;
         private const ulong MinTransactionEntryGasLimit = 21_000;
-        
+
         private readonly IDeltaTransactionRetriever _transactionRetriever;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
@@ -90,30 +90,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var includedTransactions = GetValidTransactionsForDelta(allTransactions);
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
-            var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
-                t => t.PublicEntries.Select(e =>
-                    new RawEntryWithSaltedAndHashedEntry(e, salt, _hashProvider)));
-            
-            var rawAndSaltedContractEntriesBySignature = includedTransactions.SelectMany(
-                t => t.ContractEntries.Select(e =>
-                {
-                    var contractEntriesProtoBuff = e;
-                    return new
-                    {
-                        RawEntry = contractEntriesProtoBuff,
-                        SaltedAndHashedEntry =
-                            _hashProvider.ComputeMultiHash(contractEntriesProtoBuff.ToByteArray().Concat(salt))
-                    };
-                })).ToArray();
+            var rawAndSaltedEntriesBySignature = includedTransactions.Select(
+                x => new RawEntryWithSaltedAndHashedEntry(x, salt, _hashProvider));
 
             // (Eα;Oα)
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
                .OrderBy(v => v.SaltedAndHashedEntry, ByteUtil.ByteListComparer.Default)
-               .SelectMany(v => v.RawEntry.ToByteArray())
-               .ToArray();
-
-            var shuffledContractEntriesBytes = rawAndSaltedContractEntriesBySignature
-               .OrderBy(v => v.SaltedAndHashedEntry.ToArray(), ByteUtil.ByteListComparer.Default)
                .SelectMany(v => v.RawEntry.ToByteArray())
                .ToArray();
 
@@ -125,7 +107,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                .ToArray();
 
             // xf
-            var summedFees = includedTransactions.Sum(t => t.SummedEntryFees());
+            var summedFees = includedTransactions.Sum(t => t.TransactionFees.ToUInt256());
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)
             var coinbaseEntry = new CoinbaseEntry
@@ -134,7 +116,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 ReceiverPublicKey = _producerUniqueId.PublicKey.ToByteString()
             };
             var globalLedgerStateUpdate = shuffledEntriesBytes
-               .Concat(shuffledContractEntriesBytes)
                .Concat(signaturesInOrder)
                .Concat(coinbaseEntry.ToByteArray())
                .ToArray();
@@ -143,7 +124,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var candidate = new CandidateDeltaBroadcast
             {
                 // h∆j
-                Hash = MultiBase.Decode(CidHelper.CreateCid(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate)))
+                Hash = MultiBase.Decode(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate).CreateCid())
                    .ToByteString(),
 
                 // Idj
@@ -158,8 +139,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 PreviousDeltaDfsHash = previousDeltaHash.ToArray().ToByteString(),
                 MerkleRoot = candidate.Hash,
                 CoinbaseEntries = {coinbaseEntry},
-                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries).Select(x => x)},
-                ContractEntries = {includedTransactions.SelectMany(t => t.ContractEntries).Select(x => x)},
+                PublicEntries = {includedTransactions},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -170,7 +150,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             return candidate;
         }
 
-        private IEnumerable<byte> GetSaltFromPreviousDelta(Cid previousDeltaHash)
+        private byte[] GetSaltFromPreviousDelta(Cid previousDeltaHash)
         {
             var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash.ToArray());
             return BitConverter.GetBytes(isaac.NextInt());
@@ -183,48 +163,51 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             public byte[] SaltedAndHashedEntry { get; }
 
             public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry,
-                IEnumerable<byte> salt,
+                byte[] salt,
                 IHashProvider hashProvider)
             {
                 RawEntry = rawEntry;
-                SaltedAndHashedEntry = hashProvider.ComputeMultiHash(rawEntry.ToByteArray().Concat(salt)).ToArray();
+                SaltedAndHashedEntry = hashProvider.ComputeMultiHash(rawEntry, salt).ToArray();
             }
         }
 
-        private sealed class AveragePriceComparer : IComparer<TransactionBroadcast>
+        private sealed class AveragePriceComparer : IComparer<PublicEntry>
         {
             private readonly int _multiplier;
 
             private AveragePriceComparer(int multiplier) { _multiplier = multiplier; }
-            
-            public int Compare(TransactionBroadcast x, TransactionBroadcast y)
+
+            public int Compare(PublicEntry x, PublicEntry y)
             {
-                return _multiplier * Comparer<UInt256?>.Default.Compare(x?.AverageGasPrice, y?.AverageGasPrice);
+                return _multiplier * Comparer<UInt256?>.Default.Compare(x?.GasPrice.ToUInt256(), y?.GasPrice.ToUInt256());
             }
-            
+
             public static AveragePriceComparer InstanceDesc { get; } = new AveragePriceComparer(-1);
             public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
         }
-        
-        private static bool IsTransactionOfAcceptedType(TransactionBroadcast transaction) { return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment; }
-        
+
+        private static bool IsTransactionOfAcceptedType(PublicEntry transaction)
+        {
+            return transaction.IsPublicTransaction || transaction.IsContractCall || transaction.IsContractDeployment;
+        }
+
         /// <summary>
         ///     Gets the valid transactions for delta.
         ///     This method can be used to extract the collection of transactions that meet the criteria for validating delta.
         /// </summary>
-        private IList<TransactionBroadcast> GetValidTransactionsForDelta(IList<TransactionBroadcast> allTransactions)
+        private IList<PublicEntry> GetValidTransactionsForDelta(IList<PublicEntry> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            var validTransactionsForDelta = new List<TransactionBroadcast>();
-            var rejectedTransactions = new List<TransactionBroadcast>();
+            var validTransactionsForDelta = new List<PublicEntry>();
+            var rejectedTransactions = new List<PublicEntry>();
 
             var allTransactionsCount = allTransactions.Count;
             for (var i = 0; i < allTransactionsCount; i++)
             {
                 var currentItem = allTransactions[i];
-                if (!IsTransactionOfAcceptedType(currentItem) || !currentItem.HasValidEntries())
+                if (!IsTransactionOfAcceptedType(currentItem))
                 {
                     rejectedTransactions.Add(currentItem);
                     continue;
@@ -232,7 +215,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
                 validTransactionsForDelta.Add(currentItem);
             }
-            
+
             validTransactionsForDelta.Sort(AveragePriceComparer.InstanceDesc);
 
             var totalLimit = 0UL;
@@ -247,20 +230,20 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     for (var j = i; j < allValidCount; j++)
                     {
                         currentItem = validTransactionsForDelta[j];
-                        rejectedTransactions.Add(currentItem);    
+                        rejectedTransactions.Add(currentItem);
                     }
-                    
+
                     break;
                 }
-                
-                var currentItemGasLimit = currentItem.TotalGasLimit;
+
+                var currentItemGasLimit = currentItem.GasLimit;
                 if (remainingLimit < currentItemGasLimit)
                 {
                     rejectedTransactions.Add(currentItem);
                 }
                 else
                 {
-                    totalLimit += validTransactionsForDelta[i].TotalGasLimit;    
+                    totalLimit += validTransactionsForDelta[i].GasLimit;
                 }
             }
 
@@ -268,10 +251,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 validTransactionsForDelta.Remove(rejectedTransactions[i]);
             }
-            
+
             _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}",
                 rejectedTransactions);
-            
+
             return validTransactionsForDelta;
         }
     }

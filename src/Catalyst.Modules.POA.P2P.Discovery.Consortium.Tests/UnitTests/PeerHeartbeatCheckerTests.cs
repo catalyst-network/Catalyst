@@ -23,12 +23,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
@@ -82,19 +81,18 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         {
             var peers = new List<Peer> {_testPeer};
             var peerSettings = _testPeer.PeerId.ToSubstitutedPeerSettings();
-            var peerChallenger = new PeerChallenger(
-                Substitute.For<ILogger>(), 
+            var peerChallenger = new PeerChallengeRequest(
+                Substitute.For<ILogger>(),
                 _peerClient,
-                peerSettings, 
+                peerSettings,
                 PeerChallengeTimeoutSeconds);
 
             if (sendResponse)
             {
-                peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(_testPeer.PeerId));
+                peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(_testPeer.PeerId));
             }
 
             _peerRepository.GetAll().Returns(peers);
-            _peerRepository.AsQueryable().Returns(peers.AsQueryable());
             _peerHeartbeatChecker = new PeerHeartbeatChecker(
                 Substitute.For<ILogger>(),
                 _peerRepository,
@@ -103,12 +101,10 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
                 maxNonResponsiveCounter);
 
             _peerHeartbeatChecker.Run();
-            await Task.Delay(TimeSpan.FromSeconds(PeerHeartbeatCheckSeconds * (maxNonResponsiveCounter + 1)).Add(TimeSpan.FromSeconds(1))).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(PeerHeartbeatCheckSeconds * (maxNonResponsiveCounter + 1))
+               .Add(TimeSpan.FromSeconds(1))).ConfigureAwait(false);
         }
 
-        void IDisposable.Dispose()
-        {
-            _peerHeartbeatChecker?.Dispose();
-        }
+        void IDisposable.Dispose() { _peerHeartbeatChecker?.Dispose(); }
     }
 }

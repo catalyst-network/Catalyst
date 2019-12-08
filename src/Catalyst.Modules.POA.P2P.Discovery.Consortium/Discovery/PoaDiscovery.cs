@@ -51,7 +51,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
         }
 
         /// <summary>
-        ///     @TODO get from container eventually 
+        ///     @TODO get from container eventually
         /// </summary>
         /// <returns></returns>
         private string CopyPoaFile()

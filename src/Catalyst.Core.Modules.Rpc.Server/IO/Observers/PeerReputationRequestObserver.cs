@@ -41,7 +41,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             IRpcRequestObserver
     {
         /// <summary>
-        /// The PeerReputationRequestHandler 
+        ///     The PeerReputationRequestHandler
         /// </summary>
         private readonly IPeerRepository _peerRepository;
 
@@ -54,7 +54,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getPeerReputationRequest"></param>
         /// <param name="channelHandlerContext"></param>
@@ -80,5 +79,3 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         }
     }
 }
-
-

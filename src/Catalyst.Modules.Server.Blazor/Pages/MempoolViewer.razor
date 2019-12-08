@@ -1,14 +1,14 @@
 ﻿@page "/mempool"
 @using System.Threading
-@using Catalyst.Abstractions.Mempool.Repositories
+@* @using Catalyst.Abstractions.Mempool.Repositories *@
 @using Catalyst.Core.Lib.DAO
 
 @implements IDisposable
-@inject IMempoolRepository<TransactionBroadcastDao> MempoolRepository
+@* @inject IMempoolRepository<TransactionBroadcastDao> MempoolRepository *@
 
 <h1>Mempool Viewer</h1>
 
-<p>Current count: @MempoolRepository.Count()</p>
+@* <p>Current count: @MempoolRepository.Count()</p> *@
 
 <table class="table">
     <thead>
@@ -37,9 +37,9 @@
         _mempoolList = new List<TransactionBroadcastDao>();
         _timer = new Timer((_) =>
         {
-            _mempoolList = MempoolRepository.GetAll().ToList();
+            // _mempoolList = MempoolRepository.GetAll().ToList();
             InvokeAsync(StateHasChanged).ConfigureAwait(false);
-        }, null, 1000, 1000);
+        }, null, (long) 1000, 1000);
     }
 
     public void Dispose() { _timer?.Dispose(); }

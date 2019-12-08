@@ -30,8 +30,8 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -39,13 +39,13 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository.Specifications;
+using SharpRepository.InMemoryRepository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     /// <summary>
-    /// Tests remove peer CLI and RPC calls
+    ///     Tests remove peer CLI and RPC calls
     /// </summary>
     public sealed class RemovePeerRequestObserverTests
     {
@@ -56,10 +56,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private readonly IChannelHandlerContext _fakeContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see>
-        ///     <cref>RemovePeerRequestObserverTest</cref>
-        /// </see>
-        /// class.
+        ///     Initializes a new instance of the
+        ///     <see>
+        ///         <cref>RemovePeerRequestObserverTest</cref>
+        ///     </see>
+        ///     class.
         /// </summary>
         public RemovePeerRequestObserverTests()
         {
@@ -70,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         }
 
         /// <summary>
-        /// Tests the peer list request and response.
+        ///     Tests the peer list request and response.
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
         [Theory]
@@ -79,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void TestRemovePeer(params string[] fakePeers) { ExecuteTestCase(fakePeers, true); }
 
         /// <summary>
-        /// Tests peer removal via IP only.
+        ///     Tests peer removal via IP only.
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
         [Theory]
@@ -93,27 +94,21 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
             var testScheduler = new TestScheduler();
-            IPeerRepository peerRepository = Substitute.For<IPeerRepository>();
-            Peer targetPeerToDelete = null;
+            IPeerRepository peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             var fakePeerList = fakePeers.ToList().Select(fakePeer =>
             {
-                var peer = new Peer
+                return new Peer
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now.Subtract(TimeSpan.FromSeconds(fakePeers.ToList().IndexOf(fakePeer))),
                     PeerId = PeerIdHelper.GetPeerId(fakePeer)
                 };
-
-                if (targetPeerToDelete == null)
-                {
-                    targetPeerToDelete = peer;
-                }
-
-                return peer;
             }).ToList();
 
-            peerRepository.FindAll(Arg.Any<ISpecification<Peer>>()).Returns(withPublicKey ? new List<Peer> {targetPeerToDelete} : fakePeerList);
-            
+            var targetPeerToDelete = fakePeerList[0];
+
+            peerRepository.Add(fakePeerList);
+
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
@@ -127,7 +122,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var protocolMessage = removePeerRequest.ToProtocolMessage(peerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
+            var messageStream =
+                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = peerId.ToSubstitutedPeerSettings();
             var handler = new RemovePeerRequestObserver(peerSettings, peerRepository, _logger);

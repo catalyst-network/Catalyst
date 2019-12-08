@@ -67,7 +67,7 @@ namespace Catalyst.TestUtils
                         // don't run again for at least 200 milliseconds
                         await Task.Delay(200);
                     }
-                
+
                     // ReSharper disable once FunctionNeverReturns
                 });
             }

@@ -30,7 +30,9 @@ namespace Catalyst.Core.Modules.Kvm
 {
     public static class PublicKeyExtensions
     {
-        public static Address ToKvmAddress(this IPublicKey publicKey) => 
-            new Address(ValueKeccak.Compute(publicKey.Bytes).BytesAsSpan.SliceWithZeroPadding(0, 20).ToArray());
+        public static Address ToKvmAddress(this IPublicKey publicKey)
+        {
+            return new Address(ValueKeccak.Compute(publicKey.Bytes).BytesAsSpan.SliceWithZeroPadding(0, 20).ToArray());
+        }
     }
 }

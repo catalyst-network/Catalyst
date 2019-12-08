@@ -24,7 +24,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
@@ -56,17 +55,17 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
         private readonly IRpcMessageCorrelationManager _clientCorrelationManager;
-        private readonly IKeySigner _clientKeySigner;
+        private readonly FakeKeySigner _clientKeySigner;
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly IKeySigner _serverKeySigner;
+        private readonly FakeKeySigner _serverKeySigner;
         private readonly IRpcMessageCorrelationManager _serverCorrelationManager;
 
         public RpcClientChannelFactoryTests()
         {
             _testScheduler = new TestScheduler();
             _serverCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
-            _serverKeySigner = Substitute.For<IKeySigner>();
+            _serverKeySigner = Substitute.For<FakeKeySigner>();
             _serverKeySigner.CryptoContext.SignatureLength.Returns(64);
 
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
@@ -84,7 +83,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                 _testScheduler);
 
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
-            _clientKeySigner = Substitute.For<IKeySigner>();
+            _clientKeySigner = Substitute.For<FakeKeySigner>();
             _clientKeySigner.CryptoContext.SignatureLength.Returns(64);
             var clientFactory =
                 new UnitTests.Rpc.IO.Transport.Channels.RpcClientChannelFactoryTests.TestRpcClientChannelFactory(

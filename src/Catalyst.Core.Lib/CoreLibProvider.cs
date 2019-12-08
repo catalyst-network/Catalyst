@@ -35,6 +35,7 @@ using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.Models;
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Util;
 using Catalyst.Abstractions.Validators;
@@ -48,6 +49,7 @@ using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
@@ -68,9 +70,12 @@ namespace Catalyst.Core.Lib
         protected override void Load(ContainerBuilder builder)
         {
             // Register IO.EventLoop
-            builder.RegisterType<UdpClientEventLoopGroupFactory>().As<IUdpClientEventLoopGroupFactory>().SingleInstance();
-            builder.RegisterType<UdpServerEventLoopGroupFactory>().As<IUdpServerEventLoopGroupFactory>().SingleInstance();
-            builder.RegisterType<TcpServerEventLoopGroupFactory>().As<ITcpServerEventLoopGroupFactory>().SingleInstance();
+            builder.RegisterType<UdpClientEventLoopGroupFactory>().As<IUdpClientEventLoopGroupFactory>()
+               .SingleInstance();
+            builder.RegisterType<UdpServerEventLoopGroupFactory>().As<IUdpServerEventLoopGroupFactory>()
+               .SingleInstance();
+            builder.RegisterType<TcpServerEventLoopGroupFactory>().As<ITcpServerEventLoopGroupFactory>()
+               .SingleInstance();
             builder.RegisterType<TcpClientEventLoopGroupFactory>().As<ITcpClientEventLoopGroupFactory>();
             builder.RegisterType<EventLoopGroupFactoryConfiguration>().As<IEventLoopGroupFactoryConfiguration>()
                .WithProperty("TcpServerHandlerWorkerThreads", 4)
@@ -84,12 +89,18 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<Peer>().As<IPeer>();
 
             builder.RegisterType<PeerIdValidator>().As<IPeerIdValidator>();
-            builder.RegisterType<PeerChallengerResponse>().As<IPeerChallengeResponse>();
             builder.RegisterType<PeerClient>().As<IPeerClient>().SingleInstance();
 
-            builder.RegisterType<PeerChallenger>().As<IPeerChallenger>()
-               .WithParameter("peerChallengeWaitTimeSeconds", 5)
+            builder.RegisterType<PeerChallengeRequest>().As<IPeerChallengeRequest>()
+               .WithParameter("ttl", 5)
                .SingleInstance();
+            builder.RegisterType<PeerChallengeResponse>().As<IPeerChallengeResponse>();
+            
+            builder.RegisterType<PeerQueryTipRequestRequest>().As<IPeerQueryTipRequest>();
+            builder.RegisterType<PeerQueryTipResponse>().As<IPeerQueryTipResponse>();
+
+            builder.RegisterType<PeerDeltaHistoryRequest>().As<IPeerDeltaHistoryRequest>();
+            builder.RegisterType<PeerDeltaHistoryResponse>().As<IPeerDeltaHistoryResponse>();
 
             // Register P2P.Discovery
             builder.RegisterType<HealthChecker>().As<IHealthChecker>();
@@ -103,17 +114,17 @@ namespace Catalyst.Core.Lib
 
             //  Register P2P.Messaging.Broadcast
             builder.RegisterType<BroadcastManager>().As<IBroadcastManager>().SingleInstance();
-            
-            //  Register P2P.Repository
+
+            //  Register P2P.Service
             builder.RegisterType<PeerRepository>().As<IPeerRepository>().SingleInstance();
-            
+
             //  Register P2P.ReputationSystem
             builder.RegisterType<ReputationManager>().As<IReputationManager>().SingleInstance();
-            
+
             // Register Registry #inception
             builder.RegisterType<KeyRegistry>().As<IKeyRegistry>().SingleInstance();
             builder.RegisterType<PasswordRegistry>().As<IPasswordRegistry>().SingleInstance();
-            
+
             // Register Cryptography
             builder.RegisterType<IsaacRandom>().As<IDeterministicRandom>();
             builder.RegisterType<ConsolePasswordReader>().As<IPasswordReader>().SingleInstance();
@@ -122,19 +133,20 @@ namespace Catalyst.Core.Lib
 
             // Register FileSystem
             builder.RegisterType<FileSystem.FileSystem>().As<IFileSystem>().SingleInstance();
-            
+
             // Register Rpc.IO.Messaging.Correlation
             builder.RegisterType<RpcMessageCorrelationManager>().As<IRpcMessageCorrelationManager>().SingleInstance();
 
             // Register Utils
-            builder.RegisterType<CancellationTokenProvider>().As<ICancellationTokenProvider>();
+            builder.RegisterType<CancellationTokenProvider>().As<ICancellationTokenProvider>()
+               .WithParameter("goodTillCancel", true);
             builder.RegisterType<TtlChangeTokenProvider>().As<IChangeTokenProvider>()
                .WithParameter("timeToLiveInMs", 8000);
 
             // Register Cache
             builder.RegisterType<MemoryCache>().As<IMemoryCache>().SingleInstance();
             builder.RegisterType<MemoryCacheOptions>().As<IOptions<MemoryCacheOptions>>();
-            
+
             // Register file transfer
             builder.RegisterType<DownloadFileTransferFactory>().As<IDownloadFileTransferFactory>().SingleInstance();
             builder.RegisterType<UploadFileTransferFactory>().As<IUploadFileTransferFactory>().SingleInstance();
@@ -149,7 +161,7 @@ namespace Catalyst.Core.Lib
             // Dns Client
             builder.RegisterType<Network.DnsClient>().As<IDns>();
             builder.RegisterType<LookupClient>().As<ILookupClient>().UsingConstructor();
-            
+
             base.Load(builder);
         }
     }

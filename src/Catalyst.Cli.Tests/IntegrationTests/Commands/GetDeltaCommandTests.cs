@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
@@ -40,7 +40,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
         public void Cli_Can_Request_Node_Info()
         {
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-            var hash = CidHelper.CreateCid(hashProvider.ComputeUtf8MultiHash("hello"));
+            var hash = hashProvider.ComputeUtf8MultiHash("hello").CreateCid();
 
             var result = Shell.ParseCommand("getdelta", "-h", hash, NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();

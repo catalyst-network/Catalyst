@@ -32,10 +32,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
     {
         private readonly PeerId _peer;
 
-        public HastingsOriginatorTests()
-        {
-            _peer = PeerIdHelper.GetPeerId("current_peer");
-        }
+        public HastingsOriginatorTests() { _peer = PeerIdHelper.GetPeerId("current_peer"); }
 
         [Fact]
         public void Can_Create_Memento_From_Current_State()
@@ -46,7 +43,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             var stateMemento = originator.CreateMemento();
 
             stateMemento.Peer.Should().Be(_peer);
-            
+
             stateMemento.Neighbours
                .Should()
                .BeEquivalentTo(memento.Neighbours);
@@ -57,7 +54,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         {
             var memento = DiscoveryHelper.MockMemento();
             var originator = new HastingsOriginator(memento);
-            
+
             originator.RestoreMemento(memento);
 
             originator.Peer.Should().Be(memento.Peer);
@@ -73,12 +70,12 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
             var memento1 = DiscoveryHelper.SubMemento();
             var memento2 = DiscoveryHelper.SubMemento();
-            
+
             originator.RestoreMemento(memento1);
             originator.RestoreMemento(memento2);
 
             originator.PnrCorrelationId.Should().NotBe(default);
-            
+
             originator.Peer.Should().BeEquivalentTo(memento2.Peer);
             originator.Neighbours.Should().BeEquivalentTo(memento2.Neighbours);
         }

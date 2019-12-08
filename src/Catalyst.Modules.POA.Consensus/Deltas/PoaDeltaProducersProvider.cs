@@ -32,7 +32,6 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Peer;
 using Dawn;
-using Google.Protobuf;
 using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -88,10 +87,11 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
 
             var allPeers = PeerRepository.GetAll().Concat(new[] {_selfAsPeer});
 
+            var previous = previousDeltaHash.ToArray();
+
             var peerIdsInPriorityOrder = allPeers.Select(p =>
                 {
-                    var array = p.PeerId.ToByteArray().Concat(previousDeltaHash.ToArray()).ToArray();
-                    var ranking = _hashProvider.ComputeMultiHash(array).ToArray();
+                    var ranking = _hashProvider.ComputeMultiHash(p.PeerId, previous).ToArray();
                     return new
                     {
                         p.PeerId,

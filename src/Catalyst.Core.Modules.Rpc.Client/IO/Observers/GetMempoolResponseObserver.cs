@@ -40,7 +40,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
     {
         /// <summary>
         ///     <param>
-        ///         A service used to output the result of the messages handling to the user.
+        ///         A repository used to output the result of the messages handling to the user.
         ///         <name>output</name>
         ///     </param>
         ///     <param name="logger">
