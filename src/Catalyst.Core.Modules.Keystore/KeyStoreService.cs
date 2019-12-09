@@ -114,7 +114,10 @@ namespace Catalyst.Core.Modules.Keystore
             // Get the BC key pair for the named key.
             var ekey = await Store.TryGetAsync(keyName, cancel).ConfigureAwait(false);
             if (ekey == null)
+            {
                 throw new KeyNotFoundException($"The key '{keyName}' does not exist.");
+            }
+            
             AsymmetricCipherKeyPair kp = null;
             UseEncryptedKey(ekey, key => { kp = this.GetKeyPairFromPrivateKey(key); });
 
@@ -194,7 +197,9 @@ namespace Catalyst.Core.Modules.Keystore
                 }).FirstOrDefault(r => r.key != null);
 
             if (recipient == null)
+            {
                 throw new KeyNotFoundException("The required decryption key is missing.");
+            }
 
             // Decrypt the contents.
             var decryptionKey = await GetPrivateKeyAsync(recipient.key.Name, cancel).ConfigureAwait(false);
@@ -222,7 +227,9 @@ namespace Catalyst.Core.Modules.Keystore
             {
                 // Subject Key Identifier is the key ID.
                 if (ri.RecipientID.SubjectKeyIdentifier is byte[] ski)
+                {
                     return new MultiHash(ski);
+                }
 
                 // Issuer is CN=<kid>,OU=keystore,O=ipfs
                 var issuer = ri.RecipientID.Issuer;
@@ -262,7 +269,7 @@ namespace Catalyst.Core.Modules.Keystore
         ///   </para>
         /// </remarks>
         public async Task SetPassphraseAsync(SecureString passphrase,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             // TODO: Verify DEK options.
             // TODO: get digest based on Options.Hash
@@ -307,11 +314,14 @@ namespace Catalyst.Core.Modules.Keystore
         ///   A task that represents the asynchronous operation. The task's result is
         ///   an <see cref="Microsoft.EntityFrameworkCore.Metadata.IKey"/> or <b>null</b> if the the key is not defined.
         /// </returns>
-        public async Task<IKey> FindKeyByNameAsync(string name, CancellationToken cancel = default(CancellationToken))
+        public async Task<IKey> FindKeyByNameAsync(string name, CancellationToken cancel = default)
         {
             var key = await Store.TryGetAsync(name, cancel).ConfigureAwait(false);
             if (key == null)
+            {
                 return null;
+            }
+            
             return new KeyInfo
             {
                 Id = key.Id, Name = key.Name
@@ -336,7 +346,7 @@ namespace Catalyst.Core.Modules.Keystore
         ///   a type and the DER encoding of the PKCS Subject Public Key Info.
         /// </remarks>
         /// <seealso href="https://tools.ietf.org/html/rfc5280#section-4.1.2.7"/>
-        public async Task<string> GetPublicKeyAsync(string name, CancellationToken cancel = default(CancellationToken))
+        public async Task<string> GetPublicKeyAsync(string name, CancellationToken cancel = default)
         {
             // TODO: Rename to GetIpfsPublicKeyAsync
             string result = null;
@@ -353,14 +363,21 @@ namespace Catalyst.Core.Modules.Keystore
                     {
                         Data = spki
                     };
-                    if (kp.Public is RsaKeyParameters)
-                        publicKey.Type = Lib.Cryptography.Proto.KeyType.RSA;
-                    else if (kp.Public is Ed25519PublicKeyParameters)
-                        publicKey.Type = Lib.Cryptography.Proto.KeyType.Ed25519;
-                    else if (kp.Public is ECPublicKeyParameters)
-                        publicKey.Type = Lib.Cryptography.Proto.KeyType.Secp256k1;
-                    else
-                        throw new NotSupportedException($"The key type {kp.Public.GetType().Name} is not supported.");
+                    switch (kp.Public) 
+                    {
+                        // case RsaKeyParameters _:
+                        //     publicKey.Type = Lib.Cryptography.Proto.KeyType.RSA;
+                        //     break;
+                        case Ed25519PublicKeyParameters _:
+                            publicKey.Type = Lib.Cryptography.Proto.KeyType.Ed25519;
+                            break;
+                        
+                        // case ECPublicKeyParameters _:
+                        //     publicKey.Type = Lib.Cryptography.Proto.KeyType.Secp256k1;
+                        //     break;
+                        default:
+                            throw new NotSupportedException($"The key type {kp.Public.GetType().Name} is not supported.");
+                    }
 
                     using (var ms = new MemoryStream())
                     {
@@ -377,7 +394,7 @@ namespace Catalyst.Core.Modules.Keystore
         public async Task<IKey> CreateAsync(string name,
             string keyType,
             int size,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             // Apply defaults.
             if (string.IsNullOrWhiteSpace(keyType))
@@ -470,7 +487,9 @@ namespace Catalyst.Core.Modules.Keystore
                 }
 
                 if (key == null || !key.IsPrivate)
+                {
                     throw new InvalidDataException("Not a valid PEM private key");
+                }
             }
 
             return await AddPrivateKeyAsync(name, GetKeyPairFromPrivateKey(key), cancel).ConfigureAwait(false);
@@ -492,7 +511,9 @@ namespace Catalyst.Core.Modules.Keystore
         {
             var key = await Store.TryGetAsync(name, cancel).ConfigureAwait(false);
             if (key == null)
+            {
                 return null;
+            }
 
             await Store.RemoveAsync(name, cancel).ConfigureAwait(false);
             return new KeyInfo
@@ -508,7 +529,10 @@ namespace Catalyst.Core.Modules.Keystore
         {
             var key = await Store.TryGetAsync(oldName, cancel).ConfigureAwait(false);
             if (key == null)
+            {
                 return null;
+            }
+            
             key.Name = newName;
             await Store.PutAsync(newName, key, cancel).ConfigureAwait(false);
             await Store.RemoveAsync(oldName, cancel).ConfigureAwait(false);
@@ -537,9 +561,15 @@ namespace Catalyst.Core.Modules.Keystore
         {
             var key = await Store.TryGetAsync(name, cancel).ConfigureAwait(false);
             if (key == null)
+            {
                 throw new KeyNotFoundException($"The key '{name}' does not exist.");
+            }
+            
             AsymmetricKeyParameter kp = null;
-            UseEncryptedKey(key, pkey => { kp = pkey; });
+            UseEncryptedKey(key, pkey =>
+            {
+                kp = pkey;
+            });
             return kp;
         }
 
@@ -583,7 +613,7 @@ namespace Catalyst.Core.Modules.Keystore
                 Name = name,
                 Pem = pem
             };
-            await Store.PutAsync(name, key).ConfigureAwait(false);
+            await Store.PutAsync(name, key, cancel).ConfigureAwait(false);
             log.DebugFormat("Added key '{0}' with ID {1}", name, keyId);
 
             return new KeyInfo
@@ -613,14 +643,20 @@ namespace Catalyst.Core.Modules.Keystore
             {
                 Data = spki
             };
-            if (key is RsaKeyParameters)
-                publicKey.Type = Lib.Cryptography.Proto.KeyType.RSA;
-            else if (key is ECPublicKeyParameters)
-                publicKey.Type = Lib.Cryptography.Proto.KeyType.Secp256k1;
-            else if (key is Ed25519PublicKeyParameters)
-                publicKey.Type = Lib.Cryptography.Proto.KeyType.Ed25519;
-            else
-                throw new NotSupportedException($"The key type {key.GetType().Name} is not supported.");
+            switch (key) 
+            {
+                case RsaKeyParameters _:
+                    publicKey.Type = Lib.Cryptography.Proto.KeyType.RSA;
+                    break;
+                case ECPublicKeyParameters _:
+                    publicKey.Type = Lib.Cryptography.Proto.KeyType.Secp256k1;
+                    break;
+                case Ed25519PublicKeyParameters _:
+                    publicKey.Type = Lib.Cryptography.Proto.KeyType.Ed25519;
+                    break;
+                default:
+                    throw new NotSupportedException($"The key type {key.GetType().Name} is not supported.");
+            }
 
             using (var ms = new MemoryStream())
             {
@@ -640,25 +676,33 @@ namespace Catalyst.Core.Modules.Keystore
         AsymmetricCipherKeyPair GetKeyPairFromPrivateKey(AsymmetricKeyParameter privateKey)
         {
             AsymmetricCipherKeyPair keyPair = null;
-            if (privateKey is RsaPrivateCrtKeyParameters rsa)
+            switch (privateKey) 
             {
-                var pub = new RsaKeyParameters(false, rsa.Modulus, rsa.PublicExponent);
-                keyPair = new AsymmetricCipherKeyPair(pub, privateKey);
-            }
-            else if (privateKey is Ed25519PrivateKeyParameters ed)
-            {
-                var pub = ed.GeneratePublicKey();
-                keyPair = new AsymmetricCipherKeyPair(pub, privateKey);
-            }
-            else if (privateKey is ECPrivateKeyParameters ec)
-            {
-                var q = ec.Parameters.G.Multiply(ec.D);
-                var pub = new ECPublicKeyParameters(ec.AlgorithmName, q, ec.PublicKeyParamSet);
-                keyPair = new AsymmetricCipherKeyPair(pub, ec);
+                case RsaPrivateCrtKeyParameters rsa: 
+                {
+                    var pub = new RsaKeyParameters(false, rsa.Modulus, rsa.PublicExponent);
+                    keyPair = new AsymmetricCipherKeyPair(pub, privateKey);
+                    break;
+                }
+                case Ed25519PrivateKeyParameters ed: 
+                {
+                    var pub = ed.GeneratePublicKey();
+                    keyPair = new AsymmetricCipherKeyPair(pub, privateKey);
+                    break;
+                }
+                case ECPrivateKeyParameters ec: 
+                {
+                    var q = ec.Parameters.G.Multiply(ec.D);
+                    var pub = new ECPublicKeyParameters(ec.AlgorithmName, q, ec.PublicKeyParamSet);
+                    keyPair = new AsymmetricCipherKeyPair(pub, ec);
+                    break;
+                }
             }
 
             if (keyPair == null)
+            {
                 throw new NotSupportedException($"The key type {privateKey.GetType().Name} is not supported.");
+            }
 
             return keyPair;
         }
@@ -672,7 +716,7 @@ namespace Catalyst.Core.Modules.Keystore
         /// <param name="cancel"></param>
         /// <returns></returns>
         public async Task<byte[]> CreateCertificateAsync(string keyName,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var cert = await CreateBCCertificateAsync(keyName, cancel).ConfigureAwait(false);
             return cert.GetEncoded();
@@ -687,38 +731,44 @@ namespace Catalyst.Core.Modules.Keystore
         /// <param name="cancel"></param>
         /// <returns></returns>
         public async Task<X509Certificate> CreateBCCertificateAsync(string keyName,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             // Get the BC key pair for the named key.
             var ekey = await Store.TryGetAsync(keyName, cancel).ConfigureAwait(false);
             if (ekey == null)
+            {
                 throw new KeyNotFoundException($"The key '{keyName}' does not exist.");
+            }
+            
             AsymmetricCipherKeyPair kp = null;
-            UseEncryptedKey(ekey, key => { kp = this.GetKeyPairFromPrivateKey(key); });
+            UseEncryptedKey(ekey, key =>
+            {
+                kp = GetKeyPairFromPrivateKey(key);
+            });
 
             // A signer for the key.
             var ku = new KeyUsage(KeyUsage.DigitalSignature
               | KeyUsage.DataEncipherment
               | KeyUsage.KeyEncipherment);
             ISignatureFactory signatureFactory = null;
-            if (kp.Private is ECPrivateKeyParameters)
+            switch (kp.Private) 
             {
-                signatureFactory = new Asn1SignatureFactory(
-                    X9ObjectIdentifiers.ECDsaWithSha256.ToString(),
-                    kp.Private);
-            }
-            else if (kp.Private is RsaPrivateCrtKeyParameters)
-            {
-                signatureFactory = new Asn1SignatureFactory(
-                    PkcsObjectIdentifiers.Sha256WithRsaEncryption.ToString(),
-                    kp.Private);
-            }
-            else if (kp.Private is Ed25519PrivateKeyParameters)
-            {
-                signatureFactory = new Asn1SignatureFactory(
-                    EdECObjectIdentifiers.id_Ed25519.Id.ToString(),
-                    kp.Private);
-                ku = new KeyUsage(KeyUsage.DigitalSignature);
+                case ECPrivateKeyParameters _:
+                    signatureFactory = new Asn1SignatureFactory(
+                        X9ObjectIdentifiers.ECDsaWithSha256.ToString(),
+                        kp.Private);
+                    break;
+                case RsaPrivateCrtKeyParameters _:
+                    signatureFactory = new Asn1SignatureFactory(
+                        PkcsObjectIdentifiers.Sha256WithRsaEncryption.ToString(),
+                        kp.Private);
+                    break;
+                case Ed25519PrivateKeyParameters _:
+                    signatureFactory = new Asn1SignatureFactory(
+                        EdECObjectIdentifiers.id_Ed25519.Id.ToString(),
+                        kp.Private);
+                    ku = new KeyUsage(KeyUsage.DigitalSignature);
+                    break;
             }
 
             if (signatureFactory == null)

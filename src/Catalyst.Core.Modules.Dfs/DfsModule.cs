@@ -34,6 +34,7 @@ using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
+using Lib.P2P.PubSub;
 using Makaretu.Dns;
 using Nito.AsyncEx;
 
@@ -43,8 +44,11 @@ namespace Catalyst.Core.Modules.Dfs
     {
         protected override void LoadApi(ContainerBuilder builder)
         {
-            builder.RegisterType<BlockApi>().As<IBlockApi>().SingleInstance().OnActivated(e => e.Instance.PinApi = e.Context.Resolve<IPinApi>()).PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
-            builder.RegisterType<PinApi>().As<IPinApi>().SingleInstance().OnActivated(e => e.Instance.BlockApi = e.Context.Resolve<IBlockApi>()).PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+            builder.RegisterType<BlockApi>().As<IBlockApi>().SingleInstance()
+               .OnActivated(e => e.Instance.PinApi = e.Context.Resolve<IPinApi>());
+
+            builder.RegisterType<PinApi>().As<IPinApi>().SingleInstance()
+               .OnActivated(e => e.Instance.BlockApi = e.Context.Resolve<IBlockApi>());
             
             builder.RegisterType<BitSwapApi>().As<IBitswapApi>().SingleInstance();
             builder.RegisterType<BlockRepositoryApi>().As<IBlockRepositoryApi>().SingleInstance();
@@ -66,7 +70,8 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<DfsService>().As<IDfsService>().SingleInstance();
             builder.RegisterType<BitswapService>().As<IBitswapService>().SingleInstance();
             builder.RegisterType<SwarmService>().As<ISwarmService>().SingleInstance();
-            
+            builder.RegisterType<PubSubService>().As<IPubSubService>().SingleInstance();
+
             builder.RegisterType<DotClient>().As<IDnsClient>();
         }
         

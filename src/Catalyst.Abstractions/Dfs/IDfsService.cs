@@ -81,8 +81,5 @@ namespace Catalyst.Abstractions.Dfs
         ///   Finds information with a distributed hash table.
         /// </summary>
         AsyncLazy<DhtService> DhtService { get; }
-
-        Task<Cid> ResolveIpfsPathToCidAsync(string path,
-            CancellationToken cancel = default(CancellationToken));
     }
 }

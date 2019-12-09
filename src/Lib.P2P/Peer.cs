@@ -98,12 +98,7 @@ namespace Lib.P2P
         /// </remarks>
         public bool IsValid()
         {
-            if (Id == null)
-                return false;
-            if (PublicKey != null && !Id.Matches(Convert.FromBase64String(PublicKey)))
-                return false;
-
-            return true;
+            return Id != null && (PublicKey == null || Id.Equals(PublicKey));
         }
 
         /// <inheritdoc />

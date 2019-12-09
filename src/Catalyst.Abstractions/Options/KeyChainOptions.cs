@@ -14,7 +14,7 @@ namespace Catalyst.Abstractions.Options
         /// <value>
         ///   "rsa", "ed25519" or "secp256k1". Defaults to "rsa".
         /// </value>
-        public string DefaultKeyType { get; set; } = "rsa";
+        public string DefaultKeyType { get; set; } = "ed25519";
 
         /// <summary>
         ///   The default key size, when generating a RSA key.

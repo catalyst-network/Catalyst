@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Lib.IO;
@@ -19,14 +20,23 @@ using ProtoBuf;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    class UnixFsApi : IUnixFsApi
+    internal sealed class UnixFsApi : IUnixFsApi
     {
+        private readonly IDhtApi _dhtApi;
+        private readonly IBlockApi _blockApi;
+        private readonly IKeyApi _keyApi;
+        private readonly INameApi _nameApi;
         static ILog log = LogManager.GetLogger(typeof(UnixFsApi));
-        IDfsService ipfs;
 
         static readonly int DefaultLinksPerBlock = 174;
 
-        public UnixFsApi(IDfsService ipfs) { this.ipfs = ipfs; }
+        public UnixFsApi(IDhtApi dhtApi, IBlockApi blockApi, IKeyApi keyApi, INameApi nameApi)
+        {
+            _dhtApi = dhtApi;
+            _blockApi = blockApi;
+            _keyApi = keyApi;
+            _nameApi = nameApi;
+        }
 
         public async Task<IFileSystemNode> AddFileAsync(string path,
             AddFileOptions options = default(AddFileOptions),
@@ -61,7 +71,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             var blockService = GetBlockService(options);
 
             var chunker = new SizeChunker();
-            var nodes = await chunker.ChunkAsync(stream, name, options, blockService, ipfs.KeyApi, cancel)
+            var nodes = await chunker.ChunkAsync(stream, name, options, blockService, _keyApi, cancel)
                .ConfigureAwait(false);
 
             // Multiple nodes for the file?
@@ -83,9 +93,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             }
 
             // Advertise the root node.
-            if (options.Pin && ipfs.IsStarted)
+            if (options.Pin)
             {
-                await ipfs.DhtApi.ProvideAsync(node.Id, advertise: true, cancel: cancel).ConfigureAwait(false);
+                await _dhtApi.ProvideAsync(node.Id, advertise: true, cancel: cancel).ConfigureAwait(false);
             }
 
             // Return the file system node.
@@ -213,8 +223,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public async Task<IFileSystemNode> ListFileAsync(string path,
             CancellationToken cancel = default(CancellationToken))
         {
-            var cid = await ipfs.ResolveIpfsPathToCidAsync(path, cancel).ConfigureAwait(false);
-            var block = await ipfs.BlockApi.GetAsync(cid, cancel).ConfigureAwait(false);
+            var r = await _nameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
+            var cid = Cid.Decode(r.Remove(0, 6));
+
+            var block = await _blockApi.GetAsync(cid, cancel).ConfigureAwait(false);
 
             // TODO: A content-type registry should be used.
             if (cid.ContentType == "dag-pb")
@@ -271,8 +283,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public async Task<Stream> ReadFileAsync(string path, CancellationToken cancel = default(CancellationToken))
         {
-            var cid = await ipfs.ResolveIpfsPathToCidAsync(path, cancel).ConfigureAwait(false);
-            return await UnixFs.CreateReadStreamAsync(cid, ipfs.BlockApi, ipfs.KeyApi, cancel).ConfigureAwait(false);
+            var r = await _nameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
+            var cid = Cid.Decode(r.Remove(0, 6));
+            return await UnixFs.CreateReadStreamAsync(cid, _blockApi, _keyApi, cancel).ConfigureAwait(false);
         }
 
         public async Task<Stream> ReadFileAsync(string path,
@@ -288,7 +301,8 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             bool compress = false,
             CancellationToken cancel = default(CancellationToken))
         {
-            var cid = await ipfs.ResolveIpfsPathToCidAsync(path, cancel).ConfigureAwait(false);
+            var r = await _nameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
+            var cid = Cid.Decode(r.Remove(0, 6));
             var ms = new MemoryStream();
             using (var tarStream = new TarOutputStream(ms, 1))
             using (var archive = TarArchive.CreateOutputTarArchive(tarStream))
@@ -303,7 +317,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         async Task AddTarNodeAsync(Cid cid, string name, TarOutputStream tar, CancellationToken cancel)
         {
-            var block = await ipfs.BlockApi.GetAsync(cid, cancel).ConfigureAwait(false);
+            var block = await _blockApi.GetAsync(cid, cancel).ConfigureAwait(false);
             var dm = new DataMessage
             {
                 Type = DataType.Raw
@@ -343,7 +357,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 header.TypeFlag = TarHeader.LF_NORMAL;
                 header.Size = content.Length;
                 tar.PutNextEntry(entry);
-                await content.CopyToAsync(tar);
+                await content.CopyToAsync(tar, cancel);
                 tar.CloseEntry();
             }
 
@@ -361,7 +375,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             return options.OnlyHash
                 ? new HashOnlyBlockService()
-                : ipfs.BlockApi;
+                : _blockApi;
         }
 
         /// <summary>

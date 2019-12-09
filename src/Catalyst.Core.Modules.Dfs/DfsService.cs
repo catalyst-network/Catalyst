@@ -116,21 +116,6 @@ namespace Catalyst.Core.Modules.Dfs
         public bool IsStarted => _stopTasks.Count > 0;
         
         private SecureString passphrase;
-        private readonly IBitswapApi _bitSwapApi;
-        private readonly IBlockApi _blockApi;
-        private readonly IBlockRepositoryApi _blockRepositoryApi;
-        private readonly IBootstrapApi _bootstrapApi;
-        private readonly IConfigApi _configApi;
-        private readonly IDagApi _dagApi;
-        private readonly IDhtApi _dhtApi;
-        private readonly IUnixFsApi _unixFsApi;
-        private readonly IKeyApi _keyApi;
-        private readonly INameApi _nameApi;
-        private readonly IObjectApi _objectApi;
-        private readonly IPinApi _pinApi;
-        private readonly IPubSubApi _pubSubApi;
-        private readonly IStatsApi _statsApi;
-        private readonly ISwarmApi _swarmApi;
         private readonly IHashProvider _hashProvider;
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
 
@@ -152,21 +137,21 @@ namespace Catalyst.Core.Modules.Dfs
             IHashProvider hashProvider,
             IPasswordManager passwordManager)
         {
-            _bitSwapApi = bitSwapApi;
-            _blockApi = blockApi;
-            _blockRepositoryApi = blockRepositoryApi;
-            _bootstrapApi = bootstrapApi;
-            _configApi = configApi;
-            _dagApi = dagApi;
-            _dhtApi = dhtApi;
-            _unixFsApi = unixFsApi;
-            _keyApi = keyApi;
-            _nameApi = nameApi;
-            _objectApi = objectApi;
-            _pinApi = pinApi;
-            _pubSubApi = pubSubApi;
-            _statsApi = statsApi;
-            _swarmApi = swarmApi;
+            BitSwapApi = bitSwapApi;
+            BlockApi = blockApi;
+            BlockRepositoryApi = blockRepositoryApi;
+            BootstrapApi = bootstrapApi;
+            ConfigApi = configApi;
+            DagApi = dagApi;
+            DhtApi = dhtApi;
+            UnixFsApi = unixFsApi;
+            KeyApi = keyApi;
+            NameApi = nameApi;
+            ObjectApi = objectApi;
+            PinApi = pinApi;
+            PubSubApi = pubSubApi;
+            StatsApi = statsApi;
+            SwarmApi = swarmApi;
             _hashProvider = hashProvider;
          
             passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your IPFS password");
@@ -212,7 +197,11 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 Log.Debug("Building local peer");
                 Log.Debug("Getting key info about self");
-                var self = await KeyApi.GetPublicKeyAsync("self").ConfigureAwait(false);
+                await KeyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false);
+
+                var self = await KeyApi.GetPublicKeyAsync("self").ConfigureAwait(false) 
+                 ?? await KeyApi.CreateAsync("self", null, 0).ConfigureAwait(false);
+
                 var localPeer = new Peer
                 {
                     Id = self.Id,
@@ -248,7 +237,7 @@ namespace Catalyst.Core.Modules.Dfs
                 var swarm = new SwarmService
                 {
                     LocalPeer = peer,
-                    LocalPeerKey = global::Lib.P2P.Cryptography.Key.CreatePrivateKey(self),
+                    LocalPeerKey = Key.CreatePrivateKey(self),
                     NetworkProtector = Options.Swarm.PrivateNetworkKey == null
                         ? null
                         : new Psk1Protector
@@ -315,28 +304,6 @@ namespace Catalyst.Core.Modules.Dfs
                 Log.Debug("Built PubSub service");
                 return pubsub;
             });
-        }
-        
-        /// <summary>
-        ///   Resolve an "IPFS path" to a content ID.
-        /// </summary>
-        /// <param name="path">
-        ///   A IPFS path, such as "Qm...", "Qm.../a/b/c" or "/ipfs/QM..."
-        /// </param>
-        /// <param name="cancel">
-        ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
-        /// </param>
-        /// <returns>
-        ///   The content ID of <paramref name="path"/>.
-        /// </returns>
-        /// <exception cref="ArgumentException">
-        ///   The <paramref name="path"/> cannot be resolved.
-        /// </exception>
-        public async Task<Cid> ResolveIpfsPathToCidAsync(string path,
-            CancellationToken cancel = default)
-        {
-            var r = await NameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
-            return Cid.Decode(r.Remove(0, 6)); // strip '/ipfs/'.
         }
         
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
@@ -74,6 +75,12 @@ namespace Catalyst.Core.Modules.Keystore
             CancellationToken cancel = default(CancellationToken))
         {
             return await _keyStoreService.RenameAsync(oldName, newName, cancel).ConfigureAwait(false);
+        }
+
+        public async Task SetPassphraseAsync(SecureString passphrase,
+            CancellationToken cancel = default)
+        {
+            await _keyStoreService.SetPassphraseAsync(passphrase, cancel);
         }
     }
 }

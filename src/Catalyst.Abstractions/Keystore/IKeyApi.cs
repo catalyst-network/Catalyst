@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
@@ -115,5 +116,8 @@ namespace Catalyst.Abstractions.Keystore
 
         Task<byte[]> ReadProtectedDataAsync(byte[] cipherText,
             CancellationToken cancel = default(CancellationToken));
+
+        Task SetPassphraseAsync(SecureString passphrase,
+            CancellationToken cancel = default);
     }
 }
