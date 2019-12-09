@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Transaction;
@@ -36,21 +37,24 @@ namespace Catalyst.TestUtils.ProtocolHelpers
     {
         private static readonly IMapperProvider MapperProvider = new TestMapperProvider();
 
-        public static ContractEntry GetContractEntry()
+        public static PublicEntry GetContractEntry()
         {
             var amount = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
+            var fees = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
 
-            return new ContractEntry
+            return new PublicEntry
             {
                 Data = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                 Amount = amount.ToByteString(),
-                Base = BaseEntryHelper.GetBaseEntry()
+                TransactionFees = fees.ToByteString(),
+                ReceiverAddress = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                SenderAddress = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
             };
         }
 
-        public static IEnumerable<ContractEntry> GetContractEntries(int count)
+        public static IEnumerable<PublicEntry> GetContractEntries(int count)
         {
-            var contractList = new List<ContractEntry>();
+            var contractList = new List<PublicEntry>();
 
             Enumerable.Range(0, count).ToList().ForEach(i =>
             {
@@ -59,10 +63,10 @@ namespace Catalyst.TestUtils.ProtocolHelpers
             return contractList;
         }
 
-        public static IEnumerable<ContractEntryDao> GetContractEntriesDao(int count)
+        public static IEnumerable<PublicEntryDao> GetContractEntriesDao(int count)
         {
             var contractList = GetContractEntries(count).Select(i => 
-                i.ToDao<ContractEntry, ContractEntryDao>(MapperProvider));
+                i.ToDao<PublicEntry, PublicEntryDao>(MapperProvider));
 
             return contractList;
         }

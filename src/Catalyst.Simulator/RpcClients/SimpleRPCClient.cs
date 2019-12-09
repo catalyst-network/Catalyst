@@ -165,7 +165,7 @@ namespace Catalyst.Simulator.RpcClients
             try
             {
                 _rpcClient =
-                    await _rpcClientFactory.GetClient(_certificate, peerRpcConfig).ConfigureAwait(false);
+                    await _rpcClientFactory.GetClientAsync(_certificate, peerRpcConfig).ConfigureAwait(false);
                 return _rpcClient.Channel.Open;
             }
             catch (ConnectException connectionException)

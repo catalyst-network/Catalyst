@@ -11,7 +11,11 @@
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Consensus\Catalyst.Core.Modules.Consensus.csproj" />
+      <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
       <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     </ItemGroup>
 </Project>

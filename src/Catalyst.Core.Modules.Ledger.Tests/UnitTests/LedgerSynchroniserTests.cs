@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
@@ -64,10 +64,10 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private Dictionary<Cid, Delta> BuildChainedDeltas(int chainSize)
         {
             var chainedDeltas = Enumerable.Range(0, chainSize + 1).ToDictionary(
-                i => CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash(i.ToString())),
+                i => _hashProvider.ComputeUtf8MultiHash(i.ToString()).CreateCid(),
                 i =>
                 {
-                    var previousHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash((i - 1).ToString()));
+                    var previousHash = _hashProvider.ComputeUtf8MultiHash((i - 1).ToString()).CreateCid();
                     var delta = DeltaHelper.GetDelta(_hashProvider, previousHash);
                     return delta;
                 });
@@ -75,7 +75,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _output.WriteLine("chain is:");
             _output.WriteLine(string.Join(Environment.NewLine,
                 chainedDeltas.Select((c, i) =>
-                    $"{i}: current {c.Key} | previous {CidHelper.Cast(c.Value.PreviousDeltaDfsHash.ToByteArray())}")));
+                    $"{i}: current {c.Key} | previous {c.Value.PreviousDeltaDfsHash.ToByteArray().ToCid()}")));
             return chainedDeltas;
         }
 

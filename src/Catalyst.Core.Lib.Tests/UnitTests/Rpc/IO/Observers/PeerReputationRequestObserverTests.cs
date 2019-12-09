@@ -29,8 +29,8 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -97,7 +97,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private GetPeerReputationResponse GetGetPeerReputationResponse(GetPeerReputationRequest request)
         {
             var protocolMessage = request.ToProtocolMessage(_senderId);
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
+            var messageStream =
+                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var peerSettings = _senderId.ToSubstitutedPeerSettings();
             var handler = new PeerReputationRequestObserver(peerSettings, _logger, _peerRepository);

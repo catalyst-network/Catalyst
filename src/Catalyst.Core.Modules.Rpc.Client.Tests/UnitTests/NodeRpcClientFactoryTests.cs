@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             nodeRpcConfig.NodeId = "0";
             nodeRpcConfig.PfxFileName = "pfx";
             nodeRpcConfig.Port = 9000;
-            var rpcClient = await _rpcClientFactory.GetClient(null, nodeRpcConfig);
+            var rpcClient = await _rpcClientFactory.GetClientAsync(null, nodeRpcConfig);
 
             rpcClient.Should().BeAssignableTo<IRpcClient>();
         }

@@ -21,12 +21,15 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Transaction;
+using Nethermind.Core.Extensions;
 
 namespace Catalyst.TestUtils.ProtocolHelpers
 {
@@ -36,11 +39,14 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 
         public static ConfidentialEntry GetConfidentialEntry()
         {
+            var fees = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
             return new ConfidentialEntry
             {
                 PedersenCommitment = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                RangeProof = ByteUtil.GenerateRandomByteArray(256).ToByteString(),
-                Base = BaseEntryHelper.GetBaseEntry()
+                RangeProof = new RangeProof(),
+                TransactionFees = fees.ToByteString(),
+                ReceiverPublicKey = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                SenderPublicKey = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
             };
         }
 

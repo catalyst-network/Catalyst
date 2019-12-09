@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
@@ -36,16 +37,21 @@ namespace Catalyst.Core.Modules.Web3.Controllers
     public class EthController : Controller
     {
         private readonly IWeb3EthApi _web3EthApi;
-        private readonly IWeb3HandlerResolver _handlerResolver;
+        private readonly IEthRpcService _ethRpcService;
         private readonly IJsonSerializer _jsonSerializer;
+        private readonly IWeb3HandlerResolver _handlerResolver;
         private readonly ILogger _logger = Log.Logger.ForContext(typeof(EthController));
 
-        public EthController(IWeb3EthApi web3EthApi, IWeb3HandlerResolver handlerResolver, IJsonSerializer jsonSerializer)
+        public EthController(IWeb3EthApi web3EthApi, IWeb3HandlerResolver handlerResolver, IJsonSerializer jsonSerializer, IEthRpcService ethRpcService)
         {
+            _ethRpcService = ethRpcService;
             _web3EthApi = web3EthApi ?? throw new ArgumentNullException(nameof(web3EthApi));
             _handlerResolver = handlerResolver ?? throw new ArgumentNullException(nameof(handlerResolver));
             _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
         }
+
+        [HttpGet]
+        public long? eth_blockNumber() { return _ethRpcService.eth_blockNumber(); }
 
         [HttpPost]
         public JsonRpcResponse Request([FromBody] JsonRpcRequest request)

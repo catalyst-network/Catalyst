@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Lib.P2P;
@@ -48,7 +49,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate)
         {
             return nameof(DeltaElector) + "-" +
-                CidHelper.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
+                candidate.Candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
         }
 
         public string GetCandidateListCacheKey(Cid previousDeltaHash)
@@ -83,7 +84,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
 
-                var cid = CidHelper.Cast(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray());
+                var cid = candidate.Candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(cid)
                    .Any(p => p.Equals(candidate.VoterId)))

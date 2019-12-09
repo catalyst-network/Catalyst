@@ -22,6 +22,7 @@
 #endregion
 
 using Autofac;
+using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;

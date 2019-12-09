@@ -23,6 +23,7 @@
 
 using AutoMapper;
 using Google.Protobuf;
+using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
@@ -39,6 +40,22 @@ namespace Catalyst.Core.Lib.DAO.Converters
         public ByteString Convert(string sourceMember, ResolutionContext context)
         {
             return ByteString.FromBase64(sourceMember);
+        }
+    }
+
+    public class ByteArrayToStringBase32Converter : IValueConverter<byte[], string>
+    {
+        public string Convert(byte[] sourceMember, ResolutionContext context)
+        {
+            return sourceMember.ToBase32();
+        }
+    }
+
+    public class StringBase32ToByteArrayConverter : IValueConverter<string, byte[]>
+    {
+        public byte[] Convert(string sourceMember, ResolutionContext context)
+        {
+            return sourceMember.FromBase32();
         }
     }
 }

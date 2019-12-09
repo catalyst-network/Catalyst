@@ -29,7 +29,8 @@ namespace Catalyst.Core.Modules.Kvm
     public sealed class CatalystSpecProvider : ISpecProvider
     {
         public IReleaseSpec GenesisSpec => CatalystGenesisSpec.Instance;
-        public IReleaseSpec GetSpec(long blockNumber) => GenesisSpec;
+        public IReleaseSpec GetSpec(long blockNumber) { return GenesisSpec; }
+
         public long? DaoBlockNumber => null;
         public int ChainId => NetworkTypes.Dev.Id; // @TODO should we not be using protocol.common.network?
     }

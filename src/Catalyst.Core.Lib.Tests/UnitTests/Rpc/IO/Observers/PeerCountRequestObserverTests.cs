@@ -30,8 +30,8 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [InlineData(20)]
         public void TestPeerListRequestResponse(int fakePeers)
         {
-            var peerRepository = Substitute.For<IPeerRepository>();
+            var peerService = Substitute.For<IPeerRepository>();
             var peerList = new List<Peer>();
 
             for (var i = 0; i < fakePeers; i++)
@@ -96,7 +96,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            peerRepository.GetAll().Returns(peerList);
+            peerService.GetAll().Returns(peerList);
 
             var sendPeerId = PeerIdHelper.GetPeerId("sender");
 
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var peerSettings = sendPeerId.ToSubstitutedPeerSettings();
-            var handler = new PeerCountRequestObserver(peerSettings, peerRepository, _logger);
+            var handler = new PeerCountRequestObserver(peerSettings, peerService, _logger);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();

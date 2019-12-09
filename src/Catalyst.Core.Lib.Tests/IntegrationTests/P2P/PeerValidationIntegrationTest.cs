@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
@@ -33,10 +32,12 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
+using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
+using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
     public sealed class PeerValidationIntegrationTest : FileSystemBasedTest
     {
         private IPeerService _peerService;
-        private IPeerChallenger _peerChallenger;
+        private IPeerChallengeRequest _peerChallengeRequest;
         private readonly PeerSettings _peerSettings;
 
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
@@ -71,19 +72,20 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
 
             var peerSettings =
-                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port).ToSubstitutedPeerSettings();
+                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port)
+                   .ToSubstitutedPeerSettings();
 
             ContainerProvider.ContainerBuilder.Register(c =>
             {
                 var peerClient = c.Resolve<IPeerClient>();
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                return new PeerChallenger(logger, peerClient, peerSettings, 5);
-            }).As<IPeerChallenger>().SingleInstance();
+                return new PeerChallengeRequest(logger, peerClient, peerSettings, 10);
+            }).As<IPeerChallengeRequest>().SingleInstance();
         }
 
         private async Task Setup()
         {
-            _peerChallenger = ContainerProvider.Container.Resolve<IPeerChallenger>();
+            _peerChallengeRequest = ContainerProvider.Container.Resolve<IPeerChallengeRequest>();
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {
@@ -93,18 +95,16 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 UdpClientHandlerWorkerThreads = 5
             };
 
-            var keySigner = Substitute.For<IKeySigner>();
-            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
-            var signature = Substitute.For<ISignature>();
-            keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
+            var keySigner = ContainerProvider.Container.Resolve<IKeySigner>(); // @@
 
-            _peerService = new PeerService(new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
+            _peerService = new PeerService(
+                new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
                 new PeerServerChannelFactory(ContainerProvider.Container.Resolve<IPeerMessageCorrelationManager>(),
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
                     keySigner,
                     ContainerProvider.Container.Resolve<IPeerIdValidator>(),
                     ContainerProvider.Container.Resolve<IPeerSettings>()),
-                new DiscoveryHelper.DevDiscover(), 
+                new DiscoveryHelper.DevDiscover(),
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,
                 ContainerProvider.Container.Resolve<ILogger>(),
@@ -113,15 +113,15 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             await _peerService.StartAsync();
         }
 
-        // [Fact(Skip = "false")]
+        // [Fact(Skip = "this wont work as it tries to connect to a real node!! We need to instantiate two sockets here")]
         // [Trait(Traits.TestType, Traits.IntegrationTest)]
         // public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         // {
-        //     await Setup().ConfigureAwait(false);
-        //     var valid = await RunPeerChallengeTask(_peerSettings.PublicKey, _peerSettings.BindAddress,
-        //         _peerSettings.Port).ConfigureAwait(false);
-        //
-        //     valid.Should().BeTrue();
+        //     // await Setup().ConfigureAwait(false);
+        //     // var valid = await RunPeerChallengeTask(_peerSettings.PublicKey, _peerSettings.BindAddress,
+        //     //     _peerSettings.Port).ConfigureAwait(false);
+        //     //
+        //     // valid.Should().BeTrue();
         // }
 
         [Theory]
@@ -145,8 +145,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             Output.WriteLine(port.ToString());
 
             var recipient = publicKey.BuildPeerIdFromBase32Key(ip, port);
-            
-            return await _peerChallenger.ChallengePeerAsync(recipient);
+
+            return await _peerChallengeRequest.ChallengePeerAsync(recipient);
         }
 
         protected override void Dispose(bool disposing)

@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
 
-            _keySigner = Substitute.For<IKeySigner>();
+            _keySigner = Substitute.For<FakeKeySigner>();
             _keySigner.CryptoContext.Returns(new FfiWrapper());
 
             var logger = Substitute.For<ILogger>();

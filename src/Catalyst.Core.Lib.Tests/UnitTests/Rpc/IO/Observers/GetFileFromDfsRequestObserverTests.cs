@@ -33,7 +33,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
             {
-                DfsHash = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("test"))
+                DfsHash = _hashProvider.ComputeUtf8MultiHash("test").CreateCid()
             };
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());

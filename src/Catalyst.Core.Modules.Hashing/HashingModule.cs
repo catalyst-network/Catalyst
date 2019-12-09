@@ -27,7 +27,7 @@ using MultiFormats.Registry;
 
 namespace Catalyst.Core.Modules.Hashing
 {
-    public class HashingModule : Module
+    public sealed class HashingModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

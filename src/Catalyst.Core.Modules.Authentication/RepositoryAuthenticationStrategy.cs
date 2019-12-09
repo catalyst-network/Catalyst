@@ -21,9 +21,7 @@
 
 #endregion
 
-using System.Linq;
 using Catalyst.Abstractions.Rpc.Authentication;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Authentication.Repository;
 using Catalyst.Protocol.Peer;
 
@@ -48,8 +46,7 @@ namespace Catalyst.Core.Modules.Authentication
         /// <inheritdoc cref="IAuthenticationStrategy"/>
         public bool Authenticate(PeerId peerIdentifier)
         {
-            return _trustedPeers.TryFind(t => t.IpAddress.Equals(peerIdentifier.Ip.ToString()) &&
-                t.PublicKey.KeyToBytes().SequenceEqual(peerIdentifier.PublicKey), out _);
+            return _trustedPeers.TryFind(peerIdentifier, out _);
         }
     }
 }

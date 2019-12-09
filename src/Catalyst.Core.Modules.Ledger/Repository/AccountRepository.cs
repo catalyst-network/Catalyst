@@ -27,8 +27,23 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    public class AccountRepository : IAccountRepository
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        private readonly IRepository<Account, string> _repository;
+
+        public AccountRepository(IRepository<Account, string> repository)
+        {
+            _repository = repository;
+        }
+
+        public void Add(Account account)
+        {
+            _repository.Add(account);
+        }
+
+        public void Dispose()
+        {
+            _repository.Dispose();
+        }
     }
 }

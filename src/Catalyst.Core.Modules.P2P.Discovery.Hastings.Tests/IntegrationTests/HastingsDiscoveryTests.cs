@@ -302,7 +302,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                        .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
                        .Select(n => n.PeerId)
                        .Contains(pingDto.Sender);
-                    
+
                     foundResponsiveNeighbour.Should().BeTrue();
                 }
             }

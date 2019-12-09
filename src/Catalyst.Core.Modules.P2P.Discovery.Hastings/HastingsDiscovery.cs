@@ -314,7 +314,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = new MessageDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode, StepProposal.PnrCorrelationId),
+            var peerNeighbourRequestDto = new MessageDto(
+                new PeerNeighborsRequest().ToProtocolMessage(_ownNode, StepProposal.PnrCorrelationId),
                 StepProposal.Peer
             );
 
@@ -416,7 +417,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                 {
                     try
                     {
-                        var pingRequestDto = new MessageDto(new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
+                        var pingRequestDto = new MessageDto(
+                            new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
                             n.PeerId);
 
                         PeerClient.SendMessage(pingRequestDto);

@@ -108,7 +108,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Helpers
         public static IRpcClientFactory MockNodeRpcClientFactory(ICommandContext commandContext,
             IRpcClient rpcClient)
         {
-            commandContext.RpcClientFactory.GetClient(Arg.Any<X509Certificate2>(), Arg.Any<IRpcClientConfig>())
+            commandContext.RpcClientFactory.GetClientAsync(Arg.Any<X509Certificate2>(), Arg.Any<IRpcClientConfig>())
                .Returns(rpcClient);
             return commandContext.RpcClientFactory;
         }

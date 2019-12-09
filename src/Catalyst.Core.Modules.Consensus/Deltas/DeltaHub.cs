@@ -31,7 +31,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
@@ -139,7 +139,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 _logger.Verbose(
                     "Broadcasting new delta dfs address {dfsAddress} for delta with previous delta hash {previousDeltaHash}",
-                    dfsFileAddress, CidHelper.Cast(previousDeltaHash.ToByteArray()));
+                    dfsFileAddress, previousDeltaHash.ToByteArray().ToCid());
 
                 var newDeltaHashOnDfs = new DeltaDfsHashBroadcast
                 {

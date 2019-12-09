@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -43,13 +42,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
     {
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IMessageDto<ProtocolMessage> _dto;
-        private readonly IKeySigner _keySigner;
+        private readonly FakeKeySigner _keySigner;
         private readonly ISignature _signature;
 
         public ProtocolMessageSignHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _keySigner = Substitute.For<IKeySigner>();
+            _keySigner = Substitute.For<FakeKeySigner>();
             _signature = Substitute.For<ISignature>();
 
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength));

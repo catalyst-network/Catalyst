@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
             var dnsQueryResponse =
                 await dns.GetTxtRecordsAsync("seed1.network.atlascity.io");
             var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();
-            var seedIp = answerSection.EscapedText.FirstOrDefault();
+            var seedIp = answerSection?.EscapedText.FirstOrDefault();
             seedIp.Should().Be("0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839");
         }
     }

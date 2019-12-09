@@ -28,12 +28,41 @@ using System.Text;
 using Catalyst.Abstractions.Hashing;
 using MultiFormats;
 using MultiFormats.Registry;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Modules.Hashing
 {
-    public class HashProvider : IHashProvider
+    public sealed class HashProvider : IHashProvider
     {
         public HashingAlgorithm HashingAlgorithm { set; get; }
+
+        /// <summary>
+        ///     Parse a string representation of a multihash
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
+        public static MultiHash Parse(string buffer) { return new MultiHash(buffer); }
+
+        /// <summary>
+        ///     Parse a byte array representation of a multihash
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
+        public static MultiHash Parse(byte[] buffer) { return new MultiHash(buffer); }
+
+        /// <summary>
+        ///     Parse a memory stream representation of a multihash
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static MultiHash Parse(MemoryStream stream) { return new MultiHash(stream); }
+
+        /// <summary>
+        ///     Parse a protobuff coded input stream representation of a multihash
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static MultiHash Parse(CodedInputStream stream) { return new MultiHash(stream); }
 
         public HashProvider(HashingAlgorithm hashingAlgorithm) { HashingAlgorithm = hashingAlgorithm; }
 
@@ -66,5 +95,13 @@ namespace Catalyst.Core.Modules.Hashing
         public MultiHash ComputeMultiHash(byte[] data) { return MultiHash.ComputeHash(data, HashingAlgorithm.Name); }
 
         public MultiHash ComputeMultiHash(Stream data) { return MultiHash.ComputeHash(data, HashingAlgorithm.Name); }
+
+        public MultiHash ComputeMultiHash(byte[] data, int offset, int count)
+        {
+            using (var algorithm = HashingAlgorithm.Hasher())
+            {
+                return new MultiHash(HashingAlgorithm.Name, algorithm.ComputeHash(data, offset, count));
+            }
+        }
     }
 }

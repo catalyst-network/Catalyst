@@ -29,7 +29,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Catalyst.Core.Lib.Util
 {
-    internal class JsonProtoObjectConverter<T> : JsonConverter<IMessage<T>> where T : IMessage<T>, new()
+    public class JsonProtoObjectConverter<T> : JsonConverter<IMessage<T>> where T : IMessage<T>, new()
     {
         public override void WriteJson(JsonWriter writer, IMessage<T> value, JsonSerializer serializer)
         {

@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Kvm
 
         /// <inheritdoc />
         public long MaximumExtraDataSize { get; } = Istanbul.Instance.MaximumExtraDataSize;
-        
+
         /// <inheritdoc />
         public long MaxCodeSize { get; } = Istanbul.Instance.MaxCodeSize;
 

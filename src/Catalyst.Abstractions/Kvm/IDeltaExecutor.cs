@@ -29,7 +29,7 @@ namespace Catalyst.Abstractions.Kvm
     public interface IDeltaExecutor
     {
         void Execute(Delta delta, ITxTracer txTracer);
-        
+
         void CallAndRestore(Delta delta, ITxTracer txTracer);
     }
 }

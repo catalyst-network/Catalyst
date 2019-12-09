@@ -36,6 +36,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.DAO;
 using MultiFormats;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Serilog;
 
 namespace Catalyst.Node.POA.CE
@@ -48,7 +49,7 @@ namespace Catalyst.Node.POA.CE
         private readonly ILedger _ledger;
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
-        private readonly IMempool<TransactionBroadcastDao> _memPool;
+        private readonly IMempool<PublicEntryDao> _memPool;
         private readonly IPeerService _peer;
         private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
@@ -62,7 +63,7 @@ namespace Catalyst.Node.POA.CE
             ILogger logger,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
-            IMempool<TransactionBroadcastDao> memPool,
+            IMempool<PublicEntryDao> memPool,
             IContract contract = null)
         {
             _peer = peer;

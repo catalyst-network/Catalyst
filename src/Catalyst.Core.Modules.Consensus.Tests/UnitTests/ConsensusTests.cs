@@ -26,6 +26,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Cycle;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
@@ -145,7 +146,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 
             _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(default)
                .ReturnsForAnyArgs(
-                    CidHelper.CreateCid(_hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(1000))));
+                    _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(1000)).CreateCid());
 
             _cycleEventProvider.MovePastNextPhase(PhaseName.Voting);
             _cycleEventProvider.Scheduler.Stop();

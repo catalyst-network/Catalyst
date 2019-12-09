@@ -28,7 +28,7 @@ namespace Catalyst.Core.Lib.DAO
     public static class ProtoDaoConversionExtensions
     {
         public static TProto ToProtoBuff<TDao, TProto>(this TDao dao, IMapperProvider mapperProvider)
-            where TDao : DaoBase 
+            where TDao : DaoBase
             where TProto : IMessage
         {
             return mapperProvider.Mapper.Map<TProto>(dao);

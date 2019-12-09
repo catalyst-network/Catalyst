@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -30,7 +30,5 @@ namespace Catalyst.Modules.Server.Blazor.Components
     public class TransactionTableComponentBase : ComponentBase
     {
         [Parameter] public TransactionBroadcastDao Model { get; set; }
-
-        public string GetAmount() { return Model.PublicEntries.First().Amount; }
     }
 }

@@ -21,9 +21,10 @@
 
 #endregion
 
-using System.Linq;
-using System.Reflection;
+using Catalyst.Protocol.Cryptography;
+using Google.Protobuf.WellKnownTypes;
 using Serilog;
+using System.Reflection;
 
 namespace Catalyst.Protocol.Transaction
 {
@@ -33,13 +34,39 @@ namespace Catalyst.Protocol.Transaction
 
         public bool IsValid()
         {
-            if (Amount == null || Amount.IsEmpty || Amount.All(b => b == default))
+            // make it a constant - MIN_GAS_LIMIT
+            if (GasLimit < 21000)
             {
-                Logger.Debug("{field} cannot be 0", nameof(Amount));
                 return false;
             }
 
-            return true;
+            var isTimestampValid = Timestamp != default(Timestamp) && Timestamp != new Timestamp();
+            if (!isTimestampValid)
+            {
+                Logger.Debug("{timestamp} cannot be null or 0.");
+                return false;
+            }
+
+            var hasValidSignature = Signature.IsValid(SignatureType.TransactionPublic);
+            return hasValidSignature;
         }
+
+        /// <summary>bytes
+        /// If this is an entry that is about to deploy a smart contract then <value>true</value>,
+        /// otherwise <value>false</value>.
+        /// </summary>
+        public bool IsValidDeploymentEntry => IsValid() && ReceiverAddress.IsEmpty;
+
+        /// <summary>
+        /// If this is an entry that is about to call a smart contract then <value>true</value>,
+        /// otherwise <value>false</value>.
+        /// </summary>
+        public bool IsValidCallEntry => IsValid() && !ReceiverAddress.IsEmpty;
+
+        public byte[] TargetContract { get; set; }
+
+        public bool IsContractDeployment => IsValidDeploymentEntry;
+        public bool IsContractCall => IsValidCallEntry;
+        public bool IsPublicTransaction => IsValid();
     }
 }

@@ -21,10 +21,14 @@
 
 #endregion
 
+using System;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Repository;
 
 namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    public interface IAccountRepository : IRepositoryWrapper<Account> { }
+    public interface IAccountRepository : IDisposable
+    {
+        void Add(Account account);
+    }
 }

@@ -25,11 +25,12 @@ using System.Linq;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
-using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -42,7 +43,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 {
     public sealed class TransactionReceivedEventTests
     {
-        private readonly IMempool<TransactionBroadcastDao> _mempool;
+        private readonly IMempool<PublicEntryDao> _mempool;
         private readonly ITransactionValidator _transactionValidator;
         private readonly IBroadcastManager _broadcastManager;
         private readonly TransactionReceivedEvent _transactionReceivedEvent;
@@ -50,8 +51,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         public TransactionReceivedEventTests()
         {
             var mapperProvider = new TestMapperProvider();
-
-            _mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
+            _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
             _broadcastManager = Substitute.For<IBroadcastManager>();
             _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator,
@@ -64,30 +64,30 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         [Fact]
         public void Can_Send_Error_To_Invalid_Transaction()
         {
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>())
+            _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
                .Returns(false);
-            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()
+            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast {PublicEntry = new PublicEntry()}
                    .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
                .Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
         }
 
         [Fact]
-        public void Can_Send_Error_If_Mempool_Contains_Transaction()
+        public void Can_Send_Exists_If_Mempool_Contains_Transaction()
         {
             var transaction = TransactionHelper.GetPublicTransaction();
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>())
+            _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
                .Returns(true);
 
-            _mempool.Repository.TryReadItem(Arg.Any<string>()).Returns(true);
+            _mempool.Service.TryReadItem(Arg.Any<string>()).Returns(true);
 
             _transactionReceivedEvent
                .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
                     CorrelationId.GenerateCorrelationId()))
-               .Should().Be(ResponseCode.Error);
+               .Should().Be(ResponseCode.Exists);
             _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
-            _mempool.Repository.DidNotReceiveWithAnyArgs().CreateItem(default);
+            _mempool.Service.DidNotReceiveWithAnyArgs().CreateItem(default);
         }
 
         [Fact]
@@ -95,14 +95,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         {
             var transaction = TransactionHelper.GetPublicTransaction();
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>())
+            _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
                .Returns(true);
             _transactionReceivedEvent
                .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Successful);
 
-            _mempool.Repository.Received(1).CreateItem(Arg.Any<TransactionBroadcastDao>());
+            _mempool.Service.Received(1).CreateItem(Arg.Any<PublicEntryDao>());
             _broadcastManager.Received(1)?.BroadcastAsync(Arg.Is<ProtocolMessage>(
                 broadcastedMessage => broadcastedMessage.Value.ToByteArray().SequenceEqual(transaction.ToByteArray())));
         }

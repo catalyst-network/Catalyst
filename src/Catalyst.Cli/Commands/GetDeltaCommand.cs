@@ -26,7 +26,7 @@ using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using MultiFormats;
 using Serilog;
@@ -44,7 +44,7 @@ namespace Catalyst.Cli.Commands
             try
             {
                 var hashBytes = MultiBase.Decode(option.Hash);
-                var cid = CidHelper.Cast(hashBytes);
+                var cid = hashBytes.ToCid();
                 var multiHash = new MultiHash(cid.Hash.ToArray());
                 return new GetDeltaRequest {DeltaDfsHash = hashBytes.ToByteString()};
             }

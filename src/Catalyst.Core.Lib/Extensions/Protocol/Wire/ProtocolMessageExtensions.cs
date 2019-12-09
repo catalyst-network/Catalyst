@@ -25,7 +25,6 @@ using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
-using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
@@ -52,7 +51,7 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
             }
 
             protocolMessage.Signature = null;
-            var signatureBytes = keySigner.Sign(protocolMessage.ToByteArray(),
+            var signatureBytes = keySigner.Sign(protocolMessage,
                 signingContext).SignatureBytes;
             var signature = new Signature
             {

@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
         public SignMessageRequestObserverTests()
         {
-            _keySigner = Substitute.For<IKeySigner>();
+            _keySigner = Substitute.For<FakeKeySigner>();
             _signature = Substitute.For<ISignature>();
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength));

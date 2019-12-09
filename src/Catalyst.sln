@@ -85,6 +85,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Repository
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687-ABC9-496B-B507-68AEDD4B91D5}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Common.Packable.props = Common.Packable.props
 		Common.Projects.props = Common.Projects.props
 		Common.TestProjects.props = Common.TestProjects.props
@@ -93,6 +94,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"
 	ProjectSection(SolutionItems) = preProject
+		..\docfx-azure-pipeline.yml = ..\docfx-azure-pipeline.yml
 		..\mssql-e2e-azure-pipelines.yml = ..\mssql-e2e-azure-pipelines.yml
 		..\nuget-pre-release-azure-pipelines.yml = ..\nuget-pre-release-azure-pipelines.yml
 		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
@@ -103,9 +105,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"
 	ProjectSection(SolutionItems) = preProject
 		..\scripts\addLicenseHeader.sh = ..\scripts\addLicenseHeader.sh
-		..\devnet-docker-compose.yml = ..\devnet-docker-compose.yml
-		..\Dockerfile = ..\Dockerfile
-		..\Vagrantfile = ..\Vagrantfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{8FEB1C8E-EA58-451D-A8FE-2A5189D46A0E}"
@@ -166,9 +165,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashing.Tests", "Catalyst.Core.Modules.Hashing.Tests\Catalyst.Core.Modules.Hashing.Tests.csproj", "{2FF077F1-E652-4D17-83D2-C766E385BA5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Documentation", "..\docs\Catalyst.Documentation.csproj", "{9B99940D-EBFA-40CC-9522-6776C687EAB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Documentation", "..\docs\Catalyst.Documentation.csproj", "{9B99940D-EBFA-40CC-9522-6776C687EAB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Tools.KeyGenerator", "Catalyst.Tools.KeyGenerator\Catalyst.Tools.KeyGenerator.csproj", "{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Tools.KeyGenerator", "Catalyst.Tools.KeyGenerator\Catalyst.Tools.KeyGenerator.csproj", "{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Benchmark", "Catalyst.Benchmark\Catalyst.Benchmark.csproj", "{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{8B9E2D74-AD77-4B43-B7A5-5557428CC8C8}"
 EndProject
@@ -398,6 +399,10 @@ Global
 		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8B9E2D74-AD77-4B43-B7A5-5557428CC8C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8B9E2D74-AD77-4B43-B7A5-5557428CC8C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B9E2D74-AD77-4B43-B7A5-5557428CC8C8}.Release|Any CPU.ActiveCfg = Release|Any CPU

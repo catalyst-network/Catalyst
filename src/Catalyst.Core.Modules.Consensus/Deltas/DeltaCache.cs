@@ -25,9 +25,9 @@ using System;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
-using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
 
-            GenesisHash = hashProvider.ComputeMultiHash(new Delta().ToByteArray());
+            GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).CreateCid();
 
             _dfsReader = dfsReader;
             _logger = logger;

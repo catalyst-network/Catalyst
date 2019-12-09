@@ -30,12 +30,12 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -45,6 +45,7 @@ using NSubstitute;
 using Polly;
 using Polly.Retry;
 using Serilog;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
@@ -100,7 +101,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _broadcastManager.Received(1)?.BroadcastAsync(Arg.Is<ProtocolMessage>(
                 m => IsExpectedCandidateMessage(m, myCandidate, _peerId)));
         }
-        
+
         [Fact]
         public void BroadcastFavouriteCandidateDelta_Should_Broadcast()
         {
@@ -135,7 +136,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public async Task PublishDeltaToIpfsAsync_should_retry_then_return_ipfs_address()
         {
             var delta = DeltaHelper.GetDelta(_hashProvider);
-            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("success"));
+            var cid = _hashProvider.ComputeUtf8MultiHash("success").CreateCid();
 
             var fakeBlock = Substitute.For<IFileSystemNode>();
             fakeBlock.Id.Returns(cid);
@@ -179,22 +180,41 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         //     await _dfs.ReceivedWithAnyArgs(3).FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancel: cancellationToken);
         // }
 
+            var dfsResults = new SubstituteResults<string>(() => throw new Exception("this one failed"))
+               .Then(() => throw new Exception("this one failed again"))
+               .Then(() =>
+                {
+                    cancellationSource.Cancel();
+                    throw new Exception("this one failed too");
+                })
+               .Then(dfsHash);
+
+            _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken)
+               .Returns(ci => dfsResults.Next());
+
+            new Action(() =>
+                    _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken).GetAwaiter().GetResult())
+               .Should().NotThrow<TaskCanceledException>();
+
+            await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
+        }
+
         public class BadDeltas : TheoryData<Delta>
         {
             public BadDeltas()
             {
                 var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-                var noPreviousHash = new Delta {PreviousDeltaDfsHash = (new byte[0]).ToByteString()};
+                var noPreviousHash = new Delta {PreviousDeltaDfsHash = new byte[0].ToByteString()};
                 var noMerkleRoot = DeltaHelper.GetDelta(hashProvider, merkleRoot: new byte[0]);
-                
+
                 AddRow(noMerkleRoot, typeof(InvalidDataException));
                 AddRow(noPreviousHash, typeof(InvalidDataException));
                 AddRow(null as Delta, typeof(ArgumentNullException));
             }
         }
-        
+
         private bool IsExpectedCandidateMessage<T>(ProtocolMessage protocolMessage,
-            T expected, 
+            T expected,
             PeerId senderId) where T : IMessage<T>
         {
             var hasExpectedSender = protocolMessage.PeerId.Equals(senderId);

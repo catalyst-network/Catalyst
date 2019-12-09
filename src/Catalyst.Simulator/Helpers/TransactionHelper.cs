@@ -27,9 +27,9 @@ using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
@@ -49,30 +49,23 @@ namespace Catalyst.Simulator.Helpers
             var cryptoWrapper = new FfiWrapper();
             var privateKey = cryptoWrapper.GeneratePrivateKey();
             var publicKey = ByteString.CopyFrom(privateKey.GetPublicKey().Bytes);
-            
+
             var transaction = new TransactionBroadcast
             {
-                PublicEntries =
+                PublicEntry = new PublicEntry
                 {
-                    new PublicEntry
-                    {
-                        Amount = ((UInt256) amount).ToUint256ByteString(),
-                        Base = new BaseEntry
-                        {
-                            Nonce = (ulong) nonce,
-                            SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString(),
-                            ReceiverPublicKey = publicKey,
-                            TransactionFees = ((UInt256) fee).ToUint256ByteString()
-                        }
-                    }
-                },
-                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
+                    Amount = ((UInt256) amount).ToUint256ByteString(),
+                    Nonce = (ulong) nonce,
+                    SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString(),
+                    ReceiverAddress = publicKey,
+                    TransactionFees = ((UInt256) fee).ToUint256ByteString(),
+                    Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                }.Sign(cryptoWrapper, privateKey, DevNetPublicTransactionContext)
             };
 
-            var signedTransaction = transaction.Sign(cryptoWrapper, privateKey, DevNetPublicTransactionContext);
             var broadcastRawTransactionRequest = new BroadcastRawTransactionRequest
             {
-                Transaction = signedTransaction
+                Transaction = transaction
             };
 
             return broadcastRawTransactionRequest;

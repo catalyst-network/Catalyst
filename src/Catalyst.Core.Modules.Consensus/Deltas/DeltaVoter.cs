@@ -29,6 +29,7 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
@@ -44,12 +45,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate)
         {
-            return nameof(DeltaVoter) + "-" + CidHelper.Cast(candidate.Hash.ToByteArray());
+            return nameof(DeltaVoter) + "-" + candidate.Hash.ToByteArray().ToCid();
         }
 
         public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate)
         {
-            return nameof(DeltaVoter) + "-" + CidHelper.Cast(candidate.PreviousDeltaDfsHash.ToByteArray());
+            return nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
         }
 
         public static string GetCandidateListCacheKey(Cid previousDeltaHash)
@@ -168,7 +169,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             };
 
             _logger.Debug("Retrieved favourite candidate delta {candidate} for the successor of delta {previousDelta}",
-                CidHelper.Cast(bestCandidate.Hash.ToByteArray()),
+                bestCandidate.Hash.ToByteArray().ToCid(),
                 previousDeltaDfsHash);
 
             return true;
@@ -177,7 +178,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private int GetProducerRankFactor(CandidateDeltaBroadcast candidate)
         {
             var preferredProducers = _deltaProducersProvider
-               .GetDeltaProducersFromPreviousDelta(CidHelper.Cast(candidate.PreviousDeltaDfsHash.ToByteArray()));
+               .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray().ToCid());
             var ranking = preferredProducers.ToList()
                .FindIndex(p => p.Equals(candidate.ProducerId));
 
@@ -190,7 +191,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 throw new KeyNotFoundException(
                     $"Producer {candidate.ProducerId} " +
                     "should not be sending candidate deltas with previous hash " +
-                    $"{CidHelper.Cast(candidate.PreviousDeltaDfsHash.ToByteArray())}");
+                    $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToCid()}");
             }
 
             return preferredProducers.Count - ranking;

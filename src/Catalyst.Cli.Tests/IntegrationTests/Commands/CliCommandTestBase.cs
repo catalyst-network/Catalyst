@@ -97,7 +97,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 
             var nodeRpcClientFactory = Substitute.For<IRpcClientFactory>();
             nodeRpcClientFactory
-               .GetClient(Arg.Any<X509Certificate2>(), Arg.Is<IRpcClientConfig>(c => c.NodeId == ServerNodeName))
+               .GetClientAsync(Arg.Any<X509Certificate2>(), Arg.Is<IRpcClientConfig>(c => c.NodeId == ServerNodeName))
                .Returns(RpcClient);
 
             ContainerProvider.ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<IRpcClientFactory>();

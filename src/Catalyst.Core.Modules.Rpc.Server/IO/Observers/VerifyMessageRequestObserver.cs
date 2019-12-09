@@ -67,7 +67,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type VerifyMessageRequest");
 
-            var decodedMessage = verifyMessageRequest.Message.ToByteArray();
+            var decodedMessage = verifyMessageRequest.Message;
             var decodedPublicKey = verifyMessageRequest.PublicKey.ToByteArray();
             var decodedSignature = verifyMessageRequest.Signature.ToByteArray();
             var signatureContext = verifyMessageRequest.SigningContext;
@@ -95,7 +95,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 return ReturnResponse(false);
             }
 
-            var result = _keySigner.Verify(signature, decodedMessage, signatureContext);
+            var result = _keySigner.Verify(signature, decodedMessage.Span, signatureContext);
 
             Logger.Debug("message content is {0}", verifyMessageRequest.Message);
 

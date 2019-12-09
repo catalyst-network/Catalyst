@@ -21,13 +21,33 @@
 
 #endregion
 
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.Lib.DAO;
+using System;
+using System.Collections.Generic;
 using Catalyst.Core.Lib.P2P.Models;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.P2P.Repository
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
+    public interface IPeerRepository : IDisposable
+    {
+        Peer Get(string id);
+        IEnumerable<Peer> GetAll();
+        IEnumerable<Peer> GetActivePeers(int count);
+        IEnumerable<Peer> GetRandomPeers(int count);
+        IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey);
 
-    public interface IPeerRepositoryDao : IRepositoryWrapper<PeerDao> { }
+        void Add(Peer peer);
+        void Add(IEnumerable<Peer> peer);
+
+        void Update(Peer peer);
+
+        void Delete(Peer peer);
+        void Delete(string id);
+
+        uint DeletePeersByIpAndPublicKey(ByteString ip, ByteString publicKey);
+
+        bool Exists(string id);
+
+        int Count();
+    }
 }

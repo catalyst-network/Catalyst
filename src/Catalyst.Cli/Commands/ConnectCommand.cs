@@ -43,7 +43,7 @@ namespace Catalyst.Cli.Commands
             Guard.Argument(rpcNodeConfigs, nameof(rpcNodeConfigs)).NotNull();
 
             //Connect to the node and store it in the socket client registry
-            var nodeRpcClient = CommandContext.RpcClientFactory.GetClient(
+            var nodeRpcClient = CommandContext.RpcClientFactory.GetClientAsync(
                 CommandContext.CertificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName),
                 rpcNodeConfigs).ConfigureAwait(false).GetAwaiter().GetResult();
 

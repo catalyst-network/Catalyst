@@ -45,30 +45,26 @@ namespace Catalyst.TestUtils
         {
             var transaction = new TransactionBroadcast
             {
-                PublicEntries =
+                PublicEntry = new PublicEntry
                 {
-                    new PublicEntry
+                    Amount = ((UInt256) amount).ToUint256ByteString(),
+                    Nonce = nonce,
+                    ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
+                    SenderAddress = senderPublicKey.ToUtf8ByteString(),
+                    TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
+                    Timestamp = new Timestamp {Seconds = timestamp},
+                    Signature = new Signature
                     {
-                        Amount = ((UInt256) amount).ToUint256ByteString(),
-                        Base = new BaseEntry
-                        {
-                            Nonce = nonce,
-                            ReceiverPublicKey = receiverPublicKey.ToUtf8ByteString(),
-                            SenderPublicKey = senderPublicKey.ToUtf8ByteString(),
-                            TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
-                        }
+                        SigningContext = new SigningContext
+                            {NetworkType = networkType, SignatureType = SignatureType.TransactionPublic},
+                        RawBytes = signature.ToUtf8ByteString()
                     }
-                },
-                Timestamp = new Timestamp {Seconds = timestamp},
-                Signature = new Signature
-                {
-                    SigningContext = new SigningContext {NetworkType = networkType, SignatureType = SignatureType.TransactionPublic},
-                    RawBytes = signature.ToUtf8ByteString()
                 }
             };
+
             return transaction;
         }
-        
+
         public static TransactionBroadcast GetContractTransaction(ByteString data,
             UInt256 amount,
             uint gasLimit,
@@ -84,29 +80,24 @@ namespace Catalyst.TestUtils
         {
             var transaction = new TransactionBroadcast
             {
-                ContractEntries =
+                PublicEntry = new PublicEntry
                 {
-                    new ContractEntry
+                    Amount = amount.ToUint256ByteString(),
+                    Nonce = nonce,
+                    ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
+                    SenderAddress = senderPublicKey.ToUtf8ByteString(),
+                    TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
+                    Timestamp = new Timestamp {Seconds = timestamp},
+                    Signature = new Signature
                     {
-                        Amount = amount.ToUint256ByteString(),
-                        Base = new BaseEntry
-                        {
-                            Nonce = nonce,
-                            ReceiverPublicKey = receiverPublicKey.ToUtf8ByteString(),
-                            SenderPublicKey = senderPublicKey.ToUtf8ByteString(),
-                            TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
-                        },
-                        Data = data,
-                        GasLimit = gasLimit,
-                        GasPrice = gasPrice,
-                        TargetContract = targetContract
-                    }
-                },
-                Timestamp = new Timestamp {Seconds = timestamp},
-                Signature = new Signature
-                {
-                    SigningContext = new SigningContext {NetworkType = networkType, SignatureType = SignatureType.TransactionPublic},
-                    RawBytes = signature.ToUtf8ByteString()
+                        SigningContext = new SigningContext
+                            {NetworkType = networkType, SignatureType = SignatureType.TransactionPublic},
+                        RawBytes = signature.ToUtf8ByteString()
+                    },
+                    Data = data,
+                    GasLimit = gasLimit,
+                    GasPrice = gasPrice.ToUint256ByteString(),
+                    TargetContract = targetContract
                 }
             };
 

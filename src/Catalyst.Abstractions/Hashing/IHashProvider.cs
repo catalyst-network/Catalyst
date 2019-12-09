@@ -31,11 +31,13 @@ namespace Catalyst.Abstractions.Hashing
     public interface IHashProvider
     {
         HashingAlgorithm HashingAlgorithm { set; get; }
+
         MultiHash ComputeUtf8MultiHash(string data);
         MultiHash ComputeMultiHash(Stream data);
         MultiHash ComputeMultiHash(byte[] data);
         MultiHash ComputeMultiHash(IEnumerable<byte> content);
         MultiHash Cast(byte[] data);
         bool IsValidHash(byte[] data);
+        MultiHash ComputeMultiHash(byte[] data, int offset, int count);
     }
 }

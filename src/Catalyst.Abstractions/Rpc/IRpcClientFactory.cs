@@ -28,6 +28,6 @@ namespace Catalyst.Abstractions.Rpc
 {
     public interface IRpcClientFactory
     {
-        Task<IRpcClient> GetClient(X509Certificate2 certificate, IRpcClientConfig clientConfig);
+        Task<IRpcClient> GetClientAsync(X509Certificate2 certificate, IRpcClientConfig clientConfig);
     }
 }
