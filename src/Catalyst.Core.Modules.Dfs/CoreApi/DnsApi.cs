@@ -9,11 +9,14 @@ using Makaretu.Dns;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    class DnsApi : IDnsApi
+    internal sealed class DnsApi : IDnsApi
     {
-        IDfs ipfs;
+        private readonly IDnsClient _dnsClient;
 
-        public DnsApi(IDfs ipfs) { this.ipfs = ipfs; }
+        public DnsApi(IDnsClient dnsClient)
+        {
+            _dnsClient = dnsClient;
+        }
 
         public async Task<string> ResolveAsync(string name,
             bool recursive = false,
@@ -40,24 +43,28 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             }
 
             if (!recursive || link.StartsWith("/ipfs/"))
-                return link;
-
-            if (link.StartsWith("/ipns/"))
             {
-                return await ipfs.Name.ResolveAsync(link, recursive, false, cancel).ConfigureAwait(false);
+                return link;
             }
+
+            // if (link.StartsWith("/ipns/"))
+            // {
+            //     return await _nameApi.ResolveAsync(link, recursive, false, cancel).ConfigureAwait(false);
+            // }
 
             throw new NotSupportedException($"Cannot resolve '{link}'.");
         }
 
         async Task<string> FindAsync(string name, CancellationToken cancel)
         {
-            var response = await ipfs.Options.Dns.QueryAsync(name, DnsType.TXT, cancel).ConfigureAwait(false);
+            var response = await _dnsClient.QueryAsync(name, DnsType.TXT, cancel).ConfigureAwait(false);
             var link = response.Answers.OfType<TXTRecord>().SelectMany(txt => txt.Strings)
                .Where(s => s.StartsWith("dnslink=")).Select(s => s.Substring(8)).FirstOrDefault();
 
             if (link == null)
+            {
                 throw new Exception($"'{name}' is missing a TXT record with a dnslink.");
+            }
 
             return link;
         }

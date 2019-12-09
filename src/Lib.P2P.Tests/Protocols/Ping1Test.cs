@@ -27,15 +27,15 @@ namespace Lib.P2P.Tests.Protocols
         [TestMethod]
         public async Task MultiAddress()
         {
-            var swarmB = new Swarm {LocalPeer = other};
+            var swarmB = new SwarmService {LocalPeer = other};
             await swarmB.StartAsync();
-            var pingB = new Ping1 {Swarm = swarmB};
+            var pingB = new Ping1 {SwarmService = swarmB};
             await pingB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarm = new Swarm {LocalPeer = self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
-            var pingA = new Ping1 {Swarm = swarm};
+            var pingA = new Ping1 {SwarmService = swarm};
             await pingA.StartAsync();
             try
             {
@@ -55,15 +55,15 @@ namespace Lib.P2P.Tests.Protocols
         [TestMethod]
         public async Task PeerId()
         {
-            var swarmB = new Swarm {LocalPeer = other};
+            var swarmB = new SwarmService {LocalPeer = other};
             await swarmB.StartAsync();
-            var pingB = new Ping1 {Swarm = swarmB};
+            var pingB = new Ping1 {SwarmService = swarmB};
             await pingB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarm = new Swarm {LocalPeer = self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
-            var pingA = new Ping1 {Swarm = swarm};
+            var pingA = new Ping1 {SwarmService = swarm};
             await pingA.StartAsync();
             try
             {

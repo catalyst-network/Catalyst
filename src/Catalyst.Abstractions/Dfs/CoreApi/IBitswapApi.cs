@@ -78,7 +78,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   Any outstanding <see cref="GetAsync(Cid, CancellationToken)"/> for the
         ///   <paramref name="id"/> are cancelled.
         /// </remarks>
-        Task UnwantAsync(Cid id, CancellationToken cancel = default(CancellationToken));
+        Task UnWantAsync(Cid id, CancellationToken cancel = default(CancellationToken));
 
         /// <summary>
         ///   Gets information on the blocks exchanged with a specific <see cref="Peer"/>.
@@ -95,5 +95,9 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   contains the <see cref="BitswapLedger"/> for the <paramref name="peer"/>.
         /// </returns>
         Task<BitswapLedger> LedgerAsync(Peer peer, CancellationToken cancel = default(CancellationToken));
+
+        int FoundBlock(IDataBlock block);
+
+        BitswapData GetBitSwapStatistics();
     }
 }

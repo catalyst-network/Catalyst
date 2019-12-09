@@ -42,16 +42,16 @@ namespace Lib.P2P.PubSub
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        public Swarm Swarm { get; set; }
+        public SwarmService SwarmService { get; set; }
 
         /// <inheritdoc />
         public Task StartAsync()
         {
             log.Debug("Starting");
 
-            Swarm.AddProtocol(this);
-            Swarm.ConnectionEstablished += Swarm_ConnectionEstablished;
-            Swarm.PeerDisconnected += Swarm_PeerDisconnected;
+            SwarmService.AddProtocol(this);
+            SwarmService.ConnectionEstablished += Swarm_ConnectionEstablished;
+            SwarmService.PeerDisconnected += Swarm_PeerDisconnected;
 
             return Task.CompletedTask;
         }
@@ -61,9 +61,9 @@ namespace Lib.P2P.PubSub
         {
             log.Debug("Stopping");
 
-            Swarm.ConnectionEstablished -= Swarm_ConnectionEstablished;
-            Swarm.PeerDisconnected -= Swarm_PeerDisconnected;
-            Swarm.RemoveProtocol(this);
+            SwarmService.ConnectionEstablished -= Swarm_ConnectionEstablished;
+            SwarmService.PeerDisconnected -= Swarm_PeerDisconnected;
+            SwarmService.RemoveProtocol(this);
             RemoteTopics.Clear();
             localTopics.Clear();
 
@@ -144,7 +144,7 @@ namespace Lib.P2P.PubSub
             };
             try
             {
-                var peers = Swarm.KnownPeers.Where(p => p.ConnectedAddress != null);
+                var peers = SwarmService.KnownPeers.Where(p => p.ConnectedAddress != null);
                 await SendAsync(msg, peers, cancel).ConfigureAwait(false);
             }
             catch (Exception e)
@@ -170,7 +170,7 @@ namespace Lib.P2P.PubSub
             };
             try
             {
-                var peers = Swarm.KnownPeers.Where(p => p.ConnectedAddress != null);
+                var peers = SwarmService.KnownPeers.Where(p => p.ConnectedAddress != null);
                 await SendAsync(msg, peers, cancel).ConfigureAwait(false);
             }
             catch (Exception e)
@@ -218,7 +218,7 @@ namespace Lib.P2P.PubSub
         {
             try
             {
-                using (var stream = await Swarm.DialAsync(peer, ToString(), cancel).ConfigureAwait(false))
+                using (var stream = await SwarmService.DialAsync(peer, ToString(), cancel).ConfigureAwait(false))
                 {
                     await stream.WriteAsync(message, 0, message.Length, cancel).ConfigureAwait(false);
                     await stream.FlushAsync(cancel).ConfigureAwait(false);

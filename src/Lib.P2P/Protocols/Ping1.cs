@@ -28,7 +28,7 @@ namespace Lib.P2P.Protocols
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        public Swarm Swarm { get; set; }
+        public SwarmService SwarmService { get; set; }
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }
@@ -56,7 +56,7 @@ namespace Lib.P2P.Protocols
         {
             log.Debug("Starting");
 
-            Swarm.AddProtocol(this);
+            SwarmService.AddProtocol(this);
 
             return Task.CompletedTask;
         }
@@ -66,7 +66,7 @@ namespace Lib.P2P.Protocols
         {
             log.Debug("Stopping");
 
-            Swarm.RemoveProtocol(this);
+            SwarmService.RemoveProtocol(this);
 
             return Task.CompletedTask;
         }
@@ -115,7 +115,7 @@ namespace Lib.P2P.Protocols
             int count = 10,
             CancellationToken cancel = default(CancellationToken))
         {
-            var peer = Swarm.RegisterPeerAddress(address);
+            var peer = SwarmService.RegisterPeerAddress(address);
             return await PingAsync(peer, count, cancel).ConfigureAwait(false);
         }
 
@@ -129,7 +129,7 @@ namespace Lib.P2P.Protocols
             };
             var totalTime = TimeSpan.Zero;
 
-            using (var stream = await Swarm.DialAsync(peer, ToString(), cancel))
+            using (var stream = await SwarmService.DialAsync(peer, ToString(), cancel))
             {
                 for (var i = 0; i < count; ++i)
                 {

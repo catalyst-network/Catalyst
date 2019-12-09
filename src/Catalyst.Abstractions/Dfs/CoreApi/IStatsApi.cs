@@ -33,7 +33,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   the current <see cref="BitswapData"/>.
         /// </returns>
         /// <seealso cref="IBitswapApi"/>
-        Task<BitswapData> BitswapAsync(CancellationToken cancel = default(CancellationToken));
+        Task<BitswapData> BitSwapAsync(CancellationToken cancel = default(CancellationToken));
 
         /// <summary>
         ///   Get statistics on the repository.

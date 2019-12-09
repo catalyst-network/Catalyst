@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _fileDownloadFactory;
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
         private readonly IHashProvider _hashProvider;
 
         public GetFileFromDfsObserverHandlerTests(ITestOutputHelper testOutput) : base(testOutput)
@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _fileDownloadFactory = new DownloadFileTransferFactory(_logger);
             _logger = Substitute.For<ILogger>();
-            _dfs = Substitute.For<IDfs>();
+            _dfsService = Substitute.For<IDfsService>();
         }
 
         [Theory]
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 
-                fileStream = await _dfs.FileSystem.ReadFileAsync(addedIpfsHash.ToString());
+                fileStream = await _dfsService.UnixFsApi.ReadFileAsync(addedIpfsHash.ToString());
                 IUploadFileInformation fileUploadInformation = new UploadFileTransferInformation(
                     fileStream,
                     rpcPeer,
@@ -137,7 +137,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var fakeId = _hashProvider.ComputeUtf8MultiHash(CorrelationId.GenerateCorrelationId().ToString());
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             stream = new MemoryStream(File.ReadAllBytes(fileToTransfer));
-            _dfs.FileSystem.ReadFileAsync(fakeId.ToString()).Returns(stream);
+            _dfsService.UnixFsApi.ReadFileAsync(fakeId.ToString()).Returns(stream);
             return fakeId;
         }
     }

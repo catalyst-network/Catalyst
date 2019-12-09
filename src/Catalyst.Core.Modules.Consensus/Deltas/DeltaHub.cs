@@ -50,19 +50,19 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private readonly IBroadcastManager _broadcastManager;
         private readonly PeerId _peerId;
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
         private readonly ILogger _logger;
 
         protected virtual AsyncRetryPolicy<IFileSystemNode> DfsRetryPolicy { get; }
 
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerSettings peerSettings,
-            IDfs dfs,
+            IDfsService dfsService,
             ILogger logger)
         {
             _broadcastManager = broadcastManager;
             _peerId = peerSettings.PeerId;
-            _dfs = dfs;
+            _dfsService = dfsService;
             _logger = logger;
 
             DfsRetryPolicy = Polly.Policy<IFileSystemNode>.Handle<Exception>()
@@ -164,7 +164,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                return await _dfs.FileSystem.AddAsync(memoryStream, cancel: cancellationToken).ConfigureAwait(false);
+                return await _dfsService.UnixFsApi.AddAsync(memoryStream, cancel: cancellationToken).ConfigureAwait(false);
             }
         }
     }

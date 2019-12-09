@@ -62,7 +62,7 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// </param>
         /// <returns>
         ///     The hash, or address on the DFS, of the latest ledger state update as a string, as returned in
-        ///     <seealso cref="IDfs.AddAsync" />
+        ///     <seealso cref="IDfsService.AddAsync" />
         /// </returns>
         Cid GetLatestDeltaHash(DateTime? asOf = null);
 

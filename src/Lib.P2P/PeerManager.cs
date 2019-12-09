@@ -11,7 +11,7 @@ namespace Lib.P2P
     ///   Manages the peers.
     /// </summary>
     /// <remarks>
-    ///    Listens to the <see cref="Swarm"/> events to determine the state
+    ///    Listens to the <see cref="SwarmService"/> events to determine the state
     ///    of a peer.
     /// </remarks>
     public class PeerManager : IService
@@ -39,7 +39,7 @@ namespace Lib.P2P
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        public Swarm Swarm { get; set; }
+        public SwarmService SwarmService { get; set; }
 
         /// <summary>
         ///   The peers that are reachable.
@@ -49,8 +49,8 @@ namespace Lib.P2P
         /// <inheritdoc />
         public Task StartAsync()
         {
-            Swarm.ConnectionEstablished += Swarm_ConnectionEstablished;
-            Swarm.PeerNotReachable += Swarm_PeerNotReachable;
+            SwarmService.ConnectionEstablished += Swarm_ConnectionEstablished;
+            SwarmService.PeerNotReachable += Swarm_PeerNotReachable;
 
             cancel = new CancellationTokenSource();
             var _ = PhoenixAsync(cancel.Token);
@@ -62,8 +62,8 @@ namespace Lib.P2P
         /// <inheritdoc />
         public Task StopAsync()
         {
-            Swarm.ConnectionEstablished -= Swarm_ConnectionEstablished;
-            Swarm.PeerNotReachable -= Swarm_PeerNotReachable;
+            SwarmService.ConnectionEstablished -= Swarm_ConnectionEstablished;
+            SwarmService.PeerNotReachable -= Swarm_PeerNotReachable;
             DeadPeers.Clear();
 
             cancel.Cancel();
@@ -95,14 +95,14 @@ namespace Lib.P2P
                     return existing;
                 });
 
-            Swarm.BlackList.Add($"/p2p/{peer.Id}");
+            SwarmService.BlackList.Add($"/p2p/{peer.Id}");
             if (dead.NextAttempt != DateTime.MaxValue)
             {
                 log.DebugFormat("Dead '{0}' for {1} minutes.", dead.Peer, dead.Backoff.TotalMinutes);
             }
             else
             {
-                Swarm.DeregisterPeer(dead.Peer);
+                SwarmService.DeregisterPeer(dead.Peer);
                 log.DebugFormat("Permanently dead '{0}'.", dead.Peer);
             }
         }
@@ -116,16 +116,16 @@ namespace Lib.P2P
             log.DebugFormat("Alive '{0}'.", peer);
 
             DeadPeers.TryRemove(peer, out _);
-            Swarm.BlackList.Remove($"/p2p/{peer.Id}");
+            SwarmService.BlackList.Remove($"/p2p/{peer.Id}");
         }
 
         /// <summary>
-        ///   Is invoked by the <see cref="Swarm"/> when a peer can not be connected to.
+        ///   Is invoked by the <see cref="SwarmService"/> when a peer can not be connected to.
         /// </summary>
         private void Swarm_PeerNotReachable(object sender, Peer peer) { SetNotReachable(peer); }
 
         /// <summary>
-        ///   Is invoked by the <see cref="Swarm"/> when a peer is connected to.
+        ///   Is invoked by the <see cref="SwarmService"/> when a peer is connected to.
         /// </summary>
         private void Swarm_ConnectionEstablished(object sender, PeerConnection connection)
         {
@@ -147,10 +147,10 @@ namespace Lib.P2P
                        .ParallelForEachAsync(async dead =>
                         {
                             log.DebugFormat("Attempt reconnect to {0}", dead.Peer);
-                            Swarm.BlackList.Remove($"/p2p/{dead.Peer.Id}");
+                            SwarmService.BlackList.Remove($"/p2p/{dead.Peer.Id}");
                             try
                             {
-                                await Swarm.ConnectAsync(dead.Peer, cancel.Token);
+                                await SwarmService.ConnectAsync(dead.Peer, cancel.Token);
                             }
                             catch
                             {

@@ -7,27 +7,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.Migration;
+using Catalyst.Abstractions.Options;
 using Common.Logging;
+using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Migration
 {
     /// <summary>
     ///   Allows migration of the repository. 
     /// </summary>
-    public class MigrationManager : IMigrationManager
+    public sealed class MigrationManager : IMigrationManager
     {
+        private readonly RepositoryOptions _options;
         static ILog log = LogManager.GetLogger(typeof(MigrationManager));
-
-        readonly IDfs ipfs;
 
         /// <summary>
         ///   Creates a new instance of the <see cref="MigrationManager"/> class
-        ///   for the specifed <see cref="Catalyst.Core.Modules.Dfs.Dfs"/>.
+        ///   for the specifed <see cref="DfsService"/>.
         /// </summary>
-        public MigrationManager(IDfs ipfs)
+        public MigrationManager(RepositoryOptions options)
         {
-            this.ipfs = ipfs;
-
+            _options = options;
             Migrations = typeof(MigrationManager).Assembly.GetTypes()
                .Where(x => typeof(IMigration).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
                .Select(x => (IMigration) Activator.CreateInstance(x))
@@ -53,18 +53,18 @@ namespace Catalyst.Core.Modules.Dfs.Migration
             get
             {
                 var path = VersionPath();
-                if (File.Exists(path))
+                if (!File.Exists(path))
                 {
-                    using (var reader = new StreamReader(path))
-                    {
-                        var s = reader.ReadLine();
-                        return int.Parse(s, CultureInfo.InvariantCulture);
-                    }
+                    return 0;
                 }
-
-                return 0;
+                
+                using (var reader = new StreamReader(path))
+                {
+                    var s = reader.ReadLine();
+                    return int.Parse(s ?? throw new NullException("stream null"), CultureInfo.InvariantCulture);
+                }
             }
-            private set { File.WriteAllText(VersionPath(), value.ToString(CultureInfo.InvariantCulture)); }
+            private set => File.WriteAllText(VersionPath(), value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -76,11 +76,11 @@ namespace Catalyst.Core.Modules.Dfs.Migration
         /// <param name="cancel">
         /// </param>
         /// <returns></returns>
-        public async Task MirgrateToVersionAsync(int version, CancellationToken cancel = default(CancellationToken))
+        public async Task MirgrateToVersionAsync(int version, CancellationToken cancel = default)
         {
-            if (version != 0 && !Migrations.Any(m => m.Version == version))
+            if (version != 0 && Migrations.All(m => m.Version != version))
             {
-                throw new ArgumentOutOfRangeException("version", $"Repository version '{version}' is unknown.");
+                throw new ArgumentOutOfRangeException(nameof(version), $@"Repository version '{version}' is unknown.");
             }
 
             var currentVersion = CurrentVersion;
@@ -93,17 +93,17 @@ namespace Catalyst.Core.Modules.Dfs.Migration
                 if (increment > 0)
                 {
                     var migration = Migrations.FirstOrDefault(m => m.Version == nextVersion);
-                    if (migration.CanUpgrade)
+                    if (migration != null && migration.CanUpgrade)
                     {
-                        await migration.UpgradeAsync(ipfs, cancel);
+                        await migration.UpgradeAsync(_options, cancel);
                     }
                 }
                 else if (increment < 0)
                 {
                     var migration = Migrations.FirstOrDefault(m => m.Version == currentVersion);
-                    if (migration.CanDowngrade)
+                    if (migration != null && migration.CanDowngrade)
                     {
-                        await migration.DowngradeAsync(ipfs, cancel);
+                        await migration.DowngradeAsync(_options, cancel);
                     }
                 }
 
@@ -118,6 +118,6 @@ namespace Catalyst.Core.Modules.Dfs.Migration
         /// <returns>
         ///   The path to the version file.
         /// </returns>
-        string VersionPath() { return Path.Combine(ipfs.Options.Repository.ExistingFolder(), "version"); }
+        string VersionPath() { return Path.Combine(_options.ExistingFolder(), "version"); }
     }
 }

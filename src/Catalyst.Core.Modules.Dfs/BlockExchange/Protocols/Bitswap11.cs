@@ -108,7 +108,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
                 }
 
                 // Send block to remote.
-                using (var stream = await BitswapService.Swarm.DialAsync(remotePeer, this.ToString()).ConfigureAwait(false))
+                using (var stream = await BitswapService.SwarmService.DialAsync(remotePeer, this.ToString()).ConfigureAwait(false))
                 {
                     await SendAsync(stream, block, cancel).ConfigureAwait(false);
                 }

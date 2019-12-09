@@ -58,20 +58,20 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IUploadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The DFS</summary>
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestObserver" /> class.</summary>
-        /// <param name="dfs">The DFS.</param>
+        /// <param name="dfsService">The DFS.</param>
         /// <param name="peerSettings"></param>
         /// <param name="fileTransferFactory">The upload file transfer factory.</param>
         /// <param name="logger">The logger.</param>
-        public GetFileFromDfsRequestObserver(IDfs dfs,
+        public GetFileFromDfsRequestObserver(IDfsService dfsService,
             IPeerSettings peerSettings,
             IUploadFileTransferFactory fileTransferFactory,
             ILogger logger) : base(logger, peerSettings)
         {
             _fileTransferFactory = fileTransferFactory;
-            _dfs = dfs;
+            _dfsService = dfsService;
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 {
                     responseCodeType = await Task.Run(async () =>
                     {
-                        var stream = await _dfs.FileSystem.ReadFileAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
+                        var stream = await _dfsService.UnixFsApi.ReadFileAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
                            .ConfigureAwait(false);
                         fileLen = stream.Length;
                         using (var fileTransferInformation = new UploadFileTransferInformation(

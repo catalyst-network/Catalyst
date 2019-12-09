@@ -44,7 +44,7 @@ namespace Catalyst.Node.POA.CE
     {
         public IConsensus Consensus { get; }
         private readonly IContract _contract;
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
         private readonly ILedger _ledger;
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
@@ -57,7 +57,7 @@ namespace Catalyst.Node.POA.CE
         public CatalystNodePoa(IKeySigner keySigner,
             IPeerService peer,
             IConsensus consensus,
-            IDfs dfs,
+            IDfsService dfsService,
             ILedger ledger,
             ILogger logger,
             IPeerClient peerClient,
@@ -69,7 +69,7 @@ namespace Catalyst.Node.POA.CE
             _peerClient = peerClient;
             _peerSettings = peerSettings;
             Consensus = consensus;
-            _dfs = dfs;
+            _dfsService = dfsService;
             _ledger = ledger;
             _keySigner = keySigner;
             _logger = logger;

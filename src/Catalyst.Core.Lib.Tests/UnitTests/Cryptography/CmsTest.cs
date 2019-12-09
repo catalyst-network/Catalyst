@@ -15,11 +15,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public class CmsTest : FileSystemBasedTest
     {
-        private readonly KeyChain keyChain;
+        private readonly KeyStoreService _keyStoreService;
 
         public CmsTest(ITestOutputHelper output) : base(output)
         {
-            keyChain = new KeyChain(FileSystem.Path.ToString())
+            _keyStoreService = new KeyStoreService(FileSystem.Path.ToString())
             {
                 Options = new DfsOptions().KeyChain
             };
@@ -29,7 +29,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
                 securePassword.AppendChar(c);
 
             securePassword.MakeReadOnly();
-            keyChain.SetPassphraseAsync(securePassword).ConfigureAwait(false);
+            _keyStoreService.SetPassphraseAsync(securePassword).ConfigureAwait(false);
         }
         
         [Fact]
@@ -54,7 +54,7 @@ igg5jozKCW82JsuWSiW9tu0F/6DuvYiZwHS3OLiJP0CuLfbOaRw8Jia1RTvXEH7m
 cn4oisOvxCprs4aM9UVjtZTCjfyNpX8UWwT1W3rySV+KQNhxuMy3RzmL
 -----END ENCRYPTED PRIVATE KEY-----
 ";
-            var key = await keyChain.ImportAsync("alice", alice, "mypassword".ToArray());
+            var key = await _keyStoreService.ImportAsync("alice", alice, "mypassword".ToArray());
             try
             {
                 Assert.Equal(aliceKid, key.Id);
@@ -69,13 +69,13 @@ knU1yykWGkdlbclCuu0NaAfmb8o0OX50CbEKZB7xmsv8tnqn0H0jMF4GCSqGSIb3
 DQEHATAdBglghkgBZQMEASoEEP/PW1JWehQx6/dsLkp/Mf+gMgQwFM9liLTqC56B
 nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
 ");
-                var plain = await keyChain.ReadProtectedDataAsync(cipher);
+                var plain = await _keyStoreService.ReadProtectedDataAsync(cipher);
                 var plainText = Encoding.UTF8.GetString((byte[]) plain);
                 Assert.Equal("This is a message from Alice to Bob", plainText);
             }
             finally
             {
-                await keyChain.RemoveAsync("alice");
+                await _keyStoreService.RemoveAsync("alice");
             }
         }
 
@@ -94,41 +94,41 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
 ");
             ExceptionAssert.Throws<KeyNotFoundException>(() =>
             {
-                var plain = keyChain.ReadProtectedDataAsync(cipher).Result;
+                var plain = _keyStoreService.ReadProtectedDataAsync(cipher).Result;
             });
         }
 
         [Fact]
         public async Task CreateCms_Rsa()
         {
-            var key = await keyChain.CreateAsync("alice", "rsa", 512);
+            var key = await _keyStoreService.CreateAsync("alice", "rsa", 512);
             try
             {
                 var data = new byte[] {1, 2, 3, 4};
-                var cipher = await keyChain.CreateProtectedDataAsync("alice", data);
-                var plain = await keyChain.ReadProtectedDataAsync(cipher);
+                var cipher = await _keyStoreService.CreateProtectedDataAsync("alice", data);
+                var plain = await _keyStoreService.ReadProtectedDataAsync(cipher);
                 Assert.Equal(data, plain);
             }
             finally
             {
-                await keyChain.RemoveAsync("alice");
+                await _keyStoreService.RemoveAsync("alice");
             }
         }
 
         [Fact]
         public async Task CreateCms_Secp256k1()
         {
-            var key = await keyChain.CreateAsync("alice", "secp256k1", 0);
+            var key = await _keyStoreService.CreateAsync("alice", "secp256k1", 0);
             try
             {
                 var data = new byte[] {1, 2, 3, 4};
-                var cipher = await keyChain.CreateProtectedDataAsync("alice", data);
-                var plain = await keyChain.ReadProtectedDataAsync(cipher);
+                var cipher = await _keyStoreService.CreateProtectedDataAsync("alice", data);
+                var plain = await _keyStoreService.ReadProtectedDataAsync(cipher);
                 Assert.Equal(data, plain);
             }
             finally
             {
-                await keyChain.RemoveAsync("alice");
+                await _keyStoreService.RemoveAsync("alice");
             }
         }
 

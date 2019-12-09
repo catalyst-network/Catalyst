@@ -5,7 +5,7 @@ using MultiFormats;
 namespace Catalyst.Abstractions.Dfs.CoreApi
 {
     /// <summary>
-    ///   The statistics for <see cref="IStatsApi.BitswapAsync"/>.
+    ///   The statistics for <see cref="IStatsApi.BitSwapAsync"/>.
     /// </summary>
     public class BitswapData
     {

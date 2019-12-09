@@ -34,12 +34,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     /// <inheritdoc />
     public class DeltaDfsReader : IDeltaDfsReader
     {
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
         private readonly ILogger _logger;
 
-        public DeltaDfsReader(IDfs dfs, ILogger logger)
+        public DeltaDfsReader(IDfsService dfsService, ILogger logger)
         {
-            _dfs = dfs;
+            _dfsService = dfsService;
             _logger = logger;
         }
 
@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             try
             {
-                using (var responseStream = _dfs.FileSystem.ReadFileAsync(cid, cancellationToken)
+                using (var responseStream = _dfsService.UnixFsApi.ReadFileAsync(cid, cancellationToken)
                    .ConfigureAwait(false)
                    .GetAwaiter()
                    .GetResult()

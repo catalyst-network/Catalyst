@@ -50,7 +50,7 @@ namespace Catalyst.TestUtils
         protected readonly string CurrentTestName;
         public IFileSystem FileSystem;
         protected readonly ITestOutputHelper Output;
-        private DirectoryInfo _testDirectory;
+        public DirectoryInfo TestDirectory;
         protected List<string> ConfigFilesUsed { get; }
         protected readonly ContainerProvider ContainerProvider;
         private DateTime _testStartTime;
@@ -88,20 +88,20 @@ namespace Catalyst.TestUtils
             ContainerProvider = new ContainerProvider(ConfigFilesUsed, FileSystem, Output);
             ContainerProvider.ConfigureContainerBuilder(true, true);
 
-            Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
+            Output.WriteLine("test running in folder {0}", TestDirectory.FullName);
         }
 
         protected void CreateUniqueTestDirectory()
         {
             var testStartTime = DateTime.Now;
             _testStartTime = testStartTime;
-            _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
+            TestDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
 
                 //get a unique folder for this run
                 CurrentTestName + $"_{_testStartTime:yyMMddHHmmssffff}"));
 
-            _testDirectory.Exists.Should().BeFalse();
-            _testDirectory.Create();
+            TestDirectory.Exists.Should().BeFalse();
+            TestDirectory.Create();
 
             FileSystem = GetFileSystemStub();
         }
@@ -109,7 +109,7 @@ namespace Catalyst.TestUtils
         private IFileSystem GetFileSystemStub()
         {
             var fileSystem = Substitute.For<IFileSystem>();
-            fileSystem.GetCatalystDataDir().Returns(_testDirectory);
+            fileSystem.GetCatalystDataDir().Returns(TestDirectory);
             return fileSystem;
         }
 
@@ -117,14 +117,14 @@ namespace Catalyst.TestUtils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing || _testDirectory?.Parent == null)
+            if (!disposing || TestDirectory?.Parent == null)
             {
                 return;
             }
 
             var regex = new Regex(CurrentTestName + @"_(?<timestamp>[\d]{16})");
 
-            var oldDirectories = _testDirectory.Parent.EnumerateDirectories()
+            var oldDirectories = TestDirectory.Parent.EnumerateDirectories()
                .Where(d =>
                 {
                     var matches = regex.Matches(d.Name);

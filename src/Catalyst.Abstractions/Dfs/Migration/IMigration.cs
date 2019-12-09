@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Options;
 
 namespace Catalyst.Abstractions.Dfs.Migration
 {
@@ -31,7 +32,7 @@ namespace Catalyst.Abstractions.Dfs.Migration
         /// </param>
         /// <param name="cancel"></param>
         /// <returns></returns>
-        Task UpgradeAsync(IDfs ipfs, CancellationToken cancel = default(CancellationToken));
+        Task UpgradeAsync(RepositoryOptions options, CancellationToken cancel = default(CancellationToken));
 
         /// <summary>
         ///   Downgrade the repository.
@@ -41,6 +42,6 @@ namespace Catalyst.Abstractions.Dfs.Migration
         /// </param>
         /// <param name="cancel"></param>
         /// <returns></returns>
-        Task DowngradeAsync(IDfs ipfs, CancellationToken cancel = default(CancellationToken));
+        Task DowngradeAsync(RepositoryOptions options, CancellationToken cancel = default(CancellationToken));
     }
 }

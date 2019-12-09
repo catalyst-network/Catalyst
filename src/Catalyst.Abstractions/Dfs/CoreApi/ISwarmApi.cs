@@ -51,6 +51,8 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </param>
         Task ConnectAsync(MultiAddress address, CancellationToken cancel = default(CancellationToken));
 
+        Task ConnectAsync(Peer address, CancellationToken cancel = default(CancellationToken));
+
         /// <summary>
         ///   Disconnect from a peer.
         /// </summary>

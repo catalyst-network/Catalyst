@@ -14,11 +14,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public class CertTest : FileSystemBasedTest
     {
-        private readonly KeyChain keyChain;
+        private readonly KeyStoreService _keyStoreService;
 
         public CertTest(ITestOutputHelper output) : base(output)
         {
-            keyChain = new KeyChain(FileSystem.Path.ToString())
+            _keyStoreService = new KeyStoreService(FileSystem.Path.ToString())
             {
                 Options = new DfsOptions().KeyChain
             };
@@ -28,16 +28,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
                 securePassword.AppendChar(c);
 
             securePassword.MakeReadOnly();
-            keyChain.SetPassphraseAsync(securePassword).ConfigureAwait(false);
+            _keyStoreService.SetPassphraseAsync(securePassword).ConfigureAwait(false);
         }
 
         [Fact]
         public async Task Create_Rsa()
         {
-            var key = await keyChain.CreateAsync("alice", "rsa", 512);
+            var key = await _keyStoreService.CreateAsync("alice", "rsa", 512);
             try
             {
-                var cert = await keyChain.CreateBCCertificateAsync(key.Name);
+                var cert = await _keyStoreService.CreateBCCertificateAsync(key.Name);
                 Assert.Equal($"CN={key.Id},OU=keystore,O=ipfs", cert.SubjectDN.ToString());
                 var ski = new SubjectKeyIdentifierStructure(
                     cert.GetExtensionValue(X509Extensions.SubjectKeyIdentifier));
@@ -45,17 +45,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             }
             finally
             {
-                await keyChain.RemoveAsync("alice");
+                await _keyStoreService.RemoveAsync("alice");
             }
         }
 
         [Fact]
         public async Task Create_Secp256k1()
         {
-            var key = await keyChain.CreateAsync("alice", "secp256k1", 0);
+            var key = await _keyStoreService.CreateAsync("alice", "secp256k1", 0);
             try
             {
-                var cert = await keyChain.CreateBCCertificateAsync("alice");
+                var cert = await _keyStoreService.CreateBCCertificateAsync("alice");
                 Assert.Equal($"CN={key.Id},OU=keystore,O=ipfs", cert.SubjectDN.ToString());
                 var ski = new SubjectKeyIdentifierStructure(
                     cert.GetExtensionValue(X509Extensions.SubjectKeyIdentifier));
@@ -63,17 +63,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             }
             finally
             {
-                await keyChain.RemoveAsync("alice");
+                await _keyStoreService.RemoveAsync("alice");
             }
         }
 
         [Fact]
         public async Task Create_Ed25519()
         {
-            var key = await keyChain.CreateAsync("alice", "ed25519", 0);
+            var key = await _keyStoreService.CreateAsync("alice", "ed25519", 0);
             try
             {
-                var cert = await keyChain.CreateBCCertificateAsync("alice");
+                var cert = await _keyStoreService.CreateBCCertificateAsync("alice");
                 Assert.Equal($"CN={key.Id},OU=keystore,O=ipfs", cert.SubjectDN.ToString());
                 var ski = new SubjectKeyIdentifierStructure(
                     cert.GetExtensionValue(X509Extensions.SubjectKeyIdentifier));
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             }
             finally
             {
-                await keyChain.RemoveAsync("alice");
+                await _keyStoreService.RemoveAsync("alice");
             }
         }
     }

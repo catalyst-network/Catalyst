@@ -17,7 +17,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IBitswapApi"/>.
         /// </value>
-        IBitswapApi Bitswap { get; }
+        IBitswapApi BitSwapApi { get; }
 
         /// <summary>
         ///   Provides access to the Block API.
@@ -25,7 +25,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IBlockApi"/>.
         /// </value>
-        IBlockApi Block { get; }
+        IBlockApi BlockApi { get; }
 
         /// <summary>
         ///   Provides access to the Block Repository API.
@@ -33,7 +33,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IBlockRepositoryApi"/>.
         /// </value>
-        IBlockRepositoryApi BlockRepository { get; }
+        IBlockRepositoryApi BlockRepositoryApi { get; }
 
         /// <summary>
         ///   Provides access to the Bootstrap API.
@@ -41,7 +41,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IBootstrapApi"/>.
         /// </value>
-        IBootstrapApi Bootstrap { get; }
+        IBootstrapApi BootstrapApi { get; }
 
         /// <summary>
         ///   Provides access to the Config API.
@@ -49,7 +49,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IConfigApi"/>.
         /// </value>
-        IConfigApi Config { get; }
+        IConfigApi ConfigApi { get; }
 
         /// <summary>
         ///   Provides access to the Dag API.
@@ -57,7 +57,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IDagApi"/>.
         /// </value>
-        IDagApi Dag { get; }
+        IDagApi DagApi { get; }
 
         /// <summary>
         ///   Provides access to the DHT API.
@@ -65,7 +65,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IDhtApi"/>.
         /// </value>
-        IDhtApi Dht { get; }
+        IDhtApi DhtApi { get; }
 
         /// <summary>
         ///   Provides access to the DNS API.
@@ -73,23 +73,15 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IDnsApi"/>.
         /// </value>
-        IDnsApi Dns { get; }
+        IDnsApi DnsApi { get; }
 
         /// <summary>
         ///   Provides access to the File System API.
         /// </summary>
         /// <value>
-        ///   An object that implements <see cref="IFileSystemApi"/>.
+        ///   An object that implements <see cref="IUnixFsApi"/>.
         /// </value>
-        IFileSystemApi FileSystem { get; }
-
-        /// <summary>
-        ///   Provides access to the Generic API.
-        /// </summary>
-        /// <value>
-        ///   An object that implements <see cref="IGenericApi"/>.
-        /// </value>
-        IGenericApi Generic { get; }
+        IUnixFsApi UnixFsApi { get; }
 
         /// <summary>
         ///   Provides access to the Key API.
@@ -97,7 +89,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="Catalyst.Abstractions.Keystore.IKeyApi"/>.
         /// </value>
-        IKeyApi Key { get; }
+        IKeyApi KeyApi { get; }
 
         /// <summary>
         ///   Provides access to the Name API.
@@ -105,7 +97,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="INameApi"/>.
         /// </value>
-        INameApi Name { get; }
+        INameApi NameApi { get; }
 
         /// <summary>
         ///   Provides access to the Object API.
@@ -113,7 +105,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IObjectApi"/>.
         /// </value>
-        IObjectApi Object { get; }
+        IObjectApi ObjectApi { get; }
 
         /// <summary>
         ///   Provides access to the Pin API.
@@ -121,7 +113,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IPinApi"/>.
         /// </value>
-        IPinApi Pin { get; }
+        IPinApi PinApi { get; }
 
         /// <summary>
         ///   Provides access to the PubSub API.
@@ -129,7 +121,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IPubSubApi"/>.
         /// </value>
-        IPubSubApi PubSub { get; }
+        IPubSubApi PubSubApi { get; }
 
         /// <summary>
         ///   Provides access to the Stats (statistics) API.
@@ -137,7 +129,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IStatsApi"/>.
         /// </value>
-        IStatsApi Stats { get; }
+        IStatsApi StatsApi { get; }
 
         /// <summary>
         ///   Provides access to the Swarm API.
@@ -145,6 +137,6 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="ISwarmApi"/>.
         /// </value>
-        ISwarmApi Swarm { get; }
+        ISwarmApi SwarmApi { get; }
     }
 }

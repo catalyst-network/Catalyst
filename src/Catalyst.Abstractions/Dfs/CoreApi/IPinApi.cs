@@ -11,6 +11,8 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
     /// <seealso href="https://github.com/ipfs/interface-ipfs-core/blob/master/SPEC/PIN.md">Pin API spec</seealso>
     public interface IPinApi
     {
+        IBlockApi BlockApi { get; set; }
+        
         /// <summary>
         ///   Adds an IPFS object to the pinset and also stores it to the IPFS repo. pinset is the set of hashes currently pinned (not gc'able).
         /// </summary>

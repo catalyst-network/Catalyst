@@ -90,7 +90,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   <c>/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao</c>.
         /// </returns>
         Task<string> ResolveAsync(string name,
-            bool recursive = false,
+            bool recursive = true,
             bool nocache = false,
             CancellationToken cancel = default(CancellationToken));
     }

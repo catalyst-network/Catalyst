@@ -6,42 +6,59 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.FileSystem;
 using Lib.P2P;
 using MultiFormats;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    class Pin
+    internal sealed class Pin
     {
         public Cid Id;
     }
 
-    class PinApi : IPinApi
+    internal sealed class PinApi : IPinApi
     {
-        IDfs ipfs;
-        FileStore<Cid, Pin> store;
+        private FileStore<Cid, Pin> _store;
 
-        public PinApi(IDfs ipfs) { this.ipfs = ipfs; }
+        private readonly INameApi _nameApi;
+        public IBlockApi BlockApi { get; set; }
+        private readonly IObjectApi _objectApi;
+        private readonly RepositoryOptions _repositoryOptions;
+
+        public PinApi(INameApi nameApi,
+            IObjectApi objectApi,
+            RepositoryOptions options)
+        {
+            _nameApi = nameApi;
+            _objectApi = objectApi;
+            _repositoryOptions = options;
+        }
 
         FileStore<Cid, Pin> Store
         {
             get
             {
-                if (store == null)
+                if (_store != null)
                 {
-                    var folder = Path.Combine(ipfs.Options.Repository.Folder, "pins");
-                    if (!Directory.Exists(folder))
-                        Directory.CreateDirectory(folder);
-                    store = new FileStore<Cid, Pin>
-                    {
-                        Folder = folder,
-                        NameToKey = (cid) => cid.Hash.ToBase32(),
-                        KeyToName = (key) => new MultiHash(key.FromBase32())
-                    };
+                    return _store;
                 }
+                
+                var folder = Path.Combine(_repositoryOptions.Folder, "pins");
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+                
+                _store = new FileStore<Cid, Pin>
+                {
+                    Folder = folder,
+                    NameToKey = cid => cid.Hash.ToBase32(),
+                    KeyToName = key => new MultiHash(key.FromBase32())
+                };
 
-                return store;
+                return _store;
             }
         }
 
@@ -49,7 +66,8 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             bool recursive = true,
             CancellationToken cancel = default(CancellationToken))
         {
-            var id = await ipfs.ResolveIpfsPathToCidAsync(path, cancel).ConfigureAwait(false);
+            var r = await _nameApi.ResolveAsync(path, cancel: cancel).ConfigureAwait(false);
+            var id = Cid.Decode(r.Remove(0, 6));
             var todos = new Stack<Cid>();
             todos.Push(id);
             var dones = new List<Cid>();
@@ -69,12 +87,12 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 }, cancel).ConfigureAwait(false);
 
                 // Make sure that the content is stored locally.
-                await ipfs.Block.GetAsync(current, cancel).ConfigureAwait(false);
+                await BlockApi.GetAsync(current, cancel).ConfigureAwait(false);
 
                 // Recursively pin the links?
                 if (recursive && current.ContentType == "dag-pb")
                 {
-                    var links = await ipfs.Object.LinksAsync(current, cancel);
+                    var links = await _objectApi.LinksAsync(current, cancel);
                     foreach (var link in links)
                     {
                         todos.Push(link.Id);
@@ -107,11 +125,11 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 await Store.RemoveAsync(current, cancel).ConfigureAwait(false);
                 if (recursive)
                 {
-                    if (null != await ipfs.Block.StatAsync(current, cancel).ConfigureAwait(false))
+                    if (null != await BlockApi.StatAsync(current, cancel).ConfigureAwait(false))
                     {
                         try
                         {
-                            var links = await ipfs.Object.LinksAsync(current, cancel).ConfigureAwait(false);
+                            var links = await _objectApi.LinksAsync(current, cancel).ConfigureAwait(false);
                             foreach (var link in links)
                             {
                                 todos.Push(link.Id);
@@ -119,7 +137,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                         }
                         catch (Exception)
                         {
-                            // ignore if current is not an objcet.
+                            // ignored
                         }
                     }
                 }

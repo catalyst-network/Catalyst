@@ -43,7 +43,7 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Keystore
 {
-    public sealed class LocalKeyStore : KeyStoreService, IKeyStore
+    public sealed class LocalKeyStore : Nethereum.KeyStore.KeyStoreService, IKeyStore
     {
         private readonly ILogger _logger;
         private readonly IFileSystem _fileSystem;

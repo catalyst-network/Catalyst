@@ -40,14 +40,14 @@ namespace Catalyst.Core.Modules.Web3.Controllers
     public sealed class LedgerController : Controller
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
         private readonly IMapperProvider _mapperProvider;
         private readonly ILogger _logger;
 
-        public LedgerController(IDeltaHashProvider deltaHashProvider, IDfs dfs, IMapperProvider mapperProvider, ILogger logger)
+        public LedgerController(IDeltaHashProvider deltaHashProvider, IDfsService dfsService, IMapperProvider mapperProvider, ILogger logger)
         {
             _deltaHashProvider = deltaHashProvider;
-            _dfs = dfs;
+            _dfsService = dfsService;
             _mapperProvider = mapperProvider;
             _logger = logger;
         }
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             var latest = _deltaHashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());
             try
             {
-                using (var fullContentStream = await _dfs.FileSystem.ReadFileAsync(latest).ConfigureAwait(false))
+                using (var fullContentStream = await _dfsService.UnixFsApi.ReadFileAsync(latest).ConfigureAwait(false))
                 {
                     var contentBytes = await fullContentStream.ReadAllBytesAsync(CancellationToken.None)
                        .ConfigureAwait(false);

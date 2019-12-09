@@ -41,12 +41,15 @@ using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileSystem;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Dfs;
+using Catalyst.Core.Modules.Dfs.Tests;
+using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.Rpc.Server;
@@ -63,7 +66,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
     public class PoaTestNode : ICatalystNode, IDisposable
     {
-        private readonly DevDfs _dfs;
+        private readonly IDfsService _dfsService;
         private readonly IMempool<TransactionBroadcastDao> _memPool;
         private readonly ICatalystNode _node;
         private readonly DirectoryInfo _nodeDirectory;
@@ -90,10 +93,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             _rpcSettings = RpcSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
             _nodePeerId = nodeSettings.PeerId;
-
-            var baseDfsFolder = Path.Combine(parentTestFileSystem.GetCatalystDataDir().FullName, "dfs");
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-            _dfs = new DevDfs(parentTestFileSystem, hashProvider, baseDfsFolder);
+            
+            _dfsService = TestDfs.GetTestDfs(output);
 
             _memPool = new Mempool(
                 new TestMempoolRepository(new InMemoryRepository<TransactionBroadcastDao, string>()));
@@ -153,7 +154,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
             _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
             _containerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<PeerId>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_dfs).As<IDfs>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_dfsService).As<IDfsService>();
             _containerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<TransactionBroadcastDao>>();
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()

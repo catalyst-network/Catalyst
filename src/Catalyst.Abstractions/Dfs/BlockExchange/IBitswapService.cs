@@ -22,7 +22,7 @@ namespace Catalyst.Abstractions.Dfs.BlockExchange
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        Swarm Swarm { get; set; }
+        SwarmService SwarmService { get; set; }
 
         /// <summary>
         ///   Provides access to blocks of data.
@@ -114,7 +114,7 @@ namespace Catalyst.Abstractions.Dfs.BlockExchange
         ///   </para>
         /// </remarks>
         void Unwant(Cid id);
-
+        
         /// <summary>
         ///   Indicate that a remote peer sent a block.
         /// </summary>

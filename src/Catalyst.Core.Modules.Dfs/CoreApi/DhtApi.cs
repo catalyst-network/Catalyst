@@ -2,23 +2,25 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
+using Lib.P2P.Routing;
 using MultiFormats;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    class DhtApi : IDhtApi
+    public sealed class DhtApi : IDhtApi
     {
-        IDfs ipfs;
+        private readonly IDhtService _dhtService;
 
-        public DhtApi(IDfs ipfs) { this.ipfs = ipfs; }
+        public DhtApi(IDhtService dhtService)
+        {
+            _dhtService = dhtService;
+        }
 
         public async Task<Peer> FindPeerAsync(MultiHash id, CancellationToken cancel = default(CancellationToken))
         {
-            var dht = await ipfs.DhtService.ConfigureAwait(false);
-            return await dht.FindPeerAsync(id, cancel).ConfigureAwait(false);
+            return await _dhtService.FindPeerAsync(id, cancel).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<Peer>> FindProvidersAsync(Cid id,
@@ -26,16 +28,14 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             Action<Peer> providerFound = null,
             CancellationToken cancel = default(CancellationToken))
         {
-            var dht = await ipfs.DhtService.ConfigureAwait(false);
-            return await dht.FindProvidersAsync(id, limit, providerFound, cancel).ConfigureAwait(false);
+            return await _dhtService.FindProvidersAsync(id, limit, providerFound, cancel).ConfigureAwait(false);
         }
 
         public async Task ProvideAsync(Cid cid,
             bool advertise = true,
             CancellationToken cancel = default(CancellationToken))
         {
-            var dht = await ipfs.DhtService.ConfigureAwait(false);
-            await dht.ProvideAsync(cid, advertise, cancel).ConfigureAwait(false);
+            await _dhtService.ProvideAsync(cid, advertise, cancel).ConfigureAwait(false);
         }
 
         public Task<byte[]> GetAsync(byte[] key, CancellationToken cancel = default(CancellationToken))

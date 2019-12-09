@@ -119,8 +119,8 @@ namespace Catalyst.Core.Modules.Web3
             builder.RegisterInstance(_container.Resolve<IDeltaHashProvider>())
                .As<IDeltaHashProvider>()
                .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<IDfs>())
-               .As<IDfs>()
+            builder.RegisterInstance(_container.Resolve<IDfsService>())
+               .As<IDfsService>()
                .SingleInstance();
             builder.RegisterInstance(_container.Resolve<IMapperProvider>())
                .As<IMapperProvider>()

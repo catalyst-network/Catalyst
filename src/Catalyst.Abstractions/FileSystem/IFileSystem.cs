@@ -34,10 +34,6 @@ namespace Catalyst.Abstractions.FileSystem
         Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
         bool DataFileExists(string fileName);
 
-        bool DataFileExistsInSubDirectory(string fileName, string subDirectory);
-
-        string ReadTextFromCddFile(string fileName);
-
         string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);
 
         bool SetCurrentPath(string path);

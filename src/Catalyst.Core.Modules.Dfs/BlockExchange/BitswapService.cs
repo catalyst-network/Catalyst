@@ -86,7 +86,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        public Swarm Swarm { get; set; }
+        public SwarmService SwarmService { get; set; }
 
         /// <summary>
         ///   Provides access to blocks of data.
@@ -110,7 +110,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                     DupBlksReceived = DupBlksReceived,
                     DupDataReceived = DupDataReceived,
                     ProvideBufLen = 0, // TODO: Unknown meaning
-                    Peers = Swarm.KnownPeers.Select(p => p.Id),
+                    Peers = SwarmService.KnownPeers.Select(p => p.Id),
                     Wantlist = wants.Keys
                 };
             }
@@ -129,12 +129,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <seealso cref="IBitswapApi.LedgerAsync"/>
         public BitswapLedger PeerLedger(Peer peer)
         {
-            if (peerLedgers.TryGetValue(peer, out BitswapLedger ledger))
-            {
-                return ledger;
-            }
-
-            return new BitswapLedger {Peer = peer};
+            return peerLedgers.TryGetValue(peer, out var ledger) ? ledger : new BitswapLedger {Peer = peer};
         }
 
         /// <summary>
@@ -152,10 +147,10 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
 
             foreach (var protocol in Protocols)
             {
-                Swarm.AddProtocol(protocol);
+                SwarmService.AddProtocol(protocol);
             }
 
-            Swarm.ConnectionEstablished += Swarm_ConnectionEstablished;
+            SwarmService.ConnectionEstablished += Swarm_ConnectionEstablished;
 
             // TODO: clear the stats.
             peerLedgers.Clear();
@@ -194,10 +189,10 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         {
             log.Debug("Stopping");
 
-            Swarm.ConnectionEstablished -= Swarm_ConnectionEstablished;
+            SwarmService.ConnectionEstablished -= Swarm_ConnectionEstablished;
             foreach (var protocol in Protocols)
             {
-                Swarm.RemoveProtocol(protocol);
+                SwarmService.RemoveProtocol(protocol);
             }
 
             foreach (var cid in wants.Keys)
@@ -459,17 +454,17 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// </remarks>
         public int Found(IDataBlock block)
         {
-            if (wants.TryRemove(block.Id, out WantedBlock want))
+            if (!wants.TryRemove(block.Id, out WantedBlock want))
             {
-                foreach (var consumer in want.Consumers)
-                {
-                    consumer.SetResult(block);
-                }
-
-                return want.Consumers.Count;
+                return 0;
+            }
+            
+            foreach (var consumer in want.Consumers)
+            {
+                consumer.SetResult(block);
             }
 
-            return 0;
+            return want.Consumers.Count;
         }
 
         /// <summary>
@@ -477,12 +472,12 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// </summary>
         async Task SendWantListToAllAsync(IEnumerable<WantedBlock> wantedBlocks, bool full)
         {
-            if (Swarm == null)
+            if (SwarmService == null)
                 return;
 
             try
             {
-                var tasks = Swarm.KnownPeers
+                var tasks = SwarmService.KnownPeers
                    .Where(p => p.ConnectedAddress != null)
                    .Select(p => SendWantListAsync(p, wantedBlocks, full))
                    .ToArray();
@@ -509,7 +504,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
             {
                 try
                 {
-                    using (var stream = await Swarm.DialAsync(peer, protocol.ToString()).ConfigureAwait(false))
+                    using (var stream = await SwarmService.DialAsync(peer, protocol.ToString()).ConfigureAwait(false))
                     {
                         await protocol.SendWantsAsync(stream, wants, full: full).ConfigureAwait(false);
                     }

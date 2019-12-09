@@ -15,22 +15,25 @@ using PeterO.Cbor;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    class DagApi : IDagApi
+    internal sealed class DagApi : IDagApi
     {
-        static readonly PODOptions podOptions = new PODOptions
+        private static readonly PODOptions PodOptions = new PODOptions
         (
             removeIsPrefix: false,
             useCamelCase: false
         );
 
-        IDfs ipfs;
+        private readonly IBlockApi _blockApi;
 
-        public DagApi(IDfs ipfs) { this.ipfs = ipfs; }
+        public DagApi(IBlockApi blockApi)
+        {
+            _blockApi = blockApi;
+        }
 
         public async Task<JObject> GetAsync(Cid id,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
-            var block = await ipfs.Block.GetAsync(id, cancel).ConfigureAwait(false);
+            var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
             var format = GetDataFormat(id);
             var canonical = format.Deserialise(block.DataBytes);
             using (var ms = new MemoryStream())
@@ -39,12 +42,12 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             {
                 canonical.WriteJSONTo(ms);
                 ms.Position = 0;
-                return (JObject) JObject.ReadFrom(reader);
+                return (JObject) JToken.ReadFrom(reader);
             }
         }
 
         public async Task<JToken> GetAsync(string path,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             if (path.StartsWith("/ipfs/"))
             {
@@ -53,23 +56,27 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
             var parts = path.Split('/').Where(p => p.Length > 0).ToArray();
             if (parts.Length == 0)
+            {
                 throw new ArgumentException($"Cannot resolve '{path}'.");
+            }
 
             JToken token = await GetAsync(Cid.Decode(parts[0]), cancel).ConfigureAwait(false);
             foreach (var child in parts.Skip(1))
             {
                 token = ((JObject) token)[child];
                 if (token == null)
+                {
                     throw new Exception($"Missing component '{child}'.");
+                }
             }
 
             return token;
         }
 
         public async Task<T> GetAsync<T>(Cid id,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
-            var block = await ipfs.Block.GetAsync(id, cancel).ConfigureAwait(false);
+            var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
             var format = GetDataFormat(id);
             var canonical = format.Deserialise(block.DataBytes);
 
@@ -84,18 +91,18 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = true,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             using (var ms = new MemoryStream())
             using (var sw = new StreamWriter(ms))
             using (var writer = new JsonTextWriter(sw))
             {
-                await data.WriteToAsync(writer);
+                await data.WriteToAsync(writer, cancel);
                 writer.Flush();
                 ms.Position = 0;
                 var format = GetDataFormat(contentType);
                 var block = format.Serialize(CBORObject.ReadJSON(ms));
-                return await ipfs.Block.PutAsync(block, contentType, multiHash, encoding, pin, cancel)
+                return await _blockApi.PutAsync(block, contentType, multiHash, encoding, pin, cancel)
                    .ConfigureAwait(false);
             }
         }
@@ -105,11 +112,11 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = true,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var format = GetDataFormat(contentType);
             var block = format.Serialize(CBORObject.Read(data));
-            return await ipfs.Block.PutAsync(block, contentType, multiHash, encoding, pin, cancel)
+            return await _blockApi.PutAsync(block, contentType, multiHash, encoding, pin, cancel)
                .ConfigureAwait(false);
         }
 
@@ -118,26 +125,30 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = true,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var format = GetDataFormat(contentType);
-            var block = format.Serialize(CBORObject.FromObject(data, podOptions));
-            return await ipfs.Block.PutAsync(block, contentType, multiHash, encoding, pin, cancel)
+            var block = format.Serialize(CBORObject.FromObject(data, PodOptions));
+            return await _blockApi.PutAsync(block, contentType, multiHash, encoding, pin, cancel)
                .ConfigureAwait(false);
         }
 
         ILinkedDataFormat GetDataFormat(Cid id)
         {
-            if (IpldRegistry.Formats.TryGetValue(id.ContentType, out ILinkedDataFormat format))
+            if (IpldRegistry.Formats.TryGetValue(id.ContentType, out var format))
+            {
                 return format;
+            }
 
             throw new KeyNotFoundException($"Unknown IPLD format '{id.ContentType}'.");
         }
 
         ILinkedDataFormat GetDataFormat(string contentType)
         {
-            if (IpldRegistry.Formats.TryGetValue(contentType, out ILinkedDataFormat format))
+            if (IpldRegistry.Formats.TryGetValue(contentType, out var format))
+            {
                 return format;
+            }
 
             throw new KeyNotFoundException($"Unknown IPLD format '{contentType}'.");
         }

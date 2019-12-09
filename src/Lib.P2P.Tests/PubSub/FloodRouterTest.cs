@@ -60,16 +60,16 @@ namespace Lib.P2P.Tests.PubSub
         {
             var topic = Guid.NewGuid().ToString();
 
-            var swarm1 = new Swarm {LocalPeer = self};
-            var router1 = new FloodRouter {Swarm = swarm1};
-            var ns1 = new NotificationService {LocalPeer = self};
+            var swarm1 = new SwarmService {LocalPeer = self};
+            var router1 = new FloodRouter {SwarmService = swarm1};
+            var ns1 = new PubSubService {LocalPeer = self};
             ns1.Routers.Add(router1);
             await swarm1.StartAsync();
             await ns1.StartAsync();
 
-            var swarm2 = new Swarm {LocalPeer = other};
-            var router2 = new FloodRouter {Swarm = swarm2};
-            var ns2 = new NotificationService {LocalPeer = other};
+            var swarm2 = new SwarmService {LocalPeer = other};
+            var router2 = new FloodRouter {SwarmService = swarm2};
+            var ns2 = new PubSubService {LocalPeer = other};
             ns2.Routers.Add(router2);
             await swarm2.StartAsync();
             await ns2.StartAsync();
@@ -110,16 +110,16 @@ namespace Lib.P2P.Tests.PubSub
         {
             var topic = Guid.NewGuid().ToString();
 
-            var swarm1 = new Swarm {LocalPeer = self};
-            var router1 = new FloodRouter {Swarm = swarm1};
-            var ns1 = new NotificationService {LocalPeer = self};
+            var swarm1 = new SwarmService {LocalPeer = self};
+            var router1 = new FloodRouter {SwarmService = swarm1};
+            var ns1 = new PubSubService {LocalPeer = self};
             ns1.Routers.Add(router1);
             await swarm1.StartAsync();
             await ns1.StartAsync();
 
-            var swarm2 = new Swarm {LocalPeer = other};
-            var router2 = new FloodRouter {Swarm = swarm2};
-            var ns2 = new NotificationService {LocalPeer = other};
+            var swarm2 = new SwarmService {LocalPeer = other};
+            var router2 = new FloodRouter {SwarmService = swarm2};
+            var ns2 = new PubSubService {LocalPeer = other};
             ns2.Routers.Add(router2);
             await swarm2.StartAsync();
             await ns2.StartAsync();
@@ -160,16 +160,16 @@ namespace Lib.P2P.Tests.PubSub
         {
             var topic = Guid.NewGuid().ToString();
 
-            var swarm1 = new Swarm {LocalPeer = self};
-            var router1 = new FloodRouter {Swarm = swarm1};
-            var ns1 = new NotificationService {LocalPeer = self};
+            var swarm1 = new SwarmService {LocalPeer = self};
+            var router1 = new FloodRouter {SwarmService = swarm1};
+            var ns1 = new PubSubService {LocalPeer = self};
             ns1.Routers.Add(router1);
             await swarm1.StartAsync();
             await ns1.StartAsync();
 
-            var swarm2 = new Swarm {LocalPeer = other};
-            var router2 = new FloodRouter {Swarm = swarm2};
-            var ns2 = new NotificationService {LocalPeer = other};
+            var swarm2 = new SwarmService {LocalPeer = other};
+            var router2 = new FloodRouter {SwarmService = swarm2};
+            var ns2 = new PubSubService {LocalPeer = other};
             ns2.Routers.Add(router2);
             await swarm2.StartAsync();
             await ns2.StartAsync();
@@ -221,23 +221,23 @@ namespace Lib.P2P.Tests.PubSub
         {
             var topic = Guid.NewGuid().ToString();
 
-            var swarm1 = new Swarm {LocalPeer = self};
-            var router1 = new FloodRouter {Swarm = swarm1};
-            var ns1 = new NotificationService {LocalPeer = self};
+            var swarm1 = new SwarmService {LocalPeer = self};
+            var router1 = new FloodRouter {SwarmService = swarm1};
+            var ns1 = new PubSubService {LocalPeer = self};
             ns1.Routers.Add(router1);
             await swarm1.StartAsync();
             await ns1.StartAsync();
 
-            var swarm2 = new Swarm {LocalPeer = other};
-            var router2 = new FloodRouter {Swarm = swarm2};
-            var ns2 = new NotificationService {LocalPeer = other};
+            var swarm2 = new SwarmService {LocalPeer = other};
+            var router2 = new FloodRouter {SwarmService = swarm2};
+            var ns2 = new PubSubService {LocalPeer = other};
             ns2.Routers.Add(router2);
             await swarm2.StartAsync();
             await ns2.StartAsync();
 
-            var swarm3 = new Swarm {LocalPeer = other1};
-            var router3 = new FloodRouter {Swarm = swarm3};
-            var ns3 = new NotificationService {LocalPeer = other1};
+            var swarm3 = new SwarmService {LocalPeer = other1};
+            var router3 = new FloodRouter {SwarmService = swarm3};
+            var ns3 = new PubSubService {LocalPeer = other1};
             ns3.Routers.Add(router3);
             await swarm3.StartAsync();
             await ns3.StartAsync();

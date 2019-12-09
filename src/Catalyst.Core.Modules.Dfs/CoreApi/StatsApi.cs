@@ -7,26 +7,30 @@ using Lib.P2P.Transports;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    class StatsApi : IStatsApi
+    internal sealed class StatsApi : IStatsApi
     {
-        IDfs ipfs;
+        private readonly IBitswapApi _bitSwapApi;
+        private readonly IBlockRepositoryApi _blockRepositoryApi;
 
-        public StatsApi(IDfs ipfs) { this.ipfs = ipfs; }
+        public StatsApi(IBitswapApi bitSwapApi, IBlockRepositoryApi blockRepositoryApi)
+        {
+            _bitSwapApi = bitSwapApi;
+            _blockRepositoryApi = blockRepositoryApi;
+        }
 
         public Task<BandwidthData> BandwidthAsync(CancellationToken cancel = default(CancellationToken))
         {
             return Task.FromResult(StatsStream.AllBandwidth);
         }
 
-        public async Task<BitswapData> BitswapAsync(CancellationToken cancel = default(CancellationToken))
+        public async Task<BitswapData> BitSwapAsync(CancellationToken cancel = default(CancellationToken))
         {
-            var bitswap = await ipfs.BitswapService.ConfigureAwait(false);
-            return bitswap.Statistics;
+            return _bitSwapApi.GetBitSwapStatistics();
         }
 
         public Task<RepositoryData> RepositoryAsync(CancellationToken cancel = default(CancellationToken))
         {
-            return ipfs.BlockRepository.StatisticsAsync(cancel);
+            return _blockRepositoryApi.StatisticsAsync(cancel);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Lib.P2P.SecureCommunication
     ///   uses a <see cref="PreSharedKey"/>.
     /// </summary>
     /// <remarks>
-    ///   The <see cref="Swarm"/> calls the network protector whenever a connection
+    ///   The <see cref="SwarmService"/> calls the network protector whenever a connection
     ///   is being established with another peer.
     /// </remarks>
     /// <seealso href="https://github.com/libp2p/specs/blob/master/pnet/Private-Networks-PSK-V1.md"/>

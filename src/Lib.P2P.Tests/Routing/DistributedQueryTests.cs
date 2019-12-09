@@ -14,7 +14,7 @@ namespace Lib.P2P.Tests.Routing
         {
             var dquery = new DistributedQuery<Peer>
             {
-                Dht = new Dht1()
+                Dht = new DhtService()
             };
             var cts = new CancellationTokenSource();
             cts.Cancel();

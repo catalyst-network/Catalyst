@@ -8,7 +8,7 @@ using MultiFormats;
 namespace Lib.P2P
 {
     /// <summary>
-    ///   Manages the peer connections in a <see cref="Swarm"/>.
+    ///   Manages the peer connections in a <see cref="SwarmService"/>.
     /// </summary>
     /// <remarks>
     ///   Enforces that only one connection exists to the <see cref="Peer"/>.  This

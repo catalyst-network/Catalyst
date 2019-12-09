@@ -8,11 +8,14 @@ using Lib.P2P;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    class NameApi : INameApi
+    internal sealed class NameApi : INameApi
     {
-        IDfs ipfs;
+        private readonly IDnsApi _dnsApi;
 
-        public NameApi(IDfs ipfs) { this.ipfs = ipfs; }
+        public NameApi(IDnsApi dnsApi)
+        {
+            _dnsApi = dnsApi;
+        }
 
         public Task<NamedContent> PublishAsync(string path,
             bool resolve = true,
@@ -45,10 +48,13 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
                 var parts = name.Split('/').Where(p => p.Length > 0).ToArray();
                 if (parts.Length == 0)
+                {
                     throw new ArgumentException($"Cannot resolve '{name}'.");
+                }
+                
                 if (IsDomainName(parts[0]))
                 {
-                    name = await ipfs.Dns.ResolveAsync(parts[0], recursive, cancel).ConfigureAwait(false);
+                    name = await _dnsApi.ResolveAsync(parts[0], recursive, cancel).ConfigureAwait(false);
                 }
                 else
                 {
@@ -60,6 +66,19 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                     name = name + "/" + string.Join("/", parts, 1, parts.Length - 1);
                 }
             } while (recursive && !name.StartsWith("/ipfs/"));
+            
+            // var id = Cid.Decode(parts[0]);
+            // foreach (var child in parts.Skip(1))
+            // {
+            //     var container = await _objectApi.GetAsync(id, cancel).ConfigureAwait(false);
+            //     var link = container.Links.FirstOrDefault(l => l.Name == child);
+            //     if (link == null)
+            //     {
+            //         throw new ArgumentException($"Cannot resolve '{child}' in '{name}'.");
+            //     }
+            //     
+            //     id = link.Id;
+            // }
 
             return name;
         }
@@ -77,6 +96,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         /// <remarks>
         ///    A domain must contain at least one '.'.
         /// </remarks>
-        public static bool IsDomainName(string name) { return name.IndexOf('.') > 0; }
+        private static bool IsDomainName(string name) { return name.IndexOf('.') > 0; }
     }
 }

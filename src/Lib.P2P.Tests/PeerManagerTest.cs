@@ -20,7 +20,7 @@ namespace Lib.P2P.Tests
         public void IsNotReachable()
         {
             var peer = new Peer {Id = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"};
-            var manager = new PeerManager {Swarm = new Swarm()};
+            var manager = new PeerManager {SwarmService = new SwarmService()};
             Assert.AreEqual(0, manager.DeadPeers.Count);
 
             manager.SetNotReachable(peer);
@@ -40,16 +40,16 @@ namespace Lib.P2P.Tests
         public void BlackListsThePeer()
         {
             var peer = new Peer {Id = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"};
-            var manager = new PeerManager {Swarm = new Swarm()};
+            var manager = new PeerManager {SwarmService = new SwarmService()};
             Assert.AreEqual(0, manager.DeadPeers.Count);
 
             manager.SetNotReachable(peer);
             Assert.IsFalse(
-                manager.Swarm.IsAllowed((MultiAddress) "/p2p/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"));
+                manager.SwarmService.IsAllowed((MultiAddress) "/p2p/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"));
 
             manager.SetReachable(peer);
             Assert.IsTrue(
-                manager.Swarm.IsAllowed((MultiAddress) "/p2p/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"));
+                manager.SwarmService.IsAllowed((MultiAddress) "/p2p/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"));
         }
 
         [TestMethod]
@@ -63,10 +63,10 @@ namespace Lib.P2P.Tests
                     "/ip4/127.0.0.1/tcp/4040/ipfs/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTxx"
                 }
             };
-            var swarm = new Swarm {LocalPeer = self};
+            var swarm = new SwarmService {LocalPeer = self};
             var manager = new PeerManager
             {
-                Swarm = swarm,
+                SwarmService = swarm,
                 InitialBackoff = TimeSpan.FromMilliseconds(100),
             };
             Assert.AreEqual(0, manager.DeadPeers.Count);
@@ -107,10 +107,10 @@ namespace Lib.P2P.Tests
                     "/ip4/127.0.0.1/tcp/4040/ipfs/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"
                 }
             };
-            var swarm = new Swarm {LocalPeer = self};
+            var swarm = new SwarmService {LocalPeer = self};
             var manager = new PeerManager
             {
-                Swarm = swarm,
+                SwarmService = swarm,
                 InitialBackoff = TimeSpan.FromMilliseconds(100),
                 MaxBackoff = TimeSpan.FromMilliseconds(200),
             };

@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly AddFileToDfsRequestObserver _addFileToDfsRequestObserver;
         private readonly PeerId _senderIdentifier;
-        private readonly IDfs _fakeDfs;
+        private readonly IDfsService _fakeDfsService;
         private readonly IHashProvider _hashProvider;
 
         public AddFileToDfsRequestObserverTests()
@@ -67,11 +67,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             _manualResetEvent = new ManualResetEvent(false);
             _senderIdentifier = PeerIdHelper.GetPeerId("sender");
             var peerSettings = _senderIdentifier.ToSubstitutedPeerSettings();
-            _fakeDfs = Substitute.For<IDfs>();
+            _fakeDfsService = Substitute.For<IDfsService>();
             var logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _nodeFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
-            _addFileToDfsRequestObserver = new AddFileToDfsRequestObserver(_fakeDfs,
+            _addFileToDfsRequestObserver = new AddFileToDfsRequestObserver(_fakeDfsService,
                 peerSettings,
                 _nodeFileTransferFactory,
                 logger);
@@ -132,7 +132,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("expectedHash"));
             var fakeBlock = Substitute.For<IFileSystemNode>();
             fakeBlock.Id.Returns(expectedCid);
-            _fakeDfs.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(fakeBlock);
+            _fakeDfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(fakeBlock);
 
             var protocolMessage = GenerateProtocolMessage();
 
@@ -165,7 +165,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            _fakeDfs.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Throws(new Exception());
+            _fakeDfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Throws(new Exception());
 
             var protocolMessage = GenerateProtocolMessage();
 

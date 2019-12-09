@@ -55,14 +55,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private readonly IBroadcastManager _broadcastManager;
         private readonly PeerId _peerId;
         private readonly DeltaHub _hub;
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
 
         internal sealed class DeltaHubWithFastRetryPolicy : DeltaHub
         {
             public DeltaHubWithFastRetryPolicy(IBroadcastManager broadcastManager,
                 IPeerSettings peerSettings,
-                IDfs dfs, 
-                ILogger logger) : base(broadcastManager, peerSettings, dfs, logger) { }
+                IDfsService dfsService, 
+                ILogger logger) : base(broadcastManager, peerSettings, dfsService, logger) { }
 
             protected override AsyncRetryPolicy<IFileSystemNode> DfsRetryPolicy =>
                 Polly.Policy<IFileSystemNode>.Handle<Exception>()
@@ -76,8 +76,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _broadcastManager = Substitute.For<IBroadcastManager>();
             var logger = Substitute.For<ILogger>();
             _peerId = PeerIdHelper.GetPeerId("me");
-            _dfs = Substitute.For<IDfs>();
-            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId.ToSubstitutedPeerSettings(), _dfs, logger);
+            _dfsService = Substitute.For<IDfsService>();
+            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId.ToSubstitutedPeerSettings(), _dfsService, logger);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             fakeBlock.Id.Returns(cid);
             var cancellationToken = new CancellationToken();
 
-            _dfs.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancel: cancellationToken).Returns(fakeBlock);
+            _dfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancel: cancellationToken).Returns(fakeBlock);
 
             var deltaCid = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken);
             deltaCid.Should().NotBeNull();
@@ -143,14 +143,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Then(() => throw new Exception("this one failed too"))
                .Then(fakeBlock);
 
-            _dfs.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>())
+            _dfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>())
                .Returns(ci => dfsResults.Next());
 
             var deltaCid = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta);
             deltaCid.Should().NotBeNull();
             deltaCid.Should().Be(cid);
 
-            await _dfs.ReceivedWithAnyArgs(3).FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
+            await _dfsService.ReceivedWithAnyArgs(3).UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
         }
 
         // [Fact]

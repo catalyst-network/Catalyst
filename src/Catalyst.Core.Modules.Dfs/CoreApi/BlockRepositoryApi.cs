@@ -5,24 +5,35 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Dfs.Migration;
+using Catalyst.Abstractions.Options;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    class BlockRepositoryApi : IBlockRepositoryApi
+    internal sealed class BlockRepositoryApi : IBlockRepositoryApi
     {
-        IDfs ipfs;
+        private IPinApi _pinApi;
+        private IBlockApi _blockApi;
+        private readonly IMigrationManager _migrationManager;
+        private readonly RepositoryOptions _repositoryOptions;
 
-        public BlockRepositoryApi(IDfs ipfs) { this.ipfs = ipfs; }
+        public BlockRepositoryApi(IPinApi pinApi, IBlockApi blockApi, IMigrationManager migrationManager, RepositoryOptions repositoryOptions)
+        {
+            _pinApi = pinApi;
+            _blockApi = blockApi;
+            _migrationManager = migrationManager;
+            _repositoryOptions = repositoryOptions;
+        }
 
         public async Task RemoveGarbageAsync(CancellationToken cancel = default(CancellationToken))
         {
-            var blockApi = (BlockApi) ipfs.Block;
-            var pinApi = (PinApi) ipfs.Pin;
+            var blockApi = (BlockApi) _blockApi;
+            var pinApi = (PinApi) _pinApi;
             foreach (var cid in blockApi.Store.Names)
             {
                 if (!await pinApi.IsPinnedAsync(cid, cancel).ConfigureAwait(false))
                 {
-                    await ipfs.Block.RemoveAsync(cid, ignoreNonexistent: true, cancel: cancel).ConfigureAwait(false);
+                    await _blockApi.RemoveAsync(cid, ignoreNonexistent: true, cancel: cancel).ConfigureAwait(false);
                 }
             }
         }
@@ -31,12 +42,12 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             var data = new RepositoryData
             {
-                RepoPath = Path.GetFullPath(ipfs.Options.Repository.Folder),
+                RepoPath = Path.GetFullPath(_repositoryOptions.Folder),
                 Version = await VersionAsync(cancel).ConfigureAwait(false),
                 StorageMax = 10000000000 // TODO: there is no storage max
             };
 
-            var blockApi = (BlockApi) ipfs.Block;
+            var blockApi = (BlockApi) _blockApi;
             GetDirStats(blockApi.Store.Folder, data, cancel);
 
             return data;
@@ -49,7 +60,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public Task<string> VersionAsync(CancellationToken cancel = default(CancellationToken))
         {
-            return Task.FromResult(ipfs.MigrationManager.CurrentVersion.ToString(CultureInfo.InvariantCulture));
+            return Task.FromResult(_migrationManager.CurrentVersion.ToString(CultureInfo.InvariantCulture));
         }
 
         void GetDirStats(string path, RepositoryData data, CancellationToken cancel)

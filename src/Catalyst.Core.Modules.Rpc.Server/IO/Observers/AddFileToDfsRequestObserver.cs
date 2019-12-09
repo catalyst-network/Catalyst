@@ -58,20 +58,20 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The DFS</summary>
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestObserver"/> class.</summary>
-        /// <param name="dfs">The DFS.</param>
+        /// <param name="dfsService">The DFS.</param>
         /// <param name="peerSettings"></param>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="logger">The logger.</param>
-        public AddFileToDfsRequestObserver(IDfs dfs,
+        public AddFileToDfsRequestObserver(IDfsService dfsService,
             IPeerSettings peerSettings,
             IDownloadFileTransferFactory fileTransferFactory,
             ILogger logger) : base(logger, peerSettings)
         {
             _fileTransferFactory = fileTransferFactory;
-            _dfs = dfs;
+            _dfsService = dfsService;
         }
         
         /// <summary>
@@ -139,7 +139,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
                 using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    fileSystemNode = await _dfs.FileSystem.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
+                    fileSystemNode = await _dfsService.UnixFsApi.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
                 }
 
                 fileTransferInformation.DfsHash = fileSystemNode.Id.Encode();

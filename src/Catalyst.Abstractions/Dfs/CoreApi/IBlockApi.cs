@@ -19,6 +19,8 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
     /// <seealso href="https://github.com/ipfs/interface-ipfs-core/blob/master/SPEC/BLOCK.md">Block API spec</seealso>
     public interface IBlockApi
     {
+        IPinApi PinApi { get; set; }
+        
         /// <summary>
         ///   Gets an IPFS block.
         /// </summary>

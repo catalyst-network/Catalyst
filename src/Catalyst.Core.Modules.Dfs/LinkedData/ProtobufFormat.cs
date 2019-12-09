@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using Catalyst.Core.Lib.Dag;
 using Lib.P2P;
 using PeterO.Cbor;
 
@@ -9,7 +10,7 @@ namespace Catalyst.Core.Modules.Dfs.LinkedData
     ///   Linked data as a protobuf message.
     /// </summary>
     /// <remarks>
-    ///   This is the original legacy format used by the IPFS <see cref="Catalyst.Core.Modules.Dfs.DagNode"/>. 
+    ///   This is the original legacy format used by the IPFS <see cref="DagNode"/>. 
     /// </remarks>
     public class ProtobufFormat : ILinkedDataFormat
     {

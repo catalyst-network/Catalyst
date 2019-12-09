@@ -86,7 +86,7 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///   The distributed hash table.
         /// </summary>
-        public Dht1 Dht { get; set; }
+        public DhtService Dht { get; set; }
 
         /// <summary>
         ///   The type of query to perform.
@@ -181,7 +181,7 @@ namespace Lib.P2P.Routing
                     using (var timeout = new CancellationTokenSource(askTime))
                     using (var cts = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, runningQuery.Token))
                     using (var stream =
-                        await Dht.Swarm.DialAsync(peer, Dht.ToString(), cts.Token).ConfigureAwait(false))
+                        await Dht.SwarmService.DialAsync(peer, Dht.ToString(), cts.Token).ConfigureAwait(false))
                     {
                         // Send the KAD query and get a response.
                         Serializer.SerializeWithLengthPrefix(stream, queryMessage, PrefixStyle.Base128);
@@ -220,10 +220,10 @@ namespace Lib.P2P.Routing
             foreach (var provider in providers)
                 if (provider.TryToPeer(out var p))
                 {
-                    if (p == Dht.Swarm.LocalPeer || !Dht.Swarm.IsAllowed(p))
+                    if (p == Dht.SwarmService.LocalPeer || !Dht.SwarmService.IsAllowed(p))
                         continue;
 
-                    p = Dht.Swarm.RegisterPeer(p);
+                    p = Dht.SwarmService.RegisterPeer(p);
                     if (QueryType == MessageType.GetProviders)
                     {
                         // Only unique answers
@@ -240,10 +240,10 @@ namespace Lib.P2P.Routing
             foreach (var closer in closerPeers)
                 if (closer.TryToPeer(out var p))
                 {
-                    if (p == Dht.Swarm.LocalPeer || !Dht.Swarm.IsAllowed(p))
+                    if (p == Dht.SwarmService.LocalPeer || !Dht.SwarmService.IsAllowed(p))
                         continue;
 
-                    p = Dht.Swarm.RegisterPeer(p);
+                    p = Dht.SwarmService.RegisterPeer(p);
                     if (QueryType == MessageType.FindNode && QueryKey == p.Id) AddAnswer(p as T);
                 }
         }

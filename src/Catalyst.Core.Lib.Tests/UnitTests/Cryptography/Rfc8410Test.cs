@@ -14,11 +14,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public class Rfc8410Test : FileSystemBasedTest
     {
-        private readonly KeyChain keyChain;
+        private readonly KeyStoreService _keyStoreService;
         
         public Rfc8410Test(ITestOutputHelper output) : base(output)
         {
-            keyChain = new KeyChain(FileSystem.Path.ToString())
+            _keyStoreService = new KeyStoreService(FileSystem.Path.ToString())
             {
                 Options = new DfsOptions().KeyChain
             };
@@ -28,7 +28,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
                 securePassword.AppendChar(c);
 
             securePassword.MakeReadOnly();
-            keyChain.SetPassphraseAsync(securePassword).ConfigureAwait(false);
+            _keyStoreService.SetPassphraseAsync(securePassword).ConfigureAwait(false);
         }
         
         [Fact]
@@ -38,10 +38,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 MC4CAQAwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC
 -----END PRIVATE KEY-----
 ";
-            var key = await keyChain.ImportAsync("alice1", alice1, null);
+            var key = await _keyStoreService.ImportAsync("alice1", alice1, null);
             try
             {
-                var priv = (Ed25519PrivateKeyParameters) await keyChain.GetPrivateKeyAsync("alice1");
+                var priv = (Ed25519PrivateKeyParameters) await _keyStoreService.GetPrivateKeyAsync("alice1");
                 Assert.True(priv.IsPrivate);
                 Assert.Equal("d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
                     priv.GetEncoded().ToHexString());
@@ -53,7 +53,7 @@ MC4CAQAwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC
             }
             finally
             {
-                await keyChain.RemoveAsync("alice1");
+                await _keyStoreService.RemoveAsync("alice1");
             }
         }
 
@@ -66,10 +66,10 @@ oB8wHQYKKoZIhvcNAQkJFDEPDA1DdXJkbGUgQ2hhaXJzgSEAGb9ECWmEzf6FQbrB
 Z9w7lshQhqowtrbLDFw4rXAxZuE=
 -----END PRIVATE KEY-----
 ";
-            var key = await keyChain.ImportAsync("alice1", alice1, null);
+            var key = await _keyStoreService.ImportAsync("alice1", alice1, null);
             try
             {
-                var priv = (Ed25519PrivateKeyParameters) await keyChain.GetPrivateKeyAsync("alice1");
+                var priv = (Ed25519PrivateKeyParameters) await _keyStoreService.GetPrivateKeyAsync("alice1");
                 Assert.True(priv.IsPrivate);
                 Assert.Equal("d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
                     priv.GetEncoded().ToHexString());
@@ -81,7 +81,7 @@ Z9w7lshQhqowtrbLDFw4rXAxZuE=
             }
             finally
             {
-                await keyChain.RemoveAsync("alice1");
+                await _keyStoreService.RemoveAsync("alice1");
             }
         }
     }

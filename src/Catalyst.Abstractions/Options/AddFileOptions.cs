@@ -8,7 +8,7 @@ namespace Catalyst.Abstractions.Options
     /// <summary>
     ///   The options when adding data to the IPFS file system.
     /// </summary>
-    /// <seealso cref="IFileSystemApi"/>
+    /// <seealso cref="IUnixFsApi"/>
     public class AddFileOptions
     {
         /// <summary>

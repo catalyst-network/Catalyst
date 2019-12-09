@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.FileSystem;
 using Common.Logging;
 using Lib.P2P;
@@ -32,7 +34,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         static ILog log = LogManager.GetLogger(typeof(BlockApi));
 
-        static DataBlock emptyDirectory = new DataBlock
+        static readonly DataBlock emptyDirectory = new DataBlock
         {
             DataBytes = ObjectApi.EmptyDirectory.ToArray(),
             Id = ObjectApi.EmptyDirectory.Id,
@@ -46,50 +48,76 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             Size = ObjectApi.EmptyNode.ToArray().Length
         };
 
-        IDfs ipfs;
-        FileStore<Cid, DataBlock> store;
+        FileStore<Cid, DataBlock> _store;
 
-        public BlockApi(IDfs ipfs) { this.ipfs = ipfs; }
+        private readonly IDhtApi _dhtApi;
+        private readonly ISwarmApi _swarmApi;
+        private readonly IBitswapApi _bitswapApi;
+        private readonly IFileSystem _fileSystem;
+        private readonly BlockOptions _blockOptions;
+
+        public IPinApi PinApi { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitswapApi"></param>
+        /// <param name="dhtApi"></param>
+        /// <param name="swarmApi"></param>
+        /// <param name="pinApi"></param>
+        public BlockApi(IBitswapApi bitswapApi, IDhtApi dhtApi, ISwarmApi swarmApi, IFileSystem fileSystem, BlockOptions blockOptions)
+        {
+            _bitswapApi = bitswapApi;
+            _dhtApi = dhtApi;
+            _swarmApi = swarmApi;
+            _fileSystem = fileSystem;
+            _blockOptions = blockOptions;
+        }
 
         public FileStore<Cid, DataBlock> Store
         {
             get
             {
-                if (store == null)
+                if (_store != null)
                 {
-                    var folder = Path.Combine(ipfs.Options.Repository.Folder, "blocks");
-                    if (!Directory.Exists(folder))
-                        Directory.CreateDirectory(folder);
-                    store = new FileStore<Cid, DataBlock>
-                    {
-                        Folder = folder,
-                        NameToKey = (cid) => cid.Hash.ToBase32(),
-                        KeyToName = (key) => new MultiHash(key.FromBase32()),
-                        Serialize = async (stream, cid, block, cancel) =>
-                        {
-                            await stream.WriteAsync(block.DataBytes, 0, block.DataBytes.Length, cancel)
-                               .ConfigureAwait(false);
-                        },
-                        Deserialize = async (stream, cid, cancel) =>
-                        {
-                            var block = new DataBlock
-                            {
-                                Id = cid,
-                                Size = stream.Length
-                            };
-                            block.DataBytes = new byte[block.Size];
-                            for (int i = 0, n; i < block.Size; i += n)
-                            {
-                                n = await stream.ReadAsync(block.DataBytes, i, (int) block.Size - i, cancel)
-                                   .ConfigureAwait(false);
-                            }
-
-                            return block;
-                        }
-                    };
+                    return _store;
                 }
+                
+                var folder = Path.Combine(_fileSystem.GetCatalystDataDir().FullName, "blocks");
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+                
+                _store = new FileStore<Cid, DataBlock>
+                {
+                    Folder = folder,
+                    NameToKey = (cid) => cid.Hash.ToBase32(),
+                    KeyToName = (key) => new MultiHash(key.FromBase32()),
+                    Serialize = async (stream, cid, block, cancel) =>
+                    {
+                        await stream.WriteAsync(block.DataBytes, 0, block.DataBytes.Length, cancel)
+                           .ConfigureAwait(false);
+                    },
+                    Deserialize = async (stream, cid, cancel) =>
+                    {
+                        var block = new DataBlock
+                        {
+                            Id = cid,
+                            Size = stream.Length
+                        };
+                        block.DataBytes = new byte[block.Size];
+                        for (int i = 0, n; i < block.Size; i += n)
+                        {
+                            n = await stream.ReadAsync(block.DataBytes, i, (int) block.Size - i, cancel)
+                               .ConfigureAwait(false);
+                        }
 
-                return store;
+                        return block;
+                    }
+                };
+
+                return _store;
             }
         }
 
@@ -97,9 +125,14 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             // Hack for empty object and empty directory object
             if (id == emptyDirectory.Id)
+            {
                 return emptyDirectory;
+            }
+            
             if (id == emptyNode.Id)
+            {
                 return emptyNode;
+            }
 
             // If identity hash, then CID has the content.
             if (id.Hash.IsIdentityHash)
@@ -125,17 +158,19 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             // then send the block to us via bitswap and the get task will finish.
             using (var queryCancel = CancellationTokenSource.CreateLinkedTokenSource(cancel))
             {
-                var bitswapGet = ipfs.Bitswap.GetAsync(id, queryCancel.Token).ConfigureAwait(false);
-                var dht = await ipfs.DhtService;
-                var _ = dht.FindProvidersAsync(
+                var bitswapGet = _bitswapApi.GetAsync(id, queryCancel.Token).ConfigureAwait(false);
+                
+                var providers = await _dhtApi.FindProvidersAsync(
                     id: id,
-                    limit: 20, // TODO: remove this
-                    cancel: queryCancel.Token,
-                    action: (peer) =>
-                    {
-                        var __ = ProviderFoundAsync(peer, queryCancel.Token).ConfigureAwait(false);
-                    }
+                    cancel: queryCancel.Token
                 );
+
+                var enumerable = providers as Peer[] ?? providers.ToArray();
+                for (var index = 0; index < enumerable.ToArray().Length; index++)
+                {
+                    var peer = enumerable.ToArray()[index];
+                    var __ = ProviderFoundAsync(peer, cancel: queryCancel.Token).ConfigureAwait(false);
+                }
 
                 var got = await bitswapGet;
                 log.Debug("bitswap got the block");
@@ -148,13 +183,14 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         async Task ProviderFoundAsync(Peer peer, CancellationToken cancel)
         {
             if (cancel.IsCancellationRequested)
+            {
                 return;
+            }
 
             log.Debug($"Connecting to provider {peer.Id}");
-            var swarm = await ipfs.SwarmService.ConfigureAwait(false);
             try
             {
-                await swarm.ConnectAsync(peer, cancel).ConfigureAwait(false);
+                await _swarmApi.ConnectAsync(peer, cancel).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -167,16 +203,16 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = false,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
-            if (data.Length > ipfs.Options.Block.MaxBlockSize)
+            if (data.Length > _blockOptions.MaxBlockSize)
             {
-                throw new ArgumentOutOfRangeException("data.Length",
-                    $"Block length can not exceed {ipfs.Options.Block.MaxBlockSize}.");
+                throw new ArgumentOutOfRangeException($"data.Length",
+                    $@"Block length can not exceed {_blockOptions.MaxBlockSize}.");
             }
 
             // Small enough for an inline CID?
-            if (ipfs.Options.Block.AllowInlineCid && data.Length <= ipfs.Options.Block.InlineCidLimit)
+            if (_blockOptions.AllowInlineCid && data.Length <= _blockOptions.InlineCidLimit)
             {
                 return new Cid
                 {
@@ -212,25 +248,22 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             else
             {
                 await Store.PutAsync(cid, block, cancel).ConfigureAwait(false);
-                if (ipfs.IsStarted)
-                {
-                    await ipfs.Dht.ProvideAsync(cid, advertise: false, cancel: cancel).ConfigureAwait(false);
-                }
+                await _dhtApi.ProvideAsync(cid, advertise: false, cancel: cancel).ConfigureAwait(false);
 
                 log.DebugFormat("Added block '{0}'", cid);
             }
 
             // Inform the Bitswap service.
-            (await ipfs.BitswapService.ConfigureAwait(false)).Found(block);
+            _bitswapApi.FoundBlock(block);
 
             // To pin or not.
             if (pin)
             {
-                await ipfs.Pin.AddAsync(cid, recursive: false, cancel: cancel).ConfigureAwait(false);
+                await PinApi.AddAsync(cid, recursive: false, cancel: cancel).ConfigureAwait(false);
             }
             else
             {
-                await ipfs.Pin.RemoveAsync(cid, recursive: false, cancel: cancel).ConfigureAwait(false);
+                await PinApi.RemoveAsync(cid, recursive: false, cancel: cancel).ConfigureAwait(false);
             }
 
             return cid;
@@ -245,7 +278,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             using (var ms = new MemoryStream())
             {
-                await data.CopyToAsync(ms).ConfigureAwait(false);
+                await data.CopyToAsync(ms, cancel).ConfigureAwait(false);
                 return await PutAsync(ms.ToArray(), contentType, multiHash, encoding, pin, cancel)
                    .ConfigureAwait(false);
             }
@@ -263,11 +296,15 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             if (await Store.ExistsAsync(id, cancel).ConfigureAwait(false))
             {
                 await Store.RemoveAsync(id, cancel).ConfigureAwait(false);
-                await ipfs.Pin.RemoveAsync(id, recursive: false, cancel: cancel).ConfigureAwait(false);
+                await PinApi.RemoveAsync(id, recursive: false, cancel: cancel).ConfigureAwait(false);
                 return id;
             }
 
-            if (ignoreNonexistent) return null;
+            if (ignoreNonexistent)
+            {
+                return null;
+            }
+            
             throw new KeyNotFoundException($"Block '{id.Encode()}' does not exist.");
         }
 

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.Migration;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.FileSystem;
 using Lib.P2P;
 using MultiFormats;
@@ -23,9 +24,9 @@ namespace Catalyst.Core.Modules.Dfs.Migration
 
         public bool CanDowngrade => true;
 
-        public async Task DowngradeAsync(IDfs ipfs, CancellationToken cancel = default(CancellationToken))
+        public async Task DowngradeAsync(RepositoryOptions options, CancellationToken cancel = default(CancellationToken))
         {
-            var path = Path.Combine(ipfs.Options.Repository.Folder, "pins");
+            var path = Path.Combine(options.Folder, "pins");
             var folder = new DirectoryInfo(path);
             if (!folder.Exists)
             {
@@ -53,9 +54,9 @@ namespace Catalyst.Core.Modules.Dfs.Migration
             }
         }
 
-        public async Task UpgradeAsync(IDfs ipfs, CancellationToken cancel = default(CancellationToken))
+        public async Task UpgradeAsync(RepositoryOptions options, CancellationToken cancel = default(CancellationToken))
         {
-            var path = Path.Combine(ipfs.Options.Repository.Folder, "pins");
+            var path = Path.Combine(options.Folder, "pins");
             var folder = new DirectoryInfo(path);
             if (!folder.Exists)
             {

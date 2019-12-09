@@ -11,7 +11,7 @@ namespace Lib.P2P.PubSub
     ///   when a message is published.
     /// </summary>
     /// <remarks>
-    ///   The allows the <see cref="NotificationService"/> to invoke the
+    ///   The allows the <see cref="PubSubService"/> to invoke the
     ///   local subscribtion handlers.
     /// </remarks>
     public class LoopbackRouter : IMessageRouter
