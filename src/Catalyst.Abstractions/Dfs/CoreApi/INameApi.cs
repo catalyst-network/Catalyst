@@ -37,7 +37,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </param>
         /// <returns>
         ///   A task that represents the asynchronous operation. The task's value is
-        ///   the <see cref="Catalyst.Ipfs.Core.NamedContent"/> of the published content.
+        ///   the <see cref="NamedContent"/> of the published content.
         /// </returns>
         Task<NamedContent> PublishAsync(string path,
             bool resolve = true,
@@ -62,7 +62,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </param>
         /// <returns>
         ///   A task that represents the asynchronous operation. The task's value is
-        ///   the <see cref="Catalyst.Ipfs.Core.NamedContent"/> of the published content.
+        ///   the <see cref="NamedContent"/> of the published content.
         /// </returns>
         Task<NamedContent> PublishAsync(Cid id,
             string key = "self",

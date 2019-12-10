@@ -45,7 +45,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
         {
             //Arrange
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-            var deltaMultiHash = hashProvider.ComputeUtf8MultiHash("previous").CreateCid();
+            var deltaMultiHash = hashProvider.ComputeUtf8MultiHash("previous").ToCid();
             var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var connectedNode = commandContext.GetConnectedNode(null);
             var command = new GetDeltaCommand(commandContext, _logger);

@@ -74,7 +74,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             peerRepository.GetAll().Returns(_ => _peers);
 
             _previousDeltaHash =
-                _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
+                _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
 
             _producersByPreviousDelta = Substitute.For<IMemoryCache>();
 

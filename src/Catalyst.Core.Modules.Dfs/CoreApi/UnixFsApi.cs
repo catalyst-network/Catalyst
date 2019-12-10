@@ -28,7 +28,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly INameApi _nameApi;
         static ILog log = LogManager.GetLogger(typeof(UnixFsApi));
 
-        static readonly int DefaultLinksPerBlock = 174;
+        private const int DefaultLinksPerBlock = 174;
 
         public UnixFsApi(IDhtApi dhtApi, IBlockApi blockApi, IKeyApi keyApi, INameApi nameApi)
         {
@@ -39,8 +39,8 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         }
 
         public async Task<IFileSystemNode> AddFileAsync(string path,
-            AddFileOptions options = default(AddFileOptions),
-            CancellationToken cancel = default(CancellationToken))
+            AddFileOptions options = default,
+            CancellationToken cancel = default)
         {
             using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
@@ -49,10 +49,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         }
 
         public async Task<IFileSystemNode> AddTextAsync(string text,
-            AddFileOptions options = default(AddFileOptions),
-            CancellationToken cancel = default(CancellationToken))
+            AddFileOptions options = default,
+            CancellationToken cancel = default)
         {
-            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(text), false))
+            await using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(text), false))
             {
                 return await AddAsync(ms, "", options, cancel).ConfigureAwait(false);
             }
@@ -63,10 +63,13 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             AddFileOptions options,
             CancellationToken cancel)
         {
-            options = options ?? new AddFileOptions();
+            options ??= new AddFileOptions();
 
             // TODO: various options
-            if (options.Trickle) throw new NotImplementedException("Trickle");
+            if (options.Trickle)
+            {
+                throw new NotImplementedException("Trickle");
+            }
 
             var blockService = GetBlockService(options);
 
@@ -75,7 +78,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                .ConfigureAwait(false);
 
             // Multiple nodes for the file?
-            UnixFsNode node = await BuildTreeAsync(nodes, options, cancel);
+            var node = await BuildTreeAsync(nodes, options, cancel);
 
             // Wrap in directory?
             if (options.Wrap)
@@ -102,50 +105,53 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             return node;
         }
 
-        async Task<UnixFsNode> BuildTreeAsync(IEnumerable<UnixFsNode> nodes,
+        private async Task<UnixFsNode> BuildTreeAsync(IEnumerable<UnixFsNode> nodes,
             AddFileOptions options,
             CancellationToken cancel)
         {
-            if (nodes.Count() == 1)
+            var fsNodes = nodes as UnixFsNode[] ?? nodes.ToArray();
+            if (fsNodes.Length == 1)
             {
-                return nodes.First();
+                return fsNodes.First();
             }
 
             // Bundle DefaultLinksPerBlock links into a block.
             var tree = new List<UnixFsNode>();
-            for (int i = 0; true; ++i)
+            for (var i = 0; true; ++i)
             {
-                var bundle = nodes.Skip(DefaultLinksPerBlock * i).Take(DefaultLinksPerBlock);
-                if (bundle.Count() == 0)
+                var bundle = fsNodes.Skip(DefaultLinksPerBlock * i).Take(DefaultLinksPerBlock);
+                var unixFsNodes = bundle.ToList();
+                if (!unixFsNodes.Any())
                 {
                     break;
                 }
 
-                var node = await BuildTreeNodeAsync(bundle, options, cancel);
+                var node = await BuildTreeNodeAsync(unixFsNodes, options, cancel);
                 tree.Add(node);
             }
 
             return await BuildTreeAsync(tree, options, cancel);
         }
 
-        async Task<UnixFsNode> BuildTreeNodeAsync(IEnumerable<UnixFsNode> nodes,
+        private async Task<UnixFsNode> BuildTreeNodeAsync(IEnumerable<UnixFsNode> nodes,
             AddFileOptions options,
             CancellationToken cancel)
         {
             var blockService = GetBlockService(options);
 
             // Build the DAG that contains all the file nodes.
-            var links = nodes.Select(n => n.ToLink()).ToArray();
-            var fileSize = (ulong) nodes.Sum(n => n.Size);
-            var dagSize = nodes.Sum(n => n.DagSize);
+            var unixFsNodes = nodes as UnixFsNode[] ?? nodes.ToArray();
+            var links = unixFsNodes.Select(n => n.ToLink()).ToArray();
+            var fileSize = (ulong) unixFsNodes.Sum(n => n.Size);
+            var dagSize = unixFsNodes.Sum(n => n.DagSize);
             var dm = new DataMessage
             {
                 Type = DataType.File,
                 FileSize = fileSize,
-                BlockSizes = nodes.Select(n => (ulong) n.Size).ToArray()
+                BlockSizes = unixFsNodes.Select(n => (ulong) n.Size).ToArray()
             };
             var pb = new MemoryStream();
-            ProtoBuf.Serializer.Serialize<DataMessage>(pb, dm);
+            ProtoBuf.Serializer.Serialize(pb, dm);
             var dag = new DagNode(pb.ToArray(), links, options.Hash);
 
             // Save it.
@@ -167,10 +173,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public async Task<IFileSystemNode> AddDirectoryAsync(string path,
             bool recursive = true,
-            AddFileOptions options = default(AddFileOptions),
-            CancellationToken cancel = default(CancellationToken))
+            AddFileOptions options = default,
+            CancellationToken cancel = default)
         {
-            options = options ?? new AddFileOptions();
+            options ??= new AddFileOptions();
             options.Wrap = false;
 
             // Add the files and sub-directories.
@@ -179,7 +185,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             if (recursive)
             {
                 var folders = Directory.EnumerateDirectories(path).OrderBy(s => s)
-                   .Select(dir => AddDirectoryAsync(dir, recursive, options, cancel));
+                   .Select(dir => AddDirectoryAsync(dir, true, options, cancel));
                 files = files.Union(folders);
             }
 
@@ -201,8 +207,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 Type = DataType.Directory
             };
             var pb = new MemoryStream();
-            ProtoBuf.Serializer.Serialize<DataMessage>(pb, dm);
-            var dag = new DagNode(pb.ToArray(), links, options.Hash);
+            Serializer.Serialize(pb, dm);
+            var fileSystemLinks = links as IFileSystemLink[] ?? links.ToArray();
+            var dag = new DagNode(pb.ToArray(), fileSystemLinks, options.Hash);
 
             // Save it.
             var cid = await GetBlockService(options).PutAsync(
@@ -215,13 +222,13 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             return new UnixFsNode
             {
                 Id = cid,
-                Links = links,
+                Links = fileSystemLinks,
                 IsDirectory = true
             };
         }
 
         public async Task<IFileSystemNode> ListFileAsync(string path,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var r = await _nameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
             var cid = Cid.Decode(r.Remove(0, 6));
@@ -272,16 +279,18 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             return fsn;
         }
 
-        public async Task<string> ReadAllTextAsync(string path, CancellationToken cancel = default(CancellationToken))
+        public async Task<string> ReadAllTextAsync(string path, CancellationToken cancel = default)
         {
-            using (var data = await ReadFileAsync(path, cancel).ConfigureAwait(false))
-            using (var text = new StreamReader(data))
+            await using (var data = await ReadFileAsync(path, cancel).ConfigureAwait(false))
             {
-                return await text.ReadToEndAsync().ConfigureAwait(false);
+                using (var text = new StreamReader(data))
+                {
+                    return await text.ReadToEndAsync().ConfigureAwait(false);
+                }
             }
         }
 
-        public async Task<Stream> ReadFileAsync(string path, CancellationToken cancel = default(CancellationToken))
+        public async Task<Stream> ReadFileAsync(string path, CancellationToken cancel = default)
         {
             var r = await _nameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
             var cid = Cid.Decode(r.Remove(0, 6));
@@ -291,7 +300,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public async Task<Stream> ReadFileAsync(string path,
             long offset,
             long count = 0,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var stream = await ReadFileAsync(path, cancel).ConfigureAwait(false);
             return new SlicedStream(stream, offset, count);
@@ -299,16 +308,18 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public async Task<Stream> GetAsync(string path,
             bool compress = false,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var r = await _nameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
             var cid = Cid.Decode(r.Remove(0, 6));
             var ms = new MemoryStream();
-            using (var tarStream = new TarOutputStream(ms, 1))
-            using (var archive = TarArchive.CreateOutputTarArchive(tarStream))
+            await using (var tarStream = new TarOutputStream(ms, 1))
             {
-                archive.IsStreamOwner = false;
-                await AddTarNodeAsync(cid, cid.Encode(), tarStream, cancel).ConfigureAwait(false);
+                using (var archive = TarArchive.CreateOutputTarArchive(tarStream))
+                {
+                    archive.IsStreamOwner = false;
+                    await AddTarNodeAsync(cid, cid.Encode(), tarStream, cancel).ConfigureAwait(false);
+                }
             }
 
             ms.Position = 0;
@@ -385,7 +396,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             public IPinApi PinApi { get; set; }
 
-            public Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default(CancellationToken))
+            public Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default)
             {
                 throw new NotImplementedException();
             }
@@ -395,7 +406,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 string multiHash = MultiHash.DefaultAlgorithmName,
                 string encoding = MultiBase.DefaultAlgorithmName,
                 bool pin = false,
-                CancellationToken cancel = default(CancellationToken))
+                CancellationToken cancel = default)
             {
                 var cid = new Cid
                 {
@@ -412,19 +423,19 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 string multiHash = MultiHash.DefaultAlgorithmName,
                 string encoding = MultiBase.DefaultAlgorithmName,
                 bool pin = false,
-                CancellationToken cancel = default(CancellationToken))
+                CancellationToken cancel = default)
             {
                 throw new NotImplementedException();
             }
 
             public Task<Cid> RemoveAsync(Cid id,
                 bool ignoreNonexistent = false,
-                CancellationToken cancel = default(CancellationToken))
+                CancellationToken cancel = default)
             {
                 throw new NotImplementedException();
             }
 
-            public Task<IDataBlock> StatAsync(Cid id, CancellationToken cancel = default(CancellationToken))
+            public Task<IDataBlock> StatAsync(Cid id, CancellationToken cancel = default)
             {
                 throw new NotImplementedException();
             }

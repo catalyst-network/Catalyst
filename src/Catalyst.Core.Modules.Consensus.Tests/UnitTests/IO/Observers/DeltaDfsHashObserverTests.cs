@@ -58,8 +58,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         [Fact]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Try_Update()
         {
-            var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").CreateCid();
-            var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").CreateCid();
+            var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
+            var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
             var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         public void HandleBroadcast_Should_Not_Try_Update_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
-            var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").CreateCid();
+            var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash.ToArray());
 
             var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);

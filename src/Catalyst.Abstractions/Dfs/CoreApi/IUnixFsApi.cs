@@ -177,7 +177,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </param>
         /// <returns>
         ///   A task that represents the asynchronous operation. The task's value is
-        ///   an <see cref="Catalyst.Ipfs.Core.IFileSystemNode"/>  The <see cref="IDataBlock.DataBytes"/>
+        ///   an <see cref="IFileSystemNode"/>  The <see cref="IDataBlock.DataBytes"/>
         ///   and <see cref="IDataBlock.DataStream"/> are set to <b>null</b>.
         /// </returns>
         Task<IFileSystemNode> ListFileAsync(string path, CancellationToken cancel = default(CancellationToken));

@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
-namespace Catalyst.Abstractions.Options
+﻿namespace Catalyst.Abstractions.Options
 {
     /// <summary>
     ///   Configuration options for the <see cref="Catalyst.Core.Modules.Keystore.KeyChain"/>.

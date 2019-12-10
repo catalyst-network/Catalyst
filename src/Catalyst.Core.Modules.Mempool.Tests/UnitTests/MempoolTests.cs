@@ -34,7 +34,7 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using MultiFormats;
+using MultiFormats.Registry;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

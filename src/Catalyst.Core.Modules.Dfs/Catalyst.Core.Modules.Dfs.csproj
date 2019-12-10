@@ -14,7 +14,7 @@
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
-        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -24,6 +24,7 @@
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" />
         <PackageReference Include="PeterO.Cbor" Version="3.1.0" />
+        <PackageReference Include="SharpZipLib" Version="1.2.0" />
     </ItemGroup>
 
 </Project>

@@ -24,7 +24,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Util;
 using Lib.P2P;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Serilog;

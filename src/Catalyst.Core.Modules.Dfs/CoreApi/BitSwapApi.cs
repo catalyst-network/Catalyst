@@ -13,7 +13,7 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    internal sealed class BitSwapApi : IBitswapApi
+    internal sealed class BitSwapApi : IBitSwapApi
     {
         private readonly IBitswapService _bitSwapService;
         private AsyncLazy<Peer> LocalPeer { get; set; }

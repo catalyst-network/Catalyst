@@ -57,8 +57,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaVoter = Substitute.For<IDeltaVoter>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
-            _newHash = hashProvider.ComputeUtf8MultiHash("newHash").CreateCid();
-            _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash").CreateCid();
+            _newHash = hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
+            _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
             _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, hashProvider, logger);
         }

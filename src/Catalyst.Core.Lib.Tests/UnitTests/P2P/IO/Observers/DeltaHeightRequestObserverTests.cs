@@ -32,9 +32,9 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers

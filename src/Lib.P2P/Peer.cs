@@ -98,40 +98,58 @@ namespace Lib.P2P
         /// </remarks>
         public bool IsValid()
         {
-            return Id != null && (PublicKey == null || Id.Equals(PublicKey));
+            if (Id == null)
+            {
+                return false;
+            }
+            
+            return PublicKey == null || Id.Matches(Convert.FromBase64String(PublicKey));
         }
 
         /// <inheritdoc />
-        public override int GetHashCode() { return ToString().GetHashCode(); }
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
             var that = obj as Peer;
-            return that == null
-                ? false
-                : Equals(that);
+            return that != null && Equals(that);
         }
 
         /// <inheritdoc />
-        public bool Equals(Peer that) { return Id == that.Id; }
+        public bool Equals(Peer that)
+        {
+            return that != null && Id == that.Id;
+        }
 
         /// <summary>
         ///   Value equality.
         /// </summary>
         public static bool operator ==(Peer a, Peer b)
         {
-            if (ReferenceEquals(a, b)) return true;
-            if (a is null) return false;
-            if (b is null) return false;
+            if (ReferenceEquals(a, b))
+            {
+                return true;
+            }
 
-            return a.Equals(b);
+            if (a is null)
+            {
+                return false;
+            }
+
+            return !(b is null) && a.Equals(b);
         }
 
         /// <summary>
         ///   Value inequality.
         /// </summary>
-        public static bool operator !=(Peer a, Peer b) { return !(a == b); }
+        public static bool operator !=(Peer a, Peer b)
+        {
+            return !(a == b);
+        }
 
         /// <summary>
         ///   Returns the <see cref="Base58"/> encoding of the <see cref="Id"/>.
@@ -139,7 +157,10 @@ namespace Lib.P2P
         /// <returns>
         ///   A Base58 representaton of the peer.
         /// </returns>
-        public override string ToString() { return Id == null ? string.Empty : Id.ToBase58(); }
+        public override string ToString()
+        {
+            return Id == null ? string.Empty : Id.ToBase58();
+        }
 
         /// <summary>
         ///   Implicit casting of a <see cref="string"/> to a <see cref="Peer"/>.
@@ -153,6 +174,9 @@ namespace Lib.P2P
         /// <remarks>
         ///    Equivalent to <code>new Peer { Id = s }</code>
         /// </remarks>
-        public static implicit operator Peer(string s) { return new Peer {Id = s}; }
+        public static implicit operator Peer(string s)
+        {
+            return new Peer {Id = s};
+        }
     }
 }

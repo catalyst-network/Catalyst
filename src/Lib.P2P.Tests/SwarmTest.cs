@@ -41,7 +41,10 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public async Task Start_Stop()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService
+            {
+                LocalPeer = self
+            };
             await swarm.StartAsync();
             await swarm.StopAsync();
         }
@@ -50,7 +53,10 @@ namespace Lib.P2P.Tests
         public void Start_NoLocalPeer()
         {
             var swarm = new SwarmService();
-            ExceptionAssert.Throws<NotSupportedException>(() => { swarm.StartAsync().Wait(); });
+            ExceptionAssert.Throws<NotSupportedException>(() =>
+            {
+                swarm.StartAsync().Wait();
+            });
         }
 
         [TestMethod]

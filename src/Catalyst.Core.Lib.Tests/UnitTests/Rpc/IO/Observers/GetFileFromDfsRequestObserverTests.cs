@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
             {
-                DfsHash = _hashProvider.ComputeUtf8MultiHash("test").CreateCid()
+                DfsHash = _hashProvider.ComputeUtf8MultiHash("test").ToCid()
             };
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());

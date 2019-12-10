@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Core.Lib.Extensions;
 using Lib.P2P;
 using MultiFormats;
 
@@ -28,13 +29,33 @@ namespace Catalyst.Core.Modules.Dfs.Extensions
 {
     public static class CidExtensions
     {
-        private static readonly string Encoding = "base32";
-
-        public static Cid CreateCid(this MultiHash multiHash)
+        // @TODO get this from hashing algorithm. as a param to the extension method
+        private const string Encoding = "base32";
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="multiHash"></param>
+        /// <returns></returns>
+        public static Cid ToCid(this MultiHash multiHash)
         {
-            return new Cid {Version = 1, Hash = multiHash, ContentType = "raw", Encoding = Encoding};
+            return new Cid
+            {
+                Version = 1,
+                Hash = multiHash,
+                ContentType = "raw",
+                Encoding = Encoding
+            };
         }
 
-        public static Cid ToCid(this byte[] cid) { return Cid.Decode(MultiBase.Encode(cid, Encoding)); }
+        public static Cid ToCid(this byte[] cid)
+        {
+            return Cid.Decode(MultiBase.Encode(cid, Encoding));
+        }
+
+        public static Cid ToCid(this string cid)
+        {
+            return Cid.Decode(MultiBase.Encode(cid.ToUtf8Bytes(), Encoding));
+        }
     }
 }

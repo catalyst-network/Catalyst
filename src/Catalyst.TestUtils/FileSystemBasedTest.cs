@@ -29,7 +29,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Lib.Config;
-using Catalyst.Core.Lib.FileSystem;
 using Catalyst.Protocol.Network;
 using Dawn;
 using FluentAssertions;

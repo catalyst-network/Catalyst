@@ -67,7 +67,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _dfsService.UnixFsApi.ReadFileAsync(Arg.Any<Cid>(), Arg.Any<CancellationToken>())
                .Throws(exception);
 
-            var cid = _hashProvider.ComputeUtf8MultiHash("bad hash").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("bad hash").ToCid();
             _dfsReader.TryReadDeltaFromDfs(cid, out _, CancellationToken.None).Should().BeFalse();
             _logger.Received(1).Error(exception,
                 Arg.Any<string>(),
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void TryReadDeltaFromDfs_Should_Return_True_When_Hash_Found_On_Dfs_And_Delta_Is_Valid()
         {
-            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").ToCid();
             var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
 
             _dfsService.UnixFsApi.ReadFileAsync(cid, CancellationToken.None)
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void TryReadDeltaFromDfs_Should_Return_False_When_Hash_Found_On_Dfs_And_Delta_Is_Not_Valid()
         {
-            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").ToCid();
             var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
             matchingDelta.PreviousDeltaDfsHash = ByteString.Empty;
 
@@ -111,7 +111,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void TryReadDeltaFromDfs_Should_Pass_Cancellation_Token()
         {
-            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").ToCid();
             var cancellationToken = new CancellationToken();
 
             var matchingDelta = DeltaHelper.GetDelta(_hashProvider);

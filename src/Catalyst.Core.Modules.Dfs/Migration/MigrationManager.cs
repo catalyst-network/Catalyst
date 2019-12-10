@@ -5,11 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.Options;
 using Common.Logging;
-using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Migration
 {
@@ -19,7 +17,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
     public sealed class MigrationManager : IMigrationManager
     {
         private readonly RepositoryOptions _options;
-        static ILog log = LogManager.GetLogger(typeof(MigrationManager));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(MigrationManager));
 
         /// <summary>
         ///   Creates a new instance of the <see cref="MigrationManager"/> class
@@ -61,7 +59,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
                 using (var reader = new StreamReader(path))
                 {
                     var s = reader.ReadLine();
-                    return int.Parse(s ?? throw new NullException("stream null"), CultureInfo.InvariantCulture);
+                    return int.Parse(s ?? throw new NullReferenceException(("stream null")));
                 }
             }
             private set => File.WriteAllText(VersionPath(), value.ToString(CultureInfo.InvariantCulture));
@@ -80,7 +78,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
         {
             if (version != 0 && Migrations.All(m => m.Version != version))
             {
-                throw new ArgumentOutOfRangeException(nameof(version), $@"Repository version '{version}' is unknown.");
+                throw new ArgumentOutOfRangeException(nameof(version), $@"Repository version '{version.ToString()}' is unknown.");
             }
 
             var currentVersion = CurrentVersion;
@@ -88,7 +86,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
             while (currentVersion != version)
             {
                 var nextVersion = currentVersion + increment;
-                log.InfoFormat("Migrating to version {0}", nextVersion);
+                Log.InfoFormat("Migrating to version {0}", nextVersion.ToString());
 
                 if (increment > 0)
                 {
@@ -118,6 +116,9 @@ namespace Catalyst.Core.Modules.Dfs.Migration
         /// <returns>
         ///   The path to the version file.
         /// </returns>
-        string VersionPath() { return Path.Combine(_options.ExistingFolder(), "version"); }
+        private string VersionPath()
+        {
+            return Path.Combine(_options.ExistingFolder(), "version");
+        }
     }
 }

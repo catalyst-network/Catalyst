@@ -16,7 +16,7 @@
         <PackageReference Include="Serilog" Version="2.8.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />
+        <ProtoBuf Include="..\..\submodules\Protocol\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />

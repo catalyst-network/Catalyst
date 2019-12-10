@@ -44,7 +44,7 @@ namespace Catalyst.TestUtils
             DateTime? timestamp = default)
         {
             var previousHash = previousDeltaHash ??
-                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
+                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
             var root = merkleRoot ?? ByteUtil.GenerateRandomByteArray(32);
             var poda = merklePoda ?? ByteUtil.GenerateRandomByteArray(32);
             var nonNullTimestamp =
@@ -67,9 +67,9 @@ namespace Catalyst.TestUtils
             PeerId producerId = null)
         {
             var candidateHash = hash ??
-                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
+                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
             var previousHash = previousDeltaHash ??
-                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
+                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
             var producer = producerId
              ?? PeerIdHelper.GetPeerId(ByteUtil.GenerateRandomByteArray(32));
 

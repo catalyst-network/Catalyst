@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Protocol.Peer;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {

@@ -30,8 +30,9 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
+using MultiFormats;
+using MultiFormats.Registry;
 using Nethermind.Core.Extensions;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
 {

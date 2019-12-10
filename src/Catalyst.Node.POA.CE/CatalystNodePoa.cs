@@ -34,7 +34,6 @@ using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.DAO;
 using MultiFormats;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Serilog;

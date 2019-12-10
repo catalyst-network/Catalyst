@@ -15,9 +15,9 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   Provides access to the Bitswap API.
         /// </summary>
         /// <value>
-        ///   An object that implements <see cref="IBitswapApi"/>.
+        ///   An object that implements <see cref="IBitSwapApi"/>.
         /// </value>
-        IBitswapApi BitSwapApi { get; }
+        IBitSwapApi BitSwapApi { get; }
 
         /// <summary>
         ///   Provides access to the Block API.

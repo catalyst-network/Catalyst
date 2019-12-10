@@ -23,7 +23,7 @@
 
 using System.Buffers;
 using Google.Protobuf;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.Hashing
 {

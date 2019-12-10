@@ -59,7 +59,7 @@ namespace Lib.P2P.Routing
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             while (true)
             {
@@ -84,6 +84,10 @@ namespace Lib.P2P.Routing
                         break;
                     case MessageType.AddProvider:
                         response = ProcessAddProvider(connection.RemotePeer, request, response);
+                        break;
+                    case MessageType.PutValue:
+                        break;
+                    case MessageType.GetValue:
                         break;
                     default:
                         log.Debug($"unknown {request.Type} from {connection.RemotePeer}");
@@ -112,6 +116,7 @@ namespace Lib.P2P.Routing
             SwarmService.AddProtocol(this);
             SwarmService.PeerDiscovered += Swarm_PeerDiscovered;
             SwarmService.PeerRemoved += Swarm_PeerRemoved;
+            
             foreach (var peer in SwarmService.KnownPeers)
             {
                 RoutingTable.Add(peer);
@@ -151,7 +156,7 @@ namespace Lib.P2P.Routing
         }
 
         /// <inheritdoc />
-        public async Task<Peer> FindPeerAsync(MultiHash id, CancellationToken cancel = default(CancellationToken))
+        public async Task<Peer> FindPeerAsync(MultiHash id, CancellationToken cancel = default)
         {
             // Can always find self.
             if (SwarmService.LocalPeer.Id == id)
@@ -167,7 +172,7 @@ namespace Lib.P2P.Routing
             }
 
             // Ask our peers for information on the requested peer.
-            var dquery = new DistributedQuery<Peer>
+            var dQuery = new DistributedQuery<Peer>
             {
                 QueryType = MessageType.FindNode,
                 QueryKey = id,
@@ -175,14 +180,14 @@ namespace Lib.P2P.Routing
                 AnswersNeeded = 1
             };
             
-            await dquery.RunAsync(cancel).ConfigureAwait(false);
+            await dQuery.RunAsync(cancel).ConfigureAwait(false);
 
             // If not found, return the closest peer.
-            return !dquery.Answers.Any() ? RoutingTable.NearestPeers(id).FirstOrDefault() : dquery.Answers.First();
+            return !dQuery.Answers.Any() ? RoutingTable.NearestPeers(id).FirstOrDefault() : dQuery.Answers.First();
         }
 
         /// <inheritdoc />
-        public Task ProvideAsync(Cid cid, bool advertise = true, CancellationToken cancel = default(CancellationToken))
+        public Task ProvideAsync(Cid cid, bool advertise = true, CancellationToken cancel = default)
         {
             ContentRouter.Add(cid, SwarmService.LocalPeer.Id);
             if (advertise)
@@ -197,9 +202,9 @@ namespace Lib.P2P.Routing
         public async Task<IEnumerable<Peer>> FindProvidersAsync(Cid id,
             int limit = 20,
             Action<Peer> action = null,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
-            var dquery = new DistributedQuery<Peer>
+            var dQuery = new DistributedQuery<Peer>
             {
                 QueryType = MessageType.GetProviders,
                 QueryKey = id.Hash,
@@ -209,7 +214,7 @@ namespace Lib.P2P.Routing
             
             if (action != null)
             {
-                dquery.AnswerObtained += (s, e) => action.Invoke(e);
+                dQuery.AnswerObtained += (s, e) => action.Invoke(e);
             }
 
             // Add any providers that we already know about.
@@ -221,16 +226,16 @@ namespace Lib.P2P.Routing
             
             foreach (var provider in providers)
             {
-                dquery.AddAnswer(provider);
+                dQuery.AddAnswer(provider);
             }
 
             // Ask our peers for more providers.
-            if (limit > dquery.Answers.Count())
+            if (limit > dQuery.Answers.Count())
             {
-                await dquery.RunAsync(cancel).ConfigureAwait(false);
+                await dQuery.RunAsync(cancel).ConfigureAwait(false);
             }
 
-            return dquery.Answers.Take(limit);
+            return dQuery.Answers.Take(limit);
         }
 
         /// <summary>
@@ -253,7 +258,7 @@ namespace Lib.P2P.Routing
                 {
                     Type = MessageType.AddProvider,
                     Key = cid.Hash.ToArray(),
-                    ProviderPeers = new DhtPeerMessage[]
+                    ProviderPeers = new[]
                     {
                         new DhtPeerMessage
                         {
@@ -298,7 +303,7 @@ namespace Lib.P2P.Routing
         /// <remarks>
         ///   Simply return the <paramref name="request"/>.
         /// </remarks>
-        private DhtMessage ProcessPing(DhtMessage request, DhtMessage response) { return request; }
+        private static DhtMessage ProcessPing(DhtMessage request, DhtMessage response) { return request; }
 
         /// <summary>
         ///   Process a find node request.
@@ -343,7 +348,7 @@ namespace Lib.P2P.Routing
 
             if (log.IsDebugEnabled)
             {
-                log.Debug($"returning {response.CloserPeers.Length} closer peers");
+                log.Debug($"returning {response.CloserPeers.Length.ToString()} closer peers");
             }
             
             return response;

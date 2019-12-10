@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Linq;
 using Catalyst.Core.Lib.DAO;
 using Microsoft.AspNetCore.Components;
 

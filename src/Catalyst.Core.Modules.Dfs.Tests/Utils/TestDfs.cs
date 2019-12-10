@@ -14,7 +14,6 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using Lib.P2P.Routing;
-using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.Utils

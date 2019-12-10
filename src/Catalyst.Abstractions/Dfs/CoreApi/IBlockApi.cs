@@ -12,7 +12,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
     /// <remarks>
     ///   An IPFS Block is a byte sequence that represents an IPFS Object 
     ///   (i.e. serialized byte buffers). It is useful to talk about them as 
-    ///   "blocks" in <see cref="IBitswapApi">Bitswap</see>
+    ///   "blocks" in <see cref="IBitSwapApi">Bitswap</see>
     ///   and other things that do not care about what is being stored. 
     /// </remarks>
     /// <seealso cref="IBlockRepositoryApi"/>
@@ -68,7 +68,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
             string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = false,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Stores a stream as an IPFS block.

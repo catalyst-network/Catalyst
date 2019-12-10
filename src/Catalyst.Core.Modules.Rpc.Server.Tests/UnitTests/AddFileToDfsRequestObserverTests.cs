@@ -129,7 +129,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("expectedHash"));
+            var expectedCid = _hashProvider.ComputeUtf8MultiHash("expectedHash").ToCid();
             var fakeBlock = Substitute.For<IFileSystemNode>();
             fakeBlock.Id.Returns(expectedCid);
             _fakeDfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(fakeBlock);

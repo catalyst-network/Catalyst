@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Xunit;

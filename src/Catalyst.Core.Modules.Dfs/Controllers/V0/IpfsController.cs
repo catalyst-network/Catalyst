@@ -3,7 +3,6 @@ using System.Text;
 using System.Threading;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;

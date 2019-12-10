@@ -28,7 +28,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
@@ -119,7 +118,7 @@ namespace Catalyst.Core.Modules.Dfs
         private readonly IHashProvider _hashProvider;
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
 
-        public DfsService(IBitswapApi bitSwapApi,
+        public DfsService(IBitSwapApi bitSwapApi,
             IBlockApi blockApi,
             IBlockRepositoryApi blockRepositoryApi,
             IBootstrapApi bootstrapApi,
@@ -619,7 +618,7 @@ namespace Catalyst.Core.Modules.Dfs
         #region CoreAPI Support
 
         /// <inheritdoc />
-        public IBitswapApi BitSwapApi { get; set; }
+        public IBitSwapApi BitSwapApi { get; set; }
 
         /// <inheritdoc />
         public IBlockApi BlockApi { get; set; }

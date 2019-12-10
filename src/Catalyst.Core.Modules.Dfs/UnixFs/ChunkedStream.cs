@@ -8,7 +8,6 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Dag;
-using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
 using ProtoBuf;
 

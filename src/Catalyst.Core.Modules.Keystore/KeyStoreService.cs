@@ -13,7 +13,6 @@ using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.FileSystem;
 using Common.Logging;
 using MultiFormats;
-using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Generators;

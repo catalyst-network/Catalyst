@@ -6,7 +6,7 @@ namespace Catalyst.Abstractions.Options
     /// <summary>
     ///   Configuration options for the repository.
     /// </summary>
-    /// <seealso cref="Catalyst.Ipfs.Engine.DfsOptions"/>
+    /// <seealso cref="DfsOptions"/>
     public class RepositoryOptions
     {
         /// <summary>

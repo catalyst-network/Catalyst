@@ -1,11 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using Lib.P2P.Protocols;
-using MultiFormats;
-using Semver;
 
 namespace Lib.P2P.Routing 
 {

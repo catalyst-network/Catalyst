@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
 using Lib.P2P.Transports;
@@ -9,10 +8,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     internal sealed class StatsApi : IStatsApi
     {
-        private readonly IBitswapApi _bitSwapApi;
+        private readonly IBitSwapApi _bitSwapApi;
         private readonly IBlockRepositoryApi _blockRepositoryApi;
 
-        public StatsApi(IBitswapApi bitSwapApi, IBlockRepositoryApi blockRepositoryApi)
+        public StatsApi(IBitSwapApi bitSwapApi, IBlockRepositoryApi blockRepositoryApi)
         {
             _bitSwapApi = bitSwapApi;
             _blockRepositoryApi = blockRepositoryApi;

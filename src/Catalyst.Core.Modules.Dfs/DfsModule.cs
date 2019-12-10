@@ -22,13 +22,11 @@
 #endregion
 
 using Autofac;
-using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
-using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Kernel;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
@@ -37,7 +35,6 @@ using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
 using Lib.P2P.PubSub;
 using Makaretu.Dns;
-using Nito.AsyncEx;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -51,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<PinApi>().As<IPinApi>().SingleInstance()
                .OnActivated(e => e.Instance.BlockApi = e.Context.Resolve<IBlockApi>());
             
-            builder.RegisterType<BitSwapApi>().As<IBitswapApi>().SingleInstance();
+            builder.RegisterType<BitSwapApi>().As<IBitSwapApi>().SingleInstance();
             builder.RegisterType<BlockRepositoryApi>().As<IBlockRepositoryApi>().SingleInstance();
             builder.RegisterType<BootstrapApi>().As<IBootstrapApi>().SingleInstance();
             builder.RegisterType<ConfigApi>().As<IConfigApi>().SingleInstance();

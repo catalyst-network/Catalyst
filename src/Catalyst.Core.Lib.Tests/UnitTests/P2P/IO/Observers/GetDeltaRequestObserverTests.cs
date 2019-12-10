@@ -73,7 +73,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         [Fact]
         public async Task GetDeltaRequestObserver_Should_Send_Response_When_Delta_Found_In_Cache()
         {
-            var cid = _hashProvider.ComputeUtf8MultiHash("abcd").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("abcd").ToCid();
             var delta = CreateAndExpectDeltaFromCache(cid);
             var observable = CreateStreamWithDeltaRequest(cid);
 
@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         [Fact]
         public async Task GetDeltaRequestObserver_Should_Send_Response_With_Null_Content_If_Not_Retrieved_In_Cache()
         {
-            var cid = _hashProvider.ComputeUtf8MultiHash("defg").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("defg").ToCid();
 
             var observable = CreateStreamWithDeltaRequest(cid);
 

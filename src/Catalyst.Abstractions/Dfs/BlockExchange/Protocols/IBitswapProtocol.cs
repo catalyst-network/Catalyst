@@ -18,7 +18,7 @@ namespace Catalyst.Abstractions.Dfs.BlockExchange.Protocols
         ///   The destination of the want list.
         /// </param>
         /// <param name="wants">
-        ///   A sequence of <see cref="Catalyst.Core.Modules.Dfs.BlockExchange.WantedBlock"/>.
+        ///   A sequence of <see cref="WantedBlock"/>.
         /// </param>
         /// <param name="full">
         ///   <b>true</b> if <paramref name="wants"/> is the full want list.

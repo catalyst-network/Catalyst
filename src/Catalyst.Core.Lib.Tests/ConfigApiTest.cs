@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.Config;
 using Catalyst.TestUtils;

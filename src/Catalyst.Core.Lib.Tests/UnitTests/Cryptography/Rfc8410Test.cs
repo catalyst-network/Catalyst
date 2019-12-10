@@ -1,10 +1,8 @@
 ﻿using System.Security;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Options;
-using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
-using Microsoft.Extensions.Options;
 using MultiFormats;
 using Org.BouncyCastle.Crypto.Parameters;
 using Xunit;

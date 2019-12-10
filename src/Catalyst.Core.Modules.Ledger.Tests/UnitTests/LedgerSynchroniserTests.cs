@@ -64,10 +64,10 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private Dictionary<Cid, Delta> BuildChainedDeltas(int chainSize)
         {
             var chainedDeltas = Enumerable.Range(0, chainSize + 1).ToDictionary(
-                i => _hashProvider.ComputeUtf8MultiHash(i.ToString()).CreateCid(),
+                i => _hashProvider.ComputeUtf8MultiHash(i.ToString()).ToCid(),
                 i =>
                 {
-                    var previousHash = _hashProvider.ComputeUtf8MultiHash((i - 1).ToString()).CreateCid();
+                    var previousHash = _hashProvider.ComputeUtf8MultiHash((i - 1).ToString()).ToCid();
                     var delta = DeltaHelper.GetDelta(_hashProvider, previousHash);
                     return delta;
                 });

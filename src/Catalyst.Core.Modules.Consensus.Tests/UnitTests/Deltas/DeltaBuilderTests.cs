@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _producerId = PeerIdHelper.GetPeerId("producer");
             _peerSettings = _producerId.ToSubstitutedPeerSettings();
 
-            _previousDeltaHash = _hashProvider.ComputeUtf8MultiHash("previousDelta").CreateCid();
+            _previousDeltaHash = _hashProvider.ComputeUtf8MultiHash("previousDelta").ToCid();
             _zeroCoinbaseEntry = new CoinbaseEntry
             {
                 Amount = UInt256.Zero.ToUint256ByteString(),
@@ -326,7 +326,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             candidate.ProducerId.Should().Be(_producerId);
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash.ToArray()).Should().BeTrue();
 
-            var expectedHash = _hashProvider.ComputeMultiHash(expectedBytesToHash).CreateCid();
+            var expectedHash = _hashProvider.ComputeMultiHash(expectedBytesToHash).ToCid();
             candidate.Hash.ToByteArray().Should().BeEquivalentTo(expectedHash.ToArray());
         }
     }

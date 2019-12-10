@@ -11,7 +11,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
     ///   send blocks to other peers in the network.
     /// </summary>
     /// <remarks>
-    ///   Bitswap has two primary jobs
+    ///   BitSwap has two primary jobs
     ///   <list type="bullet">
     ///     <item>
     ///       <description>
@@ -26,7 +26,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
     ///   </list>
     /// </remarks>
     /// <seealso href="https://github.com/ipfs/specs/tree/master/bitswap">Bitswap spec</seealso>
-    public interface IBitswapApi
+    public interface IBitSwapApi
     {
         /// <summary>
         ///   Gets a block from the IPFS network.
@@ -44,7 +44,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <remarks>
         ///   Waits for another peer to supply the block with the <paramref name="id"/>.
         /// </remarks>
-        Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default(CancellationToken));
+        Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default);
 
         /// <summary>
         ///   The blocks that are needed by a peer.
@@ -60,7 +60,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation. The task's value
         ///   contains the sequence of blocks needed by the <paramref name="peer"/>.
         /// </returns>
-        Task<IEnumerable<Cid>> WantsAsync(MultiHash peer = null, CancellationToken cancel = default(CancellationToken));
+        Task<IEnumerable<Cid>> WantsAsync(MultiHash peer = null, CancellationToken cancel = default);
 
         /// <summary>
         ///   Remove the CID from the want list.
@@ -78,7 +78,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   Any outstanding <see cref="GetAsync(Cid, CancellationToken)"/> for the
         ///   <paramref name="id"/> are cancelled.
         /// </remarks>
-        Task UnWantAsync(Cid id, CancellationToken cancel = default(CancellationToken));
+        Task UnWantAsync(Cid id, CancellationToken cancel = default);
 
         /// <summary>
         ///   Gets information on the blocks exchanged with a specific <see cref="Peer"/>.
@@ -94,7 +94,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation. The task's value
         ///   contains the <see cref="BitswapLedger"/> for the <paramref name="peer"/>.
         /// </returns>
-        Task<BitswapLedger> LedgerAsync(Peer peer, CancellationToken cancel = default(CancellationToken));
+        Task<BitswapLedger> LedgerAsync(Peer peer, CancellationToken cancel = default);
 
         int FoundBlock(IDataBlock block);
 

@@ -32,7 +32,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation. The task's result is
         ///   the current <see cref="BitswapData"/>.
         /// </returns>
-        /// <seealso cref="IBitswapApi"/>
+        /// <seealso cref="IBitSwapApi"/>
         Task<BitswapData> BitSwapAsync(CancellationToken cancel = default(CancellationToken));
 
         /// <summary>

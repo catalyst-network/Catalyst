@@ -3,9 +3,9 @@
 namespace Catalyst.Abstractions.Dfs.CoreApi
 {
     /// <summary>
-    ///   Statistics on the <see cref="IBitswapApi">bitswap</see> blocks exchanged with another <see cref="Peer"/>.
+    ///   Statistics on the <see cref="IBitSwapApi">bitswap</see> blocks exchanged with another <see cref="Peer"/>.
     /// </summary>
-    /// <seealso cref="IBitswapApi.LedgerAsync"/>
+    /// <seealso cref="IBitSwapApi.LedgerAsync"/>
     public class BitswapLedger
     {
         /// <summary>

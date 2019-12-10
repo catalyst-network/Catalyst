@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.BlockExchange.Protocols;
 using Catalyst.Abstractions.Dfs.CoreApi;
@@ -126,7 +125,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <returns>
         ///   Statistics on the bitswap blocks exchanged with the peer.
         /// </returns>
-        /// <seealso cref="IBitswapApi.LedgerAsync"/>
+        /// <seealso cref="IBitSwapApi.LedgerAsync"/>
         public BitswapLedger PeerLedger(Peer peer)
         {
             return peerLedgers.TryGetValue(peer, out var ledger) ? ledger : new BitswapLedger {Peer = peer};
