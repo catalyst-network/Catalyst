@@ -21,15 +21,17 @@
 
 #endregion
 
+using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Nethermind.Core;
+using Nethermind.Dirichlet.Numerics;
+using Address = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "getStorageAt")]
-    public class EthGetStorageAtHandler : EthWeb3RequestHandler<Address, byte[]>
+    public class EthGetStorageAtHandler : EthWeb3RequestHandler<Address, UInt256, BlockParameter, byte[]>
     {
-        protected override byte[] Handle(Address param1, IWeb3EthApi api)
+        protected override byte[] Handle(Address address, UInt256 positionIndex, BlockParameter blockParameter, IWeb3EthApi api)
         {
             throw new System.NotImplementedException();
         }

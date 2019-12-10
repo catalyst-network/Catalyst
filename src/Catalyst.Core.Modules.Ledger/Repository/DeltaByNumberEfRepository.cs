@@ -21,23 +21,17 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger;
-using Catalyst.Protocol.Deltas;
-using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
-using Address = Nethermind.Core.Address;
+using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Core.Lib.Repository;
+using SharpRepository.EfCoreRepository;
+using SharpRepository.Repository.Caching;
 
-namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
+namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    [EthWeb3RequestHandler("eth", "getBalance")]
-    public class EthGetBalanceHandler : EthWeb3RequestHandler<Address, UInt256>
+    class DeltaByNumberEfRepository : EfCoreRepository<DeltaByNumber, string>
     {
-        protected override UInt256 Handle(Address address, IWeb3EthApi api)
-        {
-            Delta delta = api.GetLatestDelta();
-
-            var stateRoot = api.StateRootResolver.Resolve(new Keccak(delta.StateRoot));
-            return api.StateReader.GetBalance(stateRoot, address);
-        }
+        public DeltaByNumberEfRepository(IDbContext dbContext,
+            ICachingStrategy<DeltaByNumber, string> cachingStrategy = null) :
+            base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy) { }
     }
 }

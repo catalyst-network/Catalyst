@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Modules.Consensus.Deltas.Building;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 
 namespace Catalyst.Core.Modules.Consensus

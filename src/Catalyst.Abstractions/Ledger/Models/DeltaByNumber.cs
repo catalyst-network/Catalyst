@@ -21,34 +21,38 @@
 
 #endregion
 
-using System;
-using Catalyst.Abstractions.Kvm;
-using Catalyst.Abstractions.Ledger;
-using Catalyst.Core.Modules.Ledger.Repository;
+using Catalyst.Abstractions.Repository;
 using LibP2P;
+using Newtonsoft.Json;
+using SharpRepository.Repository;
 
-namespace Catalyst.Core.Modules.Ledger
+namespace Catalyst.Abstractions.Ledger.Models
 {
-    public class DeltaResolver : IDeltaResolver
+    /// <summary>
+    /// Provides a mapping between the delta number and its <see cref="Cid"/>.
+    /// </summary>
+    public class DeltaByNumber : IDocument
     {
-        readonly IDeltaByNumberRepository _deltaByNumber;
-        readonly ILedger _ledger;
-
-        public DeltaResolver(IDeltaByNumberRepository deltaByNumber, ILedger ledger)
+        public DeltaByNumber()
         {
-            _deltaByNumber = deltaByNumber;
-            _ledger = ledger;
+            // this constructor only exists to allow SharpRepository
+            // to store instances of this class
         }
 
-        public Cid Resolve(long deltaNumber)
+        public DeltaByNumber(long number, Cid deltaId)
         {
-            return _deltaByNumber.TryFind(deltaNumber, out var deltaHash)
-                ? deltaHash
-                : throw new Exception($"Delta not found, delta number:'{deltaNumber}'");
+            Number = number;
+            DeltaId = deltaId;
         }
 
-        public long LatestDeltaNumber => _ledger.LatestKnownDeltaNumber;
+        public long Number { get; }
+        
+        public Cid DeltaId { get; }
 
-        public Cid LatestDelta => _ledger.LatestKnownDelta;
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("id")]
+        public string DocumentId => BuildDocumentId(Number);
+
+        public static string BuildDocumentId(long number) => number.ToString("D");
     }
 }

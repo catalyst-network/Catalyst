@@ -22,16 +22,20 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger;
-using Nethermind.Core;
+using Catalyst.Protocol.Deltas;
+using Nethermind.Core.Crypto;
+using Address = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "getCode")]
     public class EthGetCodeHandler : EthWeb3RequestHandler<Address, byte[]>
     {
-        protected override byte[] Handle(Address param1, IWeb3EthApi api)
+        protected override byte[] Handle(Address address, IWeb3EthApi api)
         {
-            throw new System.NotImplementedException();
+            Delta delta = api.GetLatestDelta();
+            var stateRoot = api.StateRootResolver.Resolve(new Keccak(delta.StateRoot));
+            return api.StateReader.GetCode(stateRoot, address);
         }
     }
 }

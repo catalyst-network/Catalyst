@@ -25,6 +25,8 @@ using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Nethermind.Core;
+using NLog.Targets;
+using IJsonSerializer = Nethermind.Core.IJsonSerializer;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
@@ -78,10 +80,23 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         public override object Handle(string[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
         {
             TParam1 param1 = Deserialize<TParam1>(parameters[0], serializer);
-            TParam2 param2 = Deserialize<TParam2>(parameters[0], serializer);
+            TParam2 param2 = Deserialize<TParam2>(parameters[1], serializer);
             return Handle(param1, param2, api);
         }
 
         protected abstract TResult Handle(TParam1 param1, TParam2 param2, IWeb3EthApi api);
+    }
+
+    public abstract class EthWeb3RequestHandler<TParam1, TParam2, TParam3, TResult> : EthWeb3RequestHandlerBase
+    {
+        public override int ParametersCount => 3;
+        public override object Handle(string[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
+        {
+            TParam1 param1 = Deserialize<TParam1>(parameters[0], serializer);
+            TParam2 param2 = Deserialize<TParam2>(parameters[1], serializer);
+            TParam3 param3 = Deserialize<TParam3>(parameters[2], serializer);
+            return Handle(param1, param2, param3, api);
+        }
+        protected abstract TResult Handle(TParam1 param1, TParam2 param2, TParam3 param3, IWeb3EthApi api);
     }
 }

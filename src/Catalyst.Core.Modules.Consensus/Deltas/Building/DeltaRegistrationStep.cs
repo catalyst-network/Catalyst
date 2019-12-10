@@ -22,33 +22,27 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.Kvm;
-using Catalyst.Abstractions.Ledger;
-using Catalyst.Core.Modules.Ledger.Repository;
-using LibP2P;
+using Catalyst.Abstractions.Consensus.Deltas;
+using Serilog;
+using Serilog.Events;
 
-namespace Catalyst.Core.Modules.Ledger
+namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
-    public class DeltaResolver : IDeltaResolver
+    internal sealed class DeltaRegistrationStep : IDeltaBuilderStep
     {
-        readonly IDeltaByNumberRepository _deltaByNumber;
-        readonly ILedger _ledger;
+        private readonly IDeltaCache _deltaCache;
+        private readonly ILogger _logger;
 
-        public DeltaResolver(IDeltaByNumberRepository deltaByNumber, ILedger ledger)
+        public DeltaRegistrationStep(IDeltaCache deltaCache, ILogger logger)
         {
-            _deltaByNumber = deltaByNumber;
-            _ledger = ledger;
+            _deltaCache = deltaCache ?? throw new ArgumentNullException(nameof(deltaCache));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Cid Resolve(long deltaNumber)
+        public void Execute(DeltaBuilderContext context)
         {
-            return _deltaByNumber.TryFind(deltaNumber, out var deltaHash)
-                ? deltaHash
-                : throw new Exception($"Delta not found, delta number:'{deltaNumber}'");
+            if (_logger.IsEnabled(LogEventLevel.Debug)) _logger.Debug("Registering new delta with parent ({previousHash})", context.PreviousDeltaHash);
+            _deltaCache.AddLocalDelta(context.Candidate, context.ProducedDelta);
         }
-
-        public long LatestDeltaNumber => _ledger.LatestKnownDeltaNumber;
-
-        public Cid LatestDelta => _ledger.LatestKnownDelta;
     }
 }

@@ -61,5 +61,10 @@ namespace Catalyst.Abstractions.Ledger
         ///     A boolean indicating whether a synchronisation of the ledger is in currently in process.
         /// </summary>
         bool IsSynchonising { get; }
+
+        /// <summary>
+        ///     The latest know delta number.
+        /// </summary>
+        long LatestKnownDeltaNumber { get; }
     }
 }

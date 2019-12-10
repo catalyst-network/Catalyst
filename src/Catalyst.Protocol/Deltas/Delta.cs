@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -50,5 +50,7 @@ namespace Catalyst.Protocol.Deltas
 
         // update proto
         public ulong GasLimit { get; set; } = 8_000_000UL;
+        public ulong GasUsed { get; set; }
+        public byte[] StateRoot { get; set; }
     }
 }

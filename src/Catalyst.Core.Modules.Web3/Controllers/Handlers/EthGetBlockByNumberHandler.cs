@@ -22,42 +22,90 @@
 #endregion
 
 using System;
+using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Protocol.Account;
+using Catalyst.Protocol.Deltas;
+using Google.Protobuf;
+using LibP2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
+using Address = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "getBlockByNumber")]
     public class EthGetBlockByNumberHandler : EthWeb3RequestHandler<BlockParameter, BlockForRpc>
     {
-        protected override BlockForRpc Handle(BlockParameter address, IWeb3EthApi api)
+        protected override BlockForRpc Handle(BlockParameter block, IWeb3EthApi api)
         {
-            // this needs some kind of delta repository that knows current delta and is also able to retrieve past deltas
-            throw new NotImplementedException();
+            Cid deltaHash;
+            long blockNumber;
+
+            var deltaCache = api.DeltaCache;
+            var deltaResolver = api.DeltaResolver;
+
+            switch (block.Type)
+            {
+                case BlockParameterType.Earliest:
+                    deltaHash = deltaCache.GenesisHash;
+                    blockNumber = 0;
+                    break;
+                case BlockParameterType.Latest:
+                    deltaHash = deltaResolver.LatestDelta;
+                    blockNumber = deltaResolver.LatestDeltaNumber;
+                    break;
+                case BlockParameterType.Pending:
+                    deltaHash = deltaResolver.LatestDelta;
+                    blockNumber = deltaResolver.LatestDeltaNumber;
+                    break;
+                case BlockParameterType.BlockNumber:
+                    blockNumber = block.BlockNumber.Value;
+                    deltaHash = deltaResolver.Resolve(blockNumber);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            Delta delta = GetDelta(deltaCache, deltaHash);
+            return BuildBlock(delta, deltaHash, blockNumber);
         }
 
-        private BlockForRpc GetBlockByNumber(long number)
+        private static Delta GetDelta(IDeltaCache deltaCache, Cid deltaHash)
         {
-            // create form delta
-            BlockForRpc blockForRpc = new BlockForRpc();
-            blockForRpc.Miner = Address.Zero;
-            blockForRpc.Difficulty = 1000000;
-            blockForRpc.Hash = Keccak.Compute(number.ToString());
-            blockForRpc.Number = number;
-            blockForRpc.GasLimit = 10_000_000;
-            blockForRpc.GasUsed = 0;
-            blockForRpc.Timestamp = (UInt256) number;
-            blockForRpc.ParentHash = number == 0 ? Keccak.Zero : Keccak.Compute((number - 1).ToString());
-            blockForRpc.StateRoot = Keccak.EmptyTreeHash;
-            blockForRpc.ReceiptsRoot = Keccak.EmptyTreeHash;
-            blockForRpc.TransactionsRoot = Keccak.EmptyTreeHash;
-            blockForRpc.LogsBloom = Bloom.Empty;
-            blockForRpc.TotalDifficulty = (UInt256) ((long) blockForRpc.Difficulty * number);
+            return deltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var delta)
+                ? delta
+                : throw new Exception($"Delta not found, delta hash: {deltaHash}");
+        }
+
+        private static BlockForRpc BuildBlock(Delta delta, Cid deltaHash, long blockNumber)
+        {
+            var hash0 = Keccak.Zero;
+
+            BlockForRpc blockForRpc = new BlockForRpc
+            {
+                Miner = Address.Zero,
+                Difficulty = 1,
+                Hash = GetValue(deltaHash),
+                Number = blockNumber,
+                GasLimit = (long) delta.GasLimit,
+                GasUsed = (long) delta.GasUsed,
+                Timestamp = new UInt256(delta.TimeStamp.Seconds),
+                ParentHash = blockNumber == 0 ? hash0 : GetValue(delta.PreviousDeltaDfsHash),
+                StateRoot = GetValue(delta.MerkleRoot),
+                ReceiptsRoot = hash0,
+                TransactionsRoot = hash0,
+                LogsBloom = Bloom.Empty
+            };
+            blockForRpc.TotalDifficulty = (UInt256) ((long) blockForRpc.Difficulty * (blockNumber + 1));
             blockForRpc.Sha3Uncles = Keccak.OfAnEmptySequenceRlp;
             return blockForRpc;
         }
+
+        // These functions assume 32 bytes of hash
+        static Keccak GetValue(Cid deltaHash) => new Keccak(deltaHash.Hash.Digest);
+        static Keccak GetValue(ByteString deltaHash) => new Keccak(deltaHash.ToByteArray());
     }
 }

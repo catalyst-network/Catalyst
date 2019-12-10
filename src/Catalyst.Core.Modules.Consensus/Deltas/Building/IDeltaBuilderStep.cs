@@ -21,23 +21,10 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger;
-using Catalyst.Protocol.Deltas;
-using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
-using Address = Nethermind.Core.Address;
-
-namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
+namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
-    [EthWeb3RequestHandler("eth", "getBalance")]
-    public class EthGetBalanceHandler : EthWeb3RequestHandler<Address, UInt256>
+    internal interface IDeltaBuilderStep
     {
-        protected override UInt256 Handle(Address address, IWeb3EthApi api)
-        {
-            Delta delta = api.GetLatestDelta();
-
-            var stateRoot = api.StateRootResolver.Resolve(new Keccak(delta.StateRoot));
-            return api.StateReader.GetBalance(stateRoot, address);
-        }
+        void Execute(DeltaBuilderContext context);
     }
 }

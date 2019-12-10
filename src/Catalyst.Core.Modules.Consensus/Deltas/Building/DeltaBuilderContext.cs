@@ -21,23 +21,23 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger;
+using System.Collections.Generic;
 using Catalyst.Protocol.Deltas;
-using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
-using Address = Nethermind.Core.Address;
+using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
+using LibP2P;
 
-namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
+namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
-    [EthWeb3RequestHandler("eth", "getBalance")]
-    public class EthGetBalanceHandler : EthWeb3RequestHandler<Address, UInt256>
+    internal sealed class DeltaBuilderContext
     {
-        protected override UInt256 Handle(Address address, IWeb3EthApi api)
-        {
-            Delta delta = api.GetLatestDelta();
-
-            var stateRoot = api.StateRootResolver.Resolve(new Keccak(delta.StateRoot));
-            return api.StateReader.GetBalance(stateRoot, address);
-        }
+        public DeltaBuilderContext(Cid previousDeltaHash) { PreviousDeltaHash = previousDeltaHash; }
+        
+        public Cid PreviousDeltaHash { get; }
+        public Delta PreviousDelta { get; set; }
+        public IList<PublicEntry> Transactions { get; set; }
+        public CandidateDeltaBroadcast Candidate { get; set; }
+        public CoinbaseEntry CoinbaseEntry { get; set; }
+        public Delta ProducedDelta { get; set; }
     }
 }

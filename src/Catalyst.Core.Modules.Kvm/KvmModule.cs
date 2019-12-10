@@ -35,10 +35,14 @@ namespace Catalyst.Core.Modules.Kvm
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<DeltaExecutor>().As<IDeltaExecutor>().SingleInstance();
+            builder.RegisterType<DeltaExecutor>().As<IDeltaExecutor>().Named<IDeltaExecutor>("BuilderDeltaExecutor");
+
             builder.RegisterType<KatVirtualMachine>().As<IKvm>().SingleInstance();
             builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
 
             builder.RegisterType<StateProvider>().As<IStateProvider>().SingleInstance();
+            builder.RegisterType<StateProvider>().As<IStateProvider>().Named<IStateProvider>("BuilderStateProvider");
+
             builder.RegisterType<StorageProvider>().As<IStorageProvider>().SingleInstance();
             builder.RegisterType<StateUpdateHashProvider>().As<IStateUpdateHashProvider>().SingleInstance();
             builder.RegisterInstance(LimboLogs.Instance).As<ILogManager>();

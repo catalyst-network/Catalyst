@@ -1,6 +1,6 @@
 #region LICENSE
 
-/**
+ /**
 * Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
@@ -21,23 +21,25 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger;
-using Catalyst.Protocol.Deltas;
-using Nethermind.Core.Crypto;
+using System.Collections.Generic;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Transaction;
 using Nethermind.Dirichlet.Numerics;
-using Address = Nethermind.Core.Address;
 
-namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
+namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
-    [EthWeb3RequestHandler("eth", "getBalance")]
-    public class EthGetBalanceHandler : EthWeb3RequestHandler<Address, UInt256>
+    internal sealed class AveragePriceComparer : IComparer<PublicEntry>
     {
-        protected override UInt256 Handle(Address address, IWeb3EthApi api)
-        {
-            Delta delta = api.GetLatestDelta();
+        private readonly int _multiplier;
 
-            var stateRoot = api.StateRootResolver.Resolve(new Keccak(delta.StateRoot));
-            return api.StateReader.GetBalance(stateRoot, address);
+        private AveragePriceComparer(int multiplier) { _multiplier = multiplier; }
+
+        public int Compare(PublicEntry x, PublicEntry y)
+        {
+            return _multiplier * Comparer<UInt256?>.Default.Compare(x?.GasPrice.ToUInt256(), y?.GasPrice.ToUInt256());
         }
+
+        public static AveragePriceComparer InstanceDesc { get; } = new AveragePriceComparer(-1);
+        public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
     }
 }

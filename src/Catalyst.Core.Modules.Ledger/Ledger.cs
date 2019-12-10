@@ -58,6 +58,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly IStorageProvider _storageProvider;
         private readonly ISnapshotableDb _stateDb;
         private readonly ISnapshotableDb _codeDb;
+        private readonly IDeltaByNumberRepository _deltas;
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IMapperProvider _mapperProvider;
@@ -67,6 +68,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly object _synchronisationLock = new object();
 
         public Cid LatestKnownDelta { get; private set; }
+        public long LatestKnownDeltaNumber { get; private set; }
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
         public Ledger(IDeltaExecutor deltaExecutor,
@@ -75,6 +77,7 @@ namespace Catalyst.Core.Modules.Ledger
             ISnapshotableDb stateDb,
             ISnapshotableDb codeDb,
             IAccountRepository accounts,
+            IDeltaByNumberRepository deltas,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
             IMempool<PublicEntryDao> mempool,
@@ -87,6 +90,7 @@ namespace Catalyst.Core.Modules.Ledger
             _storageProvider = storageProvider;
             _stateDb = stateDb;
             _codeDb = codeDb;
+            _deltas = deltas;
             _synchroniser = synchroniser;
             _mempool = mempool;
             _mapperProvider = mapperProvider;
@@ -214,7 +218,11 @@ namespace Catalyst.Core.Modules.Ledger
                 _stateDb.Commit();
                 _codeDb.Commit();
 
+                // store delta numbers
+                _deltas.Map(LatestKnownDeltaNumber, deltaHash);
+
                 LatestKnownDelta = deltaHash;
+                LatestKnownDeltaNumber += 1;
             }
             catch
             {

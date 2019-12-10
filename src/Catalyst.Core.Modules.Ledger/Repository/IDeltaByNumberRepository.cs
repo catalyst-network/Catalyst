@@ -21,23 +21,23 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger;
-using Catalyst.Protocol.Deltas;
-using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
-using Address = Nethermind.Core.Address;
+using LibP2P;
 
-namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
+namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    [EthWeb3RequestHandler("eth", "getBalance")]
-    public class EthGetBalanceHandler : EthWeb3RequestHandler<Address, UInt256>
+    public interface IDeltaByNumberRepository
     {
-        protected override UInt256 Handle(Address address, IWeb3EthApi api)
-        {
-            Delta delta = api.GetLatestDelta();
+        /// <summary>
+        /// Tries to find the mapping between the <paramref name="deltaNumber"/> and the <see cref="deltaHash"/>.
+        /// </summary>
+        /// <returns>Whether the mapping was found.</returns>
+        bool TryFind(long deltaNumber, out Cid deltaHash);
 
-            var stateRoot = api.StateRootResolver.Resolve(new Keccak(delta.StateRoot));
-            return api.StateReader.GetBalance(stateRoot, address);
-        }
+        /// <summary>
+        /// Maps the <paramref name="deltaNumber"/> to <paramref name="deltaHash"/>.
+        /// </summary>
+        /// <param name="deltaNumber"></param>
+        /// <param name="deltaHash"></param>
+        void Map(long deltaNumber, Cid deltaHash);
     }
 }

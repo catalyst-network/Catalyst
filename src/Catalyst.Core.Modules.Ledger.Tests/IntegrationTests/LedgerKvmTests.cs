@@ -76,6 +76,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private readonly IStorageProvider _storageProvider;
         private readonly ISnapshotableDb _stateDb;
         private readonly ISnapshotableDb _codeDb;
+        private readonly IDeltaByNumberRepository _deltaByNumber;
         private readonly IPrivateKey _senderPrivateKey;
         private readonly IPublicKey _senderPublicKey;
         private readonly SigningContext _signingContext;
@@ -93,6 +94,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
+            _deltaByNumber = Substitute.For<IDeltaByNumberRepository>();
 
             _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
 
@@ -146,7 +148,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
             var classUnderTest = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
-                _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
+                _fakeRepository, _deltaByNumber, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
 
             _testScheduler.Start();
         }
