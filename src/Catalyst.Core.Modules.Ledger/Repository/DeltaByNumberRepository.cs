@@ -27,7 +27,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    class DeltaByNumberRepository : IDeltaByNumberRepository
+    public class DeltaByNumberRepository : IDeltaByNumberRepository
     {
         readonly IRepository<DeltaByNumber, string> _repository;
 

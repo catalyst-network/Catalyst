@@ -34,6 +34,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
@@ -47,6 +48,7 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Web3;
@@ -72,6 +74,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private readonly IRpcServerSettings _rpcSettings;
         private readonly ILifetimeScope _scope;
         private readonly ContainerProvider _containerProvider;
+        private readonly IDeltaByNumberRepository _deltaByNumber;
 
         public PoaTestNode(string name,
             IPrivateKey privateKey,
@@ -103,12 +106,14 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             }).ToList();
             _peerRepository.Add(peersInRepo);
 
+            _deltaByNumber = new DeltaByNumberRepository(new InMemoryRepository<DeltaByNumber, string>());
+
             _containerProvider = new ContainerProvider(new[]
                 {
                     Constants.NetworkConfigFile(NetworkType.Devnet),
                     Constants.SerilogJsonConfigFile
                 }
-                .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, output);
+               .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, output);
 
             Program.RegisterNodeDependencies(_containerProvider.ContainerBuilder,
                 excludedModules: new List<Type>
@@ -129,8 +134,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, privateKey);
 
             keyStore.KeyStoreEncryptAsync(privateKey, nodeSettings.NetworkType, KeyRegistryTypes.DefaultKey)
-                .ConfigureAwait(false).GetAwaiter()
-                .GetResult();
+               .ConfigureAwait(false).GetAwaiter()
+               .GetResult();
         }
 
         public string Name { get; }
@@ -161,8 +166,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _containerProvider.ContainerBuilder.RegisterInstance(_dfs).As<IDfs>();
             _containerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
-                .WithParameter("rootPath", _nodeDirectory.FullName);
+               .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
         }
 
