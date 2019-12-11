@@ -19,7 +19,7 @@ namespace Lib.P2P.Routing
         private static ILog log = LogManager.GetLogger(typeof(DhtService));
 
         /// <inheritdoc />
-        public virtual string Name { get; } = "libp2p/kad";
+        public virtual string Name { get; } = "libp2p-cs/kad";
 
         /// <inheritdoc />
         public SemVersion Version { get; } = new SemVersion(1, 0);
@@ -27,7 +27,7 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        public SwarmService SwarmService { get; set; }
+        public ISwarmService SwarmService { get; set; }
 
         /// <summary>
         ///  Routing information on peers.

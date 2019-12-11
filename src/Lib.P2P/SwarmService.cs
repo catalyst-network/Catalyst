@@ -372,7 +372,10 @@ namespace Lib.P2P
         /// <inheritdoc />
         public Task StartAsync()
         {
-            if (LocalPeer == null) throw new NotSupportedException("The LocalPeer is not defined.");
+            if (LocalPeer == null)
+            {
+                throw new NotSupportedException("The LocalPeer is not defined.");
+            }
 
             // Many of the unit tests do not setup the LocalPeerKey.  If
             // its missing, then just use plaintext connection.
@@ -382,7 +385,11 @@ namespace Lib.P2P
                 lock (protocols)
                 {
                     var security = protocols.OfType<IEncryptionProtocol>().ToArray();
-                    foreach (var p in security) protocols.Remove(p);
+                    foreach (var p in security)
+                    {
+                        protocols.Remove(p);
+                    }
+                    
                     protocols.Add(plaintext1);
                 }
 
@@ -399,7 +406,11 @@ namespace Lib.P2P
 
         private void OnPeerDisconnected(object sender, MultiHash peerId)
         {
-            if (!otherPeers.TryGetValue(peerId.ToBase58(), out var peer)) peer = new Peer {Id = peerId};
+            if (!otherPeers.TryGetValue(peerId.ToBase58(), out var peer))
+            {
+                peer = new Peer {Id = peerId};
+            }
+            
             PeerDisconnected?.Invoke(this, peer);
         }
 
@@ -412,7 +423,10 @@ namespace Lib.P2P
             log.Debug($"Stopping {LocalPeer}");
 
             // Stop the listeners.
-            while (listeners.Count > 0) await StopListeningAsync(listeners.Keys.First()).ConfigureAwait(false);
+            while (listeners.Count > 0)
+            {
+                await StopListeningAsync(listeners.Keys.First()).ConfigureAwait(false);
+            }
 
             // Disconnect from remote peers.
             Manager.Clear();

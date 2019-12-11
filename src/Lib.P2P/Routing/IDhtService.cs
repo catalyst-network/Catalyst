@@ -11,7 +11,7 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        SwarmService SwarmService { get; set; }
+        ISwarmService SwarmService { get; set; }
 
         /// <summary>
         ///   The number of closer peers to return.

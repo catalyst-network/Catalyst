@@ -101,7 +101,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             _pendingRequests = memoryCache;
             _peers = peers;
             _signingContext = new SigningContext
-                {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer};
+            {
+                NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer
+            };
             _peerClient = peerClient;
             _signer = signer;
             _incomingBroadcastSignatureDictionary = new ConcurrentDictionary<ICorrelationId, ProtocolMessage>();
@@ -243,7 +245,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>Gets the maximum gossip cycles.</summary>
         /// <param name="broadcastMessage"></param>
         /// <returns></returns>
-        private uint GetMaxGossipCycles(BroadcastMessage broadcastMessage)
+        private static uint GetMaxGossipCycles(BroadcastMessage broadcastMessage)
         {
             var peerNetworkSize = broadcastMessage.PeerNetworkSize;
             return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) MaxGossipPeersPerRound) /

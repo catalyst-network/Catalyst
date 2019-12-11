@@ -29,11 +29,13 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Kernel;
+using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
 using Lib.P2P.PubSub;
+using Lib.P2P.Routing;
 using Makaretu.Dns;
 
 namespace Catalyst.Core.Modules.Dfs
@@ -65,12 +67,28 @@ namespace Catalyst.Core.Modules.Dfs
 
         protected override void LoadService(ContainerBuilder builder) 
         { 
-            builder.RegisterType<DfsService>().As<IDfsService>().SingleInstance();
-            builder.RegisterType<BitswapService>().As<IBitswapService>().SingleInstance();
-            builder.RegisterType<SwarmService>().As<ISwarmService>().SingleInstance();
-            builder.RegisterType<PubSubService>().As<IPubSubService>().SingleInstance();
+            builder.RegisterType<DfsService>()
+               .As<IDfsService>()
+               .SingleInstance();
+            
+            builder.RegisterType<BitswapService>()
+               .As<IBitswapService>()
+               .SingleInstance();
 
-            builder.RegisterType<DotClient>().As<IDnsClient>();
+            builder.RegisterType<SwarmService>()
+               .As<ISwarmService>()
+               .SingleInstance();
+
+            builder.RegisterType<KatDhtService>()
+               .As<IDhtService>()
+               .SingleInstance();
+
+            builder.RegisterType<PubSubService>()
+               .As<IPubSubService>()
+               .SingleInstance();
+
+            builder.RegisterType<DotClient>()
+               .As<IDnsClient>();
         }
         
         protected override void LoadOptions(ContainerBuilder builder) 
