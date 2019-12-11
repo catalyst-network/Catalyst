@@ -111,9 +111,9 @@ namespace Catalyst.Core.Modules.Consensus
 
                     var newCid = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
                        .ConfigureAwait(false).GetAwaiter().GetResult();
-                    var previousHash = CidHelper.Cast(d.PreviousDeltaDfsHash.ToByteArray());
+                    var previousHashCid = CidHelper.Cast(d.PreviousDeltaDfsHash.ToByteArray());
 
-                    _deltaHashProvider.TryUpdateLatestHash(previousHash, newCid);
+                    _deltaHashProvider.TryUpdateLatestHash(previousHashCid, newCid);
                 });
         }
         
