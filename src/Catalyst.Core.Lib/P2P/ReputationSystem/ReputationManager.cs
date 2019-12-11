@@ -43,15 +43,15 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
         public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
 
-        public ReputationManager(IPeerRepository peerRepository, ILogger logger)
+        public ReputationManager(IPeerRepository peerRepository, ILogger logger, IScheduler scheduler = null)
         {
+            var observableScheduler = scheduler ?? Scheduler.Default;
+
             _logger = logger;
             PeerRepository = peerRepository;
-            ReputationEvent = new ReplaySubject<IPeerReputationChange>(0);
+            ReputationEvent = new ReplaySubject<IPeerReputationChange>(0, observableScheduler);
 
-            ReputationEventStream
-               .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(OnNext, OnError, OnCompleted);
+            ReputationEventStream.Subscribe(OnNext, OnError, OnCompleted);
         }
 
         /// <summary>
