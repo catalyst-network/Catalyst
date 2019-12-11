@@ -48,6 +48,7 @@ using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Mempool;
+using Catalyst.Core.Modules.Mempool.Repositories;
 using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Web3;
 using Catalyst.Protocol.Network;
@@ -94,8 +95,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _dfs = new DevDfs(parentTestFileSystem, hashProvider, baseDfsFolder);
 
-            _memPool = new Mempool(
-                new TestMempoolRepository(new InMemoryRepository<PublicEntryDao, string>()));
+            _memPool = new Mempool(new MempoolService(new InMemoryRepository<PublicEntryDao, string>()));
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             var peersInRepo = knownPeerIds.Select(p => new Peer
             {
@@ -108,7 +108,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     Constants.NetworkConfigFile(NetworkType.Devnet),
                     Constants.SerilogJsonConfigFile
                 }
-                .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, output);
+               .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, output);
 
             Program.RegisterNodeDependencies(_containerProvider.ContainerBuilder,
                 excludedModules: new List<Type>
@@ -129,8 +129,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, privateKey);
 
             keyStore.KeyStoreEncryptAsync(privateKey, nodeSettings.NetworkType, KeyRegistryTypes.DefaultKey)
-                .ConfigureAwait(false).GetAwaiter()
-                .GetResult();
+               .ConfigureAwait(false).GetAwaiter()
+               .GetResult();
         }
 
         public string Name { get; }
@@ -142,15 +142,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false);
         }
 
-        public async Task StartSocketsAsync()
-        {
-            await _node.StartSocketsAsync();
-        }
+        public async Task StartSocketsAsync() { await _node.StartSocketsAsync(); }
 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+        public void Dispose() { Dispose(true); }
 
         protected void OverrideContainerBuilderRegistrations()
         {
@@ -162,7 +156,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _containerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
-                .WithParameter("rootPath", _nodeDirectory.FullName);
+               .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
         }
 

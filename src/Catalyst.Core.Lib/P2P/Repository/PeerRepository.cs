@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Specifications;
@@ -37,6 +38,8 @@ namespace Catalyst.Core.Lib.P2P.Repository
         public PeerRepository(IRepository<Peer, string> repository) { _repository = repository; }
 
         public Peer Get(string id) { return _repository.Get(id); }
+
+        public Peer Get(PeerId id) { return _repository.Find(x => x.PeerId.Equals(id)); }
 
         public IEnumerable<Peer> GetAll() { return _repository.GetAll(); }
 

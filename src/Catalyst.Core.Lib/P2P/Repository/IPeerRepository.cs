@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.P2P.Repository
@@ -31,6 +32,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
     public interface IPeerRepository : IDisposable
     {
         Peer Get(string id);
+        Peer Get(PeerId id);
         IEnumerable<Peer> GetAll();
         IEnumerable<Peer> GetActivePeers(int count);
         IEnumerable<Peer> GetRandomPeers(int count);
