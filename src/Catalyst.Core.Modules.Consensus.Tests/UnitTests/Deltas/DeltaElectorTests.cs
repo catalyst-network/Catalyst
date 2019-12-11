@@ -182,7 +182,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var peer = new Peer {Reputation = 100, PeerId = favourite.VoterId};
             _reputationManager.PeerRepository.Add(new Peer {Reputation = 100, PeerId = favourite.VoterId});
 
-            var expectedReputation = peer.Reputation + ReputationEventType.VoterNotInPool.Amount;
+            var expectedReputation = peer.Reputation + ReputationEventType.VoterIsNotProducer.Amount;
 
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())

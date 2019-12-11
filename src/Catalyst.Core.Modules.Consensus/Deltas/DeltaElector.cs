@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                    .GetDeltaProducersFromPreviousDelta(cid)
                    .Any(p => p.Equals(candidate.VoterId)))
                 {
-                    var reputationChange = new ReputationChange(candidate.VoterId, ReputationEventType.VoterNotInPool);
+                    var reputationChange = new ReputationChange(candidate.VoterId, ReputationEventType.VoterIsNotProducer);
                     _reputationManager.OnNext(reputationChange);
 
                     _logger.Debug(

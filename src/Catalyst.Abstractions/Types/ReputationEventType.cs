@@ -32,7 +32,7 @@ namespace Catalyst.Abstractions.Types
         public static readonly ReputationEventType ResponseReceived = new ResponseReceivedEventType();
         public static readonly ReputationEventType UnCorrelatableMessage = new UnCorrelatableMessageEventType();
         public static readonly ReputationEventType InvalidMessageSignature = new InvalidMessageSignatureEventType();
-        public static readonly ReputationEventType VoterNotInPool = new VoterNotInPoolEventType();
+        public static readonly ReputationEventType VoterIsNotProducer = new VoterIsNotProducerEventType();
 
         public int Amount { get; set; }
 
@@ -77,9 +77,9 @@ namespace Catalyst.Abstractions.Types
         /// <summary>
         ///     Fired when a peer votes when it is not authorized to vote because it is not in the voter pool.
         /// </summary>
-        private sealed class VoterNotInPoolEventType : ReputationEventType
+        private sealed class VoterIsNotProducerEventType : ReputationEventType
         {
-            public VoterNotInPoolEventType() : base(5, "voterNotInPool") { Amount = -1000; }
+            public VoterIsNotProducerEventType() : base(5, "voterIsNotProducer") { Amount = -1000; }
         }
     }
 }
