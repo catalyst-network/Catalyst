@@ -50,7 +50,6 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             _logger = logger;
             PeerRepository = peerRepository;
             ReputationEvent = new ReplaySubject<IPeerReputationChange>(0, observableScheduler);
-
             ReputationEventStream.Subscribe(OnNext, OnError, OnCompleted);
         }
 
