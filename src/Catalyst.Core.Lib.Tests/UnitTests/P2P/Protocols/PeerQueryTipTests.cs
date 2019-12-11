@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             var subbedPeerClient = Substitute.For<IPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));
-            
+
             _peerQueryTipRequest = new PeerQueryTipRequestRequest(
                 Substitute.For<ILogger>(),
                 subbedPeerClient,
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         public async Task Can_Receive_Query_Response_On_Observer()
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
-            var tipQueryResponse = new PeerQueryTipResponse(PeerIdHelper.GetPeerId(), 
+            var tipQueryResponse = new PeerQueryTipResponse(PeerIdHelper.GetPeerId(),
                 MultiHash.ComputeHash(ByteUtil.GenerateRandomByteArray(32))
             );
 
@@ -98,25 +98,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             var recipientPeerId = PeerIdHelper.GetPeerId();
             _cancellationProvider.Dispose(); //do summet nasty to force exception
             var response = await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
-            response.Should().BeFalse();   
+            response.Should().BeFalse();
         }
-
-        // [Fact]
-        // public async Task Can_Dispose_Class()
-        // {
-        //     using (_peerQueryTipRequest)
-        //     {
-        //         Debug.Assert(!_peerQueryTipRequest.Disposing); // Best not be disposed yet.
-        //     }
-        //
-        //     try
-        //     {
-        //         Debug.Assert(_peerQueryTipRequest.Disposing); // Expecting an exception.
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Debug.Assert(ex is ObjectDisposedException); // Better be the right one.
-        //     }
-        // }
     }
 }

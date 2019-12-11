@@ -31,7 +31,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
 using NSubstitute;
@@ -82,7 +82,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             var contentBytes = BitConverter.GetBytes(123456);
             var contentStream = contentBytes.ToMemoryStream();
 
-            var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeMultiHash(contentBytes));
+            var expectedCid = _hashProvider.ComputeMultiHash(contentBytes).CreateCid();
 
             var cid = await _dfs.AddAsync(contentStream);
 
@@ -129,7 +129,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
             var someGoodUtf8Content = "some good utf8 content!";
 
             var cid = await _dfs.AddTextAsync(someGoodUtf8Content);
-            var expectedCid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash(someGoodUtf8Content));
+            var expectedCid = _hashProvider.ComputeUtf8MultiHash(someGoodUtf8Content).CreateCid();
 
             await _fileSystem.File.Received(1).WriteAllTextAsync(
                 Arg.Is(Path.Combine(_baseFolder, expectedCid.Encode())),
@@ -181,7 +181,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadAsync_Should_Point_To_The_Correct_File()
         {
-            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
+            var cid = _hashProvider.ComputeUtf8MultiHash("file").CreateCid();
             await _dfs.ReadAsync(cid);
             _fileSystem.File.Received(1)
                .OpenRead(Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, cid.Encode()))));
@@ -203,7 +203,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadTextAsync_Should_Assume_UTF8_Content()
         {
-            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
+            var cid = _hashProvider.ComputeUtf8MultiHash("file").CreateCid();
             await _dfs.ReadTextAsync(cid);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
                 Arg.Any<string>(),
@@ -214,7 +214,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.UnitTests
         [Fact]
         public async Task ReadTextAsync_Should_Point_To_The_Correct_File()
         {
-            var cid = CidHelper.CreateCid(_hashProvider.ComputeUtf8MultiHash("file"));
+            var cid = _hashProvider.ComputeUtf8MultiHash("file").CreateCid();
             await _dfs.ReadTextAsync(cid);
             await _fileSystem.File.Received(1).ReadAllTextAsync(
                 Arg.Is<string>(s => s.Equals(Path.Combine(_baseFolder, cid.Encode()))),

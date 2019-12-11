@@ -27,8 +27,8 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
@@ -57,8 +57,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaVoter = Substitute.For<IDeltaVoter>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
-            _newHash = CidHelper.CreateCid(hashProvider.ComputeUtf8MultiHash("newHash"));
-            _prevHash = CidHelper.CreateCid(hashProvider.ComputeUtf8MultiHash("prevHash"));
+            _newHash = hashProvider.ComputeUtf8MultiHash("newHash").CreateCid();
+            _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash").CreateCid();
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
             _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, hashProvider, logger);
         }

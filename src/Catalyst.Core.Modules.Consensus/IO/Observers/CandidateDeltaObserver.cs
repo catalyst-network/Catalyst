@@ -28,7 +28,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
 using Serilog;
 
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                 // @TODO here we use the protobuff message to parse rather than using the CandidateDeltaBroadcastDao
                 /////////////////////////////////////////////////////////////////////////////////////////////////
                 var deserialized = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
-                var previousDeltaDfsHashCid = CidHelper.Cast(deserialized.PreviousDeltaDfsHash.ToByteArray());
+                var previousDeltaDfsHashCid = deserialized.PreviousDeltaDfsHash.ToByteArray().ToCid();
                 /////////////////////////////////////////////////////////////////////////////////////////////////
                 
                 if (!_hashProvider.IsValidHash(previousDeltaDfsHashCid.Hash.ToArray()))
@@ -70,7 +70,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                 }
 
                 /////////////////////////////////////////////////////////////////////////////////////////////////
-                var hashCid = CidHelper.Cast(deserialized.Hash.ToByteArray());
+                var hashCid = deserialized.Hash.ToByteArray().ToCid();
                 /////////////////////////////////////////////////////////////////////////////////////////////////
 
                 if (!_hashProvider.IsValidHash(hashCid.Hash.ToArray()))
