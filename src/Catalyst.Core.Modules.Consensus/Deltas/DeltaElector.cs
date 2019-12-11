@@ -27,6 +27,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
@@ -43,6 +45,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private readonly IMemoryCache _candidatesCache;
         private readonly IDeltaProducersProvider _deltaProducersProvider;
+        private readonly IReputationManager _reputationManager;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
@@ -59,10 +62,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         public DeltaElector(IMemoryCache candidatesCache,
             IDeltaProducersProvider deltaProducersProvider,
+            IReputationManager reputationManager,
             ILogger logger)
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
+            _reputationManager = reputationManager;
             _cacheEntryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(
                     new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
@@ -90,6 +95,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                    .Any(p => p.Equals(candidate.VoterId)))
                 {
                     //https://github.com/catalyst-network/Catalyst.Node/issues/827
+                    var reputationChange = new ReputationChange(candidate.VoterId, ReputationEventType.VoterNotInPool);
+                    _reputationManager.OnNext(reputationChange);
+
                     _logger.Debug(
                         "Voter {voter} is not a producer for this cycle succeeding {deltaHash} and its vote has been discarded.",
                         candidate.VoterId, candidate.Candidate.PreviousDeltaDfsHash);
