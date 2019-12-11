@@ -109,11 +109,11 @@ namespace Catalyst.Core.Modules.Consensus
                     _logger.Information("New Delta following {deltaHash} published", 
                         d.PreviousDeltaDfsHash);
 
-                    var newCid = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
+                    var newHashCid = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
                        .ConfigureAwait(false).GetAwaiter().GetResult();
                     var previousHashCid = CidHelper.Cast(d.PreviousDeltaDfsHash.ToByteArray());
 
-                    _deltaHashProvider.TryUpdateLatestHash(previousHashCid, newCid);
+                    _deltaHashProvider.TryUpdateLatestHash(previousHashCid, newHashCid);
                 });
         }
         
