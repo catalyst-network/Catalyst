@@ -38,7 +38,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             long deltaNumber = api.DeltaResolver.LatestDeltaNumber;
             Delta delta = api.GetLatestDelta();
-            Keccak root = new Keccak(delta.StateRoot);
+            Keccak root = new Keccak(delta.StateRoot.ToByteArray());
 
             if (transactionCall.Gas == null)
             {

@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Kvm;
+using Google.Protobuf;
 using Nethermind.Core.Crypto;
 using Nethermind.Evm.Tracing;
 using Nethermind.Store;
@@ -46,10 +47,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 
         public void Execute(DeltaBuilderContext context)
         {
-            Keccak stateRoot = new Keccak(context.PreviousDelta.StateRoot);
+            var previousRoot = context.PreviousDelta.StateRoot;
+            Keccak stateRoot = previousRoot.IsEmpty ? Keccak.EmptyTreeHash : new Keccak(previousRoot.ToByteArray());
+
             _stateProvider.StateRoot = stateRoot;
+
             _deltaExecutor.Execute(context.ProducedDelta, NullTxTracer.Instance);
-            context.ProducedDelta.StateRoot = _stateProvider.StateRoot.Bytes;
+            context.ProducedDelta.StateRoot = ByteString.CopyFrom(_stateProvider.StateRoot.Bytes);
             _stateProvider.Reset();
         }
     }

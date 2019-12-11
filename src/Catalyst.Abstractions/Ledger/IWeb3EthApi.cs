@@ -33,7 +33,6 @@ namespace Catalyst.Abstractions.Ledger
 {
     public interface IWeb3EthApi
     {
-        IDeltaExecutor DeltaExecutor { get; }
         IStateReader StateReader { get; }
         IDeltaResolver DeltaResolver { get; }
         IStateRootResolver StateRootResolver { get; }

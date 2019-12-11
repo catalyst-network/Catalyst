@@ -35,9 +35,8 @@ namespace Catalyst.Core.Modules.Ledger
     { 
         public const string ComponentName = nameof(Web3EthApi);
             
-        public Web3EthApi(IDeltaExecutor deltaExecutor, IStateReader stateReader, IStateRootResolver stateRootResolver, IDeltaResolver deltaResolver, IDeltaCache deltaCache, [KeyFilter(ComponentName)] ITransactionProcessor processor, [KeyFilter(ComponentName)] IStorageProvider storageProvider, [KeyFilter(ComponentName)] IStateProvider stateProvider)
+        public Web3EthApi(IStateReader stateReader, IStateRootResolver stateRootResolver, IDeltaResolver deltaResolver, IDeltaCache deltaCache, [KeyFilter(ComponentName)] ITransactionProcessor processor, [KeyFilter(ComponentName)] IStorageProvider storageProvider, [KeyFilter(ComponentName)] IStateProvider stateProvider)
         {
-            DeltaExecutor = deltaExecutor ?? throw new ArgumentNullException(nameof(deltaExecutor));
             StateReader = stateReader ?? throw new ArgumentNullException(nameof(stateReader));
             StateRootResolver = stateRootResolver ?? throw new ArgumentNullException(nameof(stateRootResolver));
             DeltaResolver = deltaResolver ?? throw new ArgumentNullException(nameof(deltaResolver));
@@ -47,7 +46,6 @@ namespace Catalyst.Core.Modules.Ledger
             StateProvider = stateProvider ?? throw new ArgumentNullException(nameof(stateProvider));
         }
         
-        public IDeltaExecutor DeltaExecutor { get; }
         public IStateReader StateReader { get; }
         public IDeltaResolver DeltaResolver { get; }
         public IStateRootResolver StateRootResolver { get; }

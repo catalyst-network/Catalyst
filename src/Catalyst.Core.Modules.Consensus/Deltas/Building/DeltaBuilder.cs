@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
 using Autofac.Features.AttributeFilters;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
@@ -56,8 +55,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             IPeerSettings peerSettings,
             IDeltaCache deltaCache,
             IDateTimeProvider dateTimeProvider,
-            [KeyFilter("BuilderStaterProvider")] IStateProvider stateProvider,
-            [KeyFilter("BuilderDeltaExecutor")] IDeltaExecutor deltaExecutor,
+            [KeyFilter("BuilderState")] IStateProvider stateProvider,
+            [KeyFilter("BuilderState")] IDeltaExecutor deltaExecutor,
             ILogger logger)
         {
             _transactionRetriever = transactionRetriever;

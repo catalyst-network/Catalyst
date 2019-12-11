@@ -103,7 +103,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache = Substitute.For<IDeltaCache>();
 
             Delta previousDelta = new Delta();
-            previousDelta.StateRoot = Keccak.EmptyTreeHash.Bytes;
+            previousDelta.StateRoot = ByteString.CopyFrom(Keccak.EmptyTreeHash.Bytes);
             _cache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>()).Returns(x =>
             {
                 x[1] = previousDelta;
