@@ -46,7 +46,6 @@ namespace Catalyst.Core.Modules.Ledger
 
             builder.RegisterType<LedgerSynchroniser>().As<ILedgerSynchroniser>();
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
-            builder.RegisterType<DeltaByNumberEfRepository>().As<IRepository<DeltaByNumber, string>>().SingleInstance();
             builder.RegisterType<DeltaByNumberRepository>().As<IDeltaByNumberRepository>().SingleInstance();
             builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();
             builder.RegisterType<StateRootResolver>().As<IStateRootResolver>().SingleInstance();
