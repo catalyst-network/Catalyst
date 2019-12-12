@@ -46,8 +46,11 @@ namespace Catalyst.Abstractions.Ledger
     {
         public static Delta GetLatestDelta(this IWeb3EthApi api)
         {
-            // change to appropriate hash
-            Cid cid = api.DeltaResolver.LatestDelta;
+            return GetDelta(api, api.DeltaResolver.LatestDelta);
+        }
+
+        public static Delta GetDelta(this IWeb3EthApi api, Cid cid)
+        {
             if (!api.DeltaCache.TryGetOrAddConfirmedDelta(cid, out Delta delta))
             {
                 throw new Exception($"Delta not found '{cid}'");

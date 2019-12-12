@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Protocol.Account;
@@ -44,8 +45,8 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             Cid deltaHash;
             long blockNumber;
 
-            var deltaCache = api.DeltaCache;
-            var deltaResolver = api.DeltaResolver;
+            IDeltaCache deltaCache = api.DeltaCache;
+            IDeltaResolver deltaResolver = api.DeltaResolver;
 
             switch (block.Type)
             {
@@ -69,15 +70,8 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                     throw new ArgumentOutOfRangeException();
             }
 
-            Delta delta = GetDelta(deltaCache, deltaHash);
+            Delta delta = api.GetDelta(deltaHash);
             return BuildBlock(delta, deltaHash, blockNumber);
-        }
-
-        private static Delta GetDelta(IDeltaCache deltaCache, Cid deltaHash)
-        {
-            return deltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var delta)
-                ? delta
-                : throw new Exception($"Delta not found, delta hash: {deltaHash}");
         }
 
         private static BlockForRpc BuildBlock(Delta delta, Cid deltaHash, long blockNumber)
