@@ -21,11 +21,8 @@
 
 #endregion
 
-using System;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Kvm;
-using Catalyst.Protocol.Deltas;
-using LibP2P;
 using Nethermind.Store;
 using Nethermind.Evm;
 
@@ -40,23 +37,5 @@ namespace Catalyst.Abstractions.Ledger
         ITransactionProcessor Processor { get; }
         IStorageProvider StorageProvider { get; }
         IStateProvider StateProvider { get; }
-    }
-
-    public static class Web3EthApiExtensions
-    {
-        public static Delta GetLatestDelta(this IWeb3EthApi api)
-        {
-            return GetDelta(api, api.DeltaResolver.LatestDelta);
-        }
-
-        public static Delta GetDelta(this IWeb3EthApi api, Cid cid)
-        {
-            if (!api.DeltaCache.TryGetOrAddConfirmedDelta(cid, out Delta delta))
-            {
-                throw new Exception($"Delta not found '{cid}'");
-            }
-
-            return delta;
-        }
     }
 }

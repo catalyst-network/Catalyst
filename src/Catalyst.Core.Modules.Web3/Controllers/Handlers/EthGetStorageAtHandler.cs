@@ -38,31 +38,11 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override byte[] Handle(Address address, UInt256 index, BlockParameter block, IWeb3EthApi api)
         {
-            Cid deltaHash = GetDeltaHash(api, block);
-
-            Delta delta = api.GetDelta(deltaHash);
+            var delta = api.GetDelta(block);
 
             var stateRoot = new Keccak(delta.StateRoot.ToByteArray());
             api.StateProvider.StateRoot = stateRoot;
             return api.StorageProvider.Get(new StorageAddress(address, index));
-        }
-
-        static Cid GetDeltaHash(IWeb3EthApi api, BlockParameter block)
-        {
-            switch (block.Type)
-            {
-                case BlockParameterType.Earliest:
-                    return api.DeltaCache.GenesisHash;
-                case BlockParameterType.Latest:
-                    return api.DeltaResolver.LatestDelta;
-                case BlockParameterType.Pending:
-                    return api.DeltaResolver.LatestDelta;
-                case BlockParameterType.BlockNumber:
-                    var blockNumber = block.BlockNumber.Value;
-                    return api.DeltaResolver.Resolve(blockNumber);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
     }
 }

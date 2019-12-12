@@ -43,7 +43,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             {
                 BlockParameter blockParameter = new BlockParameter();
                 blockParameter.FromJson(parameter);
-                return (TParam) Convert.ChangeType(blockParameter, typeof(TParam));
+                return (TParam)Convert.ChangeType(blockParameter, typeof(TParam));
             }
 
             return serializer.Deserialize<TParam>(parameter);
@@ -77,6 +77,8 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 
     public abstract class EthWeb3RequestHandler<TParam1, TParam2, TResult> : EthWeb3RequestHandlerBase
     {
+        public override int ParametersCount => 2;
+
         public override object Handle(string[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
         {
             TParam1 param1 = Deserialize<TParam1>(parameters[0], serializer);
@@ -84,12 +86,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             return Handle(param1, param2, api);
         }
 
-        protected abstract TResult Handle(TParam1 param1, TParam2 param2, IWeb3EthApi api);
+        protected abstract TResult Handle(TParam1 address, TParam2 param2, IWeb3EthApi api);
     }
 
     public abstract class EthWeb3RequestHandler<TParam1, TParam2, TParam3, TResult> : EthWeb3RequestHandlerBase
     {
         public override int ParametersCount => 3;
+
         public override object Handle(string[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
         {
             TParam1 param1 = Deserialize<TParam1>(parameters[0], serializer);
@@ -97,6 +100,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             TParam3 param3 = Deserialize<TParam3>(parameters[2], serializer);
             return Handle(param1, param2, param3, api);
         }
+
         protected abstract TResult Handle(TParam1 param1, TParam2 param2, TParam3 param3, IWeb3EthApi api);
     }
 }

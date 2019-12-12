@@ -21,18 +21,24 @@
 
 #endregion
 
+using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Protocol.Deltas;
 using Nethermind.Core;
+using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "getTransactionCount")]
-    public class EthGetTransactionsCountHandler : EthWeb3RequestHandler<Address, UInt256>
+    public class EthGetTransactionsCountHandler : EthWeb3RequestHandler<Address, BlockParameter, UInt256>
     {
-        protected override UInt256 Handle(Address param1, IWeb3EthApi api)
+        protected override UInt256 Handle(Address address, BlockParameter block, IWeb3EthApi api)
         {
-            throw new System.NotImplementedException();
+            Delta delta = api.GetDelta(block);
+            Keccak stateRoot = new Keccak(delta.StateRoot.ToByteArray());
+
+            return api.StateReader.GetAccount(stateRoot, address).Nonce;
         }
     }
 }
