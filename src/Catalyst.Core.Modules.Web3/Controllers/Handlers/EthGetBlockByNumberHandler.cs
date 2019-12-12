@@ -26,7 +26,6 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
 using LibP2P;

@@ -27,7 +27,7 @@ using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    [EthWeb3RequestHandler("eth", "getCode")]
+    [EthWeb3RequestHandler("eth", "eth_getTransactionReceipt")]
     public class EthGetTransactionReceiptHandler : EthWeb3RequestHandler<Keccak, ReceiptForRpc>
     {
         protected override ReceiptForRpc Handle(Keccak param1, IWeb3EthApi api)
