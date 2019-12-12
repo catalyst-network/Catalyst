@@ -63,8 +63,11 @@ namespace Catalyst.Core.Modules.Web3.Controllers
                 return new JsonRpcErrorResponse {Result = null, Error = new Error {Code = (int) ErrorType.MethodNotFound, Data = $"{request.Method}", Message = "Method not found"}};
             }
 
-            object result = handler.Handle(request.Params, _web3EthApi, _jsonSerializer);
-            return new JsonRpcResponse(request, result);
+            lock (_web3EthApi)
+            {
+                object result = handler.Handle(request.Params, _web3EthApi, _jsonSerializer);
+                return new JsonRpcResponse(request, result);
+            }
         }
     }
 }

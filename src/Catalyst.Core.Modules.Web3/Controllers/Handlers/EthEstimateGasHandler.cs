@@ -53,14 +53,10 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             CallOutputTracer callOutputTracer = new CallOutputTracer();
             BlockHeader header = new BlockHeader(Keccak.Zero, Keccak.Zero, Address.Zero, 1, deltaNumber, (long) delta.GasLimit, new UInt256(delta.TimeStamp.Seconds), null);
 
-            lock (api.SyncRoot)
-            {
-                api.StateProvider.StateRoot = root;
-
-                api.Processor.CallAndRestore(transaction, header, callOutputTracer);
-                api.StateProvider.Reset();
-                api.StorageProvider.Reset();
-            }
+            api.StateProvider.StateRoot = root;
+            api.Processor.CallAndRestore(transaction, header, callOutputTracer);
+            api.StateProvider.Reset();
+            api.StorageProvider.Reset();
 
             return callOutputTracer.GasSpent;
         }

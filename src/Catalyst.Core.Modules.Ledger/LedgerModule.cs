@@ -48,7 +48,6 @@ namespace Catalyst.Core.Modules.Ledger
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
             builder.RegisterType<DeltaByNumberRepository>().As<IDeltaByNumberRepository>().SingleInstance();
             builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();
-            builder.RegisterType<StateRootResolver>().As<IStateRootResolver>().SingleInstance();
             builder.RegisterType<Ledger>().As<ILedger>().SingleInstance();
 
             // Web3EthApi

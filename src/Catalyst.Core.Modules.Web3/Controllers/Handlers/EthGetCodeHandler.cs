@@ -34,7 +34,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         protected override byte[] Handle(Address address, IWeb3EthApi api)
         {
             Delta delta = api.GetLatestDelta();
-            var stateRoot = api.StateRootResolver.Resolve(new Keccak(delta.StateRoot.ToByteArray()));
+            var stateRoot = new Keccak(delta.StateRoot.ToByteArray());
             return api.StateReader.GetCode(stateRoot, address);
         }
     }

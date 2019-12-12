@@ -35,10 +35,8 @@ namespace Catalyst.Abstractions.Ledger
     {
         IStateReader StateReader { get; }
         IDeltaResolver DeltaResolver { get; }
-        IStateRootResolver StateRootResolver { get; }
         IDeltaCache DeltaCache { get; }
 
-        object SyncRoot { get; }
         ITransactionProcessor Processor { get; }
         IStorageProvider StorageProvider { get; }
         IStateProvider StateProvider { get; }
