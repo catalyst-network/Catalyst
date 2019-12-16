@@ -415,9 +415,10 @@ namespace Catalyst.Core.Modules.Kvm
         private (Address sender, Address recipient) ExtractSenderAndRecipient(PublicEntry entry)
         {
             var sender = GetAccountAddress(entry.SenderAddress);
-            var recipient = entry.TargetContract == null
+            var targetContract = entry.TargetContract;
+            var recipient = (targetContract == null || targetContract.Length == 0)
                 ? GetAccountAddress(entry.ReceiverAddress)
-                : new Address(entry.TargetContract);
+                : new Address(targetContract);
             if (entry.IsValidDeploymentEntry)
             {
                 recipient = Address.OfContract(sender, _stateProvider.GetNonce(sender));

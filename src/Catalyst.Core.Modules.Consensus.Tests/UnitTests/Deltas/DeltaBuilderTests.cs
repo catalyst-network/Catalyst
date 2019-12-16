@@ -33,7 +33,6 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Kvm;
@@ -49,7 +48,6 @@ using Google.Protobuf;
 using LibP2P;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Logging;
@@ -248,8 +246,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     UInt256.Zero,
                     21000,
                     (20 + i).GFul(),
-                    Bytes.Empty,
-                    receiverPublicKey: i.ToString(),
+                    senderPublicKey: "01234567012345670123456701234567",
+                    receiverPublicKey: "01234567012345670123456701234567",
                     transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
@@ -302,8 +300,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                         ? (uint) DeltaGasLimit / 8U - 10000U
                         : 70000U, // to test scenarios when both single transaction is ignored and all remaining
                     (20 + i).GFul(),
-                    Bytes.Empty,
-                    receiverPublicKey: i.ToString(),
+                    senderPublicKey: "01234567012345670123456701234567",
+                    receiverPublicKey: "01234567012345670123456701234567",
                     transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
