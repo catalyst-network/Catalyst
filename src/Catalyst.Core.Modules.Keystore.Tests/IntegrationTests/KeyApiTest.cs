@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.TestUtils;
@@ -17,12 +18,16 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 
         public KeyApiTest(ITestOutputHelper output) : base(output)
         {
-            _keyStoreService = new KeyStoreService(TestDirectory.FullName);
+            _keyStoreService = new KeyStoreService(FileSystem);
+            _keyStoreService.SetPassphraseAsync(new SecureString()).Wait();
         }
 
         [Fact]
         public async Task Self_Key_Exists()
         {
+            const string name = "self";
+            var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
+
             var keys = await _keyStoreService.ListAsync();
             var self = keys.Single(k => k.Name == "self");
 
@@ -34,12 +39,14 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         [Fact]
         public async Task Export_Import()
         {
+            const string name = "self";
+            var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
             var password = "password".ToCharArray();
-            var pem = await _keyStoreService.ExportAsync("self", password);
+            var pem = await _keyStoreService.ExportAsync(name, password);
             Assert.StartsWith("-----BEGIN ENCRYPTED PRIVATE KEY-----", pem);
 
             var keys = await _keyStoreService.ListAsync();
-            var self = keys.Single(k => k.Name == "self");
+            var self = keys.Single(k => k.Name == name);
 
             await _keyStoreService.RemoveAsync("clone");
             var clone = await _keyStoreService.ImportAsync("clone", pem, password);
@@ -53,13 +60,16 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             var password = "password".ToCharArray();
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var x = _keyStoreService.ExportAsync("unknow", password).Result;
+                var x = _keyStoreService.ExportAsync("unknown", password).Result;
             });
         }
 
         [Fact]
         public async Task Import_Wrong_Password()
         {
+            const string name = "self";
+            var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
+
             var password = "password".ToCharArray();
             var pem = await _keyStoreService.ExportAsync("self", password);
 

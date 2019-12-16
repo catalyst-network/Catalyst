@@ -104,13 +104,13 @@ namespace Catalyst.Core.Modules.Consensus
                     return delta;
                 })
                .Where(d => d != null)
-               .Subscribe(d =>
+               .Subscribe(async d =>
                 {
                     _logger.Information("New Delta following {deltaHash} published", 
                         d.PreviousDeltaDfsHash);
 
-                    var newCid = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
-                       .ConfigureAwait(false).GetAwaiter().GetResult();
+                    var newCid = await _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
+                       .ConfigureAwait(false);
                     var previousHash = d.PreviousDeltaDfsHash.ToByteArray().ToCid();
 
                     _deltaHashProvider.TryUpdateLatestHash(previousHash, newCid.Hash);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Autofac;
 using Catalyst.Abstractions.Cryptography;
@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             containerBuilder.RegisterModule<HashingModule>();
             containerBuilder.RegisterType<DhtService>().As<IDhtService>().SingleInstance();
             containerBuilder.RegisterType<DhtApi>().As<IDhtApi>().SingleInstance();
-            containerBuilder.RegisterInstance(new KeyStoreService(Path.Combine(filesystem.TestDirectory.FullName, "Keystore"))).As<IKeyStoreService>().SingleInstance();
+            containerBuilder.RegisterInstance(new KeyStoreService(filesystem.FileSystem)).As<IKeyStoreService>().SingleInstance();
             containerBuilder.RegisterModule(new DfsModule());
 
             var container = containerBuilder.Build();

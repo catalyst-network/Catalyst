@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
@@ -18,14 +18,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 
         public CmsTest(ITestOutputHelper output) : base(output)
         {
-            _keyStoreService = new KeyStoreService(FileSystem.Path.ToString())
+            _keyStoreService = new KeyStoreService(FileSystem)
             {
                 Options = new DfsOptions().KeyChain
             };
             var securePassword = new SecureString();
 
-            foreach (char c in "mypassword")
-                securePassword.AppendChar(c);
+            "mypassword".ToList().ForEach(c => securePassword.AppendChar(c));
 
             securePassword.MakeReadOnly();
             _keyStoreService.SetPassphraseAsync(securePassword).ConfigureAwait(false);

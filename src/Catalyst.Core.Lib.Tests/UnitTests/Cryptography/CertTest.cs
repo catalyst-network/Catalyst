@@ -1,4 +1,5 @@
-﻿using System.Security;
+using System.Linq;
+using System.Security;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Keystore;
@@ -17,14 +18,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 
         public CertTest(ITestOutputHelper output) : base(output)
         {
-            _keyStoreService = new KeyStoreService(FileSystem.Path.ToString())
+            _keyStoreService = new KeyStoreService(FileSystem)
             {
                 Options = new DfsOptions().KeyChain
             };
             var securePassword = new SecureString();
 
-            foreach (char c in "mypassword")
-                securePassword.AppendChar(c);
+            "mypassword".ToList().ForEach(c => securePassword.AppendChar(c));
 
             securePassword.MakeReadOnly();
             _keyStoreService.SetPassphraseAsync(securePassword).ConfigureAwait(false);

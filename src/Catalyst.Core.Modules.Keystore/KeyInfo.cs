@@ -1,4 +1,4 @@
-﻿using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Cryptography;
 using MultiFormats;
 
 namespace Catalyst.Core.Modules.Keystore

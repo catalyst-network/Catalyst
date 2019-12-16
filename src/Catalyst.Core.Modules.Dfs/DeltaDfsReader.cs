@@ -50,24 +50,21 @@ namespace Catalyst.Core.Modules.Dfs
         {
             try
             {
-                using (var responseStream = _dfsService.UnixFsApi.ReadFileAsync(cid, cancellationToken)
+                using var responseStream = _dfsService.UnixFsApi.ReadFileAsync(cid, cancellationToken)
                    .ConfigureAwait(false)
                    .GetAwaiter()
-                   .GetResult()
-                )
+                   .GetResult();
+                var uncheckedDelta = Delta.Parser.ParseFrom(responseStream);
+                var isValid = uncheckedDelta.IsValid();
+                if (!isValid)
                 {
-                    var uncheckedDelta = Delta.Parser.ParseFrom(responseStream);
-                    var isValid = uncheckedDelta.IsValid();
-                    if (!isValid)
-                    {
-                        _logger.Warning("Retrieved an invalid delta from the Dfs at address {hash}");
-                        delta = default;
-                        return false;
-                    }
-
-                    delta = uncheckedDelta;
-                    return true;
+                    _logger.Warning("Retrieved an invalid delta from the Dfs at address {hash}");
+                    delta = default;
+                    return false;
                 }
+
+                delta = uncheckedDelta;
+                return true;
             }
             catch (Exception e)
             {

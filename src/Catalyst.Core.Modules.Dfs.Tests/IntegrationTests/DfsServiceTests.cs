@@ -141,10 +141,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public async Task Can_Dispose()
         {
-            using (var node = TestDfs.GetTestDfs(_output))
-            {
-                await node.StartAsync();
-            }
+            using var node = TestDfs.GetTestDfs(_output);
+            await node.StartAsync();
         }
         
         [Fact]

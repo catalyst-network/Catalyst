@@ -22,9 +22,11 @@
 #endregion
 
 using Autofac;
+using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
@@ -32,6 +34,7 @@ using Catalyst.Core.Lib.Kernel;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Dfs.CoreApi;
+using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
 using Lib.P2P.PubSub;
@@ -63,6 +66,9 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<PubSubApi>().As<IPubSubApi>().SingleInstance();
             builder.RegisterType<StatsApi>().As<IStatsApi>().SingleInstance();
             builder.RegisterType<SwarmApi>().As<ISwarmApi>().SingleInstance();
+            builder.RegisterType<DhtApi>().As<IDhtApi>().SingleInstance();
+            builder.RegisterType<MigrationManager>().As<IMigrationManager>().SingleInstance();
+            builder.RegisterType<DeltaDfsReader>().As<IDeltaDfsReader>().SingleInstance();
         }
 
         protected override void LoadService(ContainerBuilder builder) 

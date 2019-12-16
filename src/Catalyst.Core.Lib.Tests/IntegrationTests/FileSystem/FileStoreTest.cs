@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests
         {
             get
             {
-                var folder = Path.Combine(FileSystem.Directory.FileSystem.Path.ToString(), "test-filestore");
+                var folder = Path.Combine(FileSystem.GetCatalystDataDir().FullName, "test-filestore");
                 if (!Directory.Exists(folder))
                     Directory.CreateDirectory(folder);
 

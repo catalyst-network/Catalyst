@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,22 +29,20 @@ namespace Catalyst.Core.Lib.Config
 
         public ConfigApi(IFileSystem fileSystem) { _fileSystem = fileSystem; }
 
-        public async Task<JObject> GetAsync(CancellationToken cancel = default(CancellationToken))
+        public async Task<JObject> GetAsync(CancellationToken cancel = default)
         {
             // If first time, load the configuration into memory.
             if (_configuration != null)
             {
                 return _configuration;
             }
-            
+
             var path = Path.Combine(_fileSystem.GetCatalystDataDir().ToString());
             if (File.Exists(path))
             {
-                using (var reader = File.OpenText(path))
-                using (var jtr = new JsonTextReader(reader))
-                {
-                    _configuration = await JObject.LoadAsync(jtr, cancel).ConfigureAwait(false);
-                }
+                using var reader = File.OpenText(path);
+                using var jtr = new JsonTextReader(reader);
+                _configuration = await JObject.LoadAsync(jtr, cancel).ConfigureAwait(false);
             }
             else
             {
@@ -54,7 +52,7 @@ namespace Catalyst.Core.Lib.Config
             return _configuration;
         }
 
-        public async Task<JToken> GetAsync(string key, CancellationToken cancel = default(CancellationToken))
+        public async Task<JToken> GetAsync(string key, CancellationToken cancel = default)
         {
             JToken config = await GetAsync(cancel).ConfigureAwait(false);
             var keys = key.Split('.');
@@ -102,18 +100,16 @@ namespace Catalyst.Core.Lib.Config
             await SaveAsync().ConfigureAwait(false);
         }
 
-        async Task SaveAsync()
+        private async Task SaveAsync()
         {
-            var path = Path.Combine(Constants.CatalystDataDir, "config");
-            using (var fs = File.OpenWrite(path))
-            using (var writer = new StreamWriter(fs))
-            using (var jtw = new JsonTextWriter(writer)
+            var path = Path.Combine(_fileSystem.GetCatalystDataDir().FullName, "config");
+            await using var fs = File.OpenWrite(path);
+            await using var writer = new StreamWriter(fs);
+            using var jtw = new JsonTextWriter(writer)
             {
                 Formatting = Formatting.Indented
-            })
-            {
-                await _configuration.WriteToAsync(jtw).ConfigureAwait(false);
-            }
+            };
+            await _configuration.WriteToAsync(jtw).ConfigureAwait(false);
         }
     }
 }

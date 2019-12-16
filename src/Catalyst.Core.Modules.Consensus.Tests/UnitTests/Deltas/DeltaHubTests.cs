@@ -149,16 +149,17 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             deltaCid.Should().NotBeNull();
             deltaCid.Should().Be(cid);
 
-            await _dfsService.ReceivedWithAnyArgs(3).UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
+            await _dfsService.UnixFsApi.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
         }
 
         [Fact]
         public async Task PublishDeltaToIpfsAsync_should_retry_until_cancelled()
         {
             var delta = DeltaHelper.GetDelta(_hashProvider);
-            const string dfsHash = "success";
+            var cid = _hashProvider.ComputeUtf8MultiHash("success").ToCid();
+
             var fakeBlock = Substitute.For<IFileSystemNode>();
-            fakeBlock.Id.Returns(dfsHash.ToCid());
+            fakeBlock.Id.Returns(cid);
             
             var cancellationSource = new CancellationTokenSource();
             var cancellationToken = cancellationSource.Token;

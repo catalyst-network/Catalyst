@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,20 +42,16 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             AddFileOptions options = default,
             CancellationToken cancel = default)
         {
-            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                return await AddAsync(stream, Path.GetFileName(path), options, cancel).ConfigureAwait(false);
-            }
+            await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return await AddAsync(stream, Path.GetFileName(path), options, cancel).ConfigureAwait(false);
         }
 
         public async Task<IFileSystemNode> AddTextAsync(string text,
             AddFileOptions options = default,
             CancellationToken cancel = default)
         {
-            await using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(text), false))
-            {
-                return await AddAsync(ms, "", options, cancel).ConfigureAwait(false);
-            }
+            await using var ms = new MemoryStream(Encoding.UTF8.GetBytes(text), false);
+            return await AddAsync(ms, "", options, cancel).ConfigureAwait(false);
         }
 
         public async Task<IFileSystemNode> AddAsync(Stream stream,
