@@ -75,6 +75,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private readonly ILifetimeScope _scope;
         private readonly ContainerProvider _containerProvider;
         private readonly IDeltaByNumberRepository _deltaByNumber;
+        private readonly ITransactionReceiptRepository _receipts;
 
         public PoaTestNode(string name,
             IPrivateKey privateKey,
@@ -107,6 +108,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _peerRepository.Add(peersInRepo);
 
             _deltaByNumber = new DeltaByNumberRepository(new InMemoryRepository<DeltaByNumber, string>());
+            _receipts = new TransactionReceiptRepository(new InMemoryRepository<TransactionReceipt, string>());
 
             _containerProvider = new ContainerProvider(new[]
                 {

@@ -27,7 +27,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Ledger.Repository 
 {
-    class TransactionReceiptRepository : ITransactionReceiptRepository
+    public class TransactionReceiptRepository : ITransactionReceiptRepository
     {
         readonly IRepository<TransactionReceipt, string> _repository;
 
