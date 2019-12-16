@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
@@ -37,6 +38,7 @@ using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Dawn;
+using Google.Protobuf;
 using LibP2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
@@ -287,7 +289,7 @@ namespace Catalyst.Core.Modules.Ledger
             readonly long _deltaNumber;
             readonly Keccak _deltaHash;
             readonly List<TransactionReceipt> _txReceipts;
-            int _currentIndex = 0;
+            int _currentIndex;
 
             public ReceiptDeltaTracer(Delta delta, Cid deltaHash, long deltaNumber)
             {
@@ -330,13 +332,23 @@ namespace Catalyst.Core.Modules.Ledger
                     DeltaNumber = _deltaNumber,
                     Index = _currentIndex,
                     GasUsed = spentGas,
-                    Sender = new Address(entry.SenderAddress.ToByteArray()),
+                    Sender = GetAccountAddress(entry.SenderAddress),
                     ContractAddress = entry.IsContractDeployment ? recipient : null
                 };
 
                 _currentIndex += 1;
 
                 return txReceipt;
+            }
+
+            private static Address GetAccountAddress(ByteString publicKeyByteString)
+            {
+                if (publicKeyByteString == null || publicKeyByteString.IsEmpty)
+                {
+                    return null;
+                }
+
+                return publicKeyByteString.ToByteArray().ToKvmAddress();
             }
 
             public bool IsTracingActions => false;

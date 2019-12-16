@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -32,7 +32,12 @@ namespace Catalyst.Core.Modules.Kvm
     {
         public static Address ToKvmAddress(this IPublicKey publicKey)
         {
-            return new Address(ValueKeccak.Compute(publicKey.Bytes).BytesAsSpan.SliceWithZeroPadding(0, 20).ToArray());
+            return ToKvmAddress(publicKey.Bytes);
+        }
+
+        public static Address ToKvmAddress(this byte[] publicKey)
+        {
+            return new Address(ValueKeccak.Compute(publicKey).BytesAsSpan.SliceWithZeroPadding(0, 20).ToArray());
         }
     }
 }
