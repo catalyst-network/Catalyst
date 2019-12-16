@@ -80,6 +80,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private readonly IPrivateKey _senderPrivateKey;
         private readonly IPublicKey _senderPublicKey;
         private readonly SigningContext _signingContext;
+        private readonly ITransactionReceiptRepository _receipts;
 
         public LedgerKvmTests()
         {
@@ -95,6 +96,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
             _deltaByNumber = Substitute.For<IDeltaByNumberRepository>();
+            _receipts = Substitute.For<ITransactionReceiptRepository>();
 
             _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
 
@@ -148,7 +150,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
             var classUnderTest = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
-                _fakeRepository, _deltaByNumber, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
+                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
 
             _testScheduler.Start();
         }

@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 Hash = GetValue(deltaHash),
                 Number = blockNumber,
                 GasLimit = (long) delta.GasLimit,
-                GasUsed = (long) delta.GasUsed,
+                GasUsed = delta.GasUsed,
                 Timestamp = new UInt256(delta.TimeStamp.Seconds),
                 ParentHash = blockNumber == 0 ? hash0 : GetValue(delta.PreviousDeltaDfsHash),
                 StateRoot = GetValue(delta.MerkleRoot),

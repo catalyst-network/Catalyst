@@ -21,22 +21,14 @@
 
 #endregion
 
-using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Kvm;
-using Nethermind.Store;
-using Nethermind.Evm;
+using Catalyst.Abstractions.Ledger.Models;
+using Nethermind.Core.Crypto;
 
-namespace Catalyst.Abstractions.Ledger
+namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    public interface IWeb3EthApi
+    public interface ITransactionReceiptRepository
     {
-        IStateReader StateReader { get; }
-        IDeltaResolver DeltaResolver { get; }
-        IDeltaCache DeltaCache { get; }
-
-        ITransactionProcessor Processor { get; }
-        IStorageProvider StorageProvider { get; }
-        IStateProvider StateProvider { get; }
-        ITransactionReceiptResolver ReceiptResolver { get; }
+        void Put(TransactionReceipt receipt);
+        bool TryFind(Keccak hash, out TransactionReceipt receipt);
     }
 }

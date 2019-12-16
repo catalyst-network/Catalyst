@@ -23,6 +23,7 @@
 
 using System.Linq;
 using System.Numerics;
+using Catalyst.Abstractions.Ledger.Models;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Json;
@@ -34,22 +35,19 @@ namespace Catalyst.Abstractions.Kvm.Models
     {
         public ReceiptForRpc() { }
 
-        public ReceiptForRpc(Keccak txHash, TxReceipt receipt)
+        public ReceiptForRpc(Keccak txHash, TransactionReceipt receipt)
         {
             TransactionHash = txHash;
             TransactionIndex = receipt.Index;
-            BlockHash = receipt.BlockHash;
-            BlockNumber = receipt.BlockNumber;
+            BlockHash = receipt.DeltaHash;
+            BlockNumber = receipt.DeltaNumber;
             CumulativeGasUsed = receipt.GasUsedTotal;
             GasUsed = receipt.GasUsed;
             From = receipt.Sender;
             To = receipt.Recipient;
             ContractAddress = receipt.ContractAddress;
             Logs = receipt.Logs.Select((l, idx) => new LogEntryForRpc(receipt, l, idx)).ToArray();
-            LogsBloom = receipt.Bloom;
-            Root = receipt.PostTransactionState;
             Status = receipt.StatusCode;
-            Error = receipt.Error;
         }
 
         [JsonConverter(typeof(KeccakConverter))]
@@ -80,9 +78,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         public Address ContractAddress { get; set; }
         
         public LogEntryForRpc[] Logs { get; set; }
-        public Bloom LogsBloom { get; set; }
-        public Keccak Root { get; set; }
+
         public BigInteger Status { get; set; }
-        public string Error { get; set; }
     }
 }

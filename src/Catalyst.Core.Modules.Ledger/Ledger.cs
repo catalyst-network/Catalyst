@@ -22,11 +22,13 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
@@ -36,7 +38,10 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using LibP2P;
+using Nethermind.Core;
 using Nethermind.Core.Crypto;
+using Nethermind.Dirichlet.Numerics;
+using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
 using Nethermind.Store;
 using Serilog;
@@ -59,6 +64,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ISnapshotableDb _stateDb;
         private readonly ISnapshotableDb _codeDb;
         private readonly IDeltaByNumberRepository _deltas;
+        private readonly ITransactionReceiptRepository _receipts;
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IMapperProvider _mapperProvider;
@@ -78,6 +84,7 @@ namespace Catalyst.Core.Modules.Ledger
             ISnapshotableDb codeDb,
             IAccountRepository accounts,
             IDeltaByNumberRepository deltas,
+            ITransactionReceiptRepository receipts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
             IMempool<PublicEntryDao> mempool,
@@ -95,6 +102,7 @@ namespace Catalyst.Core.Modules.Ledger
             _mempool = mempool;
             _mapperProvider = mapperProvider;
             _logger = logger;
+            _receipts = receipts;
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
             LatestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
@@ -200,8 +208,10 @@ namespace Catalyst.Core.Modules.Ledger
                     return;
                 }
 
+                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash, LatestKnownDeltaNumber);
+
                 // add here a receipts tracer or similar, depending on what data needs to be stored for each contract
-                _deltaExecutor.Execute(nextDeltaInChain, NullTxTracer.Instance);
+                _deltaExecutor.Execute(nextDeltaInChain, tracer);
 
                 // this code should be brought in / used as a reference if reorganization behaviour is known
                 //// delta testing here (for delta production)
@@ -214,6 +224,12 @@ namespace Catalyst.Core.Modules.Ledger
                 ////   _stateDb.Commit();
                 ////   _codeDb.Commit();
                 //// }
+
+                // store receipts
+                foreach (var receipt in tracer.Receipts)
+                {
+                    _receipts.Put(receipt);
+                }
 
                 _stateDb.Commit();
                 _codeDb.Commit();
@@ -263,6 +279,105 @@ namespace Catalyst.Core.Modules.Ledger
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        class ReceiptDeltaTracer : ITxTracer
+        {
+            readonly Delta _delta;
+            readonly long _deltaNumber;
+            readonly Keccak _deltaHash;
+            readonly List<TransactionReceipt> _txReceipts;
+            int _currentIndex = 0;
+
+            public ReceiptDeltaTracer(Delta delta, Cid deltaHash, long deltaNumber)
+            {
+                _delta = delta;
+                _deltaNumber = deltaNumber;
+                _deltaHash = new Keccak(deltaHash.Hash.Digest);
+                _txReceipts = new List<TransactionReceipt>(delta.PublicEntries.Count);
+            }
+
+            public IEnumerable<TransactionReceipt> Receipts => _txReceipts;
+
+            public bool IsTracingReceipt => true;
+
+            public void MarkAsSuccess(Address recipient, long gasSpent, byte[] output, LogEntry[] logs)
+            {
+                _txReceipts.Add(BuildReceipt(recipient, gasSpent, StatusCode.Success, logs));
+            }
+
+            public void MarkAsFailed(Address recipient, long gasSpent, byte[] output, string error)
+            {
+                _txReceipts.Add(BuildFailedReceipt(recipient, gasSpent));
+            }
+
+            private TransactionReceipt BuildFailedReceipt(Address recipient, long gasSpent)
+            {
+                return BuildReceipt(recipient, gasSpent, StatusCode.Failure, LogEntry.EmptyLogs);
+            }
+
+            private TransactionReceipt BuildReceipt(Address recipient, long spentGas, byte statusCode, LogEntry[] logEntries)
+            {
+                PublicEntry entry = _delta.PublicEntries[_currentIndex];
+
+                TransactionReceipt txReceipt = new TransactionReceipt
+                {
+                    Logs = logEntries,
+                    GasUsedTotal = _delta.GasUsed,
+                    StatusCode = statusCode,
+                    Recipient = entry.IsContractDeployment ? null : recipient,
+                    DeltaHash = _deltaHash,
+                    DeltaNumber = _deltaNumber,
+                    Index = _currentIndex,
+                    GasUsed = spentGas,
+                    Sender = new Address(entry.SenderAddress.ToByteArray()),
+                    ContractAddress = entry.IsContractDeployment ? recipient : null
+                };
+
+                _currentIndex += 1;
+
+                return txReceipt;
+            }
+
+            public bool IsTracingActions => false;
+            public bool IsTracingOpLevelStorage => false;
+            public bool IsTracingMemory => false;
+            public bool IsTracingInstructions => false;
+            public bool IsTracingCode => false;
+            public bool IsTracingStack => false;
+            public bool IsTracingState => false;
+            public void ReportBalanceChange(Address address, UInt256? before, UInt256? after) { throw new NotImplementedException(); }
+            public void ReportCodeChange(Address address, byte[] before, byte[] after) { throw new NotImplementedException(); }
+            public void ReportNonceChange(Address address, UInt256? before, UInt256? after) { throw new NotImplementedException(); }
+            public void ReportStorageChange(StorageAddress storageAddress, byte[] before, byte[] after) { throw new NotImplementedException(); }
+            public void StartOperation(int depth, long gas, Instruction opcode, int pc) { throw new NotImplementedException(); }
+            public void ReportOperationError(EvmExceptionType error) { throw new NotImplementedException(); }
+            public void ReportOperationRemainingGas(long gas) { throw new NotImplementedException(); }
+            public void SetOperationStack(List<string> stackTrace) { throw new NotImplementedException(); }
+            public void ReportStackPush(Span<byte> stackItem) { throw new NotImplementedException(); }
+            public void SetOperationMemory(List<string> memoryTrace) { throw new NotImplementedException(); }
+            public void SetOperationMemorySize(ulong newSize) { throw new NotImplementedException(); }
+            public void ReportMemoryChange(long offset, Span<byte> data) { throw new NotImplementedException(); }
+            public void ReportStorageChange(Span<byte> key, Span<byte> value) { throw new NotImplementedException(); }
+            public void SetOperationStorage(Address address, UInt256 storageIndex, byte[] newValue, byte[] currentValue) { throw new NotImplementedException(); }
+            public void ReportSelfDestruct(Address address, UInt256 balance, Address refundAddress) { throw new NotImplementedException(); }
+
+            public void ReportAction(long gas,
+                UInt256 value,
+                Address @from,
+                Address to,
+                byte[] input,
+                ExecutionType callType,
+                bool isPrecompileCall = false)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ReportActionEnd(long gas, byte[] output) { throw new NotImplementedException(); }
+            public void ReportActionError(EvmExceptionType evmExceptionType) { throw new NotImplementedException(); }
+            public void ReportActionEnd(long gas, Address deploymentAddress, byte[] deployedCode) { throw new NotImplementedException(); }
+            public void ReportByteCode(byte[] byteCode) { throw new NotImplementedException(); }
+            public void ReportRefund(long gasAvailable) { throw new NotImplementedException(); }
         }
     }
 }

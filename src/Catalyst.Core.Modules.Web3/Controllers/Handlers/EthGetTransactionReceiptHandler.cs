@@ -21,18 +21,37 @@
 
 #endregion
 
+using System.Linq;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Ledger.Models;
 using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    [EthWeb3RequestHandler("eth", "eth_getTransactionReceipt")]
+    [EthWeb3RequestHandler("eth", "getTransactionReceipt")]
     public class EthGetTransactionReceiptHandler : EthWeb3RequestHandler<Keccak, ReceiptForRpc>
     {
-        protected override ReceiptForRpc Handle(Keccak param1, IWeb3EthApi api)
+        protected override ReceiptForRpc Handle(Keccak txHash, IWeb3EthApi api)
         {
-            throw new System.NotImplementedException();
+            TransactionReceipt receipt = api.ReceiptResolver.Find(txHash);
+
+            var receiptForRpc = new ReceiptForRpc
+            {
+                TransactionHash = txHash,
+                TransactionIndex = receipt.Index,
+                BlockHash = receipt.DeltaHash,
+                BlockNumber = receipt.DeltaNumber,
+                CumulativeGasUsed = receipt.GasUsedTotal,
+                GasUsed = receipt.GasUsed,
+                From = receipt.Sender,
+                To = receipt.Recipient,
+                ContractAddress = receipt.ContractAddress,
+                Logs = receipt.Logs.Select((l, idx) => new LogEntryForRpc(receipt, l, idx)).ToArray(),
+                Status = receipt.StatusCode,
+            };
+
+            return receiptForRpc;
         }
     }
 }

@@ -22,16 +22,12 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
-using SharpRepository.EfCoreRepository;
-using SharpRepository.Repository.Caching;
+using Nethermind.Core.Crypto;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Abstractions.Kvm
 {
-    class DeltaByNumberEfRepository : EfCoreRepository<DeltaByNumber, string>
+    public interface ITransactionReceiptResolver
     {
-        public DeltaByNumberEfRepository(IDbContext dbContext,
-            ICachingStrategy<DeltaByNumber, string> cachingStrategy = null) :
-            base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy) { }
+        TransactionReceipt Find(Keccak hash);
     }
 }

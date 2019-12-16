@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.Ledger.Models;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Json;
@@ -40,14 +41,14 @@ namespace Catalyst.Abstractions.Kvm.Models
             Topics = logEntry.Topics;
         }
 
-        public LogEntryForRpc(TxReceipt receipt, LogEntry logEntry, int index)
+        public LogEntryForRpc(TransactionReceipt receipt, LogEntry logEntry, int index)
         {
             Removed = false;
             LogIndex = index;
             TransactionIndex = receipt.Index;
-            TransactionHash = receipt.TxHash;
-            BlockHash = receipt.BlockHash;
-            BlockNumber = receipt.BlockNumber;
+            TransactionHash = receipt.DeltaHash;
+            BlockHash = receipt.DeltaHash;
+            BlockNumber = receipt.DeltaNumber;
             Address = logEntry.LoggersAddress;
             Data = logEntry.Data;
             Topics = logEntry.Topics;
