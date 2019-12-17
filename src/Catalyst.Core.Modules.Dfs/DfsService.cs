@@ -39,6 +39,8 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Common.Logging;
 using Common.Logging.Serilog;
@@ -204,7 +206,7 @@ namespace Catalyst.Core.Modules.Dfs
                 var localPeer = new Peer
                 {
                     Id = self.Id,
-                    PublicKey = KeyApi.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult().Id.ToString(),
+                    PublicKey = KeyApi.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult().Id.ToString().FromBase58().ToByteString().ToBase64(),
                     ProtocolVersion = "ipfs/0.1.0"
                 };
                 var version = typeof(DfsService).GetTypeInfo().Assembly.GetName().Version;

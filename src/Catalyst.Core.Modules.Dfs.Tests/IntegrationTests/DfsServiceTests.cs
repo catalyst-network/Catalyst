@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
@@ -40,6 +41,7 @@ using Lib.P2P;
 using Lib.P2P.Cryptography;
 using MultiFormats;
 using MultiFormats.Registry;
+using Nethermind.HashLib;
 using Newtonsoft.Json.Linq;
 using NSubstitute;
 using Serilog;
@@ -59,7 +61,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
         public DfsServiceTests(ITestOutputHelper output) : base(output)
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = this.ContainerProvider.Container.Resolve<IHashProvider>();
 
             _output = output;
             var passwordReader = Substitute.For<IPasswordManager>();

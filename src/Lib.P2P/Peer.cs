@@ -102,8 +102,9 @@ namespace Lib.P2P
             {
                 return false;
             }
-            
-            return PublicKey == null || Id.Matches(Convert.FromBase64String(PublicKey));
+
+            var pubKeyBytes = Convert.FromBase64String(PublicKey);
+            return PublicKey == null || Id.Matches(pubKeyBytes);
         }
 
         /// <inheritdoc />

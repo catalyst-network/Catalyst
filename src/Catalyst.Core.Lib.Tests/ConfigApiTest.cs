@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs.CoreApi;
 #region LICENSE
 
 /**
@@ -24,6 +21,9 @@ using Catalyst.Abstractions.Dfs.CoreApi;
 
 #endregion
 
+using System;
+using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.Config;
 using Catalyst.TestUtils;
 using Newtonsoft.Json.Linq;

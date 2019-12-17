@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Hashing;
 using Google.Protobuf;
 using Lib.P2P;
 using MultiFormats;
@@ -21,7 +22,7 @@ namespace Catalyst.Core.Lib.Dag
     public class DagNode : IDagNode, IEquatable<DagNode>
     {
         private Cid id;
-        string hashAlgorithm = MultiHash.DefaultAlgorithmName;
+        private IHashProvider _hashProvider;
         long? size;
 
         /// <summary>
@@ -39,13 +40,13 @@ namespace Catalyst.Core.Lib.Dag
         ///   <see cref="MultiHash.DefaultAlgorithmName"/>.
         /// </param>
         public DagNode(byte[] data,
-            IEnumerable<IMerkleLink> links = null,
-            string hashAlgorithm = MultiHash.DefaultAlgorithmName)
+            IHashProvider hashProvider,
+            IEnumerable<IMerkleLink> links = null)
         {
             this.DataBytes = data ?? (new byte[0]);
             this.Links = (links ?? (new DagLink[0]))
                .OrderBy(link => link.Name ?? "");
-            this.hashAlgorithm = hashAlgorithm;
+            this._hashProvider = hashProvider;
         }
 
         /// <summary>
@@ -112,10 +113,6 @@ namespace Catalyst.Core.Lib.Dag
             set
             {
                 id = value;
-                if (id != null)
-                {
-                    hashAlgorithm = id.Hash.Algorithm.Name;
-                }
             }
         }
 
@@ -153,7 +150,7 @@ namespace Catalyst.Core.Lib.Dag
         public IDagNode AddLinks(IEnumerable<IMerkleLink> links)
         {
             var all = Links.Union(links);
-            return new DagNode(DataBytes, all, hashAlgorithm);
+            return new DagNode(DataBytes, this._hashProvider, all);
         }
 
         /// <summary>
@@ -196,7 +193,7 @@ namespace Catalyst.Core.Lib.Dag
         {
             var ignore = links.ToLookup(link => link.Id);
             var some = Links.Where(link => !ignore.Contains(link.Id));
-            return new DagNode(DataBytes, some, hashAlgorithm);
+            return new DagNode(DataBytes, this._hashProvider, some);
         }
 
         /// <summary>
@@ -300,13 +297,11 @@ namespace Catalyst.Core.Lib.Dag
 
         void ComputeHash()
         {
-            using (var ms = new MemoryStream())
-            {
-                Write(ms);
-                size = ms.Position;
-                ms.Position = 0;
-                id = MultiHash.ComputeHash(ms, hashAlgorithm);
-            }
+            using var ms = new MemoryStream();
+            Write(ms);
+            size = ms.Position;
+            ms.Position = 0;
+            id = this._hashProvider.ComputeMultiHash(ms);
         }
 
         void ComputeSize()

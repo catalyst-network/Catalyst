@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,9 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Dfs.UnixFileSystem;
+using Catalyst.Core.Modules.Hashing;
 using Lib.P2P;
+using MultiFormats.Registry;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
@@ -18,10 +21,12 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         internal static readonly IDagNode EmptyDirectory;
 
         private readonly IBlockApi _blockApi;
+        private readonly IHashProvider _hashProvider;
 
         static ObjectApi()
         {
-            EmptyNode = new DagNode(new byte[0]);
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            EmptyNode = new DagNode(new byte[0], hashProvider);
             var _ = EmptyNode.Id;
 
             var dm = new DataMessage
@@ -31,7 +36,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             using (var pb = new MemoryStream())
             {
                 ProtoBuf.Serializer.Serialize(pb, dm);
-                EmptyDirectory = new DagNode(pb.ToArray());
+                EmptyDirectory = new DagNode(pb.ToArray(), hashProvider);
             }
 
             _ = EmptyDirectory.Id;
@@ -40,6 +45,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public ObjectApi(IBlockApi blockApi)
         {
             _blockApi = blockApi;
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
         public async Task<Stream> DataAsync(Cid id, CancellationToken cancel = default)
@@ -89,7 +95,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             IEnumerable<IMerkleLink> links = null,
             CancellationToken cancel = default)
         {
-            var node = new DagNode(data, links);
+            var node = new DagNode(data, _hashProvider, links);
             return PutAsync(node, cancel);
         }
 

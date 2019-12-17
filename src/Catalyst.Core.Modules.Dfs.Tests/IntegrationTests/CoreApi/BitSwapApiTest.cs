@@ -1,17 +1,20 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange.Protocols;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Dfs.BlockExchange.Protocols;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
+using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
 using Lib.P2P;
 using MultiFormats;
+using MultiFormats.Registry;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,6 +22,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public sealed class BitSwapApiTest
     {
+        private readonly IHashProvider _hashProvider;
         private readonly IDfsService _dfsService;
         private readonly IDfsService _dfsServiceOther;
         private readonly ITestOutputHelper _testOutputHelper;
@@ -28,6 +32,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             _testOutputHelper = testOutputHelper;
             _dfsService = TestDfs.GetTestDfs(output, "dfs-1");
             _dfsServiceOther = TestDfs.GetTestDfs(output, "dfs-2");
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
         [Fact]
@@ -38,7 +43,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             try
             {
                 var cts = new CancellationTokenSource();
-                var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block 2"));
+                var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block 2"), _hashProvider);
                 Task wantTask = _dfsService.BitSwapApi.GetAsync(block.Id, cts.Token);
 
                 var endTime = DateTime.Now.AddSeconds(10);
@@ -76,7 +81,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             try
             {
                 var cts = new CancellationTokenSource();
-                var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block"));
+                var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block"), _hashProvider);
                 Task wantTask = _dfsService.BitSwapApi.GetAsync(block.Id, cts.Token);
 
                 var endTime = DateTime.Now.AddSeconds(10);
@@ -441,7 +446,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task GetBlock_Timeout()
         {
-            var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block"));
+            var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block"), _hashProvider);
             await _dfsService.StartAsync();
             
             try

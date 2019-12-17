@@ -1,21 +1,31 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Dag;
+using Catalyst.Core.Modules.Hashing;
 using Google.Protobuf;
 using MultiFormats;
+using MultiFormats.Registry;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     public class DagNodeTest
     {
+        private readonly IHashProvider _hashProvider;
+
+        public DagNodeTest()
+        {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256"));
+        }
+
         [Fact]
         public void EmptyDAG()
         {
-            var node = new DagNode((byte[]) null);
+            var node = new DagNode((byte[]) null, _hashProvider);
             Assert.Equal(0, node.DataBytes.Length);
             Assert.Equal(0, node.Links.Count());
             Assert.Equal(0, node.Size);
@@ -28,7 +38,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void DataOnlyDAG()
         {
             var abc = Encoding.UTF8.GetBytes("abc");
-            var node = new DagNode(abc);
+            var node = new DagNode(abc, _hashProvider);
             
             Assert.Equal(abc, node.DataBytes);
             Assert.Equal(0, node.Links.Count());
@@ -42,10 +52,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void LinkOnlyDAG()
         {
             var a = Encoding.UTF8.GetBytes("a");
-            var anode = new DagNode(a);
+            var anode = new DagNode(a, _hashProvider);
             var alink = anode.ToLink("a");
 
-            var node = new DagNode(null, new[]
+            var node = new DagNode(null, _hashProvider, new[]
             {
                 alink
             });
@@ -61,14 +71,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void MultipleLinksOnlyDAG()
         {
             var a = Encoding.UTF8.GetBytes("a");
-            var anode = new DagNode(a);
+            var anode = new DagNode(a, _hashProvider);
             var alink = anode.ToLink("a");
 
             var b = Encoding.UTF8.GetBytes("b");
-            var bnode = new DagNode(b);
+            var bnode = new DagNode(b, _hashProvider);
             var blink = bnode.ToLink("b");
 
-            var node = new DagNode(null, new[]
+            var node = new DagNode(null, _hashProvider, new[]
             {
                 alink, blink
             });
@@ -83,15 +93,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void MultipleLinksDataDAG()
         {
             var a = Encoding.UTF8.GetBytes("a");
-            var anode = new DagNode(a);
+            var anode = new DagNode(a, _hashProvider);
             var alink = anode.ToLink("a");
 
             var b = Encoding.UTF8.GetBytes("b");
-            var bnode = new DagNode(b);
+            var bnode = new DagNode(b, _hashProvider);
             var blink = bnode.ToLink("b");
 
             var ab = Encoding.UTF8.GetBytes("ab");
-            var node = new DagNode(ab, new[]
+            var node = new DagNode(ab, _hashProvider, new[]
             {
                 alink, blink
             });
@@ -107,15 +117,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void Links_are_Sorted()
         {
             var a = Encoding.UTF8.GetBytes("a");
-            var anode = new DagNode(a);
+            var anode = new DagNode(a, _hashProvider);
             var alink = anode.ToLink("a");
 
             var b = Encoding.UTF8.GetBytes("b");
-            var bnode = new DagNode(b);
+            var bnode = new DagNode(b, _hashProvider);
             var blink = bnode.ToLink("b");
 
             var ab = Encoding.UTF8.GetBytes("ab");
-            var node = new DagNode(ab, new[]
+            var node = new DagNode(ab, _hashProvider, new[]
             {
                 blink, alink
             });
@@ -128,12 +138,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void Hashing_Algorithm()
         {
             var abc = Encoding.UTF8.GetBytes("abc");
-            var node = new DagNode(abc, null, "sha2-512");
+            var node = new DagNode(abc, _hashProvider, null);
             Assert.Equal(abc, node.DataBytes);
             Assert.Equal(0, node.Links.Count());
-            Assert.Equal(
-                "bafybgqdqrys7323fuivxoixir7nnsfqmsneuuseg6mkbmcjgj4xaq7suehcmbghv5sbtxu57ccnhqjggxx7iz5p77gkcrhv2i3pj3yhv7fi56",
-                (string) node.Id);
+            Assert.Equal("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", (string) node.Id);
             Assert.Equal(5, node.Size);
 
             RoundtripTest(node);
@@ -143,7 +151,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void ToLink()
         {
             var abc = Encoding.UTF8.GetBytes("abc");
-            var node = new DagNode(abc);
+            var node = new DagNode(abc, _hashProvider);
             var link = node.ToLink();
             Assert.Equal("", link.Name);
             Assert.Equal(node.Id, link.Id);
@@ -154,7 +162,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void ToLink_With_Name()
         {
             var abc = Encoding.UTF8.GetBytes("abc");
-            var node = new DagNode(abc);
+            var node = new DagNode(abc, _hashProvider);
             var link = node.ToLink("abc");
             Assert.Equal("abc", link.Name);
             Assert.Equal(node.Id, link.Id);
@@ -165,10 +173,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void AddLink()
         {
             var a = Encoding.UTF8.GetBytes("a");
-            var anode = new DagNode(a);
+            var anode = new DagNode(a, _hashProvider);
 
             var b = Encoding.UTF8.GetBytes("b");
-            var bnode = new DagNode(b);
+            var bnode = new DagNode(b, _hashProvider);
 
             var cnode = bnode.AddLink(anode.ToLink());
             Assert.False(Object.ReferenceEquals(bnode, cnode));
@@ -184,13 +192,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void RemoveLink()
         {
             var a = Encoding.UTF8.GetBytes("a");
-            var anode = new DagNode(a);
+            var anode = new DagNode(a, _hashProvider);
 
             var b = Encoding.UTF8.GetBytes("b");
-            var bnode = new DagNode(b);
+            var bnode = new DagNode(b, _hashProvider);
 
             var c = Encoding.UTF8.GetBytes("c");
-            var cnode = new DagNode(c, new[]
+            var cnode = new DagNode(c, _hashProvider, new[]
             {
                 anode.ToLink(), bnode.ToLink()
             });
@@ -233,8 +241,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public void Setting_Id()
         {
-            var a = new DagNode((byte[]) null);
-            var b = new DagNode((byte[]) null)
+            var a = new DagNode((byte[]) null, _hashProvider);
+            var b = new DagNode((byte[]) null, _hashProvider)
             {
                 // Wrong hash but allowed.
                 Id = "QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1m"

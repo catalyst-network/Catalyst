@@ -1,14 +1,17 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
+using Catalyst.Core.Modules.Hashing;
 using Lib.P2P;
 using MultiFormats;
+using MultiFormats.Registry;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,10 +20,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     public class PinApiTest
     {
         private IDfsService ipfs;
+        private readonly IHashProvider _hashProvider;
 
         public PinApiTest(ITestOutputHelper output)
         {
             ipfs = TestDfs.GetTestDfs(output);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
         [Fact]
@@ -43,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Remove_Unknown()
         {
-            var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"));
+            var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"), _hashProvider);
             await ipfs.PinApi.RemoveAsync(dag.Id, true);
         }
 
@@ -72,7 +77,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public void Add_Unknown()
         {
-            var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"));
+            var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"), _hashProvider);
             ExceptionAssert.Throws<Exception>(() =>
             {
                 var cts = new CancellationTokenSource(250);

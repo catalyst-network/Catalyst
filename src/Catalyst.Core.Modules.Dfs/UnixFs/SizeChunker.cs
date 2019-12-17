@@ -1,12 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
+using Catalyst.Core.Modules.Hashing;
+using MultiFormats.Registry;
 
 namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
 {
@@ -15,6 +18,13 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
     /// </summary>
     public class SizeChunker
     {
+        private readonly IHashProvider _hashProvider;
+
+        public SizeChunker()
+        {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+        }
+
         /// <summary>
         ///   Performs the chunking.
         /// </summary>
@@ -148,7 +158,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
 
                     var pb = new MemoryStream();
                     ProtoBuf.Serializer.Serialize<DataMessage>(pb, dm);
-                    var dag = new DagNode(pb.ToArray(), null, options.Hash);
+                    var dag = new DagNode(pb.ToArray(), _hashProvider, null);
 
                     // Save it.
                     dag.Id = await blockService.PutAsync(

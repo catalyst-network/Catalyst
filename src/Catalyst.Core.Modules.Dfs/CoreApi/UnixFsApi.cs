@@ -7,21 +7,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Lib.IO;
 using Catalyst.Core.Modules.Dfs.UnixFileSystem;
+using Catalyst.Core.Modules.Hashing;
 using Common.Logging;
 using ICSharpCode.SharpZipLib.Tar;
 using Lib.P2P;
 using MultiFormats;
+using MultiFormats.Registry;
 using ProtoBuf;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     internal sealed class UnixFsApi : IUnixFsApi
     {
+        private readonly IHashProvider _hashProvider;
         private readonly IDhtApi _dhtApi;
         private readonly IBlockApi _blockApi;
         private readonly IKeyApi _keyApi;
@@ -36,6 +40,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             _blockApi = blockApi;
             _keyApi = keyApi;
             _nameApi = nameApi;
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
         public async Task<IFileSystemNode> AddFileAsync(string path,
@@ -148,7 +153,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             };
             var pb = new MemoryStream();
             ProtoBuf.Serializer.Serialize(pb, dm);
-            var dag = new DagNode(pb.ToArray(), links, options.Hash);
+            var dag = new DagNode(pb.ToArray(), _hashProvider, links);
 
             // Save it.
             dag.Id = await blockService.PutAsync(
@@ -205,7 +210,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             var pb = new MemoryStream();
             Serializer.Serialize(pb, dm);
             var fileSystemLinks = links as IFileSystemLink[] ?? links.ToArray();
-            var dag = new DagNode(pb.ToArray(), fileSystemLinks, options.Hash);
+            var dag = new DagNode(pb.ToArray(), _hashProvider, fileSystemLinks);
 
             // Save it.
             var cid = await GetBlockService(options).PutAsync(
