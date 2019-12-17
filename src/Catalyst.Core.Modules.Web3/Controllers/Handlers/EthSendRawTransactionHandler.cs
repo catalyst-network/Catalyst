@@ -22,16 +22,35 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Transaction;
+using Google.Protobuf.WellKnownTypes;
+using Nethermind.Core;
 using Nethermind.Core.Crypto;
+using Nethermind.Core.Encoding;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "sendRawTransaction")]
     public class EthSendRawTransactionHandler : EthWeb3RequestHandler<byte[], Keccak>
     {
-        protected override Keccak Handle(byte[] param1, IWeb3EthApi api)
+        protected override Keccak Handle(byte[] transaction, IWeb3EthApi api)
         {
-            throw new System.NotImplementedException();
+            Transaction tx = Rlp.Decode<Transaction>(transaction);
+
+            PublicEntry publicEntry = new PublicEntry
+            {
+                Data = tx.Data.ToByteString(),
+                GasLimit = (ulong) tx.GasLimit,
+                GasPrice = tx.GasPrice.ToUint256ByteString(),
+                Nonce = (ulong) tx.Nonce,
+                SenderAddress = tx.SenderAddress.Bytes.ToByteString(),
+                ReceiverAddress = tx.To.Bytes.ToByteString(),
+                Amount = tx.Value.ToUint256ByteString(),
+                Timestamp = new Timestamp {Seconds = (long) tx.Timestamp},
+            };
+
+            return api.SendTransaction(publicEntry);
         }
     }
 }

@@ -23,6 +23,8 @@
 
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Protocol.Transaction;
+using Nethermind.Core.Crypto;
 using Nethermind.Store;
 using Nethermind.Evm;
 
@@ -38,5 +40,6 @@ namespace Catalyst.Abstractions.Ledger
         IStorageProvider StorageProvider { get; }
         IStateProvider StateProvider { get; }
         ITransactionReceiptResolver ReceiptResolver { get; }
+        Keccak SendTransaction(PublicEntry publicEntry);
     }
 }
