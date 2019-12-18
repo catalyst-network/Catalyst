@@ -153,7 +153,10 @@ namespace Catalyst.Node.POA.CE
                .Select(p => p.Value())
                .Concat(extraModuleInstances ?? new List<IModule>());
 
-            foreach (var module in modulesToRegister) containerBuilder.RegisterModule(module);
+            foreach (var module in modulesToRegister)
+            {
+                containerBuilder.RegisterModule(module);
+            }
         }
 
         public static async Task<int> Main(string[] args)
@@ -161,7 +164,8 @@ namespace Catalyst.Node.POA.CE
             // Parse the arguments.
             var result = await Parser.Default
                .ParseArguments<Options>(args)
-               .MapResult(async options => await RunAsync(options), response => Task.FromResult(1));
+               .MapResult(async options => await RunAsync(options).ConfigureAwait(false),
+                    response => Task.FromResult(1)).ConfigureAwait(false);
 
             return Environment.ExitCode = result;
         }

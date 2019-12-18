@@ -58,7 +58,8 @@ namespace Catalyst.Cli
         {
             // Parse the arguments.
             var result = await Parser.Default.ParseArguments<Options>(args)
-               .MapResult(async options => await RunAsync(options), response => Task.FromResult(1));
+               .MapResult(async options => await RunAsync(options).ConfigureAwait(false),
+                    response => Task.FromResult(1)).ConfigureAwait(false);
             return Environment.ExitCode = result;
         }
 
