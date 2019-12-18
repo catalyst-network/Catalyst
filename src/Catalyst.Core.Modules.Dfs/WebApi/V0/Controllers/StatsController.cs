@@ -1,85 +1,85 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P.Transports;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///  Statistics for bitswap.
+    ///     Statistics for bitswap.
     /// </summary>
     public class StatsBitswapDto
     {
         /// <summary>
-        ///   TODO: Unknown.
+        ///     TODO: Unknown.
         /// </summary>
         public int ProvideBufLen;
 
         /// <summary>
-        ///   The content IDs that are wanted.
+        ///     The content IDs that are wanted.
         /// </summary>
         public IEnumerable<BitswapLinkDto> Wantlist;
 
         /// <summary>
-        ///   The known peers.
+        ///     The known peers.
         /// </summary>
         public IEnumerable<string> Peers;
 
         /// <summary>
-        ///   The number of blocks sent by other peers.
+        ///     The number of blocks sent by other peers.
         /// </summary>
         public ulong BlocksReceived;
 
         /// <summary>
-        ///   The number of bytes sent by other peers.
+        ///     The number of bytes sent by other peers.
         /// </summary>
         public ulong DataReceived;
 
         /// <summary>
-        ///   The number of blocks sent to other peers.
+        ///     The number of blocks sent to other peers.
         /// </summary>
         public ulong BlocksSent;
 
         /// <summary>
-        ///   The number of bytes sent to other peers.
+        ///     The number of bytes sent to other peers.
         /// </summary>
         public ulong DataSent;
 
         /// <summary>
-        ///   The number of duplicate blocks sent by other peers.
+        ///     The number of duplicate blocks sent by other peers.
         /// </summary>
         /// <remarks>
-        ///   A duplicate block is a block that is already stored in the
-        ///   local repository.
+        ///     A duplicate block is a block that is already stored in the
+        ///     local repository.
         /// </remarks>
         public ulong DupBlksReceived;
 
         /// <summary>
-        ///   The number of duplicate bytes sent by other peers.
+        ///     The number of duplicate bytes sent by other peers.
         /// </summary>
         /// <remarks>
-        ///   A duplicate block is a block that is already stored in the
-        ///   local repository.
+        ///     A duplicate block is a block that is already stored in the
+        ///     local repository.
         /// </remarks>
         public ulong DupDataReceived;
     }
 
     /// <summary>
-    ///    Get the statistics on various IPFS components.
+    ///     Get the statistics on various IPFS components.
     /// </summary>
     public class StatsController : IpfsController
     {
         /// <summary>
-        ///   Creates a new controller.
+        ///     Creates a new controller.
         /// </summary>
         public StatsController(ICoreApi ipfs) : base(ipfs) { }
 
         /// <summary>
-        ///   Get bandwidth information.
+        ///     Get bandwidth information.
         /// </summary>
-        [HttpGet, HttpPost, Route("stats/bw")]
+        [HttpGet] [HttpPost] [Route("stats/bw")]
         public Task<BandwidthData> Bandwidth()
         {
             Response.Headers.Add("X-Chunked-Output", "1");
@@ -87,9 +87,9 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
         }
 
         /// <summary>
-        ///   Get bitswap information.
+        ///     Get bitswap information.
         /// </summary>
-        [HttpGet, HttpPost, Route("stats/bitswap"), Route("bitswap/stat")]
+        [HttpGet] [HttpPost] [Route("stats/bitswap")] [Route("bitswap/stat")]
         public async Task<StatsBitswapDto> Bitswap()
         {
             Response.Headers.Add("X-Chunked-Output", "1");
@@ -109,9 +109,9 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
         }
 
         /// <summary>
-        ///   Get repository information.
+        ///     Get repository information.
         /// </summary>
-        [HttpGet, HttpPost, Route("stats/repo")]
+        [HttpGet] [HttpPost] [Route("stats/repo")]
         public Task<RepositoryData> Repo()
         {
             Response.Headers.Add("X-Chunked-Output", "1");

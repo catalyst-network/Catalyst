@@ -11,6 +11,33 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
+      <Compile Remove="WebApi\V0\ApiError.cs" />
+      <Compile Remove="WebApi\V0\ApiExceptionFilter.cs" />
+      <Compile Remove="WebApi\V0\BitswapController.cs" />
+      <Compile Remove="WebApi\V0\BlockController.cs" />
+      <Compile Remove="WebApi\V0\BlockRepositoryController.cs" />
+      <Compile Remove="WebApi\V0\BlockStatsDto.cs" />
+      <Compile Remove="WebApi\V0\BootstrapController.cs" />
+      <Compile Remove="WebApi\V0\ConfigController.cs" />
+      <Compile Remove="WebApi\V0\DagController.cs" />
+      <Compile Remove="WebApi\V0\DhtController.cs" />
+      <Compile Remove="WebApi\V0\DnsController.cs" />
+      <Compile Remove="WebApi\V0\FileSystemController.cs" />
+      <Compile Remove="WebApi\V0\GenericController.cs" />
+      <Compile Remove="WebApi\V0\HashDto.cs" />
+      <Compile Remove="WebApi\V0\IpfsController.cs" />
+      <Compile Remove="WebApi\V0\KeyController.cs" />
+      <Compile Remove="WebApi\V0\KeyDto.cs" />
+      <Compile Remove="WebApi\V0\NameController.cs" />
+      <Compile Remove="WebApi\V0\ObjectController.cs" />
+      <Compile Remove="WebApi\V0\PathDto.cs" />
+      <Compile Remove="WebApi\V0\PeerDto.cs" />
+      <Compile Remove="WebApi\V0\PinController.cs" />
+      <Compile Remove="WebApi\V0\PubSubController.cs" />
+      <Compile Remove="WebApi\V0\StatsController.cs" />
+      <Compile Remove="WebApi\V0\SwamController.cs" />
+    </ItemGroup>
+    <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />

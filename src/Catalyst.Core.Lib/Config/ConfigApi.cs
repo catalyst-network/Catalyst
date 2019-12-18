@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.Config
                 return _configuration;
             }
 
-            var path = Path.Combine(_fileSystem.GetCatalystDataDir().ToString());
+            var path = Path.Combine(_fileSystem.GetCatalystDataDir().ToString(), "config");
             if (File.Exists(path))
             {
                 using var reader = File.OpenText(path);

@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
     ///   A wrapped version number.

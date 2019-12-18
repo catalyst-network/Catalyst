@@ -1,11 +1,11 @@
-﻿// using System;
+// using System;
 // using System.Collections.Generic;
 // using System.Threading.Tasks;
 // using Catalyst.Abstractions.Dfs.CoreApi;
 // using Microsoft.AspNetCore.Mvc;
 // using MultiFormats;
 //
-// namespace Catalyst.Ipfs.Http.Server.HttpApi.V0
+// namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 // {
 //     /// <summary>
 //     ///   Some miscellaneous methods.

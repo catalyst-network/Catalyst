@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 // TODO: need MultiAddress.WithOutPeer (should be in IPFS code)
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
     ///   Information from the Distributed Hash Table.

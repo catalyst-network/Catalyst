@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,10 +9,10 @@ using Newtonsoft.Json.Linq;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    internal sealed class BootstrapApi : IBootstrapApi
+    class BootstrapApi : IBootstrapApi
     {
         // From https://github.com/libp2p/go-libp2p-daemon/blob/master/bootstrap.go#L14
-        private static readonly MultiAddress[] Defaults = 
+        static MultiAddress[] Defaults = 
         {
             "/ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",            // mars.i.ipfs.io
             "/ip4/104.236.179.241/tcp/4001/ipfs/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM",           // pluto.i.ipfs.io

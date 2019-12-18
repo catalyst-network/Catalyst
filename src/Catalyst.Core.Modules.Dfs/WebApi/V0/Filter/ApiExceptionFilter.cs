@@ -1,24 +1,26 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
+using Catalyst.Core.Modules.Dfs.Controllers.V0.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.Controllers.V0.Filter
 {
     /// <summary>
-    ///   Handles exceptions thrown by a controller.
+    ///     Handles exceptions thrown by a controller.
     /// </summary>
     /// <remarks>
-    ///   Returns a <see cref="ApiError"/> to the caller.
+    ///     Returns a <see cref="ApiError" /> to the caller.
     /// </remarks>
     public class ApiExceptionFilter : ExceptionFilterAttribute
     {
         /// <inheritdoc />
         public override void OnException(ExceptionContext context)
         {
-            int statusCode = 500; // Internal Server Error
-            string message = context.Exception.Message;
+            var statusCode = 500; // Internal Server Error
+            var message = context.Exception.Message;
             string[] details = null;
 
             // Map special exceptions to a status code.
@@ -39,7 +41,7 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
             {
                 statusCode = 501; // Not Implemented
             }
-            else if (context.Exception is System.Reflection.TargetInvocationException)
+            else if (context.Exception is TargetInvocationException)
             {
                 message = context.Exception.InnerException.Message;
             }
@@ -53,7 +55,8 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
             context.HttpContext.Response.StatusCode = statusCode;
             context.Result = new JsonResult(new ApiError
             {
-                Message = message, Details = details
+                Message = message,
+                Details = details
             });
 
             // Remove any caching headers

@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
@@ -42,6 +43,7 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Migration;
+using Catalyst.Core.Modules.Keystore;
 using Common.Logging;
 using Common.Logging.Serilog;
 using Lib.P2P;
@@ -135,6 +137,7 @@ namespace Catalyst.Core.Modules.Dfs
             IPubSubApi pubSubApi,
             IStatsApi statsApi,
             ISwarmApi swarmApi,
+            IKeyStoreService keyStoreService,
             IHashProvider hashProvider,
             IPasswordManager passwordManager)
         {
@@ -154,7 +157,8 @@ namespace Catalyst.Core.Modules.Dfs
             StatsApi = statsApi;
             SwarmApi = swarmApi;
             _hashProvider = hashProvider;
-         
+            _keyStoreService = keyStoreService;
+
             passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your IPFS password");
 
             // Options.KeyChain.DefaultKeyType = Constants.KeyChainDefaultKeyType;
@@ -189,6 +193,8 @@ namespace Catalyst.Core.Modules.Dfs
         /// </summary>
         public DfsOptions Options { get; set; } = new DfsOptions();
 
+        private IKeyStoreService _keyStoreService;
+
         void Init()
         {
             MigrationManager = new MigrationManager(Options.Repository);
@@ -206,9 +212,10 @@ namespace Catalyst.Core.Modules.Dfs
                 var localPeer = new Peer
                 {
                     Id = self.Id,
-                    PublicKey = KeyApi.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult().Id.ToString().FromBase58().ToByteString().ToBase64(),
+                    PublicKey = await _keyStoreService.GetPublicKeyAsync("self").ConfigureAwait(false),
                     ProtocolVersion = "ipfs/0.1.0"
                 };
+
                 var version = typeof(DfsService).GetTypeInfo().Assembly.GetName().Version;
                 localPeer.AgentVersion = $"net-ipfs/{version.Major}.{version.Minor}.{version.Revision}";
                 Log.Debug("Built local peer");
@@ -547,30 +554,30 @@ namespace Catalyst.Core.Modules.Dfs
         ///   A task that represents the asynchronous operation. The task's result is
         ///   the <see cref="KeyStoreService"/>.
         /// </returns>
-        // public async Task<IKeyApi> KeyChainAsync(CancellationToken cancel = default(CancellationToken))
-        // {
-        //     // TODO: this should be a LazyAsync property.
-        //     if (_keyStoreService == null)
-        //     {
-        //         lock (this)
-        //         {
-        //             if (_keyStoreService == null)
-        //             {
-        //                 _keyStoreService = new KeyStoreService(Options.Repository.Folder)
-        //                 {
-        //                     Options = Options.KeyChain
-        //                 };
-        //             }
-        //         }
-        //
-        //         await _keyStoreService.SetPassphraseAsync(passphrase, cancel).ConfigureAwait(false);
-        //
-        //         // Maybe create "self" key, this is the local peer's id.
-        //         var self = await _keyStoreService.FindKeyByNameAsync("self", cancel).ConfigureAwait(false) ?? await _keyStoreService.CreateAsync("self", null, 0, cancel).ConfigureAwait(false);
-        //     }
-        //
-        //     return _keyStoreService;
-        // }
+        //public async Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default(CancellationToken))
+        //{
+        //    // TODO: this should be a LazyAsync property.
+        //    if (_keyStoreService == null)
+        //    {
+        //        lock (this)
+        //        {
+        //            if (_keyStoreService == null)
+        //            {
+        //                _keyStoreService = new KeyStoreService(Options.Repository.Folder)
+        //                {
+        //                    Options = Options.KeyChain
+        //                };
+        //            }
+        //        }
+
+        //        await _keyStoreService.SetPassphraseAsync(passphrase, cancel).ConfigureAwait(false);
+
+        //        // Maybe create "self" key, this is the local peer's id.
+        //        var self = await _keyStoreService.FindKeyByNameAsync("self", cancel).ConfigureAwait(false) ?? await _keyStoreService.CreateAsync("self", null, 0, cancel).ConfigureAwait(false);
+        //    }
+
+        //    return _keyStoreService;
+        //}
 
         #region Class members
 

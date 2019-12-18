@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,114 +10,114 @@ using Lib.P2P;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///   Stats for an object.
+    ///     Stats for an object.
     /// </summary>
     public class ObjectStatDto
     {
         /// <summary>
-        ///   The CID of the object.
+        ///     The CID of the object.
         /// </summary>
         public string Hash;
 
         /// <summary>
-        ///   Number of links.
+        ///     Number of links.
         /// </summary>
         public int NumLinks { get; set; }
 
         /// <summary>
-        ///   Size of the links segment.
+        ///     Size of the links segment.
         /// </summary>
         public long LinksSize { get; set; }
 
         /// <summary>
-        ///   Size of the raw, encoded data.
+        ///     Size of the raw, encoded data.
         /// </summary>
         public long BlockSize { get; set; }
 
         /// <summary>
-        ///   Siz of the data segment.
+        ///     Siz of the data segment.
         /// </summary>
         public long DataSize { get; set; }
 
         /// <summary>
-        ///   Size of object and its references
+        ///     Size of object and its references
         /// </summary>
         public long CumulativeSize { get; set; }
     }
 
     /// <summary>
-    ///  A link to a file.
+    ///     A link to a file.
     /// </summary>
     public class ObjectLinkDto
     {
         /// <summary>
-        ///   The object name.
+        ///     The object name.
         /// </summary>
         public string Name;
 
         /// <summary>
-        ///   The CID of the object.
+        ///     The CID of the object.
         /// </summary>
         public string Hash;
 
         /// <summary>
-        ///   The object size.
+        ///     The object size.
         /// </summary>
         public long Size;
     }
 
     /// <summary>
-    ///   Link details on an object.
+    ///     Link details on an object.
     /// </summary>
     public class ObjectLinkDetailDto
     {
         /// <summary>
-        ///   The CID of the object.
+        ///     The CID of the object.
         /// </summary>
         public string Hash;
 
         /// <summary>
-        ///   Links to other objects.
+        ///     Links to other objects.
         /// </summary>
         public IEnumerable<ObjectLinkDto> Links;
     }
 
     /// <summary>
-    ///   Data and link details on an object.
+    ///     Data and link details on an object.
     /// </summary>
     public class ObjectDataDetailDto : ObjectLinkDetailDto
     {
         /// <summary>
-        ///   The object data encoded as UTF-8.
+        ///     The object data encoded as UTF-8.
         /// </summary>
         public string Data;
     }
 
     /// <summary>
-    ///   Manages the IPFS Merkle Directed Acrylic Graph.
+    ///     Manages the IPFS Merkle Directed Acrylic Graph.
     /// </summary>
     /// <remarks>
-    ///   <note>
-    ///   This is being obsoleted by <see cref="IDagApi"/>.
-    ///   </note>
+    ///     <note>
+    ///         This is being obsoleted by <see cref="IDagApi" />.
+    ///     </note>
     /// </remarks>
     public class ObjectController : IpfsController
     {
         /// <summary>
-        ///   Creates a new controller.
+        ///     Creates a new controller.
         /// </summary>
         public ObjectController(ICoreApi ipfs) : base(ipfs) { }
 
         /// <summary>
-        ///   Create an object from a template.
+        ///     Create an object from a template.
         /// </summary>
         /// <param name="arg">
-        ///   Template name. Must be "unixfs-dir".
+        ///     Template name. Must be "unixfs-dir".
         /// </param>
-        [HttpGet, HttpPost, Route("object/new")]
+        [HttpGet] [HttpPost] [Route("object/new")]
         public async Task<ObjectLinkDetailDto> Create(string arg)
         {
             var node = await IpfsCore.ObjectApi.NewAsync(arg, Cancel);
@@ -135,19 +135,19 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
         }
 
         /// <summary>
-        ///   Store a MerkleDAG node.
+        ///     Store a MerkleDAG node.
         /// </summary>
         /// <param name="file">
-        ///   multipart/form-data.
+        ///     multipart/form-data.
         /// </param>
         /// <param name="inputenc">
-        ///   "protobuf" or "json"
+        ///     "protobuf" or "json"
         /// </param>
         /// <param name="datafieldenc">
-        ///   "text" or "base64"
+        ///     "text" or "base64"
         /// </param>
         /// <param name="pin">
-        ///   Pin the object.
+        ///     Pin the object.
         /// </param>
         /// <returns></returns>
         [HttpPost("object/put")]
@@ -194,15 +194,15 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
         }
 
         /// <summary>
-        ///   Get the data and links of an object.
+        ///     Get the data and links of an object.
         /// </summary>
         /// <param name="arg">
-        ///   The object's CID.
+        ///     The object's CID.
         /// </param>
         /// <param name="dataEncoding">
-        ///   The encoding of the object's data; "text" (default) or "base64".
+        ///     The encoding of the object's data; "text" (default) or "base64".
         /// </param>
-        [HttpGet, HttpPost, Route("object/get")]
+        [HttpGet] [HttpPost] [Route("object/get")]
         public async Task<ObjectDataDetailDto> Get(string arg,
             [ModelBinder(Name = "data-encoding")] string dataEncoding)
         {
@@ -233,12 +233,12 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
         }
 
         /// <summary>
-        ///   Get the links of an object.
+        ///     Get the links of an object.
         /// </summary>
         /// <param name="arg">
-        ///   The object's CID.
+        ///     The object's CID.
         /// </param>
-        [HttpGet, HttpPost, Route("object/links")]
+        [HttpGet] [HttpPost] [Route("object/links")]
         public async Task<ObjectLinkDetailDto> Links(string arg)
         {
             var links = await IpfsCore.ObjectApi.LinksAsync(arg, Cancel);
@@ -256,12 +256,12 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
         }
 
         /// <summary>
-        ///   Get the object's data.
+        ///     Get the object's data.
         /// </summary>
         /// <param name="arg">
-        ///   The object's CID or a path.
+        ///     The object's CID or a path.
         /// </param>
-        [HttpGet, HttpPost, Route("object/data")]
+        [HttpGet] [HttpPost] [Route("object/data")]
         [Produces("text/plain")]
         public async Task<IActionResult> Data(string arg)
         {
@@ -273,12 +273,12 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
         }
 
         /// <summary>
-        ///   Get the stats of an object.
+        ///     Get the stats of an object.
         /// </summary>
         /// <param name="arg">
-        ///   The object's CID.
+        ///     The object's CID.
         /// </param>
-        [HttpGet, HttpPost, Route("object/stat")]
+        [HttpGet] [HttpPost] [Route("object/stat")]
         public async Task<ObjectStatDto> Stat(string arg)
         {
             var info = await IpfsCore.ObjectApi.StatAsync(arg, Cancel);

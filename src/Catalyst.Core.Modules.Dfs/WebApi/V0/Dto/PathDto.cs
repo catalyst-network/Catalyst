@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Dto
 {
     /// <summary>
     ///  A path to some data.

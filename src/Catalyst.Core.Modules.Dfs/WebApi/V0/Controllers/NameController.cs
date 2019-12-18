@@ -1,48 +1,50 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Controllers.V0;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Lib.P2P;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///   Content that has an associated name.
+    ///     Content that has an associated name.
     /// </summary>
     public class NamedContentDto
     {
         /// <summary>
-        ///   Path to the name, "/ipns/...".
+        ///     Path to the name, "/ipns/...".
         /// </summary>
         public string Name;
 
         /// <summary>
-        ///   Path to the content, "/ipfs/...".
+        ///     Path to the content, "/ipfs/...".
         /// </summary>
         public string Value;
     }
 
     /// <summary>
-    ///   Manages the IPNS (Interplanetary Name Space).
+    ///     Manages the IPNS (Interplanetary Name Space).
     /// </summary>
     /// <remarks>
-    ///   IPNS is a PKI namespace, where names are the hashes of public keys, and
-    ///   the private key enables publishing new(signed) values. The default name
-    ///   is the node's own <see cref="Peer.Id"/>,
-    ///   which is the hash of its public key.
+    ///     IPNS is a PKI namespace, where names are the hashes of public keys, and
+    ///     the private key enables publishing new(signed) values. The default name
+    ///     is the node's own <see cref="Peer.Id" />,
+    ///     which is the hash of its public key.
     /// </remarks>
     public class NameController : IpfsController
     {
         /// <summary>
-        ///   Creates a new controller.
+        ///     Creates a new controller.
         /// </summary>
         public NameController(ICoreApi ipfs) : base(ipfs) { }
 
         /// <summary>
-        ///   Resolve a name.
+        ///     Resolve a name.
         /// </summary>
-        [HttpGet, HttpPost, Route("name/resolve")]
+        [HttpGet] [HttpPost] [Route("name/resolve")]
         public async Task<PathDto> Resolve(string arg,
             bool recursive = false,
             bool nocache = false)
@@ -52,31 +54,31 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
         }
 
         /// <summary>
-        ///   Publish content.
+        ///     Publish content.
         /// </summary>
         /// <param name="arg">
-        ///   The CID or path to the content to publish.
+        ///     The CID or path to the content to publish.
         /// </param>
         /// <param name="resolve">
-        ///   Resolve before publishing.
+        ///     Resolve before publishing.
         /// </param>
         /// <param name="key">
-        ///   The local key name used to sign the content.
+        ///     The local key name used to sign the content.
         /// </param>
         /// <param name="lifetime">
-        ///   Duration that the record will be valid for.
+        ///     Duration that the record will be valid for.
         /// </param>
-        [HttpGet, HttpPost, Route("name/publish")]
+        [HttpGet] [HttpPost] [Route("name/publish")]
         public async Task<NamedContentDto> Publish(string arg,
             bool resolve = true,
             string key = "self",
             string lifetime = "24h")
         {
-            if (String.IsNullOrWhiteSpace(arg))
+            if (string.IsNullOrWhiteSpace(arg))
                 throw new ArgumentNullException("arg", "The name is required.");
-            if (String.IsNullOrWhiteSpace(key))
+            if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentNullException("type", "The key name is required.");
-            if (String.IsNullOrWhiteSpace(lifetime))
+            if (string.IsNullOrWhiteSpace(lifetime))
                 throw new ArgumentNullException("type", "The lifetime is required.");
 
             var duration = Duration.Parse(lifetime);

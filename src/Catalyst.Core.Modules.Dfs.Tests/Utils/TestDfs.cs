@@ -14,6 +14,7 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using Lib.P2P.Routing;
+using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.Utils
@@ -57,11 +58,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             dfsService.Options.Repository.Folder = Path.Combine(filesystem.FileSystem.GetCatalystDataDir().FullName, folderName);
             dfsService.Options.KeyChain.DefaultKeySize = 512;
             dfsService.Options.KeyChain.DefaultKeyType = keyType;
-            
-            // dfsService.ConfigApi.SetAsync(
-            //     "Addresses.Swarm",
-            //     JToken.FromObject(new string[] {"/ip4/0.0.0.0/tcp/0"})
-            // ).Wait();
+
+            dfsService.ConfigApi.SetAsync(
+                "Addresses.Swarm",
+                JToken.FromObject(new string[] { "/ip4/0.0.0.0/tcp/0" })
+            ).Wait();
 
             return dfsService;
         }

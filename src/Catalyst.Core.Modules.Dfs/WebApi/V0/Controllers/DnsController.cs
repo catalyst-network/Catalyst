@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Core.Modules.Dfs.Controllers.V0;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
     ///   DNS mapping to IPFS.

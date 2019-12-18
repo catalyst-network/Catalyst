@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
@@ -8,7 +8,7 @@ using MultiFormats;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
     ///   A link to a CID.

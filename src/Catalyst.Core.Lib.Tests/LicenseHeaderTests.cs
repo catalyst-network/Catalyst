@@ -67,15 +67,6 @@ namespace Catalyst.Core.Lib.Tests
                 }).ToArray();
 
             var wrongFiles = (await Task.WhenAll(getWrongFiles)).Where(f => f != null).ToArray();
-            foreach (var wrongFile in wrongFiles)
-            {
-                var content = File.ReadAllText(wrongFile);
-                var s =
-                    "#region LICENSE\n\n/**\n* Copyright (c) 2019 Catalyst Network\n*\n* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>\n*\n* Catalyst.Node is free software: you can redistribute it and/or modify\n* it under the terms of the GNU General Public License as published by\n* the Free Software Foundation, either version 2 of the License, or\n* (at your option) any later version.\n*\n* Catalyst.Node is distributed in the hope that it will be useful,\n* but WITHOUT ANY WARRANTY; without even the implied warranty of\n* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n* GNU General Public License for more details.\n*\n* You should have received a copy of the GNU General Public License\n* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.\n*/\n\n#endregion\n\n" +
-                    content;
-                File.WriteAllText(wrongFile, s);
-                var t = 0;
-            }
 
             wrongFiles.Should().BeEmpty(
                 $"all files should have a header{Environment.NewLine}" +

@@ -1,14 +1,16 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
 using System.Threading;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Core.Modules.Dfs.Controllers.V0.Filter;
+using Catalyst.Core.Modules.Dfs.Controllers.V0.Response;
 using Lib.P2P;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
     ///   A base controller for IPFS HTTP API.

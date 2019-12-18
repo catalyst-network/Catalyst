@@ -1,25 +1,25 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.Controllers.V0.Response
 {
     /// <summary>
-    ///   The standard error response for failing API calls.
+    ///     The standard error response for failing API calls.
     /// </summary>
     public class ApiError
     {
         /// <summary>
-        ///   Human readable description of the error.
+        ///     Human readable description of the error.
         /// </summary>
         public string Message { get; set; }
 
         /// <summary>
-        ///   Developer readable description of the error.
+        ///     Developer readable description of the error.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string[] Details { get; set; }
 
         /// <summary>
-        ///   A standard ??? error code.
+        ///     A standard ??? error code.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Code { get; set; }

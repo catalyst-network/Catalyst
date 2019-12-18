@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers;
 using Lib.P2P;
 using Microsoft.AspNetCore.Mvc;
 
