@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Net;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
@@ -30,7 +29,6 @@ using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Modules.POA.P2P
 {
-    [Obsolete("Please use the PeerIdDao instead")]
     public sealed class PoaPeer
     {
         public string Ip { get; set; }

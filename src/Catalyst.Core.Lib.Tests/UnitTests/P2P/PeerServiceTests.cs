@@ -144,7 +144,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
                 Substitute.For<IHealthChecker>());
 
             await _peerService.StartAsync();
-            _serverChannel.SimulateReceivingMessagesAsync(message);
+            _serverChannel.SimulateReceivingMessages(message);
         }
 
         private void Dispose(bool disposing)

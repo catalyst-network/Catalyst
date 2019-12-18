@@ -104,12 +104,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public async Task<Cid> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta,
             CancellationToken cancellationToken = default)
         {
-            var newAddress = await PublishDeltaToDfs(delta, cancellationToken).ConfigureAwait(false);
+            var newAddress = await PublishDeltaToDfsAsync(delta, cancellationToken).ConfigureAwait(false);
             await BroadcastNewDfsFileAddressAsync(newAddress, delta.PreviousDeltaDfsHash).ConfigureAwait(false);
             return newAddress;
         }
 
-        private async Task<Cid> PublishDeltaToDfs(Delta delta, CancellationToken cancellationToken)
+        private async Task<Cid> PublishDeltaToDfsAsync(Delta delta, CancellationToken cancellationToken)
         {
             try
             {
