@@ -1,4 +1,4 @@
-﻿using Makaretu.Dns;
+using Makaretu.Dns;
 
 namespace Catalyst.Abstractions.Options
 {
@@ -29,7 +29,7 @@ namespace Catalyst.Abstractions.Options
         /// <summary>
         ///   Block options.
         /// </summary>
-        public BlockOptions Block { get; set; } = new BlockOptions();
+        public BlockOptions Block { get; set; }
 
         /// <summary>
         ///    Discovery options.
@@ -40,5 +40,7 @@ namespace Catalyst.Abstractions.Options
         ///   Swarm (network) options.
         /// </summary>
         public SwarmOptions Swarm { get; set; } = new SwarmOptions();
+
+        public DfsOptions(BlockOptions blockOptions) { Block = blockOptions; }
     }
 }

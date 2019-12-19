@@ -12,8 +12,8 @@ namespace Lib.P2P
     /// </remarks>
     public class Peer : IEquatable<Peer>
     {
-        private static MultiAddress[] noAddress = new MultiAddress[0];
-        private const string unknown = "unknown/0.0";
+        static MultiAddress[] noAddress = new MultiAddress[0];
+        const string unknown = "unknown/0.0";
 
         /// <summary>
         ///   Universally unique identifier.
@@ -99,58 +99,44 @@ namespace Lib.P2P
         public bool IsValid()
         {
             if (Id == null)
-            {
                 return false;
-            }
+            if (PublicKey != null && !Id.Matches(Convert.FromBase64String(PublicKey)))
+                return false;
 
-            var pubKeyBytes = Convert.FromBase64String(PublicKey);
-            return PublicKey == null || Id.Matches(pubKeyBytes);
+            return true;
         }
 
         /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return ToString().GetHashCode();
-        }
+        public override int GetHashCode() { return ToString().GetHashCode(); }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
             var that = obj as Peer;
-            return that != null && Equals(that);
+            return (that == null)
+                ? false
+                : this.Equals(that);
         }
 
         /// <inheritdoc />
-        public bool Equals(Peer that)
-        {
-            return that != null && Id == that.Id;
-        }
+        public bool Equals(Peer that) { return this.Id == that.Id; }
 
         /// <summary>
         ///   Value equality.
         /// </summary>
         public static bool operator ==(Peer a, Peer b)
         {
-            if (ReferenceEquals(a, b))
-            {
-                return true;
-            }
+            if (object.ReferenceEquals(a, b)) return true;
+            if (a is null) return false;
+            if (b is null) return false;
 
-            if (a is null)
-            {
-                return false;
-            }
-
-            return !(b is null) && a.Equals(b);
+            return a.Equals(b);
         }
 
         /// <summary>
         ///   Value inequality.
         /// </summary>
-        public static bool operator !=(Peer a, Peer b)
-        {
-            return !(a == b);
-        }
+        public static bool operator !=(Peer a, Peer b) { return !(a == b); }
 
         /// <summary>
         ///   Returns the <see cref="Base58"/> encoding of the <see cref="Id"/>.
@@ -158,10 +144,7 @@ namespace Lib.P2P
         /// <returns>
         ///   A Base58 representaton of the peer.
         /// </returns>
-        public override string ToString()
-        {
-            return Id == null ? string.Empty : Id.ToBase58();
-        }
+        public override string ToString() { return Id == null ? string.Empty : Id.ToBase58(); }
 
         /// <summary>
         ///   Implicit casting of a <see cref="string"/> to a <see cref="Peer"/>.
@@ -175,9 +158,6 @@ namespace Lib.P2P
         /// <remarks>
         ///    Equivalent to <code>new Peer { Id = s }</code>
         /// </remarks>
-        public static implicit operator Peer(string s)
-        {
-            return new Peer {Id = s};
-        }
+        static public implicit operator Peer(string s) { return new Peer {Id = s}; }
     }
 }

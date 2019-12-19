@@ -37,6 +37,7 @@ using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
+using Lib.P2P.Protocols;
 using Lib.P2P.PubSub;
 using Lib.P2P.Routing;
 using Makaretu.Dns;
@@ -52,7 +53,7 @@ namespace Catalyst.Core.Modules.Dfs
 
             builder.RegisterType<PinApi>().As<IPinApi>().SingleInstance()
                .OnActivated(e => e.Instance.BlockApi = e.Context.Resolve<IBlockApi>());
-            
+
             builder.RegisterType<BitSwapApi>().As<IBitSwapApi>().SingleInstance();
             builder.RegisterType<BlockRepositoryApi>().As<IBlockRepositoryApi>().SingleInstance();
             builder.RegisterType<BootstrapApi>().As<IBootstrapApi>().SingleInstance();
@@ -69,39 +70,48 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<DhtApi>().As<IDhtApi>().SingleInstance();
             builder.RegisterType<MigrationManager>().As<IMigrationManager>().SingleInstance();
             builder.RegisterType<DeltaDfsReader>().As<IDeltaDfsReader>().SingleInstance();
+
+            builder.RegisterType<DfsState>().As<DfsState>().SingleInstance();
         }
 
-        protected override void LoadService(ContainerBuilder builder) 
-        { 
+        protected override void LoadService(ContainerBuilder builder)
+        {
             builder.RegisterType<DfsService>()
                .As<IDfsService>()
                .SingleInstance();
-            
+
             builder.RegisterType<BitswapService>()
-               .As<IBitswapService>()
+               .As<BitswapService>()
                .SingleInstance();
 
             builder.RegisterType<SwarmService>()
-               .As<ISwarmService>()
+               .As<SwarmService>()
                .SingleInstance();
 
             builder.RegisterType<KatDhtService>()
-               .As<IDhtService>()
+               .As<KatDhtService>()
                .SingleInstance();
 
             builder.RegisterType<PubSubService>()
-               .As<IPubSubService>()
+               .As<PubSubService>()
                .SingleInstance();
 
             builder.RegisterType<DotClient>()
-               .As<IDnsClient>();
+               .As<DotClient>();
+
+            builder.RegisterType<Ping1>()
+               .As<Ping1>();
         }
-        
-        protected override void LoadOptions(ContainerBuilder builder) 
-        { 
-            builder.RegisterType<BlockOptions>();
-            builder.RegisterType<RepositoryOptions>();
-            builder.RegisterType<DiscoveryOptions>();
+
+        protected override void LoadOptions(ContainerBuilder builder)
+        {
+            builder.RegisterType<DfsOptions>().SingleInstance();
+            builder.RegisterType<BlockOptions>().SingleInstance();
+            builder.RegisterType<RepositoryOptions>().SingleInstance();
+            builder.RegisterInstance(new DiscoveryOptions
+            {
+                BootstrapPeers = BootstrapApi.Defaults
+            }).As<DiscoveryOptions>().SingleInstance();
         }
     }
 }

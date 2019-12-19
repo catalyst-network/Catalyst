@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +12,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         private readonly IDnsClient _dnsClient;
 
-        public DnsApi(IDnsClient dnsClient)
+        public DnsApi(DotClient dnsClient)
         {
             _dnsClient = dnsClient;
         }

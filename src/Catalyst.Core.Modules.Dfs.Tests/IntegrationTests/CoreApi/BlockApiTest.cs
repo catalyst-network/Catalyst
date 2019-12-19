@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -274,7 +274,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             await ipfs.StartAsync();
             try
             {
-                var self = await ipfs.LocalPeer;
+                var self = ipfs.LocalPeer;
                 var cid = await ipfs.BlockApi.PutAsync(data);
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
                 var peers = await ipfs.DhtApi.FindProvidersAsync(cid, limit: 1, cancel: cts.Token);

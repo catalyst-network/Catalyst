@@ -22,9 +22,12 @@
 #endregion
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Lib.P2P;
 using Lib.P2P.Protocols;
@@ -50,33 +53,35 @@ namespace Catalyst.Abstractions.Dfs
         ///   A task that represents the asynchronous operation. The task's result is
         ///   a <see cref="Peer"/>.
         /// </returns>
-        AsyncLazy<Peer> LocalPeer { get; }
+        Peer LocalPeer { get; }
         
         DfsOptions Options { get; set; }
         
         /// <summary>
         ///   Determines latency to a peer.
         /// </summary>
-        AsyncLazy<Ping1> PingService { get; }
+        Ping1 PingService { get; }
         
         /// <summary>
         ///   Manages communication with other peers.
         /// </summary>
-        AsyncLazy<SwarmService> SwarmService { get; }
+        SwarmService SwarmService { get; }
 
         /// <summary>
         ///   Manages publishng and subscribing to messages.
         /// </summary>
-        AsyncLazy<PubSubService> PubSubService { get; }
+        PubSubService PubSubService { get; }
 
         /// <summary>
         ///   Exchange blocks with other peers.
         /// </summary>
-        AsyncLazy<IBitswapService> BitSwapService { get; }
+        IBitswapService BitSwapService { get; }
         
         /// <summary>
         ///   Finds information with a distributed hash table.
         /// </summary>
-        AsyncLazy<DhtService> DhtService { get; }
+        DhtService DhtService { get; }
+
+        Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default(CancellationToken));
     }
 }

@@ -150,7 +150,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public async Task Can_Start_And_Stop()
         {
-            var peer = await _dfs1.LocalPeer;
+            var peer = _dfs1.LocalPeer;
 
             Assert.False(_dfs1.IsStarted);
             await _dfs1.StartAsync();
@@ -175,8 +175,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public async Task Can_Start_And_Stop_MultipleEngines()
         {
-            var peer1 = await _dfs1.LocalPeer;
-            var peer2 = await _dfs2.LocalPeer;
+            var peer1 = _dfs1.LocalPeer;
+            var peer2 = _dfs2.LocalPeer;
 
             for (int n = 0; n < 3; ++n)
             {
@@ -208,8 +208,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         {
             Task<Peer>[] tasks = new Task<Peer>[]
             {
-                Task.Run(async () => await _dfs1.LocalPeer),
-                Task.Run(async () => await _dfs1.LocalPeer)
+                Task.Run(async () => _dfs1.LocalPeer),
+                Task.Run(async () => _dfs1.LocalPeer)
             };
             var r = await Task.WhenAll(tasks);
             Assert.Equal(r[0], r[1]);
@@ -230,8 +230,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public async Task KeyChain_GetKey()
         {
-            //var keyChain = await _dfs1.KeyChainAsync();
-            var key = await _dfs1.KeyApi.GetPrivateKeyAsync("self");
+            var keyChain = await _dfs1.KeyChainAsync();
+            var key = await keyChain.GetPrivateKeyAsync("self");
             Assert.NotNull(key);
             Assert.True(key.IsPrivate);
         }
@@ -243,7 +243,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             await _dfs1.StartAsync();
             try
             {
-                var swarm = await _dfs1.SwarmService;
+                var swarm = _dfs1.SwarmService;
                 var knownPeers = swarm.KnownPeerAddresses.ToArray();
                 var endTime = DateTime.Now.AddSeconds(3);
                 while (true)

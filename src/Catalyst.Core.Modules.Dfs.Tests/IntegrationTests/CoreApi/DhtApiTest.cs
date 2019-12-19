@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
@@ -19,7 +19,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             ipfs = TestDfs.GetTestDfs(output);
             
-            _locaId = ipfs.LocalPeer.ConfigureAwait(false).GetAwaiter().GetResult().Id;
+            _locaId = ipfs.LocalPeer.Id;
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var marsId = "QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
             var marsAddr = $"/ip6/::1/p2p/{marsId}";
-            var swarm = await ipfs.SwarmService;
+            var swarm = ipfs.SwarmService;
             var mars = swarm.RegisterPeerAddress(marsAddr);
 
             var peer = ipfs.DhtApi.FindPeerAsync(marsId).GetAwaiter().GetResult();

@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Core.Lib.P2P;
 using Lib.P2P;
 using Lib.P2P.Routing;
 using MultiFormats;
@@ -13,7 +14,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         private readonly IDhtService _dhtService;
 
-        public DhtApi(IDhtService dhtService)
+        public DhtApi(KatDhtService dhtService)
         {
             _dhtService = dhtService;
         }

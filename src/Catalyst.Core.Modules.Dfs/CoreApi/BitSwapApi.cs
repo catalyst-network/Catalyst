@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Lib.P2P;
 using MultiFormats;
 using Nito.AsyncEx;
@@ -18,7 +19,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly IBitswapService _bitSwapService;
         private AsyncLazy<Peer> LocalPeer { get; set; }
 
-        public BitSwapApi(IBitswapService bitSwapService, IKeyApi keyApi)
+        public BitSwapApi(BitswapService bitSwapService, IKeyApi keyApi)
         {
             _bitSwapService = bitSwapService;
             

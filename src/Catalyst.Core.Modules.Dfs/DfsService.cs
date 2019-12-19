@@ -35,13 +35,14 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
+using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Keystore;
 using Common.Logging;
@@ -62,11 +63,8 @@ namespace Catalyst.Core.Modules.Dfs
 {
     public class DfsService : IDfsService
     {
-        static DfsService()
-        {
-            LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger);
-        }
-        
+        static DfsService() { LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); }
+
         // (IPasswordManager passwordReader,
         //             IFileSystem fileSystem,
         //             ILogger logger,
@@ -109,74 +107,105 @@ namespace Catalyst.Core.Modules.Dfs
         //         }
 
         /// <summary>
-        ///   Determines if the engine has started.
+        ///     Determines if the engine has started.
         /// </summary>
         /// <value>
-        ///   <b>true</b> if the engine has started; otherwise, <b>false</b>.
+        ///     <b>true</b> if the engine has started; otherwise, <b>false</b>.
         /// </value>
-        /// <seealso cref="Start"/>
-        /// <seealso cref="StartAsync"/>
+        /// <seealso cref="Start" />
+        /// <seealso cref="StartAsync" />
         public bool IsStarted => _stopTasks.Count > 0;
-        
-        private SecureString passphrase;
+
+        private readonly DfsState _dfsState;
+        private readonly IFileSystem _fileSystem;
+        private readonly SecureString passphrase;
         private readonly IHashProvider _hashProvider;
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
 
         public DfsService(IBitSwapApi bitSwapApi,
+            BitswapService bitSwapService,
             IBlockApi blockApi,
             IBlockRepositoryApi blockRepositoryApi,
             IBootstrapApi bootstrapApi,
             IConfigApi configApi,
             IDagApi dagApi,
             IDhtApi dhtApi,
+            KatDhtService dhtService,
             IUnixFsApi unixFsApi,
             IKeyApi keyApi,
             INameApi nameApi,
             IObjectApi objectApi,
             IPinApi pinApi,
+            Ping1 pingService,
             IPubSubApi pubSubApi,
+            PubSubService pubSubService,
             IStatsApi statsApi,
             ISwarmApi swarmApi,
-            IKeyStoreService keyStoreService,
+            SwarmService swarmService,
+            DfsOptions dfsOptions,
+            IFileSystem fileSystem,
             IHashProvider hashProvider,
+            DfsState dfsState,
             IPasswordManager passwordManager)
         {
             BitSwapApi = bitSwapApi;
+            BitSwapService = bitSwapService;
             BlockApi = blockApi;
             BlockRepositoryApi = blockRepositoryApi;
             BootstrapApi = bootstrapApi;
             ConfigApi = configApi;
             DagApi = dagApi;
             DhtApi = dhtApi;
+            DhtService = dhtService;
             UnixFsApi = unixFsApi;
             KeyApi = keyApi;
             NameApi = nameApi;
             ObjectApi = objectApi;
             PinApi = pinApi;
+            PingService = pingService;
             PubSubApi = pubSubApi;
+            PubSubService = pubSubService;
             StatsApi = statsApi;
             SwarmApi = swarmApi;
+            SwarmService = swarmService;
+            Options = dfsOptions;
+            _fileSystem = fileSystem;
             _hashProvider = hashProvider;
-            _keyStoreService = keyStoreService;
+            _dfsState = dfsState;
 
-            passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your IPFS password");
+            passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword,
+                "Please provide your IPFS password");
 
-            // Options.KeyChain.DefaultKeyType = Constants.KeyChainDefaultKeyType;
+            var swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
+
+            var seedServers = new[]
+            {
+                new MultiAddress(
+                    "/ip4/46.101.132.61/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdtAkDHgs8MDwwhtyLu8JpYitY4Nk8jmyGgQ4Gt3VKNson"),
+                new MultiAddress(
+                    "/ip4/188.166.13.135/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe2AAPTCoujCxhJHECaySDEsPrEz9W2u7uo6hAbJhYzhPg"),
+                new MultiAddress(
+                    "/ip4/167.172.73.132/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe1E9wXdykR6h3Q9EaQcQc6hdNAXyCTEzoGfcA2wQgCRyg")
+            };
+
+            Options.KeyChain.DefaultKeyType = "rsa";
+
+            //Constants.KeyChainDefaultKeyType;
             Options.Repository.Folder = new DirectoryInfo(Path.Combine(
-                Path.Combine(Lib.FileSystem.FileSystem.GetUserHomeDir(), Constants.CatalystDataDir),
+                Path.Combine(_fileSystem.GetCatalystDataDir().FullName, Constants.CatalystDataDir),
                 Constants.DfsDataSubDir)).FullName;
-            
-            // // The seed nodes for the catalyst network.
-            // Options.Discovery.BootstrapPeers = seedServers;
-            //
-            // // Do not use the public IPFS network, use a private network
-            // // of catalyst only nodes.
-            // _ipfs.Options.Swarm.PrivateNetworkKey = new PreSharedKey
-            // {
-            //     Value = swarmKey.ToHexBuffer()
-            // };
-            
-            Init();
+
+            // The seed nodes for the catalyst network.
+            Options.Discovery.BootstrapPeers = seedServers;
+
+            // Do not use the public IPFS network, use a private network
+            // of catalyst only nodes.
+            Options.Swarm.PrivateNetworkKey = new PreSharedKey
+            {
+                Value = swarmKey.ToHexBuffer()
+            };
+
+            InitAsync().Wait();
         }
 
         internal virtual AddFileOptions AddFileOptions()
@@ -189,146 +218,149 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <summary>
-        ///   The configuration options.
+        ///     The configuration options.
         /// </summary>
-        public DfsOptions Options { get; set; } = new DfsOptions();
+        public DfsOptions Options { get; set; }
 
         private IKeyStoreService _keyStoreService;
 
-        void Init()
+        private async Task InitAsync()
         {
             MigrationManager = new MigrationManager(Options.Repository);
 
-            // Async properties
-            LocalPeer = new AsyncLazy<Peer>(async () =>
+            Log.Debug("Building local peer");
+            Log.Debug("Getting key info about self");
+            await KeyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false);
+
+            var self = await KeyApi.GetPublicKeyAsync("self").ConfigureAwait(false)
+             ?? await KeyApi.CreateAsync("self", null, 0).ConfigureAwait(false);
+
+            var localPeer = new Peer
             {
-                Log.Debug("Building local peer");
-                Log.Debug("Getting key info about self");
-                await KeyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false);
+                Id = self.Id,
+                PublicKey = await(await KeyChainAsync()).GetPublicKeyAsync("self").ConfigureAwait(false),
+                ProtocolVersion = "ipfs/0.1.0"
+            };
 
-                var self = await KeyApi.GetPublicKeyAsync("self").ConfigureAwait(false) 
-                 ?? await KeyApi.CreateAsync("self", null, 0).ConfigureAwait(false);
+            var version = typeof(DfsService).GetTypeInfo().Assembly.GetName().Version;
+            localPeer.AgentVersion = $"net-ipfs/{version.Major}.{version.Minor}.{version.Revision}";
+            Log.Debug("Built local peer");
+            LocalPeer = localPeer;
 
-                var localPeer = new Peer
-                {
-                    Id = self.Id,
-                    PublicKey = await _keyStoreService.GetPublicKeyAsync("self").ConfigureAwait(false),
-                    ProtocolVersion = "ipfs/0.1.0"
-                };
+            //Swarm
+            Log.Debug("Building swarm service");
 
-                var version = typeof(DfsService).GetTypeInfo().Assembly.GetName().Version;
-                localPeer.AgentVersion = $"net-ipfs/{version.Major}.{version.Minor}.{version.Revision}";
-                Log.Debug("Built local peer");
-                return localPeer;
-            });
-            
-            SwarmService = new AsyncLazy<SwarmService>(async () =>
+            if (Options.Swarm.PrivateNetworkKey == null)
             {
-                Log.Debug("Building swarm service");
-                
-                if (Options.Swarm.PrivateNetworkKey == null)
+                var path = Path.Combine(Options.Repository.Folder, "swarm.key");
+                if (File.Exists(path))
                 {
-                    var path = Path.Combine(Options.Repository.Folder, "swarm.key");
-                    if (File.Exists(path))
+                    using (var x = File.OpenText(path))
                     {
-                        using (var x = File.OpenText(path))
-                        {
-                            Options.Swarm.PrivateNetworkKey = new PreSharedKey();
-                            Options.Swarm.PrivateNetworkKey.Import(x);
-                        }
+                        Options.Swarm.PrivateNetworkKey = new PreSharedKey();
+                        Options.Swarm.PrivateNetworkKey.Import(x);
                     }
                 }
+            }
 
-                var peer = await LocalPeer.ConfigureAwait(false);
-                var self = await KeyApi.GetPrivateKeyAsync("self").ConfigureAwait(false);
-                
-                var swarm = new SwarmService
-                {
-                    LocalPeer = peer,
-                    LocalPeerKey = Key.CreatePrivateKey(self),
-                    NetworkProtector = Options.Swarm.PrivateNetworkKey == null
-                        ? null
-                        : new Psk1Protector
-                        {
-                            Key = Options.Swarm.PrivateNetworkKey
-                        }
-                };
-                
-                if (Options.Swarm.PrivateNetworkKey != null)
-                {
-                    Log.Debug($"Private network {Options.Swarm.PrivateNetworkKey.Fingerprint().ToHexString()}");
-                }
+            //var peer = await LocalPeer.ConfigureAwait(false);
+            //var self = await KeyApi.GetPrivateKeyAsync("self").ConfigureAwait(false);
 
-                Log.Debug("Built swarm service");
-                return swarm;
-            });
-            
-            BitSwapService = new AsyncLazy<IBitswapService>(async () =>
-            {
-                Log.Debug("Building bitswap service");
-                var bitswap = new BlockExchange.BitswapService
+            //var swarm = new SwarmService
+            //{
+            //    LocalPeer = LocalPeer,
+            //    LocalPeerKey = Key.CreatePrivateKey(await KeyApi.GetPrivateKeyAsync("self").ConfigureAwait(false)),
+            //    NetworkProtector = Options.Swarm.PrivateNetworkKey == null
+            //        ? null
+            //        : new Psk1Protector
+            //        {
+            //            Key = Options.Swarm.PrivateNetworkKey
+            //        }
+            //};
+
+            SwarmService.LocalPeer = LocalPeer;
+            SwarmService.LocalPeerKey =
+                Key.CreatePrivateKey(await KeyApi.GetPrivateKeyAsync("self").ConfigureAwait(false));
+            SwarmService.NetworkProtector = Options.Swarm.PrivateNetworkKey == null
+                ? null
+                : new Psk1Protector
                 {
-                    SwarmService = await SwarmService.ConfigureAwait(false),
-                    BlockService = BlockApi
+                    Key = Options.Swarm.PrivateNetworkKey
                 };
-                Log.Debug("Built bitswap service");
-                return bitswap;
-            });
-            
-            DhtService = new AsyncLazy<DhtService>(async () =>
+
+
+            if (Options.Swarm.PrivateNetworkKey != null)
             {
-                Log.Debug("Building DHT service");
-                var dht = new DhtService
-                {
-                    SwarmService = await SwarmService.ConfigureAwait(false)
-                };
-                dht.SwarmService.Router = dht;
-                Log.Debug("Built DHT service");
-                return dht;
-            });
+                Log.Debug($"Private network {Options.Swarm.PrivateNetworkKey.Fingerprint().ToHexString()}");
+            }
+
+            Log.Debug("Built swarm service");
+
+            //SwarmService = swarm;
+
+
+            Log.Debug("Building bitswap service");
+            //var bitswap = new BitswapService
+            //{
+            //    SwarmService = SwarmService,
+            //    BlockService = BlockApi
+            //};
+            Log.Debug("Built bitswap service");
+            //BitSwapService = bitswap;
+            BitSwapService.SwarmService = SwarmService;
+            BitSwapService.BlockService = BlockApi;
+
+
+            Log.Debug("Building DHT service");
+            //var dht = new DhtService
+            //{
+            //    SwarmService = SwarmService
+            //};
+            DhtService.SwarmService.Router = DhtService;
             
-            PingService = new AsyncLazy<Ping1>(async () =>
+            Log.Debug("Built DHT service");
+            //DhtService = dht;
+
+
+            Log.Debug("Building Ping service");
+            //var ping = new Ping1
+            //{
+            //    SwarmService = SwarmService
+            //};
+            Log.Debug("Built Ping service");
+            PingService.SwarmService = SwarmService;
+
+
+            Log.Debug("Building PubSub service");
+            //var pubsub = new PubSubService
+            //{
+            //    LocalPeer = LocalPeer
+            //};
+            PubSubService.LocalPeer = LocalPeer;
+            PubSubService.Routers.Add(new FloodRouter
             {
-                Log.Debug("Building Ping service");
-                var ping = new Ping1
-                {
-                    SwarmService = await SwarmService.ConfigureAwait(false)
-                };
-                Log.Debug("Built Ping service");
-                return ping;
+                SwarmService = SwarmService
             });
-            
-            PubSubService = new AsyncLazy<PubSubService>(async () =>
-            {
-                Log.Debug("Building PubSub service");
-                var pubsub = new PubSubService
-                {
-                    LocalPeer = await LocalPeer.ConfigureAwait(false)
-                };
-                pubsub.Routers.Add(new FloodRouter
-                {
-                    SwarmService = await SwarmService.ConfigureAwait(false)
-                });
-                Log.Debug("Built PubSub service");
-                return pubsub;
-            });
+            Log.Debug("Built PubSub service");
+            //PubSubService = pubsub;
         }
-        
+
         /// <summary>
-        ///   Starts the network services.
+        ///     Starts the network services.
         /// </summary>
         /// <returns>
-        ///   A task that represents the asynchronous operation.
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         /// <remarks>
-        ///   Starts the various IPFS and Lib.P2P network services.  This should
-        ///   be called after any configuration changes.
+        ///     Starts the various IPFS and Lib.P2P network services.  This should
+        ///     be called after any configuration changes.
         /// </remarks>
         /// <exception cref="Exception">
-        ///   When the engine is already started.
+        ///     When the engine is already started.
         /// </exception>
         public async Task StartAsync()
         {
+            _dfsState.IsStarted = true;
             if (_stopTasks.Count > 0)
             {
                 throw new Exception("IPFS engine is already started.");
@@ -337,11 +369,11 @@ namespace Catalyst.Core.Modules.Dfs
             // Repository must be at the correct version.
             await MigrationManager.MirgrateToVersionAsync(MigrationManager.LatestVersion).ConfigureAwait(false);
 
-            var localPeer = await LocalPeer.ConfigureAwait(false);
+            var localPeer = LocalPeer;
             Log.Debug("starting " + localPeer.Id);
 
             // Everybody needs the swarm.
-            var swarm = await SwarmService.ConfigureAwait(false);
+            var swarm = SwarmService;
             _stopTasks.Add(async () => { await swarm.StopAsync().ConfigureAwait(false); });
             await swarm.StartAsync().ConfigureAwait(false);
 
@@ -357,28 +389,28 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 async () =>
                 {
-                    var bitSwap = await BitSwapService.ConfigureAwait(false);
+                    var bitSwap = BitSwapService;
                     _stopTasks.Add(async () => await bitSwap.StopAsync().ConfigureAwait(false));
                     await bitSwap.StartAsync().ConfigureAwait(false);
                 },
                 async () =>
                 {
-                    var dht = await DhtService.ConfigureAwait(false);
+                    var dht = DhtService;
                     _stopTasks.Add(async () => await dht.StopAsync().ConfigureAwait(false));
                     await dht.StartAsync().ConfigureAwait(false);
                 },
                 async () =>
                 {
-                    var ping = await PingService.ConfigureAwait(false);
+                    var ping = PingService;
                     _stopTasks.Add(async () => await ping.StopAsync().ConfigureAwait(false));
                     await ping.StartAsync().ConfigureAwait(false);
                 },
                 async () =>
                 {
-                    var pubsub = await PubSubService.ConfigureAwait(false);
+                    var pubsub = PubSubService;
                     _stopTasks.Add(async () => await pubsub.StopAsync().ConfigureAwait(false));
                     await pubsub.StartAsync().ConfigureAwait(false);
-                },
+                }
             };
 
             Log.Debug("waiting for services to start");
@@ -431,7 +463,7 @@ namespace Catalyst.Core.Modules.Dfs
                 {
                     var bootstrap = new Bootstrap
                     {
-                        Addresses = await this.BootstrapApi.ListAsync()
+                        Addresses = await BootstrapApi.ListAsync()
                     };
                     bootstrap.PeerDiscovered += OnPeerDiscovered;
                     _stopTasks.Add(async () => await bootstrap.StopAsync().ConfigureAwait(false));
@@ -456,13 +488,13 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <summary>
-        ///   Stops the running services.
+        ///     Stops the running services.
         /// </summary>
         /// <returns>
-        ///   A task that represents the asynchronous operation.
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         /// <remarks>
-        ///   Multiple calls are okay.
+        ///     Multiple calls are okay.
         /// </remarks>
         public async Task StopAsync()
         {
@@ -487,18 +519,18 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <summary>
-        ///   A synchronous start.
+        ///     A synchronous start.
         /// </summary>
         /// <remarks>
-        ///   Calls <see cref="StartAsync"/> and waits for it to complete.
+        ///     Calls <see cref="StartAsync" /> and waits for it to complete.
         /// </remarks>
         public void Start() { StartAsync().ConfigureAwait(false).GetAwaiter().GetResult(); }
 
         /// <summary>
-        ///   A synchronous stop.
+        ///     A synchronous stop.
         /// </summary>
         /// <remarks>
-        ///   Calls <see cref="StopAsync"/> and waits for it to complete.
+        ///     Calls <see cref="StopAsync" /> and waits for it to complete.
         /// </remarks>
         public void Stop()
         {
@@ -517,22 +549,22 @@ namespace Catalyst.Core.Modules.Dfs
                 Log.Error("Failure when stopping the engine", e);
             }
         }
-        
+
 #pragma warning disable VSTHRD100 // Avoid async void methods
         /// <summary>
-        ///   Fired when a peer is discovered.
+        ///     Fired when a peer is discovered.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="peer"></param>
         /// <remarks>
-        ///   Registers the peer with the <see cref="SwarmService"/>.
+        ///     Registers the peer with the <see cref="SwarmService" />.
         /// </remarks>
-        async void OnPeerDiscovered(object sender, Peer peer)
+        private async void OnPeerDiscovered(object sender, Peer peer)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
             try
             {
-                var swarm = await SwarmService.ConfigureAwait(false);
+                var swarm = SwarmService;
                 swarm.RegisterPeer(peer);
             }
             catch (Exception ex)
@@ -554,74 +586,74 @@ namespace Catalyst.Core.Modules.Dfs
         ///   A task that represents the asynchronous operation. The task's result is
         ///   the <see cref="KeyStoreService"/>.
         /// </returns>
-        //public async Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default(CancellationToken))
-        //{
-        //    // TODO: this should be a LazyAsync property.
-        //    if (_keyStoreService == null)
-        //    {
-        //        lock (this)
-        //        {
-        //            if (_keyStoreService == null)
-        //            {
-        //                _keyStoreService = new KeyStoreService(Options.Repository.Folder)
-        //                {
-        //                    Options = Options.KeyChain
-        //                };
-        //            }
-        //        }
+        public async Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default(CancellationToken))
+        {
+            // TODO: this should be a LazyAsync property.
+            if (_keyStoreService == null)
+            {
+                lock (this)
+                {
+                    if (_keyStoreService == null)
+                    {
+                        _keyStoreService = new KeyStoreService(_fileSystem)
+                        {
+                            Options = Options.KeyChain
+                        };
+                    }
+                }
 
-        //        await _keyStoreService.SetPassphraseAsync(passphrase, cancel).ConfigureAwait(false);
+                await _keyStoreService.SetPassphraseAsync(passphrase, cancel).ConfigureAwait(false);
 
-        //        // Maybe create "self" key, this is the local peer's id.
-        //        var self = await _keyStoreService.FindKeyByNameAsync("self", cancel).ConfigureAwait(false) ?? await _keyStoreService.CreateAsync("self", null, 0, cancel).ConfigureAwait(false);
-        //    }
+                // Maybe create "self" key, this is the local peer's id.
+                var self = await _keyStoreService.FindKeyByNameAsync("self", cancel).ConfigureAwait(false) ?? await _keyStoreService.CreateAsync("self", null, 0, cancel).ConfigureAwait(false);
+            }
 
-        //    return _keyStoreService;
-        //}
+            return _keyStoreService;
+        }
 
         #region Class members
 
         /// <summary>
-        ///   Determines latency to a peer.
+        ///     Determines latency to a peer.
         /// </summary>
-        public AsyncLazy<Ping1> PingService { get; private set; }
-        
+        public Ping1 PingService { get; private set; }
+
         /// <summary>
-        ///   Provides access to the local peer.
+        ///     Provides access to the local peer.
         /// </summary>
         /// <returns>
-        ///   A task that represents the asynchronous operation. The task's result is
-        ///   a <see cref="Peer"/>.
+        ///     A task that represents the asynchronous operation. The task's result is
+        ///     a <see cref="Peer" />.
         /// </returns>
-        public AsyncLazy<Peer> LocalPeer { get; private set; }
-        
+        public Peer LocalPeer { get; private set; }
+
         /// <summary>
-        ///   Manages the version of the repository.
+        ///     Manages the version of the repository.
         /// </summary>
         public IMigrationManager MigrationManager { get; set; }
 
         #region Dfs Services
-        
-        /// <summary>
-        ///   Manages communication with other peers.
-        /// </summary>
-        public AsyncLazy<SwarmService> SwarmService { get; private set; }
 
         /// <summary>
-        ///   Manages publishng and subscribing to messages.
+        ///     Manages communication with other peers.
         /// </summary>
-        public AsyncLazy<PubSubService> PubSubService { get; private set; }
+        public SwarmService SwarmService { get; private set; }
 
         /// <summary>
-        ///   Exchange blocks with other peers.
+        ///     Manages publishng and subscribing to messages.
         /// </summary>
-        public AsyncLazy<IBitswapService> BitSwapService { get; private set; }
-        
+        public PubSubService PubSubService { get; private set; }
+
         /// <summary>
-        ///   Finds information with a distributed hash table.
+        ///     Exchange blocks with other peers.
         /// </summary>
-        public AsyncLazy<DhtService> DhtService { get; private set; }
-        
+        public IBitswapService BitSwapService { get; private set; }
+
+        /// <summary>
+        ///     Finds information with a distributed hash table.
+        /// </summary>
+        public DhtService DhtService { get; private set; }
+
         #endregion
 
         #region CoreAPI Support
@@ -675,19 +707,19 @@ namespace Catalyst.Core.Modules.Dfs
         public IStatsApi StatsApi { get; set; }
 
         #endregion
-        
+
         #endregion
-        
+
         #region IDisposable Support
 
-        bool _disposedValue = false; // To detect redundant calls
+        private bool _disposedValue; // To detect redundant calls
 
         /// <summary>
-        ///  Releases the unmanaged and optionally managed resources.
+        ///     Releases the unmanaged and optionally managed resources.
         /// </summary>
         /// <param name="disposing">
-        ///   <b>true</b> to release both managed and unmanaged resources; <b>false</b> 
-        ///   to release only unmanaged resources.
+        ///     <b>true</b> to release both managed and unmanaged resources; <b>false</b>
+        ///     to release only unmanaged resources.
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
@@ -695,25 +727,22 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 return;
             }
-            
+
             _disposedValue = true;
 
             if (!disposing)
             {
                 return;
             }
-            
+
             passphrase?.Dispose();
             Stop();
         }
 
         /// <summary>
-        ///   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+        public void Dispose() { Dispose(true); }
 
         #endregion
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,6 +55,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly IBitSwapApi _bitSwapApi;
         private readonly IFileSystem _fileSystem;
         private readonly BlockOptions _blockOptions;
+        private readonly DfsState _dfsState;
 
         public IPinApi PinApi { get; set; }
 
@@ -66,13 +67,14 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         /// <param name="swarmApi"></param>
         /// <param name="fileSystem"></param>
         /// <param name="blockOptions"></param>
-        public BlockApi(IBitSwapApi bitSwapApi, IDhtApi dhtApi, ISwarmApi swarmApi, IFileSystem fileSystem, BlockOptions blockOptions)
+        public BlockApi(IBitSwapApi bitSwapApi, IDhtApi dhtApi, ISwarmApi swarmApi, IFileSystem fileSystem, BlockOptions blockOptions, DfsState dfsState)
         {
             _bitSwapApi = bitSwapApi;
             _dhtApi = dhtApi;
             _swarmApi = swarmApi;
             _fileSystem = fileSystem;
             _blockOptions = blockOptions;
+            _dfsState = dfsState;
         }
 
         public FileStore<Cid, DataBlock> Store
@@ -255,7 +257,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             else
             {
                 await Store.PutAsync(cid, block, cancel).ConfigureAwait(false);
-                await _dhtApi.ProvideAsync(cid, advertise: false, cancel: cancel).ConfigureAwait(false);
+                if (_dfsState.IsStarted)
+                {
+                    await _dhtApi.ProvideAsync(cid, advertise: false, cancel: cancel).ConfigureAwait(false);
+                }
 
                 Log.DebugFormat("Added block '{0}'", cid);
             }

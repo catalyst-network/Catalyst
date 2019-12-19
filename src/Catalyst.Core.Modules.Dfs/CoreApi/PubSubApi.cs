@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -13,7 +13,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         private readonly IPubSubService _pubSubService;
 
-        public PubSubApi(IPubSubService pubSubService)
+        public PubSubApi(PubSubService pubSubService)
         {
             _pubSubService = pubSubService;
         }

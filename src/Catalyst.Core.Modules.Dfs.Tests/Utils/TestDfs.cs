@@ -7,13 +7,16 @@ using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using Lib.P2P.Routing;
+using Microsoft.AspNetCore.Mvc.Internal;
 using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
 
@@ -39,15 +42,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
 
             if (keyType == default)
             {
-                keyType = "ed25519";
+                keyType = "rsa";
+
+                //"ed25519";
             }
-            
+
             containerBuilder.RegisterInstance(new PasswordManager(new TestPasswordReader(), new PasswordRegistry())).As<IPasswordManager>().SingleInstance();
             containerBuilder.RegisterInstance(filesystem.FileSystem).As<IFileSystem>();
             containerBuilder.RegisterType<MigrationManager>().As<IMigrationManager>();
             containerBuilder.RegisterModule<HashingModule>();
-            containerBuilder.RegisterType<DhtService>().As<IDhtService>().SingleInstance();
-            containerBuilder.RegisterType<DhtApi>().As<IDhtApi>().SingleInstance();
+            //containerBuilder.RegisterType<KatDhtService>().As<IDhtService>().SingleInstance();
+            //containerBuilder.RegisterType<DhtApi>().As<IDhtApi>().SingleInstance();
             containerBuilder.RegisterInstance(new KeyStoreService(filesystem.FileSystem)).As<IKeyStoreService>().SingleInstance();
             containerBuilder.RegisterModule(new DfsModule());
 

@@ -790,9 +790,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await b.StartAsync();
                 var bootstrapPeers = new MultiAddress[]
                 {
-                    (await b.LocalPeer).Addresses.First()
+                    (b.LocalPeer).Addresses.First()
                 };
-                Console.WriteLine($"B is {await b.LocalPeer}");
+                Console.WriteLine($"B is {b.LocalPeer}");
 
                 // Node that has the content.
                 c.Options.Discovery.DisableMdns = true;
@@ -801,7 +801,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 c.Options.Discovery.BootstrapPeers = bootstrapPeers;
                 await c.StartAsync();
                 await c.SwarmApi.ConnectAsync(bootstrapPeers[0]);
-                Console.WriteLine($"C is {await c.LocalPeer}");
+                Console.WriteLine($"C is {c.LocalPeer}");
 
                 var fsn = await c.UnixFsApi.AddTextAsync("some content");
                 var cid = fsn.Id;
@@ -812,7 +812,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 a.Options.Swarm.PrivateNetworkKey = psk;
                 a.Options.Discovery.BootstrapPeers = bootstrapPeers;
                 await a.StartAsync();
-                Console.WriteLine($"A is {await a.LocalPeer}");
+                Console.WriteLine($"A is {a.LocalPeer}");
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
                 var content = await a.UnixFsApi.ReadAllTextAsync(cid, cts.Token);
                 Assert.Equal("some content", content);

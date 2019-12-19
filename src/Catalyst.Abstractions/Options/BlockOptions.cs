@@ -1,4 +1,5 @@
-﻿using Catalyst.Abstractions.Dfs.CoreApi;
+using System.Diagnostics;
+using Catalyst.Abstractions.Dfs.CoreApi;
 
 namespace Catalyst.Abstractions.Options
 {
