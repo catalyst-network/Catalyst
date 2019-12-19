@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
+using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
@@ -77,7 +78,7 @@ namespace Catalyst.Core.Modules.Web3
                 try
                 {
                     var host = Host.CreateDefaultBuilder()
-                       .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                       .UseServiceProviderFactory(new SharedContainerProviderFactory(_container))
                        .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
                        .ConfigureWebHostDefaults(
                             webHostBuilder =>
@@ -101,37 +102,10 @@ namespace Catalyst.Core.Modules.Web3
             base.Load(builder);
         }
 
-        //todo Clean up - find a better way to reuse the ContainerBuilder loaded into the module
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<Web3HandlerResolver>().As<IWeb3HandlerResolver>().SingleInstance();
             builder.RegisterType<EthereumJsonSerializer>().As<IJsonSerializer>().SingleInstance();
-            
-            //Mempool repo
-            builder.RegisterInstance(_container.Resolve<IRepository<PublicEntryDao, string>>())
-               .As<IRepository<PublicEntryDao, string>>()
-               .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<IMempoolService<PublicEntryDao>>())
-               .As<IMempoolService<PublicEntryDao>>()
-               .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<IMempool<PublicEntryDao>>())
-               .As<IMempool<PublicEntryDao>>().SingleInstance();
-
-            builder.RegisterInstance(_container.Resolve<IDeltaHashProvider>())
-               .As<IDeltaHashProvider>()
-               .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<IDfs>())
-               .As<IDfs>()
-               .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<IMapperProvider>())
-               .As<IMapperProvider>()
-               .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<IWeb3EthApi>())
-               .As<IWeb3EthApi>()
-               .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<ILogger>())
-               .As<ILogger>()
-               .SingleInstance();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -177,6 +151,31 @@ namespace Catalyst.Core.Modules.Web3
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(swagger => { swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API"); });
+            }
+        }
+
+        private sealed class SharedContainerProviderFactory : IServiceProviderFactory<ContainerBuilder>
+        {
+            readonly IContainer _container;
+
+            public SharedContainerProviderFactory(IContainer container)
+            {
+                _container = container;
+            }
+
+            public ContainerBuilder CreateBuilder(IServiceCollection services)
+            {
+                var builder = new ContainerBuilder();
+                builder.Populate(services);
+                return builder;
+            }
+
+            public IServiceProvider CreateServiceProvider(ContainerBuilder containerBuilder)
+            {
+                // using an obsolete way of updating an already created container
+                containerBuilder.Update(_container);
+
+                return new AutofacServiceProvider(_container);
             }
         }
     }
