@@ -26,7 +26,6 @@ using Catalyst.Abstractions.Kvm;
 using Catalyst.Protocol.Transaction;
 using Nethermind.Core.Crypto;
 using Nethermind.Store;
-using Nethermind.Evm;
 
 namespace Catalyst.Abstractions.Ledger
 {
@@ -36,7 +35,7 @@ namespace Catalyst.Abstractions.Ledger
         IDeltaResolver DeltaResolver { get; }
         IDeltaCache DeltaCache { get; }
 
-        ITransactionProcessor Processor { get; }
+        IDeltaExecutor Executor { get; }
         IStorageProvider StorageProvider { get; }
         IStateProvider StateProvider { get; }
         ITransactionReceiptResolver ReceiptResolver { get; }

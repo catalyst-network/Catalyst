@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly IHashProvider _hashProvider;
         public const string ComponentName = nameof(Web3EthApi);
 
-        public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, [KeyFilter(ComponentName)] ITransactionProcessor processor, [KeyFilter(ComponentName)] IStorageProvider storageProvider, [KeyFilter(ComponentName)] IStateProvider stateProvider, ITransactionReceiptRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider)
+        public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, IDeltaExecutor executor, [KeyFilter(ComponentName)] IStorageProvider storageProvider, [KeyFilter(ComponentName)] IStateProvider stateProvider, ITransactionReceiptRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider)
         {
             _receipts = receipts;
             _transactionReceived = transactionReceived ?? throw new ArgumentNullException(nameof(transactionReceived));
@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Ledger
             StateReader = stateReader ?? throw new ArgumentNullException(nameof(stateReader));
             DeltaResolver = deltaResolver ?? throw new ArgumentNullException(nameof(deltaResolver));
             DeltaCache = deltaCache ?? throw new ArgumentNullException(nameof(deltaCache));
-            Processor = processor ?? throw new ArgumentNullException(nameof(processor));
+            Executor = executor ?? throw new ArgumentNullException(nameof(executor));
             StorageProvider = storageProvider ?? throw new ArgumentNullException(nameof(storageProvider));
             StateProvider = stateProvider ?? throw new ArgumentNullException(nameof(stateProvider));
         }
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Ledger
         public IDeltaResolver DeltaResolver { get; }
         public IDeltaCache DeltaCache { get; }
 
-        public ITransactionProcessor Processor { get; }
+        public IDeltaExecutor Executor { get; }
         public IStorageProvider StorageProvider { get; }
         public IStateProvider StateProvider { get; }
         public ITransactionReceiptResolver ReceiptResolver => this;

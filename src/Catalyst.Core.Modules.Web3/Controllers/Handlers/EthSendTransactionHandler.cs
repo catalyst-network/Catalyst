@@ -25,7 +25,6 @@ using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Transaction;
-using Google.Protobuf.WellKnownTypes;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 

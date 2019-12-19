@@ -23,10 +23,10 @@
 
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
-using Nethermind.Core;
+using Catalyst.Protocol.Transaction;
 using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm.Tracing;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
@@ -36,7 +36,6 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override long Handle(TransactionForRpc transactionCall, IWeb3EthApi api)
         {
-            long deltaNumber = api.DeltaResolver.LatestDeltaNumber;
             Delta delta = api.GetLatestDelta();
             Keccak root = new Keccak(delta.StateRoot.ToByteArray());
 
@@ -45,16 +44,22 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 transactionCall.Gas = delta.GasLimit;
             }
 
-            Transaction transaction = transactionCall.ToTransaction();
+            Delta newDelta = delta.Clone();
 
-            transaction.Nonce = api.StateReader.GetNonce(root, transaction.SenderAddress);
-            transaction.Hash = Transaction.CalculateHash(transaction);
-
+            newDelta.PreviousDeltaDfsHash = api.DeltaResolver.LatestDelta.ToArray().ToByteString();
+            newDelta.CoinbaseEntries.Clear();
+            newDelta.ConfidentialEntries.Clear();
+            newDelta.PublicEntries.Clear();
+            newDelta.PublicEntries.Add(new PublicEntry
+            {
+                Nonce = (ulong) api.StateReader.GetNonce(root, transactionCall.From),
+                
+            });
+            
             CallOutputTracer callOutputTracer = new CallOutputTracer();
-            BlockHeader header = new BlockHeader(Keccak.Zero, Keccak.Zero, Address.Zero, 1, deltaNumber, (long) delta.GasLimit, new UInt256(delta.TimeStamp.Seconds), null);
 
             api.StateProvider.StateRoot = root;
-            api.Processor.CallAndRestore(transaction, header, callOutputTracer);
+            api.Executor.CallAndRestore(newDelta, callOutputTracer);
             api.StateProvider.Reset();
             api.StorageProvider.Reset();
 
