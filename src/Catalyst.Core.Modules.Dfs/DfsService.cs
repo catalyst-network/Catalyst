@@ -198,7 +198,7 @@ namespace Catalyst.Core.Modules.Dfs
                 Constants.DfsDataSubDir)).FullName;
 
             // The seed nodes for the catalyst network.
-            Options.Discovery.BootstrapPeers = seedServers;
+            //Options.Discovery.BootstrapPeers = seedServers;
 
             // Do not use the public IPFS network, use a private network
             // of catalyst only nodes.

@@ -3,44 +3,48 @@ using Makaretu.Dns;
 namespace Catalyst.Abstractions.Options
 {
     /// <summary>
-    ///   Configuration options for the <see cref="Catalyst.Core.Modules.Dfs.Dfs"/>.
+    ///     Configuration options for the <see cref="Catalyst.Core.Modules.Dfs.Dfs" />.
     /// </summary>
-    /// <seealso cref="Microsoft.Extensions.Options.Options"/>
+    /// <seealso cref="Microsoft.Extensions.Options.Options" />
     public class DfsOptions
     {
         /// <summary>
-        ///   Repository options.
+        ///     Repository options.
         /// </summary>
         public RepositoryOptions Repository { get; set; } = new RepositoryOptions();
 
         /// <summary>
-        ///   KeyChain options.
+        ///     KeyChain options.
         /// </summary>
         public KeyChainOptions KeyChain { get; set; } = new KeyChainOptions();
 
         /// <summary>
-        ///   Provides access to the Domain Name System.
+        ///     Provides access to the Domain Name System.
         /// </summary>
         /// <value>
-        ///   Defaults to <see cref="Makaretu.Dns.DotClient"/>, DNS over TLS.
+        ///     Defaults to <see cref="Makaretu.Dns.DotClient" />, DNS over TLS.
         /// </value>
         public IDnsClient Dns { get; set; } = new DotClient();
 
         /// <summary>
-        ///   Block options.
+        ///     Block options.
         /// </summary>
         public BlockOptions Block { get; set; }
 
         /// <summary>
-        ///    Discovery options.
+        ///     Discovery options.
         /// </summary>
-        public DiscoveryOptions Discovery { get; set; } = new DiscoveryOptions();
+        public DiscoveryOptions Discovery { get; set; }
 
         /// <summary>
-        ///   Swarm (network) options.
+        ///     Swarm (network) options.
         /// </summary>
         public SwarmOptions Swarm { get; set; } = new SwarmOptions();
 
-        public DfsOptions(BlockOptions blockOptions) { Block = blockOptions; }
+        public DfsOptions(BlockOptions blockOptions, DiscoveryOptions discoveryOptions)
+        {
+            Block = blockOptions;
+            Discovery = discoveryOptions;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using MultiFormats;
 
 namespace Catalyst.Abstractions.Options
@@ -21,7 +21,7 @@ namespace Catalyst.Abstractions.Options
         ///   the block API; otherwise the values in the configuration
         ///   file are used.
         /// </remarks>
-        public IEnumerable<MultiAddress> BootstrapPeers;
+        public IEnumerable<MultiAddress> BootstrapPeers { set; get; }
 
         /// <summary>
         ///   Disables the multicast DNS discovery of other peers
