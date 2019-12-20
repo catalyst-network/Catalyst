@@ -166,6 +166,9 @@ namespace Catalyst.Core.Modules.Keystore
                     );
                     break;
                 }
+                case Ed25519PrivateKeyParameters _:
+                    edGen.AddKeyTransRecipient(kp.Public, Base58.Decode(ekey.Id));
+                    break;
                 default:
                 {
                     throw new NotSupportedException($"The key type {kp.Private.GetType().Name} is not supported.");
