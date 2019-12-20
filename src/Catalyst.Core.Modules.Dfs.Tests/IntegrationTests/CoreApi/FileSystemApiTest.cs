@@ -10,11 +10,13 @@ using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.Core.Modules.Dfs.UnixFileSystem;
+using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
 using ICSharpCode.SharpZipLib.Tar;
 using Lib.P2P;
 using Lib.P2P.Cryptography;
 using MultiFormats;
+using MultiFormats.Registry;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -29,7 +31,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public FileSystemApiTest(ITestOutputHelper output)
         {
             _testOutputHelper = output;
-            ipfs = TestDfs.GetTestDfs(output);
+            ipfs = TestDfs.GetTestDfs(output, null, null, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")));
         }
         
         [Fact]

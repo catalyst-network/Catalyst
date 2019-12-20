@@ -6,6 +6,7 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Cryptography;
@@ -30,7 +31,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             internal TestDfsFileSystem(ITestOutputHelper output) : base(output) { }
         }
         
-        public static IDfsService GetTestDfs(ITestOutputHelper output, string folderName = default, string keyType = default)
+        public static IDfsService GetTestDfs(ITestOutputHelper output, string folderName = default, string keyType = default, IHashProvider hashProvider = null)
         {
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();
@@ -52,6 +53,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             containerBuilder.RegisterInstance(filesystem.FileSystem).As<IFileSystem>();
             containerBuilder.RegisterType<MigrationManager>().As<IMigrationManager>();
             containerBuilder.RegisterModule<HashingModule>();
+
+            if (hashProvider != null)
+            {
+                containerBuilder.RegisterInstance(hashProvider).As<IHashProvider>();
+            }
+
             //containerBuilder.RegisterType<KatDhtService>().As<IDhtService>().SingleInstance();
             //containerBuilder.RegisterType<DhtApi>().As<IDhtApi>().SingleInstance();
             containerBuilder.RegisterInstance(new KeyStoreService(filesystem.FileSystem)).As<IKeyStoreService>().SingleInstance();

@@ -17,30 +17,24 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     internal sealed class ObjectApi : IObjectApi
     {
-        internal static readonly IDagNode EmptyNode;
-        internal static readonly IDagNode EmptyDirectory;
-
-        private readonly IBlockApi _blockApi;
-        private readonly IHashProvider _hashProvider;
-
-        static ObjectApi()
+        internal static IDagNode GetEmptyNode(IHashProvider hashProvider)
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-            EmptyNode = new DagNode(new byte[0], hashProvider);
-            var _ = EmptyNode.Id;
+            return new DagNode(new byte[0], hashProvider);
+        }
 
+        internal static IDagNode GetEmptyDirectory(IHashProvider hashProvider)
+        {
             var dm = new DataMessage
             {
                 Type = DataType.Directory
             };
-            using (var pb = new MemoryStream())
-            {
-                ProtoBuf.Serializer.Serialize(pb, dm);
-                EmptyDirectory = new DagNode(pb.ToArray(), hashProvider);
-            }
-
-            _ = EmptyDirectory.Id;
+            using var pb = new MemoryStream();
+            ProtoBuf.Serializer.Serialize(pb, dm);
+            return new DagNode(pb.ToArray(), hashProvider);
         }
+
+        private readonly IBlockApi _blockApi;
+        private readonly IHashProvider _hashProvider;
 
         public ObjectApi(IBlockApi blockApi, IHashProvider hashProvider)
         {
@@ -78,9 +72,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             switch (template)
             {
                 case null:
-                    return Task.FromResult(EmptyNode);
+                    return Task.FromResult(GetEmptyNode(_hashProvider));
                 case "unixfs-dir":
-                    return Task.FromResult(EmptyDirectory);
+                    return Task.FromResult(GetEmptyDirectory(_hashProvider));
                 default:
                     throw new ArgumentException($"Unknown template '{template}'.", "template");
             }
@@ -88,7 +82,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public Task<IDagNode> NewDirectoryAsync(CancellationToken cancel = default)
         {
-            return Task.FromResult(EmptyDirectory);
+            return Task.FromResult(GetEmptyDirectory(_hashProvider));
         }
 
         public Task<IDagNode> PutAsync(byte[] data,

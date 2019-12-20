@@ -108,10 +108,7 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<DfsOptions>().SingleInstance();
             builder.RegisterType<BlockOptions>().SingleInstance();
             builder.RegisterType<RepositoryOptions>().SingleInstance();
-            builder.RegisterInstance(new DiscoveryOptions
-            {
-                BootstrapPeers = BootstrapApi.Defaults
-            }).As<DiscoveryOptions>().SingleInstance();
+            builder.RegisterType<DiscoveryOptions>().SingleInstance();
         }
     }
 }

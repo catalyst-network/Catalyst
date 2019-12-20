@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.FileSystem;
 using Common.Logging;
@@ -33,19 +34,27 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(BlockApi));
 
-        private static readonly DataBlock EmptyDirectory = new DataBlock
+        private static DataBlock GetEmptyDirectory(IHashProvider hashProvider)
         {
-            DataBytes = ObjectApi.EmptyDirectory.ToArray(),
-            Id = ObjectApi.EmptyDirectory.Id,
-            Size = ObjectApi.EmptyDirectory.ToArray().Length
-        };
+            var emptyDirectory = ObjectApi.GetEmptyDirectory(hashProvider);
+            return new DataBlock
+            {
+                DataBytes = emptyDirectory.ToArray(),
+                Id = emptyDirectory.Id,
+                Size = emptyDirectory.ToArray().Length
+            };
+        }
 
-        private static readonly DataBlock EmptyNode = new DataBlock
+        private static DataBlock GetEmptyNode(IHashProvider hashProvider)
         {
-            DataBytes = ObjectApi.EmptyNode.ToArray(),
-            Id = ObjectApi.EmptyNode.Id,
-            Size = ObjectApi.EmptyNode.ToArray().Length
-        };
+            var emptyNode = ObjectApi.GetEmptyNode(hashProvider);
+            return new DataBlock
+            {
+                DataBytes = emptyNode.ToArray(),
+                Id = emptyNode.Id,
+                Size = emptyNode.ToArray().Length
+            };
+        }
 
         private FileStore<Cid, DataBlock> _store;
 
@@ -55,6 +64,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly IFileSystem _fileSystem;
         private readonly BlockOptions _blockOptions;
         private readonly DfsState _dfsState;
+        private readonly IHashProvider _hashProvider;
 
         public IPinApi PinApi { get; set; }
 
@@ -70,7 +80,8 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             ISwarmApi swarmApi,
             IFileSystem fileSystem,
             BlockOptions blockOptions,
-            DfsState dfsState)
+            DfsState dfsState,
+            IHashProvider hashProvider)
         {
             _bitSwapApi = bitSwapApi;
             _dhtApi = dhtApi;
@@ -78,6 +89,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             _fileSystem = fileSystem;
             _blockOptions = blockOptions;
             _dfsState = dfsState;
+            _hashProvider = hashProvider;
         }
 
         public FileStore<Cid, DataBlock> Store
@@ -136,14 +148,16 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public async Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default)
         {
             // Hack for empty object and empty directory object
-            if (id == EmptyDirectory.Id)
+            var emptyDirectory = GetEmptyDirectory(_hashProvider);
+            if (id == emptyDirectory.Id)
             {
-                return EmptyDirectory;
+                return emptyDirectory;
             }
 
-            if (id == EmptyNode.Id)
+            var emptyNode = GetEmptyNode(_hashProvider);
+            if (id == emptyNode.Id)
             {
-                return EmptyNode;
+                return emptyNode;
             }
 
             // If identity hash, then CID has the content.
