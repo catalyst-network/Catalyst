@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Dag;
 using Lib.P2P;
@@ -43,11 +44,12 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
         public static Task<Stream> CreateReadStreamAsync(Cid id,
             IBlockApi blockService,
             IKeyApi keyChain,
+            IHashProvider hashProvider,
             CancellationToken cancel)
         {
             // TODO: A content-type registry should be used.
             if (id.ContentType == "dag-pb")
-                return CreateDagProtoBufStreamAsync(id, blockService, keyChain, cancel);
+                return CreateDagProtoBufStreamAsync(id, blockService, keyChain, hashProvider, cancel);
             else if (id.ContentType == "raw")
                 return CreateRawStreamAsync(id, blockService, keyChain, cancel);
             else if (id.ContentType == "cms")
@@ -68,10 +70,11 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
         static async Task<Stream> CreateDagProtoBufStreamAsync(Cid id,
             IBlockApi blockService,
             IKeyApi keyChain,
+            IHashProvider hashProvider,
             CancellationToken cancel)
         {
             var block = await blockService.GetAsync(id, cancel).ConfigureAwait(false);
-            var dag = new DagNode(block.DataStream);
+            var dag = new DagNode(block.DataStream, hashProvider);
             var dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
 
             if (dm.Type != DataType.File)
@@ -87,7 +90,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
 
             if (dm.BlockSizes != null)
             {
-                return new ChunkedStream(blockService, keyChain, dag);
+                return new ChunkedStream(blockService, keyChain, dag, hashProvider);
             }
 
             throw new Exception($"Cannot determine the file format of '{id}'.");

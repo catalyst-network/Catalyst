@@ -158,7 +158,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
 
                     var pb = new MemoryStream();
                     ProtoBuf.Serializer.Serialize<DataMessage>(pb, dm);
-                    var dag = new DagNode(pb.ToArray(), _hashProvider, null);
+                    var dag = new DagNode(pb.ToArray(), null);
 
                     // Save it.
                     dag.Id = await blockService.PutAsync(

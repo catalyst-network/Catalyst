@@ -12,62 +12,71 @@ using MultiFormats;
 namespace Catalyst.Core.Lib.Dag
 {
     /// <summary>
-    ///   A node in the IPFS Merkle DAG.
+    ///     A node in the IPFS Merkle DAG.
     /// </summary>
     /// <remarks>
-    ///   A <b>DagNode</b> has opaque <see cref="DagNode.DataBytes"/>
-    ///   and a set of navigable <see cref="DagNode.Links"/>.
+    ///     A <b>DagNode</b> has opaque <see cref="DagNode.DataBytes" />
+    ///     and a set of navigable <see cref="DagNode.Links" />.
     /// </remarks>
     [DataContract]
     public class DagNode : IDagNode, IEquatable<DagNode>
     {
         private Cid id;
-        private IHashProvider _hashProvider;
-        long? size;
+        private readonly IHashProvider _hashProvider;
+        private long? size;
 
         /// <summary>
-        ///   Create a new instance of a <see cref="DagNode"/> with the specified
-        ///   <see cref="DagNode.DataBytes"/> and <see cref="DagNode.Links"/>
+        ///     Create a new instance of a <see cref="DagNode" /> with the specified
+        ///     <see cref="DagNode.DataBytes" /> and <see cref="DagNode.Links" />
         /// </summary>
         /// <param name="data">
-        ///   The opaque data, can be <b>null</b>.
+        ///     The opaque data, can be <b>null</b>.
         /// </param>
         /// <param name="links">
-        ///   The links to other nodes.
+        ///     The links to other nodes.
         /// </param>
         /// <param name="hashAlgorithm">
-        ///   The name of the hashing algorithm to use; defaults to 
-        ///   <see cref="MultiHash.DefaultAlgorithmName"/>.
+        ///     The name of the hashing algorithm to use; defaults to
+        ///     <see cref="MultiHash.DefaultAlgorithmName" />.
         /// </param>
         public DagNode(byte[] data,
             IHashProvider hashProvider,
             IEnumerable<IMerkleLink> links = null)
         {
-            this.DataBytes = data ?? (new byte[0]);
-            this.Links = (links ?? (new DagLink[0]))
+            DataBytes = data ?? new byte[0];
+            Links = (links ?? new DagLink[0])
                .OrderBy(link => link.Name ?? "");
-            this._hashProvider = hashProvider;
+            _hashProvider = hashProvider;
         }
 
         /// <summary>
-        ///   Creates a new instance of the <see cref="DagNode"/> class from the
-        ///   specified <see cref="Stream"/>.
+        ///     Creates a new instance of the <see cref="DagNode" /> class from the
+        ///     specified <see cref="Stream" />.
         /// </summary>
         /// <param name="stream">
-        ///   A <see cref="Stream"/> containing the binary representation of the
-        ///   <b>DagNode</b>.
+        ///     A <see cref="Stream" /> containing the binary representation of the
+        ///     <b>DagNode</b>.
         /// </param>
-        public DagNode(Stream stream) { Read(stream); }
+        public DagNode(Stream stream, IHashProvider hashProvider)
+        {
+            _hashProvider = hashProvider;
+            Read(stream);
+        }
 
         /// <summary>
-        ///   Creates a new instance of the <see cref="DagNode"/> class from the
-        ///   specified <see cref="CodedInputStream"/>.
+        ///     Creates a new instance of the <see cref="DagNode" /> class from the
+        ///     specified <see cref="CodedInputStream" />.
         /// </summary>
-        /// <param name="stream">(
-        ///   A <see cref="CodedInputStream"/> containing the binary representation of the
-        ///   <b>DagNode</b>.
+        /// <param name="stream">
+        ///     (
+        ///     A <see cref="CodedInputStream" /> containing the binary representation of the
+        ///     <b>DagNode</b>.
         /// </param>
-        public DagNode(CodedInputStream stream) { Read(stream); }
+        public DagNode(CodedInputStream stream, IHashProvider hashProvider)
+        {
+            _hashProvider = hashProvider;
+            Read(stream);
+        }
 
         /// <inheritdoc />
         [DataMember]
@@ -78,10 +87,10 @@ namespace Catalyst.Core.Lib.Dag
         public byte[] DataBytes { get; private set; }
 
         /// <inheritdoc />
-        public Stream DataStream { get { return new MemoryStream(DataBytes, false); } }
+        public Stream DataStream => new MemoryStream(DataBytes, false);
 
         /// <summary>
-        ///   The serialised size in bytes of the node.
+        ///     The serialised size in bytes of the node.
         /// </summary>
         [DataMember]
         public long Size
@@ -110,97 +119,94 @@ namespace Catalyst.Core.Lib.Dag
 
                 return id;
             }
-            set
-            {
-                id = value;
-            }
+            set => id = value;
         }
 
         /// <inheritdoc />
         public IMerkleLink ToLink(string name = "") { return new DagLink(name, Id, Size); }
 
         /// <summary>
-        ///   Adds a link.
+        ///     Adds a link.
         /// </summary>
         /// <param name="link">
-        ///   The link to add.
+        ///     The link to add.
         /// </param>
         /// <returns>
-        ///   A new <see cref="DagNode"/> with the existing and new
-        ///   links.
+        ///     A new <see cref="DagNode" /> with the existing and new
+        ///     links.
         /// </returns>
         /// <remarks>
-        ///   A <b>DagNode</b> is immutable.
+        ///     A <b>DagNode</b> is immutable.
         /// </remarks>
         public IDagNode AddLink(IMerkleLink link) { return AddLinks(new[] {link}); }
 
         /// <summary>
-        ///   Adds a sequence of links.
+        ///     Adds a sequence of links.
         /// </summary>
         /// <param name="links">
-        ///   The sequence of links to add.
+        ///     The sequence of links to add.
         /// </param>
         /// <returns>
-        ///   A new <see cref="DagNode"/> with the existing and new
-        ///   links.
+        ///     A new <see cref="DagNode" /> with the existing and new
+        ///     links.
         /// </returns>
         /// <remarks>
-        ///   A <b>DagNode</b> is immutable.
+        ///     A <b>DagNode</b> is immutable.
         /// </remarks>
         public IDagNode AddLinks(IEnumerable<IMerkleLink> links)
         {
             var all = Links.Union(links);
-            return new DagNode(DataBytes, this._hashProvider, all);
+            return new DagNode(DataBytes, _hashProvider, all);
         }
 
         /// <summary>
-        ///   Removes a link.
+        ///     Removes a link.
         /// </summary>
         /// <param name="link">
-        ///   The <see cref="IMerkleLink"/> to remove.
+        ///     The <see cref="IMerkleLink" /> to remove.
         /// </param>
         /// <returns>
-        ///   A new <see cref="DagNode"/> with the <paramref name="link"/>
-        ///   removed.
+        ///     A new <see cref="DagNode" /> with the <paramref name="link" />
+        ///     removed.
         /// </returns>
         /// <remarks>
-        ///   A <b>DagNode</b> is immutable.
-        ///   <para>
-        ///   No exception is raised if the <paramref name="link"/> does
-        ///   not exist.
-        ///   </para>
+        ///     A <b>DagNode</b> is immutable.
+        ///     <para>
+        ///         No exception is raised if the <paramref name="link" /> does
+        ///         not exist.
+        ///     </para>
         /// </remarks>
         public DagNode RemoveLink(IMerkleLink link) { return RemoveLinks(new[] {link}); }
 
         /// <summary>
-        ///   Remove a sequence of links.
+        ///     Remove a sequence of links.
         /// </summary>
         /// <param name="links">
-        ///   The sequence of <see cref="IMerkleLink"/> to remove.
+        ///     The sequence of <see cref="IMerkleLink" /> to remove.
         /// </param>
         /// <returns>
-        ///   A new <see cref="DagNode"/> with the <paramref name="links"/>
-        ///   removed.
+        ///     A new <see cref="DagNode" /> with the <paramref name="links" />
+        ///     removed.
         /// </returns>
         /// <remarks>
-        ///   A <b>DagNode</b> is immutable.
-        ///   <para>
-        ///   No exception is raised if any of the <paramref name="links"/> do
-        ///   not exist.
-        ///   </para>
+        ///     A <b>DagNode</b> is immutable.
+        ///     <para>
+        ///         No exception is raised if any of the <paramref name="links" /> do
+        ///         not exist.
+        ///     </para>
         /// </remarks>
         public DagNode RemoveLinks(IEnumerable<IMerkleLink> links)
         {
             var ignore = links.ToLookup(link => link.Id);
             var some = Links.Where(link => !ignore.Contains(link.Id));
-            return new DagNode(DataBytes, this._hashProvider, some);
+            return new DagNode(DataBytes, _hashProvider, some);
         }
 
         /// <summary>
-        ///   Writes the binary representation of the node to the specified <see cref="Stream"/>.
+        ///     Writes the binary representation of the node to the specified <see cref="Stream" />.
         /// </summary>
         /// <param name="stream">
-        ///   The <see cref="Stream"/> to write to.
+        ///     The <see cref="Stream" /> to write to.
         /// </param>
         public void Write(Stream stream)
         {
@@ -211,10 +217,10 @@ namespace Catalyst.Core.Lib.Dag
         }
 
         /// <summary>
-        ///   Writes the binary representation of the node to the specified <see cref="CodedOutputStream"/>.
+        ///     Writes the binary representation of the node to the specified <see cref="CodedOutputStream" />.
         /// </summary>
         /// <param name="stream">
-        ///   The <see cref="CodedOutputStream"/> to write to.
+        ///     The <see cref="CodedOutputStream" /> to write to.
         /// </param>
         public void Write(CodedOutputStream stream)
         {
@@ -241,7 +247,7 @@ namespace Catalyst.Core.Lib.Dag
             }
         }
 
-        void Read(Stream stream)
+        private void Read(Stream stream)
         {
             using (var cis = new CodedInputStream(stream, true))
             {
@@ -249,10 +255,10 @@ namespace Catalyst.Core.Lib.Dag
             }
         }
 
-        void Read(CodedInputStream stream)
+        private void Read(CodedInputStream stream)
         {
             var links = new List<DagLink>();
-            bool done = false;
+            var done = false;
 
             while (!stream.IsAtEnd && !done)
             {
@@ -281,10 +287,10 @@ namespace Catalyst.Core.Lib.Dag
         }
 
         /// <summary>
-        ///   Returns the IPFS binary representation as a byte array.
+        ///     Returns the IPFS binary representation as a byte array.
         /// </summary>
         /// <returns>
-        ///   A byte array.
+        ///     A byte array.
         /// </returns>
         public byte[] ToArray()
         {
@@ -295,16 +301,16 @@ namespace Catalyst.Core.Lib.Dag
             }
         }
 
-        void ComputeHash()
+        private void ComputeHash()
         {
             using var ms = new MemoryStream();
             Write(ms);
             size = ms.Position;
             ms.Position = 0;
-            id = this._hashProvider.ComputeMultiHash(ms);
+            id = _hashProvider.ComputeMultiHash(ms);
         }
 
-        void ComputeSize()
+        private void ComputeSize()
         {
             using (var ms = new MemoryStream())
             {
@@ -312,37 +318,37 @@ namespace Catalyst.Core.Lib.Dag
                 size = ms.Position;
             }
         }
-        
+
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
             var that = obj as DagNode;
-            return that != null && this.Id == that.Id;
+            return that != null && Id == that.Id;
         }
 
         /// <inheritdoc />
-        public bool Equals(DagNode that) { return that != null && this.Id == that.Id; }
+        public bool Equals(DagNode that) { return that != null && Id == that.Id; }
 
         /// <summary>
-        ///  TODO
+        ///     TODO
         /// </summary>
         public static bool operator ==(DagNode a, DagNode b)
         {
-            if (object.ReferenceEquals(a, b)) return true;
-            if (object.ReferenceEquals(a, null)) return false;
-            if (object.ReferenceEquals(b, null)) return false;
+            if (ReferenceEquals(a, b)) return true;
+            if (ReferenceEquals(a, null)) return false;
+            if (ReferenceEquals(b, null)) return false;
 
             return a.Equals(b);
         }
 
         /// <summary>
-        ///  TODO
+        ///     TODO
         /// </summary>
         public static bool operator !=(DagNode a, DagNode b)
         {
-            if (object.ReferenceEquals(a, b)) return false;
-            if (object.ReferenceEquals(a, null)) return true;
-            if (object.ReferenceEquals(b, null)) return true;
+            if (ReferenceEquals(a, b)) return false;
+            if (ReferenceEquals(a, null)) return true;
+            if (ReferenceEquals(b, null)) return true;
 
             return !a.Equals(b);
         }

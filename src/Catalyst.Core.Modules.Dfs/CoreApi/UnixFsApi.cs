@@ -30,17 +30,19 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly IBlockApi _blockApi;
         private readonly IKeyApi _keyApi;
         private readonly INameApi _nameApi;
+        private readonly DfsState _dfsState;
         static ILog log = LogManager.GetLogger(typeof(UnixFsApi));
 
         private const int DefaultLinksPerBlock = 174;
 
-        public UnixFsApi(IDhtApi dhtApi, IBlockApi blockApi, IKeyApi keyApi, INameApi nameApi)
+        public UnixFsApi(IDhtApi dhtApi, IBlockApi blockApi, IKeyApi keyApi, INameApi nameApi, DfsState dfsState, IHashProvider hashProvider)
         {
             _dhtApi = dhtApi;
             _blockApi = blockApi;
             _keyApi = keyApi;
             _nameApi = nameApi;
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _dfsState = dfsState;
+            _hashProvider = hashProvider;
         }
 
         public async Task<IFileSystemNode> AddFileAsync(string path,
@@ -97,7 +99,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             }
 
             // Advertise the root node.
-            if (options.Pin)
+            if (options.Pin && _dfsState.IsStarted)
             {
                 await _dhtApi.ProvideAsync(node.Id, advertise: true, cancel: cancel).ConfigureAwait(false);
             }
@@ -262,7 +264,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 throw new NotSupportedException($"Cannot read content type '{cid.ContentType}'.");
             }
 
-            var dag = new DagNode(block.DataStream);
+            var dag = new DagNode(block.DataStream, _hashProvider);
             var dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
             var fsn = new UnixFsNode
             {
@@ -295,7 +297,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             var r = await _nameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
             var cid = Cid.Decode(r.Remove(0, 6));
-            return await UnixFs.CreateReadStreamAsync(cid, _blockApi, _keyApi, cancel).ConfigureAwait(false);
+            return await UnixFs.CreateReadStreamAsync(cid, _blockApi, _keyApi, _hashProvider, cancel).ConfigureAwait(false);
         }
 
         public async Task<Stream> ReadFileAsync(string path,
@@ -338,7 +340,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
             if (cid.ContentType == "dag-pb")
             {
-                dag = new DagNode(block.DataStream);
+                dag = new DagNode(block.DataStream, _hashProvider);
                 dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
             }
 

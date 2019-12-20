@@ -12,7 +12,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     public class DhtApiTest
     {
         private IDfsService ipfs;
-        private Peer _peer;
         private MultiHash _locaId;
 
         public DhtApiTest(ITestOutputHelper output)
@@ -32,9 +31,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.NotNull(peer.Id);
             Assert.StartsWith("ipfs/", peer.ProtocolVersion);
             Assert.NotNull(peer.PublicKey);
-            Assert.Equal(_locaId, _peer.Id);
-            Assert.NotNull(_peer.Addresses);
-            Assert.True(_peer.IsValid());
+            Assert.Equal(_locaId, peer.Id);
             Assert.True(peer.IsValid());
         }
 

@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Catalyst.Abstractions.Dfs.CoreApi
@@ -44,6 +44,11 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </example>
         Task<string> ResolveAsync(string name,
             bool recursive = false,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
+
+        Task<string> ResolveNameAsync(string name,
+            bool recursive = false,
+            bool nocache = false,
+            CancellationToken cancel = default);
     }
 }

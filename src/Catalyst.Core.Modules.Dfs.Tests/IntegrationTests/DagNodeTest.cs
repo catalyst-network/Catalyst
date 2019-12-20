@@ -216,8 +216,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public void Null_Stream()
         {
-            TestUtils.ExceptionAssert.Throws(() => new DagNode((CodedInputStream) null));
-            TestUtils.ExceptionAssert.Throws(() => new DagNode((Stream) null));
+            TestUtils.ExceptionAssert.Throws(() => new DagNode((CodedInputStream) null, _hashProvider));
+            TestUtils.ExceptionAssert.Throws(() => new DagNode((Stream) null, _hashProvider));
         }
 
         [Fact]
@@ -227,7 +227,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 "124F0A4401551340309ECC489C12D6EB4CC40F50C902F2B4D0ED77EE511A7C7A9BCD3CA86D4CD86F989DD35BC5FF499670DA34255B45B0CFD830E81F605DCF7DC5542E93AE9CD76F120568656C6C6F180B0A020801"
                    .ToHexBuffer();
             var ms = new MemoryStream(data, false);
-            var node = new DagNode(ms);
+            var node = new DagNode(ms, _hashProvider);
             Assert.Equal("0801", node.DataBytes.ToHexString());
             Assert.Equal(1, node.Links.Count());
             var link = node.Links.First();
@@ -260,7 +260,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var ms = new MemoryStream();
             a.Write(ms);
             ms.Position = 0;
-            var b = new DagNode(ms);
+            var b = new DagNode(ms, _hashProvider);
             
             Assert.Equal(a.DataBytes, b.DataBytes);
             Assert.Equal(a.ToArray(), b.ToArray());

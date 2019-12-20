@@ -29,7 +29,7 @@ namespace Catalyst.Core.Modules.Dfs.LinkedData
         {
             using (var ms = new MemoryStream(data, false))
             {
-                var node = new DagNode(ms);
+                var node = new DagNode(ms, _hashProvider);
                 var links = node.Links
                    .Select(link => CBORObject.NewMap()
                        .Add("Cid", CBORObject.NewMap()

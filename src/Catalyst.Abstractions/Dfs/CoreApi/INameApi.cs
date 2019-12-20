@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Lib.P2P;
@@ -90,7 +90,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   <c>/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao</c>.
         /// </returns>
         Task<string> ResolveAsync(string name,
-            bool recursive = true,
+            bool recursive = false,
             bool nocache = false,
             CancellationToken cancel = default(CancellationToken));
     }

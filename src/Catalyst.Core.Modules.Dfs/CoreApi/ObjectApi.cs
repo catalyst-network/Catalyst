@@ -42,10 +42,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             _ = EmptyDirectory.Id;
         }
 
-        public ObjectApi(IBlockApi blockApi)
+        public ObjectApi(IBlockApi blockApi, IHashProvider hashProvider)
         {
             _blockApi = blockApi;
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = hashProvider;
         }
 
         public async Task<Stream> DataAsync(Cid id, CancellationToken cancel = default)
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public async Task<IDagNode> GetAsync(Cid id, CancellationToken cancel = default)
         {
             var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
-            return new DagNode(block.DataStream);
+            return new DagNode(block.DataStream, _hashProvider);
         }
 
         public async Task<IEnumerable<IMerkleLink>> LinksAsync(Cid id,
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             }
 
             var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
-            var node = new DagNode(block.DataStream);
+            var node = new DagNode(block.DataStream, _hashProvider);
             return node.Links;
         }
 
@@ -108,7 +108,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public async Task<ObjectStat> StatAsync(Cid id, CancellationToken cancel = default)
         {
             var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
-            var node = new DagNode(block.DataStream);
+            var node = new DagNode(block.DataStream, _hashProvider);
             return new ObjectStat
             {
                 BlockSize = block.Size,

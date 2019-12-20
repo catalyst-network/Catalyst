@@ -42,67 +42,32 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             CancellationToken cancel = default)
         {
             var path = name;
-
-            //if (path.StartsWith("/ipns/"))
-            //{
-            //    path = await ipfs.Name.ResolveAsync(path, recursive, false, cancel).ConfigureAwait(false);
-            //    if (!recursive)
-            //        return path;
-            //}
-
-            //if (path.StartsWith("/ipfs/"))
-            //{
-            //    path = path.Remove(0, 6);
-            //}
-
             var parts = path.Split('/').Where(p => p.Length > 0).ToArray();
+            if (path.StartsWith("/ipns/") || IsDomainName(parts[0]))
+            {
+                return await _dnsApi.ResolveNameAsync(path, recursive, false, cancel).ConfigureAwait(false);
+            }
+
+            if (path.StartsWith("/ipfs/"))
+            {
+                path = path.Remove(0, 6);
+            }
+
+            parts = path.Split('/').Where(p => p.Length > 0).ToArray();
             if (parts.Length == 0)
                 throw new ArgumentException($"Cannot resolve '{name}'.");
 
-            //do
-            //{
-            //if (name.StartsWith("/ipns/"))
-            //{
-            //    name = name.Substring(6);
-            //}
-
-            //var parts = name.Split('/').Where(p => p.Length > 0).ToArray();
-            //if (parts.Length == 0)
-            //{
-            //    throw new ArgumentException($"Cannot resolve '{name}'.");
-            //}
-
-            //if (IsDomainName(parts[0]))
-            //{
-            //    name = await _dnsApi.ResolveAsync(parts[0], recursive, cancel).ConfigureAwait(false);
-            //}
-            //else
-            //{
             var id = Cid.Decode(parts[0]);
             foreach (var child in parts.Skip(1))
             {
                 var container = await _objectApi.GetAsync(id, cancel).ConfigureAwait(false);
                 var link = container.Links.FirstOrDefault(l => l.Name == child);
                 if (link == null)
-                {
                     throw new ArgumentException($"Cannot resolve '{child}' in '{name}'.");
-                }
-
                 id = link.Id;
             }
 
             return "/ipfs/" + id.Encode();
-
-            //throw new NotImplementedException("Resolving IPNS is not yet implemented.");
-
-            //if (parts.Length > 1)
-            //{
-            //    name = name + "/" + string.Join("/", parts, 1, parts.Length - 1);
-            //}
-
-            //} while (recursive && !name.StartsWith("/ipfs/"));
-
-            //return name;
         }
 
         /// <summary>

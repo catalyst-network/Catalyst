@@ -130,6 +130,7 @@ namespace Catalyst.Core.Modules.Dfs
             IConfigApi configApi,
             IDagApi dagApi,
             IDhtApi dhtApi,
+            IDnsApi dnsApi,
             KatDhtService dhtService,
             IUnixFsApi unixFsApi,
             IKeyApi keyApi,
@@ -172,6 +173,7 @@ namespace Catalyst.Core.Modules.Dfs
             _fileSystem = fileSystem;
             _hashProvider = hashProvider;
             _dfsState = dfsState;
+            DnsApi = dnsApi;
 
             passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword,
                 "Please provide your IPFS password");

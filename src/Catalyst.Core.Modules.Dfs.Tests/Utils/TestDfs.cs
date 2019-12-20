@@ -15,6 +15,7 @@ using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
+using FluentAssertions;
 using Lib.P2P.Routing;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Newtonsoft.Json.Linq;

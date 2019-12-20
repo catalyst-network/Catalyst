@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Dag;
 using Lib.P2P;
 using Microsoft.AspNetCore.Http;
@@ -106,10 +107,14 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     /// </remarks>
     public class ObjectController : IpfsController
     {
+        private readonly IHashProvider _hashProvider;
         /// <summary>
         ///     Creates a new controller.
         /// </summary>
-        public ObjectController(ICoreApi ipfs) : base(ipfs) { }
+        public ObjectController(ICoreApi ipfs, IHashProvider hashProvider) : base(ipfs)
+        {
+            _hashProvider = hashProvider;
+        }
 
         /// <summary>
         ///     Create an object from a template.
@@ -165,7 +170,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                 case "protobuf":
                     using (var stream = file.OpenReadStream())
                     {
-                        var dag = new DagNode(stream);
+                        var dag = new DagNode(stream, _hashProvider);
                         node = await IpfsCore.ObjectApi.PutAsync(dag, Cancel);
                     }
 
