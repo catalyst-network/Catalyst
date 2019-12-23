@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -368,6 +368,12 @@ namespace Lib.P2P
         ///   The addresses that can be used.
         /// </summary>
         public MultiAddressWhiteList WhiteList { get; set; } = new MultiAddressWhiteList();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dhtService"></param>
+        public SwarmService(DhtService dhtService = null) { Router = dhtService; }
 
         /// <inheritdoc />
         public Task StartAsync()

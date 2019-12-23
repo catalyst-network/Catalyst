@@ -47,6 +47,7 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.Core.Modules.Mempool;
+using Catalyst.Core.Modules.Mempool.Repositories;
 using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Web3;
 using Catalyst.Protocol.Network;
@@ -88,10 +89,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _rpcSettings = RpcSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
             _nodePeerId = nodeSettings.PeerId;
             
-            _dfsService = TestDfs.GetTestDfs(output);
+            _dfsService = TestDfs.GetTestDfs(output, null, "ed25519");
 
-            _memPool = new Mempool(
-                new TestMempoolRepository(new InMemoryRepository<PublicEntryDao, string>()));
+            _memPool = new Mempool(new MempoolService(new InMemoryRepository<PublicEntryDao, string>()));
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             var peersInRepo = knownPeerIds.Select(p => new Peer
             {
@@ -138,15 +138,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false);
         }
 
-        public async Task StartSocketsAsync()
-        {
-            await _node.StartSocketsAsync();
-        }
+        public async Task StartSocketsAsync() { await _node.StartSocketsAsync(); }
 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+        public void Dispose() { Dispose(true); }
 
         protected void OverrideContainerBuilderRegistrations()
         {

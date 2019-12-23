@@ -33,6 +33,12 @@ namespace Lib.P2P.Protocols
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="swarmService"></param>
+        public Ping1(SwarmService swarmService) { SwarmService = swarmService; }
+
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,
             Stream stream,

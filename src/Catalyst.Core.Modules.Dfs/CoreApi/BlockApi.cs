@@ -263,6 +263,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             {
                 return new Cid
                 {
+                    Version = 1,
                     ContentType = contentType,
                     Hash = MultiHash.ComputeHash(data, "identity")
                 };
@@ -271,6 +272,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             // CID V1 encoding defaulting to base32 which is not
             var cid = new Cid
             {
+                Version = 1,
                 ContentType = contentType,
                 Hash = MultiHash.ComputeHash(data, multiHash)
             };

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Lib.P2P.Protocols;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,13 +29,13 @@ namespace Lib.P2P.Tests.Protocols
         {
             var swarmB = new SwarmService {LocalPeer = other};
             await swarmB.StartAsync();
-            var pingB = new Ping1 {SwarmService = swarmB};
+            var pingB = new Ping1(swarmB);
             await pingB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
             var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
-            var pingA = new Ping1 {SwarmService = swarm};
+            var pingA = new Ping1(swarm);
             await pingA.StartAsync();
             try
             {
@@ -57,13 +57,13 @@ namespace Lib.P2P.Tests.Protocols
         {
             var swarmB = new SwarmService {LocalPeer = other};
             await swarmB.StartAsync();
-            var pingB = new Ping1 {SwarmService = swarmB};
+            var pingB = new Ping1(swarmB);
             await pingB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
             var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
-            var pingA = new Ping1 {SwarmService = swarm};
+            var pingA = new Ping1(swarm);
             await pingA.StartAsync();
             try
             {

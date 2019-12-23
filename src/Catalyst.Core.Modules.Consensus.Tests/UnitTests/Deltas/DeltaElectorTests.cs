@@ -27,7 +27,10 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -38,10 +41,13 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
+using SharpRepository.InMemoryRepository;
 using Xunit;
+using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -71,15 +77,20 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
     public class DeltaElectorTests
     {
+        private readonly TestScheduler _testScheduler;
         private readonly ILogger _logger;
+        private readonly IReputationManager _reputationManager;
         private readonly IHashProvider _hashProvider;
         private readonly IMemoryCache _cache;
         private readonly IDeltaProducersProvider _deltaProducersProvider;
 
         public DeltaElectorTests()
         {
+            _testScheduler = new TestScheduler();
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _logger = Substitute.For<ILogger>();
+            _reputationManager =
+                new ReputationManager(new PeerRepository(new InMemoryRepository<Peer, string>()), _logger, _testScheduler);
             _cache = Substitute.For<IMemoryCache>();
             _deltaProducersProvider = Substitute.For<IDeltaProducersProvider>();
         }
@@ -89,7 +100,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void When_receiving_bad_favourite_should_log_and_not_hit_the_cache(FavouriteDeltaBroadcast badFavourite,
             Type exceptionType)
         {
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _logger);
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             elector.OnNext(badFavourite);
 
@@ -105,7 +116,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             AddVoterAsExpectedProducer(favourite.VoterId);
 
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _logger);
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             var addedEntry = Substitute.For<ICacheEntry>();
             _cache.CreateEntry(Arg.Is<string>(s => s.Equals(candidateListKey)))
@@ -131,7 +142,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 AddVoterAsExpectedProducer(favourite.VoterId);
 
-                var elector = new DeltaElector(realCache, _deltaProducersProvider, _logger);
+                var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
                 elector.OnNext(favourite);
                 elector.OnNext(favourite);
@@ -153,13 +164,39 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
                .Returns(new List<PeerId> {PeerIdHelper.GetPeerId("the only known producer")});
 
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _logger);
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             elector.OnNext(favourite);
 
             _deltaProducersProvider.Received(1)
                .GetDeltaProducersFromPreviousDelta(Arg.Is<Cid>(h =>
                     favourite.Candidate.PreviousDeltaDfsHash.Equals(h.ToArray().ToByteString())));
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
+        }
+
+        [Fact]
+        public void Should_DeRep_Peers_That_Vote_When_They_Are_Not_Delta_Producers()
+        {
+            var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
+
+            var peer = new Peer {Reputation = 100, PeerId = favourite.VoterId};
+            _reputationManager.PeerRepository.Add(new Peer {Reputation = 100, PeerId = favourite.VoterId});
+
+            var expectedReputation = peer.Reputation + ReputationEventType.VoterIsNotProducer.Amount;
+
+            _deltaProducersProvider
+               .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
+               .Returns(new List<PeerId>());
+
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+
+            elector.OnNext(favourite);
+
+            _testScheduler.Start();
+
+            var updatedPeer = _reputationManager.PeerRepository.Get(favourite.VoterId);
+            expectedReputation.Should().Be(updatedPeer.Reputation);
+
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
         }
 
@@ -188,7 +225,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 AddVoterAsExpectedProducer(favourites.Select(f => f.VoterId).ToArray());
 
-                var elector = new DeltaElector(realCache, _deltaProducersProvider, _logger);
+                var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
                 var favouriteStream = favourites.ToObservable();
                 using (favouriteStream.Subscribe(elector))
@@ -231,7 +268,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 AddVoterAsExpectedProducer(favourites.Select(f => f.VoterId).ToArray());
 
-                var elector = new DeltaElector(realCache, _deltaProducersProvider, _logger);
+                var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
                 var favouriteStream = favourites.ToObservable();
                 using (favouriteStream.Subscribe(elector))
@@ -252,7 +289,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             _cache.TryGetValue(Arg.Any<object>(), out Arg.Any<object>()).Returns(false);
 
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _logger);
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             var previousHash = _hashProvider.ComputeUtf8MultiHash("previous").ToCid();
 

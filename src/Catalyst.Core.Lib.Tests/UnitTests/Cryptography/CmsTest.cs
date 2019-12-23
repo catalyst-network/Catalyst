@@ -5,6 +5,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using Xunit;
@@ -20,7 +21,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         {
             _keyStoreService = new KeyStoreService(FileSystem)
             {
-                Options = new DfsOptions(new BlockOptions(), new DiscoveryOptions()).KeyChain
+                Options = new DfsOptions(FileSystem, new BlockOptions(), new DiscoveryOptions(), Constants.DfsDataDirectory).KeyChain
             };
             var securePassword = new SecureString();
 
