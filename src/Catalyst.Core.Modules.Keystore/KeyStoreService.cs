@@ -155,6 +155,7 @@ namespace Catalyst.Core.Modules.Keystore
                     edGen.AddKeyTransRecipient(kp.Public, Base58.Decode(ekey.Id));
                     break;
                 case ECPrivateKeyParameters _:
+
                 {
                     var cert = await CreateBCCertificateAsync(keyName, cancel).ConfigureAwait(false);
                     edGen.AddKeyAgreementRecipient(
@@ -167,7 +168,14 @@ namespace Catalyst.Core.Modules.Keystore
                     break;
                 }
                 case Ed25519PrivateKeyParameters _:
-                    edGen.AddKeyTransRecipient(kp.Public, Base58.Decode(ekey.Id));
+                    var cert2 = await CreateBCCertificateAsync(keyName, cancel).ConfigureAwait(false);
+                    edGen.AddKeyAgreementRecipient(
+                        CmsEnvelopedGenerator.ECDHSha1Kdf,
+                        kp.Private,
+                        kp.Public,
+                        cert2,
+                        CmsEnvelopedGenerator.Aes256Wrap
+                    );
                     break;
                 default:
                 {

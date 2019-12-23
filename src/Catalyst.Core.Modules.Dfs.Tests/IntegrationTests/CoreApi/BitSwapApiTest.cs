@@ -27,9 +27,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         private readonly IDfsService _dfsServiceOther;
         private readonly ITestOutputHelper _testOutputHelper;
         
-        public BitSwapApiTest(ITestOutputHelper output, ITestOutputHelper testOutputHelper)
+        public BitSwapApiTest(ITestOutputHelper output)
         {
-            _testOutputHelper = testOutputHelper;
+            _testOutputHelper = output;
             _dfsService = TestDfs.GetTestDfs(output, "dfs-1");
             _dfsServiceOther = TestDfs.GetTestDfs(output, "dfs-2");
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));

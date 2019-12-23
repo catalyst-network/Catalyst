@@ -20,7 +20,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         {
             _keyStoreService = new KeyStoreService(FileSystem)
             {
-                Options = new DfsOptions(new BlockOptions()).KeyChain
+                Options = new DfsOptions(new BlockOptions(), new DiscoveryOptions()).KeyChain
             };
             var securePassword = new SecureString();
 
