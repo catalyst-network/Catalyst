@@ -108,7 +108,6 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
                     var cid = await blockService.PutAsync(
                         (byte[]) cipher,
                         contentType: "cms",
-                        multiHash: options.Hash,
                         encoding: options.Encoding,
                         pin: options.Pin,
                         cancel: cancel).ConfigureAwait(false);
@@ -128,7 +127,6 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
                     var cid = await blockService.PutAsync(
                         data: data,
                         contentType: "raw",
-                        multiHash: options.Hash,
                         encoding: options.Encoding,
                         pin: options.Pin,
                         cancel: cancel).ConfigureAwait(false);
@@ -163,7 +161,6 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
                     // Save it.
                     dag.Id = await blockService.PutAsync(
                         data: dag.ToArray(),
-                        multiHash: options.Hash,
                         encoding: options.Encoding,
                         pin: options.Pin,
                         cancel: cancel).ConfigureAwait(false);

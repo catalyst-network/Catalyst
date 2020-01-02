@@ -160,7 +160,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             // Save it.
             dag.Id = await blockService.PutAsync(
                 data: dag.ToArray(),
-                multiHash: options.Hash,
                 encoding: options.Encoding,
                 pin: options.Pin,
                 cancel: cancel).ConfigureAwait(false);
@@ -217,7 +216,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             // Save it.
             var cid = await GetBlockService(options).PutAsync(
                 data: dag.ToArray(),
-                multiHash: options.Hash,
                 encoding: options.Encoding,
                 pin: options.Pin,
                 cancel: cancel).ConfigureAwait(false);
@@ -388,7 +386,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         IBlockApi GetBlockService(AddFileOptions options)
         {
             return options.OnlyHash
-                ? new HashOnlyBlockService()
+                ? new HashOnlyBlockService(_hashProvider)
                 : _blockApi;
         }
 
@@ -398,6 +396,12 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         class HashOnlyBlockService : IBlockApi
         {
             public IPinApi PinApi { get; set; }
+            private IHashProvider _hashProvider { set; get; }
+
+            public HashOnlyBlockService(IHashProvider hashProvider)
+            {
+                _hashProvider = hashProvider;
+            }
 
             public Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default)
             {
@@ -406,7 +410,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
             public Task<Cid> PutAsync(byte[] data,
                 string contentType = Cid.DefaultContentType,
-                string multiHash = MultiHash.DefaultAlgorithmName,
                 string encoding = MultiBase.DefaultAlgorithmName,
                 bool pin = false,
                 CancellationToken cancel = default)
@@ -415,15 +418,14 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 {
                     ContentType = contentType,
                     Encoding = encoding,
-                    Hash = MultiHash.ComputeHash(data, multiHash),
-                    Version = (contentType == "dag-pb" && multiHash == "sha2-256") ? 0 : 1
+                    Hash = _hashProvider.ComputeMultiHash(data),
+                    Version = (contentType == "dag-pb" && _hashProvider.HashingAlgorithm.Name == "sha2-256") ? 0 : 1
                 };
                 return Task.FromResult(cid);
             }
 
             public Task<Cid> PutAsync(Stream data,
                 string contentType = Cid.DefaultContentType,
-                string multiHash = MultiHash.DefaultAlgorithmName,
                 string encoding = MultiBase.DefaultAlgorithmName,
                 bool pin = false,
                 CancellationToken cancel = default)

@@ -247,7 +247,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public async Task<Cid> PutAsync(byte[] data,
             string contentType = Cid.DefaultContentType,
-            string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = false,
             CancellationToken cancel = default)
@@ -263,7 +262,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             {
                 return new Cid
                 {
-                    Version = 1,
                     ContentType = contentType,
                     Hash = MultiHash.ComputeHash(data, "identity")
                 };
@@ -272,9 +270,8 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             // CID V1 encoding defaulting to base32 which is not
             var cid = new Cid
             {
-                Version = 1,
                 ContentType = contentType,
-                Hash = MultiHash.ComputeHash(data, multiHash)
+                Hash = _hashProvider.ComputeMultiHash(data)
             };
 
             if (encoding != "base58btc")
@@ -322,7 +319,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public async Task<Cid> PutAsync(Stream data,
             string contentType = Cid.DefaultContentType,
-            string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = false,
             CancellationToken cancel = default)
@@ -330,7 +326,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             await using (var ms = new MemoryStream())
             {
                 await data.CopyToAsync(ms, cancel).ConfigureAwait(false);
-                return await PutAsync(ms.ToArray(), contentType, multiHash, encoding, pin, cancel)
+                return await PutAsync(ms.ToArray(), contentType, encoding, pin, cancel)
                    .ConfigureAwait(false);
             }
         }

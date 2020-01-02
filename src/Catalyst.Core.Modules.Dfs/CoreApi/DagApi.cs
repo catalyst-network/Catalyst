@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -101,7 +101,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 ms.Position = 0;
                 var format = GetDataFormat(contentType);
                 var block = format.Serialize(CBORObject.ReadJSON(ms));
-                return await _blockApi.PutAsync(block, contentType, multiHash, encoding, pin, cancel)
+                return await _blockApi.PutAsync(block, contentType, encoding, pin, cancel)
                    .ConfigureAwait(false);
             }
         }
@@ -115,7 +115,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             var format = GetDataFormat(contentType);
             var block = format.Serialize(CBORObject.Read(data));
-            return await _blockApi.PutAsync(block, contentType, multiHash, encoding, pin, cancel)
+            return await _blockApi.PutAsync(block, contentType, encoding, pin, cancel)
                .ConfigureAwait(false);
         }
 
@@ -128,7 +128,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             var format = GetDataFormat(contentType);
             var block = format.Serialize(CBORObject.FromObject(data, PodOptions));
-            return await _blockApi.PutAsync(block, contentType, multiHash, encoding, pin, cancel)
+            return await _blockApi.PutAsync(block, contentType, encoding, pin, cancel)
                .ConfigureAwait(false);
         }
 

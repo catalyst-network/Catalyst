@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Lib.P2P;
@@ -65,7 +65,6 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </returns>
         Task<Cid> PutAsync(byte[] data,
             string contentType = Cid.DefaultContentType,
-            string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = false,
             CancellationToken cancel = default);
@@ -99,7 +98,6 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </returns>
         Task<Cid> PutAsync(Stream data,
             string contentType = Cid.DefaultContentType,
-            string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = false,
             CancellationToken cancel = default(CancellationToken));

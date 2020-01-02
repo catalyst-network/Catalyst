@@ -100,7 +100,6 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                 var cid = await IpfsCore.BlockApi.PutAsync(
                     (Stream) data,
                     contentType: format,
-                    multiHash: mhtype,
                     encoding: cidBase,
                     pin: false,
                     cancel: Cancel);
