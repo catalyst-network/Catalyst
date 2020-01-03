@@ -25,14 +25,10 @@ using Autofac;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
-using Common.Logging;
-using Nethermind.Core.Specs;
-using Nethermind.Evm;
-using Nethermind.Store;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
-using ILogManager = Nethermind.Logging.ILogManager;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -49,20 +45,18 @@ namespace Catalyst.Core.Modules.Ledger
             builder.RegisterType<DeltaByNumberRepository>().As<IDeltaByNumberRepository>().SingleInstance();
             builder.RegisterType<TransactionReceiptRepository>().As<ITransactionReceiptRepository>().SingleInstance();
             builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();
+            
             builder.RegisterType<Ledger>().As<ILedger>().SingleInstance();
-
-            // Web3EthApi
-            builder.RegisterType<StateProvider>().SingleInstance().Named<IStateProvider>(Web3EthApi.ComponentName);
-            builder.RegisterType<StorageProvider>().SingleInstance().Named<IStorageProvider>(Web3EthApi.ComponentName);
-
-            builder.Register(c => new TransactionProcessor(c.Resolve<ISpecProvider>(),
-                    c.ResolveNamed<IStateProvider>(Web3EthApi.ComponentName),
-                    c.ResolveNamed<IStorageProvider>(Web3EthApi.ComponentName), 
-                    c.Resolve<IVirtualMachine>(),
-                    c.Resolve<ILogManager>()))
-               .SingleInstance().Named<ITransactionProcessor>(Web3EthApi.ComponentName);
-
-            builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance();
+            builder.RegisterExecutionComponents(Ledger.ComponentName);
         }  
+    }
+
+    public class Web3ApiModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance();
+            builder.RegisterExecutionComponents(Web3EthApi.ComponentName);
+        }
     }
 }

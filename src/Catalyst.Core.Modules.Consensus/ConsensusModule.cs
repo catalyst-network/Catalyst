@@ -26,10 +26,13 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Consensus.Deltas.Building;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
+using Catalyst.Core.Modules.Kvm;
+using Nethermind.Store;
 
 namespace Catalyst.Core.Modules.Consensus
 {
@@ -53,10 +56,12 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<TransactionComparerByFeeTimestampAndHash>().As<ITransactionComparer>();
             builder.RegisterType<DeltaHub>().As<IDeltaHub>().SingleInstance();
             builder.RegisterType<DeltaTransactionRetriever>().As<IDeltaTransactionRetriever>().SingleInstance();
-            builder.RegisterType<DeltaBuilder>().As<IDeltaBuilder>().SingleInstance();
             builder.RegisterType<CycleSchedulerProvider>().As<ICycleSchedulerProvider>();
             builder.RegisterType<Consensus>().As<IConsensus>().SingleInstance();
             builder.RegisterInstance(CycleConfiguration.Default).As<ICycleConfiguration>();
+            
+            builder.RegisterType<DeltaBuilder>().As<IDeltaBuilder>().SingleInstance();
+            builder.RegisterExecutionComponents(DeltaBuilder.ComponentName);
 
             base.Load(builder);
         }

@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
@@ -36,22 +35,18 @@ namespace Catalyst.Core.Modules.Web3.Controllers
     [Route("api/[controller]/[action]")]
     public class EthController : Controller
     {
+        private static readonly object Lock = new object();
         private readonly IWeb3EthApi _web3EthApi;
-        private readonly IEthRpcService _ethRpcService;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IWeb3HandlerResolver _handlerResolver;
         private readonly ILogger _logger = Log.Logger.ForContext(typeof(EthController));
 
-        public EthController(IWeb3EthApi web3EthApi, IWeb3HandlerResolver handlerResolver, IJsonSerializer jsonSerializer, IEthRpcService ethRpcService)
+        public EthController(IWeb3EthApi web3EthApi, IWeb3HandlerResolver handlerResolver, IJsonSerializer jsonSerializer)
         {
-            _ethRpcService = ethRpcService;
             _web3EthApi = web3EthApi ?? throw new ArgumentNullException(nameof(web3EthApi));
             _handlerResolver = handlerResolver ?? throw new ArgumentNullException(nameof(handlerResolver));
             _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
         }
-
-        [HttpGet]
-        public long? eth_blockNumber() { return _ethRpcService.eth_blockNumber(); }
 
         [HttpPost]
         public JsonRpcResponse Request([FromBody] JsonRpcRequest request)
@@ -63,7 +58,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
                 return new JsonRpcErrorResponse {Result = null, Error = new Error {Code = (int) ErrorType.MethodNotFound, Data = $"{request.Method}", Message = "Method not found"}};
             }
 
-            lock (_web3EthApi)
+            lock (Lock)
             {
                 object result = handler.Handle(request.Params, _web3EthApi, _jsonSerializer);
                 return new JsonRpcResponse(request, result);

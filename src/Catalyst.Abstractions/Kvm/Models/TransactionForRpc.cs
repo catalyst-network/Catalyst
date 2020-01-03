@@ -69,26 +69,5 @@ namespace Catalyst.Abstractions.Kvm.Models
         public byte[] S { get; set; }
 
         public byte[] R { get; set; }
-
-        public Transaction ToTransaction()
-        {
-            Transaction tx = new Transaction();
-            tx.GasLimit = (long) (Gas ?? 90000);
-            tx.GasPrice = (UInt256) (GasPrice ?? 20.GWei());
-            tx.Nonce = (ulong) (Nonce ?? 0); // here pick the last nonce?
-            tx.To = To;
-            tx.SenderAddress = From;
-            tx.Value = (UInt256) (Value ?? 0);
-            if (tx.To == null)
-            {
-                tx.Init = Data ?? Input;
-            }
-            else
-            {
-                tx.Data = Data ?? Input;
-            }
-
-            return tx;
-        }
     }
 }

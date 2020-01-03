@@ -25,8 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Autofac.Features.AttributeFilters;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
@@ -59,6 +59,8 @@ namespace Catalyst.Core.Modules.Ledger
     /// <inheritdoc cref="IDisposable" />
     public sealed class Ledger : ILedger, IDisposable
     {
+        public const string ComponentName = nameof(Ledger);
+
         public IAccountRepository Accounts { get; }
         private readonly IDeltaExecutor _deltaExecutor;
         private readonly IStateProvider _stateProvider;
@@ -74,14 +76,18 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly IDisposable _deltaUpdatesSubscription;
 
         private readonly object _synchronisationLock = new object();
+        volatile Cid _latestKnownDelta;
+        long _latestKnownDeltaNumber;
 
-        public Cid LatestKnownDelta { get; private set; }
-        public long LatestKnownDeltaNumber { get; private set; }
+        public Cid LatestKnownDelta => _latestKnownDelta;
+
+        public long LatestKnownDeltaNumber => Volatile.Read(ref _latestKnownDeltaNumber);
+
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
-        public Ledger(IDeltaExecutor deltaExecutor,
-            IStateProvider stateProvider,
-            IStorageProvider storageProvider,
+        public Ledger([KeyFilter(ComponentName)] IDeltaExecutor deltaExecutor,
+            [KeyFilter(ComponentName)] IStateProvider stateProvider,
+            [KeyFilter(ComponentName)] IStorageProvider storageProvider,
             ISnapshotableDb stateDb,
             ISnapshotableDb codeDb,
             IAccountRepository accounts,
@@ -107,7 +113,7 @@ namespace Catalyst.Core.Modules.Ledger
             _receipts = receipts;
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
-            LatestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
+            _latestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
         }
 
         private void FlushTransactionsFromDelta(Cid deltaHash)
@@ -239,8 +245,8 @@ namespace Catalyst.Core.Modules.Ledger
                 // store delta numbers
                 _deltas.Map(LatestKnownDeltaNumber, deltaHash);
 
-                LatestKnownDelta = deltaHash;
-                LatestKnownDeltaNumber += 1;
+                _latestKnownDelta = deltaHash;
+                Volatile.Write(ref _latestKnownDeltaNumber, _latestKnownDeltaNumber + 1);
             }
             catch
             {
