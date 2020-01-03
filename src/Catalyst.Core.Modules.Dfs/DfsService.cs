@@ -40,7 +40,6 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Dfs.Migration;
@@ -56,7 +55,6 @@ using Lib.P2P.Routing;
 using Lib.P2P.SecureCommunication;
 using Makaretu.Dns;
 using MultiFormats;
-using Nito.AsyncEx;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs
@@ -211,7 +209,7 @@ namespace Catalyst.Core.Modules.Dfs
             var localPeer = new Peer
             {
                 Id = self.Id,
-                PublicKey = await(await KeyChainAsync()).GetPublicKeyAsync("self").ConfigureAwait(false),
+                PublicKey = await (await KeyChainAsync()).GetPublicKeyAsync("self").ConfigureAwait(false),
                 ProtocolVersion = "ipfs/0.1.0"
             };
 
@@ -236,21 +234,6 @@ namespace Catalyst.Core.Modules.Dfs
                 }
             }
 
-            //var peer = await LocalPeer.ConfigureAwait(false);
-            //var self = await KeyApi.GetPrivateKeyAsync("self").ConfigureAwait(false);
-
-            //var swarm = new SwarmService
-            //{
-            //    LocalPeer = LocalPeer,
-            //    LocalPeerKey = Key.CreatePrivateKey(await KeyApi.GetPrivateKeyAsync("self").ConfigureAwait(false)),
-            //    NetworkProtector = Options.Swarm.PrivateNetworkKey == null
-            //        ? null
-            //        : new Psk1Protector
-            //        {
-            //            Key = Options.Swarm.PrivateNetworkKey
-            //        }
-            //};
-
             SwarmService.LocalPeer = LocalPeer;
             SwarmService.LocalPeerKey =
                 Key.CreatePrivateKey(await KeyApi.GetPrivateKeyAsync("self").ConfigureAwait(false));
@@ -261,61 +244,23 @@ namespace Catalyst.Core.Modules.Dfs
                     Key = Options.Swarm.PrivateNetworkKey
                 };
 
-
             if (Options.Swarm.PrivateNetworkKey != null)
             {
                 Log.Debug($"Private network {Options.Swarm.PrivateNetworkKey.Fingerprint().ToHexString()}");
             }
 
-            Log.Debug("Built swarm service");
-
-            //SwarmService = swarm;
-
-
             Log.Debug("Building bitswap service");
-            //var bitswap = new BitswapService
-            //{
-            //    SwarmService = SwarmService,
-            //    BlockService = BlockApi
-            //};
             Log.Debug("Built bitswap service");
-            //BitSwapService = bitswap;
             BitSwapService.SwarmService = SwarmService;
             BitSwapService.BlockService = BlockApi;
 
-
-            Log.Debug("Building DHT service");
-            //var dht = new DhtService
-            //{
-            //    SwarmService = SwarmService
-            //};
-            //DhtService.SwarmService.Router = DhtService;
-            
-            Log.Debug("Built DHT service");
-            //DhtService = dht;
-
-
-            Log.Debug("Building Ping service");
-            //var ping = new Ping1
-            //{
-            //    SwarmService = SwarmService
-            //};
-            Log.Debug("Built Ping service");
-            //PingService.SwarmService = SwarmService;
-
-
             Log.Debug("Building PubSub service");
-            //var pubsub = new PubSubService
-            //{
-            //    LocalPeer = LocalPeer
-            //};
             PubSubService.LocalPeer = LocalPeer;
             PubSubService.Routers.Add(new FloodRouter
             {
                 SwarmService = SwarmService
             });
             Log.Debug("Built PubSub service");
-            //PubSubService = pubsub;
         }
 
         /// <summary>
@@ -549,17 +494,17 @@ namespace Catalyst.Core.Modules.Dfs
         }
 
         /// <summary>
-        /// @TODO this should reeally go lower down in the kernal when we load keystores
-        ///   Provides access to the <see cref="KeyStoreService"/>.
+        ///     @TODO this should reeally go lower down in the kernal when we load keystores
+        ///     Provides access to the <see cref="KeyStoreService" />.
         /// </summary>
         /// <param name="cancel">
-        ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
+        ///     Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException" /> is raised.
         /// </param>
         /// <returns>
-        ///   A task that represents the asynchronous operation. The task's result is
-        ///   the <see cref="KeyStoreService"/>.
+        ///     A task that represents the asynchronous operation. The task's result is
+        ///     the <see cref="KeyStoreService" />.
         /// </returns>
-        public async Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default(CancellationToken))
+        public async Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default)
         {
             // TODO: this should be a LazyAsync property.
             if (_keyStoreService == null)
@@ -578,7 +523,8 @@ namespace Catalyst.Core.Modules.Dfs
                 await _keyStoreService.SetPassphraseAsync(passphrase, cancel).ConfigureAwait(false);
 
                 // Maybe create "self" key, this is the local peer's id.
-                var self = await _keyStoreService.FindKeyByNameAsync("self", cancel).ConfigureAwait(false) ?? await _keyStoreService.CreateAsync("self", null, 0, cancel).ConfigureAwait(false);
+                var self = await _keyStoreService.FindKeyByNameAsync("self", cancel).ConfigureAwait(false) ??
+                    await _keyStoreService.CreateAsync("self", null, 0, cancel).ConfigureAwait(false);
             }
 
             return _keyStoreService;
@@ -589,7 +535,7 @@ namespace Catalyst.Core.Modules.Dfs
         /// <summary>
         ///     Determines latency to a peer.
         /// </summary>
-        public Ping1 PingService { get; private set; }
+        public Ping1 PingService { get; }
 
         /// <summary>
         ///     Provides access to the local peer.
@@ -610,22 +556,22 @@ namespace Catalyst.Core.Modules.Dfs
         /// <summary>
         ///     Manages communication with other peers.
         /// </summary>
-        public SwarmService SwarmService { get; private set; }
+        public SwarmService SwarmService { get; }
 
         /// <summary>
         ///     Manages publishng and subscribing to messages.
         /// </summary>
-        public PubSubService PubSubService { get; private set; }
+        public PubSubService PubSubService { get; }
 
         /// <summary>
         ///     Exchange blocks with other peers.
         /// </summary>
-        public IBitswapService BitSwapService { get; private set; }
+        public IBitswapService BitSwapService { get; }
 
         /// <summary>
         ///     Finds information with a distributed hash table.
         /// </summary>
-        public DhtService DhtService { get; private set; }
+        public DhtService DhtService { get; }
 
         #endregion
 

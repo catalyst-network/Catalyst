@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             try
             {
                 var json = await _configApi.GetAsync("Bootstrap", cancel);
-                return json == null ? new MultiAddress[0] : json.Select(a => MultiAddress.TryCreate((string) a)).Where(a => a != null);
+                return json == null ? new MultiAddress[0] : json.Select(a => MultiAddress.TryCreate((string)a)).Where(a => a != null);
             }
             catch (KeyNotFoundException)
             {

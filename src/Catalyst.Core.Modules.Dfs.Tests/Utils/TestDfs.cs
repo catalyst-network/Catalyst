@@ -26,6 +26,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
 {
     public class TestDfs
     {
+        private sealed class TestDfsFileSystem : FileSystemBasedTest
+        {
+            internal TestDfsFileSystem(ITestOutputHelper output) : base(output) { }
+        }
+
         public static IDfsService GetTestDfs(ITestOutputHelper output, IFileSystem fileSystem = default, string keyType = default, IHashProvider hashProvider = null)
         {
             var nodeGuid = Guid.NewGuid();
@@ -41,6 +46,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
                 keyType = "rsa";
 
                 //"ed25519";
+            }
+
+            if (fileSystem == null)
+            {
+                fileSystem = new TestDfsFileSystem(output).FileSystem;
             }
 
             containerBuilder.RegisterInstance(new PasswordManager(new TestPasswordReader(), new PasswordRegistry())).As<IPasswordManager>().SingleInstance();

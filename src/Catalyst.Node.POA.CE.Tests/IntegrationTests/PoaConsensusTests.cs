@@ -29,10 +29,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
+using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -55,24 +58,37 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             var poaNodeDetails = Enumerable.Range(0, 3).Select(i =>
                 {
+                    var fileSystem = Substitute.For<IFileSystem>();
+                    var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
+                    fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(path));
+
                     var privateKey = context.GeneratePrivateKey();
                     var publicKey = privateKey.GetPublicKey();
                     var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
                     var peerIdentifier = nodeSettings.PeerId;
                     var name = $"producer{i.ToString()}";
-                    return new {index = i, name, privateKey, nodeSettings, peerIdentifier};
+                    var dfs = TestDfs.GetTestDfs(output, fileSystem, "ed25519");
+                    return new {index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem};
                 }
             ).ToList();
 
             var peerIdentifiers = poaNodeDetails.Select(n => n.peerIdentifier).ToList();
 
-            _nodes = poaNodeDetails.Select(
-                p => new PoaTestNode($"producer{p.index.ToString()}",
-                    p.privateKey,
-                    p.nodeSettings,
-                    peerIdentifiers.Except(new[] {p.peerIdentifier}),
-                    FileSystem,
-                    output)).ToList();
+            _nodes = new List<PoaTestNode>();
+            foreach (var nodeDetails in poaNodeDetails)
+            {
+                nodeDetails.dfs.Options.Discovery.BootstrapPeers = poaNodeDetails.Except(new[] {nodeDetails})
+                   .Select(x => x.dfs.LocalPeer.Addresses.First());
+                var node = new PoaTestNode(nodeDetails.name,
+                    nodeDetails.privateKey,
+                    nodeDetails.nodeSettings,
+                    nodeDetails.dfs,
+                    peerIdentifiers.Except(new[] {nodeDetails.peerIdentifier}),
+                    nodeDetails.fileSystem,
+                    output);
+
+                _nodes.Add(node);
+            }
         }
 
         [Fact]
@@ -90,9 +106,12 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     : CycleConfiguration.Default.CycleDuration.Multiply(1.3))
                .ConfigureAwait(false);
 
-            var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, "dfs");
-            Directory.GetFiles(dfsDir).Length.Should().Be(1,
-                "only the elected producer should score high enough to see his block elected.");
+            for (var i = 0; i < 3; i++)
+            {
+                var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}", "blocks");
+                Directory.GetFiles(dfsDir).Length.Should().Be(1,
+                    "only the elected producer should score high enough to see his block elected.");
+            }
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }

@@ -436,7 +436,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             try
             {
                 var data = Guid.NewGuid().ToByteArray();
-                var cid = await _dfsServiceOther.BlockApi.PutAsync(data, "raw", "sha2-512"); // @TODO get this from a test prop so we can test against multiple hash algos
+                var cid = await _dfsServiceOther.BlockApi.PutAsync(data, "raw"); // @TODO get this from a test prop so we can test against multiple hash algos
 
                 var remote = _dfsServiceOther.LocalPeer;
                 await _dfsService.SwarmApi.ConnectAsync(remote.Addresses.First());

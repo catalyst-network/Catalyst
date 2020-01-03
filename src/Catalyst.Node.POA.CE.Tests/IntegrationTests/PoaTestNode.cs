@@ -53,6 +53,7 @@ using Catalyst.Core.Modules.Web3;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
+using MultiFormats;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
 using Xunit.Abstractions;
@@ -75,6 +76,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         public PoaTestNode(string name,
             IPrivateKey privateKey,
             IPeerSettings nodeSettings,
+            IDfsService dfsService,
             IEnumerable<PeerId> knownPeerIds,
             IFileSystem parentTestFileSystem,
             ITestOutputHelper output)
@@ -82,18 +84,13 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             Name = name;
             _nodeSettings = nodeSettings;
 
-            var fileSystem = Substitute.For<IFileSystem>();
-            var path = Path.Combine(parentTestFileSystem.GetCatalystDataDir().FullName, name);
-            fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(path));
+            _nodeDirectory = parentTestFileSystem.GetCatalystDataDir();
 
-            //_nodeDirectory = parentTestFileSystem.GetCatalystDataDir().SubDirectoryInfo(Name);
-            //var nodeFileSystem = Substitute.ForPartsOf<FileSystem>();
-            //nodeFileSystem.GetCatalystDataDir().Returns(_nodeDirectory);
+            _dfsService = dfsService;
+            _dfsService.StartAsync();
 
             _rpcSettings = RpcSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
             _nodePeerId = nodeSettings.PeerId;
-            
-            _dfsService = TestDfs.GetTestDfs(output, fileSystem, "ed25519");
 
             _memPool = new Mempool(new MempoolService(new InMemoryRepository<PublicEntryDao, string>()));
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
@@ -155,8 +152,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _containerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
             _containerProvider.ContainerBuilder.RegisterInstance(_dfsService).As<IDfsService>();
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
-            //_containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
-            //   .WithParameter("rootPath", _nodeDirectory.FullName);
+            _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
+               .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
         }
 
