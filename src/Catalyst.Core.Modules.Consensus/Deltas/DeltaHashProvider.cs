@@ -90,6 +90,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             lock (_hashesByTimeDescending)
             {
+                if (_hashesByTimeDescending.ContainsValue(newHash))
+                {
+                    return false;
+                }
+
                 _hashesByTimeDescending.Add(newDelta.TimeStamp, newHash);
                 if (_hashesByTimeDescending.Count > _capacity)
                 {

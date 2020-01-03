@@ -26,21 +26,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
 {
     public class TestDfs
     {
-        private sealed class TestDfsFileSystem : FileSystemBasedTest
-        {
-            internal TestDfsFileSystem(ITestOutputHelper output) : base(output) { }
-        }
-        
-        public static IDfsService GetTestDfs(ITestOutputHelper output, string folderName = default, string keyType = default, IHashProvider hashProvider = null)
+        public static IDfsService GetTestDfs(ITestOutputHelper output, IFileSystem fileSystem = default, string keyType = default, IHashProvider hashProvider = null)
         {
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();
-            var filesystem = new TestDfsFileSystem(output);
 
-            if (string.Equals(folderName, default, StringComparison.Ordinal))
-            {
-                folderName = nodeGuid.ToString();
-            }
+            //if (string.Equals(folderName, default, StringComparison.Ordinal))
+            //{
+            //    folderName = nodeGuid.ToString();
+            //}
 
             if (keyType == default)
             {
@@ -50,7 +44,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             }
 
             containerBuilder.RegisterInstance(new PasswordManager(new TestPasswordReader(), new PasswordRegistry())).As<IPasswordManager>().SingleInstance();
-            containerBuilder.RegisterInstance(filesystem.FileSystem).As<IFileSystem>();
+            containerBuilder.RegisterInstance(fileSystem).As<IFileSystem>();
             containerBuilder.RegisterType<MigrationManager>().As<IMigrationManager>();
             containerBuilder.RegisterModule<HashingModule>();
 
@@ -61,14 +55,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
 
             //containerBuilder.RegisterType<KatDhtService>().As<IDhtService>().SingleInstance();
             //containerBuilder.RegisterType<DhtApi>().As<IDhtApi>().SingleInstance();
-            containerBuilder.RegisterInstance(new KeyStoreService(filesystem.FileSystem)).As<IKeyStoreService>().SingleInstance();
+            containerBuilder.RegisterInstance(new KeyStoreService(fileSystem)).As<IKeyStoreService>().SingleInstance();
             containerBuilder.RegisterModule(new DfsModule());
 
             var container = containerBuilder.Build();
             var scope = container.BeginLifetimeScope(nodeGuid);
             var dfsService = scope.Resolve<IDfsService>();
             
-            dfsService.Options.Repository.Folder = Path.Combine(filesystem.FileSystem.GetCatalystDataDir().FullName, folderName);
+            dfsService.Options.Repository.Folder = Path.Combine(fileSystem.GetCatalystDataDir().FullName);
             dfsService.Options.KeyChain.DefaultKeySize = 512;
             dfsService.Options.KeyChain.DefaultKeyType = keyType;
 

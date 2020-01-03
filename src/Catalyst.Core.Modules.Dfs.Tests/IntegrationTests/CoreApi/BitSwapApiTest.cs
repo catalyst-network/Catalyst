@@ -1,10 +1,12 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange.Protocols;
+using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
@@ -15,6 +17,7 @@ using FluentAssertions;
 using Lib.P2P;
 using MultiFormats;
 using MultiFormats.Registry;
+using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -29,9 +32,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         
         public BitSwapApiTest(ITestOutputHelper output)
         {
+            var fileSystem1 = Substitute.For<IFileSystem>();
+            fileSystem1.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
+                $"dfs1-_{DateTime.Now:yyMMddHHmmssffff}")));
+
+            var fileSystem2 = Substitute.For<IFileSystem>();
+            fileSystem2.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
+                $"dfs2-_{DateTime.Now:yyMMddHHmmssffff}")));
+
             _testOutputHelper = output;
-            _dfsService = TestDfs.GetTestDfs(output, "dfs-1");
-            _dfsServiceOther = TestDfs.GetTestDfs(output, "dfs-2");
+            _dfsService = TestDfs.GetTestDfs(output, fileSystem1);
+            _dfsServiceOther = TestDfs.GetTestDfs(output, fileSystem2);
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
