@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly IHashProvider _hashProvider;
         public const string ComponentName = nameof(Web3EthApi);
 
-        public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, [KeyFilter(ComponentName)] IDeltaExecutor executor, [KeyFilter(ComponentName)] IStorageProvider storageProvider, [KeyFilter(ComponentName)] IStateProvider stateProvider, ITransactionReceiptRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider)
+        public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, IDeltaExecutor executor, IStorageProvider storageProvider, IStateProvider stateProvider, ITransactionReceiptRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider)
         {
             _receipts = receipts;
             _transactionReceived = transactionReceived ?? throw new ArgumentNullException(nameof(transactionReceived));

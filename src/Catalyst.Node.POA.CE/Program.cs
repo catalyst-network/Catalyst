@@ -31,8 +31,10 @@ using Autofac;
 using Autofac.Core;
 using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
@@ -40,6 +42,7 @@ using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Kernel;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Consensus;
+using Catalyst.Core.Modules.Consensus.Deltas.Building;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
@@ -55,6 +58,7 @@ using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
 using Catalyst.Protocol.Network;
 using CommandLine;
+using Nethermind.Store;
 
 namespace Catalyst.Node.POA.CE
 {
@@ -98,6 +102,21 @@ namespace Catalyst.Node.POA.CE
             RegisterNodeDependencies(Kernel.ContainerBuilder);
 
             kernel.StartContainer();
+
+            //var registrations = kernel.Instance.ComponentRegistry.Registrations;
+
+            //var providerRegistrations = registrations.Where(r => r.Activator.LimitType == typeof(StateProvider)).ToArray();
+            //var stateProviders = providerRegistrations
+            //   .Select(r => kernel.Instance.ResolveComponent(r, new Parameter[0]))
+            //   .ToArray();
+
+            //var executorRegistrations = registrations.Where(r => r.Activator.LimitType == typeof(DeltaExecutor)).ToArray();
+            //var executors = executorRegistrations
+            //   .Select(r => kernel.Instance.ResolveComponent(r, new Parameter[0]))
+            //   .ToArray();
+
+            var executor = kernel.Instance.Resolve<IDeltaBuilder>();
+
             kernel.Instance.Resolve<ICatalystNode>()
                .RunAsync(new CancellationToken())
 

@@ -59,8 +59,6 @@ namespace Catalyst.Core.Modules.Ledger
     /// <inheritdoc cref="IDisposable" />
     public sealed class Ledger : ILedger, IDisposable
     {
-        public const string ComponentName = nameof(Ledger);
-
         public IAccountRepository Accounts { get; }
         private readonly IDeltaExecutor _deltaExecutor;
         private readonly IStateProvider _stateProvider;
@@ -85,9 +83,9 @@ namespace Catalyst.Core.Modules.Ledger
 
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
-        public Ledger([KeyFilter(ComponentName)] IDeltaExecutor deltaExecutor,
-            [KeyFilter(ComponentName)] IStateProvider stateProvider,
-            [KeyFilter(ComponentName)] IStorageProvider storageProvider,
+        public Ledger(IDeltaExecutor deltaExecutor,
+            IStateProvider stateProvider,
+            IStorageProvider storageProvider,
             ISnapshotableDb stateDb,
             ISnapshotableDb codeDb,
             IAccountRepository accounts,

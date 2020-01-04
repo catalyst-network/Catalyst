@@ -39,8 +39,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
     /// <inheritdoc />
     public sealed class DeltaBuilder : IDeltaBuilder
     {
-        public const string ComponentName = nameof(DeltaBuilder);
-        
         private readonly IDeltaTransactionRetriever _transactionRetriever;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
@@ -57,8 +55,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             IPeerSettings peerSettings,
             IDeltaCache deltaCache,
             IDateTimeProvider dateTimeProvider,
-            [KeyFilter(ComponentName)] IStateProvider stateProvider,
-            [KeyFilter(ComponentName)] IDeltaExecutor deltaExecutor,
+            IStateProvider stateProvider,
+            IDeltaExecutor deltaExecutor,
             ILogger logger)
         {
             _transactionRetriever = transactionRetriever;

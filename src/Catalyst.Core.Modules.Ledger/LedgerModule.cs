@@ -27,6 +27,7 @@ using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
+using Microsoft.EntityFrameworkCore.Internal;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 
@@ -45,18 +46,12 @@ namespace Catalyst.Core.Modules.Ledger
             builder.RegisterType<DeltaByNumberRepository>().As<IDeltaByNumberRepository>().SingleInstance();
             builder.RegisterType<TransactionReceiptRepository>().As<ITransactionReceiptRepository>().SingleInstance();
             builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();
-            
-            builder.RegisterType<Ledger>().As<ILedger>().SingleInstance();
-            builder.RegisterExecutionComponents(Ledger.ComponentName);
-        }  
-    }
 
-    public class Web3ApiModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance();
-            builder.RegisterExecutionComponents(Web3EthApi.ComponentName);
-        }
+            builder.RegisterType<Ledger>().As<ILedger>().SingleInstance()
+               .WithExecutionParameters(builder);
+
+            builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance()
+               .WithExecutionParameters(builder);
+        }  
     }
 }

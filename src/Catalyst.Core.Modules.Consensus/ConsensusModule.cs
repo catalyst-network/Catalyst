@@ -22,6 +22,7 @@
 #endregion
 
 using Autofac;
+using Autofac.Core;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
@@ -59,11 +60,18 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<CycleSchedulerProvider>().As<ICycleSchedulerProvider>();
             builder.RegisterType<Consensus>().As<IConsensus>().SingleInstance();
             builder.RegisterInstance(CycleConfiguration.Default).As<ICycleConfiguration>();
-            
-            builder.RegisterType<DeltaBuilder>().As<IDeltaBuilder>().SingleInstance();
-            builder.RegisterExecutionComponents(DeltaBuilder.ComponentName);
 
-            base.Load(builder);
+            builder.RegisterType<DeltaBuilder>().As<IDeltaBuilder>().SingleInstance()
+               .WithExecutionParameters(builder);
+        }
+
+        /// <summary>
+        /// Resolves a parameter of specific type with its named service.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        sealed class ByTypeNamedParameter<T> : ResolvedParameter
+        {
+            public ByTypeNamedParameter(string name) : base((p, _) => p.ParameterType == typeof(T), (_, c) => c.ResolveNamed<T>(name)) { }
         }
     }
 }
