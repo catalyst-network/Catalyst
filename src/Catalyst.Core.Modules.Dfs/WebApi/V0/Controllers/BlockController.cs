@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Controllers.V0;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Lib.P2P;
 using Microsoft.AspNetCore.Http;
@@ -32,7 +34,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public BlockController(ICoreApi ipfs) : base(ipfs) { }
+        public BlockController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///   Get the data of a block.
@@ -44,7 +46,8 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [Produces("application/octet-stream")]
         public async Task<IActionResult> Get(string arg)
         {
-            var block = await IpfsCore.BlockApi.GetAsync(arg, Cancel);
+            var cid = new MultiHash(arg.FromBase32()).ToCid();
+            var block = await IpfsCore.BlockApi.GetAsync(cid, Cancel);
             Immutable();
             return File(block.DataStream, "application/octet-stream", arg, null, ETag(block.Id));
         }

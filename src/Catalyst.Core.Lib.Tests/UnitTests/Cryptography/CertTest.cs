@@ -6,6 +6,7 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using MultiFormats;
+using NSubstitute;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.X509.Extension;
 using Xunit;
@@ -19,9 +20,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 
         public CertTest(ITestOutputHelper output) : base(output)
         {
-            _keyStoreService = new KeyStoreService(FileSystem)
+            var dfsOptions = new DfsOptions(Substitute.For<BlockOptions>(), Substitute.For<DiscoveryOptions>(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir));
+            _keyStoreService = new KeyStoreService(dfsOptions)
             {
-                Options = new DfsOptions(FileSystem, new BlockOptions(), new DiscoveryOptions(), Constants.DfsDataDirectory).KeyChain
+                Options = dfsOptions.KeyChain
             };
             var securePassword = new SecureString();
 

@@ -15,7 +15,7 @@ namespace Catalyst.Abstractions.Options
         /// <summary>
         ///     Repository options.
         /// </summary>
-        public RepositoryOptions Repository { get; set; } = new RepositoryOptions();
+        public RepositoryOptions Repository { get; set; }
 
         /// <summary>
         ///     KeyChain options.
@@ -45,10 +45,11 @@ namespace Catalyst.Abstractions.Options
         /// </summary>
         public SwarmOptions Swarm { get; set; } = new SwarmOptions();
 
-        public DfsOptions(IFileSystem fileSystem, BlockOptions blockOptions, DiscoveryOptions discoveryOptions, string dfsDirectory)
+        public DfsOptions(BlockOptions blockOptions, DiscoveryOptions discoveryOptions, RepositoryOptions repositoryOptions)
         {
             Block = blockOptions;
             Discovery = discoveryOptions;
+            Repository = repositoryOptions;
 
             var swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
 
@@ -65,7 +66,6 @@ namespace Catalyst.Abstractions.Options
             KeyChain.DefaultKeyType = "ed25519";
 
             //Constants.KeyChainDefaultKeyType;
-            Repository.Folder = new DirectoryInfo(Path.Combine(fileSystem.GetCatalystDataDir().FullName, dfsDirectory)).FullName;
 
             // The seed nodes for the catalyst network.
             //Options.Discovery.BootstrapPeers = seedServers;

@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
+using Catalyst.Abstractions.FileSystem;
 
 namespace Catalyst.Abstractions.Options
 {
@@ -13,7 +14,7 @@ namespace Catalyst.Abstractions.Options
         ///   Creates a new instance of the <see cref="RepositoryOptions"/> class
         ///   with the default values.
         /// </summary>
-        public RepositoryOptions()
+        public RepositoryOptions(IFileSystem fileSystem = default, string dfsDirectory = default)
         {
             var path = Environment.GetEnvironmentVariable("IPFS_PATH");
             if (path != null)
@@ -26,6 +27,13 @@ namespace Catalyst.Abstractions.Options
                     Environment.GetEnvironmentVariable("HOME") ??
                     Environment.GetEnvironmentVariable("HOMEPATH"),
                     ".catalyst");
+            }
+
+            if (fileSystem != default && dfsDirectory != default)
+            {
+                Folder = new DirectoryInfo(Path.Combine(fileSystem.GetCatalystDataDir().FullName, dfsDirectory))
+                   .FullName;
+                Directory.CreateDirectory(Folder);
             }
         }
 

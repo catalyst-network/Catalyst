@@ -61,8 +61,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly IDhtApi _dhtApi;
         private readonly ISwarmApi _swarmApi;
         private readonly IBitSwapApi _bitSwapApi;
-        private readonly IFileSystem _fileSystem;
-        private readonly BlockOptions _blockOptions;
+        private readonly DfsOptions _dfsOptions;
         private readonly DfsState _dfsState;
         private readonly IHashProvider _hashProvider;
 
@@ -73,21 +72,18 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         /// <param name="bitSwapApi"></param>
         /// <param name="dhtApi"></param>
         /// <param name="swarmApi"></param>
-        /// <param name="fileSystem"></param>
-        /// <param name="blockOptions"></param>
+        /// <param name="dfsOptions"></param>
         public BlockApi(IBitSwapApi bitSwapApi,
             IDhtApi dhtApi,
             ISwarmApi swarmApi,
-            IFileSystem fileSystem,
-            BlockOptions blockOptions,
             DfsState dfsState,
+            DfsOptions dfsOptions,
             IHashProvider hashProvider)
         {
             _bitSwapApi = bitSwapApi;
             _dhtApi = dhtApi;
             _swarmApi = swarmApi;
-            _fileSystem = fileSystem;
-            _blockOptions = blockOptions;
+            _dfsOptions = dfsOptions;
             _dfsState = dfsState;
             _hashProvider = hashProvider;
         }
@@ -101,7 +97,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                     return _store;
                 }
 
-                var folder = Path.Combine(_fileSystem.GetCatalystDataDir().FullName, "blocks");
+                var folder = Path.Combine(_dfsOptions.Repository.Folder, "blocks");
 
                 if (!Directory.Exists(folder))
                 {
@@ -251,14 +247,14 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             bool pin = false,
             CancellationToken cancel = default)
         {
-            if (data.Length > _blockOptions.MaxBlockSize)
+            if (data.Length > _dfsOptions.Block.MaxBlockSize)
             {
                 throw new ArgumentOutOfRangeException("data.Length",
-                    $@"Block length can not exceed {_blockOptions.MaxBlockSize.ToString()}.");
+                    $@"Block length can not exceed {_dfsOptions.Block.MaxBlockSize.ToString()}.");
             }
 
             // Small enough for an inline CID?
-            if (_blockOptions.AllowInlineCid && data.Length <= _blockOptions.InlineCidLimit)
+            if (_dfsOptions.Block.AllowInlineCid && data.Length <= _dfsOptions.Block.InlineCidLimit)
             {
                 return new Cid
                 {

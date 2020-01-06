@@ -29,6 +29,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions;
+using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
@@ -39,6 +40,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
@@ -87,7 +89,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _nodeDirectory = parentTestFileSystem.GetCatalystDataDir();
 
             _dfsService = dfsService;
-            _dfsService.StartAsync();
 
             _rpcSettings = RpcSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
             _nodePeerId = nodeSettings.PeerId;

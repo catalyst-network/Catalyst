@@ -65,16 +65,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
 
             //containerBuilder.RegisterType<KatDhtService>().As<IDhtService>().SingleInstance();
             //containerBuilder.RegisterType<DhtApi>().As<IDhtApi>().SingleInstance();
-            containerBuilder.RegisterInstance(new KeyStoreService(fileSystem)).As<IKeyStoreService>().SingleInstance();
+            containerBuilder.RegisterType<KeyStoreService>().As<IKeyStoreService>().SingleInstance();
             containerBuilder.RegisterModule(new DfsModule());
 
             var container = containerBuilder.Build();
             var scope = container.BeginLifetimeScope(nodeGuid);
             var dfsService = scope.Resolve<IDfsService>();
             
-            dfsService.Options.Repository.Folder = Path.Combine(fileSystem.GetCatalystDataDir().FullName);
-            dfsService.Options.KeyChain.DefaultKeySize = 512;
-            dfsService.Options.KeyChain.DefaultKeyType = keyType;
+            //dfsService.Options.Repository.Folder = Path.Combine(fileSystem.GetCatalystDataDir().FullName);
+            //dfsService.Options.KeyChain.DefaultKeySize = 512;
+            //dfsService.Options.KeyChain.DefaultKeyType = keyType;
 
             dfsService.ConfigApi.SetAsync(
                 "Addresses.Swarm",

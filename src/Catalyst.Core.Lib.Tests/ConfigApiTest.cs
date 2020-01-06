@@ -24,9 +24,11 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
 using Catalyst.TestUtils;
 using Newtonsoft.Json.Linq;
+using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -41,7 +43,8 @@ namespace Catalyst.Core.Lib.Tests
 
         public ConfigApiTest(ITestOutputHelper output) : base(output)
         {
-            _configApi = new ConfigApi(FileSystem);
+            var dfsOptions = new DfsOptions(Substitute.For<BlockOptions>(), Substitute.For<DiscoveryOptions>(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir));
+            _configApi = new ConfigApi(dfsOptions);
         }
         
         [Fact]

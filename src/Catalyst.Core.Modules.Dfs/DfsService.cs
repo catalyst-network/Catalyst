@@ -30,12 +30,12 @@ using System.Reflection;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
-using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
@@ -115,7 +115,7 @@ namespace Catalyst.Core.Modules.Dfs
         public bool IsStarted => _stopTasks.Count > 0;
 
         private readonly DfsState _dfsState;
-        private readonly IFileSystem _fileSystem;
+        private readonly IUserOutput _userOutput;
         private readonly SecureString passphrase;
         private readonly IHashProvider _hashProvider;
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
@@ -142,9 +142,9 @@ namespace Catalyst.Core.Modules.Dfs
             ISwarmApi swarmApi,
             SwarmService swarmService,
             DfsOptions dfsOptions,
-            IFileSystem fileSystem,
             IHashProvider hashProvider,
             DfsState dfsState,
+            //IUserOutput userOutput,
             IPasswordManager passwordManager)
         {
             BitSwapApi = bitSwapApi;
@@ -168,10 +168,10 @@ namespace Catalyst.Core.Modules.Dfs
             SwarmApi = swarmApi;
             SwarmService = swarmService;
             Options = dfsOptions;
-            _fileSystem = fileSystem;
             _hashProvider = hashProvider;
             _dfsState = dfsState;
             DnsApi = dnsApi;
+            //_userOutput = userOutput;
 
             passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword,
                 "Please provide your IPFS password");
@@ -357,6 +357,9 @@ namespace Catalyst.Core.Modules.Dfs
 
             // Now that the listener addresses are established, the discovery 
             // services can begin.
+
+            // _userOutput.WriteLine($"/************ DFS PeerId: {localPeer.Addresses.First()} ***********/");
+
             MulticastService multicast = null;
             if (!Options.Discovery.DisableMdns)
             {
@@ -513,10 +516,7 @@ namespace Catalyst.Core.Modules.Dfs
                 {
                     if (_keyStoreService == null)
                     {
-                        _keyStoreService = new KeyStoreService(_fileSystem)
-                        {
-                            Options = Options.KeyChain
-                        };
+                        _keyStoreService = new KeyStoreService(Options);
                     }
                 }
 

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -25,9 +26,9 @@ namespace Catalyst.Core.Lib.Config
 }");
 
         private JObject _configuration;
-        private readonly IFileSystem _fileSystem;
+        private readonly DfsOptions _dfsOptions;
 
-        public ConfigApi(IFileSystem fileSystem) { _fileSystem = fileSystem; }
+        public ConfigApi(DfsOptions dfsOptions) { _dfsOptions = dfsOptions; }
 
         public async Task<JObject> GetAsync(CancellationToken cancel = default)
         {
@@ -37,7 +38,7 @@ namespace Catalyst.Core.Lib.Config
                 return _configuration;
             }
 
-            var path = Path.Combine(_fileSystem.GetCatalystDataDir().ToString(), "config");
+            var path = Path.Combine(_dfsOptions.Repository.Folder, "config");
             if (File.Exists(path))
             {
                 using var reader = File.OpenText(path);
@@ -102,7 +103,7 @@ namespace Catalyst.Core.Lib.Config
 
         private async Task SaveAsync()
         {
-            var path = Path.Combine(_fileSystem.GetCatalystDataDir().FullName, "config");
+            var path = Path.Combine(_dfsOptions.Repository.Folder, "config");
             await using var fs = File.OpenWrite(path);
             await using var writer = new StreamWriter(fs);
             using var jtw = new JsonTextWriter(writer)

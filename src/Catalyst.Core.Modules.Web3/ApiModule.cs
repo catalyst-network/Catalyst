@@ -30,6 +30,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Services;
@@ -131,6 +132,9 @@ namespace Catalyst.Core.Modules.Web3
                .SingleInstance();
             builder.RegisterInstance(_container.Resolve<ILogger>())
                .As<ILogger>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IDfsService>())
+               .As<IDfsService>()
                .SingleInstance();
         }
 

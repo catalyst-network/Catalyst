@@ -43,8 +43,6 @@ namespace Catalyst.Core.Lib.Config
         // <summary> Default dfs data directory inside the Catalyst data directory </summary>
         public static string DfsDataSubDir => "dfs";
 
-        public static string DfsDataDirectory = Path.Combine(CatalystDataDir, DfsDataSubDir);
-
         // <summary> Default keystore data directory inside the Catalyst data directory </summary>
         public static string KeyStoreDataSubDir => "keystore";
 

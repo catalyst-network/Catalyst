@@ -111,9 +111,9 @@ namespace Catalyst.Core.Modules.Dfs
 
         protected override void LoadOptions(ContainerBuilder builder)
         {
-            builder.RegisterType<DfsOptions>().SingleInstance().WithParameter("dfsDirectory", Constants.DfsDataDirectory);
+            builder.RegisterType<DfsOptions>().SingleInstance();
             builder.RegisterType<BlockOptions>().SingleInstance();
-            builder.RegisterType<RepositoryOptions>().SingleInstance();
+            builder.RegisterType<RepositoryOptions>().SingleInstance().WithParameter("dfsDirectory", Constants.DfsDataSubDir);
             builder.RegisterType<DiscoveryOptions>().SingleInstance();
         }
     }

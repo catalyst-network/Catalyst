@@ -8,6 +8,7 @@ using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
+using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,9 +20,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 
         public CmsTest(ITestOutputHelper output) : base(output)
         {
-            _keyStoreService = new KeyStoreService(FileSystem)
+            var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir));
+            _keyStoreService = new KeyStoreService(dfsOptions)
             {
-                Options = new DfsOptions(FileSystem, new BlockOptions(), new DiscoveryOptions(), Constants.DfsDataDirectory).KeyChain
+                Options = dfsOptions.KeyChain
             };
             var securePassword = new SecureString();
 

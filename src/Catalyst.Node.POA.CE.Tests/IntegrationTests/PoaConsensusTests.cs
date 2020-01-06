@@ -108,7 +108,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             for (var i = 0; i < 3; i++)
             {
-                var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}", "blocks");
+                var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}/dfs", "blocks");
                 Directory.GetFiles(dfsDir).Length.Should().Be(1,
                     "only the elected producer should score high enough to see his block elected.");
             }

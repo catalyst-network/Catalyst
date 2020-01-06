@@ -30,7 +30,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Cryptography;
@@ -74,7 +73,11 @@ namespace Catalyst.Core.Modules.Keystore
         /// <param name="ipfs">
         ///     The IPFS Engine associated with the key chain.
         /// </param>
-        public KeyStoreService(IFileSystem fileSystem) { _folder = fileSystem.GetCatalystDataDir().FullName; }
+        public KeyStoreService(DfsOptions dfsOptions)
+        {
+            _folder = dfsOptions.Repository.Folder;
+            Options = dfsOptions.KeyChain;
+        }
 
         private FileStore<string, EncryptedKey> Store
         {
@@ -403,13 +406,13 @@ namespace Catalyst.Core.Modules.Keystore
                     switch (kp.Public)
                     {
                         case RsaKeyParameters _:
-                            publicKey.Type = Lib.Cryptography.Proto.KeyType.RSA;
+                            publicKey.Type = KeyType.RSA;
                             break;
                         case Ed25519PublicKeyParameters _:
                             publicKey.Type = KeyType.Ed25519;
                             break;
                         case ECPublicKeyParameters _:
-                            publicKey.Type = Lib.Cryptography.Proto.KeyType.Secp256k1;
+                            publicKey.Type = KeyType.Secp256k1;
                             break;
                         default:
                             throw new NotSupportedException(
