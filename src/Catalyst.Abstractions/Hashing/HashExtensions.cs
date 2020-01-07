@@ -44,18 +44,22 @@ namespace Catalyst.Abstractions.Hashing
             var required = calculateSize + suffix.Length;
             var array = ArrayPool<byte>.Shared.Rent(required);
 
-            using (var output = new CodedOutputStream(array)) 
+            try
             {
-                message.WriteTo(output);
+                using (var output = new CodedOutputStream(array))
+                {
+                    message.WriteTo(output);
+                }
+
+                suffix.CopyTo(array, calculateSize);
+
+                var result = provider.ComputeMultiHash(array, 0, required);
+                return result;
             }
-
-            suffix.CopyTo(array, calculateSize);
-
-            var result = provider.ComputeMultiHash(array, 0, required);
-            
-            ArrayPool<byte>.Shared.Return(array);
-            
-            return result;
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(array);
+            }
         }
 
         /// <summary>
@@ -71,16 +75,20 @@ namespace Catalyst.Abstractions.Hashing
 
             var array = ArrayPool<byte>.Shared.Rent(required);
 
-            using (var output = new CodedOutputStream(array))
+            try
             {
-                message.WriteTo(output);
+                using (var output = new CodedOutputStream(array))
+                {
+                    message.WriteTo(output);
+                }
+
+                var result = provider.ComputeMultiHash(array, 0, required);
+                return result;
             }
-
-            var result = provider.ComputeMultiHash(array, 0, required);
-
-            ArrayPool<byte>.Shared.Return(array);
-
-            return result;
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(array);
+            }
         }
     }
 }
