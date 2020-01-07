@@ -34,16 +34,16 @@ namespace Catalyst.Abstractions.Kvm.Models
             switch (value)
             {
                 case int typedValue:
-                    writer.WriteRawValue(typedValue.ToString());
+                    writer.WriteValue(typedValue);
                     break;
                 case long typedValue:
-                    writer.WriteRawValue(typedValue.ToString());
+                    writer.WriteValue(typedValue);
                     break;
                 case BigInteger typedValue:
-                    writer.WriteRawValue(typedValue.ToString());
+                    writer.WriteValue(typedValue);
                     break;
                 case string typedValue:
-                    writer.WriteRawValue(typedValue);
+                    writer.WriteValue(typedValue);
                     break;
                 default:
                     throw new NotSupportedException();
