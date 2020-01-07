@@ -45,7 +45,6 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ITransactionReceiptRepository _receipts;
         private readonly ITransactionReceivedEvent _transactionReceived;
         private readonly IHashProvider _hashProvider;
-        public const string ComponentName = nameof(Web3EthApi);
 
         public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, IDeltaExecutor executor, IStorageProvider storageProvider, IStateProvider stateProvider, ITransactionReceiptRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider)
         {

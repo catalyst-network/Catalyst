@@ -27,7 +27,6 @@ using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
-using Microsoft.EntityFrameworkCore.Internal;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 
