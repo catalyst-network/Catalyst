@@ -74,6 +74,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             _addFileToDfsRequestObserver = new AddFileToDfsRequestObserver(_fakeDfsService,
                 peerSettings,
                 _nodeFileTransferFactory,
+                _hashProvider,
                 logger);
         }
 
