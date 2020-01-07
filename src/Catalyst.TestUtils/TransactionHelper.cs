@@ -69,7 +69,6 @@ namespace Catalyst.TestUtils
             UInt256 amount,
             uint gasLimit,
             UInt256 gasPrice,
-            byte[] targetContract = null, // to be reviewed
             string senderPublicKey = "sender",
             string receiverPublicKey = "receiver",
             string signature = "signature",
@@ -97,7 +96,6 @@ namespace Catalyst.TestUtils
                     Data = data,
                     GasLimit = gasLimit,
                     GasPrice = gasPrice.ToUint256ByteString(),
-                    TargetContract = targetContract
                 }
             };
 

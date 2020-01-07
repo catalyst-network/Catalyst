@@ -26,6 +26,7 @@ using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 using Nethermind.Core.Crypto;
 using Nethermind.Evm.Tracing;
 
@@ -36,26 +37,18 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override long Handle(TransactionForRpc transactionCall, IWeb3EthApi api)
         {
-            Delta delta = api.GetLatestDelta();
-            Keccak root = new Keccak(delta.StateRoot.ToByteArray());
+            Delta parentDelta = api.GetLatestDelta();
+            Keccak root = parentDelta.StateRootAsKeccak();
 
             if (transactionCall.Gas == null)
             {
-                transactionCall.Gas = delta.GasLimit;
+                transactionCall.Gas = parentDelta.GasLimit;
             }
 
-            Delta newDelta = delta.Clone();
+            var publicEntry = api.ToPublicEntry(transactionCall, root);
 
-            newDelta.PreviousDeltaDfsHash = api.DeltaResolver.LatestDelta.ToArray().ToByteString();
-            newDelta.CoinbaseEntries.Clear();
-            newDelta.ConfidentialEntries.Clear();
-            newDelta.PublicEntries.Clear();
-            newDelta.PublicEntries.Add(new PublicEntry
-            {
-                Nonce = (ulong) api.StateReader.GetNonce(root, transactionCall.From),
-                
-            });
-            
+            var newDelta = api.CreateOneOffDelta(parentDelta, publicEntry);
+
             CallOutputTracer callOutputTracer = new CallOutputTracer();
 
             api.StateProvider.StateRoot = root;

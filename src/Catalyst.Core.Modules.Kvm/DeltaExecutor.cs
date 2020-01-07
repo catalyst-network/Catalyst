@@ -143,15 +143,14 @@ namespace Catalyst.Core.Modules.Kvm
             return result;
         }
 
-        private Address GetAccountAddress(ByteString publicKeyByteString)
+        private static Address GetAccountAddress(ByteString addressByteString)
         {
-            if (publicKeyByteString == null || publicKeyByteString.IsEmpty)
+            if (addressByteString == null || addressByteString.IsEmpty)
             {
                 return null;
             }
 
-            var publicKey = _cryptoContext.GetPublicKeyFromBytes(publicKeyByteString.ToByteArray());
-            return publicKey.ToKvmAddress();
+            return new Address(addressByteString.ToByteArray());
         }
 
         private static void QuickFail(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
@@ -415,10 +414,7 @@ namespace Catalyst.Core.Modules.Kvm
         private (Address sender, Address recipient) ExtractSenderAndRecipient(PublicEntry entry)
         {
             var sender = GetAccountAddress(entry.SenderAddress);
-            var targetContract = entry.TargetContract;
-            var recipient = (targetContract == null || targetContract.Length == 0)
-                ? GetAccountAddress(entry.ReceiverAddress)
-                : new Address(targetContract);
+            var recipient = GetAccountAddress(entry.ReceiverAddress);
             if (entry.IsValidDeploymentEntry)
             {
                 recipient = Address.OfContract(sender, _stateProvider.GetNonce(sender));

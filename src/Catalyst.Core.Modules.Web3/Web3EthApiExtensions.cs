@@ -24,8 +24,12 @@
 using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 using LibP2P;
+using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Web3 
 {
@@ -69,6 +73,35 @@ namespace Catalyst.Core.Modules.Web3
             }
 
             return api.GetDelta(cid);
+        }
+
+        /// <summary>
+        /// Creates a delta for one off execution.
+        /// </summary>
+        public static Delta CreateOneOffDelta(this IWeb3EthApi api, Delta parentDelta, PublicEntry publicEntry)
+        {
+            Delta newDelta = parentDelta.Clone();
+
+            newDelta.PreviousDeltaDfsHash = api.DeltaResolver.LatestDelta.ToArray().ToByteString();
+            newDelta.CoinbaseEntries.Clear();
+            newDelta.ConfidentialEntries.Clear();
+            newDelta.PublicEntries.Clear();
+            newDelta.PublicEntries.Add(publicEntry);
+            return newDelta;
+        }
+
+        public static PublicEntry ToPublicEntry(this IWeb3EthApi api, TransactionForRpc transactionCall, Keccak root)
+        {
+            return new PublicEntry
+            {
+                Nonce = (ulong) api.StateReader.GetNonce(root, transactionCall.From),
+                SenderAddress = transactionCall.From.Bytes.ToByteString(),
+                ReceiverAddress = transactionCall.To?.Bytes.ToByteString() ?? ByteString.Empty,
+                GasLimit = (ulong) transactionCall.Gas.GetValueOrDefault(),
+                GasPrice = transactionCall.GasPrice.GetValueOrDefault().ToUint256ByteString(),
+                Amount = transactionCall.Value.GetValueOrDefault().ToUint256ByteString(), 
+                Data = transactionCall.Data?.ToByteString() ?? ByteString.Empty
+            };
         }
     }
 }

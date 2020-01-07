@@ -33,10 +33,16 @@ namespace Catalyst.Abstractions.Repository
         /// <summary>
         /// Gets the document id on the basis of <paramref name="entry"/> content.
         /// </summary>
-        public static string GetDocumentId(this PublicEntry entry, IHashProvider hashProvider)
-        {
-            MultiHash hash = hashProvider.ComputeMultiHash(entry);
-            return new Keccak(hash.Digest).ToString(false);
-        }
+        public static string GetDocumentId(this PublicEntry entry, IHashProvider hashProvider) => hashProvider.ComputeMultiHash(entry).AsDocumentId();
+
+        /// <summary>
+        /// Transforms <paramref name="hash"/> to a unified document id.
+        /// </summary>
+        public static string AsDocumentId(this MultiHash hash) => new Keccak(hash.Digest).AsDocumentId();
+
+        /// <summary>
+        /// Transforms <paramref name="keccak"/> to a unified document id.
+        /// </summary>
+        public static string AsDocumentId(this Keccak keccak) => keccak.ToString(false);
     }
 }

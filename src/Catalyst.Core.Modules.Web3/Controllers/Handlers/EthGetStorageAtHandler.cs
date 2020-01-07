@@ -37,7 +37,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             var delta = api.GetDelta(block);
 
-            var stateRoot = new Keccak(delta.StateRoot.ToByteArray());
+            var stateRoot = delta.StateRootAsKeccak();
             api.StateProvider.StateRoot = stateRoot;
             return api.StorageProvider.Get(new StorageAddress(address, index));
         }

@@ -31,27 +31,6 @@ namespace Catalyst.Abstractions.Kvm.Models
 {
     public class TransactionForRpc
     {
-        public TransactionForRpc(Keccak blockHash, BigInteger? blockNumber, int? txIndex, Transaction transaction)
-        {
-            Hash = transaction.Hash;
-            Nonce = transaction.Nonce;
-            BlockHash = blockHash;
-            BlockNumber = blockNumber;
-            TransactionIndex = txIndex;
-            From = transaction.SenderAddress;
-            To = transaction.To;
-            Value = transaction.Value;
-            GasPrice = transaction.GasPrice;
-            Gas = transaction.GasLimit;
-            Input = Data = transaction.Data ?? transaction.Init;
-            R = transaction.Signature?.R;
-            S = transaction.Signature?.S;
-            V = (UInt256?) transaction.Signature?.V;
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        public TransactionForRpc() { }
-
         public Keccak Hash { get; set; }
         public BigInteger? Nonce { get; set; }
         public Keccak BlockHash { get; set; }
@@ -59,9 +38,9 @@ namespace Catalyst.Abstractions.Kvm.Models
         public BigInteger? TransactionIndex { get; set; }
         public Address From { get; set; }
         public Address To { get; set; }
-        public BigInteger? Value { get; set; }
-        public BigInteger? GasPrice { get; set; }
-        public BigInteger? Gas { get; set; }
+        public UInt256? Value { get; set; }
+        public UInt256? GasPrice { get; set; }
+        public UInt256? Gas { get; set; }
         public byte[] Data { get; set; }
         public byte[] Input { get; set; }
         public UInt256? V { get; set; }

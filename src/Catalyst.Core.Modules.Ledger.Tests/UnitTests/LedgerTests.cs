@@ -108,7 +108,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         public void Save_Account_State_To_Ledger_Repository()
         {
             _ledger = new Ledger(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
-                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
+                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _hashProvider, _logger);
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
@@ -132,7 +132,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 
             _ledger = new Ledger(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
-                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
+                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _hashProvider, _logger);
 
             _testScheduler.Start();
 
@@ -185,7 +185,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 
             _ledger = new Ledger(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
-                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
+                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _hashProvider, _logger);
 
             _testScheduler.Start();
 

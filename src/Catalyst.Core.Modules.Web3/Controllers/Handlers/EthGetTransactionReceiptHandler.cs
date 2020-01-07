@@ -36,6 +36,11 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             TransactionReceipt receipt = api.ReceiptResolver.Find(txHash);
 
+            if (receipt == null)
+            {
+                return null;
+            }
+
             var receiptForRpc = new ReceiptForRpc
             {
                 TransactionHash = txHash,

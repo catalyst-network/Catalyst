@@ -63,8 +63,6 @@ namespace Catalyst.Protocol.Transaction
         /// </summary>
         public bool IsValidCallEntry => IsValid() && !ReceiverAddress.IsEmpty;
 
-        public byte[] TargetContract { get; set; }
-
         public bool IsContractDeployment => IsValidDeploymentEntry;
         public bool IsContractCall => IsValidCallEntry;
         public bool IsPublicTransaction => IsValid();

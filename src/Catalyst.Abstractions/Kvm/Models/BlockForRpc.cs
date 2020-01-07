@@ -36,48 +36,48 @@ namespace Catalyst.Abstractions.Kvm.Models
 {
     public class BlockForRpc
     {
-        private readonly BlockDecoder _blockDecoder = new BlockDecoder();
+        // private readonly BlockDecoder _blockDecoder = new BlockDecoder();
 
-        public BlockForRpc() { }
+        //public BlockForRpc() { }
         
-        public BlockForRpc(Block block, bool includeFullTransactionData)
-        {
-            var isAuRaBlock = block.Header.AuRaSignature != null;
-            Author = block.Author;
-            Difficulty = block.Difficulty;
-            ExtraData = block.ExtraData;
-            GasLimit = block.GasLimit;
-            GasUsed = block.GasUsed;
-            Hash = block.Hash;
-            LogsBloom = block.Bloom;
-            Miner = block.Beneficiary;
-            if (!isAuRaBlock)
-            {
-                MixHash = block.MixHash;
-                Nonce = ((BigInteger) block.Nonce).ToBigEndianByteArray().PadLeft(8);
-            }
-            else
-            {
-                Step = block.Header.AuRaStep;
-                Signature = block.Header.AuRaSignature;
-            }
+        //public BlockForRpc(Block block, bool includeFullTransactionData)
+        //{
+        //    var isAuRaBlock = block.Header.AuRaSignature != null;
+        //    Author = block.Author;
+        //    Difficulty = block.Difficulty;
+        //    ExtraData = block.ExtraData;
+        //    GasLimit = block.GasLimit;
+        //    GasUsed = block.GasUsed;
+        //    Hash = block.Hash;
+        //    LogsBloom = block.Bloom;
+        //    Miner = block.Beneficiary;
+        //    if (!isAuRaBlock)
+        //    {
+        //        MixHash = block.MixHash;
+        //        Nonce = ((BigInteger) block.Nonce).ToBigEndianByteArray().PadLeft(8);
+        //    }
+        //    else
+        //    {
+        //        Step = block.Header.AuRaStep;
+        //        Signature = block.Header.AuRaSignature;
+        //    }
 
-            Number = block.Number;
-            ParentHash = block.ParentHash;
-            ReceiptsRoot = block.ReceiptsRoot;
-            Sha3Uncles = block.OmmersHash;
-            Size = _blockDecoder.GetLength(block, RlpBehaviors.None);
-            StateRoot = block.StateRoot;
+        //    Number = block.Number;
+        //    ParentHash = block.ParentHash;
+        //    ReceiptsRoot = block.ReceiptsRoot;
+        //    Sha3Uncles = block.OmmersHash;
+        //    Size = _blockDecoder.GetLength(block, RlpBehaviors.None);
+        //    StateRoot = block.StateRoot;
 
-            Timestamp = block.Timestamp;
-            TotalDifficulty = block.TotalDifficulty ?? 0;
-            Transactions = includeFullTransactionData
-                ? block.Transactions.Select((t, idx) => { return new TransactionForRpc(block.Hash, block.Number, idx, t); }).ToArray()
-                : (object[]) block.Transactions.Select(t => t.Hash).AsEnumerable();
+        //    Timestamp = block.Timestamp;
+        //    TotalDifficulty = block.TotalDifficulty ?? 0;
+        //    Transactions = includeFullTransactionData
+        //        ? block.Transactions.Select((t, idx) => { return new TransactionForRpc(block.Hash, block.Number, idx, t); }).ToArray()
+        //        : (object[]) block.Transactions.Select(t => t.Hash).AsEnumerable();
 
-            TransactionsRoot = block.TransactionsRoot;
-            Uncles = block.Ommers.Select(o => o.Hash);
-        }
+        //    TransactionsRoot = block.TransactionsRoot;
+        //    Uncles = block.Ommers.Select(o => o.Hash);
+        //}
 
         [JsonConverter(typeof(AddressConverter))]
         public Address Author { get; set; }

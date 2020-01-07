@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Abstractions.Repository;
 using Nethermind.Core.Crypto;
 using SharpRepository.Repository;
 
@@ -44,7 +45,7 @@ namespace Catalyst.Core.Modules.Ledger.Repository
 
         public bool TryFind(Keccak hash, out TransactionReceipt receipt)
         {
-            return _repository.TryGet(hash.ToString(), out receipt);
+            return _repository.TryGet(hash.AsDocumentId(), out receipt);
         }
     }
 }

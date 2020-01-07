@@ -31,6 +31,7 @@ using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
@@ -150,7 +151,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
             var classUnderTest = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
-                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
+                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _hashProvider, _logger);
 
             _testScheduler.Start();
         }
@@ -338,7 +339,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 3_000_000L;                             // has to be enough for intrinsic gas 21000 + CREATE + code deposit
             delta.PublicEntries[3].GasLimit = 100_000L; // has to be enough for intrinsic gas 21000 + call
             delta.PublicEntries[4].GasLimit = 200_000;
-            delta.PublicEntries[4].TargetContract = contractAddress2.Bytes;
+            delta.PublicEntries[4].ReceiverAddress = contractAddress2.Bytes.ToByteString();
 
             delta.PublicEntries[0].Signature = delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
@@ -378,7 +379,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             var balanceOf1Tracer = new CallOutputTracer();
             var balanceOf1Delta =
                 EntryUtils.PrepareSingleContractEntryDelta(_senderPublicKey, _senderPublicKey, 0, balanceOf1, 5);
-            balanceOf1Delta.PublicEntries[0].TargetContract = contractAddress2.Bytes;
+            balanceOf1Delta.PublicEntries[0].ReceiverAddress = contractAddress2.Bytes.ToByteString();
             balanceOf1Delta.PublicEntries[0].GasLimit = 200_000;
             balanceOf1Delta.PublicEntries[0].Signature = delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
@@ -394,7 +395,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             var balanceOf2Delta =
                 EntryUtils.PrepareSingleContractEntryDelta(_senderPublicKey, _senderPublicKey, 0, balanceOf2, 6);
             balanceOf2Delta.PublicEntries[0].GasLimit = 200_000;
-            balanceOf2Delta.PublicEntries[0].TargetContract = contractAddress2.Bytes;
+            balanceOf2Delta.PublicEntries[0].ReceiverAddress = contractAddress2.Bytes.ToByteString();
             balanceOf2Delta.PublicEntries[0].Signature = balanceOf2Delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
             var balanceOf2Tracer = new CallOutputTracer();

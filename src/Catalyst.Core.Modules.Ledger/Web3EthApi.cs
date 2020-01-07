@@ -82,12 +82,7 @@ namespace Catalyst.Core.Modules.Ledger
 
         public TransactionReceipt Find(Keccak hash)
         {
-            if (_receipts.TryFind(hash, out TransactionReceipt receipt))
-            {
-                return receipt;
-            }
-
-            throw new Exception("Receipt not found");
+            return _receipts.TryFind(hash, out TransactionReceipt receipt) ? receipt : default;
         }
     }
 }
