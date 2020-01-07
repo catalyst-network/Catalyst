@@ -398,6 +398,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 await BlockService.PutAsync(
                         data: block,
                         contentType: contentType,
+                        multiHash,
                         pin: false)
                    .ConfigureAwait(false);
             }

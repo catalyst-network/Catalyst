@@ -353,6 +353,7 @@ namespace Catalyst.Core.Modules.Dfs
                 Log.Error("No listeners were created.");
             }
 
+
             // Now that the listener addresses are established, the discovery 
             // services can begin.
 
