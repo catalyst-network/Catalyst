@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Protocol.Deltas;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Store;
@@ -35,9 +36,9 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override byte[] Handle(Address address, UInt256 index, BlockParameter block, IWeb3EthApi api)
         {
-            var delta = api.GetDelta(block);
+            var deltaWithCid = api.GetDeltaWithCid(block);
 
-            var stateRoot = delta.StateRootAsKeccak();
+            var stateRoot = deltaWithCid.Delta.StateRootAsKeccak();
             api.StateProvider.StateRoot = stateRoot;
             return api.StorageProvider.Get(new StorageAddress(address, index));
         }

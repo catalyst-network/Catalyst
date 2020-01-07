@@ -25,32 +25,38 @@ using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using LibP2P;
 using Nethermind.Core.Crypto;
+using Nethermind.Evm.Tracing;
 
 namespace Catalyst.Core.Modules.Web3 
 {
     public static class Web3EthApiExtensions
     {
-        public static Delta GetLatestDelta(this IWeb3EthApi api)
+        public static DeltaWithCid GetLatestDeltaWithCid(this IWeb3EthApi api)
         {
-            return GetDelta(api, api.DeltaResolver.LatestDelta);
+            return GetDeltaWithCid(api, api.DeltaResolver.LatestDelta);
         }
 
-        public static Delta GetDelta(this IWeb3EthApi api, Cid cid)
+        public static DeltaWithCid GetDeltaWithCid(this IWeb3EthApi api, Cid cid)
         {
             if (!api.DeltaCache.TryGetOrAddConfirmedDelta(cid, out Delta delta))
             {
                 throw new Exception($"Delta not found '{cid}'");
             }
 
-            return delta;
+            return new DeltaWithCid
+            {
+                Delta = delta,
+                Cid = cid
+            };
         }
 
-        public static Delta GetDelta(this IWeb3EthApi api, BlockParameter block)
+        public static DeltaWithCid GetDeltaWithCid(this IWeb3EthApi api, BlockParameter block)
         {
             Cid cid;
             switch (block.Type)
@@ -72,22 +78,7 @@ namespace Catalyst.Core.Modules.Web3
                     throw new ArgumentOutOfRangeException();
             }
 
-            return api.GetDelta(cid);
-        }
-
-        /// <summary>
-        /// Creates a delta for one off execution.
-        /// </summary>
-        public static Delta CreateOneOffDelta(this IWeb3EthApi api, Delta parentDelta, PublicEntry publicEntry)
-        {
-            Delta newDelta = parentDelta.Clone();
-
-            newDelta.PreviousDeltaDfsHash = api.DeltaResolver.LatestDelta.ToArray().ToByteString();
-            newDelta.CoinbaseEntries.Clear();
-            newDelta.ConfidentialEntries.Clear();
-            newDelta.PublicEntries.Clear();
-            newDelta.PublicEntries.Add(publicEntry);
-            return newDelta;
+            return api.GetDeltaWithCid(cid);
         }
 
         public static PublicEntry ToPublicEntry(this IWeb3EthApi api, TransactionForRpc transactionCall, Keccak root)
@@ -102,6 +93,56 @@ namespace Catalyst.Core.Modules.Web3
                 Amount = transactionCall.Value.GetValueOrDefault().ToUint256ByteString(), 
                 Data = transactionCall.Data?.ToByteString() ?? ByteString.Empty
             };
+        }
+
+        public static CallOutputTracer CallAndRestore(this IWeb3EthApi api, TransactionForRpc transactionCall, DeltaWithCid deltaWithCid)
+        {
+            var parentDelta = deltaWithCid.Delta;
+            Keccak root = parentDelta.StateRootAsKeccak();
+
+            if (transactionCall.Gas == null)
+            {
+                transactionCall.Gas = parentDelta.GasLimit;
+            }
+
+            var publicEntry = api.ToPublicEntry(transactionCall, root);
+
+            var newDelta = deltaWithCid.CreateOneOffDelta(publicEntry);
+
+            CallOutputTracer callOutputTracer = new CallOutputTracer();
+
+            api.StateProvider.StateRoot = root;
+            api.Executor.CallAndRestore(newDelta, callOutputTracer);
+            api.StateProvider.Reset();
+            api.StorageProvider.Reset();
+            return callOutputTracer;
+        }
+    }
+
+    public struct DeltaWithCid
+    {
+        public Delta Delta;
+        public Cid Cid;
+
+        /// <summary>
+        /// Creates a delta for one off execution.
+        /// </summary>
+        public Delta CreateOneOffDelta(PublicEntry publicEntry)
+        {
+            Delta newDelta = Delta.Clone();
+
+            newDelta.PreviousDeltaDfsHash = Cid.ToArray().ToByteString();
+            newDelta.CoinbaseEntries.Clear();
+            newDelta.ConfidentialEntries.Clear();
+            newDelta.PublicEntries.Clear();
+            newDelta.PublicEntries.Add(publicEntry);
+            return newDelta;
+        }
+
+        public void Deconstruct(out Delta delta, out Cid cid)
+        {
+            delta = Delta;
+            cid = Cid;
         }
     }
 }

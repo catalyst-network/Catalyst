@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Catalyst.Protocol.Deltas;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
@@ -35,8 +34,8 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override UInt256 Handle(Address address, BlockParameter block, IWeb3EthApi api)
         {
-            Delta delta = api.GetDelta(block);
-            Keccak stateRoot = delta.StateRootAsKeccak();
+            var deltaWithCid = api.GetDeltaWithCid(block);
+            Keccak stateRoot = deltaWithCid.Delta.StateRootAsKeccak();
 
             return api.StateReader.GetAccount(stateRoot, address).Nonce;
         }

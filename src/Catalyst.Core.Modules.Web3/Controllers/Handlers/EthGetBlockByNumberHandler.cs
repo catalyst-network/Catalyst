@@ -26,7 +26,6 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
 using LibP2P;
 using Nethermind.Core;
@@ -69,12 +68,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                     throw new ArgumentOutOfRangeException();
             }
 
-            Delta delta = api.GetDelta(deltaHash);
-            return BuildBlock(delta, deltaHash, blockNumber);
+            DeltaWithCid deltaWithCid = api.GetDeltaWithCid(deltaHash);
+            return BuildBlock(deltaWithCid, blockNumber);
         }
 
-        private static BlockForRpc BuildBlock(Delta delta, Cid deltaHash, long blockNumber)
+        private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber)
         {
+            var (delta, deltaHash) = deltaWithCid;
             var hash0 = Keccak.Zero;
 
             BlockForRpc blockForRpc = new BlockForRpc

@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
@@ -43,8 +44,8 @@ namespace Catalyst.TestUtils
         {
             return new PublicEntry
             {
-                ReceiverAddress = recipient == null ? ByteString.Empty : ByteString.CopyFrom(recipient.Bytes),
-                SenderAddress = ByteString.CopyFrom(sender.Bytes),
+                ReceiverAddress = recipient.ToKvmAddressByteString(),
+                SenderAddress = sender.ToKvmAddressByteString(),
                 TransactionFees = ByteString.CopyFrom(1),
                 Nonce = nonce,
                 Amount = amount.ToUint256ByteString(),
@@ -87,8 +88,8 @@ namespace Catalyst.TestUtils
         {
             return new PublicEntry
             {
-                ReceiverAddress = ByteString.CopyFrom(recipient.Bytes),
-                SenderAddress = ByteString.CopyFrom(sender.Bytes),
+                ReceiverAddress = recipient.ToKvmAddressByteString(),
+                SenderAddress = sender.ToKvmAddressByteString(),
                 TransactionFees = ByteString.CopyFrom(1),
                 Nonce = 0,
                 Amount = amount.ToUint256ByteString(),

@@ -21,22 +21,21 @@
 
 #endregion
 
+using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Catalyst.Protocol.Deltas;
-using Nethermind.Dirichlet.Numerics;
-using Address = Nethermind.Core.Address;
 
-namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
-    [EthWeb3RequestHandler("eth", "getBalance")]
-    public class EthGetBalanceHandler : EthWeb3RequestHandler<Address, UInt256>
+    [EthWeb3RequestHandler("eth", "call")]
+    public class EthCallHandler : EthWeb3RequestHandler<TransactionForRpc, BlockParameter, byte[]>
     {
-        protected override UInt256 Handle(Address address, IWeb3EthApi api)
+        protected override byte[] Handle(TransactionForRpc transactionCall, BlockParameter block, IWeb3EthApi api)
         {
-            Delta delta = api.GetLatestDeltaWithCid().Delta;
+            var deltaWithCid = api.GetDeltaWithCid(block);
+            
+            var callOutputTracer = api.CallAndRestore(transactionCall, deltaWithCid);
 
-            var stateRoot = delta.StateRootAsKeccak();
-            return api.StateReader.GetBalance(stateRoot, address);
+            return callOutputTracer.ReturnValue;
         }
     }
 }
