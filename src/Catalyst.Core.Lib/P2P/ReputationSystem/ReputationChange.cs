@@ -27,7 +27,7 @@ using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Lib.P2P.ReputationSystem
 {
-    internal sealed class ReputationChange
+    public sealed class ReputationChange
         : IPeerReputationChange
     {
         public PeerId PeerId { get; }
