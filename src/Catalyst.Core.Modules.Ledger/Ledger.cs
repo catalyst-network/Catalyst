@@ -27,10 +27,12 @@ using System.Linq;
 using System.Threading;
 using Autofac.Features.AttributeFilters;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Modules.Kvm;
@@ -48,6 +50,7 @@ using Nethermind.Evm.Tracing;
 using Nethermind.Store;
 using Serilog;
 using Serilog.Events;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Account = Catalyst.Abstractions.Ledger.Models.Account;
 
 namespace Catalyst.Core.Modules.Ledger
@@ -70,6 +73,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IMapperProvider _mapperProvider;
+        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
@@ -95,6 +99,7 @@ namespace Catalyst.Core.Modules.Ledger
             ILedgerSynchroniser synchroniser,
             IMempool<PublicEntryDao> mempool,
             IMapperProvider mapperProvider,
+            IHashProvider hashProvider,
             ILogger logger)
         {
             Accounts = accounts;
@@ -107,6 +112,7 @@ namespace Catalyst.Core.Modules.Ledger
             _synchroniser = synchroniser;
             _mempool = mempool;
             _mapperProvider = mapperProvider;
+            _hashProvider = hashProvider;
             _logger = logger;
             _receipts = receipts;
 
@@ -214,7 +220,7 @@ namespace Catalyst.Core.Modules.Ledger
                     return;
                 }
 
-                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash, LatestKnownDeltaNumber);
+                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash, LatestKnownDeltaNumber, _hashProvider);
 
                 // add here a receipts tracer or similar, depending on what data needs to be stored for each contract
                 _deltaExecutor.Execute(nextDeltaInChain, tracer);
@@ -291,14 +297,16 @@ namespace Catalyst.Core.Modules.Ledger
         {
             readonly Delta _delta;
             readonly long _deltaNumber;
+            readonly IHashProvider _hashProvider;
             readonly Keccak _deltaHash;
             readonly List<TransactionReceipt> _txReceipts;
             int _currentIndex;
 
-            public ReceiptDeltaTracer(Delta delta, Cid deltaHash, long deltaNumber)
+            public ReceiptDeltaTracer(Delta delta, Cid deltaHash, long deltaNumber, IHashProvider hashProvider)
             {
                 _delta = delta;
                 _deltaNumber = deltaNumber;
+                _hashProvider = hashProvider;
                 _deltaHash = new Keccak(deltaHash.Hash.Digest);
                 _txReceipts = new List<TransactionReceipt>(delta.PublicEntries.Count);
             }
@@ -337,7 +345,8 @@ namespace Catalyst.Core.Modules.Ledger
                     Index = _currentIndex,
                     GasUsed = spentGas,
                     Sender = GetAccountAddress(entry.SenderAddress),
-                    ContractAddress = entry.IsContractDeployment ? recipient : null
+                    ContractAddress = entry.IsContractDeployment ? recipient : null,
+                    DocumentId = entry.GetDocumentId(_hashProvider)
                 };
 
                 _currentIndex += 1;

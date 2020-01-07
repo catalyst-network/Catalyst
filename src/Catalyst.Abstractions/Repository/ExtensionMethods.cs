@@ -21,27 +21,22 @@
 
 #endregion
 
-using System;
-using Catalyst.Abstractions.Repository;
-using Nethermind.Core;
+using Catalyst.Abstractions.Hashing;
+using Catalyst.Protocol.Transaction;
 using Nethermind.Core.Crypto;
 using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Abstractions.Ledger.Models
+namespace Catalyst.Abstractions.Repository
 {
-    public class TransactionReceipt : IDocument
+    public static class ExtensionMethods
     {
-        public long Index { get; set; }
-        public Keccak DeltaHash { get; set; }
-        public long DeltaNumber { get; set; }
-        public long GasUsedTotal { get; set; }
-        public long GasUsed { get; set; }
-        public Address Sender { get; set; }
-        public Address Recipient { get; set; }
-        public Address ContractAddress { get; set; }
-        public byte StatusCode { get; set; }
-        public LogEntry[] Logs { get; set; }
-
-        public string DocumentId { get; set; }
+        /// <summary>
+        /// Gets the document id on the basis of <paramref name="entry"/> content.
+        /// </summary>
+        public static string GetDocumentId(this PublicEntry entry, IHashProvider hashProvider)
+        {
+            MultiHash hash = hashProvider.ComputeMultiHash(entry);
+            return new Keccak(hash.Digest).ToString(false);
+        }
     }
 }
