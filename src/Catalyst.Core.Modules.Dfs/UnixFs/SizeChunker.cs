@@ -4,51 +4,42 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
-using Catalyst.Core.Modules.Hashing;
-using MultiFormats.Registry;
+using ProtoBuf;
 
 namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
 {
     /// <summary>
-    ///   Chunks a data stream into data blocks based upon a size.
+    ///     Chunks a data stream into data blocks based upon a size.
     /// </summary>
     public class SizeChunker
     {
-        private readonly IHashProvider _hashProvider;
-
-        public SizeChunker()
-        {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-        }
-
         /// <summary>
-        ///   Performs the chunking.
+        ///     Performs the chunking.
         /// </summary>
         /// <param name="stream">
-        ///   The data source.
+        ///     The data source.
         /// </param>
         /// <param name="name">
-        ///   A name for the data.
+        ///     A name for the data.
         /// </param>
         /// <param name="options">
-        ///   The options when adding data to the IPFS file system.
+        ///     The options when adding data to the IPFS file system.
         /// </param>
         /// <param name="blockService">
-        ///   The destination for the chunked data block(s).
+        ///     The destination for the chunked data block(s).
         /// </param>
         /// <param name="keyChain">
-        ///   Used to protect the chunked data blocks(s).
+        ///     Used to protect the chunked data blocks(s).
         /// </param>
         /// <param name="cancel">
-        ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
+        ///     Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException" /> is raised.
         /// </param>
         /// <returns>
-        ///    A task that represents the asynchronous operation. The task's value is
-        ///    the sequence of file system nodes of the added data blocks.
+        ///     A task that represents the asynchronous operation. The task's value is
+        ///     the sequence of file system nodes of the added data blocks.
         /// </returns>
         public async Task<List<UnixFsNode>> ChunkAsync(Stream stream,
             string name,
@@ -67,7 +58,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
             while (chunking)
             {
                 // Get an entire chunk.
-                int length = 0;
+                var length = 0;
                 while (length < chunkSize)
                 {
                     var n = await stream.ReadAsync(chunk, length, chunkSize - length, cancel).ConfigureAwait(false);
@@ -106,11 +97,12 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
                     var cipher = await keyChain.CreateProtectedDataAsync(options.ProtectionKey, plain, cancel)
                        .ConfigureAwait(false);
                     var cid = await blockService.PutAsync(
-                        (byte[]) cipher,
-                        contentType: "cms",
-                        encoding: options.Encoding,
-                        pin: options.Pin,
-                        cancel: cancel).ConfigureAwait(false);
+                        cipher,
+                        "cms",
+                        options.Hash,
+                        options.Encoding,
+                        options.Pin,
+                        cancel).ConfigureAwait(false);
                     nodes.Add(new UnixFsNode
                     {
                         Id = cid,
@@ -125,11 +117,12 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
                     var data = new byte[length];
                     Array.Copy(chunk, data, length);
                     var cid = await blockService.PutAsync(
-                        data: data,
-                        contentType: "raw",
-                        encoding: options.Encoding,
-                        pin: options.Pin,
-                        cancel: cancel).ConfigureAwait(false);
+                        data,
+                        "raw",
+                        options.Hash,
+                        options.Encoding,
+                        options.Pin,
+                        cancel).ConfigureAwait(false);
                     nodes.Add(new UnixFsNode
                     {
                         Id = cid,
@@ -144,7 +137,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
                     var dm = new DataMessage
                     {
                         Type = DataType.File,
-                        FileSize = (ulong) length,
+                        FileSize = (ulong) length
                     };
                     if (length > 0)
                     {
@@ -155,12 +148,13 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
                     }
 
                     var pb = new MemoryStream();
-                    ProtoBuf.Serializer.Serialize<DataMessage>(pb, dm);
-                    var dag = new DagNode(pb.ToArray(), null);
+                    Serializer.Serialize(pb, dm);
+                    var dag = new DagNode(pb.ToArray(), null, options.Hash);
 
                     // Save it.
                     dag.Id = await blockService.PutAsync(
-                        data: dag.ToArray(),
+                        dag.ToArray(),
+                        multiHash: options.Hash,
                         encoding: options.Encoding,
                         pin: options.Pin,
                         cancel: cancel).ConfigureAwait(false);

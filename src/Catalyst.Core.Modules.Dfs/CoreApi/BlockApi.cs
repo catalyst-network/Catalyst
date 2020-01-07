@@ -34,9 +34,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(BlockApi));
 
-        private static DataBlock GetEmptyDirectory(IHashProvider hashProvider)
+        private static DataBlock GetEmptyDirectory()
         {
-            var emptyDirectory = ObjectApi.GetEmptyDirectory(hashProvider);
+            var emptyDirectory = ObjectApi.GetEmptyDirectory();
             return new DataBlock
             {
                 DataBytes = emptyDirectory.ToArray(),
@@ -45,9 +45,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             };
         }
 
-        private static DataBlock GetEmptyNode(IHashProvider hashProvider)
+        private static DataBlock GetEmptyNode()
         {
-            var emptyNode = ObjectApi.GetEmptyNode(hashProvider);
+            var emptyNode = ObjectApi.GetEmptyNode();
             return new DataBlock
             {
                 DataBytes = emptyNode.ToArray(),
@@ -63,7 +63,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly IBitSwapApi _bitSwapApi;
         private readonly DfsOptions _dfsOptions;
         private readonly DfsState _dfsState;
-        private readonly IHashProvider _hashProvider;
 
         public IPinApi PinApi { get; set; }
 
@@ -77,15 +76,13 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             IDhtApi dhtApi,
             ISwarmApi swarmApi,
             DfsState dfsState,
-            DfsOptions dfsOptions,
-            IHashProvider hashProvider)
+            DfsOptions dfsOptions)
         {
             _bitSwapApi = bitSwapApi;
             _dhtApi = dhtApi;
             _swarmApi = swarmApi;
             _dfsOptions = dfsOptions;
             _dfsState = dfsState;
-            _hashProvider = hashProvider;
         }
 
         public FileStore<Cid, DataBlock> Store
@@ -144,13 +141,13 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public async Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default)
         {
             // Hack for empty object and empty directory object
-            var emptyDirectory = GetEmptyDirectory(_hashProvider);
+            var emptyDirectory = GetEmptyDirectory();
             if (id == emptyDirectory.Id)
             {
                 return emptyDirectory;
             }
 
-            var emptyNode = GetEmptyNode(_hashProvider);
+            var emptyNode = GetEmptyNode();
             if (id == emptyNode.Id)
             {
                 return emptyNode;
@@ -243,6 +240,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public async Task<Cid> PutAsync(byte[] data,
             string contentType = Cid.DefaultContentType,
+            string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = false,
             CancellationToken cancel = default)
@@ -267,7 +265,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             var cid = new Cid
             {
                 ContentType = contentType,
-                Hash = _hashProvider.ComputeMultiHash(data)
+                Hash = MultiHash.ComputeHash(data, multiHash)
             };
 
             if (encoding != "base58btc")
@@ -315,6 +313,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public async Task<Cid> PutAsync(Stream data,
             string contentType = Cid.DefaultContentType,
+            string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = false,
             CancellationToken cancel = default)
@@ -322,7 +321,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             await using (var ms = new MemoryStream())
             {
                 await data.CopyToAsync(ms, cancel).ConfigureAwait(false);
-                return await PutAsync(ms.ToArray(), contentType, encoding, pin, cancel)
+                return await PutAsync(ms.ToArray(), contentType, multiHash, encoding, pin, cancel)
                    .ConfigureAwait(false);
             }
         }

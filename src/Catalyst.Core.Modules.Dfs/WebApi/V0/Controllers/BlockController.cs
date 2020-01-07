@@ -46,8 +46,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [Produces("application/octet-stream")]
         public async Task<IActionResult> Get(string arg)
         {
-            var cid = new MultiHash(arg.FromBase32()).ToCid();
-            var block = await IpfsCore.BlockApi.GetAsync(cid, Cancel);
+            var block = await IpfsCore.BlockApi.GetAsync(arg, Cancel);
             Immutable();
             return File(block.DataStream, "application/octet-stream", arg, null, ETag(block.Id));
         }

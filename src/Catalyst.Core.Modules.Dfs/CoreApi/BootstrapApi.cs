@@ -14,6 +14,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         // From https://github.com/libp2p/go-libp2p-daemon/blob/master/bootstrap.go#L14
         public static MultiAddress[] Defaults =
         {
+            //"/ip4/134.209.180.20/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdr2BeLZ4Kg7CeAUJqSW7Wps3BZyNwDyto9NFGreeNzLv8",
             "/ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",            // mars.i.ipfs.io
             "/ip4/104.236.179.241/tcp/4001/ipfs/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM",           // pluto.i.ipfs.io
             "/ip4/128.199.219.111/tcp/4001/ipfs/QmSoLSafTMBsPKadTEgaXctDQVcqN88CNLHXMkTNwMKPnu",           // saturn.i.ipfs.io

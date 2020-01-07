@@ -108,10 +108,11 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     public class ObjectController : IpfsController
     {
         private readonly IHashProvider _hashProvider;
+
         /// <summary>
         ///     Creates a new controller.
         /// </summary>
-        public ObjectController(ICoreApi ipfs, IHashProvider hashProvider) : base(ipfs)
+        public ObjectController(IDfsService dfs, IHashProvider hashProvider) : base(dfs)
         {
             _hashProvider = hashProvider;
         }
@@ -123,7 +124,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///     Template name. Must be "unixfs-dir".
         /// </param>
         [HttpGet] [HttpPost] [Route("object/new")]
-        public async Task<ObjectLinkDetailDto> Create(string arg)
+        private async Task<ObjectLinkDetailDto> Create(string arg)
         {
             var node = await IpfsCore.ObjectApi.NewAsync(arg, Cancel);
             Immutable();
@@ -156,7 +157,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// </param>
         /// <returns></returns>
         [HttpPost("object/put")]
-        public async Task<ObjectLinkDetailDto> Put(IFormFile file,
+        private async Task<ObjectLinkDetailDto> Put(IFormFile file,
             string inputenc = "json",
             string datafieldenc = "text",
             bool pin = false)
@@ -170,7 +171,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                 case "protobuf":
                     using (var stream = file.OpenReadStream())
                     {
-                        var dag = new DagNode(stream, _hashProvider);
+                        var dag = new DagNode(stream);
                         node = await IpfsCore.ObjectApi.PutAsync(dag, Cancel);
                     }
 
@@ -207,8 +208,9 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <param name="dataEncoding">
         ///     The encoding of the object's data; "text" (default) or "base64".
         /// </param>
-        [HttpGet] [HttpPost] [Route("object/get")]
-        public async Task<ObjectDataDetailDto> Get(string arg,
+        [
+            HttpGet] [HttpPost] [Route("object/get")]
+        private async Task<ObjectDataDetailDto> Get(string arg,
             [ModelBinder(Name = "data-encoding")] string dataEncoding)
         {
             var node = await IpfsCore.ObjectApi.GetAsync(arg, Cancel);
@@ -243,8 +245,9 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <param name="arg">
         ///     The object's CID.
         /// </param>
-        [HttpGet] [HttpPost] [Route("object/links")]
-        public async Task<ObjectLinkDetailDto> Links(string arg)
+        [
+            HttpGet] [HttpPost] [Route("object/links")]
+        private async Task<ObjectLinkDetailDto> Links(string arg)
         {
             var links = await IpfsCore.ObjectApi.LinksAsync(arg, Cancel);
             Immutable();
@@ -266,9 +269,10 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <param name="arg">
         ///     The object's CID or a path.
         /// </param>
-        [HttpGet] [HttpPost] [Route("object/data")]
+        [
+            HttpGet] [HttpPost] [Route("object/data")]
         [Produces("text/plain")]
-        public async Task<IActionResult> Data(string arg)
+        private async Task<IActionResult> Data(string arg)
         {
             var r = await IpfsCore.NameApi.ResolveAsync(arg, true, false, Cancel);
             var cid = Cid.Decode(r.Remove(0, 6)); // strip '/ipfs/'.
@@ -283,8 +287,9 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <param name="arg">
         ///     The object's CID.
         /// </param>
-        [HttpGet] [HttpPost] [Route("object/stat")]
-        public async Task<ObjectStatDto> Stat(string arg)
+        [
+            HttpGet] [HttpPost] [Route("object/stat")]
+        private async Task<ObjectStatDto> Stat(string arg)
         {
             var info = await IpfsCore.ObjectApi.StatAsync(arg, Cancel);
             Immutable();

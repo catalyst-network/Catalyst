@@ -63,7 +63,7 @@ namespace Catalyst.Abstractions.Options
                     "/ip4/167.172.73.132/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe1E9wXdykR6h3Q9EaQcQc6hdNAXyCTEzoGfcA2wQgCRyg")
             };
 
-            KeyChain.DefaultKeyType = "ed25519";
+            //KeyChain.DefaultKeyType = "ed25519";
 
             //Constants.KeyChainDefaultKeyType;
 
@@ -72,10 +72,10 @@ namespace Catalyst.Abstractions.Options
 
             // Do not use the public IPFS network, use a private network
             // of catalyst only nodes.
-            Swarm.PrivateNetworkKey = new PreSharedKey
-            {
-                Value = swarmKey.ToHexBuffer()
-            };
+            //Swarm.PrivateNetworkKey = new PreSharedKey
+            //{
+            //    Value = swarmKey.ToHexBuffer()
+            //};
         }
     }
 }

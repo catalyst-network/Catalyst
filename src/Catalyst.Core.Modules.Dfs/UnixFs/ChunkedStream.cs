@@ -28,7 +28,6 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
             public long Position;
         }
 
-        private readonly IHashProvider _hashProvider;
         List<BlockInfo> blocks = new List<BlockInfo>();
         long fileSize;
 
@@ -39,11 +38,10 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
         /// <param name="blockService"></param>
         /// <param name="keyChain"></param>
         /// <param name="dag"></param>
-        public ChunkedStream(IBlockApi blockService, IKeyApi keyChain, IDagNode dag, IHashProvider hashProvider)
+        public ChunkedStream(IBlockApi blockService, IKeyApi keyChain, IDagNode dag)
         {
             BlockService = blockService;
             KeyChain = keyChain;
-            _hashProvider = hashProvider;
             var links = dag.Links.ToArray();
             var dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
             fileSize = (long) dm.FileSize;
@@ -138,7 +136,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
             var need = blocks.Last(b => b.Position <= position);
             if (need != currentBlock)
             {
-                var stream = await UnixFs.CreateReadStreamAsync(need.Id, BlockService, KeyChain, _hashProvider, cancel)
+                var stream = await UnixFs.CreateReadStreamAsync(need.Id, BlockService, KeyChain, cancel)
                    .ConfigureAwait(false);
                 currentBlock = need;
                 currentData = new byte[stream.Length];

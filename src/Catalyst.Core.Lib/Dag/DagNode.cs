@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Hashing;
 using Google.Protobuf;
 using Lib.P2P;
 using MultiFormats;
@@ -22,7 +21,7 @@ namespace Catalyst.Core.Lib.Dag
     public class DagNode : IDagNode, IEquatable<DagNode>
     {
         private Cid id;
-        private readonly IHashProvider _hashProvider;
+        private string hashAlgorithm = MultiHash.DefaultAlgorithmName;
         private long? size;
 
         /// <summary>
@@ -40,13 +39,13 @@ namespace Catalyst.Core.Lib.Dag
         ///     <see cref="MultiHash.DefaultAlgorithmName" />.
         /// </param>
         public DagNode(byte[] data,
-            IHashProvider hashProvider,
-            IEnumerable<IMerkleLink> links = null)
+            IEnumerable<IMerkleLink> links = null,
+            string hashAlgorithm = MultiHash.DefaultAlgorithmName)
         {
             DataBytes = data ?? new byte[0];
             Links = (links ?? new DagLink[0])
                .OrderBy(link => link.Name ?? "");
-            _hashProvider = hashProvider;
+            this.hashAlgorithm = hashAlgorithm;
         }
 
         /// <summary>
@@ -57,11 +56,7 @@ namespace Catalyst.Core.Lib.Dag
         ///     A <see cref="Stream" /> containing the binary representation of the
         ///     <b>DagNode</b>.
         /// </param>
-        public DagNode(Stream stream, IHashProvider hashProvider)
-        {
-            _hashProvider = hashProvider;
-            Read(stream);
-        }
+        public DagNode(Stream stream) { Read(stream); }
 
         /// <summary>
         ///     Creates a new instance of the <see cref="DagNode" /> class from the
@@ -72,11 +67,7 @@ namespace Catalyst.Core.Lib.Dag
         ///     A <see cref="CodedInputStream" /> containing the binary representation of the
         ///     <b>DagNode</b>.
         /// </param>
-        public DagNode(CodedInputStream stream, IHashProvider hashProvider)
-        {
-            _hashProvider = hashProvider;
-            Read(stream);
-        }
+        public DagNode(CodedInputStream stream) { Read(stream); }
 
         /// <inheritdoc />
         [DataMember]
@@ -119,7 +110,14 @@ namespace Catalyst.Core.Lib.Dag
 
                 return id;
             }
-            set => id = value;
+            set
+            {
+                id = value;
+                if (id != null)
+                {
+                    hashAlgorithm = id.Hash.Algorithm.Name;
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -156,7 +154,7 @@ namespace Catalyst.Core.Lib.Dag
         public IDagNode AddLinks(IEnumerable<IMerkleLink> links)
         {
             var all = Links.Union(links);
-            return new DagNode(DataBytes, _hashProvider, all);
+            return new DagNode(DataBytes, all, hashAlgorithm);
         }
 
         /// <summary>
@@ -199,7 +197,7 @@ namespace Catalyst.Core.Lib.Dag
         {
             var ignore = links.ToLookup(link => link.Id);
             var some = Links.Where(link => !ignore.Contains(link.Id));
-            return new DagNode(DataBytes, _hashProvider, some);
+            return new DagNode(DataBytes, some, hashAlgorithm);
         }
 
         /// <summary>
@@ -303,11 +301,13 @@ namespace Catalyst.Core.Lib.Dag
 
         private void ComputeHash()
         {
-            using var ms = new MemoryStream();
-            Write(ms);
-            size = ms.Position;
-            ms.Position = 0;
-            id = _hashProvider.ComputeMultiHash(ms);
+            using (var ms = new MemoryStream())
+            {
+                Write(ms);
+                size = ms.Position;
+                ms.Position = 0;
+                id = MultiHash.ComputeHash(ms, hashAlgorithm);
+            }
         }
 
         private void ComputeSize()

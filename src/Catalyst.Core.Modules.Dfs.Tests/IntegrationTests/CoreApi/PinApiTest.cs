@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Remove_Unknown()
         {
-            var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"), _hashProvider);
+            var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"));
             await ipfs.PinApi.RemoveAsync(dag.Id, true);
         }
 
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public void Add_Unknown()
         {
-            var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"), _hashProvider);
+            var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"));
             ExceptionAssert.Throws<Exception>(() =>
             {
                 var cts = new CancellationTokenSource(250);

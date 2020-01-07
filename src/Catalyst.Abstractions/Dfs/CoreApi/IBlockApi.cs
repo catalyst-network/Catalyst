@@ -65,6 +65,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </returns>
         Task<Cid> PutAsync(byte[] data,
             string contentType = Cid.DefaultContentType,
+            string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = false,
             CancellationToken cancel = default);
@@ -98,9 +99,10 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </returns>
         Task<Cid> PutAsync(Stream data,
             string contentType = Cid.DefaultContentType,
+            string multiHash = MultiHash.DefaultAlgorithmName,
             string encoding = MultiBase.DefaultAlgorithmName,
             bool pin = false,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Information on an IPFS block.

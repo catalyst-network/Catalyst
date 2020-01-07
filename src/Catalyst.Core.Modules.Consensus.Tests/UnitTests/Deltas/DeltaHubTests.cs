@@ -27,6 +27,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
@@ -60,8 +61,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             public DeltaHubWithFastRetryPolicy(IBroadcastManager broadcastManager,
                 IPeerSettings peerSettings,
-                IDfsService dfsService, 
-                ILogger logger) : base(broadcastManager, peerSettings, dfsService, logger) { }
+                IDfsService dfsService,
+                IHashProvider hashProvider,
+                ILogger logger) : base(broadcastManager, peerSettings, dfsService, hashProvider, logger) { }
 
             protected override AsyncRetryPolicy<IFileSystemNode> DfsRetryPolicy =>
                 Policy<IFileSystemNode>.Handle<Exception>()
@@ -76,7 +78,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var logger = Substitute.For<ILogger>();
             _peerId = PeerIdHelper.GetPeerId("me");
             _dfsService = Substitute.For<IDfsService>();
-            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId.ToSubstitutedPeerSettings(), _dfsService, logger);
+            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId.ToSubstitutedPeerSettings(), _dfsService, _hashProvider, logger);
         }
 
         [Fact]
@@ -123,7 +125,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             fakeBlock.Id.Returns(cid);
             var cancellationToken = new CancellationToken();
 
-            _dfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancel: cancellationToken).Returns(fakeBlock);
+            _dfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), cancel: cancellationToken).Returns(fakeBlock);
 
             var deltaCid = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken);
             deltaCid.Should().NotBeNull();
@@ -142,14 +144,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Then(() => throw new Exception("this one failed too"))
                .Then(fakeBlock);
 
-            _dfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>())
+            _dfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>())
                .Returns(ci => dfsResults.Next());
 
             var deltaCid = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta);
             deltaCid.Should().NotBeNull();
             deltaCid.Should().Be(cid);
 
-            await _dfsService.UnixFsApi.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
+            await _dfsService.UnixFsApi.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>());
         }
 
         [Fact]
@@ -173,13 +175,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 })
                .Then(fakeBlock);
         
-            _dfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancel: cancellationToken)
+            _dfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), cancel: cancellationToken)
                .Returns(ci => dfsResults.Next());
         
             new Action(() => _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken).GetAwaiter().GetResult())
                .Should().NotThrow<TaskCanceledException>();
         
-            await _dfsService.UnixFsApi.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancel: cancellationToken);
+            await _dfsService.UnixFsApi.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), cancel: cancellationToken);
         }
 
         public class BadDeltas : TheoryData<Delta>

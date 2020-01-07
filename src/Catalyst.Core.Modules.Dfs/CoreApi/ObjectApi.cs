@@ -17,12 +17,12 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     internal sealed class ObjectApi : IObjectApi
     {
-        internal static IDagNode GetEmptyNode(IHashProvider hashProvider)
+        internal static IDagNode GetEmptyNode()
         {
-            return new DagNode(new byte[0], hashProvider);
+            return new DagNode(new byte[0]);
         }
 
-        internal static IDagNode GetEmptyDirectory(IHashProvider hashProvider)
+        internal static IDagNode GetEmptyDirectory()
         {
             var dm = new DataMessage
             {
@@ -30,16 +30,14 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             };
             using var pb = new MemoryStream();
             ProtoBuf.Serializer.Serialize(pb, dm);
-            return new DagNode(pb.ToArray(), hashProvider);
+            return new DagNode(pb.ToArray());
         }
 
         private readonly IBlockApi _blockApi;
-        private readonly IHashProvider _hashProvider;
 
-        public ObjectApi(IBlockApi blockApi, IHashProvider hashProvider)
+        public ObjectApi(IBlockApi blockApi)
         {
             _blockApi = blockApi;
-            _hashProvider = hashProvider;
         }
 
         public async Task<Stream> DataAsync(Cid id, CancellationToken cancel = default)
@@ -51,7 +49,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public async Task<IDagNode> GetAsync(Cid id, CancellationToken cancel = default)
         {
             var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
-            return new DagNode(block.DataStream, _hashProvider);
+            return new DagNode(block.DataStream);
         }
 
         public async Task<IEnumerable<IMerkleLink>> LinksAsync(Cid id,
@@ -63,7 +61,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             }
 
             var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
-            var node = new DagNode(block.DataStream, _hashProvider);
+            var node = new DagNode(block.DataStream);
             return node.Links;
         }
 
@@ -72,9 +70,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             switch (template)
             {
                 case null:
-                    return Task.FromResult(GetEmptyNode(_hashProvider));
+                    return Task.FromResult(GetEmptyNode());
                 case "unixfs-dir":
-                    return Task.FromResult(GetEmptyDirectory(_hashProvider));
+                    return Task.FromResult(GetEmptyDirectory());
                 default:
                     throw new ArgumentException($"Unknown template '{template}'.", "template");
             }
@@ -82,14 +80,14 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public Task<IDagNode> NewDirectoryAsync(CancellationToken cancel = default)
         {
-            return Task.FromResult(GetEmptyDirectory(_hashProvider));
+            return Task.FromResult(GetEmptyDirectory());
         }
 
         public Task<IDagNode> PutAsync(byte[] data,
             IEnumerable<IMerkleLink> links = null,
             CancellationToken cancel = default)
         {
-            var node = new DagNode(data, _hashProvider, links);
+            var node = new DagNode(data, links);
             return PutAsync(node, cancel);
         }
 
@@ -102,7 +100,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public async Task<ObjectStat> StatAsync(Cid id, CancellationToken cancel = default)
         {
             var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
-            var node = new DagNode(block.DataStream, _hashProvider);
+            var node = new DagNode(block.DataStream);
             return new ObjectStat
             {
                 BlockSize = block.Size,

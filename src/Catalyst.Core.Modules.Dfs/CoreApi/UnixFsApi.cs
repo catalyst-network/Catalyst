@@ -25,7 +25,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
     internal sealed class UnixFsApi : IUnixFsApi
     {
-        private readonly IHashProvider _hashProvider;
         private readonly IDhtApi _dhtApi;
         private readonly IBlockApi _blockApi;
         private readonly IKeyApi _keyApi;
@@ -42,7 +41,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             _keyApi = keyApi;
             _nameApi = nameApi;
             _dfsState = dfsState;
-            _hashProvider = hashProvider;
         }
 
         public async Task<IFileSystemNode> AddFileAsync(string path,
@@ -155,7 +153,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             };
             var pb = new MemoryStream();
             ProtoBuf.Serializer.Serialize(pb, dm);
-            var dag = new DagNode(pb.ToArray(), _hashProvider, links);
+            var dag = new DagNode(pb.ToArray(), links);
 
             // Save it.
             dag.Id = await blockService.PutAsync(
@@ -211,11 +209,12 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             var pb = new MemoryStream();
             Serializer.Serialize(pb, dm);
             var fileSystemLinks = links as IFileSystemLink[] ?? links.ToArray();
-            var dag = new DagNode(pb.ToArray(), _hashProvider, fileSystemLinks);
+            var dag = new DagNode(pb.ToArray(), fileSystemLinks);
 
             // Save it.
             var cid = await GetBlockService(options).PutAsync(
                 data: dag.ToArray(),
+                multiHash: options.Hash,
                 encoding: options.Encoding,
                 pin: options.Pin,
                 cancel: cancel).ConfigureAwait(false);
@@ -262,7 +261,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 throw new NotSupportedException($"Cannot read content type '{cid.ContentType}'.");
             }
 
-            var dag = new DagNode(block.DataStream, _hashProvider);
+            var dag = new DagNode(block.DataStream);
             var dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
             var fsn = new UnixFsNode
             {
@@ -295,7 +294,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             var r = await _nameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
             var cid = Cid.Decode(r.Remove(0, 6));
-            return await UnixFs.CreateReadStreamAsync(cid, _blockApi, _keyApi, _hashProvider, cancel).ConfigureAwait(false);
+            return await UnixFs.CreateReadStreamAsync(cid, _blockApi, _keyApi, cancel).ConfigureAwait(false);
         }
 
         public async Task<Stream> ReadFileAsync(string path,
@@ -338,7 +337,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
             if (cid.ContentType == "dag-pb")
             {
-                dag = new DagNode(block.DataStream, _hashProvider);
+                dag = new DagNode(block.DataStream);
                 dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
             }
 
@@ -386,7 +385,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         IBlockApi GetBlockService(AddFileOptions options)
         {
             return options.OnlyHash
-                ? new HashOnlyBlockService(_hashProvider)
+                ? new HashOnlyBlockService()
                 : _blockApi;
         }
 
@@ -396,12 +395,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         class HashOnlyBlockService : IBlockApi
         {
             public IPinApi PinApi { get; set; }
-            private IHashProvider _hashProvider { set; get; }
-
-            public HashOnlyBlockService(IHashProvider hashProvider)
-            {
-                _hashProvider = hashProvider;
-            }
 
             public Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default)
             {
@@ -410,6 +403,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
             public Task<Cid> PutAsync(byte[] data,
                 string contentType = Cid.DefaultContentType,
+                string multiHash = MultiHash.DefaultAlgorithmName,
                 string encoding = MultiBase.DefaultAlgorithmName,
                 bool pin = false,
                 CancellationToken cancel = default)
@@ -418,14 +412,15 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 {
                     ContentType = contentType,
                     Encoding = encoding,
-                    Hash = _hashProvider.ComputeMultiHash(data),
-                    Version = (contentType == "dag-pb" && _hashProvider.HashingAlgorithm.Name == "sha2-256") ? 0 : 1
+                    Hash = MultiHash.ComputeHash(data, multiHash),
+                    Version = (contentType == "dag-pb" && multiHash == "sha2-256") ? 0 : 1
                 };
                 return Task.FromResult(cid);
             }
 
             public Task<Cid> PutAsync(Stream data,
                 string contentType = Cid.DefaultContentType,
+                string multiHash = MultiHash.DefaultAlgorithmName,
                 string encoding = MultiBase.DefaultAlgorithmName,
                 bool pin = false,
                 CancellationToken cancel = default)

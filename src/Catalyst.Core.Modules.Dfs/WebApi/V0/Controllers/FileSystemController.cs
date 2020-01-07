@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Options;
 using Lib.P2P;
@@ -110,7 +111,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public FileSystemController(ICoreApi ipfs) : base(ipfs) { }
+        public FileSystemController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///   Get the contents of a file or directory.

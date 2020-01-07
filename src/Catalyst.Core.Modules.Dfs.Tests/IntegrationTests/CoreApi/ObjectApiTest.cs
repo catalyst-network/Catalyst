@@ -57,8 +57,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var adata = Encoding.UTF8.GetBytes("alpha");
             var bdata = Encoding.UTF8.GetBytes("beta");
-            var alpha = new DagNode(adata, _hashProvider);
-            var beta = new DagNode(bdata, _hashProvider, new[] {alpha.ToLink()});
+            var alpha = new DagNode(adata);
+            var beta = new DagNode(bdata, new[] {alpha.ToLink()});
             var x = await ipfs.ObjectApi.PutAsync(beta);
             var node = await ipfs.ObjectApi.GetAsync(x.Id);
             Assert.Equal(beta.DataBytes, node.DataBytes);
@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var adata = Encoding.UTF8.GetBytes("alpha");
             var bdata = Encoding.UTF8.GetBytes("beta");
-            var alpha = new DagNode(adata, _hashProvider);
+            var alpha = new DagNode(adata);
             var beta = await ipfs.ObjectApi.PutAsync(bdata, new[] {alpha.ToLink()});
             var node = await ipfs.ObjectApi.GetAsync(beta.Id);
             Assert.Equal(beta.DataBytes, node.DataBytes);
@@ -101,7 +101,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var adata = Encoding.UTF8.GetBytes("alpha");
             var bdata = Encoding.UTF8.GetBytes("beta");
-            var alpha = new DagNode(adata, _hashProvider);
+            var alpha = new DagNode(adata);
             var beta = await ipfs.ObjectApi.PutAsync(bdata, new[] {alpha.ToLink()});
             var links = await ipfs.ObjectApi.LinksAsync(beta.Id);
             Assert.Equal(beta.Links.Count(), links.Count());
@@ -115,7 +115,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var data1 = Encoding.UTF8.GetBytes("Some data 1");
             var data2 = Encoding.UTF8.GetBytes("Some data 2");
-            var node2 = new DagNode(data2, _hashProvider);
+            var node2 = new DagNode(data2);
             var node1 = await ipfs.ObjectApi.PutAsync(data1,
                 new[] {node2.ToLink("some-link")});
             var info = await ipfs.ObjectApi.StatAsync(node1.Id);
@@ -130,7 +130,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task Get_Nonexistent()
         {
             var data = Encoding.UTF8.GetBytes("Some data for net-ipfs-engine-test that cannot be found");
-            var node = new DagNode(data, _hashProvider);
+            var node = new DagNode(data);
             var id = node.Id;
             var cs = new CancellationTokenSource(500);
             try
