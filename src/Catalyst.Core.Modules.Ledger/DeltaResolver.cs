@@ -40,12 +40,7 @@ namespace Catalyst.Core.Modules.Ledger
             _ledger = ledger;
         }
 
-        public Cid Resolve(long deltaNumber)
-        {
-            return _deltaByNumber.TryFind(deltaNumber, out var deltaHash)
-                ? deltaHash
-                : throw new Exception($"Delta not found, delta number:'{deltaNumber}'");
-        }
+        public bool TryResolve(long deltaNumber, out Cid deltaHash) => _deltaByNumber.TryFind(deltaNumber, out deltaHash);
 
         public long LatestDeltaNumber => _ledger.LatestKnownDeltaNumber;
 

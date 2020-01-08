@@ -49,13 +49,13 @@ namespace Catalyst.Abstractions.Kvm.Models
         {
             switch (jsonValue)
             {
-                case string earliest when string.Equals(earliest, "earliest", StringComparison.InvariantCultureIgnoreCase):
+                case string earliest when string.Equals(earliest, "\"earliest\"", StringComparison.InvariantCultureIgnoreCase):
                     Type = BlockParameterType.Earliest;
                     return;
-                case string pending when string.Equals(pending, "pending", StringComparison.InvariantCultureIgnoreCase):
+                case string pending when string.Equals(pending, "\"pending\"", StringComparison.InvariantCultureIgnoreCase):
                     Type = BlockParameterType.Pending;
                     return;
-                case string latest when string.Equals(latest, "latest", StringComparison.InvariantCultureIgnoreCase):
+                case string latest when string.Equals(latest, "\"latest\"", StringComparison.InvariantCultureIgnoreCase):
                     Type = BlockParameterType.Latest;
                     return;
                 case string empty when string.IsNullOrWhiteSpace(empty):

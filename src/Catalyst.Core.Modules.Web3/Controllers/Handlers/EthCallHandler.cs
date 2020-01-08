@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 
@@ -31,11 +32,14 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override byte[] Handle(TransactionForRpc transactionCall, BlockParameter block, IWeb3EthApi api)
         {
-            var deltaWithCid = api.GetDeltaWithCid(block);
-            
-            var callOutputTracer = api.CallAndRestore(transactionCall, deltaWithCid);
+            if (api.TryGetDeltaWithCid(block, out var deltaWithCid))
+            {
+                var callOutputTracer = api.CallAndRestore(transactionCall, deltaWithCid);
 
-            return callOutputTracer.ReturnValue;
+                return callOutputTracer.ReturnValue;
+            }
+
+            throw new InvalidOperationException($"Delta not found: '{block}'");
         }
     }
 }

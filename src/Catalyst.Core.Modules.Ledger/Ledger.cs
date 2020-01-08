@@ -79,7 +79,7 @@ namespace Catalyst.Core.Modules.Ledger
 
         private readonly object _synchronisationLock = new object();
         volatile Cid _latestKnownDelta;
-        long _latestKnownDeltaNumber;
+        long _latestKnownDeltaNumber = -1;
 
         public Cid LatestKnownDelta => _latestKnownDelta;
 
@@ -117,7 +117,7 @@ namespace Catalyst.Core.Modules.Ledger
             _receipts = receipts;
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
-            _latestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
+            WriteLatestKnownDelta(_synchroniser.DeltaCache.GenesisHash);
         }
 
         private void FlushTransactionsFromDelta(Cid deltaHash)
@@ -246,16 +246,20 @@ namespace Catalyst.Core.Modules.Ledger
                 _stateDb.Commit();
                 _codeDb.Commit();
 
-                // store delta numbers
-                _deltas.Map(LatestKnownDeltaNumber, deltaHash);
-
-                _latestKnownDelta = deltaHash;
-                Volatile.Write(ref _latestKnownDeltaNumber, _latestKnownDeltaNumber + 1);
+                WriteLatestKnownDelta(deltaHash);
             }
             catch
             {
                 Restore(stateSnapshot, codeSnapshot, snapshotStateRoot);
             }
+        }
+
+        void WriteLatestKnownDelta(Cid deltaHash)
+        {
+            _latestKnownDelta = deltaHash;
+
+            Volatile.Write(ref _latestKnownDeltaNumber, _latestKnownDeltaNumber + 1);
+            _deltas.Map(_latestKnownDeltaNumber, deltaHash); // store delta numbers
         }
 
         private void Restore(int stateSnapshot, int codeSnapshot, Keccak snapshotStateRoot)

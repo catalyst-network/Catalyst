@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Buffers.Binary;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
@@ -62,7 +63,11 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                     break;
                 case BlockParameterType.BlockNumber:
                     blockNumber = block.BlockNumber.Value;
-                    deltaHash = deltaResolver.Resolve(blockNumber);
+                    if (!deltaResolver.TryResolve(blockNumber, out deltaHash))
+                    {
+                        return null;
+                    }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -75,10 +80,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber)
         {
             var (delta, deltaHash) = deltaWithCid;
-            var hash0 = Keccak.Zero;
+
+            var nonce = new byte[8];
+            BinaryPrimitives.WriteUInt64BigEndian(nonce, 42);
 
             BlockForRpc blockForRpc = new BlockForRpc
             {
+                ExtraData = new byte[0],
                 Miner = Address.Zero,
                 Difficulty = 1,
                 Hash = GetValue(deltaHash),
@@ -86,11 +94,15 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 GasLimit = (long) delta.GasLimit,
                 GasUsed = delta.GasUsed,
                 Timestamp = new UInt256(delta.TimeStamp.Seconds),
-                ParentHash = blockNumber == 0 ? hash0 : GetValue(delta.PreviousDeltaDfsHash),
-                StateRoot = GetValue(delta.MerkleRoot),
-                ReceiptsRoot = hash0,
-                TransactionsRoot = hash0,
-                LogsBloom = Bloom.Empty
+                ParentHash = blockNumber == 0 ? Keccak.Zero : GetValue(delta.PreviousDeltaDfsHash),
+                StateRoot = delta.StateRootAsKeccak(),
+                ReceiptsRoot = Keccak.EmptyTreeHash,
+                TransactionsRoot = Keccak.EmptyTreeHash,
+                LogsBloom = Bloom.Empty,
+                MixHash = Keccak.Zero,
+                Nonce = nonce,
+                Uncles = new Keccak[0],
+                Transactions = new object[0]
             };
             blockForRpc.TotalDifficulty = (UInt256) ((long) blockForRpc.Difficulty * (blockNumber + 1));
             blockForRpc.Sha3Uncles = Keccak.OfAnEmptySequenceRlp;

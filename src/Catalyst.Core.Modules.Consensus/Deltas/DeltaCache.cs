@@ -28,9 +28,11 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
+using Nethermind.Core.Crypto;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiBase;
 
@@ -57,7 +59,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
         {
-            var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
+            var genesisDelta = new Delta
+            {
+                TimeStamp = Timestamp.FromDateTime(DateTime.UnixEpoch),
+                StateRoot = ByteString.CopyFrom(Keccak.EmptyTreeHash.Bytes),
+            };
 
             GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).CreateCid();
 

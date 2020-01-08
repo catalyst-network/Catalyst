@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Web3
             };
         }
 
-        public static DeltaWithCid GetDeltaWithCid(this IWeb3EthApi api, BlockParameter block)
+        public static bool TryGetDeltaWithCid(this IWeb3EthApi api, BlockParameter block, out DeltaWithCid delta)
         {
             Cid cid;
             switch (block.Type)
@@ -72,13 +72,19 @@ namespace Catalyst.Core.Modules.Web3
                     break;
                 case BlockParameterType.BlockNumber:
                     var blockNumber = block.BlockNumber.Value;
-                    cid = api.DeltaResolver.Resolve(blockNumber);
+                    if (!api.DeltaResolver.TryResolve(blockNumber, out cid))
+                    {
+                        delta = default;
+                        return false;
+                    }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            return api.GetDeltaWithCid(cid);
+            delta = api.GetDeltaWithCid(cid);
+            return true;
         }
 
         public static PublicEntry ToPublicEntry(this IWeb3EthApi api, TransactionForRpc transactionCall, Keccak root)

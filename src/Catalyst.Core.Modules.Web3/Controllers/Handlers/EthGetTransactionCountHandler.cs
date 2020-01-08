@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Nethermind.Core;
@@ -34,10 +35,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override UInt256 Handle(Address address, BlockParameter block, IWeb3EthApi api)
         {
-            var deltaWithCid = api.GetDeltaWithCid(block);
-            Keccak stateRoot = deltaWithCid.Delta.StateRootAsKeccak();
+            if (api.TryGetDeltaWithCid(block, out var deltaWithCid))
+            {
+                Keccak stateRoot = deltaWithCid.Delta.StateRootAsKeccak();
+                return api.StateReader.GetAccount(stateRoot, address).Nonce;
+            }
 
-            return api.StateReader.GetAccount(stateRoot, address).Nonce;
+            throw new InvalidOperationException($"Delta not found: '{block}'");
         }
     }
 }

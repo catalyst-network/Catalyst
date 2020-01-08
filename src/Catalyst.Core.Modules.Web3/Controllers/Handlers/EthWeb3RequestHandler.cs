@@ -32,20 +32,22 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     public abstract class EthWeb3RequestHandlerBase
     {
         public abstract int ParametersCount { get; }
-        public abstract object Handle(string[] parameters, IWeb3EthApi api, IJsonSerializer serializer);
+        public abstract object Handle(object[] parameters, IWeb3EthApi api, IJsonSerializer serializer);
 
         [Todo(Improve.MissingFunctionality, "Implement BlockParametersConverter")]
-        protected TParam Deserialize<TParam>(string parameter, IJsonSerializer serializer)
+        protected TParam Deserialize<TParam>(object parameter, IJsonSerializer serializer)
         {
+            var parameterString = parameter is string ? $"\"{parameter}\"" : parameter.ToString();
+
             // use BlockParamConverter instead...
             if (typeof(TParam) == typeof(BlockParameter))
             {
                 BlockParameter blockParameter = new BlockParameter();
-                blockParameter.FromJson(parameter);
+                blockParameter.FromJson(parameterString);
                 return (TParam) Convert.ChangeType(blockParameter, typeof(TParam));
             }
 
-            return serializer.Deserialize<TParam>(parameter);
+            return serializer.Deserialize<TParam>(parameterString);
         }
     }
 
@@ -53,7 +55,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         public override int ParametersCount => 0;
 
-        public override object Handle(string[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
+        public override object Handle(object[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
         {
             return Handle(api);
         }
@@ -65,7 +67,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         public override int ParametersCount => 1;
 
-        public override object Handle(string[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
+        public override object Handle(object[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
         {
             TParam1 param1 = Deserialize<TParam1>(parameters[0], serializer);
             return Handle(param1, api);
@@ -78,7 +80,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         public override int ParametersCount => 2;
 
-        public override object Handle(string[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
+        public override object Handle(object[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
         {
             TParam1 param1 = Deserialize<TParam1>(parameters[0], serializer);
             TParam2 param2 = Deserialize<TParam2>(parameters[1], serializer);
@@ -92,7 +94,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         public override int ParametersCount => 3;
 
-        public override object Handle(string[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
+        public override object Handle(object[] parameters, IWeb3EthApi api, IJsonSerializer serializer)
         {
             TParam1 param1 = Deserialize<TParam1>(parameters[0], serializer);
             TParam2 param2 = Deserialize<TParam2>(parameters[1], serializer);

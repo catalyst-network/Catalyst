@@ -34,6 +34,7 @@ using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class BlockForRpc
     {
         // private readonly BlockDecoder _blockDecoder = new BlockDecoder();

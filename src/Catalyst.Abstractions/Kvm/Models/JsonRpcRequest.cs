@@ -75,7 +75,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         public string Method { get; set; }
         
         [JsonProperty(Required = Required.Default)]
-        public string[] Params { get; set; }
+        public object[] Params { get; set; }
         
         [JsonConverter(typeof(IdConverter))]
         public object Id { get; set; }
