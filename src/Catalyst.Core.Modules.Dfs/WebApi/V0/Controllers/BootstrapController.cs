@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +31,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public BootstrapController(ICoreApi ipfs) : base(ipfs) { }
+        public BootstrapController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///   List all the bootstrap peers.

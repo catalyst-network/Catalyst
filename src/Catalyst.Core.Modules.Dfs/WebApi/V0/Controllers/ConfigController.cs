@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public ConfigController(ICoreApi ipfs) : base(ipfs) { }
+        public ConfigController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///  Get all the configuration settings.

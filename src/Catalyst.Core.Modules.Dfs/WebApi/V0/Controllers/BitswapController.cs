@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
 using Microsoft.AspNetCore.Mvc;
@@ -77,7 +78,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     Creates a new controller.
         /// </summary>
-        public BitswapController(ICoreApi ipfs) : base(ipfs) { }
+        public BitswapController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///     The blocks that are needed by a peer.

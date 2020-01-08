@@ -44,7 +44,8 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public async Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default(CancellationToken))
         {
             var peer = await LocalPeer.ConfigureAwait(false);
-            return await _bitSwapService.WantAsync(id, peer.Id, cancel).ConfigureAwait(false);
+            var dataBlock = await _bitSwapService.WantAsync(id, peer.Id, cancel).ConfigureAwait(false);
+            return dataBlock;
         }
 
         public async Task<BitswapLedger> LedgerAsync(Peer peer, CancellationToken cancel = default)

@@ -202,7 +202,7 @@ namespace Catalyst.Core.Modules.Dfs
             await KeyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false);
 
             var self = await KeyApi.GetPublicKeyAsync("self").ConfigureAwait(false)
-             ?? await KeyApi.CreateAsync("self", null, 0).ConfigureAwait(false);
+             ?? await KeyApi.CreateAsync("self", "rsa", 0).ConfigureAwait(false);
 
             var localPeer = new Peer
             {
@@ -356,7 +356,6 @@ namespace Catalyst.Core.Modules.Dfs
 
             // Now that the listener addresses are established, the discovery 
             // services can begin.
-
             MulticastService multicast = null;
             if (!Options.Discovery.DisableMdns)
             {

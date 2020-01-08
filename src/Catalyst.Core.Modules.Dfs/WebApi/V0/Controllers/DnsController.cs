@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Controllers.V0;
 using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
@@ -19,7 +20,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public DnsController(ICoreApi ipfs) : base(ipfs) { }
+        public DnsController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///   Resolve a domain name to an IPFS path.

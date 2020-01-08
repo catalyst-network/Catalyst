@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,7 +64,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public DhtController(ICoreApi ipfs) : base(ipfs) { }
+        public DhtController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///   Query the DHT for all of the multiaddresses associated with a Peer ID.

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Microsoft.AspNetCore.Mvc;
 
@@ -68,7 +69,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public KeyController(ICoreApi ipfs) : base(ipfs) { }
+        public KeyController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///   List all the keys.

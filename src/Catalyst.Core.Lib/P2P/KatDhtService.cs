@@ -36,7 +36,8 @@ namespace Catalyst.Core.Lib.P2P
         {
             SwarmService = swarmService;
         }
-   
-        public override string Name { get; } = "catalyst/kad";
+
+        //"catalyst/kad";
+        public override string Name { get; } = "ipfs/kad";
     }
 }

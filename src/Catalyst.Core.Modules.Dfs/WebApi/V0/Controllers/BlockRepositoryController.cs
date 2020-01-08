@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public BlockRepositoryController(ICoreApi ipfs) : base(ipfs) { }
+        public BlockRepositoryController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///   Garbage collection.

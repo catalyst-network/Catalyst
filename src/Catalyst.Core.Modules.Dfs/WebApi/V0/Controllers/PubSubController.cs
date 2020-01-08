@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P.PubSub;
 using Microsoft.AspNetCore.Mvc;
@@ -79,7 +80,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     Creates a new controller.
         /// </summary>
-        public PubSubController(ICoreApi ipfs) : base(ipfs) { }
+        public PubSubController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///     List all the subscribed topics.

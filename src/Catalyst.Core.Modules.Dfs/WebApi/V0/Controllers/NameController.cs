@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Controllers.V0;
@@ -39,7 +40,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     Creates a new controller.
         /// </summary>
-        public NameController(ICoreApi ipfs) : base(ipfs) { }
+        public NameController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///     Resolve a name.

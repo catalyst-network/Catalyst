@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -969,8 +969,7 @@ namespace Lib.P2P.Tests
         public void LocalPeer()
         {
             var swarm = new SwarmService {LocalPeer = self};
-            Assert.AreEqual(self, swarm.LocalPeer)
-                ;
+            Assert.AreEqual(self, swarm.LocalPeer);
             ExceptionAssert.Throws<ArgumentNullException>(() => { swarm.LocalPeer = null; });
             ExceptionAssert.Throws<ArgumentNullException>(() => { swarm.LocalPeer = new Peer {Id = self.Id}; });
             ExceptionAssert.Throws<ArgumentNullException>(() =>
