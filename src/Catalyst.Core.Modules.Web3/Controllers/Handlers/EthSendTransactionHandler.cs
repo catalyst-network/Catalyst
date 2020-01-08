@@ -23,10 +23,7 @@
 
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Protocol.Transaction;
 using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
@@ -35,22 +32,10 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override Keccak Handle(TransactionForRpc transaction, IWeb3EthApi api)
         {
-            var tx = transaction;
-
-            PublicEntry publicEntry = new PublicEntry
-            {
-                //Data = tx.Data.ToByteString(),
-                //Nonce = (ulong)tx.Nonce,
-                //SenderAddress = tx.SenderAddress.Bytes.ToByteString(),
-                //ReceiverAddress = tx.To.Bytes.ToByteString(),
-                //Amount = tx.Value.ToUint256ByteString(),
-                //Timestamp = new Timestamp { Seconds = (long)tx.t },
-            };
-
-            if (tx.GasPrice != null)
-            {
-                publicEntry.GasPrice = new UInt256(tx.GasPrice.Value).ToUint256ByteString();
-            }
+            var deltaWithCid = api.GetLatestDeltaWithCid();
+            var parentDelta = deltaWithCid.Delta;
+            Keccak root = parentDelta.StateRootAsKeccak();
+            var publicEntry = api.ToPublicEntry(transaction, root);
 
             return api.SendTransaction(publicEntry);
         }

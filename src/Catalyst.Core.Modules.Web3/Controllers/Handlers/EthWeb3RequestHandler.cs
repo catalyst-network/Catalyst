@@ -25,7 +25,6 @@ using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Nethermind.Core;
-using NLog.Targets;
 using IJsonSerializer = Nethermind.Core.IJsonSerializer;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
@@ -43,7 +42,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             {
                 BlockParameter blockParameter = new BlockParameter();
                 blockParameter.FromJson(parameter);
-                return (TParam)Convert.ChangeType(blockParameter, typeof(TParam));
+                return (TParam) Convert.ChangeType(blockParameter, typeof(TParam));
             }
 
             return serializer.Deserialize<TParam>(parameter);

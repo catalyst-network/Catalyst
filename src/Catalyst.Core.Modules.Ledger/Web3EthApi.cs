@@ -29,6 +29,7 @@ using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Ledger.Repository;
@@ -45,12 +46,15 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ITransactionReceiptRepository _receipts;
         private readonly ITransactionReceivedEvent _transactionReceived;
         private readonly IHashProvider _hashProvider;
+        private readonly PeerId _peerId;
 
-        public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, IDeltaExecutor executor, IStorageProvider storageProvider, IStateProvider stateProvider, ITransactionReceiptRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider)
+        public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, IDeltaExecutor executor, IStorageProvider storageProvider, IStateProvider stateProvider, ITransactionReceiptRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider, IPeerSettings peerSettings)
         {
             _receipts = receipts;
             _transactionReceived = transactionReceived ?? throw new ArgumentNullException(nameof(transactionReceived));
             _hashProvider = hashProvider;
+            _peerId = peerSettings.PeerId;
+
             StateReader = stateReader ?? throw new ArgumentNullException(nameof(stateReader));
             DeltaResolver = deltaResolver ?? throw new ArgumentNullException(nameof(deltaResolver));
             DeltaCache = deltaCache ?? throw new ArgumentNullException(nameof(deltaCache));
@@ -75,7 +79,7 @@ namespace Catalyst.Core.Modules.Ledger
                 PublicEntry = publicEntry
             };
 
-            _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(new PeerId(), new CorrelationId(Guid.NewGuid())));
+            _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId));
 
             return new Keccak(_hashProvider.ComputeMultiHash(broadcast).Digest);
         }

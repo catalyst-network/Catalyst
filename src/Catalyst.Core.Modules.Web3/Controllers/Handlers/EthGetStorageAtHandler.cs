@@ -23,8 +23,6 @@
 
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Catalyst.Protocol.Deltas;
-using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Store;
 using Address = Nethermind.Core.Address;
