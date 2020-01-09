@@ -29,6 +29,7 @@ using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using LibP2P;
 using Nethermind.Core.Crypto;
 using Nethermind.Evm.Tracing;
@@ -97,7 +98,8 @@ namespace Catalyst.Core.Modules.Web3
                 GasLimit = (ulong) transactionCall.Gas.GetValueOrDefault(),
                 GasPrice = transactionCall.GasPrice.GetValueOrDefault().ToUint256ByteString(),
                 Amount = transactionCall.Value.GetValueOrDefault().ToUint256ByteString(), 
-                Data = transactionCall.Data?.ToByteString() ?? ByteString.Empty
+                Data = transactionCall.Data?.ToByteString() ?? ByteString.Empty,
+                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow) //TODO: this should be set by user and signed
             };
         }
 

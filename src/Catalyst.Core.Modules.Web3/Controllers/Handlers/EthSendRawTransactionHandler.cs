@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
@@ -40,12 +41,12 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 
             PublicEntry publicEntry = new PublicEntry
             {
-                Data = tx.Data.ToByteString(),
+                Data = (tx.Data ?? tx.Init).ToByteString(),
                 GasLimit = (ulong) tx.GasLimit,
                 GasPrice = tx.GasPrice.ToUint256ByteString(),
                 Nonce = (ulong) tx.Nonce,
-                SenderAddress = tx.SenderAddress.Bytes.ToByteString(),
-                ReceiverAddress = tx.To.Bytes.ToByteString(),
+                SenderAddress = new Address("0xb77aec9f59f9d6f39793289a09aea871932619ed").Bytes.ToByteString(),
+                ReceiverAddress = tx.To?.Bytes.ToByteString() ?? ByteString.Empty,
                 Amount = tx.Value.ToUint256ByteString(),
                 Timestamp = new Timestamp {Seconds = (long) tx.Timestamp},
             };
