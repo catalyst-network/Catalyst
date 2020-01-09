@@ -26,13 +26,17 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Dfs.Extensions;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
+using Nethermind.Core;
 using Nethermind.Core.Crypto;
+using Nethermind.Dirichlet.Numerics;
+using Nethermind.Store;
 using Serilog;
 using TheDotNetLeague.MultiFormats.MultiBase;
 
@@ -57,14 +61,24 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IMemoryCache memoryCache,
             IDeltaDfsReader dfsReader,
             IDeltaCacheChangeTokenProvider changeTokenProvider,
+            IStorageProvider storageProvider,
+            IStateProvider stateProvider,
             ILogger logger)
         {
+            stateProvider.CreateAccount(new Address("0xb77aec9f59f9d6f39793289a09aea871932619ed"), new UInt256(long.MaxValue));
+
+            storageProvider.Commit();
+            stateProvider.Commit(CatalystGenesisSpec.Instance);
+
+            storageProvider.CommitTrees();
+            stateProvider.CommitTree();
+
             var genesisDelta = new Delta
             {
                 TimeStamp = Timestamp.FromDateTime(DateTime.UnixEpoch),
-                StateRoot = ByteString.CopyFrom(Keccak.EmptyTreeHash.Bytes),
+                StateRoot = ByteString.CopyFrom(stateProvider.StateRoot.Bytes),
             };
-
+            
             GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).CreateCid();
 
             _dfsReader = dfsReader;
