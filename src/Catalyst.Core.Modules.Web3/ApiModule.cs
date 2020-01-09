@@ -124,6 +124,7 @@ namespace Catalyst.Core.Modules.Web3
                 
                 converters.Add(new UInt256Converter());
                 converters.Add(new NullableUInt256Converter());
+                converters.Add(new KeccakConverter());
             }).AddApiExplorer();
 
             var mvcBuilder = services.AddRazorPages();

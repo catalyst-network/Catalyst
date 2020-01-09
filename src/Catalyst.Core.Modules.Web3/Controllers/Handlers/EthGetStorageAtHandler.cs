@@ -38,6 +38,12 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             if (api.TryGetDeltaWithCid(block, out var deltaWithCid))
             {
                 var stateRoot = deltaWithCid.Delta.StateRootAsKeccak();
+
+                if (!api.StateReader.AccountExists(stateRoot, address))
+                {
+                    return new byte[0];
+                }
+
                 api.StateProvider.StateRoot = stateRoot;
                 return api.StorageProvider.Get(new StorageAddress(address, index));
             }
