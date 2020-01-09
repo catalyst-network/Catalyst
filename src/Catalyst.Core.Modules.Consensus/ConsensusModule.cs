@@ -64,14 +64,5 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<DeltaBuilder>().As<IDeltaBuilder>().SingleInstance()
                .WithExecutionParameters(builder);
         }
-
-        /// <summary>
-        /// Resolves a parameter of specific type with its named service.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        sealed class ByTypeNamedParameter<T> : ResolvedParameter
-        {
-            public ByTypeNamedParameter(string name) : base((p, _) => p.ParameterType == typeof(T), (_, c) => c.ResolveNamed<T>(name)) { }
-        }
     }
 }

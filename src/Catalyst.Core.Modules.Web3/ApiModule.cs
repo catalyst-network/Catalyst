@@ -118,7 +118,13 @@ namespace Catalyst.Core.Modules.Web3
                        .AllowAnyHeader());
             });
 
-            services.AddMvcCore().AddNewtonsoftJson().AddApiExplorer();
+            services.AddMvcCore().AddNewtonsoftJson(options =>
+            {
+                var converters = options.SerializerSettings.Converters;
+                
+                converters.Add(new UInt256Converter());
+                converters.Add(new NullableUInt256Converter());
+            }).AddApiExplorer();
 
             var mvcBuilder = services.AddRazorPages();
 

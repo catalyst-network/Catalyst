@@ -25,28 +25,57 @@ using System.Numerics;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
+using Nethermind.Core.Json;
 using Nethermind.Dirichlet.Numerics;
+using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {
     public class TransactionForRpc
     {
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak Hash { get; set; }
-        public BigInteger? Nonce { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
+        public UInt256? Nonce { get; set; }
+
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak BlockHash { get; set; }
-        public BigInteger? BlockNumber { get; set; }
-        public BigInteger? TransactionIndex { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
+        public UInt256? BlockNumber { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
+        public UInt256? TransactionIndex { get; set; }
+
+        [JsonConverter(typeof(AddressConverter))]
         public Address From { get; set; }
+
+        [JsonConverter(typeof(AddressConverter))]
         public Address To { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
         public UInt256? Value { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
         public UInt256? GasPrice { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
         public UInt256? Gas { get; set; }
+
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Data { get; set; }
+
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Input { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
         public UInt256? V { get; set; }
 
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] S { get; set; }
 
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] R { get; set; }
     }
 }

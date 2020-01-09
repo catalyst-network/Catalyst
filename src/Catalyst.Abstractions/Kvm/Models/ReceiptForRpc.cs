@@ -79,6 +79,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         
         public LogEntryForRpc[] Logs { get; set; }
 
+        [JsonConverter(typeof(BigIntegerConverter))]
         public BigInteger Status { get; set; }
     }
 }
