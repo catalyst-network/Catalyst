@@ -74,6 +74,7 @@ namespace Catalyst.Core.Modules.Consensus
             _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name == PhaseName.Construction && p.Status == PhaseStatus.Producing)
                .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
+               .Where(c => c != null)
                .Subscribe(c =>
                 {
                     _deltaVoter.OnNext(c);
