@@ -34,7 +34,6 @@ using Google.Protobuf.WellKnownTypes;
 using LibP2P;
 using Microsoft.Extensions.Caching.Memory;
 using Nethermind.Core;
-using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Store;
 using Serilog;

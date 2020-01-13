@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Transaction;
@@ -29,6 +30,7 @@ using Google.Protobuf.WellKnownTypes;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Encoding;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
@@ -38,6 +40,8 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         protected override Keccak Handle(byte[] transaction, IWeb3EthApi api)
         {
             Transaction tx = Rlp.Decode<Transaction>(transaction);
+
+            tx.Timestamp = (UInt256) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             PublicEntry publicEntry = new PublicEntry
             {
