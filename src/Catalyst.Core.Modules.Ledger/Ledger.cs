@@ -167,7 +167,7 @@ namespace Catalyst.Core.Modules.Ledger
                         return;
                     }
 
-                    foreach (var chainedDeltaHash in chainedDeltaHashes)
+                    foreach (var chainedDeltaHash in chainedDeltaHashes.Skip(1))
                     {
                         UpdateLedgerFromDelta(chainedDeltaHash);
                     }
