@@ -75,12 +75,29 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var foundNewDelta = _deltaCache.TryGetOrAddConfirmedDelta(newAddress, out var newDelta);
             var foundPreviousDelta = _deltaCache.TryGetOrAddConfirmedDelta(previousAddress, out var previousDelta);
 
-            if (!foundNewDelta
-             || !foundPreviousDelta
-             || newDelta.PreviousDeltaDfsHash != previousHash.ToArray().ToByteString()
-             || previousDelta.TimeStamp >= newDelta.TimeStamp)
+            if (!foundPreviousDelta)
             {
-                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash}",
+                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash} due to previous delta not found",
+                    previousAddress, newAddress);
+                return false;
+            }
+
+            if (!foundNewDelta)
+            {
+                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash} due to new delta not found", previousAddress, newAddress);
+                return false;
+            }
+
+            if (newDelta.PreviousDeltaDfsHash != previousHash.ToArray().ToByteString())
+            {
+                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash} due to new delta not being a childe of the previous one",
+                    previousAddress, newAddress);
+                return false;
+            }
+
+            if (previousDelta.TimeStamp >= newDelta.TimeStamp)
+            {
+                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash} due to new delta being older than the previous one",
                     previousAddress, newAddress);
                 return false;
             }
