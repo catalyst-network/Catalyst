@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -53,6 +54,10 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 ReceiverAddress = tx.To?.Bytes.ToByteString() ?? ByteString.Empty,
                 Amount = tx.Value.ToUint256ByteString(),
                 Timestamp = new Timestamp {Seconds = (long) tx.Timestamp},
+                Signature = new Catalyst.Protocol.Cryptography.Signature
+                {
+                    RawBytes = ByteString.CopyFrom((byte)1)
+                }
             };
 
             return api.SendTransaction(publicEntry);

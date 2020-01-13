@@ -104,6 +104,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             if (_memoryCache.TryGetValue(cid, out delta))
             {
                 return true;
+            } 
+            
+            if (_memoryCache.TryGetValue(DummyConstDeltaName, out delta))
+            {
+                return true;
             }
 
             if (!_dfsReader.TryReadDeltaFromDfs(cid, out delta, cancellationToken))
@@ -126,10 +131,17 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             _logger.Verbose("Adding full details of candidate delta {candidate}", localCandidate);
             _memoryCache.Set(GetLocalDeltaCacheKey(localCandidate), delta, _entryOptions());
+
+            if (delta.PublicEntries.Count > 0)
+            {
+                _memoryCache.Set(DummyConstDeltaName, delta, _entryOptions());
+            }
         }
 
         protected virtual void Dispose(bool disposing) { _memoryCache.Dispose(); }
 
         public void Dispose() { Dispose(true); }
+
+        public const string DummyConstDeltaName = nameof(DummyConstDeltaName);
     }
 }
