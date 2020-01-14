@@ -24,7 +24,10 @@
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
+using LibP2P;
 using Nethermind.Core.Crypto;
 using Nethermind.Store;
 
@@ -39,9 +42,11 @@ namespace Catalyst.Abstractions.Ledger
         IDeltaExecutor Executor { get; }
         IStorageProvider StorageProvider { get; }
         IStateProvider StateProvider { get; }
-        ITransactionReceiptResolver ReceiptResolver { get; }
         IHashProvider HashProvider { get; }
 
         Keccak SendTransaction(PublicEntry publicEntry);
+        
+        TransactionReceipt FindReceipt(Keccak transactionHash);
+        bool FindTransactionData(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index);
     }
 }

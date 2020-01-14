@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Nethermind.Core.Crypto;
@@ -31,9 +30,14 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     [EthWeb3RequestHandler("eth", "getTransactionByHash")]
     public class EthGetTransactionsByHashHandler : EthWeb3RequestHandler<Keccak, TransactionForRpc>
     {
-        protected override TransactionForRpc Handle(Keccak txHash, IWeb3EthApi api)
+        protected override TransactionForRpc Handle(Keccak transactionHash, IWeb3EthApi api)
         {
-            throw new NotImplementedException();
+            if (api.FindTransactionData(transactionHash, out var deltaHash, out var delta, out var index))
+            {
+                return api.ToTransactionForRpc(new DeltaWithCid {Cid = deltaHash, Delta = delta}, index);
+            }
+
+            return default;
         }
     }
 }

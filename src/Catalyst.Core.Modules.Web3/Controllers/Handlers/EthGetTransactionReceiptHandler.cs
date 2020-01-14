@@ -34,7 +34,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override ReceiptForRpc Handle(Keccak txHash, IWeb3EthApi api)
         {
-            TransactionReceipt receipt = api.ReceiptResolver.Find(txHash);
+            TransactionReceipt receipt = api.FindReceipt(txHash);
 
             if (receipt == null)
             {

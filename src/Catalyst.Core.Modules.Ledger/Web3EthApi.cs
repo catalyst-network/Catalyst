@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Autofac.Features.AttributeFilters;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Events;
@@ -31,24 +30,25 @@ using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Ledger.Repository;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
+using LibP2P;
 using Nethermind.Core.Crypto;
 using Nethermind.Store;
 
 namespace Catalyst.Core.Modules.Ledger
 {
-    public class Web3EthApi : IWeb3EthApi, ITransactionReceiptResolver
+    public class Web3EthApi : IWeb3EthApi
     {
-        private readonly ITransactionReceiptRepository _receipts;
+        private readonly ITransactionRepository _receipts;
         private readonly ITransactionReceivedEvent _transactionReceived;
         public IHashProvider HashProvider { get; }
         private readonly PeerId _peerId;
 
-        public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, IDeltaExecutor executor, IStorageProvider storageProvider, IStateProvider stateProvider, ITransactionReceiptRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider, IPeerSettings peerSettings)
+        public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, IDeltaExecutor executor, IStorageProvider storageProvider, IStateProvider stateProvider, ITransactionRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider, IPeerSettings peerSettings)
         {
             _receipts = receipts;
             _transactionReceived = transactionReceived ?? throw new ArgumentNullException(nameof(transactionReceived));
@@ -70,7 +70,6 @@ namespace Catalyst.Core.Modules.Ledger
         public IDeltaExecutor Executor { get; }
         public IStorageProvider StorageProvider { get; }
         public IStateProvider StateProvider { get; }
-        public ITransactionReceiptResolver ReceiptResolver => this;
 
         public Keccak SendTransaction(PublicEntry publicEntry)
         {
@@ -84,9 +83,14 @@ namespace Catalyst.Core.Modules.Ledger
             return new Keccak(HashProvider.ComputeMultiHash(broadcast).Digest);
         }
 
-        public TransactionReceipt Find(Keccak hash)
+        public TransactionReceipt FindReceipt(Keccak transactionHash)
         {
-            return _receipts.TryFind(hash, out TransactionReceipt receipt) ? receipt : default;
+            return _receipts.TryFind(transactionHash, out TransactionReceipt receipt) ? receipt : default;
+        }
+
+        public bool FindTransactionData(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index)
+        {
+            return _receipts.TryFind(transactionHash, out deltaHash, out delta, out index);
         }
     }
 }

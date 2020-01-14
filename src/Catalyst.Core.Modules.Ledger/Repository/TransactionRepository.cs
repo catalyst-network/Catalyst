@@ -25,6 +25,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Repository;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using LibP2P;
 using Nethermind.Core.Crypto;
@@ -32,14 +33,14 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Ledger.Repository 
 {
-    public class TransactionReceiptRepository : ITransactionReceiptRepository
+    public class TransactionRepository : ITransactionRepository
     {
         readonly IRepository<TransactionReceipts, string> _repository;
         readonly IRepository<TransactionToDelta, string> _transactionToDeltaRepository;
         readonly IHashProvider _hashProvider;
         readonly IDeltaCache _deltaCache;
 
-        public TransactionReceiptRepository(IRepository<TransactionReceipts, string> repository,
+        public TransactionRepository(IRepository<TransactionReceipts, string> repository,
             IRepository<TransactionToDelta, string> transactionToDeltaRepository,
             IHashProvider hashProvider,
             IDeltaCache deltaCache)
@@ -83,27 +84,23 @@ namespace Catalyst.Core.Modules.Ledger.Repository
 
         public bool TryFind(Keccak transactionHash, out TransactionReceipt receipt)
         {
-            if (!_transactionToDeltaRepository.TryGet(transactionHash.AsDocumentId(), out var transactionToDelta))
-            {
-                receipt = default;
-                return false;
-            }
+            var id = transactionHash.AsDocumentId();
 
-            if (!_deltaCache.TryGetOrAddConfirmedDelta(transactionToDelta.DeltaHash, out var delta))
+            if (!TryFetchData(id, out var deltaHash, out var delta))
             {
                 receipt = default;
                 return false;
             }
 
             var index = 0;
-            var id = transactionHash.AsDocumentId();
 
             foreach (var publicEntry in delta.PublicEntries)
             {
                 var documentId = publicEntry.GetDocumentId(_hashProvider);
                 if (id == documentId)
                 {
-                    if (_repository.TryGet(GetDocumentId(transactionToDelta.DeltaHash), out var receipts))
+                    var key = GetDocumentId(deltaHash);
+                    if (_repository.TryGet(key, out var receipts))
                     {
                         receipt = receipts.Receipts[index];
                         return true;
@@ -118,6 +115,49 @@ namespace Catalyst.Core.Modules.Ledger.Repository
 
             receipt = default;
             return false;
+        }
+
+        public bool TryFind(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index)
+        {
+            var id = transactionHash.AsDocumentId();
+
+            if (!TryFetchData(id, out deltaHash, out delta))
+            {
+                index = 0;
+                return false;
+            }
+
+            index = 0;
+            foreach (var pe in delta.PublicEntries)
+            {
+                var documentId = pe.GetDocumentId(_hashProvider);
+                if (id == documentId)
+                {
+                    return true;
+                }
+
+                index++;
+            }
+
+            return false;
+        }
+
+        bool TryFetchData(string transactionId, out Cid deltaHash, out Delta delta)
+        {
+            if (!_transactionToDeltaRepository.TryGet(transactionId, out var transactionToDelta))
+            {
+                deltaHash = null;
+                delta = null;
+                return false;
+            }
+
+            deltaHash = transactionToDelta.DeltaHash;
+            if (!_deltaCache.TryGetOrAddConfirmedDelta(deltaHash, out delta))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         static string GetDocumentId(Cid deltaHash) => deltaHash.ToString();

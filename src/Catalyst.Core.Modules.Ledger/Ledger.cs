@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ISnapshotableDb _stateDb;
         private readonly ISnapshotableDb _codeDb;
         private readonly IDeltaByNumberRepository _deltas;
-        private readonly ITransactionReceiptRepository _receipts;
+        private readonly ITransactionRepository _receipts;
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IMapperProvider _mapperProvider;
@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Ledger
             ISnapshotableDb codeDb,
             IAccountRepository accounts,
             IDeltaByNumberRepository deltas,
-            ITransactionReceiptRepository receipts,
+            ITransactionRepository receipts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
             IMempool<PublicEntryDao> mempool,
