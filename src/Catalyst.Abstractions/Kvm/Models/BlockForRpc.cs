@@ -113,8 +113,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(LongConverter))]
         public long Number { get; set; }
         
-        [JsonConverter(typeof(KeccakConverter))]
-        public Keccak ParentHash { get; set; }
+        public byte[] ParentHash { get; set; }
         
         [JsonConverter(typeof(KeccakConverter))]
         public Keccak ReceiptsRoot { get; set; }

@@ -238,9 +238,9 @@ namespace Catalyst.Core.Modules.Ledger
                 //// }
 
                 // store receipts
-                foreach (var receipt in tracer.Receipts)
+                if (tracer.Receipts.Any())
                 {
-                    _receipts.Put(receipt);
+                    _receipts.Put(deltaHash, tracer.Receipts.ToArray());
                 }
 
                 _stateDb.Commit();
@@ -350,7 +350,6 @@ namespace Catalyst.Core.Modules.Ledger
                     GasUsed = spentGas,
                     Sender = GetAccountAddress(entry.SenderAddress),
                     ContractAddress = entry.IsContractDeployment ? recipient : null,
-                    DocumentId = entry.GetDocumentId(_hashProvider)
                 };
 
                 _currentIndex += 1;

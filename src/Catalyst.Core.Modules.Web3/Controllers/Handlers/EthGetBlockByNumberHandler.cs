@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 GasLimit = (long) delta.GasLimit,
                 GasUsed = delta.GasUsed,
                 Timestamp = new UInt256(delta.TimeStamp.Seconds),
-                ParentHash = blockNumber == 0 ? Keccak.Zero : GetValue(delta.PreviousDeltaDfsHash),
+                ParentHash = blockNumber == 0 ? new byte[38] : delta.PreviousDeltaDfsHash.ToByteArray(),
                 StateRoot = delta.StateRootAsKeccak(),
                 ReceiptsRoot = Keccak.EmptyTreeHash,
                 TransactionsRoot = Keccak.EmptyTreeHash,
@@ -111,6 +111,5 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 
         // These functions assume 32 bytes of hash
         static Keccak GetValue(Cid deltaHash) => new Keccak(deltaHash.Hash.Digest);
-        static Keccak GetValue(ByteString deltaHash) => new Keccak(deltaHash.ToByteArray());
     }
 }

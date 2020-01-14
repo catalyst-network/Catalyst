@@ -22,30 +22,41 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Abstractions.Repository;
-using Nethermind.Core.Crypto;
+using LibP2P;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Ledger.Repository 
 {
     public class TransactionReceiptRepository : ITransactionReceiptRepository
     {
-        readonly IRepository<TransactionReceipt, string> _repository;
+        readonly IRepository<TransactionReceipts, string> _repository;
 
-        public TransactionReceiptRepository(IRepository<TransactionReceipt, string> repository) { _repository = repository; }
+        public TransactionReceiptRepository(IRepository<TransactionReceipts, string> repository) { _repository = repository; }
 
-        public void Put(TransactionReceipt receipt)
+        public void Put(Cid deltaHash, TransactionReceipt[] receipts)
         {
-            string key = receipt.DocumentId;
-            if (!_repository.TryGet(key, out _))
+            if (!_repository.TryGet(GetDocumentId(deltaHash), out _))
             {
-                _repository.Add(receipt);
+                _repository.Add(new TransactionReceipts
+                {
+                    DocumentId = GetDocumentId(deltaHash),
+                    Receipts = receipts
+                });
             }
         }
 
-        public bool TryFind(Keccak hash, out TransactionReceipt receipt)
+        public bool TryFind(Cid deltaHash, out TransactionReceipt[] receipts)
         {
-            return _repository.TryGet(hash.AsDocumentId(), out receipt);
+            if (_repository.TryGet(GetDocumentId(deltaHash), out var existing))
+            {
+                receipts = existing.Receipts;
+                return true;
+            }
+
+            receipts = default;
+            return false;
         }
+
+        static string GetDocumentId(Cid deltaHash) => deltaHash.ToString();
     }
 }

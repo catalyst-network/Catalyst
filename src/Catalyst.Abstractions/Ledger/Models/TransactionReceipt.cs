@@ -21,15 +21,24 @@
 
 #endregion
 
-using System;
 using Catalyst.Abstractions.Repository;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using Newtonsoft.Json;
+using SharpRepository.Repository;
 
 namespace Catalyst.Abstractions.Ledger.Models
 {
-    public class TransactionReceipt : IDocument
+    public class TransactionReceipts : IDocument
+    {
+        public TransactionReceipt[] Receipts { get; set; }
+
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("id")]
+        public string DocumentId { get; set; }
+    }
+
+    public class TransactionReceipt
     {
         public long Index { get; set; }
         public Keccak DeltaHash { get; set; }
@@ -41,7 +50,5 @@ namespace Catalyst.Abstractions.Ledger.Models
         public Address ContractAddress { get; set; }
         public byte StatusCode { get; set; }
         public LogEntry[] Logs { get; set; }
-
-        public string DocumentId { get; set; }
     }
 }
