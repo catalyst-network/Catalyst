@@ -31,7 +31,10 @@ namespace Catalyst.Core.Modules.Ledger.Repository
     {
         readonly IRepository<DeltaByNumber, string> _repository;
 
-        public DeltaByNumberRepository(IRepository<DeltaByNumber, string> repository) { _repository = repository; }
+        public DeltaByNumberRepository(IRepository<DeltaByNumber, string> repository)
+        {
+            _repository = repository;
+        }
 
         public void Map(long deltaNumber, Cid deltaHash)
         {

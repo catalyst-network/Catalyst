@@ -89,7 +89,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 ExtraData = new byte[0],
                 Miner = Address.Zero,
                 Difficulty = 1,
-                Hash = GetValue(deltaHash),
+                Hash = deltaHash,
                 Number = blockNumber,
                 GasLimit = (long) delta.GasLimit,
                 GasUsed = delta.GasUsed,
@@ -108,8 +108,5 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             blockForRpc.Sha3Uncles = Keccak.OfAnEmptySequenceRlp;
             return blockForRpc;
         }
-
-        // These functions assume 32 bytes of hash
-        static Keccak GetValue(Cid deltaHash) => new Keccak(deltaHash.Hash.Digest);
     }
 }

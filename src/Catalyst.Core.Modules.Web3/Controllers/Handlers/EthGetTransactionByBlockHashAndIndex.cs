@@ -21,20 +21,20 @@
 
 #endregion
 
-using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
+using LibP2P;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getTransactionByBlockHashAndIndex")]
-    public class EthGetTransactionByBlockHashAndIndex : EthWeb3RequestHandler<Keccak, UInt256, TransactionForRpc>
+    public class EthGetTransactionByBlockHashAndIndex : EthWeb3RequestHandler<Cid, int, TransactionForRpc>
     {
-        protected override TransactionForRpc Handle(Keccak blockHash, UInt256 positionIndex, IWeb3EthApi api)
+        protected override TransactionForRpc Handle(Cid deltaHash, int positionIndex, IWeb3EthApi api)
         {
-            throw new NotImplementedException();
+            var delta = api.GetDeltaWithCid(deltaHash);
+
+            return api.ToTransactionForRpc(delta, positionIndex);
         }
     }
 }

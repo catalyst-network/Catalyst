@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Catalyst.Protocol.Deltas;
@@ -31,7 +32,9 @@ using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using LibP2P;
+using Nethermind.Core;
 using Nethermind.Core.Crypto;
+using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm.Tracing;
 
 namespace Catalyst.Core.Modules.Web3 
@@ -100,6 +103,30 @@ namespace Catalyst.Core.Modules.Web3
                 Amount = transactionCall.Value.GetValueOrDefault().ToUint256ByteString(), 
                 Data = transactionCall.Data?.ToByteString() ?? ByteString.Empty,
                 Timestamp = Timestamp.FromDateTime(DateTime.UtcNow) //TODO: this should be set by user and signed
+            };
+        }
+        
+        public static TransactionForRpc ToTransactionForRpc(this IWeb3EthApi api, DeltaWithCid deltaWithCid, int transactionIndex)
+        {
+            var (delta, deltaCid) = deltaWithCid;
+            var publicEntry = delta.PublicEntries[transactionIndex];
+            var deltaNumber = delta.DeltaNumber;
+            return new TransactionForRpc
+            {
+                GasPrice = publicEntry.GasPrice.ToUInt256(),
+                BlockHash = deltaCid,
+                BlockNumber = (UInt256) deltaNumber,
+                Nonce = publicEntry.Nonce,
+                To = new Address(publicEntry.ReceiverAddress.ToByteArray()),
+                From = new Address(publicEntry.SenderAddress.ToByteArray()),
+                Value = publicEntry.Amount.ToUInt256(),
+                Hash = publicEntry.GetHash(api.HashProvider),
+                Data = publicEntry.Data.ToByteArray(),
+                R = new byte[0],
+                S = new byte[0],
+                V = UInt256.Zero,
+                Gas = publicEntry.GasLimit,
+                TransactionIndex = (UInt256) transactionIndex
             };
         }
 

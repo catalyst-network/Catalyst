@@ -24,16 +24,20 @@
 using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getTransactionByBlockNumberAndIndex")]
-    public class EthGetTransactionByBlockNumberAndIndex : EthWeb3RequestHandler<BlockParameter, UInt256, TransactionForRpc>
+    public class EthGetTransactionByBlockNumberAndIndex : EthWeb3RequestHandler<BlockParameter, int, TransactionForRpc>
     {
-        protected override TransactionForRpc Handle(BlockParameter blockParameter, UInt256 positionIndex, IWeb3EthApi api)
+        protected override TransactionForRpc Handle(BlockParameter block, int positionIndex, IWeb3EthApi api)
         {
-            throw new NotImplementedException();
+            if (api.TryGetDeltaWithCid(block, out var delta))
+            {
+                return api.ToTransactionForRpc(delta, positionIndex);
+            }
+
+            return default;
         }
     }
 }

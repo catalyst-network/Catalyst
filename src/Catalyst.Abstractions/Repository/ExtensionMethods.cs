@@ -24,7 +24,6 @@
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Protocol.Transaction;
 using Nethermind.Core.Crypto;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Abstractions.Repository
 {
@@ -33,12 +32,15 @@ namespace Catalyst.Abstractions.Repository
         /// <summary>
         /// Gets the document id on the basis of <paramref name="entry"/> content.
         /// </summary>
-        public static string GetDocumentId(this PublicEntry entry, IHashProvider hashProvider) => hashProvider.ComputeMultiHash(entry).AsDocumentId();
+        public static string GetDocumentId(this PublicEntry entry, IHashProvider hashProvider) => entry.GetHash(hashProvider).AsDocumentId();
 
         /// <summary>
-        /// Transforms <paramref name="hash"/> to a unified document id.
+        /// Gets the hash out of the public entry.
         /// </summary>
-        public static string AsDocumentId(this MultiHash hash) => new Keccak(hash.Digest).AsDocumentId();
+        /// <param name="entry">The entry.</param>
+        /// <param name="hashProvider">The hash provider.</param>
+        /// <returns>The hash value.</returns>
+        public static Keccak GetHash(this PublicEntry entry, IHashProvider hashProvider) => new Keccak(hashProvider.ComputeMultiHash(entry).Digest);
 
         /// <summary>
         /// Transforms <paramref name="keccak"/> to a unified document id.

@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using LibP2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Encoding;
@@ -95,8 +96,8 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(LongConverter))]
         public long GasUsed { get; set; }
         
-        [JsonConverter(typeof(KeccakConverter))]
-        public Keccak Hash { get; set; }
+        [JsonConverter(typeof(Cid.CidJsonConverter))]
+        public Cid Hash { get; set; }
         
         [JsonConverter(typeof(BloomConverter))]
         public Bloom LogsBloom { get; set; }

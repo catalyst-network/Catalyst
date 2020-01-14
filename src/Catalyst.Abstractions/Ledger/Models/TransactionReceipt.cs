@@ -24,7 +24,6 @@
 using Catalyst.Abstractions.Repository;
 using LibP2P;
 using Nethermind.Core;
-using Nethermind.Core.Crypto;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
 
@@ -42,7 +41,7 @@ namespace Catalyst.Abstractions.Ledger.Models
     public class TransactionReceipt
     {
         public long Index { get; set; }
-        public Keccak DeltaHash { get; set; }
+        public Cid DeltaHash { get; set; }
         public long DeltaNumber { get; set; }
         public long GasUsedTotal { get; set; }
         public long GasUsed { get; set; }

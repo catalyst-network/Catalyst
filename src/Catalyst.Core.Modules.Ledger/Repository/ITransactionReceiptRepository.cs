@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Protocol.Transaction;
-using Google.Protobuf.Collections;
 using LibP2P;
 using Nethermind.Core.Crypto;
 

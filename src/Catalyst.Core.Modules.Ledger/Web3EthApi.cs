@@ -45,14 +45,14 @@ namespace Catalyst.Core.Modules.Ledger
     {
         private readonly ITransactionReceiptRepository _receipts;
         private readonly ITransactionReceivedEvent _transactionReceived;
-        private readonly IHashProvider _hashProvider;
+        public IHashProvider HashProvider { get; }
         private readonly PeerId _peerId;
 
         public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, IDeltaExecutor executor, IStorageProvider storageProvider, IStateProvider stateProvider, ITransactionReceiptRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider, IPeerSettings peerSettings)
         {
             _receipts = receipts;
             _transactionReceived = transactionReceived ?? throw new ArgumentNullException(nameof(transactionReceived));
-            _hashProvider = hashProvider;
+            HashProvider = hashProvider;
             _peerId = peerSettings.PeerId;
 
             StateReader = stateReader ?? throw new ArgumentNullException(nameof(stateReader));
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Ledger
 
             _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId));
 
-            return new Keccak(_hashProvider.ComputeMultiHash(broadcast).Digest);
+            return new Keccak(HashProvider.ComputeMultiHash(broadcast).Digest);
         }
 
         public TransactionReceipt Find(Keccak hash)

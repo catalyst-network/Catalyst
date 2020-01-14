@@ -21,19 +21,22 @@
 
 #endregion
 
-using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getBlockTransactionCountByNumber")]
-    public class EthGetBlockTransactionCountByNumber : EthWeb3RequestHandler<BlockParameter, UInt256?>
+    public class EthGetBlockTransactionCountByNumber : EthWeb3RequestHandler<BlockParameter, long?>
     {
-        protected override UInt256? Handle(BlockParameter txHash, IWeb3EthApi api)
+        protected override long? Handle(BlockParameter block, IWeb3EthApi api)
         {
-            throw new NotImplementedException();
+            if (api.TryGetDeltaWithCid(block, out var delta))
+            {
+                return delta.Delta.PublicEntries.Count;
+            }
+
+            return default;
         }
     }
 }

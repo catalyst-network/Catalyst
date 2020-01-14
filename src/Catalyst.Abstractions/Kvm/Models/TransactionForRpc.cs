@@ -21,10 +21,9 @@
 
 #endregion
 
-using System.Numerics;
+using LibP2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Extensions;
 using Nethermind.Core.Json;
 using Nethermind.Dirichlet.Numerics;
 using Newtonsoft.Json;
@@ -39,8 +38,8 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(NullableUInt256Converter))]
         public UInt256? Nonce { get; set; }
 
-        [JsonConverter(typeof(KeccakConverter))]
-        public Keccak BlockHash { get; set; }
+        [JsonConverter(typeof(Cid.CidJsonConverter))]
+        public Cid BlockHash { get; set; }
 
         [JsonConverter(typeof(NullableUInt256Converter))]
         public UInt256? BlockNumber { get; set; }

@@ -28,7 +28,7 @@ namespace Catalyst.Abstractions.Kvm
     public interface IDeltaResolver
     {
         bool TryResolve(long deltaNumber, out Cid deltaHash);
-        
+
         long LatestDeltaNumber { get; }
 
         Cid LatestDelta { get; }

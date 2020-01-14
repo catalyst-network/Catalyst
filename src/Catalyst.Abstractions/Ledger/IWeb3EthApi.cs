@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Protocol.Transaction;
 using Nethermind.Core.Crypto;
@@ -39,6 +40,8 @@ namespace Catalyst.Abstractions.Ledger
         IStorageProvider StorageProvider { get; }
         IStateProvider StateProvider { get; }
         ITransactionReceiptResolver ReceiptResolver { get; }
+        IHashProvider HashProvider { get; }
+
         Keccak SendTransaction(PublicEntry publicEntry);
     }
 }

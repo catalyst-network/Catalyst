@@ -21,19 +21,22 @@
 
 #endregion
 
-using System;
 using Catalyst.Abstractions.Ledger;
-using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
+using LibP2P;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getBlockTransactionCountByHash")]
-    public class EthGetBlockTransactionCountByHash : EthWeb3RequestHandler<Keccak, UInt256?>
+    public class EthGetBlockTransactionCountByHash : EthWeb3RequestHandler<Cid, long?>
     {
-        protected override UInt256? Handle(Keccak txHash, IWeb3EthApi api)
+        protected override long? Handle(Cid deltaHash, IWeb3EthApi api)
         {
-            throw new NotImplementedException();
+            if (api.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var delta))
+            {
+                return delta.PublicEntries.Count;
+            }
+
+            return default;
         }
     }
 }

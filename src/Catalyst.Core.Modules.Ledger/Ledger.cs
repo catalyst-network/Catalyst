@@ -220,7 +220,7 @@ namespace Catalyst.Core.Modules.Ledger
                     return;
                 }
 
-                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash, LatestKnownDeltaNumber, _hashProvider);
+                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash, LatestKnownDeltaNumber);
 
                 // add here a receipts tracer or similar, depending on what data needs to be stored for each contract
                 _deltaExecutor.Execute(nextDeltaInChain, tracer);
@@ -301,17 +301,15 @@ namespace Catalyst.Core.Modules.Ledger
         {
             readonly Delta _delta;
             readonly long _deltaNumber;
-            readonly IHashProvider _hashProvider;
-            readonly Keccak _deltaHash;
+            readonly Cid _deltaHash;
             readonly List<TransactionReceipt> _txReceipts;
             int _currentIndex;
 
-            public ReceiptDeltaTracer(Delta delta, Cid deltaHash, long deltaNumber, IHashProvider hashProvider)
+            public ReceiptDeltaTracer(Delta delta, Cid deltaHash, long deltaNumber)
             {
                 _delta = delta;
                 _deltaNumber = deltaNumber;
-                _hashProvider = hashProvider;
-                _deltaHash = new Keccak(deltaHash.Hash.Digest);
+                _deltaHash = deltaHash;
                 _txReceipts = new List<TransactionReceipt>(delta.PublicEntries.Count);
             }
 
