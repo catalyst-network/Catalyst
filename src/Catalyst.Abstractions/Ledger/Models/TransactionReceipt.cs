@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Repository;
+using LibP2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Newtonsoft.Json;
@@ -50,5 +51,14 @@ namespace Catalyst.Abstractions.Ledger.Models
         public Address ContractAddress { get; set; }
         public byte StatusCode { get; set; }
         public LogEntry[] Logs { get; set; }
+    }
+
+    public class TransactionToDelta : IDocument
+    {
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("id")]
+        public string DocumentId { get; set; }
+
+        public Cid DeltaHash { get; set; }
     }
 }

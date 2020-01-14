@@ -22,13 +22,17 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Protocol.Transaction;
+using Google.Protobuf.Collections;
 using LibP2P;
+using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Ledger.Repository
 {
     public interface ITransactionReceiptRepository
     {
-        void Put(Cid deltaHash, TransactionReceipt[] receipts);
+        void Put(Cid deltaHash, TransactionReceipt[] receipts, PublicEntry[] deltaPublicEntries);
         bool TryFind(Cid deltaHash, out TransactionReceipt[] receipts);
+        bool TryFind(Keccak transactionHash, out TransactionReceipt receipts);
     }
 }

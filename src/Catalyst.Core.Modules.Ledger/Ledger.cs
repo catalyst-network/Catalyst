@@ -240,7 +240,7 @@ namespace Catalyst.Core.Modules.Ledger
                 // store receipts
                 if (tracer.Receipts.Any())
                 {
-                    _receipts.Put(deltaHash, tracer.Receipts.ToArray());
+                    _receipts.Put(deltaHash, tracer.Receipts.ToArray(), nextDeltaInChain.PublicEntries.ToArray());
                 }
 
                 _stateDb.Commit();

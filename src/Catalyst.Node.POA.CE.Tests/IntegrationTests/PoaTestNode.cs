@@ -75,7 +75,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private readonly ILifetimeScope _scope;
         private readonly ContainerProvider _containerProvider;
         private readonly IDeltaByNumberRepository _deltaByNumber;
-        private readonly ITransactionReceiptRepository _receipts;
 
         public PoaTestNode(string name,
             IPrivateKey privateKey,
@@ -108,7 +107,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _peerRepository.Add(peersInRepo);
 
             _deltaByNumber = new DeltaByNumberRepository(new InMemoryRepository<DeltaByNumber, string>());
-            _receipts = new TransactionReceiptRepository(new InMemoryRepository<TransactionReceipt, string>());
 
             _containerProvider = new ContainerProvider(new[]
                 {
@@ -161,17 +159,26 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
         protected void OverrideContainerBuilderRegistrations()
         {
-            _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<PeerId>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_dfs).As<IDfs>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
-            _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
+            var builder = _containerProvider.ContainerBuilder;
+
+            builder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
+            builder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
+            builder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
+            builder.RegisterInstance(_nodePeerId).As<PeerId>();
+            builder.RegisterInstance(_dfs).As<IDfs>();
+            builder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
+            builder.RegisterInstance(_peerRepository).As<IPeerRepository>();
+            builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
+            
+            // receipts
+            builder.RegisterInstance(new InMemoryRepository<TransactionReceipts, string>())
+               .AsImplementedInterfaces();
+            builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())
+               .AsImplementedInterfaces();
+
+            builder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
-            _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
+            builder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
         }
 
         protected virtual void Dispose(bool disposing)
