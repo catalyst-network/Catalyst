@@ -21,12 +21,6 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Core;
 using Catalyst.Abstractions;
@@ -34,7 +28,6 @@ using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
@@ -42,7 +35,6 @@ using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Kernel;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Consensus;
-using Catalyst.Core.Modules.Consensus.Deltas.Building;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
@@ -58,7 +50,12 @@ using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
 using Catalyst.Protocol.Network;
 using CommandLine;
-using Nethermind.Store;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.POA.CE
 {
@@ -191,6 +188,10 @@ namespace Catalyst.Node.POA.CE
 
         private static async Task RunAsync(Options options)
         {
+            options.IpfsPassword = options.IpfsPassword ?? "12345";
+            options.NodePassword = options.NodePassword ?? "12345";
+            options.SslCertPassword = options.SslCertPassword ?? "12345";
+
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 Process.GetCurrentProcess().Id.ToString());
 
