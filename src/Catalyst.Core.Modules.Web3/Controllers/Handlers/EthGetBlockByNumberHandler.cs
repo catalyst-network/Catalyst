@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 GasLimit = (long) delta.GasLimit,
                 GasUsed = delta.GasUsed,
                 Timestamp = new UInt256(delta.TimeStamp.Seconds),
-                ParentHash = blockNumber == 0 ? new byte[38] : delta.PreviousDeltaDfsHash.ToByteArray(),
+                ParentHash = blockNumber == 0 ? null : Cid.Read(delta.PreviousDeltaDfsHash.ToByteArray()),
                 StateRoot = delta.StateRootAsKeccak(),
                 ReceiptsRoot = Keccak.EmptyTreeHash,
                 TransactionsRoot = Keccak.EmptyTreeHash,

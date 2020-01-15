@@ -62,11 +62,11 @@ namespace Catalyst.Abstractions.Kvm.Models
         
         [JsonConverter(typeof(NullableLongConverter))]
         public long? TransactionIndex { get; set; }
-        
-        [JsonConverter(typeof(Cid.CidJsonConverter))]
+
+        [JsonConverter(typeof(CidJsonConverter))]
         public Cid TransactionHash { get; set; }
-        
-        [JsonConverter(typeof(Cid.CidJsonConverter))]
+
+        [JsonConverter(typeof(CidJsonConverter))]
         public Cid BlockHash { get; set; }
         
         [JsonConverter(typeof(NullableLongConverter))]

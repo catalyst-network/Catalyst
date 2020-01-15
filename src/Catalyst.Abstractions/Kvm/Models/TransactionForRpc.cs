@@ -38,7 +38,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(NullableUInt256Converter))]
         public UInt256? Nonce { get; set; }
 
-        [JsonConverter(typeof(Cid.CidJsonConverter))]
+        [JsonConverter(typeof(CidJsonConverter))]
         public Cid BlockHash { get; set; }
 
         [JsonConverter(typeof(NullableUInt256Converter))]
