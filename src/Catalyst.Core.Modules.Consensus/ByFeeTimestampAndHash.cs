@@ -30,7 +30,7 @@ using Google.Protobuf;
 namespace Catalyst.Core.Modules.Consensus
 {
     /// <inheritdoc />
-    public class TransactionComparerByFeeTimestampAndHash : ITransactionComparer
+    public class TransactionComparerByPriceTimestampAndHash : ITransactionComparer
     {
         public int Compare(PublicEntry x, PublicEntry y)
         {
@@ -49,10 +49,11 @@ namespace Catalyst.Core.Modules.Consensus
                 return -1;
             }
 
-            var feeComparison = x.TransactionFees.ToUInt256().CompareTo(y.TransactionFees.ToUInt256());
-            if (feeComparison != 0)
+            var gasComparison = x.GasPrice.ToUInt256().CompareTo(x.GasPrice.ToUInt256());
+
+            if (gasComparison != 0)
             {
-                return feeComparison;
+                return gasComparison;
             }
 
             var timeStampComparison = y.Timestamp.CompareTo(x.Timestamp);
@@ -64,6 +65,6 @@ namespace Catalyst.Core.Modules.Consensus
             return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.Signature.ToByteArray(), y.Signature.ToByteArray());
         }
 
-        public static ITransactionComparer Default { get; } = new TransactionComparerByFeeTimestampAndHash();
+        public static ITransactionComparer Default { get; } = new TransactionComparerByPriceTimestampAndHash();
     }
 }

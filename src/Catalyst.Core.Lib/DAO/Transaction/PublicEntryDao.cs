@@ -39,7 +39,6 @@ namespace Catalyst.Core.Lib.DAO.Transaction
         public ulong Nonce { get; set; }
         public string ReceiverAddress { get; set; }
         public string SenderAddress { get; set; }
-        public string TransactionFees { get; set; }
         public string Data { get; set; }
         public string Amount { get; set; }
         public DateTime TimeStamp { get; set; }
@@ -72,8 +71,6 @@ namespace Catalyst.Core.Lib.DAO.Transaction
                     opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.ReceiverAddress))
                .ForMember(d => d.SenderAddress,
                     opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.SenderAddress))
-               .ForMember(d => d.TransactionFees,
-                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.TransactionFees))
                .ForMember(d => d.Nonce, opt => opt.MapFrom(s => s.Nonce))
                .ForMember(d => d.GasPrice, opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.GasPrice))
                .ForMember(d => d.GasLimit, opt => opt.MapFrom(s => s.GasLimit))
@@ -87,8 +84,6 @@ namespace Catalyst.Core.Lib.DAO.Transaction
                     opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.ReceiverAddress))
                .ForMember(d => d.SenderAddress,
                     opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.SenderAddress))
-               .ForMember(d => d.TransactionFees,
-                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.TransactionFees))
                .ForMember(d => d.Nonce, opt => opt.MapFrom(s => s.Nonce))
                .ForMember(d => d.GasPrice, opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.GasPrice))
                .ForMember(d => d.GasLimit, opt => opt.MapFrom(s => s.GasLimit))

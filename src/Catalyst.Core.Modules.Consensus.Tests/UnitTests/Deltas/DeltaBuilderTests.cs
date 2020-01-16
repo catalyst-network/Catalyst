@@ -248,7 +248,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     (20 + i).GFul(),
                     senderPublicKey: "01234567012345670123456701234567",
                     receiverPublicKey: "01234567012345670123456701234567",
-                    transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
                 return transaction.PublicEntry;
@@ -302,7 +301,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     (20 + i).GFul(),
                     senderPublicKey: "01234567012345670123456701234567",
                     receiverPublicKey: "01234567012345670123456701234567",
-                    transactionFees: (ulong) _random.Next(),
                     timestamp: _random.Next(),
                     signature: i.ToString());
                 return transaction.PublicEntry;
@@ -358,7 +356,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var expectedCoinBase = new CoinbaseEntry
             {
-                Amount = selectedTransactions.Sum(t => t.TransactionFees.ToUInt256()).ToUint256ByteString(),
+                Amount = selectedTransactions.Sum(t => t.GasPrice.ToUInt256() * t.GasLimit).ToUint256ByteString(),
                 ReceiverPublicKey = _producerId.PublicKey.ToByteString()
             };
 

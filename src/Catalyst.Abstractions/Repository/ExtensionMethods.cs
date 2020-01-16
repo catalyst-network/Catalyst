@@ -42,20 +42,7 @@ namespace Catalyst.Abstractions.Repository
         /// <returns>The hash value.</returns>
         public static Keccak GetHash(this PublicEntry entry, IHashProvider hashProvider)
         {
-            var toHash = new PublicEntry
-            {
-                Signature = entry.Signature,
-                ReceiverAddress = entry.ReceiverAddress,
-                SenderAddress = entry.SenderAddress,
-                Nonce = entry.Nonce,
-                Amount = entry.Amount,
-                GasPrice = entry.GasPrice,
-                Timestamp = entry.Timestamp,
-                Data = entry.Data,
-                GasLimit = entry.GasLimit
-            };
-
-            return new Keccak(hashProvider.ComputeMultiHash(toHash).Digest);
+            return new Keccak(hashProvider.ComputeMultiHash(entry).Digest);
         }
 
         /// <summary>

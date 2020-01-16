@@ -51,7 +51,7 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
             _entry = new PublicEntry
             {
                 Amount = amount,
-                TransactionFees = amount,
+                GasPrice = amount,
                 ReceiverAddress = bytes,
                 SenderAddress = bytes
             };

@@ -57,7 +57,7 @@ namespace Catalyst.Benchmark.Catalyst.Abstractions
                     Nonce = 1,
                     SenderAddress = key,
                     ReceiverAddress = key,
-                    TransactionFees = amount,
+                    GasPrice = amount,
                     Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
                 }
             };
