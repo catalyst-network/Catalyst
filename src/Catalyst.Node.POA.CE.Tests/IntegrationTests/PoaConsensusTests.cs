@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
@@ -35,6 +36,8 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Lib.P2P;
+using MultiFormats;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
@@ -92,7 +95,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task Run_ConsensusAsync()
+        public void Run_ConsensusAsync()
         {
             _nodes.AsParallel()
                .ForAll(n =>
@@ -101,17 +104,37 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     n?.Consensus.StartProducing();
                 });
 
-            await Task.Delay(Debugger.IsAttached
-                    ? TimeSpan.FromHours(3)
-                    : CycleConfiguration.Default.CycleDuration.Multiply(1.3))
-               .ConfigureAwait(false);
-
-            for (var i = 0; i < 3; i++)
+            var autoResetEvent = new AutoResetEvent(false);
+            bool autoResetEventResult;
+            var multihashList = new List<MultiHash>();
+            using (var watcher = new FileSystemWatcher())
             {
-                var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}/dfs", "blocks");
-                Directory.GetFiles(dfsDir).Length.Should().Be(1,
-                    "only the elected producer should score high enough to see his block elected.");
+                watcher.Path = FileSystem.GetCatalystDataDir().FullName;
+                watcher.NotifyFilter = NotifyFilters.FileName;
+                watcher.Filter = "*";
+                watcher.IncludeSubdirectories = true;
+                watcher.EnableRaisingEvents = true;
+                watcher.Created += (source, e) =>
+                {
+                    var match = Regex.Match(e.FullPath, @"(blocks\\.*)");
+                    if (match.Success)
+                    {
+                        var fileInfo = new FileInfo(e.FullPath);
+                        multihashList.Add(new MultiHash(fileInfo.Name.FromBase32()));
+
+                        if (multihashList.Count >= _nodes.Count())
+                        {
+                            autoResetEvent.Set();
+                        }
+                    }
+                };
+
+                autoResetEventResult = autoResetEvent.WaitOne(TimeSpan.FromSeconds(30));
             }
+
+            autoResetEventResult.Should().Be(true);
+
+            multihashList.Distinct().Count().Should().Be(1, "only the elected producer should score high enough to see his block elected.");
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
