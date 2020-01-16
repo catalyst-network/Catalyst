@@ -48,7 +48,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public sealed class BitSwapApiTest
     {
-        private readonly IHashProvider _hashProvider;
         private readonly IDfsService _dfsService;
         private readonly IDfsService _dfsServiceOther;
         private readonly ITestOutputHelper _testOutputHelper;
@@ -66,7 +65,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             _testOutputHelper = output;
             _dfsService = TestDfs.GetTestDfs(output, fileSystem1);
             _dfsServiceOther = TestDfs.GetTestDfs(output, fileSystem2);
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
         [Fact]

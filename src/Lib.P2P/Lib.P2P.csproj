@@ -25,11 +25,6 @@
         <PackageLicenseUrl>https://github.com/richardschneider/peer-talk/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/richardschneider/peer-talk</PackageProjectUrl>
         <PackageIconUrl>https://github.com/ipfs/logo/blob/master/platform-icons/osx-menu-bar.png</PackageIconUrl>
-        <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <WarningsAsErrors />
     </PropertyGroup>
 
     <ItemGroup>
