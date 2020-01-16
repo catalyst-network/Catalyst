@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
@@ -133,7 +134,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             var expectedCid = _hashProvider.ComputeUtf8MultiHash("expectedHash").ToCid();
             var fakeBlock = Substitute.For<IFileSystemNode>();
             fakeBlock.Id.Returns(expectedCid);
-            _fakeDfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(fakeBlock);
+            _fakeDfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>()).Returns(fakeBlock);
 
             var protocolMessage = GenerateProtocolMessage();
 
