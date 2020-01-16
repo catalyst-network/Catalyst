@@ -40,7 +40,23 @@ namespace Catalyst.Abstractions.Repository
         /// <param name="entry">The entry.</param>
         /// <param name="hashProvider">The hash provider.</param>
         /// <returns>The hash value.</returns>
-        public static Keccak GetHash(this PublicEntry entry, IHashProvider hashProvider) => new Keccak(hashProvider.ComputeMultiHash(entry).Digest);
+        public static Keccak GetHash(this PublicEntry entry, IHashProvider hashProvider)
+        {
+            var toHash = new PublicEntry
+            {
+                Signature = entry.Signature,
+                ReceiverAddress = entry.ReceiverAddress,
+                SenderAddress = entry.SenderAddress,
+                Nonce = entry.Nonce,
+                Amount = entry.Amount,
+                GasPrice = entry.GasPrice,
+                Timestamp = entry.Timestamp,
+                Data = entry.Data,
+                GasLimit = entry.GasLimit
+            };
+
+            return new Keccak(hashProvider.ComputeMultiHash(toHash).Digest);
+        }
 
         /// <summary>
         /// Transforms <paramref name="keccak"/> to a unified document id.

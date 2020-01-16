@@ -64,7 +64,10 @@ namespace Catalyst.Core.Modules.Ledger.Repository
                 for (var i = 0; i < receipts.Length; i++)
                 {
                     var transactionHash = deltaPublicEntries[i].GetDocumentId(_hashProvider);
-                    _transactionToDeltaRepository.Delete(transactionHash);
+                    if (_transactionToDeltaRepository.TryGet(transactionHash, out _))
+                    {
+                        _transactionToDeltaRepository.Delete(transactionHash);
+                    }
                     _transactionToDeltaRepository.Add(new TransactionToDelta {DeltaHash = deltaHash, DocumentId = transactionHash});
                 }
             }

@@ -29,6 +29,7 @@ using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
@@ -80,7 +81,7 @@ namespace Catalyst.Core.Modules.Ledger
 
             _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId));
 
-            return new Keccak(HashProvider.ComputeMultiHash(broadcast).Digest);
+            return publicEntry.GetHash(HashProvider);
         }
 
         public TransactionReceipt FindReceipt(Keccak transactionHash)
