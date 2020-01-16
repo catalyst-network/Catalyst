@@ -1,3 +1,26 @@
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
 using System;
 using System.IO;
 using System.Linq;
@@ -88,12 +111,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Wants()
         {
-            await _dfsService.StartAsync();
+            var fileSystem = Substitute.For<IFileSystem>();
+            fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
+                $"dfs1-_{DateTime.Now:yyMMddHHmmssffff}")));
+            var dfsService = TestDfs.GetTestDfs(_testOutputHelper, fileSystem);
+            await dfsService.StartAsync();
             try
             {
                 var cts = new CancellationTokenSource();
                 var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block"));
-                Task wantTask = _dfsService.BitSwapApi.GetAsync(block.Id, cts.Token);
+                Task wantTask = dfsService.BitSwapApi.GetAsync(block.Id, cts.Token);
 
                 var endTime = DateTime.Now.AddSeconds(10);
                 while (true)
@@ -104,7 +131,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     }
                     
                     await Task.Delay(100, cts.Token);
-                    var w = await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
+                    var w = await dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
                     if (w.Contains(block.Id))
                     {
                         break;
