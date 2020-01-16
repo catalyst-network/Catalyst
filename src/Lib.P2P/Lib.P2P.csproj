@@ -3,22 +3,11 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>Lib.P2P</RootNamespace>
-        <DocumentationFile></DocumentationFile>
-        <DebugType>portable</DebugType>
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-
-        <!-- developer build is always 0.42 -->
-        <AssemblyVersion>0.42</AssemblyVersion>
-        <Version>0.42</Version>
-
-        <!-- Nuget specs -->
         <PackageId>PeerTalk</PackageId>
         <Authors>Richard Schneider</Authors>
         <Title>Peer to Peer communication</Title>
         <Description>An implementation of the IPFS libp2p</Description>
         <PackageReleaseNotes>https://github.com/richardschneider/peer-talk/releases</PackageReleaseNotes>
-        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-        <PackageReleaseNotes></PackageReleaseNotes>
         <Copyright>© 2018-2019 Richard Schneider</Copyright>
         <PackageTags>ipfs peer-to-peer libp2p p2p distributed web</PackageTags>
         <IncludeSymbols>True</IncludeSymbols>
