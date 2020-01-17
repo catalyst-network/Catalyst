@@ -93,16 +93,12 @@ namespace Catalyst.Node.POA.CE
         /// </summary>
         /// <param name="kernel"></param>
         /// <returns></returns>
-        private static async Task CustomBootLogic(Kernel kernel)
+        private static async Task CustomBootLogicAsync(Kernel kernel)
         {
             RegisterNodeDependencies(Kernel.ContainerBuilder);
 
             kernel.StartContainer();
-            kernel.Instance.Resolve<ICatalystNode>()
-               .RunAsync(new CancellationToken())
-
-                // ReSharper disable once VSTHRD002
-               .Wait();
+            await kernel.Instance.Resolve<ICatalystNode>().RunAsync(new CancellationToken());
         }
 
         private static readonly Dictionary<Type, Func<IModule>> DefaultModulesByTypes =
@@ -160,17 +156,18 @@ namespace Catalyst.Node.POA.CE
             foreach (var module in modulesToRegister) containerBuilder.RegisterModule(module);
         }
 
-        public static int Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             // Parse the arguments.
-            Parser.Default
+            var result = await Parser.Default
                .ParseArguments<Options>(args)
-               .WithParsed(async o => await RunAsync(o).ConfigureAwait(false));
+               .MapResult(async options => await RunAsync(options).ConfigureAwait(false),
+                    response => Task.FromResult(1)).ConfigureAwait(false);
 
-            return Environment.ExitCode;
+            return Environment.ExitCode = result;
         }
 
-        private static async Task RunAsync(Options options)
+        private static async Task<int> RunAsync(Options options)
         {
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 Process.GetCurrentProcess().Id.ToString());
@@ -187,14 +184,14 @@ namespace Catalyst.Node.POA.CE
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
                    .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
-                   .StartCustomAsync(CustomBootLogic);
+                   .StartCustomAsync(CustomBootLogicAsync);
 
-                Environment.ExitCode = 0;
+                return 0;
             }
             catch (Exception e)
             {
                 Kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
-                Environment.ExitCode = 1;
+                return 1;
             }
         }
     }
