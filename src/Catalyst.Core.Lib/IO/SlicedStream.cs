@@ -31,11 +31,11 @@ namespace Catalyst.Core.Lib.IO
     /// <summary>
     ///   Provides read only access to a slice of stream.
     /// </summary>
-    public class SlicedStream : Stream
+    public sealed class SlicedStream : Stream
     {
-        Stream stream;
-        long offset;
-        long logicalEnd;
+        private Stream stream;
+        private long offset;
+        private long logicalEnd;
 
         public SlicedStream(Stream stream, long offset, long count)
         {
@@ -69,7 +69,10 @@ namespace Catalyst.Core.Lib.IO
         public override int ReadByte()
         {
             if (stream.Position >= logicalEnd)
+            {
                 return -1;
+            }
+            
             return stream.ReadByte();
         }
 

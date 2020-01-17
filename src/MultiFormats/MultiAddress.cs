@@ -51,17 +51,17 @@ namespace MultiFormats
     /// </remarks>
     /// <seealso href="https://github.com/multiformats/multiaddr"/>
     [JsonConverter(typeof(Json))]
-    public class MultiAddress : IEquatable<MultiAddress>
+    public sealed class MultiAddress : IEquatable<MultiAddress>
     {
         /// <summary>
         ///   Creates a new instance of the <see cref="MultiAddress"/> class.
         /// </summary>
-        public MultiAddress() { Protocols = new List<NetworkProtocol>(); }
+        private MultiAddress() { Protocols = new List<NetworkProtocol>(); }
 
         /// <summary>
         ///   The components of the <b>MultiAddress</b>.
         /// </summary>
-        public List<NetworkProtocol> Protocols { get; private set; }
+        public List<NetworkProtocol> Protocols { get; }
 
         /// <summary>
         ///   Creates a new instance of the <see cref="MultiAddress"/> class with the string.
@@ -72,7 +72,9 @@ namespace MultiFormats
         public MultiAddress(string s) : this()
         {
             if (string.IsNullOrWhiteSpace(s))
+            {
                 return;
+            }
 
             Read(new StringReader(s));
         }
@@ -216,16 +218,18 @@ namespace MultiFormats
         /// </exception>
         public MultiAddress WithPeerId(MultiHash peerId)
         {
-            if (HasPeerId)
+            if (!HasPeerId)
             {
-                var id = PeerId;
-                if (id != peerId)
-                    throw new Exception($"Expected a multiaddress with peer ID of '{peerId}', not '{id}'.");
-
-                return this;
+                return new MultiAddress(ToString() + $"/p2p/{peerId}");
+            }
+            
+            var id = PeerId;
+            if (id != peerId)
+            {
+                throw new Exception($"Expected a multiaddress with peer ID of '{peerId}', not '{id}'.");
             }
 
-            return new MultiAddress(ToString() + $"/p2p/{peerId}");
+            return this;
         }
 
         /// <summary>
@@ -237,7 +241,10 @@ namespace MultiFormats
         /// </returns>
         public MultiAddress WithoutPeerId()
         {
-            if (!HasPeerId) return this;
+            if (!HasPeerId)
+            {
+                return this;
+            }
 
             var clone = Clone();
             clone.Protocols
@@ -270,7 +277,7 @@ namespace MultiFormats
         /// <remarks>
         ///   The binary representation is a sequence of <see cref="NetworkProtocol">network protocols</see>.
         /// </remarks>
-        public void Write(CodedOutputStream stream)
+        private void Write(CodedOutputStream stream)
         {
             foreach (var protocol in Protocols)
             {
@@ -288,7 +295,7 @@ namespace MultiFormats
         /// <remarks>
         ///   The string representation is a sequence of <see cref="NetworkProtocol">network protocols</see>.
         /// </remarks>
-        public void Write(TextWriter stream)
+        private void Write(TextWriter stream)
         {
             foreach (var protocol in Protocols)
             {
@@ -325,8 +332,10 @@ namespace MultiFormats
             {
                 var code = (uint) stream.ReadInt64();
                 if (!NetworkProtocol.Codes.TryGetValue(code, out var protocolType))
-                    throw new InvalidDataException(string.Format("The IPFS network protocol code '{0}' is unknown.",
-                        code));
+                {
+                    throw new InvalidDataException($"The IPFS network protocol code '{code}' is unknown.");
+                }
+                
                 var p = (NetworkProtocol) Activator.CreateInstance(protocolType);
                 p.ReadValue(stream);
                 Protocols.Add(p);
@@ -344,7 +353,10 @@ namespace MultiFormats
         /// </remarks>
         private void Read(TextReader stream)
         {
-            if (stream.Read() != '/') throw new FormatException("An IPFS multiaddr must start with '/'.");
+            if (stream.Read() != '/')
+            {
+                throw new FormatException("An IPFS multiaddr must start with '/'.");
+            }
 
             var name = new StringBuilder();
             Protocols.Clear();
@@ -352,20 +364,31 @@ namespace MultiFormats
             while (true)
             {
                 name.Clear();
-                while (-1 != (c = stream.Read()) && c != '/') name.Append((char) c);
+                while (-1 != (c = stream.Read()) && c != '/')
+                {
+                    name.Append((char) c);
+                }
 
                 if (name.Length == 0)
+                {
                     break;
+                }
+                
                 if (!NetworkProtocol.Names.TryGetValue(name.ToString(), out var protocolType))
+                {
                     throw new FormatException(string.Format("The IPFS network protocol '{0}' is unknown.",
                         name));
+                }
+                
                 var p = (NetworkProtocol) Activator.CreateInstance(protocolType);
                 p.ReadValue(stream);
                 Protocols.Add(p);
             }
 
             if (Protocols.Count == 0)
+            {
                 throw new FormatException("The IFPS multiaddr has no protocol specified.");
+            }
         }
 
         /// <inheritdoc />
@@ -386,22 +409,28 @@ namespace MultiFormats
         public override bool Equals(object obj)
         {
             var that = obj as MultiAddress;
-            return that == null
-                ? false
-                : Equals(that);
+            return that != null && Equals(that);
         }
 
         /// <inheritdoc />
         public bool Equals(MultiAddress that)
         {
             if (Protocols.Count != that.Protocols.Count)
+            {
                 return false;
+            }
+            
             for (var i = 0; i < Protocols.Count; ++i)
             {
                 if (Protocols[i].Code != that.Protocols[i].Code)
+                {
                     return false;
+                }
+
                 if (Protocols[i].Value != that.Protocols[i].Value)
+                {
                     return false;
+                }
             }
 
             return true;
@@ -412,11 +441,7 @@ namespace MultiFormats
         /// </summary>
         public static bool operator ==(MultiAddress a, MultiAddress b)
         {
-            if (ReferenceEquals(a, b)) return true;
-            if (a is null) return false;
-            if (b is null) return false;
-
-            return a.Equals(b);
+            return ReferenceEquals(a, b) || !(a is null) && (!(b is null) && a.Equals(b));
         }
 
         /// <summary>
@@ -424,11 +449,7 @@ namespace MultiFormats
         /// </summary>
         public static bool operator !=(MultiAddress a, MultiAddress b)
         {
-            if (ReferenceEquals(a, b)) return false;
-            if (a is null) return true;
-            if (b is null) return true;
-
-            return !a.Equals(b);
+            return !ReferenceEquals(a, b) && (a is null || (b is null || !a.Equals(b)));
         }
 
         /// <summary>
@@ -519,7 +540,7 @@ namespace MultiFormats
         /// <remarks>
         ///   The JSON is just a single string value.
         /// </remarks>
-        private class Json : JsonConverter
+        private sealed class Json : JsonConverter
         {
             public override bool CanConvert(Type objectType) { return true; }
 
@@ -537,8 +558,7 @@ namespace MultiFormats
                 object existingValue,
                 JsonSerializer serializer)
             {
-                var s = reader.Value as string;
-                return s == null ? null : new MultiAddress(s);
+                return !(reader.Value is string s) ? null : new MultiAddress(s);
             }
         }
     }

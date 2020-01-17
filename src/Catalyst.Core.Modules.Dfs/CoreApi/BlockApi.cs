@@ -268,7 +268,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             if (data.Length > _dfsOptions.Block.MaxBlockSize)
             {
-                throw new ArgumentOutOfRangeException("data.Length",
+                throw new ArgumentOutOfRangeException($"data.Length",
                     $@"Block length can not exceed {_dfsOptions.Block.MaxBlockSize.ToString()}.");
             }
 

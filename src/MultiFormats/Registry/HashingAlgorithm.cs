@@ -51,7 +51,10 @@ namespace MultiFormats.Registry
     ///   </para>
     ///   <para>
     ///   The <c>identity</c> hash is also implemented;  which just returns the input bytes.
-    ///   This is used to inline a small amount of data into a <see cref="Ipfs.Core.Cid"/>.
+    ///   This is used to inline a small amount of data into a <see>
+    ///       <cref>Lib.P2P.Cid</cref>
+    ///   </see>
+    ///   .
     ///   </para>
     ///   <para>
     ///     Use <see cref="Register(string, int, int, Func{HashAlgorithm})"/> to add a new
@@ -163,19 +166,27 @@ namespace MultiFormats.Registry
             Func<HashAlgorithm> hasher = null)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
             if (Names.ContainsKey(name))
+            {
                 throw new ArgumentException(string.Format("The IPFS hashing algorithm '{0}' is already defined.",
                     name));
+            }
+            
             if (Codes.ContainsKey(code))
+            {
                 throw new ArgumentException(
-                    string.Format("The IPFS hashing algorithm code 0x{0:x2} is already defined.", code));
+                    $"The IPFS hashing algorithm code 0x{code:x2} is already defined.");
+            }
+            
             if (hasher == null)
-                hasher = () =>
-                {
-                    throw new NotImplementedException(
-                        string.Format("The IPFS hashing algorithm '{0}' is not implemented.", name));
-                };
+            {
+                hasher = () => throw new NotImplementedException(
+                    $"The IPFS hashing algorithm '{name}' is not implemented.");
+            }
 
             var a = new HashingAlgorithm
             {
@@ -205,14 +216,25 @@ namespace MultiFormats.Registry
         public static HashingAlgorithm RegisterAlias(string alias, string name)
         {
             if (string.IsNullOrWhiteSpace(alias))
-                throw new ArgumentNullException("alias");
+            {
+                throw new ArgumentNullException(nameof(alias));
+            }
+            
             if (Names.ContainsKey(alias))
-                throw new ArgumentException(string.Format(
-                    "The IPFS hashing algorithm '{0}' is already defined and cannot be used as an alias.", alias));
+            {
+                throw new ArgumentException(
+                    $"The IPFS hashing algorithm '{alias}' is already defined and cannot be used as an alias.");
+            }
+
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             if (!Names.TryGetValue(name, out var existing))
+            {
                 throw new ArgumentException(string.Format("The IPFS hashing algorithm '{0}' is not defined.", name));
+            }
 
             var a = new HashingAlgorithm
             {
@@ -232,7 +254,7 @@ namespace MultiFormats.Registry
         /// <param name="algorithm">
         ///   The <see cref="HashingAlgorithm"/> to remove.
         /// </param>
-        public static void Deregister(HashingAlgorithm algorithm)
+        public static void DeRegister(HashingAlgorithm algorithm)
         {
             Names.Remove(algorithm.Name);
             Codes.Remove(algorithm.Code);

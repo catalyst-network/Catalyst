@@ -36,8 +36,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class DagApiTest
     {
-        byte[] blob = Encoding.UTF8.GetBytes("blorb");
-        string blob64 = "YmxvcmI"; // base 64 encoded with no padding
+        private byte[] blob = Encoding.UTF8.GetBytes("blorb");
+        private string blob64 = "YmxvcmI"; // base 64 encoded with no padding
         private IDfsService ipfs;
 
         public DagApiTest(ITestOutputHelper output)
@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.Equal(blob64, (string) dag["data"]);
         }
 
-        sealed class Name
+        private sealed class Name
         {
             public string First { get; set; }
             public string Last { get; set; }

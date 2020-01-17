@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -54,7 +53,6 @@ namespace Catalyst.Cli
 
         private static string Prompt => "Koopa";
         private static string ServiceName => "Catalyst Distributed Shell";
-        private static CultureInfo AppCulture => new CultureInfo("en-GB", false);
 
         /// <inheritdoc />
         public bool RunConsole(CancellationToken ct)

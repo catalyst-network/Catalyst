@@ -248,7 +248,7 @@ namespace Lib.P2P
         /// <param name="name"></param>
         /// <param name="cancel"></param>
         /// <returns></returns>
-        public Task EstablishProtocolAsync(string name, CancellationToken cancel)
+        internal Task EstablishProtocolAsync(string name, CancellationToken cancel)
         {
             return EstablishProtocolAsync(name, Stream, cancel);
         }
@@ -291,7 +291,7 @@ namespace Lib.P2P
         /// <summary>
         ///   Starts reading messages from the remote peer.
         /// </summary>
-        public async Task ReadMessagesAsync(CancellationToken cancel)
+        internal async Task ReadMessagesAsync(CancellationToken cancel)
         {
             _log.Debug($"start reading messsages from {RemoteAddress}");
 
@@ -301,7 +301,9 @@ namespace Lib.P2P
             try
             {
                 while (!cancel.IsCancellationRequested && Stream != null)
+                {
                     await protocol.ProcessMessageAsync(this, Stream, cancel).ConfigureAwait(false);
+                }
             }
             catch (IOException e)
             {
@@ -311,7 +313,10 @@ namespace Lib.P2P
             }
             catch (Exception e)
             {
-                if (!cancel.IsCancellationRequested && Stream != null) _log.Error("reading message failed", e);
+                if (!cancel.IsCancellationRequested && Stream != null)
+                {
+                    _log.Error("reading message failed", e);
+                }
             }
 
             // Ignore any disposal exceptions.
@@ -330,7 +335,7 @@ namespace Lib.P2P
         /// <summary>
         ///   Starts reading messages from the remote peer on the specified stream.
         /// </summary>
-        public async Task ReadMessagesAsync(Stream stream, CancellationToken cancel)
+        internal async Task ReadMessagesAsync(Stream stream, CancellationToken cancel)
         {
             IPeerProtocol protocol = new Multistream1();
             try
@@ -347,13 +352,15 @@ namespace Lib.P2P
             catch (Exception e)
             {
                 if (!cancel.IsCancellationRequested && stream != null)
+                {
                     _log.Error($"reading message failed {RemoteAddress} {RemotePeer}", e);
+                }
             }
         }
 
         #region IDisposable Support
 
-        private bool _disposedValue = false; // To detect redundant calls
+        private bool _disposedValue; // To detect redundant calls
 
         /// <summary>
         ///   Signals that the connection is closed (disposed).

@@ -40,7 +40,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     internal sealed class BitSwapApi : IBitSwapApi
     {
         private readonly IBitswapService _bitSwapService;
-        private AsyncLazy<Peer> LocalPeer { get; set; }
+        private AsyncLazy<Peer> LocalPeer { get; }
 
         public BitSwapApi(BitSwapService bitSwapService, IKeyApi keyApi)
         {

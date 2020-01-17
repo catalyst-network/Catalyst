@@ -34,12 +34,12 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.Tests
 {
-    public class ConfigApiTest : FileSystemBasedTest
+    public sealed class ConfigApiTest : FileSystemBasedTest
     {
         private readonly IConfigApi _configApi;
 
-        const string apiAddress = "/ip4/127.0.0.1/tcp/";
-        const string gatewayAddress = "/ip4/127.0.0.1/tcp/";
+        private const string ApiAddress = "/ip4/127.0.0.1/tcp/";
+        private const string GatewayAddress = "/ip4/127.0.0.1/tcp/";
 
         public ConfigApiTest(ITestOutputHelper output) : base(output)
         {
@@ -52,33 +52,33 @@ namespace Catalyst.Core.Lib.Tests
         {
             var config = await _configApi.GetAsync();
             
-            Assert.StartsWith(apiAddress, config["Addresses"]["API"].Value<string>());
+            Assert.StartsWith(ApiAddress, config["Addresses"]["API"].Value<string>());
         }
 
         [Fact]
         public async Task Get_Scalar_Key_Value()
         {
             var api = await _configApi.GetAsync("Addresses.API");
-            Assert.StartsWith(apiAddress, api.Value<string>());
+            Assert.StartsWith(ApiAddress, api.Value<string>());
         }
 
         [Fact]
         public async Task Get_Object_Key_Value()
         {
             var addresses = await _configApi.GetAsync("Addresses");
-            Assert.StartsWith(apiAddress, addresses["API"].Value<string>());
-            Assert.StartsWith(gatewayAddress, addresses["Gateway"].Value<string>());
+            Assert.StartsWith(ApiAddress, addresses["API"].Value<string>());
+            Assert.StartsWith(GatewayAddress, addresses["Gateway"].Value<string>());
         }
 
         [Fact]
         public void Keys_are_Case_Sensitive()
         {
             var api = _configApi.GetAsync("Addresses.API").Result;
-            Assert.StartsWith(apiAddress, api.Value<string>());
+            Assert.StartsWith(ApiAddress, api.Value<string>());
 
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var x = _configApi.GetAsync("Addresses.api").Result;
+                var _ = _configApi.GetAsync("Addresses.api").Result;
             });
         }
 

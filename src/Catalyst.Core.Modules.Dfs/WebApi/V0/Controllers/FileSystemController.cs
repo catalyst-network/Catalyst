@@ -247,7 +247,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             bool progress = true)
         {
             if (file == null)
-                throw new ArgumentNullException("file");
+                throw new ArgumentNullException(nameof(file));
 
             var options = new AddFileOptions
             {
@@ -268,7 +268,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("chunker");
+                    throw new ArgumentOutOfRangeException(nameof(chunker));
                 }
             }
 
@@ -278,7 +278,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             }
 
             // TODO: Accept multiple files.
-            using (var stream = file.OpenReadStream())
+            await using (var stream = file.OpenReadStream())
             {
                 // TODO: AddAsync returns a list of nodes containing every node added not just the top level.
                 var node = await IpfsCore.UnixFsApi.AddAsync(stream, file.FileName, options, Cancel);

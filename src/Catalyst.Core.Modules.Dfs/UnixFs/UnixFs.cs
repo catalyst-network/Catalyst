@@ -31,14 +31,14 @@ using Catalyst.Core.Lib.Dag;
 using Lib.P2P;
 using ProtoBuf;
 
-namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
+namespace Catalyst.Core.Modules.Dfs.UnixFs
 {
     /// <summary>
     ///   Support for the *nix file system.
     /// </summary>
-    public class UnixFs
+    internal class UnixFs
     {
-        static readonly byte[] emptyData = new byte[0];
+        private static readonly byte[] EmptyData = new byte[0];
 
         /// <summary>
         ///   Creates a stream that can read the supplied <see cref="Cid"/>.
@@ -68,27 +68,29 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
             IKeyApi keyChain,
             CancellationToken cancel)
         {
-            // TODO: A content-type registry should be used.
-            if (id.ContentType == "dag-pb")
-                return CreateDagProtoBufStreamAsync(id, blockService, keyChain, cancel);
-            else if (id.ContentType == "raw")
-                return CreateRawStreamAsync(id, blockService, keyChain, cancel);
-            else if (id.ContentType == "cms")
-                return CreateCmsStreamAsync(id, blockService, keyChain, cancel);
-            else
-                throw new NotSupportedException($"Cannot read content type '{id.ContentType}'.");
+            switch (id.ContentType)
+            {
+                // TODO: A content-type registry should be used.
+                case "dag-pb":
+                    return CreateDagProtoBufStreamAsync(id, blockService, keyChain, cancel);
+                case "raw":
+                    return CreateRawStreamAsync(id, blockService, cancel);
+                case "cms":
+                    return CreateCmsStreamAsync(id, blockService, keyChain, cancel);
+                default:
+                    throw new NotSupportedException($"Cannot read content type '{id.ContentType}'.");
+            }
         }
 
-        static async Task<Stream> CreateRawStreamAsync(Cid id,
+        private static async Task<Stream> CreateRawStreamAsync(Cid id,
             IBlockApi blockService,
-            IKeyApi keyChain,
             CancellationToken cancel)
         {
             var block = await blockService.GetAsync(id, cancel).ConfigureAwait(false);
             return block.DataStream;
         }
 
-        static async Task<Stream> CreateDagProtoBufStreamAsync(Cid id,
+        private static async Task<Stream> CreateDagProtoBufStreamAsync(Cid id,
             IBlockApi blockService,
             IKeyApi keyChain,
             CancellationToken cancel)
@@ -98,14 +100,19 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
             var dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
 
             if (dm.Type != DataType.File)
+            {
                 throw new Exception($"'{id.Encode()}' is not a file.");
+            }
 
-            if (dm.Fanout.HasValue) throw new NotImplementedException("files with a fanout");
+            if (dm.Fanout.HasValue)
+            {
+                throw new NotImplementedException("files with a fanout");
+            }
 
             // Is it a simple node?
             if (dm.BlockSizes == null && !dm.Fanout.HasValue)
             {
-                return new MemoryStream(buffer: dm.Data ?? emptyData, writable: false);
+                return new MemoryStream(buffer: dm.Data ?? EmptyData, writable: false);
             }
 
             if (dm.BlockSizes != null)
@@ -116,7 +123,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
             throw new Exception($"Cannot determine the file format of '{id}'.");
         }
 
-        static async Task<Stream> CreateCmsStreamAsync(Cid id,
+        private static async Task<Stream> CreateCmsStreamAsync(Cid id,
             IBlockApi blockService,
             IKeyApi keyChain,
             CancellationToken cancel)

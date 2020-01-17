@@ -45,7 +45,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
 
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
 
-            var getPeerListCommand = new PeerListCommand(commandContext, Substitute.For<ILogger>());
+            new PeerListCommand(commandContext, Substitute.For<ILogger>());
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, getPeerListResponse);

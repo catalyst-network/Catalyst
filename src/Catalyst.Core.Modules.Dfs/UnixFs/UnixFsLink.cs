@@ -24,7 +24,7 @@
 using Catalyst.Abstractions.Dfs;
 using Lib.P2P;
 
-namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
+namespace Catalyst.Core.Modules.Dfs.UnixFs
 {
     /// <summary>
     ///   A link to another <see cref="UnixFsNode"/> in the IPFS Unix File System.

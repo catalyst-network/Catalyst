@@ -41,7 +41,7 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {
-    public sealed class PeerChallengeRequest : ProtocolRequestBase, IPeerChallengeRequest, IDisposable
+    public sealed class PeerChallengeRequest : ProtocolRequestBase, IPeerChallengeRequest
     {
         private readonly ILogger _logger;
         private readonly PeerId _senderIdentifier;

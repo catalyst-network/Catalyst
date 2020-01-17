@@ -32,7 +32,7 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
-using Catalyst.Core.Modules.Dfs.UnixFileSystem;
+using Catalyst.Core.Modules.Dfs.UnixFs;
 using Catalyst.Core.Modules.Hashing;
 using FluentAssertions;
 using ICSharpCode.SharpZipLib.Tar;
@@ -935,7 +935,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             try
             {
                 var dir = ipfs.UnixFsApi.AddDirectoryAsync(temp).Result;
-                var dirid = dir.Id.Encode();
+                var _ = dir.Id.Encode();
 
                 var tar = await ipfs.UnixFsApi.GetAsync(dir.Id);
                 Assert.Equal(3 * 512, tar.Length);

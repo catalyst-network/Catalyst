@@ -85,7 +85,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             return Task.FromResult(_migrationManager.CurrentVersion.ToString(CultureInfo.InvariantCulture));
         }
 
-        void GetDirStats(string path, RepositoryData data, CancellationToken cancel)
+        private void GetDirStats(string path, RepositoryData data, CancellationToken cancel)
         {
             foreach (var file in Directory.EnumerateFiles(path))
             {

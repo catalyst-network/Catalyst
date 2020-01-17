@@ -110,7 +110,10 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (!disposing) return;
+            if (!disposing)
+            {
+                return;
+            }
 
             _containerProvider?.Dispose();
         }

@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             }
         }
 
-        static List<object[]> InitialiseQueryData()
+        private static List<object[]> InitialiseQueryData()
         {
             return new List<object[]> 
             {

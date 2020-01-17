@@ -34,19 +34,19 @@ namespace Catalyst.Abstractions.Dfs
     ///   and some data (<see cref="IDataBlock.DataBytes"/> 
     ///   or <see cref="IDataBlock.DataStream"/>).
     /// </remarks>
-    /// <typeparam name="Link">
+    /// <typeparam name="TLink">
     ///   The type of <see cref="IMerkleLink"/> used by this node.
     /// </typeparam>
     /// <seealso href="https://en.wikipedia.org/wiki/Directed_acyclic_graph"/>
     /// <seealso href="https://github.com/ipfs/specs/tree/master/merkledag"/>
-    public interface IMerkleNode<out Link> : IDataBlock
-        where Link : IMerkleLink
+    public interface IMerkleNode<out TLink> : IDataBlock
+        where TLink : IMerkleLink
     {
         /// <summary>
         ///   Links to other nodes.
         /// </summary>
         /// <value>
-        ///   A sequence of <typeparamref name="Link"/>.
+        ///   A sequence of <typeparamref name="TLink"/>.
         /// </value>
         /// <remarks>
         ///   It is never <b>null</b>.
@@ -55,7 +55,7 @@ namespace Catalyst.Abstractions.Dfs
         ///   name is compared as "".
         ///   </para>
         /// </remarks>
-        IEnumerable<Link> Links { get; }
+        IEnumerable<TLink> Links { get; }
 
         /// <summary>
         ///   Returns a link to the node.
@@ -66,6 +66,6 @@ namespace Catalyst.Abstractions.Dfs
         /// <returns>
         ///   A new <see cref="IMerkleLink"/> to the node.
         /// </returns>
-        Link ToLink(string name = "");
+        TLink ToLink(string name = "");
     }
 }

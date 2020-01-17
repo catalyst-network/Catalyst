@@ -26,7 +26,7 @@ using ProtoBuf;
 #pragma warning disable 0649 // disable warning about unassinged fields
 #pragma warning disable 0169// disable warning about unassinged fields
 
-namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
+namespace Catalyst.Core.Modules.Dfs.UnixFs
 {
     /// <summary>
     ///   Specifies the type of data.
@@ -61,26 +61,24 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
         /// <summary>
         ///  NYI 
         /// </summary>
-        HAMTShard = 5
+        HamtShard = 5
     };
 
     /// <summary>
     ///   The ProtoBuf data that is stored in a DAG.
     /// </summary>
     [ProtoContract]
-    public class DataMessage
+    internal sealed class DataMessage
     {
         /// <summary>
         ///   The type of data.
         /// </summary>
-        [ProtoMember(1, IsRequired = true)]
-        public DataType Type;
+        [ProtoMember(1, IsRequired = true)] internal DataType Type;
 
         /// <summary>
         ///   The data.
         /// </summary>
-        [ProtoMember(2, IsRequired = false)]
-        public byte[] Data;
+        [ProtoMember(2, IsRequired = false)] internal byte[] Data;
 
         /// <summary>
         ///   The file size.

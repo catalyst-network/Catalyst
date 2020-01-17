@@ -27,14 +27,14 @@ namespace Catalyst.Core.Lib.Cryptography.Proto
 {
     public enum KeyType
     {
-        RSA = 0,
+        Rsa = 0,
         Ed25519 = 1,
-        Secp256k1 = 2,
-        ECDH = 4,
+        Secp256K1 = 2,
+        Ecdh = 4,
     }
 
     [ProtoContract]
-    public class PublicKey
+    public sealed class PublicKey
     {
         [ProtoMember(1, IsRequired = true)]
         public KeyType Type;

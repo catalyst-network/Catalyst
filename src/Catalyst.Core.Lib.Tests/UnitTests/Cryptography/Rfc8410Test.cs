@@ -57,11 +57,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         [Fact]
         public async Task ReadPrivateKey()
         {
-            string alice1 = @"-----BEGIN PRIVATE KEY-----
+            const string alice1 = @"-----BEGIN PRIVATE KEY-----
 MC4CAQAwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC
 -----END PRIVATE KEY-----
 ";
-            var key = await _keyStoreService.ImportAsync("alice1", alice1);
+            var _ = await _keyStoreService.ImportAsync("alice1", alice1);
             try
             {
                 var priv = (Ed25519PrivateKeyParameters) await _keyStoreService.GetPrivateKeyAsync("alice1");
@@ -83,13 +83,13 @@ MC4CAQAwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC
         [Fact]
         public async Task ReadPrivateAndPublicKey()
         {
-            string alice1 = @"-----BEGIN PRIVATE KEY-----
+            const string alice1 = @"-----BEGIN PRIVATE KEY-----
 MHICAQEwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC
 oB8wHQYKKoZIhvcNAQkJFDEPDA1DdXJkbGUgQ2hhaXJzgSEAGb9ECWmEzf6FQbrB
 Z9w7lshQhqowtrbLDFw4rXAxZuE=
 -----END PRIVATE KEY-----
 ";
-            var key = await _keyStoreService.ImportAsync("alice1", alice1);
+            var _ = await _keyStoreService.ImportAsync("alice1", alice1);
             try
             {
                 var priv = (Ed25519PrivateKeyParameters) await _keyStoreService.GetPrivateKeyAsync("alice1");

@@ -54,7 +54,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   the current <see cref="RepositoryData"/>.
         /// </returns>
         /// <remarks>
-        ///   Same as <see cref="IStatsApi.RepositoryAsync(CancellationToken)"/>.
+        ///   Same as <see cref="IStatsApi.GetRepositoryStatsAsync"/>.
         /// </remarks>
         Task<RepositoryData> StatisticsAsync(CancellationToken cancel = default);
 

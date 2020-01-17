@@ -21,19 +21,20 @@
 
 #endregion
 
-using System.IO;
-using Catalyst.Abstractions.FileSystem;
-using SharpRepository.XmlRepository;
+using System;
+using MultiFormats.Registry;
 
-namespace Catalyst.Core.Lib.Service
+namespace MultiFormats
 {
     /// <summary>
-    /// Xml Repository where base folder is derived from the file system <see cref="Catalyst.Abstractions.FileSystem.IFileSystem"/>
+    ///   Provides data for the unknown hashing algorithm event.
     /// </summary>
-    /// <typeparam name="T">Type of object</typeparam>
-    /// <seealso cref="SharpRepository.XmlRepository.XmlRepository{T}" />
-    public sealed class FileSystemAwareXmlRepository<T> : XmlRepository<T, string> where T : class, new()
+    public class UnknownHashingAlgorithmEventArgs : EventArgs
     {
-        public FileSystemAwareXmlRepository(IFileSystem fileSystem, string path = "") : base(Path.Combine(fileSystem.GetCatalystDataDir().ToString(), path)) { }
+        /// <summary>
+        ///   The <see cref="HashingAlgorithm"/> that is defined for the
+        ///   unknown hashing number.
+        /// </summary>
+        public HashingAlgorithm Algorithm { get; set; }
     }
 }

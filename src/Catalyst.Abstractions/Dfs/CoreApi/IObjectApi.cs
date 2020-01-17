@@ -38,7 +38,9 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
     ///   </note>
     /// </remarks>
     /// <seealso cref="IDagApi"/>
-    /// <seealso cref="Catalyst.Ipfs.Core.DagNode"/>
+    /// <seealso>
+    ///     <cref>Catalyst.Ipfs.Core.DagNode</cref>
+    /// </seealso>
     /// <seealso href="https://github.com/ipfs/interface-ipfs-core/blob/master/SPEC/OBJECT.md">Object API spec</seealso>
     public interface IObjectApi
     {

@@ -156,7 +156,7 @@ namespace MultiFormats.Tests
             }
             finally
             {
-                HashingAlgorithm.Deregister(alg);
+                HashingAlgorithm.DeRegister(alg);
             }
         }
 
@@ -530,9 +530,8 @@ namespace MultiFormats.Tests
             Assert.AreEqual($"\"{a}\"", json);
             var b = JsonConvert.DeserializeObject<MultiHash>(json);
             Assert.AreEqual(a, b);
-
-            a = null;
-            json = JsonConvert.SerializeObject(a);
+            
+            json = JsonConvert.SerializeObject(null);
             b = JsonConvert.DeserializeObject<MultiHash>(json);
             Assert.IsNull(b);
         }

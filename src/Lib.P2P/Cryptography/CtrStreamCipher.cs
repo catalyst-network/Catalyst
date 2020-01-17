@@ -85,7 +85,7 @@ namespace Lib.P2P.Cryptography
             var ivParam = parameters as ParametersWithIV;
             if (ivParam == null)
             {
-                throw new ArgumentException("CTR mode requires ParametersWithIV", "parameters");
+                throw new ArgumentException("CTR mode requires ParametersWithIV", nameof(parameters));
             }
 
             _iv = Arrays.Clone(ivParam.GetIV());

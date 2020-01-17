@@ -110,9 +110,9 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             [ModelBinder(Name = "cid-base")] string cidBase = MultiBase.DefaultAlgorithmName)
         {
             if (file == null)
-                throw new ArgumentNullException("file");
+                throw new ArgumentNullException(nameof(file));
 
-            using (var stream = file.OpenReadStream())
+            await using (var stream = file.OpenReadStream())
             using (var sr = new StreamReader(stream))
             using (var tr = new JsonTextReader(sr))
             {

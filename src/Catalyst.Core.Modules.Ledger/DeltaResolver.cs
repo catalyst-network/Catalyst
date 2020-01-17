@@ -27,7 +27,7 @@ using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Ledger
 {
-    public class DeltaResolver : IDeltaResolver
+    public sealed class DeltaResolver : IDeltaResolver
     {
         public Keccak Resolve(int deltaNumber)
         {

@@ -129,7 +129,7 @@ namespace MultiFormats.Registry
         public static Codec Register(string name, int code)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
             if (Names.ContainsKey(name))
                 throw new ArgumentException(string.Format("The IPFS codec name '{0}' is already defined.", name));
             if (Codes.ContainsKey(code))

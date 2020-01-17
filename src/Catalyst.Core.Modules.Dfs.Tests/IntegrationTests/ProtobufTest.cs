@@ -27,14 +27,14 @@ using ProtoBuf;
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     [ProtoContract]
-    class M1
+    internal class M1
     {
         [ProtoMember(1, IsRequired = false)]
         public byte[] Data;
     }
 
     [ProtoContract]
-    class M2
+    internal class M2
     {
         [ProtoMember(1, IsRequired = false)]
         public ArraySegment<byte>? Data;

@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
             var format = GetDataFormat(id);
             var canonical = format.Deserialise(block.DataBytes);
-            using (var ms = new MemoryStream())
+            await using (var ms = new MemoryStream())
             using (var sr = new StreamReader(ms))
             using (var reader = new JsonTextReader(sr))
             {
@@ -115,8 +115,8 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             bool pin = true,
             CancellationToken cancel = default)
         {
-            using (var ms = new MemoryStream())
-            using (var sw = new StreamWriter(ms))
+            await using (var ms = new MemoryStream())
+            await using (var sw = new StreamWriter(ms))
             using (var writer = new JsonTextWriter(sw))
             {
                 await data.WriteToAsync(writer, cancel);
@@ -155,7 +155,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                .ConfigureAwait(false);
         }
 
-        ILinkedDataFormat GetDataFormat(Cid id)
+        private ILinkedDataFormat GetDataFormat(Cid id)
         {
             if (IpldRegistry.Formats.TryGetValue(id.ContentType, out var format))
             {
@@ -165,7 +165,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             throw new KeyNotFoundException($"Unknown IPLD format '{id.ContentType}'.");
         }
 
-        ILinkedDataFormat GetDataFormat(string contentType)
+        private ILinkedDataFormat GetDataFormat(string contentType)
         {
             if (IpldRegistry.Formats.TryGetValue(contentType, out var format))
             {

@@ -78,7 +78,7 @@ namespace Catalyst.Core.Lib.Cryptography
             }
         }
 
-        void Mix(ref uint a, ref uint b, ref uint c, ref uint d, ref uint e, ref uint f, ref uint g, ref uint h)
+        private void Mix(ref uint a, ref uint b, ref uint c, ref uint d, ref uint e, ref uint f, ref uint g, ref uint h)
         {
             a ^= b << 11;
             d += a;

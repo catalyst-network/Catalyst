@@ -22,7 +22,6 @@
 #endregion
 
 using System.IO;
-using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.TestUtils;

@@ -117,12 +117,14 @@ namespace Catalyst.Modules.Server.Blazor
         /// </param>
         private void Dispose(bool disposing)
         {
-            if (!_disposed)
+            if (_disposed)
             {
-                if (disposing) LifetimeScope.Dispose();
-
-                _disposed = true;
+                return;
             }
+            
+            if (disposing) LifetimeScope.Dispose();
+
+            _disposed = true;
         }
 
         /// <summary>

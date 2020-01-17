@@ -33,9 +33,9 @@ using MultiFormats;
 
 namespace Catalyst.Core.Modules.Dfs.Migration
 {
-    class MigrateTo1 : IMigration
+    internal class MigrateTo1 : IMigration
     {
-        class Pin1
+        private sealed class Pin1
         {
             public Cid Id;
         }
@@ -72,7 +72,10 @@ namespace Catalyst.Core.Modules.Dfs.Migration
                     File.Create(Path.Combine(store.Folder, pin.Id));
                     File.Delete(store.GetPath(name));
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
             }
         }
 
@@ -89,7 +92,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
             {
                 Folder = path,
                 NameToKey = (cid) => cid.Hash.ToBase32(),
-                KeyToName = (key) => new MultiHash(Base32.FromBase32(key))
+                KeyToName = (key) => new MultiHash(key.FromBase32())
             };
 
             var files = folder.EnumerateFiles().Where(fi => fi.Length == 0);
@@ -104,7 +107,10 @@ namespace Catalyst.Core.Modules.Dfs.Migration
                     }, cancel).ConfigureAwait(false);
                     File.Delete(fi.FullName);
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
             }
         }
     }

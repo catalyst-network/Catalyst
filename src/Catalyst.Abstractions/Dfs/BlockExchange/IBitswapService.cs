@@ -79,12 +79,6 @@ namespace Catalyst.Abstractions.Dfs.BlockExchange
         /// </remarks>
         event EventHandler<CidEventArgs> BlockNeeded;
 
-        /// <inheritdoc />
-        Task StartAsync();
-
-        /// <inheritdoc />
-        Task StopAsync();
-
         /// <summary>
         ///   The blocks needed by the peer.
         /// </summary>

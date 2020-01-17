@@ -29,7 +29,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.LinkedData
 {
     public class RawFormatTest
     {
-        ILinkedDataFormat formatter = new RawFormat();
+        private ILinkedDataFormat formatter = new RawFormat();
 
         [Fact]
         public void Empty()

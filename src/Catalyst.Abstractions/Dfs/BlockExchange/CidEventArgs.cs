@@ -30,8 +30,10 @@ namespace Catalyst.Abstractions.Dfs.BlockExchange
     ///   The content addressable ID related to an event. 
     /// </summary>
     /// <see cref="Cid"/>
-    /// <see cref="Catalyst.Core.Modules.Dfs.BlockExchange.BitswapService.BlockNeeded"/>
-    public class CidEventArgs : EventArgs
+    /// <see>
+    ///     <cref>Catalyst.Core.Modules.Dfs.BlockExchange.BitswapService.BlockNeeded</cref>
+    /// </see>
+    public sealed class CidEventArgs : EventArgs
     {
         /// <summary>
         ///   The content addressable ID. 

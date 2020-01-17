@@ -25,7 +25,7 @@ using System;
 using Catalyst.Abstractions.Attributes;
 using SharpRepository.Repository.Aspects;
 
-namespace Catalyst.Core.Lib.Repository.Attributes
+namespace Catalyst.Core.Lib.Service.Attributes
 {
     public sealed class AuditAttribute : RepositoryActionBaseAttribute
     {

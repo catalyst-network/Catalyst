@@ -21,11 +21,10 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Microsoft.AspNetCore.Mvc;
 
 // TODO: need MultiAddress.WithOutPeer (should be in DFS code)
@@ -83,12 +82,10 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     /// </remarks>
     public sealed class DhtController : IpfsController
     {
-        private readonly IDfsService _dfs;
-
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public DhtController(IDfsService dfs) : base(dfs) { _dfs = dfs; }
+        public DhtController(ICoreApi dfs) : base(dfs) { }
 
         /// <summary>
         ///   Query the DHT for all of the multiaddresses associated with a Peer ID.

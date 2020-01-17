@@ -42,7 +42,7 @@ namespace MultiFormats
     /// </remarks>
     /// <seealso href="https://github.com/jbenet/multihash"/>
     [JsonConverter(typeof(Json))]
-    public class MultiHash : IEquatable<MultiHash>
+    public partial class MultiHash : IEquatable<MultiHash>
     {
         private static readonly ILog Log = LogManager.GetLogger<MultiHash>();
 
@@ -125,19 +125,29 @@ namespace MultiFormats
         public MultiHash(string algorithmName, byte[] digest)
         {
             if (algorithmName == null)
-                throw new ArgumentNullException("algorithmName");
+            {
+                throw new ArgumentNullException(nameof(algorithmName));
+            }
+
             if (digest == null)
-                throw new ArgumentNullException("digest");
+            {
+                throw new ArgumentNullException(nameof(digest));
+            }
 
             if (!HashingAlgorithm.Names.TryGetValue(algorithmName, out var a))
+            {
                 throw new ArgumentException(
-                    string.Format("The IPFS hashing algorithm '{0}' is unknown.", algorithmName));
+                    $"The IPFS hashing algorithm '{algorithmName}' is unknown.");
+            }
 
             Algorithm = a;
 
             if (Algorithm.DigestSize != 0 && Algorithm.DigestSize != digest.Length)
-                throw new ArgumentException(string.Format("The digest size for '{0}' is {1} bytes, not {2}.",
-                    algorithmName, Algorithm.DigestSize, digest.Length));
+            {
+                throw new ArgumentException(
+                    $"The digest size for '{algorithmName}' is {Algorithm.DigestSize} bytes, not {digest.Length}.");
+            }
+            
             Digest = digest;
         }
 
@@ -282,7 +292,10 @@ namespace MultiFormats
         ///   <b>true</b> if the identity hash algorithm is used; otherwise, <b>false</b>.
         /// </value>
         /// <remarks>
-        ///   The identity hash is used to inline a small amount of data into a <see cref="Ipfs.Core.Cid"/>.
+        ///   The identity hash is used to inline a small amount of data into a <see>
+        ///       <cref>Lib.P2P.Cid</cref>
+        ///   </see>
+        ///   .
         ///   When <b>true</b>, the <see cref="Digest"/> is also the content.
         /// </remarks>
         public bool IsIdentityHash => Algorithm.Code == 0;
@@ -318,7 +331,9 @@ namespace MultiFormats
         public void Write(CodedOutputStream stream)
         {
             if (stream == null)
-                throw new ArgumentNullException("stream");
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
 
             stream.WriteInt32(Algorithm.Code);
             stream.WriteLength(Digest.Length);
@@ -347,8 +362,8 @@ namespace MultiFormats
             }
             else if (Algorithm.DigestSize != 0 && digestSize != Algorithm.DigestSize)
             {
-                throw new InvalidDataException(string.Format("The digest size {0} is wrong for {1}; it should be {2}.",
-                    digestSize, Algorithm.Name, Algorithm.DigestSize));
+                throw new InvalidDataException(
+                    $"The digest size {digestSize} is wrong for {Algorithm.Name}; it should be {Algorithm.DigestSize}.");
             }
 
             Digest = stream.ReadSomeBytes(digestSize);
@@ -361,9 +376,7 @@ namespace MultiFormats
         public override bool Equals(object obj)
         {
             var that = obj as MultiHash;
-            return that == null
-                ? false
-                : Equals(that);
+            return that != null && Equals(that);
         }
 
         /// <inheritdoc />
@@ -378,11 +391,7 @@ namespace MultiFormats
         /// </summary>
         public static bool operator ==(MultiHash a, MultiHash b)
         {
-            if (ReferenceEquals(a, b)) return true;
-            if (a is null) return false;
-            if (b is null) return false;
-
-            return a.Equals(b);
+            return ReferenceEquals(a, b) || !(a is null) && (!(b is null) && a.Equals(b));
         }
 
         /// <summary>
@@ -407,7 +416,10 @@ namespace MultiFormats
         /// </returns>
         public string ToBase58()
         {
-            if (_b58String != null) return _b58String;
+            if (_b58String != null)
+            {
+                return _b58String;
+            }
 
             using (var ms = new MemoryStream())
             {
@@ -459,8 +471,12 @@ namespace MultiFormats
         {
             var digest = Algorithm.Hasher().ComputeHash(data);
             for (var i = digest.Length - 1; 0 <= i; --i)
+            {
                 if (digest[i] != Digest[i])
+                {
                     return false;
+                }
+            }
 
             return true;
         }
@@ -481,26 +497,34 @@ namespace MultiFormats
         {
             var digest = Algorithm.Hasher().ComputeHash(data);
             for (var i = digest.Length - 1; 0 <= i; --i)
+            {
                 if (digest[i] != Digest[i])
+                {
                     return false;
-
+                }
+            }
+            
             return true;
         }
 
         private void RaiseUnknownHashingAlgorithm(HashingAlgorithm algorithm)
         {
             if (Log.IsWarnEnabled)
+            {
                 Log.WarnFormat("Unknown hashing algorithm number 0x{0:x2}.", algorithm.Code);
+            }
 
             var handler = UnknownHashingAlgorithm;
-            if (handler != null)
+            if (handler == null)
             {
-                var args = new UnknownHashingAlgorithmEventArgs
-                {
-                    Algorithm = algorithm
-                };
-                handler(this, args);
+                return;
             }
+            
+            var args = new UnknownHashingAlgorithmEventArgs
+            {
+                Algorithm = algorithm
+            };
+            handler(this, args);
         }
 
         /// <summary>
@@ -542,46 +566,5 @@ namespace MultiFormats
                 return new MultiHash(algorithmName, alg.ComputeHash(data));
             }
         }
-
-        /// <summary>
-        ///   Conversion of a <see cref="MultiHash"/> to and from JSON.
-        /// </summary>
-        /// <remarks>
-        ///   The JSON is just a single string value.
-        /// </remarks>
-        private class Json : JsonConverter
-        {
-            public override bool CanConvert(Type objectType) { return true; }
-
-            public override bool CanRead => true;
-            public override bool CanWrite => true;
-
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                var mh = value as MultiHash;
-                writer.WriteValue(mh?.ToString());
-            }
-
-            public override object ReadJson(JsonReader reader,
-                Type objectType,
-                object existingValue,
-                JsonSerializer serializer)
-            {
-                var s = reader.Value as string;
-                return s == null ? null : new MultiHash(s);
-            }
-        }
-    }
-
-    /// <summary>
-    ///   Provides data for the unknown hashing algorithm event.
-    /// </summary>
-    public class UnknownHashingAlgorithmEventArgs : EventArgs
-    {
-        /// <summary>
-        ///   The <see cref="HashingAlgorithm"/> that is defined for the
-        ///   unknown hashing number.
-        /// </summary>
-        public HashingAlgorithm Algorithm { get; set; }
     }
 }

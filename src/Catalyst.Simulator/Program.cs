@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.FileSystem;

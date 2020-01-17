@@ -71,7 +71,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var node = ipfs.ObjectApi.NewAsync("unknown-template").Result;
+                var _ = ipfs.ObjectApi.NewAsync("unknown-template").Result;
             });
         }
 
@@ -111,7 +111,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var adata = Encoding.UTF8.GetBytes("alpha");
             var node = await ipfs.ObjectApi.PutAsync(adata);
-            using (var stream = await ipfs.ObjectApi.DataAsync(node.Id))
+            await using (var stream = await ipfs.ObjectApi.DataAsync(node.Id))
             {
                 var bdata = new byte[adata.Length];
                 stream.Read(bdata, 0, bdata.Length);
@@ -163,7 +163,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
             catch (TaskCanceledException)
             {
-                return;
+                // ignore
             }
         }
 

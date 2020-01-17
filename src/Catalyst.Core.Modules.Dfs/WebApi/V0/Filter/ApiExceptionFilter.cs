@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using Catalyst.Core.Modules.Dfs.Controllers.V0.Response;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

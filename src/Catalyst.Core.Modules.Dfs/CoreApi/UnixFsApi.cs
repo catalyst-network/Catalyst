@@ -30,32 +30,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Lib.IO;
-using Catalyst.Core.Modules.Dfs.UnixFileSystem;
-using Common.Logging;
+using Catalyst.Core.Modules.Dfs.UnixFs;
 using ICSharpCode.SharpZipLib.Tar;
 using Lib.P2P;
-using MultiFormats;
 using ProtoBuf;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {
-    internal sealed class UnixFsApi : IUnixFsApi
+    internal sealed partial class UnixFsApi : IUnixFsApi
     {
         private readonly IDhtApi _dhtApi;
         private readonly IBlockApi _blockApi;
         private readonly IKeyApi _keyApi;
         private readonly INameApi _nameApi;
         private readonly DfsState _dfsState;
-        static ILog log = LogManager.GetLogger(typeof(UnixFsApi));
 
         private const int DefaultLinksPerBlock = 174;
 
-        public UnixFsApi(IDhtApi dhtApi, IBlockApi blockApi, IKeyApi keyApi, INameApi nameApi, DfsState dfsState, IHashProvider hashProvider)
+        public UnixFsApi(IDhtApi dhtApi, IBlockApi blockApi, IKeyApi keyApi, INameApi nameApi, DfsState dfsState)
         {
             _dhtApi = dhtApi;
             _blockApi = blockApi;
@@ -131,28 +127,31 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             AddFileOptions options,
             CancellationToken cancel)
         {
-            var fsNodes = nodes as UnixFsNode[] ?? nodes.ToArray();
-            if (fsNodes.Length == 1)
+            while (true)
             {
-                return fsNodes.First();
-            }
-
-            // Bundle DefaultLinksPerBlock links into a block.
-            var tree = new List<UnixFsNode>();
-            for (var i = 0; true; ++i)
-            {
-                var bundle = fsNodes.Skip(DefaultLinksPerBlock * i).Take(DefaultLinksPerBlock);
-                var unixFsNodes = bundle.ToList();
-                if (!unixFsNodes.Any())
+                var fsNodes = nodes as UnixFsNode[] ?? nodes.ToArray();
+                if (fsNodes.Length == 1)
                 {
-                    break;
+                    return fsNodes.First();
                 }
 
-                var node = await BuildTreeNodeAsync(unixFsNodes, options, cancel);
-                tree.Add(node);
-            }
+                // Bundle DefaultLinksPerBlock links into a block.
+                var tree = new List<UnixFsNode>();
+                for (var i = 0;; ++i)
+                {
+                    var bundle = fsNodes.Skip(DefaultLinksPerBlock * i).Take(DefaultLinksPerBlock);
+                    var unixFsNodes = bundle.ToList();
+                    if (!unixFsNodes.Any())
+                    {
+                        break;
+                    }
 
-            return await BuildTreeAsync(tree, options, cancel);
+                    var node = await BuildTreeNodeAsync(unixFsNodes, options, cancel);
+                    tree.Add(node);
+                }
+
+                nodes = tree;
+            }
         }
 
         private async Task<UnixFsNode> BuildTreeNodeAsync(IEnumerable<UnixFsNode> nodes,
@@ -219,7 +218,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             return fsn;
         }
 
-        async Task<UnixFsNode> CreateDirectoryAsync(IEnumerable<IFileSystemLink> links,
+        private async Task<UnixFsNode> CreateDirectoryAsync(IEnumerable<IFileSystemLink> links,
             AddFileOptions options,
             CancellationToken cancel)
         {
@@ -256,30 +255,26 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
             var block = await _blockApi.GetAsync(cid, cancel).ConfigureAwait(false);
 
-            // TODO: A content-type registry should be used.
-            if (cid.ContentType == "dag-pb")
+            switch (cid.ContentType)
             {
-                // fall thru
-            }
-            else if (cid.ContentType == "raw")
-            {
-                return new UnixFsNode
-                {
-                    Id = cid,
-                    Size = block.Size
-                };
-            }
-            else if (cid.ContentType == "cms")
-            {
-                return new UnixFsNode
-                {
-                    Id = cid,
-                    Size = block.Size
-                };
-            }
-            else
-            {
-                throw new NotSupportedException($"Cannot read content type '{cid.ContentType}'.");
+                // TODO: A content-type registry should be used.
+                case "dag-pb":
+                    // fall thru
+                    break;
+                case "raw":
+                    return new UnixFsNode
+                    {
+                        Id = cid,
+                        Size = block.Size
+                    };
+                case "cms":
+                    return new UnixFsNode
+                    {
+                        Id = cid,
+                        Size = block.Size
+                    };
+                default:
+                    throw new NotSupportedException($"Cannot read content type '{cid.ContentType}'.");
             }
 
             var dag = new DagNode(block.DataStream);
@@ -315,7 +310,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             var r = await _nameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
             var cid = Cid.Decode(r.Remove(0, 6));
-            return await UnixFs.CreateReadStreamAsync(cid, _blockApi, _keyApi, cancel).ConfigureAwait(false);
+            return await UnixFs.UnixFs.CreateReadStreamAsync(cid, _blockApi, _keyApi, cancel).ConfigureAwait(false);
         }
 
         public async Task<Stream> ReadFileAsync(string path,
@@ -347,7 +342,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             return ms;
         }
 
-        async Task AddTarNodeAsync(Cid cid, string name, TarOutputStream tar, CancellationToken cancel)
+        private async Task AddTarNodeAsync(Cid cid, string name, TarOutputStream tar, CancellationToken cancel)
         {
             var block = await _blockApi.GetAsync(cid, cancel).ConfigureAwait(false);
             var dm = new DataMessage
@@ -365,9 +360,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             var entry = new TarEntry(new TarHeader());
             var header = entry.TarHeader;
             header.Mode = 0x1ff; // 777 in octal
-            header.LinkName = String.Empty;
-            header.UserName = String.Empty;
-            header.GroupName = String.Empty;
+            header.LinkName = string.Empty;
+            header.UserName = string.Empty;
+            header.GroupName = string.Empty;
             header.Version = "00";
             header.Name = name;
             header.DevMajor = 0;
@@ -396,70 +391,18 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             // Recurse over files and subdirectories
             if (dm.Type == DataType.Directory)
             {
-                foreach (var link in dag.Links)
+                foreach (var link in dag?.Links)
                 {
                     await AddTarNodeAsync(link.Id, $"{name}/{link.Name}", tar, cancel).ConfigureAwait(false);
                 }
             }
         }
 
-        IBlockApi GetBlockService(AddFileOptions options)
+        private IBlockApi GetBlockService(AddFileOptions options)
         {
             return options.OnlyHash
                 ? new HashOnlyBlockService()
                 : _blockApi;
-        }
-
-        /// <summary>
-        ///   A Block service that only computes the block's hash.
-        /// </summary>
-        class HashOnlyBlockService : IBlockApi
-        {
-            public IPinApi PinApi { get; set; }
-
-            public Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task<Cid> PutAsync(byte[] data,
-                string contentType = Cid.DefaultContentType,
-                string multiHash = MultiHash.DefaultAlgorithmName,
-                string encoding = MultiBase.DefaultAlgorithmName,
-                bool pin = false,
-                CancellationToken cancel = default)
-            {
-                var cid = new Cid
-                {
-                    ContentType = contentType,
-                    Encoding = encoding,
-                    Hash = MultiHash.ComputeHash(data, multiHash),
-                    Version = (contentType == "dag-pb" && multiHash == "sha2-256") ? 0 : 1
-                };
-                return Task.FromResult(cid);
-            }
-
-            public Task<Cid> PutAsync(Stream data,
-                string contentType = Cid.DefaultContentType,
-                string multiHash = MultiHash.DefaultAlgorithmName,
-                string encoding = MultiBase.DefaultAlgorithmName,
-                bool pin = false,
-                CancellationToken cancel = default)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task<Cid> RemoveAsync(Cid id,
-                bool ignoreNonexistent = false,
-                CancellationToken cancel = default)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task<IDataBlock> StatAsync(Cid id, CancellationToken cancel = default)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

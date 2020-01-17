@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             return address;
         }
 
-        public async Task<IEnumerable<Peer>> AddressesAsync(CancellationToken cancel = default)
+        public IEnumerable<Peer> GetSwarmKnownPeers(CancellationToken cancel = default)
         {
             return _swarmService.KnownPeers;
         }

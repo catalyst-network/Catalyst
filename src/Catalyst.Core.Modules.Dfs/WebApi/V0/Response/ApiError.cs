@@ -23,12 +23,12 @@
 
 using Newtonsoft.Json;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0.Response
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Response
 {
     /// <summary>
     ///     The standard error response for failing API calls.
     /// </summary>
-    public class ApiError
+    public sealed class ApiError
     {
         /// <summary>
         ///     Human readable description of the error.

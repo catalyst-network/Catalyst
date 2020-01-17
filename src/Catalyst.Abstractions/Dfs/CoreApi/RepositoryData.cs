@@ -24,7 +24,7 @@
 namespace Catalyst.Abstractions.Dfs.CoreApi
 {
     /// <summary>
-    ///   The statistics for <see cref="IStatsApi.RepositoryAsync"/>.
+    ///   The statistics for <see cref="IStatsApi.GetRepositoryStatsAsync"/>.
     /// </summary>
     public class RepositoryData
     {

@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Core.Modules.Dfs.UnixFileSystem;
+using Catalyst.Core.Modules.Dfs.UnixFs;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.UnixFileSystem

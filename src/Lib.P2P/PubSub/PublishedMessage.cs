@@ -38,7 +38,7 @@ namespace Lib.P2P.PubSub
     ///   
     /// </remarks>
     [ProtoContract]
-    public class PublishedMessage : IPublishedMessage
+    public sealed class PublishedMessage : IPublishedMessage
     {
         private string _messageId;
 

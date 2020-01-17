@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.Dfs;
 using Lib.P2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
@@ -62,7 +61,9 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// </param>
         /// <returns>
         ///     The hash, or address on the DFS, of the latest ledger state update as a string, as returned in
-        ///     <seealso cref="IDfsService.AddAsync" />
+        ///     <seealso>
+        ///         <cref>IDfsService.AddAsync</cref>
+        ///     </seealso>
         /// </returns>
         Cid GetLatestDeltaHash(DateTime? asOf = null);
 

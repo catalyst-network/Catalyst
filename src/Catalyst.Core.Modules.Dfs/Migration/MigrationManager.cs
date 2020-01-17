@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
         /// <summary>
         ///   The list of migrations that can be performed.
         /// </summary>
-        public List<IMigration> Migrations { get; private set; }
+        public List<IMigration> Migrations { get; }
 
         /// <summary>
         ///   Gets the latest supported version number of a repository.

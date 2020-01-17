@@ -32,12 +32,12 @@ namespace Lib.P2P
     /// <summary>
     ///   A simple wrapper around another stream that records statistics.
     /// </summary>
-    public class StatsStream : Stream
+    public sealed class StatsStream : Stream
     {
         /// <summary>
         ///   A summary of all StatStreams.
         /// </summary>
-        public static BandwidthData AllBandwidth = new BandwidthData
+        public static readonly BandwidthData AllBandwidth = new BandwidthData
         {
             RateIn = 5 * 1024,
             RateOut = 1024
@@ -67,22 +67,22 @@ namespace Lib.P2P
         /// <summary>
         ///   Create a <see cref="StatsStream"/> for the specified stream.
         /// </summary>
-        public StatsStream(Stream stream) { this._stream = stream; }
+        internal StatsStream(Stream stream) { this._stream = stream; }
 
         /// <summary>
         ///   Total number of bytes read on the stream.
         /// </summary>
-        public long BytesRead => _bytesRead;
+        internal long BytesRead => _bytesRead;
 
         /// <summary>
         ///   Total number of byte written to the stream.
         /// </summary>
-        public long BytesWritten => _bytesWritten;
+        internal long BytesWritten => _bytesWritten;
 
         /// <summary>
         ///   The last time a write or read occured.
         /// </summary>
-        public DateTime LastUsed => _lastUsed;
+        internal DateTime LastUsed => _lastUsed;
 
         /// <inheritdoc />
         public override bool CanRead => _stream.CanRead;
@@ -117,13 +117,13 @@ namespace Lib.P2P
             var n = _stream.Read(buffer, offset, count);
             _bytesRead += n;
             _lastUsed = DateTime.Now;
-            if (n > 0)
-
-                //lock (AllBandwidth)
+            if (n <= 0)
             {
-                AllBandwidth.TotalIn += (ulong) n;
-                AllBandwidth.RateIn += n;
+                return n;
             }
+            
+            AllBandwidth.TotalIn += (ulong) n;
+            AllBandwidth.RateIn += n;
 
             return n;
         }
@@ -140,19 +140,24 @@ namespace Lib.P2P
             _stream.Write(buffer, offset, count);
             _bytesWritten += count;
             _lastUsed = DateTime.Now;
-            if (count > 0)
-
-                //lock (AllBandwidth)
+            
+            if (count <= 0)
             {
-                AllBandwidth.TotalOut += (ulong) count;
-                AllBandwidth.RateOut += count;
+                return;
             }
+            
+            AllBandwidth.TotalOut += (ulong) count;
+            AllBandwidth.RateOut += count;
         }
 
         /// <inheritdoc />
         protected override void Dispose(bool disposing)
         {
-            if (disposing) _stream.Dispose();
+            if (disposing)
+            {
+                _stream.Dispose();
+            }
+            
             base.Dispose(disposing);
         }
 

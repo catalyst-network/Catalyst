@@ -30,7 +30,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.LinkedData
 {
     public class ProtobufFormatTest
     {
-        ILinkedDataFormat formatter = new ProtobufFormat();
+        private ILinkedDataFormat formatter = new ProtobufFormat();
 
         [Fact]
         public void Empty()

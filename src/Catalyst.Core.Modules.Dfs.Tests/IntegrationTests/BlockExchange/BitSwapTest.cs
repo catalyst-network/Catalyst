@@ -24,7 +24,6 @@
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Hashing;
@@ -35,20 +34,18 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.BlockExchange
 {
-    public class BitswapTest
+    public sealed class BitSwapTest
     {
-        private readonly IHashProvider _hashProvider;
-
-        Peer self = new Peer
+        private Peer self = new Peer
         {
             Id = "QmXK9VBxaXFuuT29AaPUTgW3jBWZ9JgLVZYdMYTHC6LLAH",
             PublicKey =
                 "CAASXjBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCC5r4nQBtnd9qgjnG8fBN5+gnqIeWEIcUFUdCG4su/vrbQ1py8XGKNUBuDjkyTv25Gd3hlrtNJV3eOKZVSL8ePAgMBAAE="
         };
 
-        public BitswapTest()
+        public BitSwapTest()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
         [Fact]
@@ -59,7 +56,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.BlockExchange
 
             var cid = new DagNode(Encoding.UTF8.GetBytes("BitswapTest unknown block")).Id;
             var cancel = new CancellationTokenSource();
-            var task = bitswap.WantAsync(cid, self.Id, cancel.Token);
+            var _ = bitswap.WantAsync(cid, self.Id, cancel.Token);
             bitswap.PeerWants(self.Id).ToArray().Should().Contain(cid);
 
             // Assert.Contains(bitswap.PeerWants(self.Id).ToArray(), cid);
@@ -96,7 +93,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.BlockExchange
             var cid1 = new DagNode(Encoding.UTF8.GetBytes("BitswapTest unknown block y")).Id;
             var cid2 = new DagNode(Encoding.UTF8.GetBytes("BitswapTest unknown block z")).Id;
             var cancel = new CancellationTokenSource();
-            int callCount = 0;
+            var callCount = 0;
+            
             bitswap.BlockNeeded += (s, e) =>
             {
                 Assert.True(cid1 == e.Id || cid2 == e.Id);

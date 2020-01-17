@@ -44,9 +44,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task SmokeTest()
         {
-            await ipfs.StatsApi.BandwidthAsync();
-            await ipfs.StatsApi.BitSwapAsync();
-            await ipfs.StatsApi.RepositoryAsync();
+            await ipfs.StatsApi.GetBandwidthStatsAsync();
+            ipfs.StatsApi.GetBitSwapStats();
+            await ipfs.StatsApi.GetRepositoryStatsAsync();
         }
     }
 }

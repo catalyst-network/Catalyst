@@ -28,7 +28,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Catalyst.KBucket
 {
     [TestClass]
-    public class CollectionTest
+    public sealed class CollectionTest
     {
         [TestMethod]
         public void Add()
@@ -166,7 +166,7 @@ namespace Catalyst.KBucket
 
             var n = 0;
             
-            foreach (var contact in bucket)
+            foreach (var _ in bucket)
             {
                 ++n;
             }

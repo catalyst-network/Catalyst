@@ -42,19 +42,21 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         private BlockForRpc GetBlockByNumber(long number)
         {
             // create form delta
-            BlockForRpc blockForRpc = new BlockForRpc();
-            blockForRpc.Miner = Address.Zero;
-            blockForRpc.Difficulty = 1000000;
-            blockForRpc.Hash = Keccak.Compute(number.ToString());
-            blockForRpc.Number = number;
-            blockForRpc.GasLimit = 10_000_000;
-            blockForRpc.GasUsed = 0;
-            blockForRpc.Timestamp = (UInt256) number;
-            blockForRpc.ParentHash = number == 0 ? Keccak.Zero : Keccak.Compute((number - 1).ToString());
-            blockForRpc.StateRoot = Keccak.EmptyTreeHash;
-            blockForRpc.ReceiptsRoot = Keccak.EmptyTreeHash;
-            blockForRpc.TransactionsRoot = Keccak.EmptyTreeHash;
-            blockForRpc.LogsBloom = Bloom.Empty;
+            var blockForRpc = new BlockForRpc
+            {
+                Miner = Address.Zero,
+                Difficulty = 1000000,
+                Hash = Keccak.Compute(number.ToString()),
+                Number = number,
+                GasLimit = 10_000_000,
+                GasUsed = 0,
+                Timestamp = (UInt256) number,
+                ParentHash = number == 0 ? Keccak.Zero : Keccak.Compute((number - 1).ToString()),
+                StateRoot = Keccak.EmptyTreeHash,
+                ReceiptsRoot = Keccak.EmptyTreeHash,
+                TransactionsRoot = Keccak.EmptyTreeHash,
+                LogsBloom = Bloom.Empty
+            };
             blockForRpc.TotalDifficulty = (UInt256) ((long) blockForRpc.Difficulty * number);
             blockForRpc.Sha3Uncles = Keccak.OfAnEmptySequenceRlp;
             return blockForRpc;

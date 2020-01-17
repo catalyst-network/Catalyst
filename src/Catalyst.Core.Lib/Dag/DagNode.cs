@@ -41,11 +41,11 @@ namespace Catalyst.Core.Lib.Dag
     ///     and a set of navigable <see cref="DagNode.Links" />.
     /// </remarks>
     [DataContract]
-    public class DagNode : IDagNode, IEquatable<DagNode>
+    public sealed class DagNode : IDagNode, IEquatable<DagNode>
     {
-        private Cid id;
-        private string hashAlgorithm = MultiHash.DefaultAlgorithmName;
-        private long? size;
+        private Cid _id;
+        private string _hashAlgorithm = MultiHash.DefaultAlgorithmName;
+        private long? _size;
 
         /// <summary>
         ///     Create a new instance of a <see cref="DagNode" /> with the specified
@@ -68,7 +68,7 @@ namespace Catalyst.Core.Lib.Dag
             DataBytes = data ?? new byte[0];
             Links = (links ?? new DagLink[0])
                .OrderBy(link => link.Name ?? "");
-            this.hashAlgorithm = hashAlgorithm;
+            _hashAlgorithm = hashAlgorithm;
         }
 
         /// <summary>
@@ -111,12 +111,12 @@ namespace Catalyst.Core.Lib.Dag
         {
             get
             {
-                if (!size.HasValue)
+                if (!_size.HasValue)
                 {
                     ComputeSize();
                 }
 
-                return size.Value;
+                return _size ?? throw new ArgumentNullException();
             }
         }
 
@@ -126,19 +126,19 @@ namespace Catalyst.Core.Lib.Dag
         {
             get
             {
-                if (id == null)
+                if (_id == null)
                 {
                     ComputeHash();
                 }
 
-                return id;
+                return _id;
             }
             set
             {
-                id = value;
-                if (id != null)
+                _id = value;
+                if (_id != null)
                 {
-                    hashAlgorithm = id.Hash.Algorithm.Name;
+                    _hashAlgorithm = _id.Hash.Algorithm.Name;
                 }
             }
         }
@@ -177,7 +177,7 @@ namespace Catalyst.Core.Lib.Dag
         public IDagNode AddLinks(IEnumerable<IMerkleLink> links)
         {
             var all = Links.Union(links);
-            return new DagNode(DataBytes, all, hashAlgorithm);
+            return new DagNode(DataBytes, all, _hashAlgorithm);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Catalyst.Core.Lib.Dag
         {
             var ignore = links.ToLookup(link => link.Id);
             var some = Links.Where(link => !ignore.Contains(link.Id));
-            return new DagNode(DataBytes, some, hashAlgorithm);
+            return new DagNode(DataBytes, some, _hashAlgorithm);
         }
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace Catalyst.Core.Lib.Dag
         public void Write(CodedOutputStream stream)
         {
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
 
             foreach (var link in Links.Select(l => new DagLink(l)))
             {
@@ -327,9 +327,9 @@ namespace Catalyst.Core.Lib.Dag
             using (var ms = new MemoryStream())
             {
                 Write(ms);
-                size = ms.Position;
+                _size = ms.Position;
                 ms.Position = 0;
-                id = MultiHash.ComputeHash(ms, hashAlgorithm);
+                _id = MultiHash.ComputeHash(ms, _hashAlgorithm);
             }
         }
 
@@ -338,7 +338,7 @@ namespace Catalyst.Core.Lib.Dag
             using (var ms = new MemoryStream())
             {
                 Write(ms);
-                size = ms.Position;
+                _size = ms.Position;
             }
         }
 
@@ -357,11 +357,7 @@ namespace Catalyst.Core.Lib.Dag
         /// </summary>
         public static bool operator ==(DagNode a, DagNode b)
         {
-            if (ReferenceEquals(a, b)) return true;
-            if (ReferenceEquals(a, null)) return false;
-            if (ReferenceEquals(b, null)) return false;
-
-            return a.Equals(b);
+            return ReferenceEquals(a, b) || !ReferenceEquals(a, null) && (!ReferenceEquals(b, null) && a.Equals(b));
         }
 
         /// <summary>
@@ -369,11 +365,7 @@ namespace Catalyst.Core.Lib.Dag
         /// </summary>
         public static bool operator !=(DagNode a, DagNode b)
         {
-            if (ReferenceEquals(a, b)) return false;
-            if (ReferenceEquals(a, null)) return true;
-            if (ReferenceEquals(b, null)) return true;
-
-            return !a.Equals(b);
+            return !ReferenceEquals(a, b) && (ReferenceEquals(a, null) || (ReferenceEquals(b, null) || !a.Equals(b)));
         }
     }
 }

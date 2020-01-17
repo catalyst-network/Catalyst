@@ -46,7 +46,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             //Arrange
             var deltaResponse = new GetDeltaResponse {Delta = new Delta()};
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var getDeltaCommand = new GetDeltaCommand(commandContext, _logger);
+            new GetDeltaCommand(commandContext, _logger);
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, deltaResponse);
@@ -63,7 +63,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             //Arrange
             var deltaResponse = new GetDeltaResponse();
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var getDeltaCommand = new GetDeltaCommand(commandContext, _logger);
+            new GetDeltaCommand(commandContext, _logger);
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, deltaResponse);

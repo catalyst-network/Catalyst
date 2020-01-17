@@ -402,9 +402,9 @@ namespace Catalyst.Core.Modules.Keystore
                         Data = spki,
                         Type = kp.Public switch
                         {
-                            RsaKeyParameters _ => KeyType.RSA,
+                            RsaKeyParameters _ => KeyType.Rsa,
                             Ed25519PublicKeyParameters _ => KeyType.Ed25519,
-                            ECPublicKeyParameters _ => KeyType.Secp256k1,
+                            ECPublicKeyParameters _ => KeyType.Secp256K1,
                             _ => throw new NotSupportedException(
                                 $"The key type {kp.Public.GetType().Name} is not supported.")
                         }
@@ -617,7 +617,7 @@ namespace Catalyst.Core.Modules.Keystore
 
             // Create the PKCS #8 container for the key
             string pem;
-            using (var sw = new StringWriter())
+            await using (var sw = new StringWriter())
             {
                 var pkcs8 = new Pkcs8Generator(keyPair.Private, Pkcs8Generator.PbeSha1_3DES)
                 {
@@ -669,10 +669,10 @@ namespace Catalyst.Core.Modules.Keystore
             switch (key)
             {
                 case RsaKeyParameters _:
-                    publicKey.Type = KeyType.RSA;
+                    publicKey.Type = KeyType.Rsa;
                     break;
                 case ECPublicKeyParameters _:
-                    publicKey.Type = KeyType.Secp256k1;
+                    publicKey.Type = KeyType.Secp256K1;
                     break;
                 case Ed25519PublicKeyParameters _:
                     publicKey.Type = KeyType.Ed25519;

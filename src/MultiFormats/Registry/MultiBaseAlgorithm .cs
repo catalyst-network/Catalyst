@@ -170,7 +170,7 @@ namespace MultiFormats.Registry
             Func<string, byte[]> decode = null)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
             if (Names.ContainsKey(name))
                 throw new ArgumentException(
                     string.Format("The IPFS multi-base algorithm name '{0}' is already defined.", name));

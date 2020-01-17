@@ -48,7 +48,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation. The task's value
         ///   is a sequence of peer nodes.
         /// </returns>
-        Task<IEnumerable<Peer>> AddressesAsync(CancellationToken cancel = default);
+        IEnumerable<Peer> GetSwarmKnownPeers(CancellationToken cancel = default);
 
         /// <summary>
         ///   Get the peers that are connected to this node.

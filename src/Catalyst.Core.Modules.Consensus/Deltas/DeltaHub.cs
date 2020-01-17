@@ -163,7 +163,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private async Task<IFileSystemNode> PublishDfsFileAsync(byte[] deltaAsBytes,
             CancellationToken cancellationToken)
         {
-            using (var memoryStream = new MemoryStream())
+            await using (var memoryStream = new MemoryStream())
             {
                 await memoryStream.WriteAsync(deltaAsBytes, cancellationToken).ConfigureAwait(false);
                 await memoryStream.FlushAsync(cancellationToken).ConfigureAwait(false);

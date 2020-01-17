@@ -25,7 +25,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Logging;
 using MultiFormats;
 
 namespace Lib.P2P
@@ -42,8 +41,6 @@ namespace Lib.P2P
     /// </remarks>
     public sealed class ConnectionManager
     {
-        private static ILog _log = LogManager.GetLogger(typeof(ConnectionManager));
-
         /// <summary>
         ///   The connections to other peers. Key is the base58 hash of the peer ID.
         /// </summary>

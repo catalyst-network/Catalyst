@@ -129,7 +129,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///     The CID that is no longer needed.
         /// </param>
         [HttpGet] [HttpPost] [Route("bitswap/unwant")]
-        public async Task Unwants(string arg) { IpfsCore.BitSwapApi.UnWant(arg, Cancel); }
+        public void Unwants(string arg) { IpfsCore.BitSwapApi.UnWant(arg, Cancel); }
 
         /// <summary>
         ///     The blocks that are needed by a peer.
@@ -138,7 +138,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///     A peer ID.
         /// </param>
         [HttpGet] [HttpPost] [Route("bitswap/ledger")]
-        public async Task<BitswapLedgerDto> Ledger(string arg)
+        public BitswapLedgerDto Ledger(string arg)
         {
             var peer = new Peer
             {

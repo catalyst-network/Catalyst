@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
@@ -52,7 +53,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         public async Task Self_Key_Exists()
         {
             const string name = "self";
-            var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
+            var _ = await _keyStoreService.CreateAsync(name, "ed25519", 0);
 
             var keys = await _keyStoreService.ListAsync();
             var self = keys.Single(k => k.Name == "self");
@@ -66,7 +67,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         public async Task Export_Import()
         {
             const string name = "self";
-            var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
+            var _ = await _keyStoreService.CreateAsync(name, "ed25519", 0);
             var password = "password".ToCharArray();
             var pem = await _keyStoreService.ExportAsync(name, password);
             Assert.StartsWith("-----BEGIN ENCRYPTED PRIVATE KEY-----", pem);
@@ -86,7 +87,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             var password = "password".ToCharArray();
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var x = _keyStoreService.ExportAsync("unknown", password).Result;
+                var _ = _keyStoreService.ExportAsync("unknown", password).Result;
             });
         }
 
@@ -94,7 +95,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         public async Task Import_Wrong_Password()
         {
             const string name = "self";
-            var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
+            var _ = await _keyStoreService.CreateAsync(name, "ed25519", 0);
 
             var password = "password".ToCharArray();
             var pem = await _keyStoreService.ExportAsync("self", password);
@@ -102,7 +103,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             var wrong = "wrong password".ToCharArray();
             ExceptionAssert.Throws<UnauthorizedAccessException>(() =>
             {
-                var x = _keyStoreService.ImportAsync("clone", pem, wrong).Result;
+                var _ = _keyStoreService.ImportAsync("clone", pem, wrong).Result;
             });
         }
 
@@ -148,8 +149,8 @@ Rw==
             Assert.Equal("jsipfs", key.Name);
             Assert.Equal("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb", key.Id);
 
-            var pubkey = await _keyStoreService.GetPublicKeyAsync("jsipfs");
-            Assert.Equal(spki, pubkey);
+            var pubKey = await _keyStoreService.GetPublicKeyAsync("jsipfs");
+            Assert.Equal(spki, pubKey);
         }
 
         [Fact]
@@ -159,7 +160,7 @@ Rw==
             var password = "password".ToCharArray();
             ExceptionAssert.Throws<InvalidDataException>(() =>
             {
-                var x = _keyStoreService.ImportAsync("bad", pem, password).Result;
+                var _ = _keyStoreService.ImportAsync("bad", pem, password).Result;
             });
         }
 
@@ -173,7 +174,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             var password = "password".ToCharArray();
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var x = _keyStoreService.ImportAsync("bad", pem, password).Result;
+                var _ = _keyStoreService.ImportAsync("bad", pem, password).Result;
             });
         }
 
@@ -231,8 +232,9 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             Assert.Equal(newName, renamed.Name);
 
             var keys = await _keyStoreService.ListAsync();
-            Assert.True(keys.Any(k => k.Name == newName));
-            Assert.False(keys.Any(k => k.Name == name));
+            var enumerable = keys as IKey[] ?? keys.ToArray();
+            Assert.True(enumerable.Any(k => k.Name == newName));
+            Assert.False(enumerable.Any(k => k.Name == name));
         }
 
         [Fact]

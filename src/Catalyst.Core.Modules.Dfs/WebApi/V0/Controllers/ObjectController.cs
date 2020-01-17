@@ -184,11 +184,11 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                 throw new NotImplementedException("Only datafieldenc = `text` is allowed.");
             }
 
-            IDagNode node = null;
+            IDagNode node;
             switch (inputenc)
             {
                 case "protobuf":
-                    using (var stream = file.OpenReadStream())
+                    await using (var stream = file.OpenReadStream())
                     {
                         var dag = new DagNode(stream);
                         node = await IpfsCore.ObjectApi.PutAsync(dag, Cancel);

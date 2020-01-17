@@ -41,8 +41,8 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         internal static IPrivateKey GeneratePrivateKey()
         {
             var key = new byte[PrivateKeyLength];
-            var error_code = generate_key(key);
-            if (Enum.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+            var responseCode = generate_key(key);
+            if (Enum.TryParse<ErrorCode>(responseCode.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
             {
                 Error.ThrowErrorFromErrorCode(errorCode);
             }
@@ -70,9 +70,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             {
                 fixed (byte* contextHandle = context)
                 {
-                    var error_code = std_sign(signature, publicKey, privateKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
+                    var responseCode = std_sign(signature, publicKey, privateKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
 
-                    if (Enum.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+                    if (Enum.TryParse<ErrorCode>(responseCode.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
                     {
                         Error.ThrowErrorFromErrorCode(errorCode);
                     }
@@ -104,9 +104,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             {
                 fixed (byte* contextHandle = context)
                 {
-                    var error_code = std_verify(signature, publicKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
+                    var responseCode = std_verify(signature, publicKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
 
-                    Enum.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
+                    Enum.TryParse<ErrorCode>(responseCode.ToString(), out var errorCode);
 
                     if (errorCode == ErrorCode.NoError)
                     {
@@ -133,9 +133,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
                 Error.ThrowArgumentExceptionPublicKeyLength(PublicKeyLength);
             }
 
-            var error_code = validate_public_key(publicKey);
+            var responseCode = validate_public_key(publicKey);
 
-            if (Enum.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+            if (Enum.TryParse<ErrorCode>(responseCode.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
             {
                 Error.ThrowErrorFromErrorCode(errorCode);
             }

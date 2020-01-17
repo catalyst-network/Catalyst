@@ -128,9 +128,9 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             int size)
         {
             if (String.IsNullOrWhiteSpace(arg))
-                throw new ArgumentNullException("arg", "The key name is required.");
+                throw new ArgumentNullException(nameof(arg), "The key name is required.");
             if (String.IsNullOrWhiteSpace(type))
-                throw new ArgumentNullException("type", "The key type is required.");
+                throw new ArgumentNullException(nameof(type), "The key type is required.");
 
             var key = await IpfsCore.KeyApi.CreateAsync(arg, type, size, Cancel);
             return new CryptoKeyDto
@@ -150,7 +150,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         public async Task<CryptoKeysDto> Remove(string arg)
         {
             if (String.IsNullOrWhiteSpace(arg))
-                throw new ArgumentNullException("arg", "The key name is required.");
+                throw new ArgumentNullException(nameof(arg), "The key name is required.");
 
             var key = await IpfsCore.KeyApi.RemoveAsync(arg, Cancel);
             var dto = new CryptoKeysDto();

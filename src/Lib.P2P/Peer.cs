@@ -35,8 +35,8 @@ namespace Lib.P2P
     /// </remarks>
     public class Peer : IEquatable<Peer>
     {
-        static MultiAddress[] _noAddress = new MultiAddress[0];
-        const string Unknown = "unknown/0.0";
+        private static MultiAddress[] _noAddress = new MultiAddress[0];
+        private const string Unknown = "unknown/0.0";
 
         /// <summary>
         ///   Universally unique identifier.

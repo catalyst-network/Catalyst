@@ -34,7 +34,7 @@ using MultiFormats;
 using MultiFormats.Registry;
 using Nethermind.Core.Extensions;
 
-namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
+namespace Catalyst.Benchmark.Catalyst.Abstractions
 {
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.CoreRt30)]

@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.Util;
 using Lib.P2P;
 using Microsoft.AspNetCore.Mvc;
@@ -103,15 +103,15 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public SwarmController(IDfsService dfs) : base(dfs) { }
+        public SwarmController(ICoreApi dfs) : base(dfs) { }
 
         /// <summary>
         ///   Peer addresses.
         /// </summary>
         [HttpGet, HttpPost, Route("swarm/addrs")]
-        public async Task<AddrsDto> PeerAddresses()
+        public AddrsDto PeerAddresses()
         {
-            var peers = await IpfsCore.SwarmApi.AddressesAsync(Cancel);
+            var peers = IpfsCore.SwarmApi.GetSwarmKnownPeers(Cancel);
             var dto = new AddrsDto();
             foreach (var peer in peers)
             {

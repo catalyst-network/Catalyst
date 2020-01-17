@@ -146,7 +146,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid) h).ToObservable(_testScheduler));
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
-            var classUnderTest = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
+            var _ = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
                 _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
 
             _testScheduler.Start();

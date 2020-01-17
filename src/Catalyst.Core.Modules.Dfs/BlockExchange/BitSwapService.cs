@@ -296,11 +296,13 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
             cancel.Register(() => Unwant(id));
 
             // If first time, tell other peers.
-            if (want.Consumers.Count == 1)
+            if (want.Consumers.Count != 1)
             {
-                var _ = SendWantListToAllAsync(new[] {want}, full: false);
-                BlockNeeded?.Invoke(this, new CidEventArgs {Id = want.Id});
+                return tsc.Task;
             }
+            
+            var _ = SendWantListToAllAsync(new[] {want}, full: false);
+            BlockNeeded?.Invoke(this, new CidEventArgs {Id = want.Id});
 
             return tsc.Task;
         }
@@ -325,12 +327,14 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 _log.Debug($"Unwant {id}");
             }
 
-            if (_wants.TryRemove(id, out WantedBlock block))
+            if (!_wants.TryRemove(id, out var block))
             {
-                foreach (var consumer in block.Consumers)
-                {
-                    consumer.SetCanceled();
-                }
+                return;
+            }
+            
+            foreach (var consumer in block.Consumers)
+            {
+                consumer.SetCanceled();
             }
 
             // TODO: Tell the swarm
@@ -409,7 +413,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 });
 
             // TODO: Detect if duplicate and update stats
-            var isDuplicate = false;
+            const bool isDuplicate = false;
             if (isDuplicate)
             {
                 ++_dupBlksReceived;
@@ -417,8 +421,8 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
             }
 
             // TODO: Determine if we should accept the block from the remote.
-            var acceptble = true;
-            if (acceptble)
+            const bool acceptable = true;
+            if (acceptable)
             {
                 await BlockService.PutAsync(
                         data: block,
@@ -496,7 +500,9 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         private async Task SendWantListToAllAsync(IEnumerable<WantedBlock> wantedBlocks, bool full)
         {
             if (SwarmService == null)
+            {
                 return;
+            }
 
             try
             {
@@ -505,11 +511,16 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                    .Select(p => SendWantListAsync(p, wantedBlocks, full))
                    .ToArray();
                 if (_log.IsDebugEnabled)
+                {
                     _log.Debug($"Spamming {tasks.Count()} connected peers");
+                }
+                
                 await Task.WhenAll(tasks).ConfigureAwait(false);
 
                 if (_log.IsDebugEnabled)
+                {
                     _log.Debug($"Spam {tasks.Count()} connected peers done");
+                }
             }
             catch (Exception e)
             {
@@ -527,7 +538,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
             {
                 try
                 {
-                    using (var stream = await SwarmService.DialAsync(peer, protocol.ToString()).ConfigureAwait(false))
+                    await using (var stream = await SwarmService.DialAsync(peer, protocol.ToString()).ConfigureAwait(false))
                     {
                         await protocol.SendWantsAsync(stream, wants, full: full).ConfigureAwait(false);
                     }

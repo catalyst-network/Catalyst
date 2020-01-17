@@ -107,17 +107,17 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         public Task<BandwidthData> Bandwidth()
         {
             Response.Headers.Add("X-Chunked-Output", "1");
-            return IpfsCore.StatsApi.BandwidthAsync(Cancel);
+            return IpfsCore.StatsApi.GetBandwidthStatsAsync(Cancel);
         }
 
         /// <summary>
         ///     Get bitswap information.
         /// </summary>
         [HttpGet] [HttpPost] [Route("stats/bitswap")] [Route("bitswap/stat")]
-        public async Task<StatsBitswapDto> Bitswap()
+        public StatsBitswapDto Bitswap()
         {
             Response.Headers.Add("X-Chunked-Output", "1");
-            var data = await IpfsCore.StatsApi.BitSwapAsync(Cancel);
+            var data = IpfsCore.StatsApi.GetBitSwapStats(Cancel);
             return new StatsBitswapDto
             {
                 BlocksReceived = data.BlocksReceived,
@@ -139,7 +139,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         public Task<RepositoryData> Repo()
         {
             Response.Headers.Add("X-Chunked-Output", "1");
-            return IpfsCore.StatsApi.RepositoryAsync(Cancel);
+            return IpfsCore.StatsApi.GetRepositoryStatsAsync(Cancel);
         }
     }
 }

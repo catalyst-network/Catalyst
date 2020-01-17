@@ -45,7 +45,7 @@ namespace Catalyst.Cli.Commands
             {
                 var hashBytes = MultiBase.Decode(option.Hash);
                 var cid = hashBytes.ToCid();
-                var multiHash = new MultiHash(cid.Hash.ToArray());
+                new MultiHash(cid.Hash.ToArray());
                 return new GetDeltaRequest {DeltaDfsHash = hashBytes.ToByteString()};
             }
             catch (FormatException fe)

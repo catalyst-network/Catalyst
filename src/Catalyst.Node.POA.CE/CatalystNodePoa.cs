@@ -40,7 +40,7 @@ using Serilog;
 
 namespace Catalyst.Node.POA.CE
 {
-    public class CatalystNodePoa : ICatalystNode
+    public sealed class CatalystNodePoa : ICatalystNode
     {
         public IConsensus Consensus { get; }
         private readonly IContract _contract;

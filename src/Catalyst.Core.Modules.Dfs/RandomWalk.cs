@@ -38,15 +38,15 @@ namespace Catalyst.Core.Modules.Dfs
     ///   A backgroud task is created to query the DHT.  It is designed
     ///   to run often at startup and then less often at time increases.
     /// </remarks>
-    public class RandomWalk : IService
+    public sealed class RandomWalk : IService
     {
-        static ILog log = LogManager.GetLogger(typeof(RandomWalk));
-        CancellationTokenSource cancel;
+        private static ILog log = LogManager.GetLogger(typeof(RandomWalk));
+        private CancellationTokenSource _cancel;
 
         /// <summary>
         ///   The Distributed Hash Table to query.
         /// </summary>
-        public IDhtApi Dht { get; set; }
+        internal IDhtApi Dht { get; set; }
 
         /// <summary>
         ///   The time to wait until running the query.
@@ -69,13 +69,13 @@ namespace Catalyst.Core.Modules.Dfs
         /// </summary>
         public Task StartAsync()
         {
-            if (cancel != null)
+            if (_cancel != null)
             {
                 throw new Exception("Already started.");
             }
 
-            cancel = new CancellationTokenSource();
-            _ = RunnerAsync(cancel.Token);
+            _cancel = new CancellationTokenSource();
+            _ = RunnerAsync(_cancel.Token);
 
             log.Debug("started");
             return Task.CompletedTask;
@@ -86,9 +86,9 @@ namespace Catalyst.Core.Modules.Dfs
         /// </summary>
         public Task StopAsync()
         {
-            cancel?.Cancel();
-            cancel?.Dispose();
-            cancel = null;
+            _cancel?.Cancel();
+            _cancel?.Dispose();
+            _cancel = null;
 
             log.Debug("stopped");
             return Task.CompletedTask;
@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Dfs
         /// <summary>
         ///   The background process.
         /// </summary>
-        async Task RunnerAsync(CancellationToken cancellation)
+        private async Task RunnerAsync(CancellationToken cancellation)
         {
             while (!cancellation.IsCancellationRequested)
             {
@@ -125,7 +125,7 @@ namespace Catalyst.Core.Modules.Dfs
             }
         }
 
-        async Task RunQueryAsync(CancellationToken cancel = default)
+        private async Task RunQueryAsync(CancellationToken cancel = default)
         {
             // Tests may not set a DHT.
             if (Dht == null)

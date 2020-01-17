@@ -32,7 +32,7 @@ using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
 using ProtoBuf;
 
-namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
+namespace Catalyst.Core.Modules.Dfs.UnixFs
 {
     /// <summary>
     ///     Chunks a data stream into data blocks based upon a size.

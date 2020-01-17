@@ -114,7 +114,7 @@ namespace Catalyst.Core.Modules.Dfs
         public bool IsStarted => _stopTasks.Count > 0;
 
         private readonly DfsState _dfsState;
-        private readonly SecureString passphrase;
+        private readonly SecureString _passphrase;
         private readonly IHashProvider _hashProvider;
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
 
@@ -169,7 +169,7 @@ namespace Catalyst.Core.Modules.Dfs
             _dfsState = dfsState;
             DnsApi = dnsApi;
 
-            passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword,
+            _passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword,
                 "Please provide your IPFS password");
 
             InitAsync().Wait();
@@ -197,7 +197,7 @@ namespace Catalyst.Core.Modules.Dfs
 
             Log.Debug("Building local peer");
             Log.Debug("Getting key info about self");
-            await KeyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false);
+            await KeyApi.SetPassphraseAsync(_passphrase).ConfigureAwait(false);
 
             var self = await KeyApi.GetPublicKeyAsync("self").ConfigureAwait(false)
              ?? await KeyApi.CreateAsync("self", "rsa", 0).ConfigureAwait(false);
@@ -473,7 +473,7 @@ namespace Catalyst.Core.Modules.Dfs
         /// <remarks>
         ///     Registers the peer with the <see cref="SwarmService" />.
         /// </remarks>
-        private async void OnPeerDiscovered(object sender, Peer peer)
+        private void OnPeerDiscovered(object sender, Peer peer)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
             try
@@ -503,22 +503,24 @@ namespace Catalyst.Core.Modules.Dfs
         public async Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default)
         {
             // TODO: this should be a LazyAsync property.
-            if (_keyStoreService == null)
+            if (_keyStoreService != null)
             {
-                lock (this)
-                {
-                    if (_keyStoreService == null)
-                    {
-                        _keyStoreService = new KeyStoreService(Options);
-                    }
-                }
-
-                await _keyStoreService.SetPassphraseAsync(passphrase, cancel).ConfigureAwait(false);
-
-                // Maybe create "self" key, this is the local peer's id.
-                var self = await _keyStoreService.FindKeyByNameAsync("self", cancel).ConfigureAwait(false) ??
-                    await _keyStoreService.CreateAsync("self", null, 0, cancel).ConfigureAwait(false);
+                return _keyStoreService;
             }
+            
+            lock (this)
+            {
+                if (_keyStoreService == null)
+                {
+                    _keyStoreService = new KeyStoreService(Options);
+                }
+            }
+
+            await _keyStoreService.SetPassphraseAsync(_passphrase, cancel).ConfigureAwait(false);
+
+            // Maybe create "self" key, this is the local peer's id.
+            var _ = await _keyStoreService.FindKeyByNameAsync("self", cancel).ConfigureAwait(false) ??
+                await _keyStoreService.CreateAsync("self", null, 0, cancel).ConfigureAwait(false);
 
             return _keyStoreService;
         }
@@ -647,7 +649,7 @@ namespace Catalyst.Core.Modules.Dfs
                 return;
             }
 
-            passphrase?.Dispose();
+            _passphrase?.Dispose();
             Stop();
         }
 

@@ -30,7 +30,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.Dag;
-using Catalyst.Core.Modules.Dfs.UnixFileSystem;
+using Catalyst.Core.Modules.Dfs.UnixFs;
 using Lib.P2P;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 case "unixfs-dir":
                     return Task.FromResult(GetEmptyDirectory());
                 default:
-                    throw new ArgumentException($"Unknown template '{template}'.", "template");
+                    throw new ArgumentException($"Unknown template '{template}'.", nameof(template));
             }
         }
 

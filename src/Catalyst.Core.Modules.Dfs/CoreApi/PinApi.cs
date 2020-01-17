@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             _repositoryOptions = options;
         }
 
-        FileStore<Cid, Pin> Store
+        private FileStore<Cid, Pin> Store
         {
             get
             {

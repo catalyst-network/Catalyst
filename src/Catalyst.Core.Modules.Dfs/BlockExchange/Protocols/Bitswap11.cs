@@ -46,7 +46,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
     /// </summary>
     public class Bitswap11 : IBitswapProtocol
     {
-        static ILog log = LogManager.GetLogger(typeof(Bitswap11));
+        private static ILog log = LogManager.GetLogger(typeof(Bitswap11));
 
         /// <inheritdoc />
         public string Name { get; } = "ipfs/bitswap";
@@ -117,7 +117,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
             }
         }
 
-        async Task GetBlockAsync(Cid cid, Peer remotePeer, CancellationToken cancel)
+        private async Task GetBlockAsync(Cid cid, Peer remotePeer, CancellationToken cancel)
         {
             // TODO: Determine if we will fetch the block for the remote
             try
@@ -210,7 +210,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
         /// <returns>
         ///   A byte array of consisting of cid version, multicodec and multihash prefix (type + length).
         /// </returns>
-        byte[] GetCidPrefix(Cid id)
+        private byte[] GetCidPrefix(Cid id)
         {
             using (var ms = new MemoryStream())
             {

@@ -29,10 +29,10 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO.Ledger
 {
-    public class DeltaIndexDao : DaoBase
+    internal class DeltaIndexDao : DaoBase
     {
-        public int DeltaHeight { get; }
-        public string DeltaCid { get; }
+        internal int DeltaHeight { get; }
+        internal string DeltaCid { get; }
     }
     
     public class DeltaIndexMapperInitialiser : IMapperInitializer

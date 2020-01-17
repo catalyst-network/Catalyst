@@ -34,7 +34,7 @@ using Catalyst.Core.Lib.Dag;
 using Lib.P2P;
 using ProtoBuf;
 
-namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
+namespace Catalyst.Core.Modules.Dfs.UnixFs
 {
     /// <summary>
     ///   Provides read-only access to a chunked file.
@@ -42,16 +42,16 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
     /// <remarks>
     ///   Internal class to support <see cref="UnixFs"/>.
     /// </remarks>
-    public class ChunkedStream : Stream
+    public sealed class ChunkedStream : Stream
     {
-        class BlockInfo
+        private sealed class BlockInfo
         {
             public Cid Id;
             public long Position;
         }
 
-        List<BlockInfo> blocks = new List<BlockInfo>();
-        long fileSize;
+        private List<BlockInfo> blocks = new List<BlockInfo>();
+        private long fileSize;
 
         /// <summary>
         ///   Creates a new instance of the <see cref="ChunkedStream"/> class with
@@ -60,15 +60,15 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
         /// <param name="blockService"></param>
         /// <param name="keyChain"></param>
         /// <param name="dag"></param>
-        public ChunkedStream(IBlockApi blockService, IKeyApi keyChain, IDagNode dag)
+        internal ChunkedStream(IBlockApi blockService, IKeyApi keyChain, IDagNode dag)
         {
             BlockService = blockService;
             KeyChain = keyChain;
             var links = dag.Links.ToArray();
             var dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
-            fileSize = (long) dm.FileSize;
+            if (dm.FileSize != null) fileSize = (long) dm.FileSize;
             ulong position = 0;
-            for (int i = 0; i < dm.BlockSizes.Length; ++i)
+            for (var i = 0; i < dm.BlockSizes.Length; ++i)
             {
                 blocks.Add(new BlockInfo
                 {
@@ -79,8 +79,8 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
             }
         }
 
-        IBlockApi BlockService { get; set; }
-        IKeyApi KeyChain { get; set; }
+        private IBlockApi BlockService { get; }
+        private IKeyApi KeyChain { get; }
 
         /// <inheritdoc />
         public override long Length => fileSize;
@@ -117,6 +117,8 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
                 case SeekOrigin.End:
                     Position = Length - offset;
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(origin), origin, null);
             }
 
             return Position;
@@ -136,19 +138,21 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
         {
             var block = await GetBlockAsync(Position, cancel).ConfigureAwait(false);
             var k = Math.Min(count, block.Count);
-            if (k > 0)
+            if (k <= 0)
             {
-                Array.Copy(block.Array, block.Offset, buffer, offset, k);
-                Position += k;
+                return k;
             }
+            
+            Array.Copy(block.Array ?? throw new NullReferenceException(), block.Offset, buffer, offset, k);
+            Position += k;
 
             return k;
         }
 
-        BlockInfo currentBlock;
-        byte[] currentData;
+        private BlockInfo _currentBlock;
+        private byte[] _currentData;
 
-        async Task<ArraySegment<byte>> GetBlockAsync(long position, CancellationToken cancel)
+        private async Task<ArraySegment<byte>> GetBlockAsync(long position, CancellationToken cancel)
         {
             if (position >= Length)
             {
@@ -156,20 +160,20 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
             }
 
             var need = blocks.Last(b => b.Position <= position);
-            if (need != currentBlock)
+            if (need != _currentBlock)
             {
                 var stream = await UnixFs.CreateReadStreamAsync(need.Id, BlockService, KeyChain, cancel)
                    .ConfigureAwait(false);
-                currentBlock = need;
-                currentData = new byte[stream.Length];
+                _currentBlock = need;
+                _currentData = new byte[stream.Length];
                 for (int i = 0, n; i < stream.Length; i += n)
                 {
-                    n = await stream.ReadAsync(currentData, i, (int) stream.Length - i, cancel);
+                    n = await stream.ReadAsync(_currentData, i, (int) stream.Length - i, cancel);
                 }
             }
 
-            int offset = (int) (position - currentBlock.Position);
-            return new ArraySegment<byte>(currentData, offset, currentData.Length - offset);
+            var offset = (int) (position - _currentBlock.Position);
+            return new ArraySegment<byte>(_currentData, offset, _currentData.Length - offset);
         }
     }
 }

@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         }
 
         [Fact]
-        public async Task Mars_Info()
+        public void Mars_Info()
         {
             const string marsId = "QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
             var marsAddr = $"/ip6/::1/p2p/{marsId}";

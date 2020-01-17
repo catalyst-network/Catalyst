@@ -124,9 +124,9 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         public async Task Replace(IFormFile file)
         {
             if (file == null)
-                throw new ArgumentNullException("file");
+                throw new ArgumentNullException(nameof(file));
 
-            using (var stream = file.OpenReadStream())
+            await using (var stream = file.OpenReadStream())
             using (var text = new StreamReader(stream))
             using (var reader = new JsonTextReader(text))
             {

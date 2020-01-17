@@ -133,7 +133,7 @@ namespace MultiFormats.Cryptography
 
         #endregion
 
-        public override void Initialize()
+        public sealed override void Initialize()
         {
             BuffLength = 0;
             state = new ulong[5 * 5]; //1600 bits

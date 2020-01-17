@@ -368,7 +368,7 @@ namespace Lib.P2P
         {
             if (peer.Id == null)
             {
-                throw new ArgumentNullException("peer");
+                throw new ArgumentNullException(nameof(peer));
             }
 
             if (_otherPeers.TryRemove(peer.Id.ToBase58(), out var found))
@@ -837,7 +837,7 @@ namespace Lib.P2P
 
             if (!didSomething)
             {
-                throw new ArgumentException($"Missing a transport protocol name '{address}'.", "address");
+                throw new ArgumentException($"Missing a transport protocol name '{address}'.", nameof(address));
             }
 
             var result = new MultiAddress($"{address}/ipfs/{LocalPeer.Id}");

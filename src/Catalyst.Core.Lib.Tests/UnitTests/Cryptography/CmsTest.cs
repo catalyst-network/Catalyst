@@ -103,7 +103,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
         }
 
         [Fact]
-        public async Task ReadCms_FailsWithoutKey()
+        public void ReadCms_FailsWithoutKey()
         {
             var cipher = Convert.FromBase64String(@"
 MIIBcwYJKoZIhvcNAQcDoIIBZDCCAWACAQAxgfowgfcCAQAwYDBbMQ0wCwYDVQQK
@@ -117,14 +117,14 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
 ");
             ExceptionAssert.Throws<KeyNotFoundException>(() =>
             {
-                var plain = _keyStoreService.ReadProtectedDataAsync(cipher).Result;
+                var _ = _keyStoreService.ReadProtectedDataAsync(cipher).Result;
             });
         }
 
         [Fact]
         public async Task CreateCms_Rsa()
         {
-            var key = await _keyStoreService.CreateAsync("alice", "rsa", 512);
+            var _ = await _keyStoreService.CreateAsync("alice", "rsa", 512);
             try
             {
                 var data = new byte[] {1, 2, 3, 4};
@@ -141,7 +141,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
         [Fact]
         public async Task CreateCms_Secp256k1()
         {
-            var key = await _keyStoreService.CreateAsync("alice", "secp256k1", 0);
+            var _ = await _keyStoreService.CreateAsync("alice", "secp256k1", 0);
             try
             {
                 var data = new byte[] {1, 2, 3, 4};

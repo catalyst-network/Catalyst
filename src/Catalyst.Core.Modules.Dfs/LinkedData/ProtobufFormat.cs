@@ -23,7 +23,6 @@
 
 using System.IO;
 using System.Linq;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Hashing;
 using Lib.P2P;
@@ -38,13 +37,11 @@ namespace Catalyst.Core.Modules.Dfs.LinkedData
     /// <remarks>
     ///   This is the original legacy format used by the IPFS <see cref="DagNode"/>. 
     /// </remarks>
-    public class ProtobufFormat : ILinkedDataFormat
+    public sealed class ProtobufFormat : ILinkedDataFormat
     {
-        private readonly IHashProvider _hashProvider;
-
         public ProtobufFormat()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
         /// <inheritdoc />

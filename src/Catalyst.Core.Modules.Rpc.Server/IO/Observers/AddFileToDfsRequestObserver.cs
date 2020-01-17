@@ -144,7 +144,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             {
                 IFileSystemNode fileSystemNode;
 
-                using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open, FileAccess.Read,
+                await using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open, FileAccess.Read,
                     FileShare.ReadWrite))
                 {
                     fileSystemNode = await _dfsService.UnixFsApi.AddAsync(fileStream,

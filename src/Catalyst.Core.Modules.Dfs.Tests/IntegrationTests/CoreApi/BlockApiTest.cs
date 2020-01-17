@@ -41,8 +41,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     public sealed class BlockApiTest
     {
         private IDfsService ipfs;
-        string id = "QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
-        byte[] blob = Encoding.UTF8.GetBytes("blorb");
+        private string id = "QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
+        private byte[] blob = Encoding.UTF8.GetBytes("blorb");
 
         public BlockApiTest(ITestOutputHelper output)
         {
@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var data = new byte[ipfs.Options.Block.MaxBlockSize + 1];
             ExceptionAssert.Throws<ArgumentOutOfRangeException>(() =>
             {
-                var cid = ipfs.BlockApi.PutAsync(data).Result;
+                var _ = ipfs.BlockApi.PutAsync(data).Result;
             });
         }
 

@@ -113,7 +113,7 @@ namespace Catalyst.Core.Lib.Dag
         public void Write(CodedOutputStream stream)
         {
             if (stream == null)
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
 
             stream.WriteTag(1, WireFormat.WireType.LengthDelimited);
             Id.Write(stream);
@@ -128,7 +128,7 @@ namespace Catalyst.Core.Lib.Dag
             stream.WriteInt64(Size);
         }
 
-        void Read(Stream stream)
+        private void Read(Stream stream)
         {
             using (var cis = new CodedInputStream(stream, true))
             {
@@ -136,7 +136,7 @@ namespace Catalyst.Core.Lib.Dag
             }
         }
 
-        void Read(CodedInputStream stream)
+        private void Read(CodedInputStream stream)
         {
             while (!stream.IsAtEnd)
             {

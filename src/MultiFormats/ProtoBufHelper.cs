@@ -97,7 +97,7 @@ namespace MultiFormats
             var bytes = new byte[length];
             await stream.ReadExactAsync(bytes, 0, length, cancel).ConfigureAwait(false);
 
-            using (var ms = new MemoryStream(bytes, false))
+            await using (var ms = new MemoryStream(bytes, false))
             {
                 return Serializer.Deserialize<T>(ms);
             }

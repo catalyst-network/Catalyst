@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -43,7 +42,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         }
 
         [Fact]
-        public void EmptyDAG()
+        public void EmptyDag()
         {
             var node = new DagNode((byte[]) null);
             Assert.Equal(0, node.DataBytes.Length);
@@ -285,7 +284,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             Assert.Equal(a.DataBytes, b.DataBytes);
             Assert.Equal(a.ToArray(), b.ToArray());
             Assert.Equal(a.Links.Count(), b.Links.Count());
-            foreach (var merkleLink in a.Links.Zip(b.Links, (first, second) =>
+            foreach (var _ in a.Links.Zip(b.Links, (first, second) =>
             {
                 Assert.Equal(first.Id, second.Id);
                 Assert.Equal(first.Name, second.Name);

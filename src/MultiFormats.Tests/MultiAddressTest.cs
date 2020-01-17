@@ -353,8 +353,7 @@ namespace MultiFormats.Tests
             var b = JsonConvert.DeserializeObject<MultiAddress>(json);
             Assert.AreEqual(a.ToString(), b.ToString());
 
-            a = null;
-            json = JsonConvert.SerializeObject(a);
+            json = JsonConvert.SerializeObject(null);
             b = JsonConvert.DeserializeObject<MultiAddress>(json);
             Assert.IsNull(b);
         }

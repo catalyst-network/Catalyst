@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;

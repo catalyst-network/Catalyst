@@ -50,7 +50,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             };
 
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var addFileToDfsCommand = new AddFileCommand(null, commandContext, _logger);
+            new AddFileCommand(null, commandContext, _logger);
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, addFileToDfsResponse);
@@ -73,7 +73,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             };
 
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var addFileToDfsCommand = new AddFileCommand(null, commandContext, _logger);
+            new AddFileCommand(null, commandContext, _logger);
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, addFileToDfsResponse);
@@ -92,7 +92,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             //Arrange
             var addFileToDfsResponse = new AddFileToDfsResponse();
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var addFileToDfsCommand = new AddFileCommand(null, commandContext, _logger);
+            new AddFileCommand(null, commandContext, _logger);
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, addFileToDfsResponse);

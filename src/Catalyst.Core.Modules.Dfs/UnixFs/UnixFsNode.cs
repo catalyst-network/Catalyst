@@ -27,7 +27,7 @@ using System.IO;
 using Catalyst.Abstractions.Dfs;
 using Lib.P2P;
 
-namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
+namespace Catalyst.Core.Modules.Dfs.UnixFs
 {
     /// <summary>
     ///   A node in the IPFS Unix File System.

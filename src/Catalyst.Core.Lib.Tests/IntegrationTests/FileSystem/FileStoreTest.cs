@@ -32,34 +32,36 @@ using Catalyst.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Core.Lib.Tests.UnitTests
+namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
 {
-    public class FileStoreTest : FileSystemBasedTest
+    public sealed class FileStoreTest : FileSystemBasedTest
     {
         public FileStoreTest(ITestOutputHelper output) : base(output) { }
-        
-        class Entity
+
+        private sealed class Entity
         {
             public int Number;
             public string Value;
         }
 
-        Entity a = new Entity {Number = 1, Value = "a"};
-        Entity b = new Entity {Number = 2, Value = "b"};
+        private Entity a = new Entity {Number = 1, Value = "a"};
+        private Entity b = new Entity {Number = 2, Value = "b"};
 
-        FileStore<int, Entity> Store
+        private FileStore<int, Entity> Store
         {
             get
             {
                 var folder = Path.Combine(FileSystem.GetCatalystDataDir().FullName, "test-filestore");
                 if (!Directory.Exists(folder))
+                {
                     Directory.CreateDirectory(folder);
+                }
 
                 return new FileStore<int, Entity>
                 {
                     Folder = folder,
                     NameToKey = name => name.ToString(),
-                    KeyToName = key => Int32.Parse(key)
+                    KeyToName = int.Parse
                 };
             }
         }
@@ -97,8 +99,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests
         [Fact]
         public void Get_Unknown()
         {
-            var store = Store;
-
             ExceptionAssert.Throws<KeyNotFoundException>(() =>
             {
                 var _ = Store.GetAsync(42).Result;
@@ -167,7 +167,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests
         public async Task Atomic()
         {
             var store = Store;
-            int nTasks = 100;
+            const int nTasks = 100;
             var tasks = Enumerable
                .Range(1, nTasks)
                .Select(i => Task.Run(() => AtomicTask(store)))
@@ -175,20 +175,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests
             await Task.WhenAll(tasks);
         }
 
-        async Task AtomicTask(FileStore<int, Entity> store)
+        private async Task AtomicTask(FileStore<int, Entity> store)
         {
             await store.PutAsync(1, a);
             await store.TryGetAsync(1);
             await store.RemoveAsync(1);
-            var names = store.Names;
-            var values = store.Values;
         }
 
         [Fact]
         public void PutWithException()
         {
-            Func<Stream, int, Entity, CancellationToken, Task> BadSerialize =
-                (stream, name, value, canel) => throw new Exception("no serializer");
+            Task BadSerialize(Stream stream, int name, Entity value, CancellationToken cancel) => throw new Exception("no serializer");
             var store = Store;
             store.Serialize = BadSerialize;
 

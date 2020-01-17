@@ -143,7 +143,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         //    throw new NotSupportedException($"Cannot resolve '{link}'.");
         //}
 
-        async Task<string> FindAsync(string name, CancellationToken cancel)
+        private async Task<string> FindAsync(string name, CancellationToken cancel)
         {
             var response = await _dnsClient.QueryAsync(name, DnsType.TXT, cancel).ConfigureAwait(false);
             var link = response.Answers.OfType<TXTRecord>().SelectMany(txt => txt.Strings)

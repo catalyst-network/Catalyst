@@ -99,7 +99,7 @@ namespace Catalyst.Core.Lib.FileSystem
                 Directory.CreateDirectory(fileInfo.DirectoryName);
             }
 
-            using (var file = File.CreateText(path))
+            await using (var file = File.CreateText(path))
             {
                 await file.WriteAsync(contents).ConfigureAwait(false);
                 await file.FlushAsync().ConfigureAwait(false);

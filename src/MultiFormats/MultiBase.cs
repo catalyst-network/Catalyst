@@ -84,7 +84,7 @@ namespace MultiFormats
         /// </exception>
         public static string Encode(byte[] bytes, string algorithmName = DefaultAlgorithmName)
         {
-            if (bytes == null) throw new ArgumentNullException("bytes");
+            if (bytes == null) throw new ArgumentNullException(nameof(bytes));
 
             var alg = GetAlgorithm(algorithmName);
             return alg.Code + alg.Encode(bytes);
@@ -105,7 +105,7 @@ namespace MultiFormats
         /// </exception>
         public static byte[] Decode(string s)
         {
-            if (string.IsNullOrWhiteSpace(s)) throw new ArgumentNullException("s");
+            if (string.IsNullOrWhiteSpace(s)) throw new ArgumentNullException(nameof(s));
 
             MultiBaseAlgorithm.Codes.TryGetValue(s[0], out var alg);
             if (alg == null) throw new FormatException($"MultiBase '{s}' is invalid. The code is not registered.");

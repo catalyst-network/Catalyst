@@ -263,7 +263,7 @@ namespace Lib.P2P.Routing
 
                     // Only unique answers
                     var answer = p as T;
-                    if (!_answers.ContainsKey(answer))
+                    if (!_answers.ContainsKey(answer ?? throw new NullReferenceException()))
                     {
                         AddAnswer(answer);
                     }
