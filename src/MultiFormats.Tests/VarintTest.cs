@@ -130,7 +130,7 @@ namespace MultiFormats.Tests
             var ms = new MemoryStream();
             var cs = new CancellationTokenSource();
             cs.Cancel();
-            ExceptionAssert.Throws<TaskCanceledException>(() => ms.WriteVarintAsync(0, cs.Token).Wait(cs.Token));
+            ExceptionAssert.Throws<TaskCanceledException>(() => ms.WriteVarintAsync(0, cs.Token).Wait());
         }
 
         [TestMethod]
@@ -152,7 +152,7 @@ namespace MultiFormats.Tests
             });
             var cs = new CancellationTokenSource();
             cs.Cancel();
-            ExceptionAssert.Throws<TaskCanceledException>(() => ms.ReadVarint32Async(cs.Token).Wait(cs.Token));
+            ExceptionAssert.Throws<TaskCanceledException>(() => ms.ReadVarint32Async(cs.Token).Wait());
         }
 
         [TestMethod]

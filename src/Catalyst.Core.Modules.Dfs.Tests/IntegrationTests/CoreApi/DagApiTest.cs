@@ -90,7 +90,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.Equal(expected.First, actual.First);
             Assert.Equal(expected.Last, actual.Last);
 
-            var value = (string) await ipfs.DagApi.GetAsync(id.Encode() + "/last");
+            var value = (string) await ipfs.DagApi.GetAsync(id.Encode() + "/Last");
             Assert.Equal(expected.Last, value);
         }
 
@@ -108,7 +108,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.Equal(expected.First, actual.First);
             Assert.Equal(expected.Last, actual.Last);
 
-            var value = (string) await ipfs.DagApi.GetAsync(id.Encode() + "/last");
+            var value = (string) await ipfs.DagApi.GetAsync(id.Encode() + "/Last");
             Assert.Equal(expected.Last, value);
         }
 

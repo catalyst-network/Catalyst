@@ -189,7 +189,7 @@ namespace Catalyst.Core.Lib.Util
 
         private static void Stringify(double value, string unit, StringBuilder sb)
         {
-            if (Math.Abs(value) < 0)
+            if (value == 0)
             {
                 return;
             }

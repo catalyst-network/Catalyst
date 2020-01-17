@@ -84,7 +84,10 @@ namespace Lib.P2P.Tests
             {
                 ExceptionAssert.Throws<TaskCanceledException>(() =>
                 {
-                    ms.ReadExactAsync(actual, 0, actual.Length, cancel.Token).Wait(cancel.Token);
+                    if (ms != null)
+                    {
+                        ms.ReadExactAsync(actual, 0, actual.Length, cancel.Token).Wait();
+                    }
                 });
             }
         }
