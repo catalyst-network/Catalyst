@@ -260,31 +260,23 @@ namespace Lib.P2P
         /// <param name="stream"></param>
         /// <param name="cancel"></param>
         /// <returns></returns>
-        internal async Task EstablishProtocolAsync(string name,
+        public async Task EstablishProtocolAsync(string name,
             Stream stream,
-            CancellationToken cancel = default)
+            CancellationToken cancel = default(CancellationToken))
         {
             var protocols = ProtocolRegistry.Protocols.Keys
                .Where(k => k == name || k.StartsWith(name))
-               .Select(VersionedName.Parse)
+               .Select(k => VersionedName.Parse(k))
                .OrderByDescending(vn => vn)
                .Select(vn => vn.ToString());
-            var enumerable = protocols as string[] ?? protocols.ToArray();
-            foreach (var protocol in enumerable)
+            foreach (var protocol in protocols)
             {
                 await Message.WriteAsync(protocol, stream, cancel).ConfigureAwait(false);
                 var result = await Message.ReadStringAsync(stream, cancel).ConfigureAwait(false);
-                if (result == protocol)
-                {
-                    return;
-                }
+                if (result == protocol) return;
             }
 
-            if (!enumerable.Any())
-            {
-                throw new Exception($"Protocol '{name}' is not registered.");
-            }
-            
+            if (protocols.Count() == 0) throw new Exception($"Protocol '{name}' is not registered.");
             throw new Exception($"{RemotePeer.Id} does not support protocol '{name}'.");
         }
 

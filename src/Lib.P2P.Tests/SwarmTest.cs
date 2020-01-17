@@ -1,26 +1,3 @@
-#region LICENSE
-
-/**
-* Copyright (c) 2019 Catalyst Network
-*
-* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
-*
-* Catalyst.Node is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-*
-* Catalyst.Node is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
-*/
-
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,18 +11,18 @@ using MultiFormats;
 namespace Lib.P2P.Tests
 {
     [TestClass]
-    public sealed class SwarmTest
+    public class SwarmTest
     {
-        private readonly MultiAddress _mars =
+        private readonly MultiAddress mars =
             "/ip4/10.1.10.10/tcp/29087/ipfs/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
 
-        private readonly MultiAddress _venus =
+        private readonly MultiAddress venus =
             "/ip4/104.236.76.40/tcp/4001/ipfs/QmSoLV4Bbm51jM9C4gDYZQ9Cy3U6aXMJDAbzgu2fzaDs64";
 
-        private readonly MultiAddress _earth =
+        private readonly MultiAddress earth =
             "/ip4/178.62.158.247/tcp/4001/ipfs/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd";
 
-        private readonly Peer _self = new Peer
+        private Peer self = new Peer
         {
             AgentVersion = "self",
             Id = "QmXK9VBxaXFuuT29AaPUTgW3jBWZ9JgLVZYdMYTHC6LLAH",
@@ -53,7 +30,7 @@ namespace Lib.P2P.Tests
                 "CAASXjBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCC5r4nQBtnd9qgjnG8fBN5+gnqIeWEIcUFUdCG4su/vrbQ1py8XGKNUBuDjkyTv25Gd3hlrtNJV3eOKZVSL8ePAgMBAAE="
         };
 
-        private readonly Peer _other = new Peer
+        private Peer other = new Peer
         {
             AgentVersion = "other",
             Id = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h",
@@ -66,7 +43,7 @@ namespace Lib.P2P.Tests
         {
             var swarm = new SwarmService
             {
-                LocalPeer = _self
+                LocalPeer = self
             };
             await swarm.StartAsync();
             await swarm.StopAsync();
@@ -85,22 +62,22 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void NewPeerAddress()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
-            swarm.RegisterPeerAddress(_mars);
-            Assert.IsTrue(swarm.KnownPeerAddresses.Contains(_mars));
+            var swarm = new SwarmService {LocalPeer = self};
+            swarm.RegisterPeerAddress(mars);
+            Assert.IsTrue(swarm.KnownPeerAddresses.Contains(mars));
         }
 
         [TestMethod]
         public void NewPeerAddress_Self()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
-            var selfAddress = "/ip4/178.62.158.247/tcp/4001/ipfs/" + _self.Id;
+            var swarm = new SwarmService {LocalPeer = self};
+            var selfAddress = "/ip4/178.62.158.247/tcp/4001/ipfs/" + self.Id;
             ExceptionAssert.Throws<Exception>(() =>
             {
                 var _ = swarm.RegisterPeerAddress(selfAddress);
             });
 
-            selfAddress = "/ip4/178.62.158.247/tcp/4001/p2p/" + _self.Id;
+            selfAddress = "/ip4/178.62.158.247/tcp/4001/p2p/" + self.Id;
             ExceptionAssert.Throws<Exception>(() =>
             {
                 var _ = swarm.RegisterPeerAddress(selfAddress);
@@ -110,39 +87,39 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void NewPeerAddress_BlackList()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
-            swarm.BlackList.Add(_mars);
+            var swarm = new SwarmService {LocalPeer = self};
+            swarm.BlackList.Add(mars);
 
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var _ = swarm.RegisterPeerAddress(_mars);
+                var _ = swarm.RegisterPeerAddress(mars);
             });
-            Assert.IsFalse(swarm.KnownPeerAddresses.Contains(_mars));
+            Assert.IsFalse(swarm.KnownPeerAddresses.Contains(mars));
 
-            Assert.IsNotNull(swarm.RegisterPeerAddress(_venus));
-            Assert.IsTrue(swarm.KnownPeerAddresses.Contains(_venus));
+            Assert.IsNotNull(swarm.RegisterPeerAddress(venus));
+            Assert.IsTrue(swarm.KnownPeerAddresses.Contains(venus));
         }
 
         [TestMethod]
         public void NewPeerAddress_WhiteList()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
-            swarm.WhiteList.Add(_venus);
+            var swarm = new SwarmService {LocalPeer = self};
+            swarm.WhiteList.Add(venus);
 
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var _ = swarm.RegisterPeerAddress(_mars);
+                var _ = swarm.RegisterPeerAddress(mars);
             });
-            Assert.IsFalse(swarm.KnownPeerAddresses.Contains(_mars));
+            Assert.IsFalse(swarm.KnownPeerAddresses.Contains(mars));
 
-            Assert.IsNotNull(swarm.RegisterPeerAddress(_venus));
-            Assert.IsTrue(swarm.KnownPeerAddresses.Contains(_venus));
+            Assert.IsNotNull(swarm.RegisterPeerAddress(venus));
+            Assert.IsTrue(swarm.KnownPeerAddresses.Contains(venus));
         }
 
         [TestMethod]
         public void NewPeerAddress_InvalidAddress_MissingPeerId()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             ExceptionAssert.Throws<Exception>(() =>
             {
                 var _ = swarm.RegisterPeerAddress("/ip4/10.1.10.10/tcp/29087");
@@ -153,18 +130,18 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void NewPeerAddress_Duplicate()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
-            swarm.RegisterPeerAddress(_mars);
+            var swarm = new SwarmService {LocalPeer = self};
+            swarm.RegisterPeerAddress(mars);
             Assert.AreEqual(1, swarm.KnownPeerAddresses.Count());
 
-            swarm.RegisterPeerAddress(_mars);
+            swarm.RegisterPeerAddress(mars);
             Assert.AreEqual(1, swarm.KnownPeerAddresses.Count());
         }
 
         [TestMethod]
         public void KnownPeers()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             Assert.AreEqual(0, swarm.KnownPeers.Count());
             Assert.AreEqual(0, swarm.KnownPeerAddresses.Count());
 
@@ -176,7 +153,7 @@ namespace Lib.P2P.Tests
             Assert.AreEqual(1, swarm.KnownPeers.Count());
             Assert.AreEqual(2, swarm.KnownPeerAddresses.Count());
 
-            swarm.RegisterPeerAddress(_venus);
+            swarm.RegisterPeerAddress(venus);
             Assert.AreEqual(2, swarm.KnownPeers.Count());
             Assert.AreEqual(3, swarm.KnownPeerAddresses.Count());
         }
@@ -196,7 +173,7 @@ namespace Lib.P2P.Tests
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
             Assert.IsTrue(peerB.Addresses.Count() > 0);
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
             try
             {
@@ -212,21 +189,21 @@ namespace Lib.P2P.Tests
                 {
                     if (DateTime.Now > endTime)
                         Assert.Fail("swarmB does not know about self");
-                    if (swarmB.KnownPeers.Contains(_self))
+                    if (swarmB.KnownPeers.Contains(self))
                         break;
                     await Task.Delay(100);
                 }
 
-                var me = swarmB.KnownPeers.First(p => p == _self);
-                Assert.AreEqual(_self.Id, me.Id);
-                Assert.AreEqual(_self.PublicKey, me.PublicKey);
+                var me = swarmB.KnownPeers.First(p => p == self);
+                Assert.AreEqual(self.Id, me.Id);
+                Assert.AreEqual(self.PublicKey, me.PublicKey);
                 Assert.IsNotNull(me.ConnectedAddress);
 
                 // Check disconnect
                 await swarm.DisconnectAsync(peerBAddress);
                 Assert.IsNull(remotePeer.ConnectedAddress);
                 Assert.IsTrue(swarm.KnownPeers.Contains(peerB));
-                Assert.IsTrue(swarmB.KnownPeers.Contains(_self));
+                Assert.IsTrue(swarmB.KnownPeers.Contains(self));
 
                 // wait for swarmB to settle
                 endTime = DateTime.Now.AddSeconds(3);
@@ -261,7 +238,7 @@ namespace Lib.P2P.Tests
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
             Assert.IsTrue(peerB.Addresses.Count() > 0);
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
             await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
             try
@@ -278,21 +255,21 @@ namespace Lib.P2P.Tests
                 {
                     if (DateTime.Now > endTime)
                         Assert.Fail("swarmB does not know about self");
-                    if (swarmB.KnownPeers.Contains(_self))
+                    if (swarmB.KnownPeers.Contains(self))
                         break;
                     await Task.Delay(100);
                 }
 
-                var me = swarmB.KnownPeers.First(p => p == _self);
-                Assert.AreEqual(_self.Id, me.Id);
-                Assert.AreEqual(_self.PublicKey, me.PublicKey);
+                var me = swarmB.KnownPeers.First(p => p == self);
+                Assert.AreEqual(self.Id, me.Id);
+                Assert.AreEqual(self.PublicKey, me.PublicKey);
                 Assert.IsNotNull(me.ConnectedAddress);
 
                 // Check disconnect
                 await swarm.DisconnectAsync(peerBAddress);
                 Assert.IsNull(remotePeer.ConnectedAddress);
                 Assert.IsTrue(swarm.KnownPeers.Contains(peerB));
-                Assert.IsTrue(swarmB.KnownPeers.Contains(_self));
+                Assert.IsTrue(swarmB.KnownPeers.Contains(self));
 
                 // wait for swarmB to settle
                 endTime = DateTime.Now.AddSeconds(3);
@@ -333,7 +310,7 @@ namespace Lib.P2P.Tests
             await swarmB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/0.0.0.0/tcp/0");
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
             try
             {
@@ -369,7 +346,7 @@ namespace Lib.P2P.Tests
             var peerBPort = peerBAddress.Protocols[1].Value;
             Assert.IsTrue(peerB.Addresses.Count() > 0);
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
             try
             {
@@ -389,7 +366,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public async Task Connect_CancelsOnStop()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             var venus = new Peer
             {
                 Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",
@@ -418,7 +395,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public async Task Connect_IsPending()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             var venus = new Peer
             {
                 Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",
@@ -433,7 +410,7 @@ namespace Lib.P2P.Tests
             {
                 Assert.IsFalse(swarm.HasPendingConnection(venus));
 
-                await swarm.ConnectAsync(venus);
+                var a = swarm.ConnectAsync(venus);
                 Assert.IsTrue(swarm.HasPendingConnection(venus));
             }
             finally
@@ -445,7 +422,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public async Task Connect_WithSomeUnreachableAddresses()
         {
-            const string bid = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h";
+            var bid = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h";
             var peerB = new Peer
             {
                 AgentVersion = "peerB",
@@ -460,10 +437,10 @@ namespace Lib.P2P.Tests
             };
             var swarmB = new SwarmService {LocalPeer = peerB};
             await swarmB.StartAsync();
-            await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
-            Assert.IsTrue(peerB.Addresses.Any());
+            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
+            Assert.IsTrue(peerB.Addresses.Count() > 0);
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
             try
             {
@@ -496,13 +473,13 @@ namespace Lib.P2P.Tests
             await swarmB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             var swarmConnections = 0;
             swarm.ConnectionEstablished += (s, e) => { ++swarmConnections; };
             await swarm.StartAsync();
             try
             {
-                await swarm.ConnectAsync(peerBAddress);
+                var remotePeer = await swarm.ConnectAsync(peerBAddress);
                 Assert.AreEqual(1, swarmConnections);
 
                 // wait for swarmB to settle
@@ -510,18 +487,10 @@ namespace Lib.P2P.Tests
                 while (true)
                 {
                     if (DateTime.Now > endTime)
-                    {
                         Assert.Fail("swarmB did not raise event.");
-                    }
-
-                    if (swarmBConnections != 1)
-                    {
-                        await Task.Delay(100);
-                    }
-                    else
-                    {
+                    if (swarmBConnections == 1)
                         break;
-                    }
+                    await Task.Delay(100);
                 }
             }
             finally
@@ -534,9 +503,9 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Connect_No_Transport()
         {
-            const string remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
+            var remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
             MultiAddress remoteAddress = $"/ip4/127.0.0.1/ipfs/{remoteId}";
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             swarm.StartAsync().Wait();
             try
             {
@@ -554,9 +523,9 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Connect_Refused()
         {
-            const string remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
+            var remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
             MultiAddress remoteAddress = $"/ip4/127.0.0.1/tcp/4040/ipfs/{remoteId}";
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             swarm.StartAsync().Wait();
             try
             {
@@ -574,9 +543,9 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Connect_Failure_Event()
         {
-            const string remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
+            var remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
             MultiAddress remoteAddress = $"/ip4/127.0.0.1/tcp/4040/ipfs/{remoteId}";
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             Peer unreachable = null;
             swarm.PeerNotReachable += (s, e) => { unreachable = e; };
             swarm.StartAsync().Wait();
@@ -599,9 +568,9 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Connect_Not_Peer()
         {
-            const string remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
+            var remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
             MultiAddress remoteAddress = $"/dns/npmjs.com/tcp/80/ipfs/{remoteId}";
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             swarm.StartAsync().Wait();
             try
             {
@@ -621,10 +590,10 @@ namespace Lib.P2P.Tests
         {
             var cs = new CancellationTokenSource();
             cs.Cancel();
-            const string remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
+            var remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
             MultiAddress remoteAddress = $"/ip4/127.0.0.1/tcp/4002/ipfs/{remoteId}";
-            var swarm = new SwarmService {LocalPeer = _self};
-            swarm.StartAsync().Wait(cs.Token);
+            var swarm = new SwarmService {LocalPeer = self};
+            swarm.StartAsync().Wait();
             try
             {
                 ExceptionAssert.Throws<Exception>(() =>
@@ -634,21 +603,21 @@ namespace Lib.P2P.Tests
             }
             finally
             {
-                swarm.StopAsync().Wait(cs.Token);
+                swarm.StopAsync().Wait();
             }
         }
 
         [TestMethod]
         public void Connecting_To_Blacklisted_Address()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
-            swarm.BlackList.Add(_mars);
+            var swarm = new SwarmService {LocalPeer = self};
+            swarm.BlackList.Add(mars);
             swarm.StartAsync().Wait();
             try
             {
                 ExceptionAssert.Throws<Exception>(() =>
                 {
-                    var _ = swarm.ConnectAsync(_mars).Result;
+                    var _ = swarm.ConnectAsync(mars).Result;
                 });
             }
             finally
@@ -660,13 +629,13 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Connecting_To_Self()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             swarm.StartAsync().Wait();
             try
             {
                 ExceptionAssert.Throws<Exception>(() =>
                 {
-                    var _ = swarm.ConnectAsync(_earth).Result;
+                    var _ = swarm.ConnectAsync(earth).Result;
                 });
             }
             finally
@@ -678,7 +647,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public async Task Connecting_To_Self_Indirect()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
             try
             {
@@ -707,14 +676,14 @@ namespace Lib.P2P.Tests
             await swarmB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             var swarmConnections = 0;
             swarm.ConnectionEstablished += (s, e) => { ++swarmConnections; };
             swarm.PeerDisconnected += (s, e) => { --swarmConnections; };
             await swarm.StartAsync();
             try
             {
-                await swarm.ConnectAsync(peerBAddress);
+                var remotePeer = await swarm.ConnectAsync(peerBAddress);
                 Assert.AreEqual(1, swarmConnections);
 
                 await swarm.StopAsync();
@@ -732,17 +701,17 @@ namespace Lib.P2P.Tests
         {
             var peerA = new Peer
             {
-                Id = _self.Id,
-                PublicKey = _self.PublicKey,
-                AgentVersion = _self.AgentVersion
+                Id = self.Id,
+                PublicKey = self.PublicKey,
+                AgentVersion = self.AgentVersion
             };
             MultiAddress addr = "/ip4/127.0.0.1/tcp/0";
             var swarmA = new SwarmService {LocalPeer = peerA};
             var peerB = new Peer
             {
-                Id = _other.Id,
-                PublicKey = _other.PublicKey,
-                AgentVersion = _other.AgentVersion
+                Id = other.Id,
+                PublicKey = other.PublicKey,
+                AgentVersion = other.AgentVersion
             };
             var swarmB = new SwarmService {LocalPeer = peerB};
             await swarmA.StartAsync();
@@ -770,9 +739,9 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer
             {
-                Id = _self.Id,
-                PublicKey = _self.PublicKey,
-                AgentVersion = _self.AgentVersion
+                Id = self.Id,
+                PublicKey = self.PublicKey,
+                AgentVersion = self.AgentVersion
             };
             MultiAddress addr = "/ip4/0.0.0.0/tcp/0";
             var swarm = new SwarmService {LocalPeer = peer};
@@ -781,13 +750,13 @@ namespace Lib.P2P.Tests
             try
             {
                 await swarm.StartListeningAsync(addr);
-                Assert.IsTrue(peer.Addresses.Any());
+                Assert.IsTrue(peer.Addresses.Count() > 0);
 
                 await swarm.StopListeningAsync(addr);
                 Assert.AreEqual(0, peer.Addresses.Count());
 
                 await swarm.StartListeningAsync(addr);
-                Assert.IsTrue(peer.Addresses.Any());
+                Assert.IsTrue(peer.Addresses.Count() > 0);
 
                 await swarm.StopListeningAsync(addr);
                 Assert.AreEqual(0, peer.Addresses.Count());
@@ -803,9 +772,9 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer
             {
-                Id = _self.Id,
-                PublicKey = _self.PublicKey,
-                AgentVersion = _self.AgentVersion
+                Id = self.Id,
+                PublicKey = self.PublicKey,
+                AgentVersion = self.AgentVersion
             };
             MultiAddress addr = "/ip4/0.0.0.0/tcp/0";
             var swarm = new SwarmService {LocalPeer = peer};
@@ -814,13 +783,13 @@ namespace Lib.P2P.Tests
             {
                 await swarm.StartAsync();
                 await swarm.StartListeningAsync(addr);
-                Assert.IsTrue(peer.Addresses.Any());
+                Assert.IsTrue(peer.Addresses.Count() > 0);
                 await swarm.StopAsync();
                 Assert.AreEqual(0, peer.Addresses.Count());
 
                 await swarm.StartAsync();
                 await swarm.StartListeningAsync(addr);
-                Assert.IsTrue(peer.Addresses.Any());
+                Assert.IsTrue(peer.Addresses.Count() > 0);
                 await swarm.StopAsync();
                 Assert.AreEqual(0, peer.Addresses.Count());
             }
@@ -836,9 +805,9 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer
             {
-                Id = _self.Id,
-                PublicKey = _self.PublicKey,
-                AgentVersion = _self.AgentVersion
+                Id = self.Id,
+                PublicKey = self.PublicKey,
+                AgentVersion = self.AgentVersion
             };
             MultiAddress addr = "/ip4/127.0.0.1/tcp/0";
             var swarm = new SwarmService {LocalPeer = peer};
@@ -861,17 +830,17 @@ namespace Lib.P2P.Tests
         {
             var peerA = new Peer
             {
-                Id = _self.Id,
-                PublicKey = _self.PublicKey,
-                AgentVersion = _self.AgentVersion
+                Id = self.Id,
+                PublicKey = self.PublicKey,
+                AgentVersion = self.AgentVersion
             };
             MultiAddress addr = "/ip4/127.0.0.1/tcp/0";
             var swarmA = new SwarmService {LocalPeer = peerA};
             var peerB = new Peer
             {
-                Id = _other.Id,
-                PublicKey = _other.PublicKey,
-                AgentVersion = _other.AgentVersion
+                Id = other.Id,
+                PublicKey = other.PublicKey,
+                AgentVersion = other.AgentVersion
             };
             var swarmB = new SwarmService {LocalPeer = peerB};
             await swarmA.StartAsync();
@@ -901,17 +870,17 @@ namespace Lib.P2P.Tests
         {
             var peerA = new Peer
             {
-                Id = _self.Id,
-                PublicKey = _self.PublicKey,
-                AgentVersion = _self.AgentVersion
+                Id = self.Id,
+                PublicKey = self.PublicKey,
+                AgentVersion = self.AgentVersion
             };
             MultiAddress addr = "/ip4/0.0.0.0/tcp/0";
             var swarmA = new SwarmService {LocalPeer = peerA};
             var peerB = new Peer
             {
-                Id = _other.Id,
-                PublicKey = _other.PublicKey,
-                AgentVersion = _other.AgentVersion
+                Id = other.Id,
+                PublicKey = other.PublicKey,
+                AgentVersion = other.AgentVersion
             };
             var swarmB = new SwarmService {LocalPeer = peerB};
             await swarmA.StartAsync();
@@ -943,17 +912,17 @@ namespace Lib.P2P.Tests
         {
             var peerA = new Peer
             {
-                Id = _self.Id,
-                PublicKey = _self.PublicKey,
-                AgentVersion = _self.AgentVersion
+                Id = self.Id,
+                PublicKey = self.PublicKey,
+                AgentVersion = self.AgentVersion
             };
             MultiAddress addr = "/ip6/::/tcp/0";
             var swarmA = new SwarmService {LocalPeer = peerA};
             var peerB = new Peer
             {
-                Id = _other.Id,
-                PublicKey = _other.PublicKey,
-                AgentVersion = _other.AgentVersion
+                Id = other.Id,
+                PublicKey = other.PublicKey,
+                AgentVersion = other.AgentVersion
             };
             var swarmB = new SwarmService {LocalPeer = peerB};
             await swarmA.StartAsync();
@@ -984,9 +953,9 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer
             {
-                Id = _self.Id,
-                PublicKey = _self.PublicKey,
-                AgentVersion = _self.AgentVersion
+                Id = self.Id,
+                PublicKey = self.PublicKey,
+                AgentVersion = self.AgentVersion
             };
             var swarm = new SwarmService {LocalPeer = peer};
             ExceptionAssert.Throws<ArgumentException>(() =>
@@ -999,21 +968,22 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void LocalPeer()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
-            Assert.AreEqual(_self, swarm.LocalPeer);
+            var swarm = new SwarmService {LocalPeer = self};
+            Assert.AreEqual(self, swarm.LocalPeer)
+                ;
             ExceptionAssert.Throws<ArgumentNullException>(() => { swarm.LocalPeer = null; });
-            ExceptionAssert.Throws<ArgumentNullException>(() => { swarm.LocalPeer = new Peer {Id = _self.Id}; });
+            ExceptionAssert.Throws<ArgumentNullException>(() => { swarm.LocalPeer = new Peer {Id = self.Id}; });
             ExceptionAssert.Throws<ArgumentNullException>(() =>
             {
-                swarm.LocalPeer = new Peer {PublicKey = _self.PublicKey};
+                swarm.LocalPeer = new Peer {PublicKey = self.PublicKey};
             });
             ExceptionAssert.Throws<ArgumentException>(() =>
             {
-                swarm.LocalPeer = new Peer {Id = _self.Id, PublicKey = _other.PublicKey};
+                swarm.LocalPeer = new Peer {Id = self.Id, PublicKey = other.PublicKey};
             });
 
-            swarm.LocalPeer = new Peer {Id = _other.Id, PublicKey = _other.PublicKey};
-            Assert.AreEqual(_other, swarm.LocalPeer);
+            swarm.LocalPeer = new Peer {Id = other.Id, PublicKey = other.PublicKey};
+            Assert.AreEqual(other, swarm.LocalPeer);
         }
 
         [TestMethod]
@@ -1021,10 +991,10 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer
             {
-                Id = _mars.PeerId
+                Id = mars.PeerId
             };
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
             try
             {
@@ -1041,15 +1011,15 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer
             {
-                Id = _mars.PeerId,
+                Id = mars.PeerId,
                 Addresses = new List<MultiAddress>
                 {
-                    new MultiAddress($"/ip4/127.0.0.1/tcp/4242/ipfs/{_mars.PeerId}"),
-                    new MultiAddress($"/ip4/127.0.0.2/tcp/4242/ipfs/{_mars.PeerId}")
+                    new MultiAddress($"/ip4/127.0.0.1/tcp/4242/ipfs/{mars.PeerId}"),
+                    new MultiAddress($"/ip4/127.0.0.2/tcp/4242/ipfs/{mars.PeerId}")
                 }
             };
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
             try
             {
@@ -1072,9 +1042,9 @@ namespace Lib.P2P.Tests
                     "CAASXjBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQDlTSgVLprWaXfmxDr92DJE1FP0wOexhulPqXSTsNh5ot6j+UiuMgwb0shSPKzLx9AuTolCGhnwpTBYHVhFoBErAgMBAAE="
             };
             var swarmB = new SwarmService {LocalPeer = peerB};
-            await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
+            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
             try
             {
@@ -1099,13 +1069,13 @@ namespace Lib.P2P.Tests
             };
             var swarmB = new SwarmService {LocalPeer = peerB};
             await swarmB.StartAsync();
-            await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
+            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             await swarm.StartAsync();
             try
             {
-                await using (var stream = await swarm.DialAsync(peerB, "/ipfs/id/1.0.0"))
+                using (var stream = await swarm.DialAsync(peerB, "/ipfs/id/1.0.0"))
                 {
                     Assert.IsNotNull(stream);
                     Assert.IsTrue(stream.CanRead);
@@ -1122,7 +1092,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void PeerDiscovered()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             var peerCount = 0;
             swarm.PeerDiscovered += (s, e) => { ++peerCount; };
             swarm.RegisterPeerAddress("/ip4/127.0.0.1/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h");
@@ -1140,7 +1110,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public async Task IsRunning()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             Assert.IsFalse(swarm.IsRunning);
 
             await swarm.StartAsync();
@@ -1163,13 +1133,13 @@ namespace Lib.P2P.Tests
             var swarmB = new SwarmService {LocalPeer = peerB, NetworkProtector = new OpenNetwork()};
             await swarmB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
-            Assert.IsTrue(peerB.Addresses.Any());
+            Assert.IsTrue(peerB.Addresses.Count() > 0);
 
-            var swarm = new SwarmService {LocalPeer = _self, NetworkProtector = new OpenNetwork()};
+            var swarm = new SwarmService {LocalPeer = self, NetworkProtector = new OpenNetwork()};
             await swarm.StartAsync();
             try
             {
-                await swarm.ConnectAsync(peerBAddress);
+                var remotePeer = await swarm.ConnectAsync(peerBAddress);
                 Assert.AreEqual(2, OpenNetwork.Count);
             }
             finally
@@ -1182,15 +1152,15 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void DeregisterPeer()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
-            swarm.RegisterPeer(_other);
-            Assert.IsTrue(swarm.KnownPeers.Contains(_other));
+            var swarm = new SwarmService {LocalPeer = self};
+            swarm.RegisterPeer(other);
+            Assert.IsTrue(swarm.KnownPeers.Contains(other));
 
             Peer removedPeer = null;
             swarm.PeerRemoved += (s, e) => removedPeer = e;
-            swarm.DeregisterPeer(_other);
-            Assert.IsFalse(swarm.KnownPeers.Contains(_other));
-            Assert.AreEqual(_other, removedPeer);
+            swarm.DeregisterPeer(other);
+            Assert.IsFalse(swarm.KnownPeers.Contains(other));
+            Assert.AreEqual(other, removedPeer);
         }
 
         [TestMethod]
@@ -1219,7 +1189,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void RegisterPeer_BlackListed()
         {
-            var swarm = new SwarmService {LocalPeer = _self};
+            var swarm = new SwarmService {LocalPeer = self};
             var peer = new Peer
             {
                 Id = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h",
@@ -1237,12 +1207,12 @@ namespace Lib.P2P.Tests
     /// <summary>
     ///   A noop private network.
     /// </summary>
-    internal sealed class OpenNetwork : INetworkProtector
+    internal class OpenNetwork : INetworkProtector
     {
         public static int Count;
 
         public Task<Stream> ProtectAsync(PeerConnection connection,
-            CancellationToken cancel = default)
+            CancellationToken cancel = default(CancellationToken))
         {
             Interlocked.Increment(ref Count);
             return Task.FromResult(connection.Stream);
