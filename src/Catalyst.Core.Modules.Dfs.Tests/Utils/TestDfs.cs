@@ -22,26 +22,18 @@
 #endregion
 
 using System;
-using System.IO;
 using Autofac;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Cryptography;
-using Catalyst.Core.Lib.P2P;
-using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
-using FluentAssertions;
-using Lib.P2P.Routing;
-using Microsoft.AspNetCore.Mvc.Internal;
 using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
 
@@ -101,7 +93,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
 
             dfsService.ConfigApi.SetAsync(
                 "Addresses.Swarm",
-                JToken.FromObject(new string[] { "/ip4/0.0.0.0/tcp/0" })
+                JToken.FromObject(new[]
+                {
+                    "/ip4/0.0.0.0/tcp/0"
+                })
             ).Wait();
 
             return dfsService;

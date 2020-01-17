@@ -36,18 +36,18 @@ namespace Lib.P2P
     /// </summary>
     public static class MultiAddressExtensions
     {
-        private static Dictionary<AddressFamily, string> supportedDnsAddressFamilies =
+        private static Dictionary<AddressFamily, string> _supportedDnsAddressFamilies =
             new Dictionary<AddressFamily, string>();
 
-        private static MultiAddress http = new MultiAddress("/tcp/80");
-        private static MultiAddress https = new MultiAddress("/tcp/443");
+        private static MultiAddress _http = new MultiAddress("/tcp/80");
+        private static MultiAddress _https = new MultiAddress("/tcp/443");
 
         static MultiAddressExtensions()
         {
             if (Socket.OSSupportsIPv4)
-                supportedDnsAddressFamilies[AddressFamily.InterNetwork] = "/ip4/";
+                _supportedDnsAddressFamilies[AddressFamily.InterNetwork] = "/ip4/";
             if (Socket.OSSupportsIPv6)
-                supportedDnsAddressFamilies[AddressFamily.InterNetworkV6] = "/ip6/";
+                _supportedDnsAddressFamilies[AddressFamily.InterNetworkV6] = "/ip6/";
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Lib.P2P
         ///   </para>
         /// </remarks>
         public static async Task<List<MultiAddress>> ResolveAsync(this MultiAddress multiaddress,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var list = new List<MultiAddress>();
 
@@ -102,7 +102,7 @@ namespace Lib.P2P
             if (i >= 0 && !multiaddress.Protocols.Any(p => p.Name == "tcp"))
             {
                 multiaddress = multiaddress.Clone();
-                multiaddress.Protocols.InsertRange(i + 1, http.Protocols);
+                multiaddress.Protocols.InsertRange(i + 1, _http.Protocols);
             }
 
             // HTTPS
@@ -110,7 +110,7 @@ namespace Lib.P2P
             if (i >= 0 && !multiaddress.Protocols.Any(p => p.Name == "tcp"))
             {
                 multiaddress = multiaddress.Clone();
-                multiaddress.Protocols.InsertRange(i + 1, https.Protocols);
+                multiaddress.Protocols.InsertRange(i + 1, _https.Protocols);
             }
 
             // DNS*
@@ -128,14 +128,14 @@ namespace Lib.P2P
             // This will not then expose the domain name in plain text.
             // We also, then get to specify if A and/or AAAA records are needed.
             var addresses = (await Dns.GetHostAddressesAsync(host).ConfigureAwait(false))
-               .Where(a => supportedDnsAddressFamilies.ContainsKey(a.AddressFamily))
+               .Where(a => _supportedDnsAddressFamilies.ContainsKey(a.AddressFamily))
                .Where(a =>
                     protocolName == "dns" ||
                     protocolName == "dns4" && a.AddressFamily == AddressFamily.InterNetwork ||
                     protocolName == "dns6" && a.AddressFamily == AddressFamily.InterNetworkV6);
             foreach (var addr in addresses)
             {
-                var ma0 = new MultiAddress(supportedDnsAddressFamilies[addr.AddressFamily] + addr.ToString());
+                var ma0 = new MultiAddress(_supportedDnsAddressFamilies[addr.AddressFamily] + addr);
                 var ma1 = multiaddress.Clone();
                 ma1.Protocols[i] = ma0.Protocols[0];
                 list.Add(ma1);

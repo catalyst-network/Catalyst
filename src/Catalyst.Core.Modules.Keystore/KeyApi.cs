@@ -43,14 +43,14 @@ namespace Catalyst.Core.Modules.Keystore
         public async Task<IKey> CreateAsync(string name,
             string keyType,
             int size,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             return await _keyStoreService.CreateAsync(name, keyType, size, cancel).ConfigureAwait(false);
         }
 
         public async Task<string> ExportAsync(string name,
             char[] password,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             return await _keyStoreService.ExportAsync(name, password, cancel).ConfigureAwait(false);
         }
@@ -72,30 +72,30 @@ namespace Catalyst.Core.Modules.Keystore
 
         public async Task<byte[]> CreateProtectedDataAsync(string keyName,
             byte[] plainText,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             return await _keyStoreService.CreateProtectedDataAsync(keyName, plainText, cancel);
         }
 
         public async Task<byte[]> ReadProtectedDataAsync(byte[] cipherText,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             return await _keyStoreService.ReadProtectedDataAsync(cipherText, cancel: cancel);
         }
 
-        public async Task<IEnumerable<IKey>> ListAsync(CancellationToken cancel = default(CancellationToken))
+        public async Task<IEnumerable<IKey>> ListAsync(CancellationToken cancel = default)
         {
             return await _keyStoreService.ListAsync(cancel).ConfigureAwait(false);
         }
 
-        public async Task<IKey> RemoveAsync(string name, CancellationToken cancel = default(CancellationToken))
+        public async Task<IKey> RemoveAsync(string name, CancellationToken cancel = default)
         {
             return await _keyStoreService.RemoveAsync(name, cancel).ConfigureAwait(false);
         }
 
         public async Task<IKey> RenameAsync(string oldName,
             string newName,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             return await _keyStoreService.RenameAsync(oldName, newName, cancel).ConfigureAwait(false);
         }

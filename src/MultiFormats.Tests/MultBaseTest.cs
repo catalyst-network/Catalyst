@@ -74,14 +74,14 @@ namespace MultiFormats.Tests
             ExceptionAssert.Throws<FormatException>(() => MultiBase.Decode("fXX"));
         }
 
-        private class TestVector
+        private sealed class TestVector
         {
             public string Algorithm { get; set; }
             public string Input { get; set; }
             public string Output { get; set; }
         }
 
-        private TestVector[] TestVectors = new TestVector[]
+        private TestVector[] TestVectors =
         {
             new TestVector
             {

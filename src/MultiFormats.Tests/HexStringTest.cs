@@ -29,7 +29,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MultiFormats.Tests
 {
     [TestClass]
-    public class HexStringTest
+    public sealed class HexStringTest
     {
         [TestMethod]
         public void Encode()
@@ -39,7 +39,7 @@ namespace MultiFormats.Tests
             var upperHex = string.Concat(buffer.Select(b => b.ToString("X2")).ToArray());
 
             Assert.AreEqual(lowerHex, buffer.ToHexString(), "encode default");
-            Assert.AreEqual(lowerHex, buffer.ToHexString("G"), "encode general");
+            Assert.AreEqual(lowerHex, buffer.ToHexString(), "encode general");
             Assert.AreEqual(lowerHex, buffer.ToHexString("x"), "encode lower");
             Assert.AreEqual(upperHex, buffer.ToHexString("X"), "encode upper");
         }

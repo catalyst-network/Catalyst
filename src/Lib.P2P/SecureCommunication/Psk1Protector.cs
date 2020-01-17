@@ -49,7 +49,7 @@ namespace Lib.P2P.SecureCommunication
 
         /// <inheritdoc />
         public Task<Stream> ProtectAsync(PeerConnection connection,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             return Task.FromResult<Stream>(new Psk1Stream(connection.Stream, Key));
         }

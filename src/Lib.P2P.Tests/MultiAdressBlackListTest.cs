@@ -27,7 +27,7 @@ using MultiFormats;
 namespace Lib.P2P.Tests
 {
     [TestClass]
-    public class MultiAddressBlackListTest
+    public sealed class MultiAddressBlackListTest
     {
         private MultiAddress a = "/ipfs/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
         private MultiAddress a1 = "/ip4/127.0.0.1/ipfs/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
@@ -38,9 +38,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Allowed()
         {
-            var policy = new MultiAddressBlackList();
-            policy.Add(a);
-            policy.Add(b);
+            var policy = new MultiAddressBlackList {a, b};
             Assert.IsFalse(policy.IsAllowed(a));
             Assert.IsFalse(policy.IsAllowed(a1));
             Assert.IsFalse(policy.IsAllowed(b));
@@ -51,8 +49,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Allowed_Alias()
         {
-            var policy = new MultiAddressBlackList();
-            policy.Add(a);
+            var policy = new MultiAddressBlackList {a};
             Assert.IsFalse(policy.IsAllowed(a));
             Assert.IsFalse(policy.IsAllowed(a1));
             Assert.IsFalse(policy.IsAllowed(b));
@@ -70,45 +67,48 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Collection()
         {
-            MultiAddress a = "/ip4/127.0.0.1";
-            MultiAddress b = "/ip4/127.0.0.2";
+            MultiAddress addressA = "/ip4/127.0.0.1";
+            MultiAddress addressB = "/ip4/127.0.0.2";
 
             var policy = new MultiAddressBlackList();
             Assert.IsFalse(policy.IsReadOnly);
             Assert.AreEqual(0, policy.Count);
-            Assert.IsFalse(policy.Contains(a));
-            Assert.IsFalse(policy.Contains(b));
+            Assert.IsFalse(policy.Contains(addressA));
+            Assert.IsFalse(policy.Contains(addressB));
 
-            policy.Add(a);
+            policy.Add(addressA);
             Assert.AreEqual(1, policy.Count);
-            Assert.IsTrue(policy.Contains(a));
-            Assert.IsFalse(policy.Contains(b));
+            Assert.IsTrue(policy.Contains(addressA));
+            Assert.IsFalse(policy.Contains(addressB));
 
-            policy.Add(a);
+            policy.Add(addressA);
             Assert.AreEqual(1, policy.Count);
-            Assert.IsTrue(policy.Contains(a));
-            Assert.IsFalse(policy.Contains(b));
+            Assert.IsTrue(policy.Contains(addressA));
+            Assert.IsFalse(policy.Contains(addressB));
 
-            policy.Add(b);
+            policy.Add(addressB);
             Assert.AreEqual(2, policy.Count);
-            Assert.IsTrue(policy.Contains(a));
-            Assert.IsTrue(policy.Contains(b));
+            Assert.IsTrue(policy.Contains(addressA));
+            Assert.IsTrue(policy.Contains(addressB));
 
-            policy.Remove(b);
+            policy.Remove(addressB);
             Assert.AreEqual(1, policy.Count);
-            Assert.IsTrue(policy.Contains(a));
-            Assert.IsFalse(policy.Contains(b));
+            Assert.IsTrue(policy.Contains(addressA));
+            Assert.IsFalse(policy.Contains(addressB));
 
             var array = new MultiAddress[1];
             policy.CopyTo(array, 0);
-            Assert.AreSame(a, array[0]);
+            Assert.AreSame(addressA, array[0]);
 
-            foreach (var filter in policy) Assert.AreSame(a, filter);
+            foreach (var filter in policy)
+            {
+                Assert.AreSame(addressA, filter);
+            }
 
             policy.Clear();
             Assert.AreEqual(0, policy.Count);
-            Assert.IsFalse(policy.Contains(a));
-            Assert.IsFalse(policy.Contains(b));
+            Assert.IsFalse(policy.Contains(addressA));
+            Assert.IsFalse(policy.Contains(addressB));
         }
     }
 }

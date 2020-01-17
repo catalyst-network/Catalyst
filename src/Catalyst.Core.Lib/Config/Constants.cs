@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.IO;
 using Catalyst.Protocol.Network;
 
 namespace Catalyst.Core.Lib.Config

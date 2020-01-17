@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -40,19 +40,19 @@ namespace Lib.P2P
     ///   TODO: Enforces a maximum number of open connections.
     ///   </para>
     /// </remarks>
-    public class ConnectionManager
+    public sealed class ConnectionManager
     {
-        private static ILog log = LogManager.GetLogger(typeof(ConnectionManager));
+        private static ILog _log = LogManager.GetLogger(typeof(ConnectionManager));
 
         /// <summary>
         ///   The connections to other peers. Key is the base58 hash of the peer ID.
         /// </summary>
-        private ConcurrentDictionary<string, List<PeerConnection>> connections =
+        private readonly ConcurrentDictionary<string, List<PeerConnection>> _connections =
             new ConcurrentDictionary<string, List<PeerConnection>>();
 
-        private string Key(Peer peer) { return peer.Id.ToBase58(); }
+        private static string Key(Peer peer) { return peer.Id.ToBase58(); }
 
-        private string Key(MultiHash id) { return id.ToBase58(); }
+        private static string Key(MultiHash id) { return id.ToBase58(); }
 
         /// <summary>
         ///   Raised when a peer's connection is closed.
@@ -63,7 +63,7 @@ namespace Lib.P2P
         ///   Gets the current active connections.
         /// </summary>
         public IEnumerable<PeerConnection> Connections =>
-            connections.Values
+            _connections.Values
                .SelectMany(c => c)
                .Where(c => c.IsActive);
 
@@ -95,14 +95,16 @@ namespace Lib.P2P
         ///   If the connection's underlaying <see cref="PeerConnection.Stream"/>
         ///   is closed, then the connection is removed.
         /// </remarks>
-        public bool TryGet(Peer peer, out PeerConnection connection)
+        internal bool TryGet(Peer peer, out PeerConnection connection)
         {
             connection = null;
-            if (!connections.TryGetValue(Key(peer), out var conns)) return false;
+            if (!_connections.TryGetValue(Key(peer), out var conns))
+            {
+                return false;
+            }
 
             connection = conns
-               .Where(c => c.IsActive)
-               .FirstOrDefault();
+               .FirstOrDefault(c => c.IsActive);
 
             return connection != null;
         }
@@ -124,24 +126,39 @@ namespace Lib.P2P
         public PeerConnection Add(PeerConnection connection)
         {
             if (connection == null)
-                throw new ArgumentNullException("connection");
-            if (connection.RemotePeer == null)
-                throw new ArgumentNullException("connection.RemotePeer");
-            if (connection.RemotePeer.Id == null)
-                throw new ArgumentNullException("connection.RemotePeer.Id");
+            {
+                throw new ArgumentNullException(nameof(connection));
+            }
 
-            connections.AddOrUpdate(
+            if (connection.RemotePeer == null)
+            {
+                throw new ArgumentNullException(nameof(connection.RemotePeer));
+            }
+
+            if (connection.RemotePeer.Id == null)
+            {
+                throw new ArgumentNullException(nameof(connection.RemotePeer.Id));
+            }
+
+            _connections.AddOrUpdate(
                 Key(connection.RemotePeer),
-                (key) => new List<PeerConnection> {connection},
+                key => new List<PeerConnection> {connection},
                 (key, conns) =>
                 {
-                    if (!conns.Contains(connection)) conns.Add(connection);
+                    if (!conns.Contains(connection))
+                    {
+                        conns.Add(connection);
+                    }
+                    
                     return conns;
                 }
             );
 
             if (connection.RemotePeer.ConnectedAddress == null)
+            {
                 connection.RemotePeer.ConnectedAddress = connection.RemoteAddress;
+            }
+            
             connection.Closed += (s, e) => Remove(e);
             return connection;
         }
@@ -161,9 +178,12 @@ namespace Lib.P2P
         /// </remarks>
         public bool Remove(PeerConnection connection)
         {
-            if (connection == null) return false;
+            if (connection == null)
+            {
+                return false;
+            }
 
-            if (!connections.TryGetValue(Key(connection.RemotePeer), out var originalConns))
+            if (!_connections.TryGetValue(Key(connection.RemotePeer), out var originalConns))
             {
                 connection.Dispose();
                 return false;
@@ -177,7 +197,7 @@ namespace Lib.P2P
 
             var newConns = new List<PeerConnection>();
             newConns.AddRange(originalConns.Where(c => c != connection));
-            connections.TryUpdate(Key(connection.RemotePeer), newConns, originalConns);
+            _connections.TryUpdate(Key(connection.RemotePeer), newConns, originalConns);
 
             connection.Dispose();
             if (newConns.Count > 0)
@@ -205,7 +225,11 @@ namespace Lib.P2P
         /// </returns>
         public bool Remove(MultiHash id)
         {
-            if (!connections.TryRemove(Key(id), out var conns)) return false;
+            if (!_connections.TryRemove(Key(id), out var conns))
+            {
+                return false;
+            }
+            
             foreach (var conn in conns)
             {
                 conn.RemotePeer.ConnectedAddress = null;
@@ -221,8 +245,11 @@ namespace Lib.P2P
         /// </summary>
         public void Clear()
         {
-            var conns = connections.Values.SelectMany(c => c).ToArray();
-            foreach (var conn in conns) Remove(conn);
+            var conns = _connections.Values.SelectMany(c => c).ToArray();
+            foreach (var conn in conns)
+            {
+                Remove(conn);
+            }
         }
     }
 }

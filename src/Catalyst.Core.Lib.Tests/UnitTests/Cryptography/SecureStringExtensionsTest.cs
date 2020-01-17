@@ -33,7 +33,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         public void UseBytes()
         {
             var secret = new SecureString();
-            var expected = new char[]
+            var expected = new[]
             {
                 'a', 'b', 'c'
             };
@@ -45,10 +45,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             
             secret.UseSecretBytes(bytes =>
             {
-                Assert.Equal<int>(expected.Length, bytes.Length);
+                Assert.Equal(expected.Length, bytes.Length);
                 for (var i = 0; i < expected.Length; ++i)
                 {
-                    Assert.Equal((int) expected[i], (int) bytes[i]);
+                    Assert.Equal(expected[i], (int) bytes[i]);
                 }
             });
         }

@@ -45,7 +45,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         }
 
         [Fact]
-        public async Task Local_Info()
+        public void Local_Info()
         {
             var peer = ipfs.DhtApi.FindPeerAsync(_locaId).GetAwaiter().GetResult();
             Assert.IsType(typeof(Peer), peer);
@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Mars_Info()
         {
-            var marsId = "QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
+            const string marsId = "QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
             var marsAddr = $"/ip6/::1/p2p/{marsId}";
             var swarm = ipfs.SwarmService;
             var mars = swarm.RegisterPeerAddress(marsAddr);

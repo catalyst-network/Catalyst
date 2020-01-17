@@ -42,7 +42,7 @@ namespace Lib.P2P
         /// <remarks>
         ///   The key is the ID of a message.  The value is the expiry date.
         /// </remarks>
-        private ConcurrentDictionary<string, DateTime> messages = new ConcurrentDictionary<string, DateTime>();
+        private ConcurrentDictionary<string, DateTime> _messages = new ConcurrentDictionary<string, DateTime>();
 
         /// <summary>
         ///   The definition of recent.
@@ -73,7 +73,7 @@ namespace Lib.P2P
             Prune(now.Value);
 
             var seen = false;
-            messages.AddOrUpdate(
+            _messages.AddOrUpdate(
                 id,
                 (key) => now.Value + Recent,
                 (key, expiry) =>
@@ -93,11 +93,11 @@ namespace Lib.P2P
         /// </param>
         public void Prune(DateTime now)
         {
-            var expired = messages
+            var expired = _messages
                .Where(e => now >= e.Value)
                .Select(e => e.Key)
                .ToArray();
-            foreach (var key in expired) messages.TryRemove(key, out _);
+            foreach (var key in expired) _messages.TryRemove(key, out _);
         }
     }
 }

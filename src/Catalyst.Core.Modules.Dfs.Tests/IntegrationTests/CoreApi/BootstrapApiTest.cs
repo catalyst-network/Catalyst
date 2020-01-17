@@ -109,7 +109,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 var addrs = await ipfs.BootstrapApi.ListAsync();
                 Assert.Equal(0, addrs.Count());
 
-                ipfs.Options.Discovery.BootstrapPeers = new MultiAddress[1]
+                ipfs.Options.Discovery.BootstrapPeers = new[]
                     {somewhere};
                 addrs = await ipfs.BootstrapApi.ListAsync();
                 Assert.Equal(1, addrs.Count());

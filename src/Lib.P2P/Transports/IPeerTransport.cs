@@ -48,7 +48,7 @@ namespace Lib.P2P.Transports
         ///   A task that represents the asynchronous operation. The task's result
         ///   is a duplex <see cref="Stream"/> or <b>null</b>.
         /// </returns>
-        Task<Stream> ConnectAsync(MultiAddress address, CancellationToken cancel = default(CancellationToken));
+        Task<Stream> ConnectAsync(MultiAddress address, CancellationToken cancel = default);
 
         /// <summary>
         ///   Listen to any peer connections on the specified address.

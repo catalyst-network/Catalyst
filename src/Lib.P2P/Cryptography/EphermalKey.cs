@@ -41,10 +41,10 @@ namespace Lib.P2P.Cryptography
     ///   It as assummed that the curve name is known a priori.
     ///   </para>
     /// </remarks>
-    public class EphermalKey
+    public sealed class EphermalKey
     {
-        private ECPublicKeyParameters publicKey;
-        private ECPrivateKeyParameters privateKey;
+        private ECPublicKeyParameters _publicKey;
+        private ECPrivateKeyParameters _privateKey;
 
         /// <summary>
         ///   Gets the IPFS encoding of the public key.
@@ -52,7 +52,7 @@ namespace Lib.P2P.Cryptography
         /// <returns>
         ///   Returns the uncompressed EC point.
         /// </returns>
-        public byte[] PublicKeyBytes() { return publicKey.Q.GetEncoded(false); }
+        internal byte[] PublicKeyBytes() { return _publicKey.Q.GetEncoded(false); }
 
         /// <summary>
         ///   Create a shared secret between this key and another.
@@ -69,8 +69,8 @@ namespace Lib.P2P.Cryptography
         public byte[] GenerateSharedSecret(EphermalKey other)
         {
             var agreement = AgreementUtilities.GetBasicAgreement("ECDH");
-            agreement.Init(privateKey);
-            var secret = agreement.CalculateAgreement(other.publicKey);
+            agreement.Init(_privateKey);
+            var secret = agreement.CalculateAgreement(other._publicKey);
             return BigIntegers.AsUnsignedByteArray(agreement.GetFieldSize(), secret);
         }
 
@@ -83,16 +83,19 @@ namespace Lib.P2P.Cryptography
         /// <param name="bytes">
         ///   The IPFS encoded ephermal key.
         /// </param>
-        public static EphermalKey CreatePublicKeyFromIpfs(string curveName, byte[] bytes)
+        internal static EphermalKey CreatePublicKeyFromDfs(string curveName, byte[] bytes)
         {
             var ecP = ECNamedCurveTable.GetByName(curveName);
             if (ecP == null)
+            {
                 throw new KeyNotFoundException($"Unknown curve name '{curveName}'.");
+            }
+            
             var domain = new ECDomainParameters(ecP.Curve, ecP.G, ecP.N, ecP.H, ecP.GetSeed());
             var q = ecP.Curve.DecodePoint(bytes);
             return new EphermalKey
             {
-                publicKey = new ECPublicKeyParameters(q, domain)
+                _publicKey = new ECPublicKeyParameters(q, domain)
             };
         }
 
@@ -109,7 +112,10 @@ namespace Lib.P2P.Cryptography
         {
             var ecP = ECNamedCurveTable.GetByName(curveName);
             if (ecP == null)
+            {
                 throw new Exception($"Unknown curve name '{curveName}'.");
+            }
+            
             var domain = new ECDomainParameters(ecP.Curve, ecP.G, ecP.N, ecP.H, ecP.GetSeed());
             var g = GeneratorUtilities.GetKeyPairGenerator("EC");
             g.Init(new ECKeyGenerationParameters(domain, new SecureRandom()));
@@ -117,8 +123,8 @@ namespace Lib.P2P.Cryptography
 
             return new EphermalKey
             {
-                privateKey = (ECPrivateKeyParameters) keyPair.Private,
-                publicKey = (ECPublicKeyParameters) keyPair.Public
+                _privateKey = (ECPrivateKeyParameters) keyPair.Private,
+                _publicKey = (ECPublicKeyParameters) keyPair.Public
             };
         }
     }

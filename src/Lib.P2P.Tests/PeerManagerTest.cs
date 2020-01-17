@@ -102,7 +102,10 @@ namespace Lib.P2P.Tests
                 {
                     await swarm.ConnectAsync(peer);
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
 
                 Assert.AreEqual(1, manager.DeadPeers.Count);
 
@@ -147,7 +150,10 @@ namespace Lib.P2P.Tests
                 {
                     await swarm.ConnectAsync(peer);
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
 
                 Assert.AreEqual(1, manager.DeadPeers.Count);
 

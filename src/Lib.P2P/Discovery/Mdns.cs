@@ -36,7 +36,7 @@ namespace Lib.P2P.Discovery
     /// </summary>
     public abstract class Mdns : IPeerDiscovery
     {
-        private static ILog log = LogManager.GetLogger(typeof(Mdns));
+        private static ILog _log = LogManager.GetLogger(typeof(Mdns));
 
         /// <inheritdoc />
         public event EventHandler<Peer> PeerDiscovered;
@@ -81,7 +81,7 @@ namespace Lib.P2P.Discovery
 
                     if (Broadcast && profile != null)
                     {
-                        log.Debug($"Advertising {profile.FullyQualifiedName}");
+                        _log.Debug($"Advertising {profile.FullyQualifiedName}");
                         discovery.Advertise(profile);
                     }
 
@@ -90,7 +90,7 @@ namespace Lib.P2P.Discovery
                 }
                 catch (Exception ex)
                 {
-                    log.Debug("Failed to send query", ex);
+                    _log.Debug("Failed to send query", ex);
 
                     // eat it
                 }
@@ -125,7 +125,7 @@ namespace Lib.P2P.Discovery
             }
             catch (Exception ex)
             {
-                log.Error("OnServiceInstanceDiscovered error", ex);
+                _log.Error("OnServiceInstanceDiscovered error", ex);
 
                 // eat it
             }

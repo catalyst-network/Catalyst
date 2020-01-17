@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public void Peers_Unknown_Topic()
         {
-            var topic = "net-ipfs-http-client-test-unknown" + Guid.NewGuid().ToString();
+            var topic = "net-ipfs-http-client-test-unknown" + Guid.NewGuid();
             var peers = ipfs.PubSubApi.PeersAsync(topic).Result.ToArray();
             Assert.Equal(0, peers.Length);
         }
@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             try
             {
                 await ipfs.PubSubApi.SubscribeAsync(topic, msg => { }, cs.Token);
-                var topics = ipfs.PubSubApi.SubscribedTopicsAsync().Result.ToArray();
+                var topics = ipfs.PubSubApi.SubscribedTopicsAsync(cs.Token).Result.ToArray();
                 Assert.True(topics.Length > 0);
                 topics.Should().Contain(topic);
             }
@@ -79,22 +79,22 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        volatile int messageCount = 0;
+        private volatile int _messageCount;
 
         [Fact]
         public async Task Subscribe()
         {
-            messageCount = 0;
+            _messageCount = 0;
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
             await ipfs.StartAsync();
             try
             {
-                await ipfs.PubSubApi.SubscribeAsync(topic, msg => { Interlocked.Increment(ref messageCount); }, cs.Token);
-                await ipfs.PubSubApi.PublishAsync(topic, "hello world!");
+                await ipfs.PubSubApi.SubscribeAsync(topic, msg => { Interlocked.Increment(ref _messageCount); }, cs.Token);
+                await ipfs.PubSubApi.PublishAsync(topic, "hello world!", cs.Token);
 
-                await Task.Delay(100);
-                Assert.Equal(1, messageCount);
+                await Task.Delay(100, cs.Token);
+                Assert.Equal(1, _messageCount);
             }
             finally
             {
@@ -106,21 +106,21 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Subscribe_Mutiple_Messages()
         {
-            messageCount = 0;
+            _messageCount = 0;
             var messages = "hello world this is pubsub".Split();
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
             await ipfs.StartAsync();
             try
             {
-                await ipfs.PubSubApi.SubscribeAsync(topic, msg => { Interlocked.Increment(ref messageCount); }, cs.Token);
+                await ipfs.PubSubApi.SubscribeAsync(topic, msg => { Interlocked.Increment(ref _messageCount); }, cs.Token);
                 foreach (var msg in messages)
                 {
-                    await ipfs.PubSubApi.PublishAsync(topic, msg);
+                    await ipfs.PubSubApi.PublishAsync(topic, msg, cs.Token);
                 }
 
-                await Task.Delay(100);
-                Assert.Equal(messages.Length, messageCount);
+                await Task.Delay(100, cs.Token);
+                Assert.Equal(messages.Length, _messageCount);
             }
             finally
             {
@@ -132,24 +132,24 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Multiple_Subscribe_Mutiple_Messages()
         {
-            messageCount = 0;
+            _messageCount = 0;
             var messages = "hello world this is pubsub".Split();
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
 
-            Action<IPublishedMessage> processMessage = (msg) => { Interlocked.Increment(ref messageCount); };
+            void ProcessMessage(IPublishedMessage msg) { Interlocked.Increment(ref _messageCount); }
             await ipfs.StartAsync();
             try
             {
-                await ipfs.PubSubApi.SubscribeAsync(topic, processMessage, cs.Token);
-                await ipfs.PubSubApi.SubscribeAsync(topic, processMessage, cs.Token);
+                await ipfs.PubSubApi.SubscribeAsync(topic, ProcessMessage, cs.Token);
+                await ipfs.PubSubApi.SubscribeAsync(topic, ProcessMessage, cs.Token);
                 foreach (var msg in messages)
                 {
-                    await ipfs.PubSubApi.PublishAsync(topic, msg);
+                    await ipfs.PubSubApi.PublishAsync(topic, msg, cs.Token);
                 }
 
-                await Task.Delay(100);
-                Assert.Equal(messages.Length * 2, messageCount);
+                await Task.Delay(100, cs.Token);
+                Assert.Equal(messages.Length * 2, _messageCount);
             }
             finally
             {
@@ -158,26 +158,26 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        volatile int messageCount1 = 0;
+        private volatile int _messageCount1;
 
         [Fact]
         public async Task Unsubscribe()
         {
-            messageCount1 = 0;
+            _messageCount1 = 0;
             var topic = Guid.NewGuid().ToString();
             var cs = new CancellationTokenSource();
             await ipfs.StartAsync();
             try
             {
-                await ipfs.PubSubApi.SubscribeAsync(topic, msg => { Interlocked.Increment(ref messageCount1); }, cs.Token);
-                await ipfs.PubSubApi.PublishAsync(topic, "hello world!");
-                await Task.Delay(100);
-                Assert.Equal(1, messageCount1);
+                await ipfs.PubSubApi.SubscribeAsync(topic, msg => { Interlocked.Increment(ref _messageCount1); }, cs.Token);
+                await ipfs.PubSubApi.PublishAsync(topic, "hello world!", cs.Token);
+                await Task.Delay(100, cs.Token);
+                Assert.Equal(1, _messageCount1);
 
                 cs.Cancel();
-                await ipfs.PubSubApi.PublishAsync(topic, "hello world!!!");
-                await Task.Delay(100);
-                Assert.Equal(1, messageCount1);
+                await ipfs.PubSubApi.PublishAsync(topic, "hello world!!!", cs.Token);
+                await Task.Delay(100, cs.Token);
+                Assert.Equal(1, _messageCount1);
             }
             finally
             {
@@ -196,9 +196,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             try
             {
                 await ipfs.PubSubApi.SubscribeAsync(topic, msg => { messages.Add(msg); }, cs.Token);
-                await ipfs.PubSubApi.PublishAsync(topic, expected);
+                await ipfs.PubSubApi.PublishAsync(topic, expected, cs.Token);
 
-                await Task.Delay(100);
+                await Task.Delay(100, cs.Token);
                 Assert.Equal(1, messages.Count);
                 Assert.Equal(expected, messages[0].DataBytes);
             }
@@ -221,9 +221,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 await ipfs.PubSubApi.SubscribeAsync(topic, msg => { messages.Add(msg); }, cs.Token);
                 var ms = new MemoryStream(expected, false);
-                await ipfs.PubSubApi.PublishAsync(topic, ms);
+                await ipfs.PubSubApi.PublishAsync(topic, ms, cs.Token);
 
-                await Task.Delay(100);
+                await Task.Delay(100, cs.Token);
                 Assert.Equal(1, messages.Count);
                 Assert.Equal(expected, messages[0].DataBytes);
             }

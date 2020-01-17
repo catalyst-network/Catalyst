@@ -29,7 +29,7 @@ using Catalyst.Core.Modules.Dfs.Controllers.V0.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0.Filter
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Filter
 {
     /// <summary>
     ///     Handles exceptions thrown by a controller.

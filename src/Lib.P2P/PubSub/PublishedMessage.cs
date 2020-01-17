@@ -40,7 +40,7 @@ namespace Lib.P2P.PubSub
     [ProtoContract]
     public class PublishedMessage : IPublishedMessage
     {
-        private string messageId;
+        private string _messageId;
 
         /// <inheritdoc />
         public Peer Sender { get; set; }
@@ -86,8 +86,8 @@ namespace Lib.P2P.PubSub
         {
             get
             {
-                if (messageId == null) messageId = Sender.Id.ToBase58() + SequenceNumber.ToHexString();
-                return messageId;
+                if (_messageId == null) _messageId = Sender.Id.ToBase58() + SequenceNumber.ToHexString();
+                return _messageId;
             }
         }
 

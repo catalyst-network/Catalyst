@@ -89,10 +89,10 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   Remove the CID from the want list.
         /// </summary>
         /// <param name="id">
-        ///   The content that is no longer needed.
+        ///     The content that is no longer needed.
         /// </param>
         /// <param name="cancel">
-        ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
+        ///     Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
         /// </param>
         /// <returns>
         ///   A task that represents the asynchronous operation.
@@ -101,7 +101,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   Any outstanding <see cref="GetAsync(Cid, CancellationToken)"/> for the
         ///   <paramref name="id"/> are cancelled.
         /// </remarks>
-        Task UnWantAsync(Cid id, CancellationToken cancel = default);
+        void UnWant(Cid id, CancellationToken cancel = default);
 
         /// <summary>
         ///   Gets information on the blocks exchanged with a specific <see cref="Peer"/>.
@@ -117,7 +117,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation. The task's value
         ///   contains the <see cref="BitswapLedger"/> for the <paramref name="peer"/>.
         /// </returns>
-        Task<BitswapLedger> LedgerAsync(Peer peer, CancellationToken cancel = default);
+        BitswapLedger GetBitSwapLedger(Peer peer, CancellationToken cancel = default);
 
         int FoundBlock(IDataBlock block);
 

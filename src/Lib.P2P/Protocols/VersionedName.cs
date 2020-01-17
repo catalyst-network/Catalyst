@@ -33,7 +33,7 @@ namespace Lib.P2P.Protocols
     /// <remarks>
     ///   Implements value type equality.
     /// </remarks>
-    public class VersionedName : IEquatable<VersionedName>, IComparable<VersionedName>
+    public sealed class VersionedName : IEquatable<VersionedName>, IComparable<VersionedName>
     {
         /// <summary>
         ///   The name.
@@ -59,7 +59,7 @@ namespace Lib.P2P.Protocols
             return new VersionedName
             {
                 Name = string.Join("/", parts, 0, parts.Length - 1),
-                Version = SemVersion.Parse(parts[parts.Length - 1])
+                Version = SemVersion.Parse(parts[^1])
             };
         }
 
@@ -70,24 +70,18 @@ namespace Lib.P2P.Protocols
         public override bool Equals(object obj)
         {
             var that = obj as VersionedName;
-            return that == null
-                ? false
-                : Name == that.Name && Version == that.Version;
+            return that != null && (Name == that.Name && Version == that.Version);
         }
 
         /// <inheritdoc />
-        public bool Equals(VersionedName that) { return Name == that.Name && Version == that.Version; }
+        public bool Equals(VersionedName that) { return Name == that?.Name && Version == that?.Version; }
 
         /// <summary>
         ///   Value equality.
         /// </summary>
         public static bool operator ==(VersionedName a, VersionedName b)
         {
-            if (ReferenceEquals(a, b)) return true;
-            if (ReferenceEquals(a, null)) return false;
-            if (ReferenceEquals(b, null)) return false;
-
-            return a.Equals(b);
+            return ReferenceEquals(a, b) || !ReferenceEquals(a, null) && !ReferenceEquals(b, null) && a.Equals(b);
         }
 
         /// <summary>
@@ -95,19 +89,13 @@ namespace Lib.P2P.Protocols
         /// </summary>
         public static bool operator !=(VersionedName a, VersionedName b)
         {
-            if (ReferenceEquals(a, b)) return false;
-            if (ReferenceEquals(a, null)) return true;
-            if (ReferenceEquals(b, null)) return true;
-
-            return !a.Equals(b);
+            return !ReferenceEquals(a, b) && (ReferenceEquals(a, null) || ReferenceEquals(b, null) || !a.Equals(b));
         }
 
         /// <inheritdoc />
         public int CompareTo(VersionedName that)
         {
-            if (that == null) return 1;
-            if (Name == that.Name) return Version.CompareTo(that.Version);
-            return Name.CompareTo(that.Name);
+            return that == null ? 1 : Name == that.Name ? Version.CompareTo(that.Version) : string.Compare(Name, that.Name, StringComparison.Ordinal);
         }
     }
 }

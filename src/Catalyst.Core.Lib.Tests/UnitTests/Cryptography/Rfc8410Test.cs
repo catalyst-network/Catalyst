@@ -29,7 +29,6 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using MultiFormats;
-using NSubstitute;
 using Org.BouncyCastle.Crypto.Parameters;
 using Xunit;
 using Xunit.Abstractions;
@@ -62,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 MC4CAQAwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC
 -----END PRIVATE KEY-----
 ";
-            var key = await _keyStoreService.ImportAsync("alice1", alice1, null);
+            var key = await _keyStoreService.ImportAsync("alice1", alice1);
             try
             {
                 var priv = (Ed25519PrivateKeyParameters) await _keyStoreService.GetPrivateKeyAsync("alice1");
@@ -90,7 +89,7 @@ oB8wHQYKKoZIhvcNAQkJFDEPDA1DdXJkbGUgQ2hhaXJzgSEAGb9ECWmEzf6FQbrB
 Z9w7lshQhqowtrbLDFw4rXAxZuE=
 -----END PRIVATE KEY-----
 ";
-            var key = await _keyStoreService.ImportAsync("alice1", alice1, null);
+            var key = await _keyStoreService.ImportAsync("alice1", alice1);
             try
             {
                 var priv = (Ed25519PrivateKeyParameters) await _keyStoreService.GetPrivateKeyAsync("alice1");

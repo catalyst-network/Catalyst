@@ -36,12 +36,10 @@ using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Lib.IO;
 using Catalyst.Core.Modules.Dfs.UnixFileSystem;
-using Catalyst.Core.Modules.Hashing;
 using Common.Logging;
 using ICSharpCode.SharpZipLib.Tar;
 using Lib.P2P;
 using MultiFormats;
-using MultiFormats.Registry;
 using ProtoBuf;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
@@ -108,7 +106,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             if (options.Wrap)
             {
                 var link = node.ToLink(name);
-                var wlinks = new IFileSystemLink[]
+                var wlinks = new[]
                 {
                     link
                 };
@@ -175,7 +173,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 BlockSizes = unixFsNodes.Select(n => (ulong) n.Size).ToArray()
             };
             var pb = new MemoryStream();
-            ProtoBuf.Serializer.Serialize(pb, dm);
+            Serializer.Serialize(pb, dm);
             var dag = new DagNode(pb.ToArray(), links);
 
             // Save it.

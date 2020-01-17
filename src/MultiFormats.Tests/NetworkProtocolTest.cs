@@ -46,7 +46,7 @@ namespace MultiFormats.Tests
             ExceptionAssert.Throws<ArgumentException>(() => NetworkProtocol.Register<CodeExists>());
         }
 
-        private class NameExists : NetworkProtocol
+        private sealed class NameExists : NetworkProtocol
         {
             public override string Name => "tcp";
             public override uint Code => 0x7FFF;
@@ -55,7 +55,7 @@ namespace MultiFormats.Tests
             public override void WriteValue(CodedOutputStream stream) { }
         }
 
-        private class CodeExists : NetworkProtocol
+        private sealed class CodeExists : NetworkProtocol
         {
             public override string Name => "x-tcp";
             public override uint Code => 6;

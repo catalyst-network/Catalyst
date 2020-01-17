@@ -67,6 +67,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="dfsService">The DFS.</param>
         /// <param name="peerSettings"></param>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
+        /// <param name="hashProvider"></param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestObserver(IDfsService dfsService,
             IPeerSettings peerSettings,

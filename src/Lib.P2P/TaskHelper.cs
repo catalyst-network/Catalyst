@@ -64,13 +64,21 @@ namespace Lib.P2P
             {
                 cancel.ThrowIfCancellationRequested();
                 var winner = await Task.WhenAny(running).ConfigureAwait(false);
-                if (!winner.IsCanceled && !winner.IsFaulted) return await winner;
+                if (!winner.IsCanceled && !winner.IsFaulted)
+                {
+                    return await winner;
+                }
+                
                 if (winner.IsFaulted)
                 {
-                    if (winner.Exception is AggregateException ae)
+                    if (winner.Exception is { } ae)
+                    {
                         exceptions.AddRange(ae.InnerExceptions);
+                    }
                     else
+                    {
                         exceptions.Add(winner.Exception);
+                    }
                 }
 
                 running.Remove(winner);
@@ -98,7 +106,7 @@ namespace Lib.P2P
         /// <remarks>
         ///   Copied from https://houseofcat.io/tutorials/csharp/async/parallelforeachasync
         /// </remarks>
-        public static Task ParallelForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> funcBody, int maxDoP = 4)
+        internal static Task ParallelForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> funcBody, int maxDoP = 4)
         {
             async Task AwaitPartition(IEnumerator<T> partition)
             {
@@ -113,7 +121,7 @@ namespace Lib.P2P
                    .Create(source)
                    .GetPartitions(maxDoP)
                    .AsParallel()
-                   .Select(p => AwaitPartition(p)));
+                   .Select(AwaitPartition));
         }
     }
 }

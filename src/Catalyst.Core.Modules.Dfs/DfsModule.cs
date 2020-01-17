@@ -21,15 +21,11 @@
 
 #endregion
 
-using System.IO;
-using System.Reflection;
 using Autofac;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
-using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
@@ -40,13 +36,9 @@ using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
-using Lib.P2P.Cryptography;
 using Lib.P2P.Protocols;
 using Lib.P2P.PubSub;
-using Lib.P2P.Routing;
 using Makaretu.Dns;
-using MultiFormats;
-using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -86,8 +78,8 @@ namespace Catalyst.Core.Modules.Dfs
                .As<IDfsService>()
                .SingleInstance();
 
-            builder.RegisterType<BitswapService>()
-               .As<BitswapService>()
+            builder.RegisterType<BitSwapService>()
+               .As<BitSwapService>()
                .SingleInstance();
 
             builder.RegisterType<SwarmService>()

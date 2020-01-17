@@ -149,7 +149,9 @@ namespace MultiFormats
             : this()
         {
             if (buffer == null || buffer.Length == 0)
+            {
                 return;
+            }
 
             Read(new MemoryStream(buffer, false));
         }
@@ -158,7 +160,10 @@ namespace MultiFormats
         ///   Gets the peer ID of the multiaddress.
         /// </summary>
         /// <value>
-        ///   The <see cref="Ipfs.Core.Peer.Id"/> as a <see cref="MultiHash"/>.
+        ///   The <see>
+        ///       <cref>Lib.P2P.Peer.Id</cref>
+        ///   </see>
+        ///   as a <see cref="MultiHash"/>.
         /// </value>
         /// <exception cref="Exception">
         ///   When the last <see cref="Protocols">protocol</see>
@@ -175,7 +180,9 @@ namespace MultiFormats
                 var protocol = Protocols
                    .LastOrDefault(p => p.Name == "ipfs" || p.Name == "p2p");
                 if (protocol == null)
+                {
                     throw new Exception($"'{this}' is missing the peer ID. Add the 'ipfs' or 'p2p' protocol.");
+                }
 
                 return protocol.Value;
             }
@@ -286,7 +293,7 @@ namespace MultiFormats
             foreach (var protocol in Protocols)
             {
                 stream.Write('/');
-                stream.Write((string) protocol.Name);
+                stream.Write(protocol.Name);
                 protocol.WriteValue(stream);
             }
         }
@@ -351,7 +358,7 @@ namespace MultiFormats
                     break;
                 if (!NetworkProtocol.Names.TryGetValue(name.ToString(), out var protocolType))
                     throw new FormatException(string.Format("The IPFS network protocol '{0}' is unknown.",
-                        name.ToString()));
+                        name));
                 var p = (NetworkProtocol) Activator.CreateInstance(protocolType);
                 p.ReadValue(stream);
                 Protocols.Add(p);

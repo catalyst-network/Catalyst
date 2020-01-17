@@ -24,9 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Core.Modules.Dfs.Controllers.V0;
 using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Lib.P2P;
 using Microsoft.AspNetCore.Mvc;
@@ -99,11 +97,19 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             string lifetime = "24h")
         {
             if (string.IsNullOrWhiteSpace(arg))
-                throw new ArgumentNullException("arg", "The name is required.");
+            {
+                throw new ArgumentNullException(nameof(arg), "The name is required.");
+            }
+
             if (string.IsNullOrWhiteSpace(key))
-                throw new ArgumentNullException("type", "The key name is required.");
+            {
+                throw new ArgumentNullException(nameof(arg), "The key name is required.");
+            }
+
             if (string.IsNullOrWhiteSpace(lifetime))
-                throw new ArgumentNullException("type", "The lifetime is required.");
+            {
+                throw new ArgumentNullException(nameof(arg), "The lifetime is required.");
+            }
 
             var duration = Duration.Parse(lifetime);
             var content = await IpfsCore.NameApi.PublishAsync(arg, resolve, key, duration, Cancel);

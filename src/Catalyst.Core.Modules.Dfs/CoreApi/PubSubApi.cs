@@ -42,28 +42,28 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         }
 
         public async Task<IEnumerable<Peer>> PeersAsync(string topic = null,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             return await _pubSubService.PeersAsync(topic, cancel);
         }
 
         public async Task PublishAsync(string topic,
             string message,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             await _pubSubService.PublishAsync(topic, message, cancel);
         }
 
         public async Task PublishAsync(string topic,
             byte[] message,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             await _pubSubService.PublishAsync(topic, message, cancel);
         }
 
         public async Task PublishAsync(string topic,
             Stream message,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             await _pubSubService.PublishAsync(topic, message, cancel);
         }
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         }
 
         public async Task<IEnumerable<string>> SubscribedTopicsAsync(CancellationToken cancel =
-            default(CancellationToken))
+            default)
         {
             return await _pubSubService.SubscribedTopicsAsync(cancel);
         }

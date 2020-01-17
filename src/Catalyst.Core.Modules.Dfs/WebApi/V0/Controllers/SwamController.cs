@@ -25,13 +25,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers;
 using Lib.P2P;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Catalyst.Core.Modules.Dfs.Controllers.V0
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
     ///   Addresses for peers.
@@ -183,12 +181,6 @@ namespace Catalyst.Core.Modules.Dfs.Controllers.V0
             };
         }
 
-        /// <summary>
-        ///   Connect to a peer.
-        /// </summary>
-        /// <param name="arg">
-        ///   The multiaddress of the peer.
-        /// </param>
         // [HttpGet, HttpPost, Route("swarm/connect")]
         // public Task Connect(string arg) { return IpfsCore.SwarmApi.ConnectAsync(arg, Cancel); }
 

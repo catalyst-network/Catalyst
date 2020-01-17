@@ -43,7 +43,7 @@ namespace Lib.P2P.Multiplex
     /// </remarks>
     public class Muxer
     {
-        private static ILog log = LogManager.GetLogger(typeof(Muxer));
+        private static ILog _log = LogManager.GetLogger(typeof(Muxer));
 
         /// <summary>
         ///   The next stream ID to create.
@@ -79,7 +79,7 @@ namespace Lib.P2P.Multiplex
         /// </summary>
         public event EventHandler<Substream> SubstreamClosed;
 
-        private readonly AsyncLock ChannelWriteLock = new AsyncLock();
+        private readonly AsyncLock _channelWriteLock = new AsyncLock();
 
         /// <summary>
         ///   The substreams that are open.
@@ -128,7 +128,7 @@ namespace Lib.P2P.Multiplex
         ///   A duplex stream.
         /// </returns>
         public async Task<Substream> CreateStreamAsync(string name = "",
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var streamId = NextStreamId;
             NextStreamId += 2;
@@ -148,8 +148,8 @@ namespace Lib.P2P.Multiplex
                 var wireName = Encoding.UTF8.GetBytes(name);
                 await header.WriteAsync(Channel, cancel).ConfigureAwait(false);
                 await Channel.WriteVarintAsync(wireName.Length, cancel).ConfigureAwait(false);
-                await Channel.WriteAsync(wireName, 0, wireName.Length).ConfigureAwait(false);
-                await Channel.FlushAsync().ConfigureAwait(false);
+                await Channel.WriteAsync(wireName, 0, wireName.Length, cancel).ConfigureAwait(false);
+                await Channel.FlushAsync(cancel).ConfigureAwait(false);
             }
 
             return substream;
@@ -162,7 +162,7 @@ namespace Lib.P2P.Multiplex
         ///   Internal method called by Substream.Dispose().
         /// </remarks>
         public async Task<Substream> RemoveStreamAsync(Substream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             if (Substreams.TryRemove(stream.Id, out _))
 
@@ -176,7 +176,7 @@ namespace Lib.P2P.Multiplex
                     };
                     await header.WriteAsync(Channel, cancel).ConfigureAwait(false);
                     Channel.WriteByte(0); // length
-                    await Channel.FlushAsync().ConfigureAwait(false);
+                    await Channel.FlushAsync(cancel).ConfigureAwait(false);
                 }
 
             return stream;
@@ -194,7 +194,7 @@ namespace Lib.P2P.Multiplex
         ///   Any encountered errors will close the <see cref="Channel"/>.
         ///   </para>
         /// </remarks>
-        public async Task ProcessRequestsAsync(CancellationToken cancel = default(CancellationToken))
+        public async Task ProcessRequestsAsync(CancellationToken cancel = default)
         {
             try
             {
@@ -203,8 +203,8 @@ namespace Lib.P2P.Multiplex
                     // Read the packet prefix.
                     var header = await Header.ReadAsync(Channel, cancel).ConfigureAwait(false);
                     var length = await Varint.ReadVarint32Async(Channel, cancel).ConfigureAwait(false);
-                    if (log.IsTraceEnabled)
-                        log.TraceFormat("received '{0}', stream={1}, length={2}", header.PacketType, header.StreamId,
+                    if (_log.IsTraceEnabled)
+                        _log.TraceFormat("received '{0}', stream={1}, length={2}", header.PacketType, header.StreamId,
                             length);
 
                     // Read the payload.
@@ -218,7 +218,7 @@ namespace Lib.P2P.Multiplex
                         case PacketType.NewStream:
                             if (substream != null)
                             {
-                                log.Warn($"Stream {substream.Id} already exists");
+                                _log.Warn($"Stream {substream.Id} already exists");
                                 continue;
                             }
 
@@ -238,7 +238,7 @@ namespace Lib.P2P.Multiplex
 #if true
                             if (Receiver && (substream.Id & 1) == 1)
                             {
-                                log.Debug($"go-hack sending newstream {substream.Id}");
+                                _log.Debug($"go-hack sending newstream {substream.Id}");
                                 using (await AcquireWriteAccessAsync().ConfigureAwait(false))
                                 {
                                     var hdr = new Header
@@ -248,7 +248,7 @@ namespace Lib.P2P.Multiplex
                                     };
                                     await hdr.WriteAsync(Channel, cancel).ConfigureAwait(false);
                                     Channel.WriteByte(0); // length
-                                    await Channel.FlushAsync().ConfigureAwait(false);
+                                    await Channel.FlushAsync(cancel).ConfigureAwait(false);
                                 }
                             }
 #endif
@@ -257,7 +257,7 @@ namespace Lib.P2P.Multiplex
                         case PacketType.MessageInitiator:
                             if (substream == null)
                             {
-                                log.Warn($"Message to unknown stream #{header.StreamId}");
+                                _log.Warn($"Message to unknown stream #{header.StreamId}");
                                 continue;
                             }
 
@@ -267,7 +267,7 @@ namespace Lib.P2P.Multiplex
                         case PacketType.MessageReceiver:
                             if (substream == null)
                             {
-                                log.Warn($"Message to unknown stream #{header.StreamId}");
+                                _log.Warn($"Message to unknown stream #{header.StreamId}");
                                 continue;
                             }
 
@@ -280,7 +280,7 @@ namespace Lib.P2P.Multiplex
                         case PacketType.ResetReceiver:
                             if (substream == null)
                             {
-                                log.Warn($"Reset of unknown stream #{header.StreamId}");
+                                _log.Warn($"Reset of unknown stream #{header.StreamId}");
                                 continue;
                             }
 
@@ -313,7 +313,7 @@ namespace Lib.P2P.Multiplex
             catch (Exception e)
             {
                 // Log error if the channel is not closed.
-                if (Channel.CanRead || Channel.CanWrite) log.Error("failed", e);
+                if (Channel.CanRead || Channel.CanWrite) _log.Error("failed", e);
             }
 
             // Some of the tests do not pass a connection.
@@ -335,6 +335,6 @@ namespace Lib.P2P.Multiplex
         ///   A task that represents the asynchronous get operation. The task's value
         ///   is an <see cref="IDisposable"/> that releases the lock.
         /// </returns>
-        public Task<IDisposable> AcquireWriteAccessAsync() { return ChannelWriteLock.LockAsync(); }
+        public Task<IDisposable> AcquireWriteAccessAsync() { return _channelWriteLock.LockAsync(); }
     }
 }

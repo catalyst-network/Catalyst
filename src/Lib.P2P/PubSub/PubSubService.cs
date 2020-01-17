@@ -40,19 +40,19 @@ namespace Lib.P2P.PubSub
     /// <remarks>
     ///   Relies upon the router(s) to deliver and receive messages from other peers.
     /// </remarks>
-    public class PubSubService : IPubSubService
+    public sealed class PubSubService : IPubSubService
     {
-        private static ILog log = LogManager.GetLogger(typeof(PubSubService));
+        private static ILog _log = LogManager.GetLogger(typeof(PubSubService));
 
-        private class TopicHandler
+        private sealed class TopicHandler
         {
             public string Topic;
             public Action<IPublishedMessage> Handler;
         }
 
-        private long nextSequenceNumber;
-        private ConcurrentDictionary<TopicHandler, TopicHandler> topicHandlers;
-        private MessageTracker tracker = new MessageTracker();
+        private long _nextSequenceNumber;
+        private ConcurrentDictionary<TopicHandler, TopicHandler> _topicHandlers;
+        private readonly MessageTracker _tracker = new MessageTracker();
 
         // TODO: A general purpose CancellationTokenSource that stops publishing of
         // messages when this service is stopped.
@@ -88,10 +88,10 @@ namespace Lib.P2P.PubSub
         /// <inheritdoc />
         public async Task StartAsync()
         {
-            topicHandlers = new ConcurrentDictionary<TopicHandler, TopicHandler>();
+            _topicHandlers = new ConcurrentDictionary<TopicHandler, TopicHandler>();
 
             // Resolution of 100 nanoseconds.
-            nextSequenceNumber = DateTime.UtcNow.Ticks;
+            _nextSequenceNumber = DateTime.UtcNow.Ticks;
 
             // Init the stats.
             MesssagesPublished = 0;
@@ -109,7 +109,7 @@ namespace Lib.P2P.PubSub
         /// <inheritdoc />
         public async Task StopAsync()
         {
-            topicHandlers.Clear();
+            _topicHandlers.Clear();
 
             foreach (var router in Routers)
             {
@@ -136,12 +136,16 @@ namespace Lib.P2P.PubSub
         /// </remarks>
         public PublishedMessage CreateMessage(string topic, byte[] data)
         {
-            var next = Interlocked.Increment(ref nextSequenceNumber);
+            var next = Interlocked.Increment(ref _nextSequenceNumber);
             var seqno = BitConverter.GetBytes(next);
-            if (BitConverter.IsLittleEndian) seqno = seqno.Reverse().ToArray();
+            if (BitConverter.IsLittleEndian)
+            {
+                seqno = seqno.Reverse().ToArray();
+            }
+            
             return new PublishedMessage
             {
-                Topics = new string[] {topic},
+                Topics = new[] {topic},
                 Sender = LocalPeer,
                 SequenceNumber = seqno,
                 DataBytes = data
@@ -149,9 +153,9 @@ namespace Lib.P2P.PubSub
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<string>> SubscribedTopicsAsync(CancellationToken cancel = default(CancellationToken))
+        public Task<IEnumerable<string>> SubscribedTopicsAsync(CancellationToken cancel = default)
         {
-            var topics = topicHandlers.Values
+            var topics = _topicHandlers.Values
                .Select(t => t.Topic)
                .Distinct();
             return Task.FromResult(topics);
@@ -159,7 +163,7 @@ namespace Lib.P2P.PubSub
 
         /// <inheritdoc />
         public Task<IEnumerable<Peer>> PeersAsync(string topic = null,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var peers = Routers
                .SelectMany(r => r.InterestedPeers(topic))
@@ -168,13 +172,13 @@ namespace Lib.P2P.PubSub
         }
 
         /// <inheritdoc />
-        public Task PublishAsync(string topic, string message, CancellationToken cancel = default(CancellationToken))
+        public Task PublishAsync(string topic, string message, CancellationToken cancel = default)
         {
             return PublishAsync(topic, Encoding.UTF8.GetBytes(message), cancel);
         }
 
         /// <inheritdoc />
-        public Task PublishAsync(string topic, Stream message, CancellationToken cancel = default(CancellationToken))
+        public Task PublishAsync(string topic, Stream message, CancellationToken cancel = default)
         {
             using (var ms = new MemoryStream())
             {
@@ -186,7 +190,7 @@ namespace Lib.P2P.PubSub
         }
 
         /// <inheritdoc />
-        public Task PublishAsync(string topic, byte[] message, CancellationToken cancel = default(CancellationToken))
+        public Task PublishAsync(string topic, byte[] message, CancellationToken cancel = default)
         {
             var msg = CreateMessage(topic, message);
             ++MesssagesPublished;
@@ -200,23 +204,30 @@ namespace Lib.P2P.PubSub
             CancellationToken cancellationToken)
         {
             var topicHandler = new TopicHandler {Topic = topic, Handler = handler};
-            topicHandlers.TryAdd(topicHandler, topicHandler);
+            _topicHandlers.TryAdd(topicHandler, topicHandler);
 
             // TODO: need a better way.
 #pragma warning disable VSTHRD101 
             cancellationToken.Register(async () =>
             {
-                topicHandlers.TryRemove(topicHandler, out _);
-                if (topicHandlers.Values.Count(t => t.Topic == topic) == 0)
+                _topicHandlers.TryRemove(topicHandler, out _);
+                
+                if (_topicHandlers.Values.Count(t => t.Topic == topic) == 0)
+                {
                     await Task.WhenAll(Routers.Select(r => r.LeaveTopicAsync(topic, CancellationToken.None)))
                        .ConfigureAwait(false);
+                }
             });
 #pragma warning restore VSTHRD101 
 
             // Tell routers if first time.
-            if (topicHandlers.Values.Count(t => t.Topic == topic) == 1)
-                await Task.WhenAll(Routers.Select(r => r.JoinTopicAsync(topic, CancellationToken.None)))
+            Task Selector(IMessageRouter r) => r.JoinTopicAsync(topic, CancellationToken.None);
+
+            if (_topicHandlers.Values.Count(t => t.Topic == topic) == 1)
+            {
+                await Task.WhenAll(Routers.Select(Selector))
                    .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -236,24 +247,26 @@ namespace Lib.P2P.PubSub
             ++MesssagesReceived;
 
             // Check for duplicate message.
-            if (tracker.RecentlySeen(msg.MessageId))
+            if (_tracker.RecentlySeen(msg.MessageId))
             {
                 ++DuplicateMesssagesReceived;
                 return;
             }
 
             // Call local topic handlers.
-            var handlers = topicHandlers.Values
+            var handlers = _topicHandlers.Values
                .Where(th => msg.Topics.Contains(th.Topic));
             foreach (var handler in handlers)
+            {
                 try
                 {
                     handler.Handler(msg);
                 }
                 catch (Exception e)
                 {
-                    log.Error($"Topic handler for '{handler.Topic}' failed.", e);
+                    _log.Error($"Topic handler for '{handler.Topic}' failed.", e);
                 }
+            }
 
             // Tell other message routers.
             _ = Task.WhenAll(Routers

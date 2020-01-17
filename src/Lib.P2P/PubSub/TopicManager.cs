@@ -32,9 +32,9 @@ namespace Lib.P2P.PubSub
     /// </summary>
     public class TopicManager
     {
-        private static readonly IEnumerable<Peer> nopeers = Enumerable.Empty<Peer>();
+        private static readonly IEnumerable<Peer> Nopeers = Enumerable.Empty<Peer>();
 
-        private ConcurrentDictionary<string, HashSet<Peer>> topics = new ConcurrentDictionary<string, HashSet<Peer>>();
+        private ConcurrentDictionary<string, HashSet<Peer>> _topics = new ConcurrentDictionary<string, HashSet<Peer>>();
 
         /// <summary>
         ///   Get the peers interested in a topic.
@@ -48,9 +48,9 @@ namespace Lib.P2P.PubSub
         /// </returns>
         public IEnumerable<Peer> GetPeers(string topic)
         {
-            if (topic == null) return topics.Values.SelectMany(v => v);
+            if (topic == null) return _topics.Values.SelectMany(v => v);
 
-            if (!topics.TryGetValue(topic, out var peers)) return nopeers;
+            if (!_topics.TryGetValue(topic, out var peers)) return Nopeers;
             return peers;
         }
 
@@ -66,7 +66,7 @@ namespace Lib.P2P.PubSub
         /// </returns>
         public IEnumerable<string> GetTopics(Peer peer)
         {
-            return topics
+            return _topics
                .Where(kp => kp.Value.Contains(peer))
                .Select(kp => kp.Key);
         }
@@ -86,7 +86,7 @@ namespace Lib.P2P.PubSub
         /// </remarks>
         public void AddInterest(string topic, Peer peer)
         {
-            topics.AddOrUpdate(
+            _topics.AddOrUpdate(
                 topic,
                 (key) => new HashSet<Peer> {peer},
                 (key, peers) =>
@@ -108,10 +108,10 @@ namespace Lib.P2P.PubSub
         /// </param>
         public void RemoveInterest(string topic, Peer peer)
         {
-            topics.AddOrUpdate(
+            _topics.AddOrUpdate(
                 topic,
                 (key) => new HashSet<Peer>(),
-                (Key, list) =>
+                (key, list) =>
                 {
                     list.Remove(peer);
                     return list;
@@ -126,12 +126,15 @@ namespace Lib.P2P.PubSub
         /// </param>
         public void Clear(Peer peer)
         {
-            foreach (var topic in topics.Keys) RemoveInterest(topic, peer);
+            foreach (var topic in _topics.Keys)
+            {
+                RemoveInterest(topic, peer);
+            }
         }
 
         /// <summary>
         ///   Remove all topics.
         /// </summary>
-        public void Clear() { topics.Clear(); }
+        public void Clear() { _topics.Clear(); }
     }
 }

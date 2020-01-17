@@ -42,9 +42,9 @@ namespace Catalyst.Core.Lib.Dag
         /// <param name="size">The serialised size (in bytes) of the linked node.</param>
         public DagLink(string name, Cid id, long size)
         {
-            this.Name = name;
-            this.Id = id;
-            this.Size = size;
+            Name = name;
+            Id = id;
+            Size = size;
         }
 
         /// <summary>
@@ -56,9 +56,9 @@ namespace Catalyst.Core.Lib.Dag
         /// </param>
         public DagLink(IMerkleLink link)
         {
-            this.Name = link.Name;
-            this.Id = link.Id;
-            this.Size = link.Size;
+            Name = link.Name;
+            Id = link.Id;
+            Size = link.Size;
         }
 
         /// <summary>

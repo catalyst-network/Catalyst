@@ -53,6 +53,6 @@ namespace Catalyst.Abstractions.Dfs.Migration
         /// <param name="cancel">
         /// </param>
         /// <returns></returns>
-        Task MirgrateToVersionAsync(int version, CancellationToken cancel = default(CancellationToken));  
+        Task MirgrateToVersionAsync(int version, CancellationToken cancel = default);  
     }
 }

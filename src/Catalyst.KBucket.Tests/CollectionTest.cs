@@ -157,11 +157,20 @@ namespace Catalyst.KBucket
         {
             var bucket = new KBucket<Contact>();
             var nContacts = bucket.ContactsPerBucket + 1;
-            for (var i = 0; i < nContacts; ++i) bucket.Add(new Contact(i));
+            for (var i = 0; i < nContacts; ++i)
+            {
+                bucket.Add(new Contact(i));
+            }
+
             Assert.AreEqual(nContacts, bucket.Count);
 
             var n = 0;
-            foreach (var contact in bucket) ++n;
+            
+            foreach (var contact in bucket)
+            {
+                ++n;
+            }
+            
             Assert.AreEqual(nContacts, n);
         }
 
@@ -172,8 +181,8 @@ namespace Catalyst.KBucket
         public async Task ThreadSafe()
         {
             var bucket = new KBucket<Contact>();
-            var nContacts = 1000;
-            var nTasks = 100;
+            const int nContacts = 1000;
+            const int nTasks = 100;
             var tasks = new Task[nTasks];
 
             for (var i = 0; i < nTasks; ++i)
@@ -187,7 +196,10 @@ namespace Catalyst.KBucket
 
         public void AddTask(KBucket<Contact> bucket, int start, int count)
         {
-            for (var i = 0; i < count; ++i) bucket.Add(new Contact(start * count + i));
+            for (var i = 0; i < count; ++i)
+            {
+                bucket.Add(new Contact(start * count + i));
+            }
         }
     }
 }

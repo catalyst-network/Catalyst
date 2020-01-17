@@ -29,12 +29,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Dfs.UnixFileSystem;
-using Catalyst.Core.Modules.Hashing;
 using Lib.P2P;
-using MultiFormats.Registry;
 
 namespace Catalyst.Core.Modules.Dfs.CoreApi
 {

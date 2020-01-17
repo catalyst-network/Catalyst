@@ -44,7 +44,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation that returns
         ///   the value of the key as a byte array.
         /// </returns>
-        Task<byte[]> GetAsync(byte[] key, CancellationToken cancel = default(CancellationToken));
+        Task<byte[]> GetAsync(byte[] key, CancellationToken cancel = default);
 
         /// <summary>
         ///   Tries to get the value of a key.
@@ -62,7 +62,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation that returns
         ///   <b>true</b> if the key exists; otherwise, <b>false</b>.
         /// </returns>
-        Task<bool> TryGetAsync(byte[] key, out byte[] value, CancellationToken cancel = default(CancellationToken));
+        Task<bool> TryGetAsync(byte[] key, out byte[] value, CancellationToken cancel = default);
 
         /// <summary>
         ///   Put the value of a key.
@@ -79,6 +79,6 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <returns>
         ///   A task that represents the asynchronous operation.
         /// </returns>
-        Task PutAsync(byte[] key, out byte[] value, CancellationToken cancel = default(CancellationToken));
+        Task PutAsync(byte[] key, out byte[] value, CancellationToken cancel = default);
     }
 }

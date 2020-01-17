@@ -58,6 +58,6 @@ namespace Lib.P2P
         ///   the private network.
         ///   </para>
         /// </remarks>
-        Task<Stream> ProtectAsync(PeerConnection connection, CancellationToken cancel = default(CancellationToken));
+        Task<Stream> ProtectAsync(PeerConnection connection, CancellationToken cancel = default);
     }
 }

@@ -44,7 +44,7 @@ namespace Lib.P2P.PubSub
         ///   A task that represents the asynchronous operation. The task's value is
         ///   a sequence of <see cref="string"/> for each topic.
         /// </returns>
-        Task<IEnumerable<string>> SubscribedTopicsAsync(CancellationToken cancel = default(CancellationToken));
+        Task<IEnumerable<string>> SubscribedTopicsAsync(CancellationToken cancel = default);
 
         /// <summary>
         ///   Get the peers that are pubsubing with us.
@@ -59,7 +59,7 @@ namespace Lib.P2P.PubSub
         ///   A task that represents the asynchronous operation. The task's value is
         ///   a sequence of <see cref="Peer"/>.
         /// </returns>
-        Task<IEnumerable<Peer>> PeersAsync(string topic = null, CancellationToken cancel = default(CancellationToken));
+        Task<IEnumerable<Peer>> PeersAsync(string topic = null, CancellationToken cancel = default);
 
         /// <summary>
         ///   Publish a string message to a given topic.
@@ -76,7 +76,7 @@ namespace Lib.P2P.PubSub
         /// <returns>
         ///   A task that represents the asynchronous operation.
         /// </returns>
-        Task PublishAsync(string topic, string message, CancellationToken cancel = default(CancellationToken));
+        Task PublishAsync(string topic, string message, CancellationToken cancel = default);
 
         /// <summary>
         ///   Publish a binary message to a given topic.
@@ -93,7 +93,7 @@ namespace Lib.P2P.PubSub
         /// <returns>
         ///   A task that represents the asynchronous operation.
         /// </returns>
-        Task PublishAsync(string topic, byte[] message, CancellationToken cancel = default(CancellationToken));
+        Task PublishAsync(string topic, byte[] message, CancellationToken cancel = default);
 
         /// <summary>
         ///   Publish a binary message to a given topic.
@@ -110,7 +110,7 @@ namespace Lib.P2P.PubSub
         /// <returns>
         ///   A task that represents the asynchronous operation.
         /// </returns>
-        Task PublishAsync(string topic, Stream message, CancellationToken cancel = default(CancellationToken));
+        Task PublishAsync(string topic, Stream message, CancellationToken cancel = default);
 
         /// <summary>
         ///   Subscribe to messages on a given topic.

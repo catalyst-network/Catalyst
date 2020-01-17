@@ -313,9 +313,9 @@ namespace Lib.P2P.Tests
             Assert.AreEqual(a0, a1);
             Assert.AreNotEqual(a0, b);
 
-            Assert.AreEqual<Cid>(a0, a0);
-            Assert.AreEqual<Cid>(a0, a1);
-            Assert.AreNotEqual<Cid>(a0, b);
+            Assert.AreEqual(a0, a0);
+            Assert.AreEqual(a0, a1);
+            Assert.AreNotEqual(a0, b);
 
             Assert.AreEqual(a0.GetHashCode(), a0.GetHashCode());
             Assert.AreEqual(a0.GetHashCode(), a1.GetHashCode());
@@ -424,7 +424,7 @@ namespace Lib.P2P.Tests
             ExceptionAssert.Throws<NotSupportedException>(() => cid.Version = 0);
         }
 
-        private class CidAndX
+        private sealed class CidAndX
         {
             public Cid Cid;
             public int X;

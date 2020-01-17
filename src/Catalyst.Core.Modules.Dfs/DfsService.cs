@@ -30,13 +30,11 @@ using System.Reflection;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
-using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
@@ -121,7 +119,7 @@ namespace Catalyst.Core.Modules.Dfs
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
 
         public DfsService(IBitSwapApi bitSwapApi,
-            BitswapService bitSwapService,
+            BitSwapService bitSwapService,
             IBlockApi blockApi,
             IBlockRepositoryApi blockRepositoryApi,
             IBootstrapApi bootstrapApi,
@@ -352,8 +350,7 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 Log.Error("No listeners were created.");
             }
-
-
+            
             // Now that the listener addresses are established, the discovery 
             // services can begin.
             MulticastService multicast = null;

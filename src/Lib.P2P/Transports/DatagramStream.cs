@@ -31,16 +31,16 @@ namespace Lib.P2P.Transports
 {
     internal class DatagramStream : Stream
     {
-        private Socket socket;
-        private bool ownsSocket;
-        private MemoryStream sendBuffer = new MemoryStream();
-        private MemoryStream receiveBuffer = new MemoryStream();
-        private byte[] datagram = new byte[2048];
+        private Socket _socket;
+        private bool _ownsSocket;
+        private MemoryStream _sendBuffer = new MemoryStream();
+        private MemoryStream _receiveBuffer = new MemoryStream();
+        private byte[] _datagram = new byte[2048];
 
         public DatagramStream(Socket socket, bool ownsSocket = false)
         {
-            this.socket = socket;
-            this.ownsSocket = ownsSocket;
+            this._socket = socket;
+            this._ownsSocket = ownsSocket;
         }
 
         protected override void Dispose(bool disposing)
@@ -55,10 +55,10 @@ namespace Lib.P2P.Transports
                     // eat it
                 }
 
-            if (ownsSocket && socket != null)
+            if (_ownsSocket && _socket != null)
                 try
                 {
-                    socket.Dispose();
+                    _socket.Dispose();
                 }
                 catch (SocketException)
                 {
@@ -66,7 +66,7 @@ namespace Lib.P2P.Transports
                 }
                 finally
                 {
-                    socket = null;
+                    _socket = null;
                 }
 
             base.Dispose(disposing);
@@ -95,11 +95,11 @@ namespace Lib.P2P.Transports
 
         public override async Task FlushAsync(CancellationToken cancellationToken)
         {
-            if (sendBuffer.Position > 0)
+            if (_sendBuffer.Position > 0)
             {
-                var bytes = new ArraySegment<byte>(sendBuffer.ToArray());
-                sendBuffer.Position = 0;
-                await socket.SendAsync(bytes, SocketFlags.None).ConfigureAwait(false);
+                var bytes = new ArraySegment<byte>(_sendBuffer.ToArray());
+                _sendBuffer.Position = 0;
+                await _socket.SendAsync(bytes, SocketFlags.None).ConfigureAwait(false);
             }
         }
 
@@ -116,24 +116,26 @@ namespace Lib.P2P.Transports
             CancellationToken cancellationToken)
         {
             // If no data.
-            if (receiveBuffer.Position == receiveBuffer.Length)
+            if (_receiveBuffer.Position != _receiveBuffer.Length)
             {
-                await FlushAsync().ConfigureAwait(false);
-                receiveBuffer.Position = 0;
-                receiveBuffer.SetLength(0);
-                var size = socket.Receive(datagram);
-                await receiveBuffer.WriteAsync(datagram, 0, size);
-                receiveBuffer.Position = 0;
+                return _receiveBuffer.Read(buffer, offset, count);
             }
+            
+            await FlushAsync(cancellationToken).ConfigureAwait(false);
+            _receiveBuffer.Position = 0;
+            _receiveBuffer.SetLength(0);
+            var size = _socket.Receive(_datagram);
+            await _receiveBuffer.WriteAsync(_datagram, 0, size, cancellationToken);
+            _receiveBuffer.Position = 0;
 
-            return receiveBuffer.Read(buffer, offset, count);
+            return _receiveBuffer.Read(buffer, offset, count);
         }
 
         public override long Seek(long offset, SeekOrigin origin) { throw new NotSupportedException(); }
 
         public override void SetLength(long value) { throw new NotSupportedException(); }
 
-        public override void Write(byte[] buffer, int offset, int count) { sendBuffer.Write(buffer, offset, count); }
+        public override void Write(byte[] buffer, int offset, int count) { _sendBuffer.Write(buffer, offset, count); }
 
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {

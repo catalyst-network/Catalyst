@@ -37,11 +37,11 @@ namespace Lib.P2P
     /// </remarks>
     public class MultiAddressBlackList : ICollection<MultiAddress>, IPolicy<MultiAddress>
     {
-        private ConcurrentDictionary<MultiAddress, MultiAddress> filters =
+        private ConcurrentDictionary<MultiAddress, MultiAddress> _filters =
             new ConcurrentDictionary<MultiAddress, MultiAddress>();
 
         /// <inheritdoc />
-        public bool IsAllowed(MultiAddress target) { return !filters.Any(kvp => Matches(kvp.Key, target)); }
+        public bool IsAllowed(MultiAddress target) { return !_filters.Any(kvp => Matches(kvp.Key, target)); }
 
         private bool Matches(MultiAddress filter, MultiAddress target)
         {
@@ -51,30 +51,30 @@ namespace Lib.P2P
         }
 
         /// <inheritdoc />
-        public bool Remove(MultiAddress item) { return filters.TryRemove(item, out _); }
+        public bool Remove(MultiAddress item) { return _filters.TryRemove(item, out _); }
 
         /// <inheritdoc />
-        public int Count => filters.Count;
+        public int Count => _filters.Count;
 
         /// <inheritdoc />
         public bool IsReadOnly => false;
 
         /// <inheritdoc />
-        public void Add(MultiAddress item) { filters.TryAdd(item, item); }
+        public void Add(MultiAddress item) { _filters.TryAdd(item, item); }
 
         /// <inheritdoc />
-        public void Clear() { filters.Clear(); }
+        public void Clear() { _filters.Clear(); }
 
         /// <inheritdoc />
-        public bool Contains(MultiAddress item) { return filters.Keys.Contains(item); }
+        public bool Contains(MultiAddress item) { return _filters.Keys.Contains(item); }
 
         /// <inheritdoc />
-        public void CopyTo(MultiAddress[] array, int arrayIndex) { filters.Keys.CopyTo(array, arrayIndex); }
+        public void CopyTo(MultiAddress[] array, int arrayIndex) { _filters.Keys.CopyTo(array, arrayIndex); }
 
         /// <inheritdoc />
-        public IEnumerator<MultiAddress> GetEnumerator() { return filters.Keys.GetEnumerator(); }
+        public IEnumerator<MultiAddress> GetEnumerator() { return _filters.Keys.GetEnumerator(); }
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() { return filters.Keys.GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() { return _filters.Keys.GetEnumerator(); }
     }
 }

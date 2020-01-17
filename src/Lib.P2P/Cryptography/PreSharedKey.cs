@@ -40,7 +40,7 @@ namespace Lib.P2P.Cryptography
     /// <seealso href="https://github.com/libp2p/specs/blob/master/pnet/Private-Networks-PSK-V1.md"/>
     public class PreSharedKey
     {
-        private const string codecName = "/key/swarm/psk/1.0.0/";
+        private const string CodecName = "/key/swarm/psk/1.0.0/";
 
         /// <summary>
         ///   The key value.
@@ -124,7 +124,7 @@ namespace Lib.P2P.Cryptography
         /// </remarks>
         public void Export(TextWriter text, string format = "base16")
         {
-            text.WriteLine(codecName);
+            text.WriteLine(CodecName);
             text.Write("/");
             text.Write(format);
             text.WriteLine("/");
@@ -149,8 +149,8 @@ namespace Lib.P2P.Cryptography
         /// </param>
         public void Import(TextReader text)
         {
-            if (text.ReadLine() != codecName)
-                throw new FormatException($"Expected '{codecName}'.");
+            if (text.ReadLine() != CodecName)
+                throw new FormatException($"Expected '{CodecName}'.");
             switch (text.ReadLine())
             {
                 case "/base16/":

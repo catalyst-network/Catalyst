@@ -66,7 +66,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
             bool resolve = true,
             string key = "self",
             TimeSpan? lifetime = null,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Publish an IPFS name.
@@ -90,7 +90,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         Task<NamedContent> PublishAsync(Cid id,
             string key = "self",
             TimeSpan? lifetime = null,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Resolve an IPNS name.
@@ -115,6 +115,6 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         Task<string> ResolveAsync(string name,
             bool recursive = false,
             bool nocache = false,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
     }
 }

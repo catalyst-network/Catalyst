@@ -43,7 +43,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   the current <see cref="BandwidthData"/>.
         /// </returns>
         /// <seealso cref="ISwarmApi"/>
-        Task<BandwidthData> BandwidthAsync(CancellationToken cancel = default(CancellationToken));
+        Task<BandwidthData> BandwidthAsync(CancellationToken cancel = default);
 
         /// <summary>
         ///   Get statistics on the blocks exchanged with other peers.
@@ -56,7 +56,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   the current <see cref="BitswapData"/>.
         /// </returns>
         /// <seealso cref="IBitSwapApi"/>
-        Task<BitswapData> BitSwapAsync(CancellationToken cancel = default(CancellationToken));
+        Task<BitswapData> BitSwapAsync(CancellationToken cancel = default);
 
         /// <summary>
         ///   Get statistics on the repository.
@@ -72,6 +72,6 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   Same as <see cref="IBlockRepositoryApi.StatisticsAsync(CancellationToken)"/>.
         /// </remarks>
         /// <seealso cref="IBlockRepositoryApi"/>
-        Task<RepositoryData> RepositoryAsync(CancellationToken cancel = default(CancellationToken));
+        Task<RepositoryData> RepositoryAsync(CancellationToken cancel = default);
     }
 }

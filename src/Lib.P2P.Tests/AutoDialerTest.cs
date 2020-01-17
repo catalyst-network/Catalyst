@@ -28,7 +28,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Lib.P2P.Tests
 {
     [TestClass]
-    public class AutoDialerTest
+    public sealed class AutoDialerTest
     {
         private Peer peerA = new Peer
         {
@@ -68,7 +68,7 @@ namespace Lib.P2P.Tests
         {
             var swarmA = new SwarmService {LocalPeer = peerA};
             await swarmA.StartAsync();
-            var peerAAddress = await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
+            await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
             var swarmB = new SwarmService {LocalPeer = peerB};
             await swarmB.StartAsync();
@@ -76,7 +76,7 @@ namespace Lib.P2P.Tests
 
             try
             {
-                using (var dialer = new AutoDialer(swarmA))
+                using (new AutoDialer(swarmA))
                 {
                     var other = swarmA.RegisterPeerAddress(peerBAddress);
 
@@ -102,7 +102,7 @@ namespace Lib.P2P.Tests
         {
             var swarmA = new SwarmService {LocalPeer = peerA};
             await swarmA.StartAsync();
-            var peerAAddress = await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
+            await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
             var swarmB = new SwarmService {LocalPeer = peerB};
             await swarmB.StartAsync();
@@ -110,7 +110,7 @@ namespace Lib.P2P.Tests
 
             try
             {
-                using (var dialer = new AutoDialer(swarmA) {MinConnections = 0})
+                using (new AutoDialer(swarmA) {MinConnections = 0})
                 {
                     var other = swarmA.RegisterPeerAddress(peerBAddress);
 
@@ -119,7 +119,10 @@ namespace Lib.P2P.Tests
                     while (other.ConnectedAddress == null)
                     {
                         if (DateTime.Now > endTime)
+                        {
                             return;
+                        }
+                        
                         await Task.Delay(100);
                     }
 
@@ -128,8 +131,8 @@ namespace Lib.P2P.Tests
             }
             finally
             {
-                await swarmA?.StopAsync();
-                await swarmB?.StopAsync();
+                await swarmA.StopAsync();
+                await swarmB.StopAsync();
             }
         }
 
@@ -138,7 +141,7 @@ namespace Lib.P2P.Tests
         {
             var swarmA = new SwarmService {LocalPeer = peerA};
             await swarmA.StartAsync();
-            var peerAAddress = await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
+            await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
             var swarmB = new SwarmService {LocalPeer = peerB};
             await swarmB.StartAsync();
@@ -152,14 +155,16 @@ namespace Lib.P2P.Tests
             swarmA.ConnectionEstablished += (s, conn) =>
             {
                 if (conn.RemotePeer == peerB)
+                {
                     isBConnected = true;
+                }
             };
 
             try
             {
-                using (var dialer = new AutoDialer(swarmA) {MinConnections = 1})
+                using (new AutoDialer(swarmA) {MinConnections = 1})
                 {
-                    var b = swarmA.RegisterPeerAddress(peerBAddress);
+                    swarmA.RegisterPeerAddress(peerBAddress);
                     var c = swarmA.RegisterPeerAddress(peerCAddress);
 
                     // wait for the peer B connection.
@@ -167,8 +172,11 @@ namespace Lib.P2P.Tests
                     while (!isBConnected)
                     {
                         if (DateTime.Now > endTime)
+                        {
                             Assert.Fail("Did not do autodial on peer discovered");
-                        await Task.Delay(100);
+                        }
+                        
+                        await Task.Delay(100); // get cancellaton token
                     }
 
                     Assert.IsNull(c.ConnectedAddress);

@@ -29,7 +29,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Dag;
 using Lib.P2P;
@@ -165,7 +164,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFileSystem
                 currentData = new byte[stream.Length];
                 for (int i = 0, n; i < stream.Length; i += n)
                 {
-                    n = await stream.ReadAsync(currentData, i, (int) stream.Length - i);
+                    n = await stream.ReadAsync(currentData, i, (int) stream.Length - i, cancel);
                 }
             }
 

@@ -21,52 +21,50 @@
 
 #endregion
 
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using Lib.P2P;
+using Lib.P2P.PubSub;
 
-namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Dto
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///   Information on a peer.
+    ///     A published message.
     /// </summary>
-    public class PeerInfoDto
+    internal sealed class MessageDto
     {
         /// <summary>
-        ///  The unique ID of the peer.
+        ///     The base-64 encoding of the author's peer id.
         /// </summary>
-        public string Id;
+        public string From;
 
         /// <summary>
-        ///   The public key of the peer.
+        ///     The base-64 encoding of the author's unique sequence number.
         /// </summary>
-        public string PublicKey;
+        public string Seqno;
 
         /// <summary>
-        ///   The addresses that the peer is listening on.
+        ///     The base-64 encoding of the message data.
         /// </summary>
-        public IEnumerable<string> Addresses;
+        public string Data;
 
         /// <summary>
-        ///   The version of the software.
+        ///     The topics associated with the message.
         /// </summary>
-        public string AgentVersion;
+        public string[] TopicIDs;
 
         /// <summary>
-        ///   The version of the protocol.
+        ///     Create a new instance of the <see cref="MessageDto" />
+        ///     from the <see cref="IPublishedMessage" />.
         /// </summary>
-        public string ProtocolVersion;
-
-        /// <summary>
-        ///   Creates a new peer info.
-        /// </summary>
-        public PeerInfoDto(Peer peer)
+        /// <param name="msg">
+        ///     A pubsub messagee.
+        /// </param>
+        public MessageDto(IPublishedMessage msg)
         {
-            Id = peer.Id.ToBase58();
-            PublicKey = peer.PublicKey;
-            Addresses = peer.Addresses.Select(a => a.ToString());
-            AgentVersion = peer.AgentVersion;
-            ProtocolVersion = peer.ProtocolVersion;
+            From = Convert.ToBase64String(msg.Sender.Id.ToArray());
+            Seqno = Convert.ToBase64String(msg.SequenceNumber);
+            Data = Convert.ToBase64String(msg.DataBytes);
+            TopicIDs = msg.Topics.ToArray();
         }
     }
 }

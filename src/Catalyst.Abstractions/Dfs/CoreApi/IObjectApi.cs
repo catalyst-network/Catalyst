@@ -55,7 +55,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <remarks>
         ///   Equivalent to <c>NewAsync("unixfs-dir")</c>.
         /// </remarks>
-        Task<IDagNode> NewDirectoryAsync(CancellationToken cancel = default(CancellationToken));
+        Task<IDagNode> NewDirectoryAsync(CancellationToken cancel = default);
 
         /// <summary>
         ///   Create a new MerkleDAG node, using a specific layout.
@@ -71,7 +71,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <remarks>
         ///  Caveat: So far, only UnixFS object layouts are supported.
         /// </remarks>
-        Task<IDagNode> NewAsync(string template = null, CancellationToken cancel = default(CancellationToken));
+        Task<IDagNode> NewAsync(string template = null, CancellationToken cancel = default);
 
         /// <summary>
         ///   Fetch a MerkleDAG node.
@@ -86,7 +86,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation. The task's value
         ///   is a <see cref="Catalyst.Ipfs.Core.DagNode"/>.
         /// </returns>
-        Task<IDagNode> GetAsync(Cid id, CancellationToken cancel = default(CancellationToken));
+        Task<IDagNode> GetAsync(Cid id, CancellationToken cancel = default);
 
         /// <summary>
         ///   Information on a MerkleDag node.
@@ -101,7 +101,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///    A task that represents the asynchronous operation. The task's value
         ///    contains the <see cref="ObjectStat"/>.
         /// </returns>
-        Task<ObjectStat> StatAsync(Cid id, CancellationToken cancel = default(CancellationToken));
+        Task<ObjectStat> StatAsync(Cid id, CancellationToken cancel = default);
 
         /// <summary>
         ///   Store a MerkleDAG node.
@@ -121,7 +121,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </returns>
         Task<IDagNode> PutAsync(byte[] data,
             IEnumerable<IMerkleLink> links = null,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Store a MerkleDAG node.
@@ -134,7 +134,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation. The task's value
         ///   is a <see cref="Catalyst.Ipfs.Core.DagNode"/>.
         /// </returns>
-        Task<IDagNode> PutAsync(IDagNode node, CancellationToken cancel = default(CancellationToken));
+        Task<IDagNode> PutAsync(IDagNode node, CancellationToken cancel = default);
 
         /// <summary>
         ///   Get the data of a MerkleDAG node.
@@ -152,7 +152,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <remarks>
         ///   The caller must dispose the returned <see cref="Stream"/>.
         /// </remarks>
-        Task<Stream> DataAsync(Cid id, CancellationToken cancel = default(CancellationToken));
+        Task<Stream> DataAsync(Cid id, CancellationToken cancel = default);
 
         /// <summary>
         ///   Get the links of a MerkleDAG node.
@@ -185,6 +185,6 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   }
         ///   </code>
         /// </remarks>
-        Task<IEnumerable<IMerkleLink>> LinksAsync(Cid id, CancellationToken cancel = default(CancellationToken));
+        Task<IEnumerable<IMerkleLink>> LinksAsync(Cid id, CancellationToken cancel = default);
     }
 }

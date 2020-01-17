@@ -35,9 +35,9 @@ namespace Lib.P2P
     ///   Listens to the <see cref="SwarmService"/> and automically dials a
     ///   new <see cref="Peer"/> when required.
     /// </remarks>
-    public class AutoDialer : IDisposable
+    public sealed class AutoDialer : IDisposable
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(AutoDialer));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(AutoDialer));
 
         /// <summary>
         ///   The default minimum number of connections to maintain (16).
@@ -45,7 +45,7 @@ namespace Lib.P2P
         public const int DefaultMinConnections = 16;
 
         private readonly SwarmService _swarmService;
-        private int pendingConnects;
+        private int _pendingConnects;
 
         /// <summary>
         ///   Creates a new instance of the <see cref="AutoDialer"/> class.
@@ -55,7 +55,7 @@ namespace Lib.P2P
         /// </param>
         public AutoDialer(SwarmService swarmService)
         {
-            this._swarmService = swarmService;
+            _swarmService = swarmService;
             swarmService.PeerDiscovered += OnPeerDiscovered;
             swarmService.PeerDisconnected += OnPeerDisconnected;
         }
@@ -67,13 +67,15 @@ namespace Lib.P2P
         ///   <b>true</b> to release both managed and unmanaged resources; <b>false</b> 
         ///   to release only unmanaged resources.
         /// </param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!disposing)
             {
-                _swarmService.PeerDiscovered -= OnPeerDiscovered;
-                _swarmService.PeerDisconnected -= OnPeerDisconnected;
+                return;
             }
+            
+            _swarmService.PeerDiscovered -= OnPeerDiscovered;
+            _swarmService.PeerDisconnected -= OnPeerDisconnected;
         }
 
         /// <summary>
@@ -110,23 +112,26 @@ namespace Lib.P2P
         private async void OnPeerDiscovered(object sender, Peer peer)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
-            var n = _swarmService.Manager.Connections.Count() + pendingConnects;
-            if (_swarmService.IsRunning && n < MinConnections)
+            var n = _swarmService.Manager.Connections.Count() + _pendingConnects;
+            
+            if (!_swarmService.IsRunning || n >= MinConnections)
             {
-                Interlocked.Increment(ref pendingConnects);
-                log.Debug($"Dialing new {peer}");
-                try
-                {
-                    await _swarmService.ConnectAsync(peer).ConfigureAwait(false);
-                }
-                catch (Exception)
-                {
-                    log.Warn($"Failed to dial {peer}");
-                }
-                finally
-                {
-                    Interlocked.Decrement(ref pendingConnects);
-                }
+                return;
+            }
+            
+            Interlocked.Increment(ref _pendingConnects);
+            Log.Debug($"Dialing new {peer}");
+            try
+            {
+                await _swarmService.ConnectAsync(peer).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                Log.Warn($"Failed to dial {peer}");
+            }
+            finally
+            {
+                Interlocked.Decrement(ref _pendingConnects);
             }
         }
 
@@ -147,9 +152,11 @@ namespace Lib.P2P
         private async void OnPeerDisconnected(object sender, Peer disconnectedPeer)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
-            var n = _swarmService.Manager.Connections.Count() + pendingConnects;
+            var n = _swarmService.Manager.Connections.Count() + _pendingConnects;
             if (!_swarmService.IsRunning || n >= MinConnections)
+            {
                 return;
+            }
 
             // Find a random peer to connect with.
             var peers = _swarmService.KnownPeers
@@ -158,24 +165,28 @@ namespace Lib.P2P
                .Where(p => _swarmService.IsAllowed(p))
                .Where(p => !_swarmService.HasPendingConnection(p))
                .ToArray();
+            
             if (peers.Length == 0)
+            {
                 return;
+            }
+            
             var rng = new Random();
-            var peer = peers[rng.Next(peers.Count())];
+            var peer = peers[rng.Next(peers.Length)];
 
-            Interlocked.Increment(ref pendingConnects);
-            log.Debug($"Dialing {peer}");
+            Interlocked.Increment(ref _pendingConnects);
+            Log.Debug($"Dialing {peer}");
             try
             {
                 await _swarmService.ConnectAsync(peer).ConfigureAwait(false);
             }
             catch (Exception)
             {
-                log.Warn($"Failed to dial {peer}");
+                Log.Warn($"Failed to dial {peer}");
             }
             finally
             {
-                Interlocked.Decrement(ref pendingConnects);
+                Interlocked.Decrement(ref _pendingConnects);
             }
         }
     }

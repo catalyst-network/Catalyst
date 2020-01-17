@@ -34,14 +34,11 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
-using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Lib.P2P;
 using Lib.P2P.Cryptography;
 using MultiFormats;
-using MultiFormats.Registry;
-using Nethermind.HashLib;
 using Newtonsoft.Json.Linq;
 using NSubstitute;
 using Serilog;
@@ -55,30 +52,21 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
     {
         private readonly IDfsService _dfs1;
         private readonly IDfsService _dfs2;
-        private readonly ILogger _logger;
         private readonly ITestOutputHelper _output;
-        private readonly IHashProvider _hashProvider;
 
         public DfsServiceTests(ITestOutputHelper output) : base(output)
         {
-            _hashProvider = this.ContainerProvider.Container.Resolve<IHashProvider>();
+            ContainerProvider.Container.Resolve<IHashProvider>();
 
             _output = output;
             var passwordReader = Substitute.For<IPasswordManager>();
             passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>())
                .Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 
-            _logger = Substitute.For<ILogger>();
+            Substitute.For<ILogger>();
 
             _dfs1 = TestDfs.GetTestDfs(output);
             _dfs2 = TestDfs.GetTestDfs(output);
-            
-            // Starting IPFS takes a few seconds.  Do it here, so that individual
-            // test times are not affected.
-            // _dfs1.GenericApi.IdAsync()
-            //    .ConfigureAwait(false)
-            //    .GetAwaiter()
-            //    .GetResult();
         }
 
         [Fact]
@@ -107,7 +95,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var ms = new MemoryStream(binary);
 
             var id = await _dfs1.UnixFsApi.AddAsync(ms, "", cancel: cts.Token);
-            using (var stream = await _dfs1.UnixFsApi.ReadFileAsync(id.Id, cts.Token))
+            await using (var stream = await _dfs1.UnixFsApi.ReadFileAsync(id.Id, cts.Token))
             {
                 var content = new byte[binary.Length];
                 await stream.ReadAsync(content, 0, content.Length, cts.Token);
@@ -206,10 +194,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public async Task LocalPeer()
         {
-            Task<Peer>[] tasks = new Task<Peer>[]
+            Task<Peer>[] tasks =
             {
-                Task.Run(async () => _dfs1.LocalPeer),
-                Task.Run(async () => _dfs1.LocalPeer)
+                Task.Run(() => _dfs1.LocalPeer),
+                Task.Run(() => _dfs1.LocalPeer)
             };
             var r = await Task.WhenAll(tasks);
             Assert.Equal(r[0], r[1]);
@@ -218,10 +206,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public async Task KeyChain()
         {
-            Task<IKeyApi>[] tasks = new Task<IKeyApi>[]
+            Task<IKeyApi>[] tasks =
             {
-                Task.Run(async () => _dfs1.KeyApi),
-                Task.Run(async () => _dfs1.KeyApi)
+                Task.Run(() => _dfs1.KeyApi),
+                Task.Run(() => _dfs1.KeyApi)
             };
             var r = await Task.WhenAll(tasks);
             Assert.Equal(r[0], r[1]);

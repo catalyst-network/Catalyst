@@ -43,7 +43,7 @@ message Exchange
 namespace Lib.P2P.SecureCommunication
 {
     [ProtoContract]
-    internal class Secio1Propose
+    internal sealed class Secio1Propose
     {
         [ProtoMember(1)]
         public byte[] Nonce;
@@ -62,7 +62,7 @@ namespace Lib.P2P.SecureCommunication
     }
 
     [ProtoContract]
-    internal class Secio1Exchange
+    internal sealed class Secio1Exchange
     {
         [ProtoMember(1)]
         public byte[] EPublicKey;

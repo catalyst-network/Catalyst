@@ -135,7 +135,6 @@ namespace Lib.P2P.Tests.Multiplex
         [TestMethod]
         public void Reading_Empty()
         {
-            var m1 = new byte[0];
             var stream = new Substream();
             var _ = Task.Run(async () =>
             {

@@ -21,9 +21,6 @@
 
 #endregion
 
-using System.IO;
-using Catalyst.Abstractions.FileSystem;
-using Lib.P2P.Cryptography;
 using Makaretu.Dns;
 using MultiFormats;
 

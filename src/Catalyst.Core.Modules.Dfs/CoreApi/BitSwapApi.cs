@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly IBitswapService _bitSwapService;
         private AsyncLazy<Peer> LocalPeer { get; set; }
 
-        public BitSwapApi(BitswapService bitSwapService, IKeyApi keyApi)
+        public BitSwapApi(BitSwapService bitSwapService, IKeyApi keyApi)
         {
             _bitSwapService = bitSwapService;
             
@@ -64,14 +64,14 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             });
         }
 
-        public async Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default(CancellationToken))
+        public async Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default)
         {
             var peer = await LocalPeer.ConfigureAwait(false);
             var dataBlock = await _bitSwapService.WantAsync(id, peer.Id, cancel).ConfigureAwait(false);
             return dataBlock;
         }
 
-        public async Task<BitswapLedger> LedgerAsync(Peer peer, CancellationToken cancel = default)
+        public BitswapLedger GetBitSwapLedger(Peer peer, CancellationToken cancel = default)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
         public BitswapData GetBitSwapStatistics() { return _bitSwapService.Statistics; }
 
-        public async Task UnWantAsync(Cid id, CancellationToken cancel = default)
+        public void UnWant(Cid id, CancellationToken cancel = default)
         {
             _bitSwapService.Unwant(id);
         }

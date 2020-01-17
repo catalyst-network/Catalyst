@@ -55,7 +55,7 @@ namespace Catalyst.Abstractions.Dfs.Migration
         /// </param>
         /// <param name="cancel"></param>
         /// <returns></returns>
-        Task UpgradeAsync(RepositoryOptions options, CancellationToken cancel = default(CancellationToken));
+        Task UpgradeAsync(RepositoryOptions options, CancellationToken cancel = default);
 
         /// <summary>
         ///   Downgrade the repository.
@@ -65,6 +65,6 @@ namespace Catalyst.Abstractions.Dfs.Migration
         /// </param>
         /// <param name="cancel"></param>
         /// <returns></returns>
-        Task DowngradeAsync(RepositoryOptions options, CancellationToken cancel = default(CancellationToken));
+        Task DowngradeAsync(RepositoryOptions options, CancellationToken cancel = default);
     }
 }

@@ -28,7 +28,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

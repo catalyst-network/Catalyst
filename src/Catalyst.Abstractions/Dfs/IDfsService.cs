@@ -33,7 +33,6 @@ using Lib.P2P;
 using Lib.P2P.Protocols;
 using Lib.P2P.PubSub;
 using Lib.P2P.Routing;
-using Nito.AsyncEx;
 
 namespace Catalyst.Abstractions.Dfs
 {
@@ -82,6 +81,6 @@ namespace Catalyst.Abstractions.Dfs
         /// </summary>
         DhtService DhtService { get; }
 
-        Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default(CancellationToken));
+        Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default);
     }
 }

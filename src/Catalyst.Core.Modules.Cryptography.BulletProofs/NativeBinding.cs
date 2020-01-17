@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         {
             var key = new byte[PrivateKeyLength];
             var error_code = generate_key(key);
-            if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+            if (Enum.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
             {
                 Error.ThrowErrorFromErrorCode(errorCode);
             }
@@ -72,7 +72,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
                 {
                     var error_code = std_sign(signature, publicKey, privateKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
 
-                    if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+                    if (Enum.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
                     {
                         Error.ThrowErrorFromErrorCode(errorCode);
                     }
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
                 {
                     var error_code = std_verify(signature, publicKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
 
-                    ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
+                    Enum.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
 
                     if (errorCode == ErrorCode.NoError)
                     {
@@ -135,7 +135,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 
             var error_code = validate_public_key(publicKey);
 
-            if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+            if (Enum.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
             {
                 Error.ThrowErrorFromErrorCode(errorCode);
             }

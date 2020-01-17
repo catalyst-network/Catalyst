@@ -35,7 +35,7 @@ namespace Lib.P2P.Tests
         public async Task ReadAsync()
         {
             var expected = new byte[] {1, 2, 3, 4};
-            using (var ms = new MemoryStream(expected))
+            await using (var ms = new MemoryStream(expected))
             {
                 var actual = new byte[expected.Length];
                 await ms.ReadExactAsync(actual, 0, actual.Length);
@@ -62,7 +62,7 @@ namespace Lib.P2P.Tests
             {
                 ExceptionAssert.Throws<EndOfStreamException>(() =>
                 {
-                    ms.ReadExactAsync(actual, 0, actual.Length, cancel.Token).Wait();
+                    ms.ReadExactAsync(actual, 0, actual.Length, cancel.Token).Wait(cancel.Token);
                 });
             }
         }
@@ -73,18 +73,18 @@ namespace Lib.P2P.Tests
             var expected = new byte[] {1, 2, 3, 4};
             var actual = new byte[expected.Length];
             var cancel = new CancellationTokenSource();
-            using (var ms = new MemoryStream(expected))
+            await using (var ms = new MemoryStream(expected))
             {
                 await ms.ReadExactAsync(actual, 0, actual.Length, cancel.Token);
                 CollectionAssert.AreEqual(expected, actual);
             }
 
             cancel.Cancel();
-            using (var ms = new MemoryStream(expected))
+            await using (var ms = new MemoryStream(expected))
             {
                 ExceptionAssert.Throws<TaskCanceledException>(() =>
                 {
-                    ms.ReadExactAsync(actual, 0, actual.Length, cancel.Token).Wait();
+                    ms.ReadExactAsync(actual, 0, actual.Length, cancel.Token).Wait(cancel.Token);
                 });
             }
         }

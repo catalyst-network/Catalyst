@@ -43,13 +43,13 @@ namespace Lib.P2P
     /// </remarks>
     internal class DuplexBufferedStream : Stream
     {
-        private readonly Stream Inner;
-        private readonly BufferedStream ReadBuffer;
-        private readonly BufferedStream WriteBuffer;
+        private readonly Stream _inner;
+        private readonly BufferedStream _readBuffer;
+        private readonly BufferedStream _writeBuffer;
 
-        public override bool CanRead => Inner.CanRead;
+        public override bool CanRead => _inner.CanRead;
         public override bool CanSeek => false;
-        public override bool CanWrite => Inner.CanWrite;
+        public override bool CanWrite => _inner.CanWrite;
         public override long Length => throw new NotSupportedException();
 
         public override long Position
@@ -60,46 +60,46 @@ namespace Lib.P2P
 
         public DuplexBufferedStream(Stream stream)
         {
-            Inner = stream;
-            ReadBuffer = new BufferedStream(stream);
-            WriteBuffer = new BufferedStream(stream);
+            _inner = stream;
+            _readBuffer = new BufferedStream(stream);
+            _writeBuffer = new BufferedStream(stream);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                WriteBuffer.Flush();
-                Inner.Dispose();
-                ReadBuffer.Dispose();
-                WriteBuffer.Dispose();
+                _writeBuffer.Flush();
+                _inner.Dispose();
+                _readBuffer.Dispose();
+                _writeBuffer.Dispose();
             }
         }
 
-        public override void Flush() { WriteBuffer.Flush(); }
-        public override Task FlushAsync(CancellationToken token) { return WriteBuffer.FlushAsync(token); }
+        public override void Flush() { _writeBuffer.Flush(); }
+        public override Task FlushAsync(CancellationToken token) { return _writeBuffer.FlushAsync(token); }
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            return ReadBuffer.Read(buffer, offset, count);
+            return _readBuffer.Read(buffer, offset, count);
         }
 
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken token)
         {
-            return ReadBuffer.ReadAsync(buffer, offset, count, token);
+            return _readBuffer.ReadAsync(buffer, offset, count, token);
         }
 
-        public override int ReadByte() { return ReadBuffer.ReadByte(); }
+        public override int ReadByte() { return _readBuffer.ReadByte(); }
         public override long Seek(long offset, SeekOrigin origin) { throw new NotSupportedException(); }
         public override void SetLength(long value) { throw new NotSupportedException(); }
-        public override void Write(byte[] buffer, int offset, int count) { WriteBuffer.Write(buffer, offset, count); }
+        public override void Write(byte[] buffer, int offset, int count) { _writeBuffer.Write(buffer, offset, count); }
 
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken token)
         {
-            return WriteBuffer.WriteAsync(buffer, offset, count, token);
+            return _writeBuffer.WriteAsync(buffer, offset, count, token);
         }
 
-        public override void WriteByte(byte value) { WriteBuffer.WriteByte(value); }
+        public override void WriteByte(byte value) { _writeBuffer.WriteByte(value); }
     }
 }
 

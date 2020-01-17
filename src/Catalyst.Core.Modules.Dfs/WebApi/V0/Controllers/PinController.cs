@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers

@@ -44,7 +44,7 @@ namespace Lib.P2P.Tests.Routing
         {
             AgentVersion = "other",
             Id = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h",
-            Addresses = new MultiAddress[]
+            Addresses = new[]
             {
                 new MultiAddress("/ip4/127.0.0.1/tcp/4001")
             }
@@ -126,7 +126,7 @@ namespace Lib.P2P.Tests.Routing
                 var providers = router.Get(cid1);
                 Assert.AreEqual(0, providers.Count());
 
-                router.Add(cid1, self.Id, DateTime.MaxValue - router.ProviderTTL);
+                router.Add(cid1, self.Id, DateTime.MaxValue - router.ProviderTtl);
                 providers = router.Get(cid1);
                 Assert.AreEqual(1, providers.Count());
             }

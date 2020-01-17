@@ -41,8 +41,8 @@ namespace Catalyst.Core.Lib.Util
     /// </remarks>
     public static class Duration
     {
-        const double TicksPerNanosecond = (double) TimeSpan.TicksPerMillisecond * 0.000001;
-        const double TicksPerMicrosecond = (double) TimeSpan.TicksPerMillisecond * 0.001;
+        const double TicksPerNanosecond = TimeSpan.TicksPerMillisecond * 0.000001;
+        const double TicksPerMicrosecond = TimeSpan.TicksPerMillisecond * 0.001;
 
         /// <summary>
         ///   Converts the string representation of an IPFS duration
@@ -181,8 +181,8 @@ namespace Catalyst.Core.Lib.Util
             Stringify(duration.Minutes, "m", s);
             Stringify(duration.Seconds, "s", s);
             Stringify(duration.Milliseconds, "ms", s);
-            Stringify((long) ((double) duration.Ticks / TicksPerMicrosecond) % 1000, "us", s);
-            Stringify((long) ((double) duration.Ticks / TicksPerNanosecond) % 1000, "ns", s);
+            Stringify((long) (duration.Ticks / TicksPerMicrosecond) % 1000, "us", s);
+            Stringify((long) (duration.Ticks / TicksPerNanosecond) % 1000, "ns", s);
 
             return s.ToString();
         }

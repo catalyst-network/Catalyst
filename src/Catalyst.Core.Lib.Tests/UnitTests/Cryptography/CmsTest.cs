@@ -31,7 +31,6 @@ using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
-using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -94,7 +93,7 @@ DQEHATAdBglghkgBZQMEASoEEP/PW1JWehQx6/dsLkp/Mf+gMgQwFM9liLTqC56B
 nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
 ");
                 var plain = await _keyStoreService.ReadProtectedDataAsync(cipher);
-                var plainText = Encoding.UTF8.GetString((byte[]) plain);
+                var plainText = Encoding.UTF8.GetString(plain);
                 Assert.Equal("This is a message from Alice to Bob", plainText);
             }
             finally

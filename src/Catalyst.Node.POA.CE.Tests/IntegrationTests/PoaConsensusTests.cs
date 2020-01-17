@@ -23,20 +23,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.FileSystem;
-using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Lib.P2P;
 using MultiFormats;
 using NSubstitute;
 using Xunit;

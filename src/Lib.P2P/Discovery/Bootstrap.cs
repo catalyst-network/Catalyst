@@ -35,7 +35,7 @@ namespace Lib.P2P.Discovery
     /// </summary>
     public class Bootstrap : IPeerDiscovery
     {
-        private static ILog log = LogManager.GetLogger(typeof(Bootstrap));
+        private static ILog _log = LogManager.GetLogger(typeof(Bootstrap));
 
         /// <inheritdoc />
         public event EventHandler<Peer> PeerDiscovered;
@@ -52,10 +52,10 @@ namespace Lib.P2P.Discovery
         /// <inheritdoc />
         public Task StartAsync()
         {
-            log.Debug("Starting");
+            _log.Debug("Starting");
             if (Addresses == null)
             {
-                log.Warn("No bootstrap addresses");
+                _log.Warn("No bootstrap addresses");
                 return Task.CompletedTask;
             }
 
@@ -72,8 +72,7 @@ namespace Lib.P2P.Discovery
                 }
                 catch (Exception e)
                 {
-                    log.Error(e);
-                    continue; // silently ignore
+                    _log.Error(e);
                 }
 
             return Task.CompletedTask;
@@ -82,7 +81,7 @@ namespace Lib.P2P.Discovery
         /// <inheritdoc />
         public Task StopAsync()
         {
-            log.Debug("Stopping");
+            _log.Debug("Stopping");
             PeerDiscovered = null;
             return Task.CompletedTask;
         }

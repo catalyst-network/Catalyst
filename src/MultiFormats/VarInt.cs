@@ -228,7 +228,7 @@ namespace MultiFormats
         ///   When the varint value is greater than <see cref="Int32.MaxValue"/>.
         /// </exception>
         public static async Task<int> ReadVarint32Async(this Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var value = await stream.ReadVarint64Async(cancel).ConfigureAwait(false);
             if (value > int.MaxValue)
@@ -256,7 +256,7 @@ namespace MultiFormats
         ///   is the integer value in the <paramref name="stream"/>.
         /// </returns>
         public static async Task<long> ReadVarint64Async(this Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             long value = 0;
             var shift = 0;

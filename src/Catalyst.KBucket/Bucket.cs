@@ -27,9 +27,12 @@ using System.Linq;
 namespace Catalyst.KBucket
 {
     /// <summary>
-    ///   A binary tree node in the <see cref="Catalyst.KBucket{T}"/>.
+    ///   A binary tree node in the <see>
+    ///       <cref>Catalyst.KBucket{T}</cref>
+    ///   </see>
+    ///   .
     /// </summary>
-    public class Bucket<T>
+    public sealed class Bucket<T>
         where T : class, IContact
     {
         /// <summary>
@@ -68,7 +71,10 @@ namespace Catalyst.KBucket
 
         internal int IndexOf(byte[] id)
         {
-            if (Contacts == null) return -1;
+            if (Contacts == null)
+            {
+                return -1;
+            }
 
             return Contacts.FindIndex(c => c.Id.SequenceEqual(id));
         }
@@ -76,11 +82,20 @@ namespace Catalyst.KBucket
         internal int DeepCount()
         {
             var n = 0;
-            if (Contacts != null) n += Contacts.Count;
+            if (Contacts != null)
+            {
+                n += Contacts.Count;
+            }
 
-            if (Left != null) n += Left.DeepCount();
+            if (Left != null)
+            {
+                n += Left.DeepCount();
+            }
 
-            if (Right != null) n += Right.DeepCount();
+            if (Right != null)
+            {
+                n += Right.DeepCount();
+            }
 
             return n;
         }
@@ -88,16 +103,29 @@ namespace Catalyst.KBucket
         internal IEnumerable<T> AllContacts()
         {
             if (Contacts != null)
+            {
                 foreach (var contact in Contacts)
+                {
                     yield return contact;
+                }
+            }
 
             if (Left != null)
-                foreach (var contact in Left.AllContacts())
-                    yield return contact;
-
-            if (Right == null) yield break;
             {
-                foreach (var contact in Right.AllContacts()) yield return contact;
+                foreach (var contact in Left.AllContacts())
+                {
+                    yield return contact;
+                }
+            }
+
+            if (Right == null)
+            {
+                yield break;
+            }
+
+            foreach (var contact in Right.AllContacts())
+            {
+                yield return contact;
             }
         }
     }

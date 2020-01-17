@@ -23,8 +23,6 @@
 
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Core.Modules.Dfs.Controllers.V0;
 using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Microsoft.AspNetCore.Mvc;
 

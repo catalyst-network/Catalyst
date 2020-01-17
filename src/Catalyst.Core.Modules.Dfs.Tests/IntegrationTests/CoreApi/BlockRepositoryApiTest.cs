@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task GarbageCollection()
         {
             var pinned = await ipfs.BlockApi.PutAsync(new byte[256], pin: true);
-            var unpinned = await ipfs.BlockApi.PutAsync(new byte[512], pin: false);
+            var unpinned = await ipfs.BlockApi.PutAsync(new byte[512]);
             Assert.NotEqual(pinned, unpinned);
             Assert.NotNull(await ipfs.BlockApi.StatAsync(pinned));
             Assert.NotNull(await ipfs.BlockApi.StatAsync(unpinned));

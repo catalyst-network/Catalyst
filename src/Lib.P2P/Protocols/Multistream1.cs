@@ -34,15 +34,15 @@ namespace Lib.P2P.Protocols
     ///   A protocol to select other protocols.
     /// </summary>
     /// <seealso href="https://github.com/multiformats/multistream-select"/>
-    public class Multistream1 : IPeerProtocol
+    public sealed class Multistream1 : IPeerProtocol
     {
-        private static ILog log = LogManager.GetLogger(typeof(Multistream1));
+        private static ILog _log = LogManager.GetLogger(typeof(Multistream1));
 
         /// <inheritdoc />
         public string Name { get; } = "multistream";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1, 0);
+        public SemVersion Version { get; } = new SemVersion(1);
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }
@@ -50,7 +50,7 @@ namespace Lib.P2P.Protocols
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var msg = await Message.ReadStringAsync(stream, cancel).ConfigureAwait(false);
 
@@ -65,7 +65,7 @@ namespace Lib.P2P.Protocols
             }
 
             // Ack protocol switch
-            log.Debug("switching to " + msg);
+            _log.Debug("switching to " + msg);
             await Message.WriteAsync(msg, stream, cancel).ConfigureAwait(false);
 
             // Process protocol message.

@@ -42,7 +42,7 @@ namespace Lib.P2P.Routing
     /// </summary>
     public class RoutingTable
     {
-        private KBucket<RoutingPeer> Peers = new KBucket<RoutingPeer>();
+        private KBucket<RoutingPeer> _peers = new KBucket<RoutingPeer>();
 
         /// <summary>
         ///   Creates a new instance of the <see cref="RoutingTable"/> for
@@ -51,9 +51,9 @@ namespace Lib.P2P.Routing
         /// <param name="localPeer"></param>
         public RoutingTable(Peer localPeer)
         {
-            Peers.LocalContactId = Key(localPeer.Id);
-            Peers.ContactsToPing = 1;
-            Peers.Ping += Peers_Ping;
+            _peers.LocalContactId = Key(localPeer.Id);
+            _peers.ContactsToPing = 1;
+            _peers.Ping += Peers_Ping;
         }
 
         /// <summary>
@@ -68,30 +68,30 @@ namespace Lib.P2P.Routing
         /// </remarks>
         private void Peers_Ping(object sender, PingEventArgs<RoutingPeer> e)
         {
-            if (Peers.Remove(e.Oldest.First())) Peers.Add(e.Newest);
+            if (_peers.Remove(e.Oldest.First())) _peers.Add(e.Newest);
         }
 
         /// <summary>
         ///   Add some information about the peer.
         /// </summary>
-        public void Add(Peer peer) { Peers.Add(new RoutingPeer(peer)); }
+        public void Add(Peer peer) { _peers.Add(new RoutingPeer(peer)); }
 
         /// <summary>
         ///   Remove the information about the peer.
         /// </summary>
-        public void Remove(Peer peer) { Peers.Remove(new RoutingPeer(peer)); }
+        public void Remove(Peer peer) { _peers.Remove(new RoutingPeer(peer)); }
 
         /// <summary>
         ///   Determines in the peer exists in the routing table.
         /// </summary>
-        public bool Contains(Peer peer) { return Peers.Contains(new RoutingPeer(peer)); }
+        public bool Contains(Peer peer) { return _peers.Contains(new RoutingPeer(peer)); }
 
         /// <summary>
         ///   Find the closest peers to the peer ID.
         /// </summary>
         public IEnumerable<Peer> NearestPeers(MultiHash id)
         {
-            return Peers
+            return _peers
                .Closest(Key(id))
                .Select(r => r.Peer);
         }
@@ -111,6 +111,6 @@ namespace Lib.P2P.Routing
         ///   hash buckets.
         /// </remarks>
         /// <seealso href="https://github.com/libp2p/js-libp2p-kad-dht/issues/56#issuecomment-441378802"/>
-        public static byte[] Key(MultiHash id) { return MultiHash.ComputeHash(id.ToArray(), "sha2-256").Digest; }
+        public static byte[] Key(MultiHash id) { return MultiHash.ComputeHash(id.ToArray()).Digest; }
     }
 }

@@ -53,8 +53,8 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///    the file's node.
         /// </returns>
         Task<IFileSystemNode> AddFileAsync(string path,
-            AddFileOptions options = default(AddFileOptions),
-            CancellationToken cancel = default(CancellationToken));
+            AddFileOptions options = default,
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Add some text to the interplanetary file system.
@@ -73,8 +73,8 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   the text's node.
         /// </returns>
         Task<IFileSystemNode> AddTextAsync(string text,
-            AddFileOptions options = default(AddFileOptions),
-            CancellationToken cancel = default(CancellationToken));
+            AddFileOptions options = default,
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Add a <see cref="Stream"/> to interplanetary file system.
@@ -97,8 +97,8 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </returns>
         Task<IFileSystemNode> AddAsync(Stream stream,
             string name = "",
-            AddFileOptions options = default(AddFileOptions),
-            CancellationToken cancel = default(CancellationToken));
+            AddFileOptions options = default,
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Add a directory and its files to the interplanetary file system.
@@ -121,8 +121,8 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </returns>
         Task<IFileSystemNode> AddDirectoryAsync(string path,
             bool recursive = true,
-            AddFileOptions options = default(AddFileOptions),
-            CancellationToken cancel = default(CancellationToken));
+            AddFileOptions options = default,
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Reads the content of an existing IPFS file as text.
@@ -138,7 +138,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation. The task's value is
         ///   the contents of the <paramref name="path"/> as a <see cref="string"/>.
         /// </returns>
-        Task<String> ReadAllTextAsync(string path, CancellationToken cancel = default(CancellationToken));
+        Task<String> ReadAllTextAsync(string path, CancellationToken cancel = default);
 
         /// <summary>
         ///   Reads an existing IPFS file.
@@ -157,7 +157,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <remarks>
         ///   The returned <see cref="Stream"/> must be disposed.
         /// </remarks>
-        Task<Stream> ReadFileAsync(string path, CancellationToken cancel = default(CancellationToken));
+        Task<Stream> ReadFileAsync(string path, CancellationToken cancel = default);
 
         /// <summary>
         ///   Reads an existing IPFS file with the specified offset and length.
@@ -186,7 +186,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         Task<Stream> ReadFileAsync(string path,
             long offset,
             long count = 0,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Get information about the file or directory.
@@ -203,7 +203,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   an <see cref="IFileSystemNode"/>  The <see cref="IDataBlock.DataBytes"/>
         ///   and <see cref="IDataBlock.DataStream"/> are set to <b>null</b>.
         /// </returns>
-        Task<IFileSystemNode> ListFileAsync(string path, CancellationToken cancel = default(CancellationToken));
+        Task<IFileSystemNode> ListFileAsync(string path, CancellationToken cancel = default);
 
         /// <summary>
         ///   Download IPFS objects as a TAR archive.
@@ -231,6 +231,6 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </remarks>
         Task<Stream> GetAsync(string path,
             bool compress = false,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
     }
 }

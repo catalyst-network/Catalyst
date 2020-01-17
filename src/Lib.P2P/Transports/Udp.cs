@@ -39,11 +39,11 @@ namespace Lib.P2P.Transports
     /// </summary>
     public class Udp : IPeerTransport
     {
-        private static ILog log = LogManager.GetLogger(typeof(Udp));
+        private static ILog _log = LogManager.GetLogger(typeof(Udp));
 
         /// <inheritdoc />
         public async Task<Stream> ConnectAsync(MultiAddress address,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var port = address.Protocols
                .Where(p => p.Name == "udp")
@@ -66,9 +66,9 @@ namespace Lib.P2P.Transports
 
             try
             {
-                log.Debug("connecting to " + address);
+                _log.Debug("connecting to " + address);
                 await socket.ConnectAsync(ip.Value, port).ConfigureAwait(false);
-                log.Debug("connected " + address);
+                _log.Debug("connected " + address);
             }
             catch (Exception) when (cancel.IsCancellationRequested)
             {
@@ -76,13 +76,13 @@ namespace Lib.P2P.Transports
             }
             catch (Exception e)
             {
-                log.Warn("failed " + address, e);
+                _log.Warn("failed " + address, e);
                 throw;
             }
 
             if (cancel.IsCancellationRequested)
             {
-                log.Debug("cancel " + address);
+                _log.Debug("cancel " + address);
                 socket?.Dispose();
                 cancel.ThrowIfCancellationRequested();
             }

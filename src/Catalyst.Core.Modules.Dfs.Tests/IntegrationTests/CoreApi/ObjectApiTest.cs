@@ -53,17 +53,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task New_Template_Null()
         {
             var node = await ipfs.ObjectApi.NewAsync();
-            Assert.Equal("QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n", (string) node.Id);
+            Assert.Equal("QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n", node.Id);
         }
 
         [Fact]
         public async Task New_Template_UnixfsDir()
         {
             var node = await ipfs.ObjectApi.NewAsync("unixfs-dir");
-            Assert.Equal("QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn", (string) node.Id);
+            Assert.Equal("QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn", node.Id);
 
             node = await ipfs.ObjectApi.NewDirectoryAsync();
-            Assert.Equal("QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn", (string) node.Id);
+            Assert.Equal("QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn", node.Id);
         }
 
         [Fact]
@@ -215,7 +215,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task Links_RawCid()
         {
             var blob = new byte[2048];
-            var cid = await ipfs.BlockApi.PutAsync(blob, contentType: "raw");
+            var cid = await ipfs.BlockApi.PutAsync(blob, "raw");
 
             var links = await ipfs.ObjectApi.LinksAsync(cid);
             Assert.Equal(0, links.Count());

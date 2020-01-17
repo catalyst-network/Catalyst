@@ -40,10 +40,10 @@ namespace Lib.P2P.PubSub
     /// </summary>
     public class FloodRouter : IPeerProtocol, IMessageRouter
     {
-        private static ILog log = LogManager.GetLogger(typeof(FloodRouter));
+        private static ILog _log = LogManager.GetLogger(typeof(FloodRouter));
 
-        private MessageTracker tracker = new MessageTracker();
-        private ConcurrentDictionary<string, string> localTopics = new ConcurrentDictionary<string, string>();
+        private MessageTracker _tracker = new MessageTracker();
+        private ConcurrentDictionary<string, string> _localTopics = new ConcurrentDictionary<string, string>();
 
         /// <summary>
         ///   The topics of interest of other peers.
@@ -57,7 +57,7 @@ namespace Lib.P2P.PubSub
         public string Name { get; } = "floodsub";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1, 0);
+        public SemVersion Version { get; } = new SemVersion(1);
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }
@@ -70,7 +70,7 @@ namespace Lib.P2P.PubSub
         /// <inheritdoc />
         public Task StartAsync()
         {
-            log.Debug("Starting");
+            _log.Debug("Starting");
 
             SwarmService.AddProtocol(this);
             SwarmService.ConnectionEstablished += Swarm_ConnectionEstablished;
@@ -82,13 +82,13 @@ namespace Lib.P2P.PubSub
         /// <inheritdoc />
         public Task StopAsync()
         {
-            log.Debug("Stopping");
+            _log.Debug("Stopping");
 
             SwarmService.ConnectionEstablished -= Swarm_ConnectionEstablished;
             SwarmService.PeerDisconnected -= Swarm_PeerDisconnected;
             SwarmService.RemoveProtocol(this);
             RemoteTopics.Clear();
-            localTopics.Clear();
+            _localTopics.Clear();
 
             return Task.CompletedTask;
         }
@@ -96,27 +96,33 @@ namespace Lib.P2P.PubSub
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             while (true)
             {
                 var request = await ProtoBufHelper.ReadMessageAsync<PubSubMessage>(stream, cancel)
                    .ConfigureAwait(false);
-                ;
-                log.Debug($"got message from {connection.RemotePeer}");
+                
+                _log.Debug($"got message from {connection.RemotePeer}");
 
                 if (request.Subscriptions != null)
+                {
                     foreach (var sub in request.Subscriptions)
                         ProcessSubscription(sub, connection.RemotePeer);
+                }
 
-                if (request.PublishedMessages != null)
-                    foreach (var msg in request.PublishedMessages)
-                    {
-                        log.Debug($"Message for '{string.Join(", ", msg.Topics)}' fowarded by {connection.RemotePeer}");
-                        msg.Forwarder = connection.RemotePeer;
-                        MessageReceived?.Invoke(this, msg);
-                        await PublishAsync(msg, cancel).ConfigureAwait(false);
-                    }
+                if (request.PublishedMessages == null)
+                {
+                    continue;
+                }
+                
+                foreach (var msg in request.PublishedMessages)
+                {
+                    _log.Debug($"Message for '{string.Join(", ", msg.Topics)}' fowarded by {connection.RemotePeer}");
+                    msg.Forwarder = connection.RemotePeer;
+                    MessageReceived?.Invoke(this, msg);
+                    await PublishAsync(msg, cancel).ConfigureAwait(false);
+                }
             }
         }
 
@@ -137,12 +143,12 @@ namespace Lib.P2P.PubSub
         {
             if (sub.Subscribe)
             {
-                log.Debug($"Subscribe '{sub.Topic}' by {remote}");
+                _log.Debug($"Subscribe '{sub.Topic}' by {remote}");
                 RemoteTopics.AddInterest(sub.Topic, remote);
             }
             else
             {
-                log.Debug($"Unsubscribe '{sub.Topic}' by {remote}");
+                _log.Debug($"Unsubscribe '{sub.Topic}' by {remote}");
                 RemoteTopics.RemoveInterest(sub.Topic, remote);
             }
         }
@@ -153,10 +159,10 @@ namespace Lib.P2P.PubSub
         /// <inheritdoc />
         public async Task JoinTopicAsync(string topic, CancellationToken cancel)
         {
-            localTopics.TryAdd(topic, topic);
+            _localTopics.TryAdd(topic, topic);
             var msg = new PubSubMessage
             {
-                Subscriptions = new Subscription[]
+                Subscriptions = new[]
                 {
                     new Subscription
                     {
@@ -172,17 +178,17 @@ namespace Lib.P2P.PubSub
             }
             catch (Exception e)
             {
-                log.Warn("Join topic failed.", e);
+                _log.Warn("Join topic failed.", e);
             }
         }
 
         /// <inheritdoc />
         public async Task LeaveTopicAsync(string topic, CancellationToken cancel)
         {
-            localTopics.TryRemove(topic, out _);
+            _localTopics.TryRemove(topic, out _);
             var msg = new PubSubMessage
             {
-                Subscriptions = new Subscription[]
+                Subscriptions = new[]
                 {
                     new Subscription
                     {
@@ -198,15 +204,17 @@ namespace Lib.P2P.PubSub
             }
             catch (Exception e)
             {
-                log.Warn("Leave topic failed.", e);
+                _log.Warn("Leave topic failed.", e);
             }
         }
 
         /// <inheritdoc />
         public Task PublishAsync(PublishedMessage message, CancellationToken cancel)
         {
-            if (tracker.RecentlySeen(message.MessageId))
+            if (_tracker.RecentlySeen(message.MessageId))
+            {
                 return Task.CompletedTask;
+            }
 
             // Find a set of peers that are interested in the topic(s).
             // Exclude author and sender
@@ -218,7 +226,7 @@ namespace Lib.P2P.PubSub
             // Forward the message.
             var forward = new PubSubMessage
             {
-                PublishedMessages = new PublishedMessage[] {message}
+                PublishedMessages = new[] {message}
             };
 
             return SendAsync(forward, peers, cancel);
@@ -241,18 +249,17 @@ namespace Lib.P2P.PubSub
         {
             try
             {
-                using (var stream = await SwarmService.DialAsync(peer, ToString(), cancel).ConfigureAwait(false))
+                await using (var stream = await SwarmService.DialAsync(peer, ToString(), cancel).ConfigureAwait(false))
                 {
                     await stream.WriteAsync(message, 0, message.Length, cancel).ConfigureAwait(false);
                     await stream.FlushAsync(cancel).ConfigureAwait(false);
                 }
 
-                log.Debug($"sending message to {peer}");
-                return;
+                _log.Debug($"sending message to {peer}");
             }
             catch (Exception e)
             {
-                log.Debug($"{peer} refused pubsub message.", e);
+                _log.Debug($"{peer} refused pubsub message.", e);
             }
         }
 
@@ -269,14 +276,16 @@ namespace Lib.P2P.PubSub
         private async void Swarm_ConnectionEstablished(object sender, PeerConnection connection)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
-            if (localTopics.Count == 0)
+            if (_localTopics.Count == 0)
+            {
                 return;
+            }
 
             try
             {
                 var hello = new PubSubMessage
                 {
-                    Subscriptions = localTopics.Values
+                    Subscriptions = _localTopics.Values
                        .Select(topic => new Subscription
                         {
                             Subscribe = true,
@@ -284,12 +293,12 @@ namespace Lib.P2P.PubSub
                         })
                        .ToArray()
                 };
-                await SendAsync(hello, new Peer[] {connection.RemotePeer}, CancellationToken.None)
+                await SendAsync(hello, new[] {connection.RemotePeer}, CancellationToken.None)
                    .ConfigureAwait(false);
             }
             catch (Exception e)
             {
-                log.Warn("Sending hello message failed", e);
+                _log.Warn("Sending hello message failed", e);
             }
         }
 

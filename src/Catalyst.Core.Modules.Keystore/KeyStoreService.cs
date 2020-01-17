@@ -62,17 +62,15 @@ namespace Catalyst.Core.Modules.Keystore
     public class KeyStoreService : IKeyStoreService
     {
         private readonly string _folder;
-        private static readonly ILog log = LogManager.GetLogger(typeof(KeyStoreService));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(KeyStoreService));
 
         private char[] _dek;
-        private FileStore<string, EncryptedKey> store;
+        private FileStore<string, EncryptedKey> _store;
 
         /// <summary>
         ///     Create a new instance of the <see cref="KeyStoreService" /> class.
         /// </summary>
-        /// <param name="ipfs">
-        ///     The IPFS Engine associated with the key chain.
-        /// </param>
+        /// <param name="dfsOptions"></param>
         public KeyStoreService(DfsOptions dfsOptions)
         {
             _folder = dfsOptions.Repository.Folder;
@@ -83,9 +81,9 @@ namespace Catalyst.Core.Modules.Keystore
         {
             get
             {
-                if (store != null)
+                if (_store != null)
                 {
-                    return store;
+                    return _store;
                 }
 
                 var folder = Path.Combine(_folder, "keys");
@@ -94,21 +92,21 @@ namespace Catalyst.Core.Modules.Keystore
                     Directory.CreateDirectory(folder);
                 }
 
-                store = new FileStore<string, EncryptedKey>
+                _store = new FileStore<string, EncryptedKey>
                 {
                     Folder = folder,
                     NameToKey = name => Encoding.UTF8.GetBytes(name).ToBase32(),
                     KeyToName = key => Encoding.UTF8.GetString(Base32.Decode(key))
                 };
 
-                return store;
+                return _store;
             }
         }
 
         /// <summary>
         ///     The configuration options.
         /// </summary>
-        public KeyChainOptions Options { get; set; } = new KeyChainOptions();
+        public KeyChainOptions Options { get; set; }
 
         /// <summary>
         ///     Encrypt data as CMS protected data.
@@ -160,7 +158,7 @@ namespace Catalyst.Core.Modules.Keystore
                 case ECPrivateKeyParameters _:
 
                 {
-                    var cert = await CreateBCCertificateAsync(keyName, cancel).ConfigureAwait(false);
+                    var cert = await CreateBcCertificateAsync(keyName, cancel).ConfigureAwait(false);
                     edGen.AddKeyAgreementRecipient(
                         CmsEnvelopedGenerator.ECDHSha1Kdf,
                         kp.Private,
@@ -171,7 +169,7 @@ namespace Catalyst.Core.Modules.Keystore
                     break;
                 }
                 case Ed25519PrivateKeyParameters _:
-                    var cert2 = await CreateBCCertificateAsync(keyName, cancel).ConfigureAwait(false);
+                    var cert2 = await CreateBcCertificateAsync(keyName, cancel).ConfigureAwait(false);
                     edGen.AddKeyAgreementRecipient(
                         CmsEnvelopedGenerator.ECDHSha1Kdf,
                         kp.Private,
@@ -266,7 +264,7 @@ namespace Catalyst.Core.Modules.Keystore
             try
             {
                 // Subject Key Identifier is the key ID.
-                if (ri.RecipientID.SubjectKeyIdentifier is byte[] ski)
+                if (ri.RecipientID.SubjectKeyIdentifier is { } ski)
                 {
                     return new MultiHash(ski);
                 }
@@ -282,7 +280,7 @@ namespace Catalyst.Core.Modules.Keystore
             }
             catch (Exception e)
             {
-                log.Warn("Failed reading CMS recipient info.", e);
+                Log.Warn("Failed reading CMS recipient info.", e);
             }
 
             return null;
@@ -338,7 +336,7 @@ namespace Catalyst.Core.Modules.Keystore
                 }
             }
 
-            log.Debug("Pass phrase is okay");
+            Log.Debug("Pass phrase is okay");
         }
 
         /// <summary>
@@ -401,23 +399,16 @@ namespace Catalyst.Core.Modules.Keystore
                     // Add protobuf cruft.
                     var publicKey = new PublicKey
                     {
-                        Data = spki
+                        Data = spki,
+                        Type = kp.Public switch
+                        {
+                            RsaKeyParameters _ => KeyType.RSA,
+                            Ed25519PublicKeyParameters _ => KeyType.Ed25519,
+                            ECPublicKeyParameters _ => KeyType.Secp256k1,
+                            _ => throw new NotSupportedException(
+                                $"The key type {kp.Public.GetType().Name} is not supported.")
+                        }
                     };
-                    switch (kp.Public)
-                    {
-                        case RsaKeyParameters _:
-                            publicKey.Type = KeyType.RSA;
-                            break;
-                        case Ed25519PublicKeyParameters _:
-                            publicKey.Type = KeyType.Ed25519;
-                            break;
-                        case ECPublicKeyParameters _:
-                            publicKey.Type = KeyType.Secp256k1;
-                            break;
-                        default:
-                            throw new NotSupportedException(
-                                $"The key type {kp.Public.GetType().Name} is not supported.");
-                    }
 
                     using var ms = new MemoryStream();
                     Serializer.Serialize(ms, publicKey);
@@ -448,7 +439,7 @@ namespace Catalyst.Core.Modules.Keystore
             keyType = keyType.ToLowerInvariant();
 
             // Create the key pair.
-            log.DebugFormat("Creating {0} key named '{1}'", keyType, name);
+            Log.DebugFormat("Creating {0} key named '{1}'", keyType, name);
             IAsymmetricCipherKeyPairGenerator g;
             switch (keyType)
             {
@@ -470,7 +461,7 @@ namespace Catalyst.Core.Modules.Keystore
             }
 
             var keyPair = g.GenerateKeyPair();
-            log.Debug("Created key");
+            Log.Debug("Created key");
 
             return await AddPrivateKeyAsync(name, keyPair, cancel).ConfigureAwait(false);
         }
@@ -646,7 +637,7 @@ namespace Catalyst.Core.Modules.Keystore
                 Pem = pem
             };
             await Store.PutAsync(name, key, cancel).ConfigureAwait(false);
-            log.DebugFormat("Added key '{0}' with ID {1}", name, keyId);
+            Log.DebugFormat("Added key '{0}' with ID {1}", name, keyId);
 
             return new KeyInfo
             {
@@ -750,7 +741,7 @@ namespace Catalyst.Core.Modules.Keystore
         public async Task<byte[]> CreateCertificateAsync(string keyName,
             CancellationToken cancel = default)
         {
-            var cert = await CreateBCCertificateAsync(keyName, cancel).ConfigureAwait(false);
+            var cert = await CreateBcCertificateAsync(keyName, cancel).ConfigureAwait(false);
             return cert.GetEncoded();
         }
 
@@ -762,7 +753,7 @@ namespace Catalyst.Core.Modules.Keystore
         /// </param>
         /// <param name="cancel"></param>
         /// <returns></returns>
-        public async Task<X509Certificate> CreateBCCertificateAsync(string keyName,
+        public async Task<X509Certificate> CreateBcCertificateAsync(string keyName,
             CancellationToken cancel = default)
         {
             // Get the BC key pair for the named key.
@@ -827,7 +818,7 @@ namespace Catalyst.Core.Modules.Keystore
             return certGenerator.Generate(signatureFactory);
         }
 
-        private class PasswordFinder : IPasswordFinder, IDisposable
+        private sealed class PasswordFinder : IPasswordFinder, IDisposable
         {
             public char[] Password;
 

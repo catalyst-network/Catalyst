@@ -47,18 +47,18 @@ namespace Lib.P2P
     /// </remarks>
     /// <seealso href="https://github.com/ipld/cid"/>
     [JsonConverter(typeof(CidJsonConverter))]
-    public class Cid : IEquatable<Cid>
+    public sealed partial class Cid : IEquatable<Cid>
     {
         /// <summary>
         ///   The default <see cref="ContentType"/>.
         /// </summary>
         public const string DefaultContentType = "dag-pb";
 
-        private string encodedValue;
-        private int version;
-        private string encoding = MultiBase.DefaultAlgorithmName;
-        private string contentType = DefaultContentType;
-        private MultiHash hash;
+        private string _encodedValue;
+        private int _version;
+        private string _encoding = MultiBase.DefaultAlgorithmName;
+        private string _contentType = DefaultContentType;
+        private MultiHash _hash;
 
         /// <summary>
         ///   Throws if a property cannot be set.
@@ -72,7 +72,10 @@ namespace Lib.P2P
         /// </remarks>
         private void EnsureMutable()
         {
-            if (encodedValue != null) throw new NotSupportedException("CID cannot be changed.");
+            if (_encodedValue != null)
+            {
+                throw new NotSupportedException("CID cannot be changed.");
+            }
         }
 
         /// <summary>
@@ -99,12 +102,17 @@ namespace Lib.P2P
         /// </remarks>
         public int Version
         {
-            get => version;
+            get => _version;
             set
             {
                 EnsureMutable();
-                if (version == 0 && value > 0 && Encoding == "base58btc") encoding = "base32";
-                version = value;
+                
+                if (_version == 0 && value > 0 && Encoding == "base58btc")
+                {
+                    _encoding = "base32";
+                }
+                
+                _version = value;
             }
         }
 
@@ -121,12 +129,16 @@ namespace Lib.P2P
         /// <seealso cref="MultiBase"/>
         public string Encoding
         {
-            get => encoding;
+            get => _encoding;
             set
             {
                 EnsureMutable();
-                if (Version == 0 && value != "base58btc") Version = 1;
-                encoding = value;
+                if (Version == 0 && value != "base58btc")
+                {
+                    Version = 1;
+                }
+                
+                _encoding = value;
             }
         }
 
@@ -143,12 +155,15 @@ namespace Lib.P2P
         /// <seealso cref="MultiCodec"/>
         public string ContentType
         {
-            get => contentType;
+            get => _contentType;
             set
             {
                 EnsureMutable();
-                contentType = value;
-                if (Version == 0 && value != "dag-pb") Version = 1;
+                _contentType = value;
+                if (Version == 0 && value != "dag-pb")
+                {
+                    Version = 1;
+                }
             }
         }
 
@@ -169,12 +184,15 @@ namespace Lib.P2P
         /// </remarks>
         public MultiHash Hash
         {
-            get => hash;
+            get => _hash;
             set
             {
                 EnsureMutable();
-                hash = value;
-                if (Version == 0 && Hash.Algorithm.Name != "sha2-256") Version = 1;
+                _hash = value;
+                if (Version == 0 && Hash.Algorithm.Name != "sha2-256")
+                {
+                    Version = 1;
+                }
             }
         }
 
@@ -235,13 +253,16 @@ namespace Lib.P2P
                     sb.Append(Version);
                     sb.Append(' ');
                     sb.Append(ContentType);
-                    if (Hash != null)
+
+                    if (Hash == null)
                     {
-                        sb.Append(' ');
-                        sb.Append(Hash.Algorithm.Name);
-                        sb.Append(' ');
-                        sb.Append(MultiBase.Encode(Hash.ToArray(), Encoding).Substring(1));
+                        return sb.ToString();
                     }
+                    
+                    sb.Append(' ');
+                    sb.Append(Hash.Algorithm.Name);
+                    sb.Append(' ');
+                    sb.Append(MultiBase.Encode(Hash.ToArray(), Encoding).Substring(1));
 
                     return sb.ToString();
 
@@ -264,19 +285,31 @@ namespace Lib.P2P
         /// <seealso cref="Decode"/>
         public string Encode()
         {
-            if (encodedValue != null) return encodedValue;
-            if (Version == 0)
-                encodedValue = Hash.ToBase58();
-            else
-                using (var ms = new MemoryStream())
-                {
-                    ms.WriteVarint(Version);
-                    ms.WriteMultiCodec(ContentType);
-                    Hash.Write(ms);
-                    encodedValue = MultiBase.Encode(ms.ToArray(), Encoding);
-                }
+            if (_encodedValue != null)
+            {
+                return _encodedValue;
+            }
 
-            return encodedValue;
+            switch (Version)
+            {
+                case 0:
+                    _encodedValue = Hash.ToBase58();
+                    break;
+                default:
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        ms.WriteVarint(Version);
+                        ms.WriteMultiCodec(ContentType);
+                        Hash.Write(ms);
+                        _encodedValue = MultiBase.Encode(ms.ToArray(), Encoding);
+                    }
+
+                    break;
+                }
+            }
+
+            return _encodedValue;
         }
 
         /// <summary>
@@ -298,12 +331,19 @@ namespace Lib.P2P
             try
             {
                 // SHA2-256 MultiHash is CID v0.
-                if (input.Length == 46 && input.StartsWith("Qm")) return (Cid) new MultiHash(input);
+                if (input.Length == 46 && input.StartsWith("Qm"))
+                {
+                    return new MultiHash(input);
+                }
 
                 using (var ms = new MemoryStream(MultiBase.Decode(input), false))
                 {
                     var v = ms.ReadVarint32();
-                    if (v != 1) throw new InvalidDataException($"Unknown CID version '{v}'.");
+                    if (v != 1)
+                    {
+                        throw new InvalidDataException($"Unknown CID version '{v}'.");
+                    }
+                    
                     return new Cid
                     {
                         Version = v,
@@ -465,7 +505,10 @@ namespace Lib.P2P
         /// </remarks>
         public byte[] ToArray()
         {
-            if (Version == 0) return Hash.ToArray();
+            if (Version == 0)
+            {
+                return Hash.ToArray();
+            }
 
             using (var ms = new MemoryStream())
             {
@@ -489,6 +532,7 @@ namespace Lib.P2P
         public static implicit operator Cid(MultiHash hash)
         {
             if (hash.Algorithm.Name == "sha2-256")
+            {
                 return new Cid
                 {
                     Hash = hash,
@@ -496,6 +540,7 @@ namespace Lib.P2P
                     Encoding = "base58btc",
                     ContentType = "dag-pb"
                 };
+            }
 
             return new Cid
             {
@@ -505,29 +550,27 @@ namespace Lib.P2P
         }
 
         /// <inheritdoc />
-        public override int GetHashCode() { return Encode().GetHashCode(); }
+        public override int GetHashCode()
+        {
+            return Encode().GetHashCode();
+        }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
             var that = obj as Cid;
-            return that == null
-                ? false
-                : Encode() == that.Encode();
+            return that != null && Encode() == that.Encode();
         }
 
         /// <inheritdoc />
-        public bool Equals(Cid that) { return Encode() == that.Encode(); }
+        public bool Equals(Cid that) { return Encode() == that?.Encode(); }
 
         /// <summary>
         ///   Value equality.
         /// </summary>
         public static bool operator ==(Cid a, Cid b)
         {
-            if (ReferenceEquals(a, b)) return true;
-            if (ReferenceEquals(a, null)) return false;
-            if (ReferenceEquals(b, null)) return false;
-            return a.Equals(b);
+            return ReferenceEquals(a, b) || !ReferenceEquals(a, null) && !ReferenceEquals(b, null) && a.Equals(b);
         }
 
         /// <summary>
@@ -535,10 +578,7 @@ namespace Lib.P2P
         /// </summary>
         public static bool operator !=(Cid a, Cid b)
         {
-            if (ReferenceEquals(a, b)) return false;
-            if (ReferenceEquals(a, null)) return true;
-            if (ReferenceEquals(b, null)) return true;
-            return !a.Equals(b);
+            return !ReferenceEquals(a, b) && (ReferenceEquals(a, null) || ReferenceEquals(b, null) || !a.Equals(b));
         }
 
         /// <summary>
@@ -570,41 +610,6 @@ namespace Lib.P2P
         public static implicit operator string(Cid id)
         {
             return id.Encode();
-        }
-
-        /// <summary>
-        ///   Conversion of a <see cref="Cid"/> to and from JSON.
-        /// </summary>
-        /// <remarks>
-        ///   The JSON is just a single string value.
-        /// </remarks>
-        public class CidJsonConverter : JsonConverter
-        {
-            /// <inheritdoc />
-            public override bool CanConvert(Type objectType) { return true; }
-
-            /// <inheritdoc />
-            public override bool CanRead => true;
-
-            /// <inheritdoc />
-            public override bool CanWrite => true;
-
-            /// <inheritdoc />
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                var cid = value as Cid;
-                writer.WriteValue(cid?.Encode());
-            }
-
-            /// <inheritdoc />
-            public override object ReadJson(JsonReader reader,
-                Type objectType,
-                object existingValue,
-                JsonSerializer serializer)
-            {
-                var s = reader.Value as string;
-                return s == null ? null : Decode(s);
-            }
         }
     }
 }

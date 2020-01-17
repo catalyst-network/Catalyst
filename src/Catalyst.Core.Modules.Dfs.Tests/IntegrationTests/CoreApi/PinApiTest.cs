@@ -27,7 +27,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
@@ -42,29 +41,28 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class PinApiTest
     {
-        private IDfsService ipfs;
-        private readonly IHashProvider _hashProvider;
+        private readonly IDfsService _dfs;
 
         public PinApiTest(ITestOutputHelper output)
         {
-            ipfs = TestDfs.GetTestDfs(output);
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _dfs = TestDfs.GetTestDfs(output);
+            new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
         [Fact]
         public async Task Add_Remove()
         {
-            var result = await ipfs.UnixFsApi.AddTextAsync("I am pinned");
+            var result = await _dfs.UnixFsApi.AddTextAsync("I am pinned");
             var id = result.Id;
 
-            var pins = await ipfs.PinApi.AddAsync(id);
+            var pins = await _dfs.PinApi.AddAsync(id);
             Assert.True(pins.Any(pin => pin == id));
-            var all = await ipfs.PinApi.ListAsync();
+            var all = await _dfs.PinApi.ListAsync();
             Assert.True(all.Any(pin => pin == id));
 
-            pins = await ipfs.PinApi.RemoveAsync(id);
+            pins = await _dfs.PinApi.RemoveAsync(id);
             Assert.True(pins.Any(pin => pin == id));
-            all = await ipfs.PinApi.ListAsync();
+            all = await _dfs.PinApi.ListAsync();
             Assert.False(all.Any(pin => pin == id));
         }
 
@@ -72,7 +70,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task Remove_Unknown()
         {
             var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"));
-            await ipfs.PinApi.RemoveAsync(dag.Id, true);
+            await _dfs.PinApi.RemoveAsync(dag.Id);
         }
 
         [Fact]
@@ -86,14 +84,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     1, 2, 3
                 }, "identity")
             };
-            var pins = await ipfs.PinApi.AddAsync(cid, recursive: false);
+            var pins = await _dfs.PinApi.AddAsync(cid, false);
             Assert.Contains(cid, pins.ToArray());
-            var all = await ipfs.PinApi.ListAsync();
+            var all = await _dfs.PinApi.ListAsync();
             Assert.Contains(cid, all.ToArray());
 
-            var removals = await ipfs.PinApi.RemoveAsync(cid, recursive: false);
+            var removals = await _dfs.PinApi.RemoveAsync(cid, false);
             Assert.Contains(cid, removals.ToArray());
-            all = await ipfs.PinApi.ListAsync();
+            all = await _dfs.PinApi.ListAsync();
             Assert.DoesNotContain(cid, all.ToArray());
         }
 
@@ -104,7 +102,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             ExceptionAssert.Throws<Exception>(() =>
             {
                 var cts = new CancellationTokenSource(250);
-                var _ = ipfs.PinApi.AddAsync(dag.Id, true, cts.Token).Result;
+                var _ = _dfs.PinApi.AddAsync(dag.Id, true, cts.Token).Result;
             });
         }
 
@@ -118,8 +116,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 RawLeaves = true,
                 Wrap = true,
             };
-            var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            var cids = await ipfs.PinApi.AddAsync(node.Id, true);
+            var node = await _dfs.UnixFsApi.AddTextAsync("hello world", options);
+            var cids = await _dfs.PinApi.AddAsync(node.Id);
             Assert.Equal(6, cids.Count());
         }
 
@@ -133,11 +131,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 RawLeaves = true,
                 Wrap = true,
             };
-            var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            var cids = await ipfs.PinApi.AddAsync(node.Id, true);
+            var node = await _dfs.UnixFsApi.AddTextAsync("hello world", options);
+            var cids = await _dfs.PinApi.AddAsync(node.Id);
             Assert.Equal(6, cids.Count());
 
-            var removedCids = await ipfs.PinApi.RemoveAsync(node.Id, true);
+            var removedCids = await _dfs.PinApi.RemoveAsync(node.Id);
             Assert.Equal(cids.ToArray(), removedCids.ToArray());
         }
     }

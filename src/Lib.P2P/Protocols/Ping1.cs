@@ -40,13 +40,13 @@ namespace Lib.P2P.Protocols
     {
         private const int PingSize = 32;
 
-        private static ILog log = LogManager.GetLogger(typeof(Ping1));
+        private static ILog _log = LogManager.GetLogger(typeof(Ping1));
 
         /// <inheritdoc />
         public string Name { get; } = "ipfs/ping";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1, 0);
+        public SemVersion Version { get; } = new SemVersion(1);
 
         /// <summary>
         ///   Provides access to other peers.
@@ -65,14 +65,14 @@ namespace Lib.P2P.Protocols
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             while (true)
             {
                 // Read the message.
                 var request = new byte[PingSize];
                 await stream.ReadExactAsync(request, 0, PingSize, cancel).ConfigureAwait(false);
-                log.Debug($"got ping from {connection.RemotePeer}");
+                _log.Debug($"got ping from {connection.RemotePeer}");
 
                 // Echo the message
                 await stream.WriteAsync(request, 0, PingSize, cancel).ConfigureAwait(false);
@@ -83,7 +83,7 @@ namespace Lib.P2P.Protocols
         /// <inheritdoc />
         public Task StartAsync()
         {
-            log.Debug("Starting");
+            _log.Debug("Starting");
 
             SwarmService.AddProtocol(this);
 
@@ -93,7 +93,7 @@ namespace Lib.P2P.Protocols
         /// <inheritdoc />
         public Task StopAsync()
         {
-            log.Debug("Stopping");
+            _log.Debug("Stopping");
 
             SwarmService.RemoveProtocol(this);
 
@@ -118,7 +118,7 @@ namespace Lib.P2P.Protocols
         /// </returns>
         public async Task<IEnumerable<PingResult>> PingAsync(MultiHash peerId,
             int count = 10,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var peer = new Peer {Id = peerId};
             return await PingAsync(peer, count, cancel).ConfigureAwait(false);
@@ -142,7 +142,7 @@ namespace Lib.P2P.Protocols
         /// </returns>
         public async Task<IEnumerable<PingResult>> PingAsync(MultiAddress address,
             int count = 10,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var peer = SwarmService.RegisterPeerAddress(address);
             return await PingAsync(peer, count, cancel).ConfigureAwait(false);
@@ -158,7 +158,7 @@ namespace Lib.P2P.Protocols
             };
             var totalTime = TimeSpan.Zero;
 
-            using (var stream = await SwarmService.DialAsync(peer, ToString(), cancel))
+            await using (var stream = await SwarmService.DialAsync(peer, ToString(), cancel))
             {
                 for (var i = 0; i < count; ++i)
                 {
@@ -167,8 +167,8 @@ namespace Lib.P2P.Protocols
                     var start = DateTime.Now;
                     try
                     {
-                        await stream.WriteAsync(ping, 0, ping.Length).ConfigureAwait(false);
-                        ;
+                        await stream.WriteAsync(ping, 0, ping.Length, cancel).ConfigureAwait(false);
+                        
                         await stream.FlushAsync(cancel).ConfigureAwait(false);
 
                         var response = new byte[PingSize];

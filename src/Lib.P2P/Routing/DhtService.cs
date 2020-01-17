@@ -39,13 +39,13 @@ namespace Lib.P2P.Routing
     /// </summary>
     public class DhtService : IDhtService
     {
-        private static ILog log = LogManager.GetLogger(typeof(DhtService));
+        private static ILog _log = LogManager.GetLogger(typeof(DhtService));
 
         /// <inheritdoc />
         public virtual string Name { get; } = "libp2p-cs/kad";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1, 0);
+        public SemVersion Version { get; } = new SemVersion(1);
 
         /// <summary>
         ///   Provides access to other peers.
@@ -88,7 +88,7 @@ namespace Lib.P2P.Routing
             {
                 var request = await ProtoBufHelper.ReadMessageAsync<DhtMessage>(stream, cancel).ConfigureAwait(false);
 
-                log.Debug($"got {request.Type} from {connection.RemotePeer}");
+                _log.Debug($"got {request.Type} from {connection.RemotePeer}");
                 var response = new DhtMessage
                 {
                     Type = request.Type,
@@ -113,7 +113,7 @@ namespace Lib.P2P.Routing
                     case MessageType.GetValue:
                         break;
                     default:
-                        log.Debug($"unknown {request.Type} from {connection.RemotePeer}");
+                        _log.Debug($"unknown {request.Type} from {connection.RemotePeer}");
 
                         // TODO: Should we close the stream?
                         continue;
@@ -132,7 +132,7 @@ namespace Lib.P2P.Routing
         /// <inheritdoc />
         public Task StartAsync()
         {
-            log.Debug("Starting");
+            _log.Debug("Starting");
 
             RoutingTable = new RoutingTable(SwarmService.LocalPeer);
             ContentRouter = new ContentRouter();
@@ -151,7 +151,7 @@ namespace Lib.P2P.Routing
         /// <inheritdoc />
         public Task StopAsync()
         {
-            log.Debug("Stopping");
+            _log.Debug("Stopping");
 
             SwarmService.RemoveProtocol(this);
             SwarmService.PeerDiscovered -= Swarm_PeerDiscovered;
@@ -341,13 +341,12 @@ namespace Lib.P2P.Routing
             }
             catch (Exception)
             {
-                log.Error($"Bad FindNode request key {request.Key.ToHexString()}");
+                _log.Error($"Bad FindNode request key {request.Key.ToHexString()}");
                 peerId = MultiHash.ComputeHash(request.Key);
             }
 
             // Do we know the peer?.
-            Peer found = null;
-            found = SwarmService.LocalPeer.Id == peerId ? SwarmService.LocalPeer : SwarmService.KnownPeers.FirstOrDefault(p => p.Id == peerId);
+            var found = SwarmService.LocalPeer.Id == peerId ? SwarmService.LocalPeer : SwarmService.KnownPeers.FirstOrDefault(p => p.Id == peerId);
 
             // Find the closer peers.
             var closerPeers = new List<Peer>();
@@ -369,9 +368,9 @@ namespace Lib.P2P.Routing
                 })
                .ToArray();
 
-            if (log.IsDebugEnabled)
+            if (_log.IsDebugEnabled)
             {
-                log.Debug($"returning {response.CloserPeers.Length.ToString()} closer peers");
+                _log.Debug($"returning {response.CloserPeers.Length.ToString()} closer peers");
             }
             
             return response;
@@ -421,7 +420,7 @@ namespace Lib.P2P.Routing
             }
             catch (Exception)
             {
-                log.Error($"Bad AddProvider request key {request.Key.ToHexString()}");
+                _log.Error($"Bad AddProvider request key {request.Key.ToHexString()}");
                 return null;
             }
 

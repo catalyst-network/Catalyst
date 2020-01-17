@@ -28,8 +28,6 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.FileSystem;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.FileSystem;
 using Common.Logging;

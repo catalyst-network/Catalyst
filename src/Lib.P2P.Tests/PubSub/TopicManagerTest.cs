@@ -129,16 +129,16 @@ namespace Lib.P2P.Tests.PubSub
         {
             var tm = new TopicManager();
             tm.AddInterest("alpha", a);
-            CollectionAssert.AreEquivalent(new string[] {"alpha"}, tm.GetTopics(a).ToArray());
+            CollectionAssert.AreEquivalent(new[] {"alpha"}, tm.GetTopics(a).ToArray());
             CollectionAssert.AreEquivalent(new string[0], tm.GetTopics(b).ToArray());
 
             tm.AddInterest("beta", a);
-            CollectionAssert.AreEquivalent(new string[] {"alpha", "beta"}, tm.GetTopics(a).ToArray());
+            CollectionAssert.AreEquivalent(new[] {"alpha", "beta"}, tm.GetTopics(a).ToArray());
             CollectionAssert.AreEquivalent(new string[0], tm.GetTopics(b).ToArray());
 
             tm.AddInterest("beta", b);
-            CollectionAssert.AreEquivalent(new string[] {"alpha", "beta"}, tm.GetTopics(a).ToArray());
-            CollectionAssert.AreEquivalent(new string[] {"beta"}, tm.GetTopics(b).ToArray());
+            CollectionAssert.AreEquivalent(new[] {"alpha", "beta"}, tm.GetTopics(a).ToArray());
+            CollectionAssert.AreEquivalent(new[] {"beta"}, tm.GetTopics(b).ToArray());
         }
     }
 }

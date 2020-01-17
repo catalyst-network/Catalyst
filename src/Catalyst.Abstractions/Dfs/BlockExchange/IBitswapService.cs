@@ -68,7 +68,7 @@ namespace Catalyst.Abstractions.Dfs.BlockExchange
         /// <returns>
         ///   Statistics on the bitswap blocks exchanged with the peer.
         /// </returns>
-        /// <seealso cref="IBitSwapApi.LedgerAsync"/>
+        /// <seealso cref="IBitSwapApi.GetBitSwapLedger"/>
         BitswapLedger PeerLedger(Peer peer);
 
         /// <summary>

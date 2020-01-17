@@ -232,7 +232,7 @@ namespace Lib.P2P
         ///   the existing connection is returned.
         /// </remarks>
         Task<PeerConnection> ConnectAsync(MultiAddress address,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Connect to a peer.
@@ -251,7 +251,7 @@ namespace Lib.P2P
         ///   If already connected to the peer and is active on any address, then
         ///   the existing connection is returned.
         /// </remarks>
-        Task<PeerConnection> ConnectAsync(Peer peer, CancellationToken cancel = default(CancellationToken));
+        Task<PeerConnection> ConnectAsync(Peer peer, CancellationToken cancel = default);
 
         /// <summary>
         ///   Create a stream to the peer that talks the specified protocol.
@@ -277,7 +277,7 @@ namespace Lib.P2P
         /// </remarks>
         Task<Stream> DialAsync(Peer peer,
             string protocol,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Disconnect from a peer.
@@ -295,7 +295,7 @@ namespace Lib.P2P
         /// <remarks>
         ///   If the peer is not conected, then nothing happens.
         /// </remarks>
-        Task DisconnectAsync(MultiAddress address, CancellationToken cancel = default(CancellationToken));
+        Task DisconnectAsync(MultiAddress address, CancellationToken cancel = default);
 
         /// <summary>
         ///   Start listening on the specified <see cref="MultiAddress"/>.

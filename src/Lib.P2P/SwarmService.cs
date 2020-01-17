@@ -34,6 +34,7 @@ using Common.Logging;
 using Lib.P2P.Cryptography;
 using Lib.P2P.Protocols;
 using Lib.P2P.Routing;
+using Lib.P2P.SecureCommunication;
 using Lib.P2P.Transports;
 using MultiFormats;
 using Nito.AsyncEx;
@@ -45,7 +46,7 @@ namespace Lib.P2P
     /// </summary>
     public class SwarmService : ISwarmService
     {
-        private static ILog log = LogManager.GetLogger(typeof(SwarmService));
+        private static ILog _log = LogManager.GetLogger(typeof(SwarmService));
 
         /// <summary>
         ///   The time to wait for a low level connection to be established.
@@ -61,10 +62,10 @@ namespace Lib.P2P
         /// <remarks>
         ///   Use sychronized access, e.g. <code>lock (protocols) { ... }</code>.
         /// </remarks>
-        private List<IPeerProtocol> protocols = new List<IPeerProtocol>
+        private List<IPeerProtocol> _protocols = new List<IPeerProtocol>
         {
             new Multistream1(),
-            new SecureCommunication.Secio1(),
+            new Secio1(),
             new Identify1(),
             new Mplex67()
         };
@@ -72,9 +73,9 @@ namespace Lib.P2P
         /// <summary>
         ///   Added to connection protocols when needed.
         /// </summary>
-        private readonly Plaintext1 plaintext1 = new Plaintext1();
+        private readonly Plaintext1 _plaintext1 = new Plaintext1();
 
-        private Peer localPeer;
+        private Peer _localPeer;
 
         /// <summary>
         ///   Raised when a listener is establihed.
@@ -124,7 +125,7 @@ namespace Lib.P2P
         /// </value>
         public Peer LocalPeer
         {
-            get => localPeer;
+            get => _localPeer;
             set
             {
                 if (value == null)
@@ -134,12 +135,12 @@ namespace Lib.P2P
 
                 if (value.Id == null)
                 {
-                    throw new ArgumentNullException("peer.Id");
+                    throw new ArgumentNullException($"peer.id");
                 }
 
                 if (value.PublicKey == null)
                 {
-                    throw new ArgumentNullException("peer.PublicKey");
+                    throw new ArgumentNullException($"peer.PublicKey");
                 }
 
                 if (!value.IsValid())
@@ -147,7 +148,7 @@ namespace Lib.P2P
                     throw new ArgumentException("Invalid peer.");
                 }
                 
-                localPeer = value;
+                _localPeer = value;
             }
         }
 
@@ -162,29 +163,29 @@ namespace Lib.P2P
         /// <summary>
         ///   Other nodes. Key is the bae58 hash of the peer ID.
         /// </summary>
-        private ConcurrentDictionary<string, Peer> otherPeers = new ConcurrentDictionary<string, Peer>();
+        private readonly ConcurrentDictionary<string, Peer> _otherPeers = new ConcurrentDictionary<string, Peer>();
 
         /// <summary>
         ///   Used to cancel any task when the swarm is stopped.
         /// </summary>
-        private CancellationTokenSource swarmCancellation;
+        private CancellationTokenSource _swarmCancellation;
 
         /// <summary>
         ///  Outstanding connection tasks initiated by the local peer.
         /// </summary>
-        private ConcurrentDictionary<Peer, AsyncLazy<PeerConnection>> pendingConnections =
+        private readonly ConcurrentDictionary<Peer, AsyncLazy<PeerConnection>> _pendingConnections =
             new ConcurrentDictionary<Peer, AsyncLazy<PeerConnection>>();
 
         /// <summary>
         ///  Outstanding connection tasks initiated by a remote peer.
         /// </summary>
-        private ConcurrentDictionary<MultiAddress, object> pendingRemoteConnections =
+        private readonly ConcurrentDictionary<MultiAddress, object> _pendingRemoteConnections =
             new ConcurrentDictionary<MultiAddress, object>();
 
         /// <summary>
         ///   Manages the swarm's peer connections.
         /// </summary>
-        public ConnectionManager Manager = new ConnectionManager();
+        internal readonly ConnectionManager Manager = new ConnectionManager();
 
         /// <summary>
         ///   Use to find addresses of a peer.
@@ -209,7 +210,7 @@ namespace Lib.P2P
         /// <summary>
         ///   Cancellation tokens for the listeners.
         /// </summary>
-        private ConcurrentDictionary<MultiAddress, CancellationTokenSource> listeners =
+        private ConcurrentDictionary<MultiAddress, CancellationTokenSource> _listeners =
             new ConcurrentDictionary<MultiAddress, CancellationTokenSource>();
 
         /// <summary>
@@ -224,7 +225,7 @@ namespace Lib.P2P
         {
             get
             {
-                return otherPeers
+                return _otherPeers
                    .Values
                    .SelectMany(p => p.Addresses);
             }
@@ -238,7 +239,7 @@ namespace Lib.P2P
         ///   <see cref="RegisterPeerAddress">discovered</see>.
         /// </value>
         /// <seealso cref="RegisterPeerAddress"/>
-        public IEnumerable<Peer> KnownPeers => otherPeers.Values;
+        public IEnumerable<Peer> KnownPeers => _otherPeers.Values;
 
         /// <summary>
         ///   Register that a peer's address has been discovered.
@@ -299,7 +300,7 @@ namespace Lib.P2P
         {
             if (peer.Id == null)
             {
-                throw new ArgumentNullException("peer.ID");
+                throw new ArgumentNullException(nameof(peer));
             }
 
             if (peer.Id == LocalPeer.Id)
@@ -313,8 +314,8 @@ namespace Lib.P2P
             }
 
             var isNew = false;
-            var p = otherPeers.AddOrUpdate(peer.Id.ToBase58(),
-                (id) =>
+            var p = _otherPeers.AddOrUpdate(peer.Id.ToBase58(),
+                id =>
                 {
                     isNew = true;
                     return peer;
@@ -343,9 +344,9 @@ namespace Lib.P2P
                 return p;
             }
 
-            if (log.IsDebugEnabled)
+            if (_log.IsDebugEnabled)
             {
-                log.Debug($"New peer registerd {p}");
+                _log.Debug($"New peer registerd {p}");
             }
             
             PeerDiscovered?.Invoke(this, p);
@@ -365,9 +366,16 @@ namespace Lib.P2P
         /// </remarks>
         public void DeregisterPeer(Peer peer)
         {
-            if (peer.Id == null) throw new ArgumentNullException("peer.ID");
+            if (peer.Id == null)
+            {
+                throw new ArgumentNullException("peer");
+            }
 
-            if (otherPeers.TryRemove(peer.Id.ToBase58(), out var found)) peer = found;
+            if (_otherPeers.TryRemove(peer.Id.ToBase58(), out var found))
+            {
+                peer = found;
+            }
+            
             PeerRemoved?.Invoke(this, peer);
         }
 
@@ -380,7 +388,7 @@ namespace Lib.P2P
         /// <returns>
         ///   <b>true</b> is the <paramref name="peer"/> has a pending connection.
         /// </returns>
-        public bool HasPendingConnection(Peer peer) { return pendingConnections.TryGetValue(peer, out _); }
+        public bool HasPendingConnection(Peer peer) { return _pendingConnections.TryGetValue(peer, out _); }
 
         /// <summary>
         ///   The addresses that cannot be used.
@@ -396,7 +404,7 @@ namespace Lib.P2P
         /// 
         /// </summary>
         /// <param name="dhtService"></param>
-        public SwarmService(DhtService dhtService = null) { Router = dhtService; }
+        public SwarmService(IPeerRouting dhtService = null) { Router = dhtService; }
 
         /// <inheritdoc />
         public Task StartAsync()
@@ -411,31 +419,31 @@ namespace Lib.P2P
             // TODO: make the tests setup the security protocols.
             if (LocalPeerKey == null)
             {
-                lock (protocols)
+                lock (_protocols)
                 {
-                    var security = protocols.OfType<IEncryptionProtocol>().ToArray();
+                    var security = _protocols.OfType<IEncryptionProtocol>().ToArray();
                     foreach (var p in security)
                     {
-                        protocols.Remove(p);
+                        _protocols.Remove(p);
                     }
                     
-                    protocols.Add(plaintext1);
+                    _protocols.Add(_plaintext1);
                 }
 
-                log.Warn("Peer key is missing, using unencrypted connections.");
+                _log.Warn("Peer key is missing, using unencrypted connections.");
             }
 
             Manager.PeerDisconnected += OnPeerDisconnected;
             IsRunning = true;
-            swarmCancellation = new CancellationTokenSource();
-            log.Debug("Started");
+            _swarmCancellation = new CancellationTokenSource();
+            _log.Debug("Started");
 
             return Task.CompletedTask;
         }
 
         private void OnPeerDisconnected(object sender, MultiHash peerId)
         {
-            if (!otherPeers.TryGetValue(peerId.ToBase58(), out var peer))
+            if (!_otherPeers.TryGetValue(peerId.ToBase58(), out var peer))
             {
                 peer = new Peer {Id = peerId};
             }
@@ -447,28 +455,28 @@ namespace Lib.P2P
         public async Task StopAsync()
         {
             IsRunning = false;
-            swarmCancellation?.Cancel(true);
+            _swarmCancellation?.Cancel(true);
 
-            log.Debug($"Stopping {LocalPeer}");
+            _log.Debug($"Stopping {LocalPeer}");
 
             // Stop the listeners.
-            while (listeners.Count > 0)
+            while (_listeners.Count > 0)
             {
-                await StopListeningAsync(listeners.Keys.First()).ConfigureAwait(false);
+                await StopListeningAsync(_listeners.Keys.First()).ConfigureAwait(false);
             }
 
             // Disconnect from remote peers.
             Manager.Clear();
             Manager.PeerDisconnected -= OnPeerDisconnected;
 
-            otherPeers.Clear();
-            listeners.Clear();
-            pendingConnections.Clear();
-            pendingRemoteConnections.Clear();
+            _otherPeers.Clear();
+            _listeners.Clear();
+            _pendingConnections.Clear();
+            _pendingRemoteConnections.Clear();
             BlackList = new MultiAddressBlackList();
             WhiteList = new MultiAddressWhiteList();
 
-            log.Debug($"Stopped {LocalPeer}");
+            _log.Debug($"Stopped {LocalPeer}");
         }
 
         /// <summary>
@@ -490,7 +498,7 @@ namespace Lib.P2P
         ///   the existing connection is returned.
         /// </remarks>
         public async Task<PeerConnection> ConnectAsync(MultiAddress address,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var peer = RegisterPeerAddress(address);
             return await ConnectAsync(peer, cancel).ConfigureAwait(false);
@@ -513,23 +521,29 @@ namespace Lib.P2P
         ///   If already connected to the peer and is active on any address, then
         ///   the existing connection is returned.
         /// </remarks>
-        public async Task<PeerConnection> ConnectAsync(Peer peer, CancellationToken cancel = default(CancellationToken))
+        public async Task<PeerConnection> ConnectAsync(Peer peer, CancellationToken cancel = default)
         {
-            if (!IsRunning) throw new Exception("The swarm is not running.");
+            if (!IsRunning)
+            {
+                throw new Exception("The swarm is not running.");
+            }
 
             peer = RegisterPeer(peer);
 
             // If connected and still open, then use the existing connection.
-            if (Manager.TryGet(peer, out var conn)) return conn;
+            if (Manager.TryGet(peer, out var conn))
+            {
+                return conn;
+            }
 
             // Use a current connection attempt to the peer or create a new one.
             try
             {
-                using (var cts = CancellationTokenSource.CreateLinkedTokenSource(swarmCancellation.Token, cancel))
+                using (var cts = CancellationTokenSource.CreateLinkedTokenSource(_swarmCancellation.Token, cancel))
                 {
-                    return await pendingConnections
+                    return await _pendingConnections
                        .GetOrAdd(peer,
-                            (key) => new AsyncLazy<PeerConnection>(() => DialAsync(peer, peer.Addresses, cts.Token)))
+                            key => new AsyncLazy<PeerConnection>(() => DialAsync(peer, peer.Addresses, cts.Token)))
                        .ConfigureAwait(false);
                 }
             }
@@ -540,7 +554,7 @@ namespace Lib.P2P
             }
             finally
             {
-                pendingConnections.TryRemove(peer, out _);
+                _pendingConnections.TryRemove(peer, out _);
             }
         }
 
@@ -568,7 +582,7 @@ namespace Lib.P2P
         /// </remarks>
         public async Task<Stream> DialAsync(Peer peer,
             string protocol,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             peer = RegisterPeer(peer);
 
@@ -577,10 +591,10 @@ namespace Lib.P2P
             var muxer = await connection.MuxerEstablished.Task.ConfigureAwait(false);
 
             // Create a new stream for the peer protocol.
-            var stream = await muxer.CreateStreamAsync(protocol).ConfigureAwait(false);
+            var stream = await muxer.CreateStreamAsync(protocol, cancel).ConfigureAwait(false);
             try
             {
-                await connection.EstablishProtocolAsync("/multistream/", stream).ConfigureAwait(false);
+                await connection.EstablishProtocolAsync("/multistream/", stream, cancel).ConfigureAwait(false);
 
                 await Message.WriteAsync(protocol, stream, cancel).ConfigureAwait(false);
                 var result = await Message.ReadStringAsync(stream, cancel).ConfigureAwait(false);
@@ -606,12 +620,13 @@ namespace Lib.P2P
             IEnumerable<MultiAddress> addrs,
             CancellationToken cancel)
         {
-            log.Debug($"Dialing {remote}");
+            _log.Debug($"Dialing {remote}");
 
             if (remote == LocalPeer) throw new Exception("Cannot dial self.");
 
             // If no addresses, then ask peer routing.
-            if (Router != null && addrs.Count() == 0)
+            var multiAddresses = addrs.ToList();
+            if (Router != null && !multiAddresses.Any())
             {
                 var found = await Router.FindPeerAsync(remote.Id, cancel).ConfigureAwait(false);
                 addrs = found.Addresses;
@@ -620,35 +635,42 @@ namespace Lib.P2P
 
             // Get the addresses we can use to dial the remote.  Filter
             // out any addresses (ip and port) we are listening on.
-            var blackList = listeners.Keys
+            var blackList = _listeners.Keys
                .Select(a => a.WithoutPeerId())
                .ToArray();
+            
             var possibleAddresses =
-                (await Task.WhenAll(addrs.Select(a => a.ResolveAsync(cancel))).ConfigureAwait(false))
+                (await Task.WhenAll(multiAddresses.Select(a => a.ResolveAsync(cancel))).ConfigureAwait(false))
                .SelectMany(a => a)
                .Where(a => !blackList.Contains(a.WithoutPeerId()))
                .Select(a => a.WithPeerId(remote.Id))
                .Distinct()
                .ToArray();
-            if (possibleAddresses.Length == 0) throw new Exception($"{remote} has no known or reachable address.");
+               
+            if (possibleAddresses.Length == 0)
+            {
+                throw new Exception($"{remote} has no known or reachable address.");
+            }
 
             // Try the various addresses in parallel.  The first one to complete wins.
             PeerConnection connection = null;
             try
             {
                 using (var timeout = new CancellationTokenSource(TransportConnectionTimeout))
-                using (var cts = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, cancel))
                 {
-                    var attempts = possibleAddresses
-                       .Select(a => DialAsync(remote, a, cts.Token));
-                    connection = await TaskHelper.WhenAnyResultAsync(attempts, cts.Token).ConfigureAwait(false);
-                    cts.Cancel(); // stop other dialing tasks.
+                    using (var cts = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, cancel))
+                    {
+                        var attempts = possibleAddresses
+                           .Select(a => DialAsync(remote, a, cts.Token));
+                        connection = await TaskHelper.WhenAnyResultAsync(attempts, cts.Token).ConfigureAwait(false);
+                        cts.Cancel(); // stop other dialing tasks.
+                    }
                 }
             }
             catch (Exception e)
             {
                 var attemped = string.Join(", ", possibleAddresses.Select(a => a.ToString()));
-                log.Trace($"Cannot dial {attemped}");
+                _log.Trace($"Cannot dial {attemped}");
                 throw new Exception($"Cannot dial {remote}.", e);
             }
 
@@ -656,18 +678,18 @@ namespace Lib.P2P
             try
             {
                 MountProtocols(connection);
-                IEncryptionProtocol[] security = null;
-                lock (protocols)
+                IEncryptionProtocol[] security;
+                lock (_protocols)
                 {
-                    security = protocols.OfType<IEncryptionProtocol>().ToArray();
+                    security = _protocols.OfType<IEncryptionProtocol>().ToArray();
                 }
 
                 await connection.InitiateAsync(security, cancel).ConfigureAwait(false);
                 await connection.MuxerEstablished.Task.ConfigureAwait(false);
-                Identify1 identify = null;
-                lock (protocols)
+                Identify1 identify;
+                lock (_protocols)
                 {
-                    identify = protocols.OfType<Identify1>().First();
+                    identify = _protocols.OfType<Identify1>().First();
                 }
 
                 await identify.GetRemotePeerAsync(connection, cancel).ConfigureAwait(false);
@@ -679,7 +701,10 @@ namespace Lib.P2P
             }
 
             var actual = Manager.Add(connection);
-            if (actual == connection) ConnectionEstablished?.Invoke(this, connection);
+            if (actual == connection)
+            {
+                ConnectionEstablished?.Invoke(this, connection);
+            }
 
             return actual;
         }
@@ -690,27 +715,34 @@ namespace Lib.P2P
             // short circuit to make life faster.
             if (addr.Protocols.Count != 3
              || !(addr.Protocols[2].Name == "ipfs" || addr.Protocols[2].Name == "p2p"))
+            {
                 throw new Exception($"Cannnot dial; unknown protocol in '{addr}'.");
+            }
 
             // Establish the transport stream.
             Stream stream = null;
             foreach (var protocol in addr.Protocols)
             {
                 cancel.ThrowIfCancellationRequested();
-                if (TransportRegistry.Transports.TryGetValue(protocol.Name, out var transport))
+                if (!TransportRegistry.Transports.TryGetValue(protocol.Name, out var transport))
                 {
-                    stream = await transport().ConnectAsync(addr, cancel).ConfigureAwait(false);
-                    if (cancel.IsCancellationRequested)
-                    {
-                        stream?.DisposeAsync();
-                        continue;
-                    }
-
-                    break;
+                    continue;
                 }
+                
+                stream = await transport().ConnectAsync(addr, cancel).ConfigureAwait(false);
+                if (cancel.IsCancellationRequested)
+                {
+                    stream?.DisposeAsync();
+                    continue;
+                }
+
+                break;
             }
 
-            if (stream == null) throw new Exception("Missing a known transport protocol name.");
+            if (stream == null)
+            {
+                throw new Exception("Missing a known transport protocol name.");
+            }
 
             // Build the connection.
             var connection = new PeerConnection
@@ -727,7 +759,9 @@ namespace Lib.P2P
 
             // Are we communicating to a private network?
             if (NetworkProtector != null)
-                connection.Stream = await NetworkProtector.ProtectAsync(connection).ConfigureAwait(false);
+            {
+                connection.Stream = await NetworkProtector.ProtectAsync(connection, cancel).ConfigureAwait(false);
+            }
 
             return connection;
         }
@@ -748,7 +782,7 @@ namespace Lib.P2P
         /// <remarks>
         ///   If the peer is not conected, then nothing happens.
         /// </remarks>
-        public Task DisconnectAsync(MultiAddress address, CancellationToken cancel = default(CancellationToken))
+        public Task DisconnectAsync(MultiAddress address, CancellationToken cancel = default)
         {
             Manager.Remove(address.PeerId);
             return Task.CompletedTask;
@@ -785,7 +819,10 @@ namespace Lib.P2P
         {
             var cancel = new CancellationTokenSource();
 
-            if (!listeners.TryAdd(address, cancel)) throw new Exception($"Already listening on '{address}'.");
+            if (!_listeners.TryAdd(address, cancel))
+            {
+                throw new Exception($"Already listening on '{address}'.");
+            }
 
             // Start a listener for the transport
             var didSomething = false;
@@ -793,13 +830,15 @@ namespace Lib.P2P
                 if (TransportRegistry.Transports.TryGetValue(protocol.Name, out var transport))
                 {
                     address = transport().Listen(address, OnRemoteConnect, cancel.Token);
-                    listeners.TryAdd(address, cancel);
+                    _listeners.TryAdd(address, cancel);
                     didSomething = true;
                     break;
                 }
 
             if (!didSomething)
+            {
                 throw new ArgumentException($"Missing a transport protocol name '{address}'.", "address");
+            }
 
             var result = new MultiAddress($"{address}/ipfs/{LocalPeer.Id}");
 
@@ -812,24 +851,33 @@ namespace Lib.P2P
                  || nic.NetworkInterfaceType == NetworkInterfaceType.Loopback)
                .SelectMany(nic => nic.GetIPProperties().UnicastAddresses);
             if (result.ToString().StartsWith("/ip4/0.0.0.0/"))
+            {
                 addresses = ips
                    .Where(ip => ip.Address.AddressFamily == AddressFamily.InterNetwork)
-                   .Select(ip =>
-                    {
-                        return new MultiAddress(result.ToString().Replace("0.0.0.0", ip.Address.ToString()));
-                    })
+                   .Select(ip => new MultiAddress(result.ToString().Replace("0.0.0.0", ip.Address.ToString())))
                    .ToArray();
+            }
             else if (result.ToString().StartsWith("/ip6/::/"))
+            {
                 addresses = ips
                    .Where(ip => ip.Address.AddressFamily == AddressFamily.InterNetworkV6)
                    .Select(ip => { return new MultiAddress(result.ToString().Replace("::", ip.Address.ToString())); })
                    .ToArray();
+            }
             else
-                addresses = new MultiAddress[] {result};
-            if (addresses.Count() == 0)
+            {
+                addresses = new[] {result};
+            }
+            
+            if (!addresses.Any())
             {
                 var msg = "Cannot determine address(es) for " + result;
-                foreach (var ip in ips) msg += " nic-ip: " + ip.Address.ToString();
+                
+                foreach (var ip in ips)
+                {
+                    msg += " nic-ip: " + ip.Address;
+                }
+                
                 cancel.Cancel();
                 throw new Exception(msg);
             }
@@ -837,8 +885,8 @@ namespace Lib.P2P
             // Add actual addresses to listeners and local peer addresses.
             foreach (var a in addresses)
             {
-                log.Debug($"Listening on {a}");
-                listeners.TryAdd(a, cancel);
+                _log.Debug($"Listening on {a}");
+                _listeners.TryAdd(a, cancel);
             }
 
             LocalPeer.Addresses = LocalPeer
@@ -886,9 +934,9 @@ namespace Lib.P2P
 
             // If the remote is already trying to establish a connection, then we
             // can just refuse this one.
-            if (!pendingRemoteConnections.TryAdd(remote, null))
+            if (!_pendingRemoteConnections.TryAdd(remote, null))
             {
-                log.Debug($"Duplicate remote connection from {remote}");
+                _log.Debug($"Duplicate remote connection from {remote}");
                 try
                 {
                     stream.Dispose();
@@ -903,7 +951,10 @@ namespace Lib.P2P
 
             try
             {
-                if (log.IsDebugEnabled) log.Debug($"remote connect from {remote}");
+                if (_log.IsDebugEnabled)
+                {
+                    _log.Debug($"remote connect from {remote}");
+                }
 
                 // TODO: Check the policies
 
@@ -919,14 +970,16 @@ namespace Lib.P2P
 
                 // Are we communicating to a private network?
                 if (NetworkProtector != null)
+                {
                     connection.Stream = await NetworkProtector.ProtectAsync(connection).ConfigureAwait(false);
+                }
 
                 // Mount the protocols.
                 MountProtocols(connection);
 
                 // Start the handshake
                 // TODO: Isn't connection cancel token required.
-                _ = connection.ReadMessagesAsync(default(CancellationToken));
+                _ = connection.ReadMessagesAsync(default);
 
                 // Wait for security to be established.
                 await connection.SecurityEstablished.Task.ConfigureAwait(false);
@@ -934,38 +987,45 @@ namespace Lib.P2P
                 // TODO: Maybe connection.LocalPeerKey = null;
 
                 // Wait for the handshake to complete.
-                var muxer = await connection.MuxerEstablished.Task;
+                await connection.MuxerEstablished.Task;
 
                 // Need details on the remote peer.
-                Identify1 identify = null;
-                lock (protocols)
+                Identify1 identify;
+                lock (_protocols)
                 {
-                    identify = protocols.OfType<Identify1>().First();
+                    identify = _protocols.OfType<Identify1>().First();
                 }
 
-                connection.RemotePeer = await identify.GetRemotePeerAsync(connection, default(CancellationToken))
+                connection.RemotePeer = await identify.GetRemotePeerAsync(connection, default)
                    .ConfigureAwait(false);
 
                 connection.RemotePeer = RegisterPeer(connection.RemotePeer);
                 connection.RemoteAddress = new MultiAddress($"{remote}/ipfs/{connection.RemotePeer.Id}");
                 var actual = Manager.Add(connection);
-                if (actual == connection) ConnectionEstablished?.Invoke(this, connection);
+                if (actual == connection)
+                {
+                    ConnectionEstablished?.Invoke(this, connection);
+                }
             }
             catch (Exception e)
             {
-                if (log.IsDebugEnabled) log.Debug($"remote connect from {remote} failed: {e.Message}");
+                if (_log.IsDebugEnabled)
+                {
+                    _log.Debug($"remote connect from {remote} failed: {e.Message}");
+                }
+                
                 try
                 {
                     stream.Dispose();
                 }
                 catch (Exception)
                 {
-                    // eat it.
+                    // ignore
                 }
             }
             finally
             {
-                pendingRemoteConnections.TryRemove(remote, out _);
+                _pendingRemoteConnections.TryRemove(remote, out _);
             }
         }
 
@@ -977,9 +1037,9 @@ namespace Lib.P2P
         /// </param>
         public void AddProtocol(IPeerProtocol protocol)
         {
-            lock (protocols)
+            lock (_protocols)
             {
-                protocols.Add(protocol);
+                _protocols.Add(protocol);
             }
         }
 
@@ -991,17 +1051,17 @@ namespace Lib.P2P
         /// </param>
         public void RemoveProtocol(IPeerProtocol protocol)
         {
-            lock (protocols)
+            lock (_protocols)
             {
-                protocols.Remove(protocol);
+                _protocols.Remove(protocol);
             }
         }
 
         private void MountProtocols(PeerConnection connection)
         {
-            lock (protocols)
+            lock (_protocols)
             {
-                connection.AddProtocols(protocols);
+                connection.AddProtocols(_protocols);
             }
         }
 
@@ -1021,14 +1081,20 @@ namespace Lib.P2P
         /// </remarks>
         public async Task StopListeningAsync(MultiAddress address)
         {
-            if (!listeners.TryRemove(address, out var listener)) return;
+            if (!_listeners.TryRemove(address, out var listener))
+            {
+                return;
+            }
 
             try
             {
-                if (!listener.IsCancellationRequested) listener.Cancel(false);
+                if (!listener.IsCancellationRequested)
+                {
+                    listener.Cancel(false);
+                }
 
                 // Remove any local peer address that depend on the cancellation token.
-                var others = listeners
+                var others = _listeners
                    .Where(l => l.Value == listener)
                    .Select(l => l.Key)
                    .ToArray();
@@ -1038,7 +1104,10 @@ namespace Lib.P2P
                    .Where(a => !others.Contains(a))
                    .ToArray();
 
-                foreach (var other in others) listeners.TryRemove(other, out _);
+                foreach (var other in others)
+                {
+                    _listeners.TryRemove(other, out _);
+                }
 
                 // Give some time away, so that cancel can run
                 // TODO: Would be nice to make this deterministic.
@@ -1046,7 +1115,7 @@ namespace Lib.P2P
             }
             catch (Exception e)
             {
-                log.Error("stop listening failed", e);
+                _log.Error("stop listening failed", e);
             }
         }
 
@@ -1058,6 +1127,6 @@ namespace Lib.P2P
         }
 
         /// <inheritdoc />
-        public bool IsAllowed(Peer peer) { return peer.Addresses.All(a => IsAllowed(a)); }
+        public bool IsAllowed(Peer peer) { return peer.Addresses.All(IsAllowed); }
     }
 }

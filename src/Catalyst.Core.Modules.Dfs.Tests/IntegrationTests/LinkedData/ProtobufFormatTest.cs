@@ -22,11 +22,8 @@
 #endregion
 
 using System.Text;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Dfs.LinkedData;
-using Catalyst.Core.Modules.Hashing;
-using MultiFormats.Registry;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.LinkedData

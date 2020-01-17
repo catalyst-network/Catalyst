@@ -50,13 +50,13 @@ namespace Lib.P2P
         ///   the <typeparamref name="T"/> message.
         /// </returns>
         public static async Task<T> ReadMessageAsync<T>(Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var length = await stream.ReadVarint32Async(cancel).ConfigureAwait(false);
             var bytes = new byte[length];
             await stream.ReadExactAsync(bytes, 0, length, cancel).ConfigureAwait(false);
 
-            using (var ms = new MemoryStream(bytes, false))
+            await using (var ms = new MemoryStream(bytes, false))
             {
                 return ProtoBuf.Serializer.Deserialize<T>(ms);
             }

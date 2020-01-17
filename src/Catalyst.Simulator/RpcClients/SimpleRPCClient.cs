@@ -91,7 +91,7 @@ namespace Catalyst.Simulator.RpcClients
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(signingContextProvider.NetworkType);
 
-            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, (IFileSystem) fileSystem, hashProvider, _logger);
+            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, fileSystem, hashProvider, _logger);
 
             var keyRegistry = new KeyRegistry();
             var keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);

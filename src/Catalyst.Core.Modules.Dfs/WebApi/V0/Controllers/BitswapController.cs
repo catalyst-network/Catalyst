@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Lib.P2P;
 using Microsoft.AspNetCore.Mvc;
 using MultiFormats;
@@ -130,7 +129,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///     The CID that is no longer needed.
         /// </param>
         [HttpGet] [HttpPost] [Route("bitswap/unwant")]
-        public async Task Unwants(string arg) { await IpfsCore.BitSwapApi.UnWantAsync(arg, Cancel); }
+        public async Task Unwants(string arg) { IpfsCore.BitSwapApi.UnWant(arg, Cancel); }
 
         /// <summary>
         ///     The blocks that are needed by a peer.
@@ -145,7 +144,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             {
                 Id = arg
             };
-            var ledger = await IpfsCore.BitSwapApi.LedgerAsync(peer, Cancel);
+            var ledger = IpfsCore.BitSwapApi.GetBitSwapLedger(peer, Cancel);
             return new BitswapLedgerDto
             {
                 Peer = ledger.Peer.Id.ToBase58(),

@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             // There is a race condition between getting the remote identity and
             // the remote sending the first wantlist.
@@ -97,19 +97,21 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
                 // Forward sent blocks to the block service.  Eventually
                 // bitswap will here about and them and then continue
                 // any tasks (GetBlockAsync) waiting for the block.
-                if (request.payload != null)
+                if (request.payload == null)
                 {
-                    log.Debug($"got block(s) from {connection.RemotePeer}");
-                    foreach (var sentBlock in request.payload)
+                    continue;
+                }
+                
+                log.Debug($"got block(s) from {connection.RemotePeer}");
+                foreach (var sentBlock in request.payload)
+                {
+                    await using (var ms = new MemoryStream(sentBlock.prefix))
                     {
-                        using (var ms = new MemoryStream(sentBlock.prefix))
-                        {
-                            var version = ms.ReadVarint32();
-                            var contentType = ms.ReadMultiCodec().Name;
-                            var multiHash = MultiHash.GetHashAlgorithmName(ms.ReadVarint32());
-                            await BitswapService.OnBlockReceivedAsync(connection.RemotePeer, sentBlock.data, contentType,
-                                multiHash);
-                        }
+                        ms.ReadVarint32();
+                        var contentType = ms.ReadMultiCodec().Name;
+                        var multiHash = MultiHash.GetHashAlgorithmName(ms.ReadVarint32());
+                        await BitswapService.OnBlockReceivedAsync(connection.RemotePeer, sentBlock.data, contentType,
+                            multiHash);
                     }
                 }
             }
@@ -131,7 +133,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
                 }
 
                 // Send block to remote.
-                using (var stream = await BitswapService.SwarmService.DialAsync(remotePeer, this.ToString()).ConfigureAwait(false))
+                await using (var stream = await BitswapService.SwarmService.DialAsync(remotePeer, ToString(), cancel).ConfigureAwait(false))
                 {
                     await SendAsync(stream, block, cancel).ConfigureAwait(false);
                 }
@@ -154,7 +156,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
         public async Task SendWantsAsync(Stream stream,
             IEnumerable<WantedBlock> wants,
             bool full = true,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var message = new Message
             {
@@ -174,13 +176,13 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
                 payload = new List<Block>(0)
             };
 
-            ProtoBuf.Serializer.SerializeWithLengthPrefix<Message>(stream, message, PrefixStyle.Base128);
+            Serializer.SerializeWithLengthPrefix(stream, message, PrefixStyle.Base128);
             await stream.FlushAsync(cancel).ConfigureAwait(false);
         }
 
-        internal async Task SendAsync(Stream stream,
+        private async Task SendAsync(Stream stream,
             IDataBlock block,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             log.Debug($"Sending block {block.Id}");
             var message = new Message
@@ -195,7 +197,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
                 }
             };
 
-            ProtoBuf.Serializer.SerializeWithLengthPrefix<Message>(stream, message, PrefixStyle.Base128);
+            Serializer.SerializeWithLengthPrefix(stream, message, PrefixStyle.Base128);
             await stream.FlushAsync(cancel).ConfigureAwait(false);
         }
 
@@ -221,7 +223,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
         }
 
         [ProtoContract]
-        class Entry
+        private sealed class Entry
         {
             [ProtoMember(1)]
 
@@ -236,7 +238,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
         }
 
         [ProtoContract]
-        class Wantlist
+        private sealed class Wantlist
         {
             [ProtoMember(1)]
             public Entry[] entries; // a list of wantlist entries
@@ -246,7 +248,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
         }
 
         [ProtoContract]
-        class Block
+        private sealed class Block
         {
             [ProtoMember(1)]
             public byte[] prefix; // CID prefix (cid version, multicodec and multihash prefix (type + length)
@@ -256,7 +258,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
         }
 
         [ProtoContract]
-        class Message
+        private sealed class Message
         {
             [ProtoMember(1)]
             public Wantlist wantlist;

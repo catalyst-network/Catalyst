@@ -28,7 +28,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
     /// <summary>
     ///   Statistics on the <see cref="IBitSwapApi">bitswap</see> blocks exchanged with another <see cref="Peer"/>.
     /// </summary>
-    /// <seealso cref="IBitSwapApi.LedgerAsync"/>
+    /// <seealso cref="IBitSwapApi.GetBitSwapLedger"/>
     public class BitswapLedger
     {
         /// <summary>
@@ -75,7 +75,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         {
             get
             {
-                return (float) DataSent / (float) (DataReceived + 1); // +1 is to prevent division by zero
+                return DataSent / (float) (DataReceived + 1); // +1 is to prevent division by zero
             }
         }
 

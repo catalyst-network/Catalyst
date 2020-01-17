@@ -28,7 +28,7 @@ using System;
 
 namespace MultiFormats.Cryptography
 {
-    internal partial class KeccakManaged : Keccak
+    internal sealed class KeccakManaged : Keccak
     {
         public KeccakManaged(int hashBitLength)
             : base(hashBitLength) { }
@@ -37,33 +37,44 @@ namespace MultiFormats.Cryptography
         {
             base.HashCore(array, ibStart, cbSize);
             if (cbSize == 0)
+            {
                 return;
+            }
+            
             var sizeInBytes = SizeInBytes;
-            if (buffer == null)
-                buffer = new byte[sizeInBytes];
+            if (Buffer == null)
+            {
+                Buffer = new byte[sizeInBytes];
+            }
+            
             var stride = sizeInBytes >> 3;
             var utemps = new ulong[stride];
-            if (buffLength == sizeInBytes)
-                throw new Exception("Unexpected error, the internal buffer is full");
-            AddToBuffer(array, ref ibStart, ref cbSize);
-            if (buffLength == sizeInBytes) //buffer full
+            if (BuffLength == sizeInBytes)
             {
-                Buffer.BlockCopy(buffer, 0, utemps, 0, sizeInBytes);
+                throw new Exception("Unexpected error, the internal buffer is full");
+            }
+            
+            AddToBuffer(array, ref ibStart, ref cbSize);
+            if (BuffLength == sizeInBytes) //buffer full
+            {
+                System.Buffer.BlockCopy(Buffer, 0, utemps, 0, sizeInBytes);
                 KeccakF(utemps, stride);
-                buffLength = 0;
+                BuffLength = 0;
             }
 
             for (; cbSize >= sizeInBytes; cbSize -= sizeInBytes, ibStart += sizeInBytes)
             {
-                Buffer.BlockCopy(array, ibStart, utemps, 0, sizeInBytes);
+                System.Buffer.BlockCopy(array, ibStart, utemps, 0, sizeInBytes);
                 KeccakF(utemps, stride);
             }
 
-            if (cbSize > 0) //some left over
+            if (cbSize <= 0)
             {
-                Buffer.BlockCopy(array, ibStart, buffer, buffLength, cbSize);
-                buffLength += cbSize;
+                return;
             }
+            
+            System.Buffer.BlockCopy(array, ibStart, Buffer, BuffLength, cbSize);
+            BuffLength += cbSize;
         }
 
         protected override byte[] HashFinal()
@@ -72,24 +83,32 @@ namespace MultiFormats.Cryptography
             var outb = new byte[HashByteLength];
 
             //    padding
-            if (buffer == null)
-                buffer = new byte[sizeInBytes];
+            if (Buffer == null)
+            {
+                Buffer = new byte[sizeInBytes];
+            }
             else
-                Array.Clear(buffer, buffLength, sizeInBytes - buffLength);
-            buffer[buffLength++] = 1;
-            buffer[sizeInBytes - 1] |= 0x80;
+            {
+                Array.Clear(Buffer, BuffLength, sizeInBytes - BuffLength);
+            }
+            
+            Buffer[BuffLength++] = 1;
+            Buffer[sizeInBytes - 1] |= 0x80;
             var stride = sizeInBytes >> 3;
             var utemps = new ulong[stride];
-            Buffer.BlockCopy(buffer, 0, utemps, 0, sizeInBytes);
+            System.Buffer.BlockCopy(Buffer, 0, utemps, 0, sizeInBytes);
             KeccakF(utemps, stride);
-            Buffer.BlockCopy(state, 0, outb, 0, HashByteLength);
+            System.Buffer.BlockCopy(state, 0, outb, 0, HashByteLength);
             return outb;
         }
 
         private void KeccakF(ulong[] inb, int laneCount)
         {
             while (--laneCount >= 0)
+            {
                 state[laneCount] ^= inb[laneCount];
+            }
+            
             ulong Aba, Abe, Abi, Abo, Abu;
             ulong Aga, Age, Agi, Ago, Agu;
             ulong Aka, Ake, Aki, Ako, Aku;

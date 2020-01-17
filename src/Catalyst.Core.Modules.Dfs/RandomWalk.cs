@@ -125,7 +125,7 @@ namespace Catalyst.Core.Modules.Dfs
             }
         }
 
-        async Task RunQueryAsync(CancellationToken cancel = default(CancellationToken))
+        async Task RunQueryAsync(CancellationToken cancel = default)
         {
             // Tests may not set a DHT.
             if (Dht == null)

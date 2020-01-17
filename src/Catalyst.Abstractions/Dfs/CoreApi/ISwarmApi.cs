@@ -48,7 +48,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation. The task's value
         ///   is a sequence of peer nodes.
         /// </returns>
-        Task<IEnumerable<Peer>> AddressesAsync(CancellationToken cancel = default(CancellationToken));
+        Task<IEnumerable<Peer>> AddressesAsync(CancellationToken cancel = default);
 
         /// <summary>
         ///   Get the peers that are connected to this node.
@@ -60,7 +60,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         ///   A task that represents the asynchronous operation. The task's value
         ///   is a sequence of <see cref="Peer">Connected Peers</see>.
         /// </returns>
-        Task<IEnumerable<Peer>> PeersAsync(CancellationToken cancel = default(CancellationToken));
+        Task<IEnumerable<Peer>> PeersAsync(CancellationToken cancel = default);
 
         /// <summary>
         ///   Connect to a peer.
@@ -72,9 +72,9 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <param name="cancel">
         ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
         /// </param>
-        Task ConnectAsync(MultiAddress address, CancellationToken cancel = default(CancellationToken));
+        Task ConnectAsync(MultiAddress address, CancellationToken cancel = default);
 
-        Task ConnectAsync(Peer address, CancellationToken cancel = default(CancellationToken));
+        Task ConnectAsync(Peer address, CancellationToken cancel = default);
 
         /// <summary>
         ///   Disconnect from a peer.
@@ -86,7 +86,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <param name="cancel">
         ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
         /// </param>
-        Task DisconnectAsync(MultiAddress address, CancellationToken cancel = default(CancellationToken));
+        Task DisconnectAsync(MultiAddress address, CancellationToken cancel = default);
 
         /// <summary>
         ///   Adds a new address filter.
@@ -108,7 +108,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <seealso href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing"/>
         Task<MultiAddress> AddAddressFilterAsync(MultiAddress address,
             bool persist = false,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   List all the address filters.
@@ -125,7 +125,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// </returns>
         /// <seealso href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing"/>
         Task<IEnumerable<MultiAddress>> ListAddressFiltersAsync(bool persist = false,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
 
         /// <summary>
         ///   Delete the specified address filter.
@@ -147,6 +147,6 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <seealso href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing"/>
         Task<MultiAddress> RemoveAddressFilterAsync(MultiAddress address,
             bool persist = false,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
     }
 }

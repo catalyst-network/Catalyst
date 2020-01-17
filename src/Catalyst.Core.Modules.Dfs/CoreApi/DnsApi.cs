@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             return name;
         }
 
-        public async Task<string> ResolveAsync(string name, bool recursive = false, CancellationToken cancel = default(CancellationToken))
+        public async Task<string> ResolveAsync(string name, bool recursive = false, CancellationToken cancel = default)
         {
             // Find the TXT dnslink in either <name> or _dnslink.<name>.
             string link = null;
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             {
                 try
                 {
-                    var attempts = new Task<string>[]
+                    var attempts = new[]
                     {
                         FindAsync(name, cts.Token),
                         FindAsync("_dnslink." + name, cts.Token)

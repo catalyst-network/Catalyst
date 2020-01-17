@@ -31,10 +31,10 @@ using Org.BouncyCastle.Crypto.Parameters;
 namespace Lib.P2P.Tests.Cryptography
 {
     [TestClass]
-    public class CtrStreamCipherTest
+    public sealed class CtrStreamCipherTest
     {
         [TestMethod]
-        public void SameAsNodeJS()
+        public void SameAsNodeJs()
         {
             var key = new byte[32];
             var iv = new byte[16];
@@ -42,7 +42,7 @@ namespace Lib.P2P.Tests.Cryptography
             var p = new ParametersWithIV(new KeyParameter(key), iv);
             encrypt.Init(true, p);
 
-            var plain = new byte[] {(byte) 'a'};
+            var plain = new[] {(byte) 'a'};
             var actual = new byte[plain.Length];
 
             var expected = new byte[] {0xbd};

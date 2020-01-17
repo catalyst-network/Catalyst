@@ -34,6 +34,7 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Fakes;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;

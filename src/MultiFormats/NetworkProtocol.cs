@@ -512,7 +512,7 @@ namespace MultiFormats
         public override void WriteValue(TextWriter stream)
         {
             stream.Write('/');
-            stream.Write(DomainName.ToString());
+            stream.Write(DomainName);
         }
 
         public override void WriteValue(CodedOutputStream stream) { stream.WriteString(DomainName); }

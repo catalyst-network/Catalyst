@@ -109,7 +109,7 @@ namespace MultiFormats.Tests
         [TestMethod]
         public async Task WriteAsync()
         {
-            using (var ms = new MemoryStream())
+            await using (var ms = new MemoryStream())
             {
                 await ms.WriteVarintAsync(long.MaxValue);
                 ms.Position = 0;
@@ -130,13 +130,13 @@ namespace MultiFormats.Tests
             var ms = new MemoryStream();
             var cs = new CancellationTokenSource();
             cs.Cancel();
-            ExceptionAssert.Throws<TaskCanceledException>(() => ms.WriteVarintAsync(0, cs.Token).Wait());
+            ExceptionAssert.Throws<TaskCanceledException>(() => ms.WriteVarintAsync(0, cs.Token).Wait(cs.Token));
         }
 
         [TestMethod]
         public async Task ReadAsync()
         {
-            using (var ms = new MemoryStream("ffffffffffffffff7f".ToHexBuffer()))
+            await using (var ms = new MemoryStream("ffffffffffffffff7f".ToHexBuffer()))
             {
                 var v = await ms.ReadVarint64Async();
                 Assert.AreEqual(long.MaxValue, v);
@@ -152,7 +152,7 @@ namespace MultiFormats.Tests
             });
             var cs = new CancellationTokenSource();
             cs.Cancel();
-            ExceptionAssert.Throws<TaskCanceledException>(() => ms.ReadVarint32Async(cs.Token).Wait());
+            ExceptionAssert.Throws<TaskCanceledException>(() => ms.ReadVarint32Async(cs.Token).Wait(cs.Token));
         }
 
         [TestMethod]

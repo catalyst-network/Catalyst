@@ -33,12 +33,12 @@ namespace Lib.P2P.Routing
     ///   Manages a list of content that is provided by multiple peers.
     /// </summary>
     /// <remarks>
-    ///   A peer is expected to provide content for at least <see cref="ProviderTTL"/>.
+    ///   A peer is expected to provide content for at least <see cref="ProviderTtl"/>.
     ///   After this expires the provider is removed from the list.
     /// </remarks>
-    public class ContentRouter : IDisposable
+    public sealed class ContentRouter : IDisposable
     {
-        private class ProviderInfo
+        private sealed class ProviderInfo
         {
             /// <summary>
             ///   When the provider entry expires.
@@ -51,7 +51,7 @@ namespace Lib.P2P.Routing
             public MultiHash PeerId { get; set; }
         }
 
-        private ConcurrentDictionary<string, List<ProviderInfo>> content =
+        private ConcurrentDictionary<string, List<ProviderInfo>> _content =
             new ConcurrentDictionary<string, List<ProviderInfo>>();
 
         private string Key(Cid cid) { return "/providers/" + cid.Hash.ToBase32(); }
@@ -62,7 +62,7 @@ namespace Lib.P2P.Routing
         /// <value>
         ///   Defaults to 24 hours (1 day).
         /// </value>
-        public TimeSpan ProviderTTL { get; set; } = TimeSpan.FromHours(24);
+        public TimeSpan ProviderTtl { get; set; } = TimeSpan.FromHours(24);
 
         /// <summary>
         ///    Adds the <see cref="Cid"/> and <see cref="Peer"/> to the content routing system.
@@ -93,22 +93,26 @@ namespace Lib.P2P.Routing
         {
             var pi = new ProviderInfo
             {
-                Expiry = now + ProviderTTL,
+                Expiry = now + ProviderTtl,
                 PeerId = provider
             };
 
-            content.AddOrUpdate(
+            _content.AddOrUpdate(
                 Key(cid),
                 (key) => new List<ProviderInfo> {pi},
                 (key, providers) =>
                 {
                     var existing = providers
-                       .Where(p => p.PeerId == provider)
-                       .FirstOrDefault();
+                       .FirstOrDefault(p => p.PeerId == provider);
                     if (existing != null)
+                    {
                         existing.Expiry = pi.Expiry;
+                    }
                     else
+                    {
                         providers.Add(pi);
+                    }
+                    
                     return providers;
                 });
         }
@@ -124,7 +128,10 @@ namespace Lib.P2P.Routing
         /// </returns>
         public IEnumerable<MultiHash> Get(Cid cid)
         {
-            if (!content.TryGetValue(Key(cid), out var providers)) return Enumerable.Empty<MultiHash>();
+            if (!_content.TryGetValue(Key(cid), out var providers))
+            {
+                return Enumerable.Empty<MultiHash>();
+            }
 
             return providers
                .Where(p => DateTime.Now < p.Expiry)

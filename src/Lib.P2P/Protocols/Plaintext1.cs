@@ -37,7 +37,7 @@ namespace Lib.P2P.Protocols
         public string Name { get; } = "plaintext";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1, 0);
+        public SemVersion Version { get; } = new SemVersion(1);
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }
@@ -45,7 +45,7 @@ namespace Lib.P2P.Protocols
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             connection.SecurityEstablished.SetResult(true);
             await connection.EstablishProtocolAsync("/multistream/", CancellationToken.None).ConfigureAwait(false);
@@ -53,7 +53,7 @@ namespace Lib.P2P.Protocols
 
         /// <inheritdoc />
         public Task<Stream> EncryptAsync(PeerConnection connection,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             connection.SecurityEstablished.SetResult(true);
             return Task.FromResult(connection.Stream);

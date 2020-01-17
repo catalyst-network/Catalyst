@@ -45,8 +45,8 @@ namespace MultiFormats.Cryptography
         public readonly ulong[] RoundConstants;
 
         protected ulong[] state;
-        protected byte[] buffer;
-        protected int buffLength;
+        protected byte[] Buffer;
+        protected int BuffLength;
 
         protected int keccakR;
 
@@ -61,7 +61,10 @@ namespace MultiFormats.Cryptography
         protected Keccak(int hashBitLength)
         {
             if (hashBitLength != 224 && hashBitLength != 256 && hashBitLength != 384 && hashBitLength != 512)
-                throw new ArgumentException("hashBitLength must be 224, 256, 384, or 512", "hashBitLength");
+            {
+                throw new ArgumentException("hashBitLength must be 224, 256, 384, or 512", nameof(hashBitLength));
+            }
+            
             Initialize();
             HashSizeValue = hashBitLength;
             switch (hashBitLength)
@@ -80,7 +83,7 @@ namespace MultiFormats.Cryptography
                     break;
             }
 
-            RoundConstants = new ulong[]
+            RoundConstants = new[]
             {
                 0x0000000000000001UL,
                 0x0000000000008082UL,
@@ -117,10 +120,10 @@ namespace MultiFormats.Cryptography
 
         protected void AddToBuffer(byte[] array, ref int offset, ref int count)
         {
-            var amount = Math.Min(count, buffer.Length - buffLength);
-            Buffer.BlockCopy(array, offset, buffer, buffLength, amount);
+            var amount = Math.Min(count, Buffer.Length - BuffLength);
+            System.Buffer.BlockCopy(array, offset, Buffer, BuffLength, amount);
             offset += amount;
-            buffLength += amount;
+            BuffLength += amount;
             count -= amount;
         }
 
@@ -132,7 +135,7 @@ namespace MultiFormats.Cryptography
 
         public override void Initialize()
         {
-            buffLength = 0;
+            BuffLength = 0;
             state = new ulong[5 * 5]; //1600 bits
             HashValue = null;
         }
@@ -140,13 +143,24 @@ namespace MultiFormats.Cryptography
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
             if (array == null)
-                throw new ArgumentNullException("array");
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             if (ibStart < 0)
-                throw new ArgumentOutOfRangeException("ibStart");
+            {
+                throw new ArgumentOutOfRangeException(nameof(ibStart));
+            }
+            
             if (cbSize > array.Length)
-                throw new ArgumentOutOfRangeException("cbSize");
+            {
+                throw new ArgumentOutOfRangeException(nameof(cbSize));
+            }
+
             if (ibStart + cbSize > array.Length)
-                throw new ArgumentOutOfRangeException("ibStart or cbSize");
+            {
+                throw new ArgumentOutOfRangeException("" + "ibStart or cbSize");
+            }
         }
     }
 }

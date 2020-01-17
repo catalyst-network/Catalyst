@@ -44,7 +44,7 @@ namespace Lib.P2P.Tests.Cryptography
 
             Assert.IsNotNull(k1);
             CollectionAssert.AreEqual(
-                new byte[] {208, 132, 203, 169, 253, 52, 40, 83, 161, 91, 17, 71, 33, 136, 67, 96}, k1.IV);
+                new byte[] {208, 132, 203, 169, 253, 52, 40, 83, 161, 91, 17, 71, 33, 136, 67, 96}, k1.Iv);
             CollectionAssert.AreEqual(
                 new byte[]
                 {
@@ -57,7 +57,7 @@ namespace Lib.P2P.Tests.Cryptography
 
             Assert.IsNotNull(k2);
             CollectionAssert.AreEqual(
-                new byte[] {236, 17, 34, 141, 90, 106, 197, 56, 197, 184, 157, 135, 91, 88, 112, 19}, k2.IV);
+                new byte[] {236, 17, 34, 141, 90, 106, 197, 56, 197, 184, 157, 135, 91, 88, 112, 19}, k2.Iv);
             CollectionAssert.AreEqual(
                 new byte[]
                 {

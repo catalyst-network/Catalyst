@@ -56,7 +56,7 @@ namespace Lib.P2P.Discovery
                 profile.Resources.Add(new TXTRecord
                 {
                     Name = profile.FullyQualifiedName,
-                    Strings = {$"dnsaddr={address.ToString()}"}
+                    Strings = {$"dnsaddr={address}"}
                 });
 
             return profile;
@@ -70,7 +70,7 @@ namespace Lib.P2P.Discovery
                .SelectMany(t => t.Strings)
                .Where(s => s.StartsWith("dnsaddr="))
                .Select(s => s.Substring(8))
-               .Select(s => MultiAddress.TryCreate(s))
+               .Select(MultiAddress.TryCreate)
                .Where(a => a != null);
         }
 

@@ -89,8 +89,8 @@ namespace Lib.P2P.Tests.Multiplex
         {
             var channel = new MemoryStream();
             var muxer1 = new Muxer {Channel = channel, Initiator = true};
-            var foo = await muxer1.CreateStreamAsync("foo");
-            var bar = await muxer1.CreateStreamAsync("bar");
+            await muxer1.CreateStreamAsync("foo");
+            await muxer1.CreateStreamAsync("bar");
 
             channel.Position = 0;
             var muxer2 = new Muxer {Channel = channel};
@@ -105,9 +105,9 @@ namespace Lib.P2P.Tests.Multiplex
         {
             var channel = new MemoryStream();
             var muxer1 = new Muxer {Channel = channel, Initiator = true};
-            var foo = await muxer1.CreateStreamAsync("foo");
+            await muxer1.CreateStreamAsync("foo");
             var muxer2 = new Muxer {Channel = channel, Initiator = true};
-            var bar = await muxer2.CreateStreamAsync("bar");
+            await muxer2.CreateStreamAsync("bar");
 
             channel.Position = 0;
             var muxer3 = new Muxer {Channel = channel};
@@ -123,8 +123,8 @@ namespace Lib.P2P.Tests.Multiplex
         {
             var channel = new MemoryStream();
             var muxer1 = new Muxer {Channel = channel, Initiator = true};
-            var foo = await muxer1.CreateStreamAsync("foo");
-            var bar = await muxer1.CreateStreamAsync("bar");
+            await muxer1.CreateStreamAsync("foo");
+            await muxer1.CreateStreamAsync("bar");
 
             channel.Position = 0;
             var muxer2 = new Muxer {Channel = channel};
@@ -139,10 +139,12 @@ namespace Lib.P2P.Tests.Multiplex
         {
             var channel = new MemoryStream();
             var muxer1 = new Muxer {Channel = channel, Initiator = true};
-            using (var foo = await muxer1.CreateStreamAsync("foo"))
-            using (var bar = await muxer1.CreateStreamAsync("bar"))
+            await using (await muxer1.CreateStreamAsync("foo"))
             {
-                // open and close a stream.
+                await using (await muxer1.CreateStreamAsync("bar"))
+                {
+                    // open and close a stream.
+                }
             }
 
             channel.Position = 0;

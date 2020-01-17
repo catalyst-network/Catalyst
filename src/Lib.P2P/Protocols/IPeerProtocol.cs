@@ -65,6 +65,6 @@ namespace Lib.P2P.Protocols
         /// </returns>
         Task ProcessMessageAsync(PeerConnection connection,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken));
+            CancellationToken cancel = default);
     }
 }

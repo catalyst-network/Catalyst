@@ -43,10 +43,10 @@ namespace Lib.P2P
     /// </remarks>
     public class PeerConnection : IDisposable
     {
-        private static ILog log = LogManager.GetLogger(typeof(PeerConnection));
+        private static ILog _log = LogManager.GetLogger(typeof(PeerConnection));
 
-        private Stream stream;
-        private StatsStream statsStream;
+        private Stream _stream;
+        private StatsStream _statsStream;
 
         /// <summary>
         ///   The local peer.
@@ -98,16 +98,16 @@ namespace Lib.P2P
         /// </summary>
         public Stream Stream
         {
-            get => stream;
+            get => _stream;
             set
             {
-                if (value != null && statsStream == null)
+                if (value != null && _statsStream == null)
                 {
-                    statsStream = new StatsStream(value);
-                    value = statsStream;
+                    _statsStream = new StatsStream(value);
+                    value = _statsStream;
                 }
 
-                stream = value;
+                _stream = value;
             }
         }
 
@@ -178,17 +178,17 @@ namespace Lib.P2P
         /// <summary>
         ///   When the connection was last used.
         /// </summary>
-        public DateTime LastUsed => statsStream.LastUsed;
+        public DateTime LastUsed => _statsStream.LastUsed;
 
         /// <summary>
         ///   Number of bytes read over the connection.
         /// </summary>
-        public long BytesRead => statsStream.BytesRead;
+        public long BytesRead => _statsStream.BytesRead;
 
         /// <summary>
         ///   Number of bytes written over the connection.
         /// </summary>
-        public long BytesWritten => statsStream.BytesWritten;
+        public long BytesWritten => _statsStream.BytesWritten;
 
         /// <summary>
         ///  Establish the connection with the remote node.
@@ -200,7 +200,7 @@ namespace Lib.P2P
         ///   the remote peer.
         /// </remarks>
         public async Task InitiateAsync(IEnumerable<IEncryptionProtocol> securityProtocols,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             await EstablishProtocolAsync("/multistream/", cancel).ConfigureAwait(false);
 
@@ -223,7 +223,9 @@ namespace Lib.P2P
             }
 
             if (!SecurityEstablished.Task.IsCompleted)
+            {
                 throw new AggregateException("Could not establish a secure connection.", exceptions);
+            }
 
             await EstablishProtocolAsync("/multistream/", cancel).ConfigureAwait(false);
             await EstablishProtocolAsync("/mplex/", cancel).ConfigureAwait(false);
@@ -237,7 +239,7 @@ namespace Lib.P2P
             muxer.SubstreamCreated += (s, e) => _ = ReadMessagesAsync(e, CancellationToken.None);
             MuxerEstablished.SetResult(muxer);
 
-            _ = muxer.ProcessRequestsAsync();
+            _ = muxer.ProcessRequestsAsync(cancel);
         }
 
         /// <summary>
@@ -258,23 +260,31 @@ namespace Lib.P2P
         /// <param name="stream"></param>
         /// <param name="cancel"></param>
         /// <returns></returns>
-        public async Task EstablishProtocolAsync(string name,
+        internal async Task EstablishProtocolAsync(string name,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var protocols = ProtocolRegistry.Protocols.Keys
                .Where(k => k == name || k.StartsWith(name))
-               .Select(k => VersionedName.Parse(k))
+               .Select(VersionedName.Parse)
                .OrderByDescending(vn => vn)
                .Select(vn => vn.ToString());
-            foreach (var protocol in protocols)
+            var enumerable = protocols as string[] ?? protocols.ToArray();
+            foreach (var protocol in enumerable)
             {
                 await Message.WriteAsync(protocol, stream, cancel).ConfigureAwait(false);
                 var result = await Message.ReadStringAsync(stream, cancel).ConfigureAwait(false);
-                if (result == protocol) return;
+                if (result == protocol)
+                {
+                    return;
+                }
             }
 
-            if (protocols.Count() == 0) throw new Exception($"Protocol '{name}' is not registered.");
+            if (!enumerable.Any())
+            {
+                throw new Exception($"Protocol '{name}' is not registered.");
+            }
+            
             throw new Exception($"{RemotePeer.Id} does not support protocol '{name}'.");
         }
 
@@ -283,7 +293,7 @@ namespace Lib.P2P
         /// </summary>
         public async Task ReadMessagesAsync(CancellationToken cancel)
         {
-            log.Debug($"start reading messsages from {RemoteAddress}");
+            _log.Debug($"start reading messsages from {RemoteAddress}");
 
             // TODO: Only a subset of protocols are allowed until
             // the remote is authenticated.
@@ -295,13 +305,13 @@ namespace Lib.P2P
             }
             catch (IOException e)
             {
-                log.Error("reading message failed " + e.Message);
+                _log.Error("reading message failed " + e.Message);
 
                 // eat it.
             }
             catch (Exception e)
             {
-                if (!cancel.IsCancellationRequested && Stream != null) log.Error("reading message failed", e);
+                if (!cancel.IsCancellationRequested && Stream != null) _log.Error("reading message failed", e);
             }
 
             // Ignore any disposal exceptions.
@@ -314,7 +324,7 @@ namespace Lib.P2P
                 // eat it.
             }
 
-            log.Debug($"stop reading messsages from {RemoteAddress}");
+            _log.Debug($"stop reading messsages from {RemoteAddress}");
         }
 
         /// <summary>
@@ -326,7 +336,9 @@ namespace Lib.P2P
             try
             {
                 while (!cancel.IsCancellationRequested && stream != null && stream.CanRead)
+                {
                     await protocol.ProcessMessageAsync(this, stream, cancel).ConfigureAwait(false);
+                }
             }
             catch (EndOfStreamException)
             {
@@ -335,13 +347,13 @@ namespace Lib.P2P
             catch (Exception e)
             {
                 if (!cancel.IsCancellationRequested && stream != null)
-                    log.Error($"reading message failed {RemoteAddress} {RemotePeer}", e);
+                    _log.Error($"reading message failed {RemoteAddress} {RemotePeer}", e);
             }
         }
 
         #region IDisposable Support
 
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false; // To detect redundant calls
 
         /// <summary>
         ///   Signals that the connection is closed (disposed).
@@ -354,39 +366,46 @@ namespace Lib.P2P
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)
         {
-            if (disposedValue)
-                return;
-            disposedValue = true;
-
-            if (disposing)
+            if (_disposedValue)
             {
-                log.Debug($"Closing connection to {RemoteAddress}");
-                if (Stream != null)
-                    try
-                    {
-                        Stream.Dispose();
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        // ignore stream already closed.
-                    }
-                    catch (Exception e)
-                    {
-                        log.Warn($"Failed to close connection to {RemoteAddress}", e);
-
-                        // eat it.
-                    }
-                    finally
-                    {
-                        Stream = null;
-                        statsStream = null;
-                    }
-
-                SecurityEstablished.TrySetCanceled();
-                IdentityEstablished.TrySetCanceled();
-                IdentityEstablished.TrySetCanceled();
-                Closed?.Invoke(this, this);
+                return;
             }
+            
+            _disposedValue = true;
+
+            if (!disposing)
+            {
+                return;
+            }
+            
+            _log.Debug($"Closing connection to {RemoteAddress}");
+            if (Stream != null)
+            {
+                try
+                {
+                    Stream.Dispose();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // ignore stream already closed.
+                }
+                catch (Exception e)
+                {
+                    _log.Warn($"Failed to close connection to {RemoteAddress}", e);
+
+                    // eat it.
+                }
+                finally
+                {
+                    Stream = null;
+                    _statsStream = null;
+                }
+            }
+
+            SecurityEstablished.TrySetCanceled();
+            IdentityEstablished.TrySetCanceled();
+            IdentityEstablished.TrySetCanceled();
+            Closed?.Invoke(this, this);
 
             // free unmanaged resources (unmanaged objects) and override a finalizer below.
             // set large fields to null.

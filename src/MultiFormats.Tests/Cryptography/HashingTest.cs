@@ -27,18 +27,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MultiFormats.Tests.Cryptography
 {
     [TestClass]
-    public class HashingTest
+    public sealed class HashingTest
     {
         private static readonly string Merkle = Encoding.UTF8.GetBytes("Merkle–Damgård").ToHexString();
 
-        private class TestVector
+        private sealed class TestVector
         {
             public string Algorithm { get; set; }
             public string Input { get; set; }
             public string Digest { get; set; }
         }
 
-        private TestVector[] TestVectors = new TestVector[]
+        private TestVector[] TestVectors =
         {
             new TestVector
             {

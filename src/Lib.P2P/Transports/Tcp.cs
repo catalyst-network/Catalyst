@@ -21,8 +21,6 @@
 
 #endregion
 
-#if !NETSTANDARD14
-#endif
 using System;
 using System.IO;
 using System.Linq;
@@ -35,10 +33,6 @@ using System.Threading.Tasks;
 using Common.Logging;
 using MultiFormats;
 
-#if !NET461
-
-#endif
-
 namespace Lib.P2P.Transports
 {
     /// <summary>
@@ -49,9 +43,9 @@ namespace Lib.P2P.Transports
     ///   <see cref="ConnectAsync"/> determines the network latency and sets the timeout
     ///   to 3 times the latency or <see cref="MinReadTimeout"/>.
     /// </remarks>
-    public class Tcp : IPeerTransport
+    public sealed class Tcp : IPeerTransport
     {
-        private static ILog log = LogManager.GetLogger(typeof(Tcp));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Tcp));
 
         /// <summary>
         ///  The minimum read timeout.
@@ -59,21 +53,25 @@ namespace Lib.P2P.Transports
         /// <value>
         ///   Defaults to 3 seconds.
         /// </value>
-        public static TimeSpan MinReadTimeout = TimeSpan.FromSeconds(3);
+        private static readonly TimeSpan MinReadTimeout = TimeSpan.FromSeconds(3);
 
         /// <inheritdoc />
         public async Task<Stream> ConnectAsync(MultiAddress address,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var port = address.Protocols
                .Where(p => p.Name == "tcp")
                .Select(p => int.Parse(p.Value))
                .First();
+            
             var ip = address.Protocols
-               .Where(p => p.Name == "ip4" || p.Name == "ip6")
-               .FirstOrDefault();
+               .FirstOrDefault(p => p.Name == "ip4" || p.Name == "ip6");
+            
             if (ip == null)
-                throw new ArgumentException($"Missing IP address in '{address}'.", "address");
+            {
+                throw new ArgumentException($"Missing IP address in '{address}'.", nameof(address));
+            }
+            
             var socket = new Socket(
                 ip.Name == "ip4" ? AddressFamily.InterNetwork : AddressFamily.InterNetworkV6,
                 SocketType.Stream,
@@ -81,15 +79,20 @@ namespace Lib.P2P.Transports
 
             var latency = MinReadTimeout; // keep compiler happy
             var start = DateTime.Now;
+            
             try
             {
-                log.Trace("connecting to " + address);
+                Log.Trace("connecting to " + address);
 
                 // Handle cancellation of the connect attempt by disposing
                 // of the socket.  This will force ConnectAsync to return.
-                using (var _ = cancel.Register(() =>
+                await using (var _ = cancel.Register(() =>
                 {
-                    socket?.Dispose();
+                    if (socket != null)
+                    {
+                        socket?.Dispose();
+                    }
+                    
                     socket = null;
                 }))
                 {
@@ -97,10 +100,8 @@ namespace Lib.P2P.Transports
                     await socket.ConnectAsync(ipaddr, port).ConfigureAwait(false);
                 }
 
-                ;
-
                 latency = DateTime.Now - start;
-                log.Trace($"connected to {address} in {latency.TotalMilliseconds} ms");
+                Log.Trace($"connected to {address} in {latency.TotalMilliseconds} ms");
             }
             catch (Exception) when (cancel.IsCancellationRequested)
             {
@@ -109,14 +110,14 @@ namespace Lib.P2P.Transports
             catch (Exception)
             {
                 latency = DateTime.Now - start;
-                log.Trace($"failed to {address} in {latency.TotalMilliseconds} ms");
+                Log.Trace($"failed to {address} in {latency.TotalMilliseconds} ms");
                 socket?.Dispose();
                 throw;
             }
 
             if (cancel.IsCancellationRequested)
             {
-                log.Trace("cancel " + address);
+                Log.Trace("cancel " + address);
                 socket?.Dispose();
                 cancel.ThrowIfCancellationRequested();
             }
@@ -131,12 +132,14 @@ namespace Lib.P2P.Transports
 
             stream = new DuplexBufferedStream(stream);
 
-            if (cancel.IsCancellationRequested)
+            if (!cancel.IsCancellationRequested)
             {
-                log.Trace("cancel " + address);
-                stream?.DisposeAsync();
-                cancel.ThrowIfCancellationRequested();
+                return stream;
             }
+            
+            Log.Trace("cancel " + address);
+            await stream.DisposeAsync();
+            cancel.ThrowIfCancellationRequested();
 
             return stream;
         }
@@ -150,11 +153,15 @@ namespace Lib.P2P.Transports
                .Where(p => p.Name == "tcp")
                .Select(p => int.Parse(p.Value))
                .FirstOrDefault();
+            
             var ip = address.Protocols
-               .Where(p => p.Name == "ip4" || p.Name == "ip6")
-               .FirstOrDefault();
+               .FirstOrDefault(p => p.Name == "ip4" || p.Name == "ip6");
+            
             if (ip == null)
-                throw new ArgumentException($"Missing IP address in '{address}'.", "address");
+            {
+                throw new ArgumentException($"Missing IP address in '{address}'.", nameof(address));
+            }
+            
             var ipAddress = IPAddress.Parse(ip.Value);
             var endPoint = new IPEndPoint(ipAddress, port);
             var socket = new Socket(
@@ -174,37 +181,40 @@ namespace Lib.P2P.Transports
 
             // If no port specified, then add it.
             var actualPort = ((IPEndPoint) socket.LocalEndPoint).Port;
+            
             if (port != actualPort)
             {
                 address = address.Clone();
                 var protocol = address.Protocols.FirstOrDefault(p => p.Name == "tcp");
                 if (protocol != null)
+                {
                     protocol.Value = actualPort.ToString();
+                }
                 else
+                {
                     address.Protocols.AddRange(new MultiAddress("/tcp/" + actualPort).Protocols);
+                }
             }
 
-            _ = Task.Run(() => ProcessConnection(socket, address, handler, cancel));
+            _ = Task.Run(() => ProcessConnection(socket, address, handler, cancel), cancel);
 
             return address;
         }
 
-        private void ProcessConnection(Socket socket,
+        private static void ProcessConnection(Socket socket,
             MultiAddress address,
             Action<Stream, MultiAddress, MultiAddress> handler,
             CancellationToken cancel)
         {
-            log.Debug("listening on " + address);
+            Log.Debug("listening on " + address);
 
             // Handle cancellation of the listener
             cancel.Register(() =>
             {
-                log.Debug("Got cancel on " + address);
+                Log.Debug("Got cancel on " + address);
 
                 try
                 {
-                    // .Net Standard on Unix neeeds this to cancel the Accept
-#if !NET461
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         socket.Shutdown(SocketShutdown.Both);
@@ -218,13 +228,10 @@ namespace Lib.P2P.Transports
                     {
                         socket.Dispose();
                     }
-#else
-                    socket.Dispose();
-#endif
                 }
                 catch (Exception e)
                 {
-                    log.Warn($"Cancelling listener: {e.Message}");
+                    Log.Warn($"Cancelling listener: {e.Message}");
                 }
                 finally
                 {
@@ -237,60 +244,50 @@ namespace Lib.P2P.Transports
                 while (!cancel.IsCancellationRequested)
                 {
                     var conn = socket.Accept();
-                    if (conn == null)
-                    {
-                        log.Warn("Null socket from Accept");
-                        continue;
-                    }
 
                     MultiAddress remote = null;
-                    var endPoint = conn.RemoteEndPoint as IPEndPoint;
-                    if (endPoint != null)
+                    if (conn.RemoteEndPoint is IPEndPoint endPoint)
                     {
                         var s = new StringBuilder();
                         s.Append(endPoint.AddressFamily == AddressFamily.InterNetwork ? "/ip4/" : "/ip6/");
-                        s.Append(endPoint.Address.ToString());
+                        s.Append(endPoint.Address);
                         s.Append("/tcp/");
                         s.Append(endPoint.Port);
                         remote = new MultiAddress(s.ToString());
-                        log.Debug("connection from " + remote);
+                        Log.Debug("connection from " + remote);
                     }
 
                     conn.NoDelay = true;
                     Stream peer = new NetworkStream(conn, true);
-#if !NETSTANDARD14
 
-                    // BufferedStream not available in .Net Standard 1.4
                     peer = new DuplexBufferedStream(peer);
-#endif
+
                     try
                     {
                         handler(peer, address, remote);
                     }
                     catch (Exception e)
                     {
-                        log.Error("listener handler failed " + address, e);
+                        Log.Error("listener handler failed " + address, e);
                         peer.Dispose();
                     }
                 }
             }
             catch (Exception) when (cancel.IsCancellationRequested)
             {
-                // eat it
+                // ignore
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                log.Error("listener failed " + address, e);
-
-                // eat it and give up
+                Log.Error("listener failed " + address, e);
             }
             finally
             {
-                if (socket != null) socket.Dispose();
+                socket?.Dispose();
             }
 
-            log.Debug("stop listening on " + address);
+            Log.Debug("stop listening on " + address);
         }
     }
 }

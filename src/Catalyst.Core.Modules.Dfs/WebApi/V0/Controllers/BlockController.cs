@@ -26,9 +26,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Core.Modules.Dfs.Controllers.V0;
-using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Lib.P2P;
 using Microsoft.AspNetCore.Http;
@@ -119,13 +116,15 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             [ModelBinder(Name = "cid-base")] string cidBase = MultiBase.DefaultAlgorithmName)
         {
             if (file == null)
-                throw new ArgumentNullException("file");
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
 
-            using (var data = file.OpenReadStream())
+            await using (var data = file.OpenReadStream())
             {
                 var cid = await IpfsCore.BlockApi.PutAsync(
-                    (Stream) data,
-                    contentType: format,
+                    data,
+                    format,
                     encoding: cidBase,
                     pin: false,
                     cancel: Cancel);
@@ -154,7 +153,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                 dto.Hash = arg;
                 dto.Error = "block not found";
             }
-            else if (cid == null && force)
+            else if (cid == null)
             {
                 return null;
             }

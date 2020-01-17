@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var temp = FileSystemApiTest.MakeTemp();
             try
             {
-                var dir = await ipfs.UnixFsApi.AddDirectoryAsync(temp, true);
+                var dir = await ipfs.UnixFsApi.AddDirectoryAsync(temp);
                 var name = "/ipfs/" + dir.Id.Encode() + "/x/y/y.txt";
                 Assert.Equal("/ipfs/QmTwEE2eSyzcvUctxP2negypGDtj7DQDKVy8s3Rvp6y6Pc",
                     await ipfs.NameApi.ResolveAsync(name));

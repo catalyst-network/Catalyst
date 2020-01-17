@@ -26,22 +26,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Microsoft.AspNetCore.Mvc;
 
-// TODO: need MultiAddress.WithOutPeer (should be in IPFS code)
+// TODO: need MultiAddress.WithOutPeer (should be in DFS code)
 
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
     ///   Information from the Distributed Hash Table.
     /// </summary>
-    public class DhtPeerDto
+    public sealed class DhtPeerDto
     {
         /// <summary>
         ///   The ID of the peer that provided the response.
         /// </summary>
-        public string ID;
+        internal string Id;
 
         /// <summary>
         ///   Unknown.
@@ -51,7 +50,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   The peer that has the information.
         /// </summary>
-        public IEnumerable<DhtPeerResponseDto> Responses;
+        internal IEnumerable<DhtPeerResponseDto> Responses;
 
         /// <summary>
         ///   Unknown.
@@ -62,17 +61,17 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     /// <summary>
     ///   Information on a peer that has the information.
     /// </summary>
-    public class DhtPeerResponseDto
+    internal sealed class DhtPeerResponseDto
     {
         /// <summary>
         ///   The peer ID.
         /// </summary>
-        public string ID;
+        public string Id;
 
         /// <summary>
         ///   The listening addresses of the peer.
         /// </summary>
-        public IEnumerable<String> Addrs;
+        public IEnumerable<string> Addrs;
     }
 
     /// <summary>
@@ -82,12 +81,14 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     ///   The DHT is a place to store, not the value, but pointers to peers who have 
     ///   the actual value.
     /// </remarks>
-    public class DhtController : IpfsController
+    public sealed class DhtController : IpfsController
     {
+        private readonly IDfsService _dfs;
+
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public DhtController(IDfsService dfs) : base(dfs) { }
+        public DhtController(IDfsService dfs) : base(dfs) { _dfs = dfs; }
 
         /// <summary>
         ///   Query the DHT for all of the multiaddresses associated with a Peer ID.
@@ -104,12 +105,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             var peer = await IpfsCore.DhtApi.FindPeerAsync(arg, Cancel);
             return new DhtPeerDto
             {
-                ID = peer.Id.ToBase58(),
-                Responses = new DhtPeerResponseDto[]
+                Id = peer.Id.ToBase58(),
+                Responses = new[]
                 {
                     new DhtPeerResponseDto
                     {
-                        ID = peer.Id.ToBase58(),
+                        Id = peer.Id.ToBase58(),
                         Addrs = peer.Addresses.Select(a => a.WithoutPeerId().ToString())
                     }
                 }
@@ -135,12 +136,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             var peers = await IpfsCore.DhtApi.FindProvidersAsync(arg, limit, null, Cancel);
             return peers.Select(peer => new DhtPeerDto
             {
-                ID = peer.Id.ToBase58(), // TODO: should be the peer ID that answered the query
-                Responses = new DhtPeerResponseDto[]
+                Id = peer.Id.ToBase58(), // TODO: should be the peer ID that answered the query
+                Responses = new[]
                 {
                     new DhtPeerResponseDto
                     {
-                        ID = peer.Id.ToBase58(),
+                        Id = peer.Id.ToBase58(),
                         Addrs = peer.Addresses.Select(a => a.WithoutPeerId().ToString())
                     }
                 }

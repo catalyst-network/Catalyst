@@ -43,8 +43,8 @@ namespace Lib.P2P.Protocols
     /// </remarks>
     public static class Message
     {
-        private static byte[] newline = new byte[] {0x0a};
-        private static ILog log = LogManager.GetLogger(typeof(Message));
+        private static byte[] _newline = new byte[] {0x0a};
+        private static ILog _log = LogManager.GetLogger(typeof(Message));
 
         /// <summary>
         ///   Read the message as a sequence of bytes from the <see cref="Stream"/>.
@@ -63,16 +63,16 @@ namespace Lib.P2P.Protocols
         ///   When the message is invalid.
         /// </exception>
         public static async Task<byte[]> ReadBytesAsync(Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var eol = new byte[1];
             var length = await stream.ReadVarint32Async(cancel).ConfigureAwait(false);
             var buffer = new byte[length - 1];
             await stream.ReadExactAsync(buffer, 0, length - 1, cancel).ConfigureAwait(false);
             await stream.ReadExactAsync(eol, 0, 1, cancel).ConfigureAwait(false);
-            if (eol[0] != newline[0])
+            if (eol[0] != _newline[0])
             {
-                log.Error($"length: {length}, bytes: {buffer.ToHexString()}");
+                _log.Error($"length: {length}, bytes: {buffer.ToHexString()}");
                 throw new InvalidDataException("Missing terminating newline");
             }
 
@@ -99,11 +99,11 @@ namespace Lib.P2P.Protocols
         ///   The return value has the length prefix and terminating newline removed.
         /// </remarks>
         public static async Task<string> ReadStringAsync(Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             var payload = Encoding.UTF8.GetString(await ReadBytesAsync(stream, cancel).ConfigureAwait(false));
 
-            log.Trace("received " + payload);
+            _log.Trace("received " + payload);
             return payload;
         }
 
@@ -124,14 +124,14 @@ namespace Lib.P2P.Protocols
         /// </returns>
         public static async Task WriteAsync(string message,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
-            log.Trace("sending " + message);
+            _log.Trace("sending " + message);
 
             var payload = Encoding.UTF8.GetBytes(message);
             await stream.WriteVarintAsync(message.Length + 1, cancel).ConfigureAwait(false);
             await stream.WriteAsync(payload, 0, payload.Length, cancel).ConfigureAwait(false);
-            await stream.WriteAsync(newline, 0, newline.Length, cancel).ConfigureAwait(false);
+            await stream.WriteAsync(_newline, 0, _newline.Length, cancel).ConfigureAwait(false);
             await stream.FlushAsync(cancel).ConfigureAwait(false);
         }
     }

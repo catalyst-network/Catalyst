@@ -36,7 +36,7 @@ namespace Lib.P2P.Protocols
     /// <seealso href="https://github.com/libp2p/mplex"/>
     public class Mplex67 : IPeerProtocol
     {
-        private static ILog log = LogManager.GetLogger(typeof(Mplex67));
+        private static ILog _log = LogManager.GetLogger(typeof(Mplex67));
 
         /// <inheritdoc />
         public string Name { get; } = "mplex";
@@ -50,9 +50,9 @@ namespace Lib.P2P.Protocols
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
-            log.Debug("start processing requests from " + connection.RemoteAddress);
+            _log.Debug("start processing requests from " + connection.RemoteAddress);
             var muxer = new Muxer
             {
                 Channel = stream,
@@ -63,14 +63,14 @@ namespace Lib.P2P.Protocols
 
             // Attach muxer to the connection.  It now becomes the message reader.
             connection.MuxerEstablished.SetResult(muxer);
-            await muxer.ProcessRequestsAsync().ConfigureAwait(false);
+            await muxer.ProcessRequestsAsync(cancel).ConfigureAwait(false);
 
-            log.Debug("stop processing from " + connection.RemoteAddress);
+            _log.Debug("stop processing from " + connection.RemoteAddress);
         }
 
         /// <inheritdoc />
         public Task ProcessResponseAsync(PeerConnection connection,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             return Task.CompletedTask;
         }

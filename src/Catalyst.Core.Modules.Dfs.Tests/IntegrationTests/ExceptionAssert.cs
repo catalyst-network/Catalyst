@@ -31,9 +31,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
     /// <summary>
     ///   Asserting an <see cref="Exception"/>.
     /// </summary>
-    public static class ExceptionAssert
+    internal static class ExceptionAssert
     {
-        public static T Throws<T>(Action action, string expectedMessage = null) where T : Exception
+        internal static T Throws<T>(Action action, string expectedMessage = null) where T : Exception
         {
             try
             {
@@ -42,17 +42,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             catch (AggregateException e)
             {
                 var match = e.InnerExceptions.OfType<T>().FirstOrDefault();
-                if (match != null)
+                if (match == null)
                 {
-                    if (expectedMessage != null)
-                    {
-                        Assert.Equal(expectedMessage, match.Message);
-                    }
-                    
-                    return match;
+                    throw;
                 }
-
-                throw;
+                
+                if (expectedMessage != null)
+                {
+                    Assert.Equal(expectedMessage, match.Message);
+                }
+                    
+                return match;
             }
             catch (T e)
             {
@@ -62,9 +62,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
 
             throw new XunitException($"Exception of type {typeof(T)}should be thrown.");
-
-            //  The compiler doesn't know that Assert.Fail will always throw an exception
-            return null;
         }
 
         public static Exception Throws(Action action, string expectedMessage = null)

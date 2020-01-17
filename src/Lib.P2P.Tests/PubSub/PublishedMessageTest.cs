@@ -31,18 +31,18 @@ using ProtoBuf;
 namespace Lib.P2P.Tests.PubSub
 {
     [TestClass]
-    public class PublishedMessageTest
+    public sealed class PublishedMessageTest
     {
-        private Peer self = new Peer {Id = "QmXK9VBxaXFuuT29AaPUTgW3jBWZ9JgLVZYdMYTHC6LLAH"};
-        private Peer other = new Peer {Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"};
+        private readonly Peer _self = new Peer {Id = "QmXK9VBxaXFuuT29AaPUTgW3jBWZ9JgLVZYdMYTHC6LLAH"};
+        private readonly Peer _other = new Peer {Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"};
 
         [TestMethod]
         public void RoundTrip()
         {
             var a = new PublishedMessage
             {
-                Topics = new string[] {"topic"},
-                Sender = self,
+                Topics = new[] {"topic"},
+                Sender = _self,
                 SequenceNumber = new byte[] {1, 2, 3, 4, 5, 6, 7, 8},
                 DataBytes = new byte[] {0, 1, 0xfe, 0xff}
             };
@@ -50,7 +50,6 @@ namespace Lib.P2P.Tests.PubSub
             Serializer.Serialize(ms, a);
             ms.Position = 0;
             var b = Serializer.Deserialize<PublishedMessage>(ms);
-            ;
 
             CollectionAssert.AreEqual(a.Topics.ToArray(), b.Topics.ToArray());
             Assert.AreEqual(a.Sender, b.Sender);
@@ -65,15 +64,15 @@ namespace Lib.P2P.Tests.PubSub
         {
             var a = new PublishedMessage
             {
-                Topics = new string[] {"topic"},
-                Sender = self,
+                Topics = new[] {"topic"},
+                Sender = _self,
                 SequenceNumber = new byte[] {1, 2, 3, 4, 5, 6, 7, 8},
                 DataBytes = new byte[] {0, 1, 0xfe, 0xff}
             };
             var b = new PublishedMessage
             {
-                Topics = new string[] {"topic"},
-                Sender = other,
+                Topics = new[] {"topic"},
+                Sender = _other,
                 SequenceNumber = new byte[] {1, 2, 3, 4, 5, 6, 7, 8},
                 DataBytes = new byte[] {0, 1, 0xfe, 0xff}
             };

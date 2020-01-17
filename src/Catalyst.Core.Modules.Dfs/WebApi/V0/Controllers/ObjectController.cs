@@ -28,7 +28,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Dag;
 using Lib.P2P;
 using Microsoft.AspNetCore.Http;
@@ -128,17 +127,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     ///         This is being obsoleted by <see cref="IDagApi" />.
     ///     </note>
     /// </remarks>
-    public class ObjectController : IpfsController
+    public sealed class ObjectController : IpfsController
     {
-        private readonly IHashProvider _hashProvider;
-
         /// <summary>
         ///     Creates a new controller.
         /// </summary>
-        public ObjectController(IDfsService dfs, IHashProvider hashProvider) : base(dfs)
-        {
-            _hashProvider = hashProvider;
-        }
+        public ObjectController(ICoreApi dfs) : base(dfs) { }
 
         /// <summary>
         ///     Create an object from a template.
@@ -186,7 +180,9 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             bool pin = false)
         {
             if (datafieldenc != "text") // TODO
+            {
                 throw new NotImplementedException("Only datafieldenc = `text` is allowed.");
+            }
 
             IDagNode node = null;
             switch (inputenc)
@@ -241,23 +237,16 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             var dto = new ObjectDataDetailDto
             {
                 Hash = arg,
-                Links = node.Links.Select(link => new ObjectLinkDto
+                Links = node.Links.Select(
+                    link => new ObjectLinkDto {Hash = link.Id, Name = link.Name, Size = link.Size}
+                ),
+                Data = dataEncoding switch
                 {
-                    Hash = link.Id,
-                    Name = link.Name,
-                    Size = link.Size
-                })
+                    "base64" => Convert.ToBase64String(node.DataBytes),
+                    "text" => Encoding.UTF8.GetString(node.DataBytes),
+                    _ => Encoding.UTF8.GetString(node.DataBytes)
+                }
             };
-            switch (dataEncoding)
-            {
-                case "base64":
-                    dto.Data = Convert.ToBase64String(node.DataBytes);
-                    break;
-                case "text":
-                default:
-                    dto.Data = Encoding.UTF8.GetString(node.DataBytes);
-                    break;
-            }
 
             return dto;
         }

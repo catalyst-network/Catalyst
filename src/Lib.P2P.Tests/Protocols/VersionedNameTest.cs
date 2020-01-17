@@ -85,9 +85,9 @@ namespace Lib.P2P.Tests.Protocols
             Assert.AreEqual(a0, a1);
             Assert.AreNotEqual(a0, b);
 
-            Assert.AreEqual<VersionedName>(a0, a0);
-            Assert.AreEqual<VersionedName>(a0, a1);
-            Assert.AreNotEqual<VersionedName>(a0, b);
+            Assert.AreEqual(a0, a0);
+            Assert.AreEqual(a0, a1);
+            Assert.AreNotEqual(a0, b);
 
             Assert.AreEqual(a0.GetHashCode(), a0.GetHashCode());
             Assert.AreEqual(a0.GetHashCode(), a1.GetHashCode());

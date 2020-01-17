@@ -36,15 +36,15 @@ namespace Lib.P2P.Protocols
     /// <summary>
     ///   Identifies the peer.
     /// </summary>
-    public class Identify1 : IPeerProtocol
+    public sealed class Identify1 : IPeerProtocol
     {
-        private static ILog log = LogManager.GetLogger(typeof(Identify1));
+        private static ILog _log = LogManager.GetLogger(typeof(Identify1));
 
         /// <inheritdoc />
         public string Name { get; } = "ipfs/id";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1, 0);
+        public SemVersion Version { get; } = new SemVersion(1);
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }
@@ -52,10 +52,10 @@ namespace Lib.P2P.Protocols
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,
             Stream stream,
-            CancellationToken cancel = default(CancellationToken))
+            CancellationToken cancel = default)
         {
             // Send our identity.
-            log.Debug("Sending identity to " + connection.RemoteAddress);
+            _log.Debug("Sending identity to " + connection.RemoteAddress);
             var peer = connection.LocalPeer;
             var res = new Identify
             {
@@ -67,10 +67,14 @@ namespace Lib.P2P.Protocols
                 ObservedAddress = connection.RemoteAddress?.ToArray(),
                 Protocols = null, // no longer sent
             };
-            if (peer.PublicKey != null) res.PublicKey = Convert.FromBase64String(peer.PublicKey);
+            
+            if (peer.PublicKey != null)
+            {
+                res.PublicKey = Convert.FromBase64String(peer.PublicKey);
+            }
 
-            Serializer.SerializeWithLengthPrefix<Identify>(stream, res, PrefixStyle.Base128);
-            await stream.FlushAsync().ConfigureAwait(false);
+            Serializer.SerializeWithLengthPrefix(stream, res, PrefixStyle.Base128);
+            await stream.FlushAsync(cancel).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -84,7 +88,7 @@ namespace Lib.P2P.Protocols
         public async Task<Peer> GetRemotePeerAsync(PeerConnection connection, CancellationToken cancel)
         {
             var muxer = await connection.MuxerEstablished.Task.ConfigureAwait(false);
-            log.Debug("Get remote identity");
+            _log.Debug("Get remote identity");
             var remote = connection.RemotePeer;
             if (remote == null)
             {
@@ -93,7 +97,7 @@ namespace Lib.P2P.Protocols
             }
 
             // Read the remote peer identify info.
-            using (var stream = await muxer.CreateStreamAsync("id", cancel).ConfigureAwait(false))
+            await using (var stream = await muxer.CreateStreamAsync("id", cancel).ConfigureAwait(false))
             {
                 await connection.EstablishProtocolAsync("/multistream/", stream, cancel).ConfigureAwait(false);
                 await connection.EstablishProtocolAsync("/ipfs/id/", stream, cancel).ConfigureAwait(false);
@@ -111,7 +115,7 @@ namespace Lib.P2P.Protocols
 
             connection.IdentityEstablished.TrySetResult(remote);
 
-            log.Debug($"Peer id '{remote}' of {connection.RemoteAddress}");
+            _log.Debug($"Peer id '{remote}' of {connection.RemoteAddress}");
             return remote;
         }
 
@@ -129,24 +133,38 @@ namespace Lib.P2P.Protocols
             remote.AgentVersion = info.AgentVersion;
             remote.ProtocolVersion = info.ProtocolVersion;
             if (info.PublicKey == null || info.PublicKey.Length == 0)
+            {
                 throw new InvalidDataException("Public key is missing.");
+            }
+            
             remote.PublicKey = Convert.ToBase64String(info.PublicKey);
-            if (remote.Id == null) remote.Id = MultiHash.ComputeHash(info.PublicKey);
+            if (remote.Id == null)
+            {
+                remote.Id = MultiHash.ComputeHash(info.PublicKey);
+            }
 
             if (info.ListenAddresses != null)
+            {
                 remote.Addresses = info.ListenAddresses
-                   .Select(b => MultiAddress.TryCreate(b))
+                   .Select(MultiAddress.TryCreate)
                    .Where(a => a != null)
                    .Select(a => a.WithPeerId(remote.Id))
                    .ToList();
-            if (remote.Addresses.Count() == 0)
-                log.Warn($"No listen address for {remote}");
+            }
+            
+            if (!remote.Addresses.Any())
+            {
+                _log.Warn($"No listen address for {remote}");
+            }
 
-            if (!remote.IsValid()) throw new InvalidDataException($"Invalid peer {remote}.");
+            if (!remote.IsValid())
+            {
+                throw new InvalidDataException($"Invalid peer {remote}.");
+            }
         }
 
         [ProtoContract]
-        private class Identify
+        private sealed class Identify
         {
             [ProtoMember(5)]
             public string ProtocolVersion;

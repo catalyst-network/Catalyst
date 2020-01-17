@@ -31,7 +31,6 @@ using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
 using Catalyst.TestUtils;
 using Lib.P2P;
-using NSubstitute;
 using Org.BouncyCastle.Crypto.Parameters;
 using Xunit;
 using Xunit.Abstractions;

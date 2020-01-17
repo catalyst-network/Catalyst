@@ -39,21 +39,21 @@ namespace Lib.P2P.Routing
     /// <typeparam name="T">
     ///  The type of answer returned by a peer.
     /// </typeparam>
-    public class DistributedQuery<T> where T : class
+    public sealed class DistributedQuery<T> where T : class
     {
-        private static ILog log = LogManager.GetLogger("Lib.P2P.Routing.DistributedQuery");
-        private static int nextQueryId = 1;
+        private static readonly ILog Log = LogManager.GetLogger("Lib.P2P.Routing.DistributedQuery");
+        private static int _nextQueryId = 1;
 
         /// <summary>
         ///   The maximum number of peers that can be queried at one time
         ///   for all distributed queries.
         /// </summary>
-        private static SemaphoreSlim askCount = new SemaphoreSlim(128);
+        private static readonly SemaphoreSlim AskCount = new SemaphoreSlim(128);
 
         /// <summary>
         ///   The maximum time spent on waiting for an answer from a peer.
         /// </summary>
-        private static readonly TimeSpan askTime = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan AskTime = TimeSpan.FromSeconds(10);
 
         /// <summary>
         ///   Controls the running of the distributed query.
@@ -63,12 +63,12 @@ namespace Lib.P2P.Routing
         ///   or the caller of <see cref="RunAsync"/> wants to cancel
         ///   or the DHT is stopped.
         /// </remarks>
-        private CancellationTokenSource runningQuery;
+        private CancellationTokenSource _runningQuery;
 
-        private ConcurrentDictionary<Peer, Peer> visited = new ConcurrentDictionary<Peer, Peer>();
-        private ConcurrentDictionary<T, T> answers = new ConcurrentDictionary<T, T>();
-        private DhtMessage queryMessage;
-        private int failedConnects = 0;
+        private readonly ConcurrentDictionary<Peer, Peer> _visited = new ConcurrentDictionary<Peer, Peer>();
+        private readonly ConcurrentDictionary<T, T> _answers = new ConcurrentDictionary<T, T>();
+        private DhtMessage _queryMessage;
+        private int _failedConnects;
 
         /// <summary>
         ///   Raised when an answer is obtained.
@@ -78,12 +78,12 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///   The unique identifier of the query.
         /// </summary>
-        public int Id { get; } = nextQueryId++;
+        public int Id { get; } = _nextQueryId++;
 
         /// <summary>
         ///   The received answers for the query.
         /// </summary>
-        public IEnumerable<T> Answers => answers.Values;
+        public IEnumerable<T> Answers => _answers.Values;
 
         /// <summary>
         ///   The number of answers needed.
@@ -92,7 +92,7 @@ namespace Lib.P2P.Routing
         ///   When the numbers <see cref="Answers"/> reaches this limit
         ///   the <see cref="RunAsync">running query</see> will stop.
         /// </remarks>
-        public int AnswersNeeded { get; set; } = 1;
+        internal int AnswersNeeded { get; set; } = 1;
 
         /// <summary>
         ///   The maximum number of concurrent peer queries to perform
@@ -114,12 +114,12 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///   The type of query to perform.
         /// </summary>
-        public MessageType QueryType { get; set; }
+        internal MessageType QueryType { get; set; }
 
         /// <summary>
         ///   The key to find.
         /// </summary>
-        public MultiHash QueryKey { get; set; }
+        internal MultiHash QueryKey { get; set; }
 
         /// <summary>
         ///   Starts the distributed query.
@@ -132,11 +132,11 @@ namespace Lib.P2P.Routing
         /// </returns>
         public async Task RunAsync(CancellationToken cancel)
         {
-            log.Debug($"Q{Id} run {QueryType} {QueryKey}");
+            Log.Debug($"Q{Id} run {QueryType} {QueryKey}");
 
-            runningQuery = CancellationTokenSource.CreateLinkedTokenSource(cancel);
+            _runningQuery = CancellationTokenSource.CreateLinkedTokenSource(cancel);
             Dht.Stopped += OnDhtStopped;
-            queryMessage = new DhtMessage
+            _queryMessage = new DhtMessage
             {
                 Type = QueryType,
                 Key = QueryKey?.ToArray(),
@@ -162,13 +162,13 @@ namespace Lib.P2P.Routing
                 Dht.Stopped -= OnDhtStopped;
             }
 
-            log.Debug($"Q{Id} found {answers.Count} answers, visited {visited.Count} peers, failed {failedConnects}");
+            Log.Debug($"Q{Id} found {_answers.Count} answers, visited {_visited.Count} peers, failed {_failedConnects}");
         }
 
         private void OnDhtStopped(object sender, EventArgs e)
         {
-            log.Debug($"Q{Id} cancelled because DHT stopped.");
-            runningQuery.Cancel();
+            Log.Debug($"Q{Id} cancelled because DHT stopped.");
+            _runningQuery.Cancel();
         }
 
         /// <summary>
@@ -178,13 +178,12 @@ namespace Lib.P2P.Routing
         {
             var pass = 0;
             var waits = 20;
-            while (!runningQuery.IsCancellationRequested && waits > 0)
+            while (!_runningQuery.IsCancellationRequested && waits > 0)
             {
                 // Get the nearest peer that has not been visited.
                 var peer = Dht.RoutingTable
                    .NearestPeers(QueryKey)
-                   .Where(p => !visited.ContainsKey(p))
-                   .FirstOrDefault();
+                   .FirstOrDefault(p => !_visited.ContainsKey(p));
                 if (peer == null)
                 {
                     --waits;
@@ -192,45 +191,51 @@ namespace Lib.P2P.Routing
                     continue;
                 }
 
-                if (!visited.TryAdd(peer, peer)) continue;
+                if (!_visited.TryAdd(peer, peer))
+                {
+                    continue;
+                }
+                
                 ++pass;
 
                 // Ask the nearest peer.
-                await askCount.WaitAsync(runningQuery.Token).ConfigureAwait(false);
+                await AskCount.WaitAsync(_runningQuery.Token).ConfigureAwait(false);
                 var start = DateTime.Now;
-                log.Debug($"Q{Id}.{taskId}.{pass} ask {peer}");
+                Log.Debug($"Q{Id}.{taskId}.{pass} ask {peer}");
                 try
                 {
-                    using (var timeout = new CancellationTokenSource(askTime))
-                    using (var cts = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, runningQuery.Token))
-                    using (var stream =
-                        await Dht.SwarmService.DialAsync(peer, Dht.ToString(), cts.Token).ConfigureAwait(false))
+                    using (var timeout = new CancellationTokenSource(AskTime))
                     {
-                        // Send the KAD query and get a response.
-                        Serializer.SerializeWithLengthPrefix(stream, queryMessage, PrefixStyle.Base128);
-                        await stream.FlushAsync(cts.Token).ConfigureAwait(false);
-                        var response = await ProtoBufHelper.ReadMessageAsync<DhtMessage>(stream, cts.Token)
-                           .ConfigureAwait(false);
+                        using var cts = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, _runningQuery.Token);
+                        {
+                            await using (var stream =
+                                await Dht.SwarmService.DialAsync(peer, Dht.ToString(), cts.Token).ConfigureAwait(false))
+                            {
+                                // Send the KAD query and get a response.
+                                Serializer.SerializeWithLengthPrefix(stream, _queryMessage, PrefixStyle.Base128);
+                                await stream.FlushAsync(cts.Token).ConfigureAwait(false);
+                                var response = await ProtoBufHelper.ReadMessageAsync<DhtMessage>(stream, cts.Token)
+                                   .ConfigureAwait(false);
 
-                        // Process answer
-                        ProcessProviders(response.ProviderPeers);
-                        ProcessCloserPeers(response.CloserPeers);
+                                // Process answer
+                                ProcessProviders(response.ProviderPeers);
+                                ProcessCloserPeers(response.CloserPeers);
+                            }
+                        }
                     }
 
                     var time = DateTime.Now - start;
-                    log.Debug($"Q{Id}.{taskId}.{pass} ok {peer} ({time.TotalMilliseconds} ms)");
+                    Log.Debug($"Q{Id}.{taskId}.{pass} ok {peer} ({time.TotalMilliseconds} ms)");
                 }
                 catch (Exception e)
                 {
-                    Interlocked.Increment(ref failedConnects);
+                    Interlocked.Increment(ref _failedConnects);
                     var time = DateTime.Now - start;
-                    log.Warn($"Q{Id}.{taskId}.{pass} failed ({time.TotalMilliseconds} ms) - {e.Message}");
-
-                    // eat it
+                    Log.Warn($"Q{Id}.{taskId}.{pass} failed ({time.TotalMilliseconds} ms) - {e.Message}");
                 }
                 finally
                 {
-                    askCount.Release();
+                    AskCount.Release();
                 }
             }
         }
@@ -238,20 +243,29 @@ namespace Lib.P2P.Routing
         private void ProcessProviders(DhtPeerMessage[] providers)
         {
             if (providers == null)
+            {
                 return;
+            }
 
             foreach (var provider in providers)
                 if (provider.TryToPeer(out var p))
                 {
                     if (p == Dht.SwarmService.LocalPeer || !Dht.SwarmService.IsAllowed(p))
+                    {
                         continue;
+                    }
 
                     p = Dht.SwarmService.RegisterPeer(p);
-                    if (QueryType == MessageType.GetProviders)
+                    if (QueryType != MessageType.GetProviders)
                     {
-                        // Only unique answers
-                        var answer = p as T;
-                        if (!answers.ContainsKey(answer)) AddAnswer(answer);
+                        continue;
+                    }
+
+                    // Only unique answers
+                    var answer = p as T;
+                    if (!_answers.ContainsKey(answer))
+                    {
+                        AddAnswer(answer);
                     }
                 }
         }
@@ -259,15 +273,23 @@ namespace Lib.P2P.Routing
         private void ProcessCloserPeers(DhtPeerMessage[] closerPeers)
         {
             if (closerPeers == null)
+            {
                 return;
+            }
+            
             foreach (var closer in closerPeers)
                 if (closer.TryToPeer(out var p))
                 {
                     if (p == Dht.SwarmService.LocalPeer || !Dht.SwarmService.IsAllowed(p))
+                    {
                         continue;
+                    }
 
                     p = Dht.SwarmService.RegisterPeer(p);
-                    if (QueryType == MessageType.FindNode && QueryKey == p.Id) AddAnswer(p as T);
+                    if (QueryType == MessageType.FindNode && QueryKey == p.Id)
+                    {
+                        AddAnswer(p as T);
+                    }
                 }
         }
 
@@ -279,16 +301,25 @@ namespace Lib.P2P.Routing
         /// </param>
         /// <remarks>
         /// </remarks>
-        public void AddAnswer(T answer)
+        internal void AddAnswer(T answer)
         {
             if (answer == null)
+            {
                 return;
-            if (runningQuery != null && runningQuery.IsCancellationRequested)
-                return;
+            }
 
-            if (answers.TryAdd(answer, answer))
-                if (answers.Count >= AnswersNeeded && runningQuery != null && !runningQuery.IsCancellationRequested)
-                    runningQuery.Cancel(false);
+            if (_runningQuery != null && _runningQuery.IsCancellationRequested)
+            {
+                return;
+            }
+
+            if (_answers.TryAdd(answer, answer))
+            {
+                if (_answers.Count >= AnswersNeeded && _runningQuery != null && !_runningQuery.IsCancellationRequested)
+                {
+                    _runningQuery.Cancel(false);
+                }   
+            }
 
             AnswerObtained?.Invoke(this, answer);
         }

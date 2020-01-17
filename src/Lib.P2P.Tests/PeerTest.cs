@@ -29,12 +29,12 @@ using MultiFormats;
 namespace Lib.P2P.Tests
 {
     [TestClass]
-    public class PeerTest
+    public sealed class PeerTest
     {
-        private const string marsId = "QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
-        private const string plutoId = "QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM";
+        private const string MarsId = "QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
+        private const string PlutoId = "QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM";
 
-        private const string marsPublicKey =
+        private const string MarsPublicKey =
             "CAASogEwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAKGUtbRQf+a9SBHFEruNAUatS/tsGUnHuCtifGrlbYPELD3UyyhWf/FYczBCavx3i8hIPEW2jQv4ehxQxi/cg9SHswZCQblSi0ucwTBFr8d40JEiyB9CcapiMdFQxdMgGvXEOQdLz1pz+UPUDojkdKZq8qkkeiBn7KlAoGEocnmpAgMBAAE=";
 
         private static string marsAddress =
@@ -44,7 +44,7 @@ namespace Lib.P2P.Tests
         public new void ToString()
         {
             Assert.AreEqual("", new Peer().ToString());
-            Assert.AreEqual(marsId, new Peer {Id = marsId}.ToString());
+            Assert.AreEqual(MarsId, new Peer {Id = MarsId}.ToString());
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Validation_With_Id()
         {
-            Peer peer = marsId;
+            Peer peer = MarsId;
             Assert.AreEqual(true, peer.IsValid());
         }
 
@@ -92,8 +92,8 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer
             {
-                Id = marsId,
-                PublicKey = marsPublicKey
+                Id = MarsId,
+                PublicKey = MarsPublicKey
             };
             Assert.AreEqual(true, peer.IsValid());
         }
@@ -103,8 +103,8 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer
             {
-                Id = plutoId,
-                PublicKey = marsPublicKey
+                Id = PlutoId,
+                PublicKey = MarsPublicKey
             };
             Assert.AreEqual(false, peer.IsValid());
         }
@@ -112,9 +112,9 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Value_Equality()
         {
-            var a0 = new Peer {Id = marsId};
-            var a1 = new Peer {Id = marsId};
-            var b = new Peer {Id = plutoId};
+            var a0 = new Peer {Id = MarsId};
+            var a1 = new Peer {Id = MarsId};
+            var b = new Peer {Id = PlutoId};
             Peer c = null;
             Peer d = null;
 
@@ -144,9 +144,9 @@ namespace Lib.P2P.Tests
             Assert.AreEqual(a0, a1);
             Assert.AreNotEqual(a0, b);
 
-            Assert.AreEqual<Peer>(a0, a0);
-            Assert.AreEqual<Peer>(a0, a1);
-            Assert.AreNotEqual<Peer>(a0, b);
+            Assert.AreEqual(a0, a0);
+            Assert.AreEqual(a0, a1);
+            Assert.AreNotEqual(a0, b);
 
             Assert.AreEqual(a0.GetHashCode(), a0.GetHashCode());
             Assert.AreEqual(a0.GetHashCode(), a1.GetHashCode());
@@ -156,7 +156,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Implicit_Conversion_From_String()
         {
-            Peer a = marsId;
+            Peer a = MarsId;
             Assert.IsInstanceOfType(a, typeof(Peer));
         }
     }

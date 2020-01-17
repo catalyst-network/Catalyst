@@ -47,14 +47,14 @@ namespace Lib.P2P.SecureCommunication
     /// </remarks>
     public class Secio1Stream : Stream
     {
-        private Stream stream;
-        private byte[] inBlock;
-        private int inBlockOffset;
-        private MemoryStream outStream = new MemoryStream();
-        private HMac inHmac;
-        private HMac outHmac;
-        private IStreamCipher decrypt;
-        private IStreamCipher encrypt;
+        private Stream _stream;
+        private byte[] _inBlock;
+        private int _inBlockOffset;
+        private MemoryStream _outStream = new MemoryStream();
+        private HMac _inHmac;
+        private HMac _outHmac;
+        private IStreamCipher _decrypt;
+        private IStreamCipher _encrypt;
 
         /// <summary>
         ///   Creates a new instance of the <see cref="Secio1Stream"/> class. 
@@ -80,23 +80,23 @@ namespace Lib.P2P.SecureCommunication
             StretchedKey localKey,
             StretchedKey remoteKey)
         {
-            this.stream = stream;
+            this._stream = stream;
 
-            inHmac = new HMac(DigestUtilities.GetDigest(hashName));
-            inHmac.Init(new KeyParameter(localKey.MacKey));
+            _inHmac = new HMac(DigestUtilities.GetDigest(hashName));
+            _inHmac.Init(new KeyParameter(localKey.MacKey));
 
-            outHmac = new HMac(DigestUtilities.GetDigest(hashName));
-            outHmac.Init(new KeyParameter(remoteKey.MacKey));
+            _outHmac = new HMac(DigestUtilities.GetDigest(hashName));
+            _outHmac.Init(new KeyParameter(remoteKey.MacKey));
 
             if (cipherName == "AES-256" || cipherName == "AES-512")
             {
-                decrypt = new CtrStreamCipher(new AesEngine());
-                var p = new ParametersWithIV(new KeyParameter(remoteKey.CipherKey), remoteKey.IV);
-                decrypt.Init(false, p);
+                _decrypt = new CtrStreamCipher(new AesEngine());
+                var p = new ParametersWithIV(new KeyParameter(remoteKey.CipherKey), remoteKey.Iv);
+                _decrypt.Init(false, p);
 
-                encrypt = new CtrStreamCipher(new AesEngine());
-                p = new ParametersWithIV(new KeyParameter(localKey.CipherKey), localKey.IV);
-                encrypt.Init(true, p);
+                _encrypt = new CtrStreamCipher(new AesEngine());
+                p = new ParametersWithIV(new KeyParameter(localKey.CipherKey), localKey.Iv);
+                _encrypt.Init(true, p);
             }
             else
             {
@@ -105,13 +105,13 @@ namespace Lib.P2P.SecureCommunication
         }
 
         /// <inheritdoc />
-        public override bool CanRead => stream.CanRead;
+        public override bool CanRead => _stream.CanRead;
 
         /// <inheritdoc />
         public override bool CanSeek => false;
 
         /// <inheritdoc />
-        public override bool CanWrite => stream.CanRead;
+        public override bool CanWrite => _stream.CanRead;
 
         /// <inheritdoc />
         public override bool CanTimeout => false;
@@ -150,21 +150,21 @@ namespace Lib.P2P.SecureCommunication
             while (count > 0)
 
                 // Does the current packet have some unread data?
-                if (inBlock != null && inBlockOffset < inBlock.Length)
+                if (_inBlock != null && _inBlockOffset < _inBlock.Length)
                 {
-                    var n = Math.Min(inBlock.Length - inBlockOffset, count);
-                    Array.Copy(inBlock, inBlockOffset, buffer, offset, n);
+                    var n = Math.Min(_inBlock.Length - _inBlockOffset, count);
+                    Array.Copy(_inBlock, _inBlockOffset, buffer, offset, n);
                     total += n;
                     count -= n;
                     offset += n;
-                    inBlockOffset += n;
+                    _inBlockOffset += n;
                 }
 
                 // Otherwise, wait for a new block of data.
                 else
                 {
-                    inBlock = await ReadPacketAsync(cancellationToken);
-                    inBlockOffset = 0;
+                    _inBlock = await ReadPacketAsync(cancellationToken);
+                    _inBlockOffset = 0;
                 }
 
             return total;
@@ -183,17 +183,17 @@ namespace Lib.P2P.SecureCommunication
         {
             var lengthBuffer = await ReadPacketBytesAsync(4, cancel).ConfigureAwait(false);
             var length =
-                ((int) lengthBuffer[0] << 24) |
-                ((int) lengthBuffer[1] << 16) |
-                ((int) lengthBuffer[2] << 8) |
-                (int) lengthBuffer[3];
-            if (length <= outHmac.GetMacSize())
+                (lengthBuffer[0] << 24) |
+                (lengthBuffer[1] << 16) |
+                (lengthBuffer[2] << 8) |
+                lengthBuffer[3];
+            if (length <= _outHmac.GetMacSize())
                 throw new InvalidDataException($"Invalid secio packet length of {length}.");
 
-            var encryptedData = await ReadPacketBytesAsync(length - outHmac.GetMacSize(), cancel).ConfigureAwait(false);
-            var signature = await ReadPacketBytesAsync(outHmac.GetMacSize(), cancel).ConfigureAwait(false);
+            var encryptedData = await ReadPacketBytesAsync(length - _outHmac.GetMacSize(), cancel).ConfigureAwait(false);
+            var signature = await ReadPacketBytesAsync(_outHmac.GetMacSize(), cancel).ConfigureAwait(false);
 
-            var hmac = outHmac;
+            var hmac = _outHmac;
             var mac = new byte[hmac.GetMacSize()];
             hmac.Reset();
             hmac.BlockUpdate(encryptedData, 0, encryptedData.Length);
@@ -202,14 +202,14 @@ namespace Lib.P2P.SecureCommunication
                 throw new InvalidDataException("HMac error");
 
             // Decrypt the data in-place.
-            decrypt.ProcessBytes(encryptedData, 0, encryptedData.Length, encryptedData, 0);
+            _decrypt.ProcessBytes(encryptedData, 0, encryptedData.Length, encryptedData, 0);
             return encryptedData;
         }
 
         private async Task<byte[]> ReadPacketBytesAsync(int count, CancellationToken cancel)
         {
             var buffer = new byte[count];
-            await stream.ReadExactAsync(buffer, 0, count, cancel).ConfigureAwait(false);
+            await _stream.ReadExactAsync(buffer, 0, count, cancel).ConfigureAwait(false);
             return buffer;
         }
 
@@ -224,46 +224,46 @@ namespace Lib.P2P.SecureCommunication
         /// <inheritdoc />
         public override async Task FlushAsync(CancellationToken cancel)
         {
-            if (outStream.Length == 0)
+            if (_outStream.Length == 0)
                 return;
 
-            var data = outStream.ToArray(); // plain text
-            encrypt.ProcessBytes(data, 0, data.Length, data, 0);
+            var data = _outStream.ToArray(); // plain text
+            _encrypt.ProcessBytes(data, 0, data.Length, data, 0);
 
-            var hmac = inHmac;
+            var hmac = _inHmac;
             var mac = new byte[hmac.GetMacSize()];
             hmac.Reset();
             hmac.BlockUpdate(data, 0, data.Length);
             hmac.DoFinal(mac, 0);
 
             var length = data.Length + mac.Length;
-            stream.WriteByte((byte) (length >> 24));
-            stream.WriteByte((byte) (length >> 16));
-            stream.WriteByte((byte) (length >> 8));
-            stream.WriteByte((byte) length);
-            await stream.WriteAsync(data, 0, data.Length);
-            await stream.WriteAsync(mac, 0, mac.Length);
-            await stream.FlushAsync(cancel).ConfigureAwait(false);
+            _stream.WriteByte((byte) (length >> 24));
+            _stream.WriteByte((byte) (length >> 16));
+            _stream.WriteByte((byte) (length >> 8));
+            _stream.WriteByte((byte) length);
+            await _stream.WriteAsync(data, 0, data.Length, cancel);
+            await _stream.WriteAsync(mac, 0, mac.Length, cancel);
+            await _stream.FlushAsync(cancel).ConfigureAwait(false);
 
-            outStream.SetLength(0);
+            _outStream.SetLength(0);
         }
 
         /// <inheritdoc />
-        public override void Write(byte[] buffer, int offset, int count) { outStream.Write(buffer, offset, count); }
+        public override void Write(byte[] buffer, int offset, int count) { _outStream.Write(buffer, offset, count); }
 
         /// <inheritdoc />
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            return outStream.WriteAsync(buffer, offset, count, cancellationToken);
+            return _outStream.WriteAsync(buffer, offset, count, cancellationToken);
         }
 
         /// <inheritdoc />
-        public override void WriteByte(byte value) { outStream.WriteByte(value); }
+        public override void WriteByte(byte value) { _outStream.WriteByte(value); }
 
         /// <inheritdoc />
         protected override void Dispose(bool disposing)
         {
-            if (disposing) stream.Dispose();
+            if (disposing) _stream.Dispose();
             base.Dispose(disposing);
         }
     }

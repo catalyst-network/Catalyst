@@ -39,7 +39,7 @@ namespace Lib.P2P.PubSub
     /// </remarks>
     public class LoopbackRouter : IMessageRouter
     {
-        private MessageTracker tracker = new MessageTracker();
+        private MessageTracker _tracker = new MessageTracker();
 
         /// <inheritdoc />
         public event EventHandler<PublishedMessage> MessageReceived;
@@ -58,7 +58,7 @@ namespace Lib.P2P.PubSub
         {
             cancel.ThrowIfCancellationRequested();
 
-            if (!tracker.RecentlySeen(message.MessageId)) MessageReceived?.Invoke(this, message);
+            if (!_tracker.RecentlySeen(message.MessageId)) MessageReceived?.Invoke(this, message);
 
             return Task.CompletedTask;
         }

@@ -37,6 +37,7 @@ using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
+using Catalyst.TestUtils.Fakes;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers

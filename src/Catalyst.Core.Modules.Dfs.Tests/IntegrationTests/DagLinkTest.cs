@@ -29,14 +29,14 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
-    public class DagLinkTest
+    public sealed class DagLinkTest
     {
         [Fact]
         public void Creating()
         {
             var link = new DagLink("abc", "QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", 5);
             Assert.Equal("abc", link.Name);
-            Assert.Equal("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", (string) link.Id);
+            Assert.Equal("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", link.Id);
             Assert.Equal(5, link.Size);
         }
 
@@ -47,16 +47,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var clone = new DagLink(link);
 
             Assert.Equal("abc", clone.Name);
-            Assert.Equal("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", (string) clone.Id);
+            Assert.Equal("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", clone.Id);
             Assert.Equal(5, clone.Size);
         }
 
         [Fact]
         public void Encoding()
         {
-            var encoded = "0a22122023dca2a7429612378554b0bb5b85012dec00a17cc2c673f17d2b76a50b839cd51201611803";
+            const string encoded = "0a22122023dca2a7429612378554b0bb5b85012dec00a17cc2c673f17d2b76a50b839cd51201611803";
             var link = new DagLink("a", "QmQke7LGtfu3GjFP3AnrP8vpEepQ6C5aJSALKAq653bkRi", 3);
-            var x = link.ToArray();
+            link.ToArray();
             Assert.Equal(encoded, link.ToArray().ToHexString());
         }
 
@@ -65,16 +65,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         {
             var encoded = "0a22122023dca2a7429612378554b0bb5b85012dec00a17cc2c673f17d2b76a50b839cd512001803";
             var link = new DagLink("", "QmQke7LGtfu3GjFP3AnrP8vpEepQ6C5aJSALKAq653bkRi", 3);
-            var x = link.ToArray();
+            link.ToArray();
             Assert.Equal(encoded, link.ToArray().ToHexString());
         }
 
         [Fact]
         public void Encoding_NullName()
         {
-            var encoded = "0a22122023dca2a7429612378554b0bb5b85012dec00a17cc2c673f17d2b76a50b839cd51803";
+            const string encoded = "0a22122023dca2a7429612378554b0bb5b85012dec00a17cc2c673f17d2b76a50b839cd51803";
             var link = new DagLink(null, "QmQke7LGtfu3GjFP3AnrP8vpEepQ6C5aJSALKAq653bkRi", 3);
-            var x = link.ToArray();
+            link.ToArray();
             Assert.Equal(encoded, link.ToArray().ToHexString());
         }
 

@@ -40,17 +40,17 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             _blockRepositoryApi = blockRepositoryApi;
         }
 
-        public Task<BandwidthData> BandwidthAsync(CancellationToken cancel = default(CancellationToken))
+        public Task<BandwidthData> BandwidthAsync(CancellationToken cancel = default)
         {
             return Task.FromResult(StatsStream.AllBandwidth);
         }
 
-        public async Task<BitswapData> BitSwapAsync(CancellationToken cancel = default(CancellationToken))
+        public async Task<BitswapData> BitSwapAsync(CancellationToken cancel = default)
         {
             return _bitSwapApi.GetBitSwapStatistics();
         }
 
-        public Task<RepositoryData> RepositoryAsync(CancellationToken cancel = default(CancellationToken))
+        public Task<RepositoryData> RepositoryAsync(CancellationToken cancel = default)
         {
             return _blockRepositoryApi.StatisticsAsync(cancel);
         }

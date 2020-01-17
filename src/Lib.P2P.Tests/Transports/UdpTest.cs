@@ -68,7 +68,7 @@ namespace Lib.P2P.Tests.Transports
             cs.Cancel();
             ExceptionAssert.Throws<OperationCanceledException>(() =>
             {
-                var stream = udp.ConnectAsync("/ip4/127.0.10.10/udp/32700", cs.Token).Result;
+                var _ = udp.ConnectAsync("/ip4/127.0.10.10/udp/32700", cs.Token).Result;
             });
         }
 
@@ -79,19 +79,20 @@ namespace Lib.P2P.Tests.Transports
             var udp = new Udp();
             var cs = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var connected = false;
-            MultiAddress listenerAddress = null;
-            Action<Stream, MultiAddress, MultiAddress> handler = (stream, local, remote) =>
+
+            void Handler(Stream stream, MultiAddress local, MultiAddress remote)
             {
                 Assert.IsNotNull(stream);
                 connected = true;
-            };
+            }
+
             try
             {
-                listenerAddress = udp.Listen("/ip4/127.0.0.1", handler, cs.Token);
+                var listenerAddress = udp.Listen("/ip4/127.0.0.1", Handler, cs.Token);
                 Assert.IsTrue(listenerAddress.Protocols.Any(p => p.Name == "udp"));
-                using (var stream = await udp.ConnectAsync(listenerAddress, cs.Token))
+                await using (var stream = await udp.ConnectAsync(listenerAddress, cs.Token))
                 {
-                    await Task.Delay(50);
+                    await Task.Delay(50, cs.Token);
                     Assert.IsNotNull(stream);
                     Assert.IsTrue(connected);
                 }
@@ -112,7 +113,7 @@ namespace Lib.P2P.Tests.Transports
             ntpData[0] = 0x1B;
 
             var udp = new Udp();
-            using (var time = await udp.ConnectAsync(server[0], cs.Token))
+            await using (var time = await udp.ConnectAsync(server[0], cs.Token))
             {
                 ntpData[0] = 0x1B;
                 await time.WriteAsync(ntpData, 0, ntpData.Length, cs.Token);
@@ -135,30 +136,33 @@ namespace Lib.P2P.Tests.Transports
         {
             var cs = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var udp = new Udp();
+            
             using (var server = new HelloServer())
-            using (var stream = await udp.ConnectAsync(server.Address, cs.Token))
             {
-                var bytes = new byte[5];
-                await stream.ReadAsync(bytes, 0, bytes.Length, cs.Token);
-                Assert.AreEqual("hello", Encoding.UTF8.GetString(bytes));
+                await using (var stream = await udp.ConnectAsync(server.Address, cs.Token))
+                {
+                    var bytes = new byte[5];
+                    await stream.ReadAsync(bytes, 0, bytes.Length, cs.Token);
+                    Assert.AreEqual("hello", Encoding.UTF8.GetString(bytes));
+                }
             }
         }
 
-        private class HelloServer : IDisposable
+        private sealed class HelloServer : IDisposable
         {
-            private CancellationTokenSource cs = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            private readonly CancellationTokenSource _cs = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
             public HelloServer()
             {
                 var udp = new Udp();
-                Address = udp.Listen("/ip4/127.0.0.1", Handler, cs.Token);
+                Address = udp.Listen("/ip4/127.0.0.1", Handler, _cs.Token);
             }
 
-            public MultiAddress Address { get; set; }
+            public MultiAddress Address { get; }
 
-            public void Dispose() { cs.Cancel(); }
+            public void Dispose() { _cs.Cancel(); }
 
-            private void Handler(Stream stream, MultiAddress local, MultiAddress remote)
+            private static void Handler(Stream stream, MultiAddress local, MultiAddress remote)
             {
                 var msg = Encoding.UTF8.GetBytes("hello");
                 stream.Write(msg, 0, msg.Length);

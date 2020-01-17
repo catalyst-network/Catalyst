@@ -41,8 +41,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public void Environment_Home()
         {
-            var names = new string[] {"IPFS_PATH", "HOME", "HOMEPATH"};
-            var values = names.Select(n => Environment.GetEnvironmentVariable(n));
+            var names = new[] {"IPFS_PATH", "HOME", "HOMEPATH"};
+            var values = names.Select(Environment.GetEnvironmentVariable);
             var sep = Path.DirectorySeparatorChar;
             try
             {
@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
             finally
             {
-                var pairs = names.Zip(values, (name, value) => new {name = name, value = value});
+                var pairs = names.Zip(values, (name, value) => new {name, value});
                 foreach (var pair in pairs)
                 {
                     Environment.SetEnvironmentVariable(pair.name, pair.value);
@@ -72,8 +72,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public void Environment_HomePath()
         {
-            var names = new string[] {"IPFS_PATH", "HOME", "HOMEPATH"};
-            var values = names.Select(n => Environment.GetEnvironmentVariable(n));
+            var names = new[] {"IPFS_PATH", "HOME", "HOMEPATH"};
+            var values = names.Select(Environment.GetEnvironmentVariable);
             var sep = Path.DirectorySeparatorChar;
             try
             {
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
             finally
             {
-                var pairs = names.Zip(values, (name, value) => new {name = name, value = value});
+                var pairs = names.Zip(values, (name, value) => new {name, value});
                 foreach (var pair in pairs)
                 {
                     Environment.SetEnvironmentVariable(pair.name, pair.value);
@@ -103,8 +103,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Fact]
         public void Environment_IpfsPath()
         {
-            var names = new string[] {"IPFS_PATH", "HOME", "HOMEPATH"};
-            var values = names.Select(n => Environment.GetEnvironmentVariable(n));
+            var names = new[] {"IPFS_PATH", "HOME", "HOMEPATH"};
+            var values = names.Select(Environment.GetEnvironmentVariable);
             var sep = Path.DirectorySeparatorChar;
             try
             {
@@ -123,7 +123,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
             finally
             {
-                var pairs = names.Zip(values, (name, value) => new {name = name, value = value});
+                var pairs = names.Zip(values, (name, value) => new {name, value});
                 foreach (var pair in pairs)
                 {
                     Environment.SetEnvironmentVariable(pair.name, pair.value);

@@ -40,40 +40,43 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
     /// <summary>
     ///   Exchange blocks with other peers.
     /// </summary>
-    public class BitswapService : IBitswapService
+    public class BitSwapService : IBitswapService
     {
-        static ILog log = LogManager.GetLogger(typeof(BitswapService));
+        private static ILog _log = LogManager.GetLogger(typeof(BitSwapService));
 
-        ConcurrentDictionary<Cid, WantedBlock> wants = new ConcurrentDictionary<Cid, WantedBlock>();
-        ConcurrentDictionary<Peer, BitswapLedger> peerLedgers = new ConcurrentDictionary<Peer, BitswapLedger>();
+        private readonly ConcurrentDictionary<Cid, WantedBlock> _wants = new ConcurrentDictionary<Cid, WantedBlock>();
+        private readonly ConcurrentDictionary<Peer, BitswapLedger> _peerLedgers = new ConcurrentDictionary<Peer, BitswapLedger>();
 
         /// <summary>
         ///   The supported bitswap protocols.
         /// </summary>
         /// <value>
-        ///   Defaults to <see cref="Bitswap11"/> and <see cref="Bitswap1"/>.
+        ///   Defaults to <see cref="Bitswap11"/> and <see>
+        ///       <cref>Bitswap1</cref>
+        ///   </see>
+        ///   .
         /// </value>
         public IBitswapProtocol[] Protocols { get; set; }
 
         /// <summary>
         ///   The number of blocks sent by other peers.
         /// </summary>
-        ulong BlocksReceived;
+        private ulong _blocksReceived;
 
         /// <summary>
         ///   The number of bytes sent by other peers.
         /// </summary>
-        ulong DataReceived;
+        private ulong _dataReceived;
 
         /// <summary>
         ///   The number of blocks sent to other peers.
         /// </summary>
-        ulong BlocksSent;
+        private ulong _blocksSent;
 
         /// <summary>
         ///   The number of bytes sent to other peers.
         /// </summary>
-        ulong DataSent;
+        private ulong _dataSent;
 
         /// <summary>
         ///   The number of duplicate blocks sent by other peers.
@@ -82,7 +85,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         ///   A duplicate block is a block that is already stored in the
         ///   local repository.
         /// </remarks>
-        ulong DupBlksReceived;
+        private ulong _dupBlksReceived;
 
         /// <summary>
         ///   The number of duplicate bytes sent by other peers.
@@ -91,17 +94,16 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         ///   A duplicate block is a block that is already stored in the
         ///   local repository.
         /// </remarks>
-        ulong DupDataReceived;
+        private ulong _dupDataReceived;
 
         /// <summary>
-        ///   Creates a new instance of the <see cref="BitswapService"/> class.
+        ///   Creates a new instance of the <see cref="BitSwapService"/> class.
         /// </summary>
-        public BitswapService()
+        public BitSwapService()
         {
             Protocols = new IBitswapProtocol[]
             {
-                new Bitswap11 {BitswapService = this},
-                new Bitswap1 {BitswapService = this}
+                new Bitswap11 {BitswapService = this}
             };
         }
 
@@ -125,15 +127,15 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
             {
                 return new BitswapData
                 {
-                    BlocksReceived = BlocksReceived,
-                    BlocksSent = BlocksSent,
-                    DataReceived = DataReceived,
-                    DataSent = DataSent,
-                    DupBlksReceived = DupBlksReceived,
-                    DupDataReceived = DupDataReceived,
+                    BlocksReceived = _blocksReceived,
+                    BlocksSent = _blocksSent,
+                    DataReceived = _dataReceived,
+                    DataSent = _dataSent,
+                    DupBlksReceived = _dupBlksReceived,
+                    DupDataReceived = _dupDataReceived,
                     ProvideBufLen = 0, // TODO: Unknown meaning
                     Peers = SwarmService.KnownPeers.Select(p => p.Id),
-                    Wantlist = wants.Keys
+                    Wantlist = _wants.Keys
                 };
             }
         }
@@ -148,10 +150,10 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <returns>
         ///   Statistics on the bitswap blocks exchanged with the peer.
         /// </returns>
-        /// <seealso cref="IBitSwapApi.LedgerAsync"/>
+        /// <seealso cref="IBitSwapApi.GetBitSwapLedger"/>
         public BitswapLedger PeerLedger(Peer peer)
         {
-            return peerLedgers.TryGetValue(peer, out var ledger) ? ledger : new BitswapLedger {Peer = peer};
+            return _peerLedgers.TryGetValue(peer, out var ledger) ? ledger : new BitswapLedger {Peer = peer};
         }
 
         /// <summary>
@@ -165,7 +167,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <inheritdoc />
         public Task StartAsync()
         {
-            log.Debug("Starting");
+            _log.Debug("Starting");
 
             foreach (var protocol in Protocols)
             {
@@ -175,7 +177,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
             SwarmService.ConnectionEstablished += Swarm_ConnectionEstablished;
 
             // TODO: clear the stats.
-            peerLedgers.Clear();
+            _peerLedgers.Clear();
 
             return Task.CompletedTask;
         }
@@ -183,10 +185,10 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         // When a connection is established
         // (1) Send the local peer's want list to the remote
 #pragma warning disable VSTHRD100 // Avoid async void methods
-        async void Swarm_ConnectionEstablished(object sender, PeerConnection connection)
+        private async void Swarm_ConnectionEstablished(object sender, PeerConnection connection)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
-            if (wants.Count == 0)
+            if (_wants.Count == 0)
             {
                 return;
             }
@@ -198,18 +200,18 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 var peer = await connection.IdentityEstablished.Task.ConfigureAwait(false);
 
                 // Fire and forget.
-                var _ = SendWantListAsync(peer, wants.Values, true);
+                var _ = SendWantListAsync(peer, _wants.Values, true);
             }
             catch (Exception e)
             {
-                log.Warn("Sending want list", e);
+                _log.Warn("Sending want list", e);
             }
         }
 
         /// <inheritdoc />
         public Task StopAsync()
         {
-            log.Debug("Stopping");
+            _log.Debug("Stopping");
 
             SwarmService.ConnectionEstablished -= Swarm_ConnectionEstablished;
             foreach (var protocol in Protocols)
@@ -217,7 +219,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 SwarmService.RemoveProtocol(protocol);
             }
 
-            foreach (var cid in wants.Keys)
+            foreach (var cid in _wants.Keys)
             {
                 Unwant(cid);
             }
@@ -236,7 +238,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// </returns>
         public IEnumerable<Cid> PeerWants(MultiHash peer)
         {
-            return wants.Values
+            return _wants.Values
                .Where(w => w.Peers.Contains(peer))
                .Select(w => w.Id);
         }
@@ -268,13 +270,13 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// </remarks>
         public Task<IDataBlock> WantAsync(Cid id, MultiHash peer, CancellationToken cancel)
         {
-            if (log.IsDebugEnabled)
+            if (_log.IsDebugEnabled)
             {
-                log.Debug($"{peer} wants {id}");
+                _log.Debug($"{peer} wants {id}");
             }
 
             var tsc = new TaskCompletionSource<IDataBlock>();
-            var want = wants.AddOrUpdate(
+            var want = _wants.AddOrUpdate(
                 id,
                 (key) => new WantedBlock
                 {
@@ -318,12 +320,12 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// </remarks>
         public void Unwant(Cid id)
         {
-            if (log.IsDebugEnabled)
+            if (_log.IsDebugEnabled)
             {
-                log.Debug($"Unwant {id}");
+                _log.Debug($"Unwant {id}");
             }
 
-            if (wants.TryRemove(id, out WantedBlock block))
+            if (_wants.TryRemove(id, out WantedBlock block))
             {
                 foreach (var consumer in block.Consumers)
                 {
@@ -390,9 +392,9 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         public async Task OnBlockReceivedAsync(Peer remote, byte[] block, string contentType, string multiHash)
         {
             // Update statistics.
-            ++BlocksReceived;
-            DataReceived += (ulong) block.LongLength;
-            peerLedgers.AddOrUpdate(remote,
+            ++_blocksReceived;
+            _dataReceived += (ulong) block.LongLength;
+            _peerLedgers.AddOrUpdate(remote,
                 (peer) => new BitswapLedger
                 {
                     Peer = peer,
@@ -402,7 +404,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 (peer, ledger) =>
                 {
                     ++ledger.BlocksExchanged;
-                    DataReceived += (ulong) block.LongLength;
+                    _dataReceived += (ulong) block.LongLength;
                     return ledger;
                 });
 
@@ -410,8 +412,8 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
             var isDuplicate = false;
             if (isDuplicate)
             {
-                ++DupBlksReceived;
-                DupDataReceived += (ulong) block.Length;
+                ++_dupBlksReceived;
+                _dupDataReceived += (ulong) block.Length;
             }
 
             // TODO: Determine if we should accept the block from the remote.
@@ -421,8 +423,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 await BlockService.PutAsync(
                         data: block,
                         contentType: contentType,
-                        multiHash,
-                        pin: false)
+                        multiHash)
                    .ConfigureAwait(false);
             }
         }
@@ -441,9 +442,9 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// </returns>
         public Task OnBlockSentAsync(Peer remote, IDataBlock block)
         {
-            ++BlocksSent;
-            DataSent += (ulong) block.Size;
-            peerLedgers.AddOrUpdate(remote,
+            ++_blocksSent;
+            _dataSent += (ulong) block.Size;
+            _peerLedgers.AddOrUpdate(remote,
                 (peer) => new BitswapLedger
                 {
                     Peer = peer,
@@ -453,7 +454,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 (peer, ledger) =>
                 {
                     ++ledger.BlocksExchanged;
-                    DataSent += (ulong) block.Size;
+                    _dataSent += (ulong) block.Size;
                     return ledger;
                 });
 
@@ -476,7 +477,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// </remarks>
         public int Found(IDataBlock block)
         {
-            if (!wants.TryRemove(block.Id, out WantedBlock want))
+            if (!_wants.TryRemove(block.Id, out WantedBlock want))
             {
                 return 0;
             }
@@ -492,7 +493,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <summary>
         ///   Send our want list to the connected peers.
         /// </summary>
-        async Task SendWantListToAllAsync(IEnumerable<WantedBlock> wantedBlocks, bool full)
+        private async Task SendWantListToAllAsync(IEnumerable<WantedBlock> wantedBlocks, bool full)
         {
             if (SwarmService == null)
                 return;
@@ -503,22 +504,22 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                    .Where(p => p.ConnectedAddress != null)
                    .Select(p => SendWantListAsync(p, wantedBlocks, full))
                    .ToArray();
-                if (log.IsDebugEnabled)
-                    log.Debug($"Spamming {tasks.Count()} connected peers");
+                if (_log.IsDebugEnabled)
+                    _log.Debug($"Spamming {tasks.Count()} connected peers");
                 await Task.WhenAll(tasks).ConfigureAwait(false);
 
-                if (log.IsDebugEnabled)
-                    log.Debug($"Spam {tasks.Count()} connected peers done");
+                if (_log.IsDebugEnabled)
+                    _log.Debug($"Spam {tasks.Count()} connected peers done");
             }
             catch (Exception e)
             {
-                log.Debug("sending to all failed", e);
+                _log.Debug("sending to all failed", e);
             }
         }
 
-        async Task SendWantListAsync(Peer peer, IEnumerable<WantedBlock> wants, bool full)
+        private async Task SendWantListAsync(Peer peer, IEnumerable<WantedBlock> wants, bool full)
         {
-            log.Debug($"sending want list to {peer}");
+            _log.Debug($"sending want list to {peer}");
 
             // Send the want list to the peer on any bitswap protocol
             // that it supports.
@@ -535,11 +536,11 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 }
                 catch (Exception)
                 {
-                    log.Debug($"{peer} refused {protocol}");
+                    _log.Debug($"{peer} refused {protocol}");
                 }
             }
 
-            log.Warn($"{peer} does not support any bitswap protocol");
+            _log.Warn($"{peer} does not support any bitswap protocol");
         }
     }
 }

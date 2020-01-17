@@ -35,7 +35,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
     {
         public ConfigurableRepoIntegrationTests(ITestOutputHelper output) : base(output) { }
 
-        private async Task ModuleCanSaveAndRetrieveValuesFromRepository(FileInfo moduleFile)
+        private void ModuleCanSaveAndRetrieveValuesFromRepository(FileInfo moduleFile)
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName + moduleFile))
             {

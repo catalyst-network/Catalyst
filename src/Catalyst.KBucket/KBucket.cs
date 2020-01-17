@@ -313,9 +313,15 @@ namespace Catalyst.KBucket
         /// </exception>
         private void Validate(T contact)
         {
-            if (contact == null) throw new ArgumentNullException("contact");
+            if (contact == null)
+            {
+                throw new ArgumentNullException(nameof(contact));
+            }
 
-            if (contact.Id == null || contact.Id.Length == 0) throw new ArgumentNullException("contact.Id");
+            if (contact.Id == null || contact.Id.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(contact));
+            }
         }
 
         /// <summary>
@@ -339,7 +345,9 @@ namespace Catalyst.KBucket
                 // this is not a leaf node but an inner node with 'low' and 'high'
                 // branches; we will check the appropriate bit of the identifier and
                 // delegate to the appropriate node for further processing
+            {
                 node = _DetermineNode(node, contact.Id, bitIndex++);
+            }
 
             // check if the contact already exists
             var index = node.IndexOf(contact.Id);
@@ -388,8 +396,10 @@ namespace Catalyst.KBucket
 
             // redistribute existing contacts amongst the two newly created nodes
             foreach (var contact in node.Contacts)
+            {
                 _DetermineNode(node, contact.Id, bitIndex)
                    .Contacts.Add(contact);
+            }
 
             node.Contacts = null; // mark as inner tree node
 
@@ -422,8 +432,11 @@ namespace Catalyst.KBucket
 
             // if the selection is our old contact and the candidate is some new
             // contact, then there is nothing to do
-            if (selection == incumbent && incumbent != contact) return;
-
+            if (selection == incumbent && incumbent != contact)
+            {
+                return;
+            }
+            
             node.Contacts.RemoveAt(index);
             node.Contacts.Add(selection);
         }
@@ -449,7 +462,10 @@ namespace Catalyst.KBucket
             // bucket
             var bytesDescribedByBitIndex = bitIndex >> 3;
             var bitIndexWithinByte = bitIndex % 8;
-            if (id.Length <= bytesDescribedByBitIndex && bitIndexWithinByte != 0) return node.Left;
+            if (id.Length <= bytesDescribedByBitIndex && bitIndexWithinByte != 0)
+            {
+                return node.Left;
+            }
 
             // byteUnderConsideration is an integer from 0 to 255 represented by 8 bits
             // where 255 is 11111111 and 0 is 00000000
@@ -480,7 +496,10 @@ namespace Catalyst.KBucket
              */
             var bitIndex = 0;
             var node = Root;
-            while (node.Contacts == null) node = _DetermineNode(node, id, bitIndex++);
+            while (node.Contacts == null)
+            {
+                node = _DetermineNode(node, id, bitIndex++);
+            }
 
             return node.Get(id);
         }
@@ -490,11 +509,17 @@ namespace Catalyst.KBucket
             var bitIndex = 0;
 
             var node = Root;
-            while (node.Contacts == null) node = _DetermineNode(node, id, bitIndex++);
+            while (node.Contacts == null)
+            {
+                node = _DetermineNode(node, id, bitIndex++);
+            }
 
             // index of uses contact id for matching
             var index = node.IndexOf(id);
-            if (0 > index) return false;
+            if (0 > index)
+            {
+                return false;
+            }
 
             node.Contacts.RemoveAt(index);
             return true;

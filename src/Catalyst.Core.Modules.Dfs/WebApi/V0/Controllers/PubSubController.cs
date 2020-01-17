@@ -26,8 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
-using Lib.P2P.PubSub;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
@@ -52,47 +50,6 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///     A list of peer IDs.
         /// </summary>
         public IEnumerable<string> Strings;
-    }
-
-    /// <summary>
-    ///     A published message.
-    /// </summary>
-    public class MessageDto
-    {
-        /// <summary>
-        ///     The base-64 encoding of the author's peer id.
-        /// </summary>
-        public string from;
-
-        /// <summary>
-        ///     The base-64 encoding of the author's unique sequence number.
-        /// </summary>
-        public string seqno;
-
-        /// <summary>
-        ///     The base-64 encoding of the message data.
-        /// </summary>
-        public string data;
-
-        /// <summary>
-        ///     The topics associated with the message.
-        /// </summary>
-        public string[] topicIDs;
-
-        /// <summary>
-        ///     Create a new instance of the <see cref="MessageDto" />
-        ///     from the <see cref="IPublishedMessage" />.
-        /// </summary>
-        /// <param name="msg">
-        ///     A pubsub messagee.
-        /// </param>
-        public MessageDto(IPublishedMessage msg)
-        {
-            from = Convert.ToBase64String(msg.Sender.Id.ToArray());
-            seqno = Convert.ToBase64String(msg.SequenceNumber);
-            data = Convert.ToBase64String(msg.DataBytes);
-            topicIDs = msg.Topics.ToArray();
-        }
     }
 
     /// <summary>

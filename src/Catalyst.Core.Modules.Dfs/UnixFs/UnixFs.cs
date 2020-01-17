@@ -26,7 +26,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Dag;
 using Lib.P2P;
