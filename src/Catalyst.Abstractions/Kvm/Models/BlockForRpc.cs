@@ -22,12 +22,9 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
+using LibP2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Encoding;
-using Nethermind.Core.Extensions;
 using Nethermind.Core.Json;
 using Nethermind.Dirichlet.Numerics;
 using Newtonsoft.Json;
@@ -94,9 +91,9 @@ namespace Catalyst.Abstractions.Kvm.Models
         
         [JsonConverter(typeof(LongConverter))]
         public long GasUsed { get; set; }
-        
-        [JsonConverter(typeof(KeccakConverter))]
-        public Keccak Hash { get; set; }
+
+        [JsonConverter(typeof(CidJsonConverter))]
+        public Cid Hash { get; set; }
         
         [JsonConverter(typeof(BloomConverter))]
         public Bloom LogsBloom { get; set; }
@@ -112,9 +109,9 @@ namespace Catalyst.Abstractions.Kvm.Models
         
         [JsonConverter(typeof(LongConverter))]
         public long Number { get; set; }
-        
-        [JsonConverter(typeof(KeccakConverter))]
-        public Keccak ParentHash { get; set; }
+
+        [JsonConverter(typeof(CidJsonConverter))]
+        public Cid ParentHash { get; set; }
         
         [JsonConverter(typeof(KeccakConverter))]
         public Keccak ReceiptsRoot { get; set; }

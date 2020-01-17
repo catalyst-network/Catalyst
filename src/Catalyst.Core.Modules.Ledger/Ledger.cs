@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ISnapshotableDb _stateDb;
         private readonly ISnapshotableDb _codeDb;
         private readonly IDeltaByNumberRepository _deltas;
-        private readonly ITransactionReceiptRepository _receipts;
+        private readonly ITransactionRepository _receipts;
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IMapperProvider _mapperProvider;
@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Ledger
             ISnapshotableDb codeDb,
             IAccountRepository accounts,
             IDeltaByNumberRepository deltas,
-            ITransactionReceiptRepository receipts,
+            ITransactionRepository receipts,
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
             IMempool<PublicEntryDao> mempool,
@@ -220,7 +220,7 @@ namespace Catalyst.Core.Modules.Ledger
                     return;
                 }
 
-                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash, LatestKnownDeltaNumber, _hashProvider);
+                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash, LatestKnownDeltaNumber);
 
                 // add here a receipts tracer or similar, depending on what data needs to be stored for each contract
                 _deltaExecutor.Execute(nextDeltaInChain, tracer);
@@ -238,9 +238,9 @@ namespace Catalyst.Core.Modules.Ledger
                 //// }
 
                 // store receipts
-                foreach (var receipt in tracer.Receipts)
+                if (tracer.Receipts.Any())
                 {
-                    _receipts.Put(receipt);
+                    _receipts.Put(deltaHash, tracer.Receipts.ToArray(), nextDeltaInChain.PublicEntries.ToArray());
                 }
 
                 _stateDb.Commit();
@@ -301,17 +301,15 @@ namespace Catalyst.Core.Modules.Ledger
         {
             readonly Delta _delta;
             readonly long _deltaNumber;
-            readonly IHashProvider _hashProvider;
-            readonly Keccak _deltaHash;
+            readonly Cid _deltaHash;
             readonly List<TransactionReceipt> _txReceipts;
             int _currentIndex;
 
-            public ReceiptDeltaTracer(Delta delta, Cid deltaHash, long deltaNumber, IHashProvider hashProvider)
+            public ReceiptDeltaTracer(Delta delta, Cid deltaHash, long deltaNumber)
             {
                 _delta = delta;
                 _deltaNumber = deltaNumber;
-                _hashProvider = hashProvider;
-                _deltaHash = new Keccak(deltaHash.Hash.Digest);
+                _deltaHash = deltaHash;
                 _txReceipts = new List<TransactionReceipt>(delta.PublicEntries.Count);
             }
 
@@ -350,7 +348,6 @@ namespace Catalyst.Core.Modules.Ledger
                     GasUsed = spentGas,
                     Sender = GetAccountAddress(entry.SenderAddress),
                     ContractAddress = entry.IsContractDeployment ? recipient : null,
-                    DocumentId = entry.GetDocumentId(_hashProvider)
                 };
 
                 _currentIndex += 1;

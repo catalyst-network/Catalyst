@@ -37,15 +37,19 @@ using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Catalyst.Core.Lib.DAO.Transaction;
+using LibP2P;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Nethermind.Core;
+using Nethermind.Core.Crypto;
 using Nethermind.Core.Json;
+using Newtonsoft.Json;
 using Serilog;
 using SharpRepository.Repository;
+using TheDotNetLeague.MultiFormats.MultiHash;
 using Module = Autofac.Module;
 
 namespace Catalyst.Core.Modules.Web3

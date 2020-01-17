@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
@@ -47,6 +46,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             context.ProducedDelta = new Delta
             {
                 PreviousDeltaDfsHash = context.PreviousDeltaHash.ToArray().ToByteString(),
+                DeltaNumber = context.PreviousDelta.DeltaNumber + 1,
                 MerkleRoot = context.Candidate.Hash,
                 CoinbaseEntries =
                 {

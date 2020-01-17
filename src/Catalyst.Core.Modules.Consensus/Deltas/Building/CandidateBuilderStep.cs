@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                .ToArray();
 
             // xf
-            UInt256 summedFees = context.Transactions.Sum(t => t.TransactionFees.ToUInt256());
+            UInt256 summedFees = context.Transactions.Sum(t => t.GasPrice.ToUInt256() * t.GasLimit);
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)
             context.CoinbaseEntry = new CoinbaseEntry

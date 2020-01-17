@@ -21,16 +21,16 @@
 
 #endregion
 
-using LibP2P;
+using Catalyst.Abstractions.Kvm.Models;
+using Catalyst.Abstractions.Ledger;
+using Nethermind.Core.Crypto;
+using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Abstractions.Kvm
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
-    public interface IDeltaResolver
+    [EthWeb3RequestHandler("eth", "getUncleByBlockHashAndIndex")]
+    public class EthGetUncleByBlockHashAndIndex : EthWeb3RequestHandler<Keccak, UInt256, BlockForRpc>
     {
-        bool TryResolve(long deltaNumber, out Cid deltaHash);
-
-        long LatestDeltaNumber { get; }
-
-        Cid LatestDelta { get; }
+        protected override BlockForRpc Handle(Keccak blockHashData, UInt256 positionIndex, IWeb3EthApi api) => null;
     }
 }

@@ -21,13 +21,23 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Nethermind.Core.Crypto;
+using System;
+using Catalyst.Abstractions.Kvm.Models;
+using Catalyst.Abstractions.Ledger;
 
-namespace Catalyst.Abstractions.Kvm
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
-    public interface ITransactionReceiptResolver
+    [EthWeb3RequestHandler("eth", "getTransactionByBlockNumberAndIndex")]
+    public class EthGetTransactionByBlockNumberAndIndex : EthWeb3RequestHandler<BlockParameter, int, TransactionForRpc>
     {
-        TransactionReceipt Find(Keccak hash);
+        protected override TransactionForRpc Handle(BlockParameter block, int positionIndex, IWeb3EthApi api)
+        {
+            if (api.TryGetDeltaWithCid(block, out var delta))
+            {
+                return api.ToTransactionForRpc(delta, positionIndex);
+            }
+
+            return default;
+        }
     }
 }

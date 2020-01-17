@@ -46,7 +46,6 @@ namespace Catalyst.TestUtils
             {
                 ReceiverAddress = recipient.ToKvmAddressByteString(),
                 SenderAddress = sender.ToKvmAddressByteString(),
-                TransactionFees = ByteString.CopyFrom(1),
                 Nonce = nonce,
                 Amount = amount.ToUint256ByteString(),
                 Data = ByteString.CopyFrom(Bytes.FromHexString(dataHex)),
@@ -90,7 +89,6 @@ namespace Catalyst.TestUtils
             {
                 ReceiverAddress = recipient.ToKvmAddressByteString(),
                 SenderAddress = sender.ToKvmAddressByteString(),
-                TransactionFees = ByteString.CopyFrom(1),
                 Nonce = 0,
                 Amount = amount.ToUint256ByteString(),
                 GasLimit = 21000,

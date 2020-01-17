@@ -21,14 +21,14 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Nethermind.Core.Crypto;
+using Catalyst.Abstractions.Ledger;
+using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.Modules.Ledger.Repository
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
-    public interface ITransactionReceiptRepository
+    [EthWeb3RequestHandler("eth", "getUncleCountByBlockHash")]
+    public class EthGetUncleCountByBlockHash : EthWeb3RequestHandler<UInt256?>
     {
-        void Put(TransactionReceipt receipt);
-        bool TryFind(Keccak hash, out TransactionReceipt receipt);
+        protected override UInt256? Handle(IWeb3EthApi api) => UInt256.Zero;
     }
 }

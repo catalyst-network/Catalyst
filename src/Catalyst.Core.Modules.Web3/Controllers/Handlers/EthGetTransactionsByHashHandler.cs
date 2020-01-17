@@ -21,31 +21,23 @@
 
 #endregion
 
-using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Abstractions.Repository;
+using Catalyst.Abstractions.Kvm.Models;
+using Catalyst.Abstractions.Ledger;
 using Nethermind.Core.Crypto;
-using SharpRepository.Repository;
 
-namespace Catalyst.Core.Modules.Ledger.Repository 
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
-    public class TransactionReceiptRepository : ITransactionReceiptRepository
+    [EthWeb3RequestHandler("eth", "getTransactionByHash")]
+    public class EthGetTransactionsByHashHandler : EthWeb3RequestHandler<Keccak, TransactionForRpc>
     {
-        readonly IRepository<TransactionReceipt, string> _repository;
-
-        public TransactionReceiptRepository(IRepository<TransactionReceipt, string> repository) { _repository = repository; }
-
-        public void Put(TransactionReceipt receipt)
+        protected override TransactionForRpc Handle(Keccak transactionHash, IWeb3EthApi api)
         {
-            string key = receipt.DocumentId;
-            if (!_repository.TryGet(key, out _))
+            if (api.FindTransactionData(transactionHash, out var deltaHash, out var delta, out var index))
             {
-                _repository.Add(receipt);
+                return api.ToTransactionForRpc(new DeltaWithCid {Cid = deltaHash, Delta = delta}, index);
             }
-        }
 
-        public bool TryFind(Keccak hash, out TransactionReceipt receipt)
-        {
-            return _repository.TryGet(hash.AsDocumentId(), out receipt);
+            return default;
         }
     }
 }

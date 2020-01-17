@@ -21,16 +21,22 @@
 
 #endregion
 
-using LibP2P;
+using Catalyst.Abstractions.Kvm.Models;
+using Catalyst.Abstractions.Ledger;
 
-namespace Catalyst.Abstractions.Kvm
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
-    public interface IDeltaResolver
+    [EthWeb3RequestHandler("eth", "getBlockTransactionCountByNumber")]
+    public class EthGetBlockTransactionCountByNumber : EthWeb3RequestHandler<BlockParameter, long?>
     {
-        bool TryResolve(long deltaNumber, out Cid deltaHash);
+        protected override long? Handle(BlockParameter block, IWeb3EthApi api)
+        {
+            if (api.TryGetDeltaWithCid(block, out var delta))
+            {
+                return delta.Delta.PublicEntries.Count;
+            }
 
-        long LatestDeltaNumber { get; }
-
-        Cid LatestDelta { get; }
+            return default;
+        }
     }
 }

@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private readonly IDeltaByNumberRepository _deltaByNumber;
         private readonly ICryptoContext _cryptoContext;
         private readonly SigningContext _signingContext;
-        private readonly ITransactionReceiptRepository _receipts;
+        private readonly ITransactionRepository _receipts;
 
         public LedgerTests()
         {
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _logger = Substitute.For<ILogger>();
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
-            _receipts = Substitute.For<ITransactionReceiptRepository>();
+            _receipts = Substitute.For<ITransactionRepository>();
             _deltaByNumber = Substitute.For<IDeltaByNumberRepository>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis").CreateCid();

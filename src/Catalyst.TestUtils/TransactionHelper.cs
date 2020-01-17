@@ -41,6 +41,7 @@ namespace Catalyst.TestUtils
             long timestamp = 12345,
             ulong transactionFees = 2,
             ulong nonce = 0,
+            ulong gasPrice = 1,
             NetworkType networkType = NetworkType.Devnet)
         {
             var transaction = new TransactionBroadcast
@@ -51,7 +52,7 @@ namespace Catalyst.TestUtils
                     Nonce = nonce,
                     ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
                     SenderAddress = senderPublicKey.ToUtf8ByteString(),
-                    TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
+                    GasPrice = ((UInt256) gasPrice).ToUint256ByteString(),
                     Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {
@@ -73,7 +74,6 @@ namespace Catalyst.TestUtils
             string receiverPublicKey = "receiver",
             string signature = "signature",
             long timestamp = 12345,
-            ulong transactionFees = 2,
             ulong nonce = 0,
             NetworkType networkType = NetworkType.Devnet)
         {
@@ -85,7 +85,6 @@ namespace Catalyst.TestUtils
                     Nonce = nonce,
                     ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
                     SenderAddress = senderPublicKey.ToUtf8ByteString(),
-                    TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
                     Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {

@@ -24,6 +24,7 @@
 using System.Linq;
 using System.Numerics;
 using Catalyst.Abstractions.Ledger.Models;
+using LibP2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Json;
@@ -56,8 +57,8 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(LongConverter))]
         public long TransactionIndex { get; set; }
         
-        [JsonConverter(typeof(KeccakConverter))]
-        public Keccak BlockHash { get; set; }
+        [JsonConverter(typeof(Cid.CidJsonConverter))]
+        public Cid BlockHash { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
         public long BlockNumber { get; set; }

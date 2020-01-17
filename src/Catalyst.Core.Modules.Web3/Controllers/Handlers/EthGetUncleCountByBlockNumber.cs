@@ -21,16 +21,14 @@
 
 #endregion
 
-using LibP2P;
+using Catalyst.Abstractions.Ledger;
+using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Abstractions.Kvm
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
-    public interface IDeltaResolver
+    [EthWeb3RequestHandler("eth", "getUncleCountByBlockNumber")]
+    public class EthGetUncleCountByBlockNumber : EthWeb3RequestHandler<UInt256?>
     {
-        bool TryResolve(long deltaNumber, out Cid deltaHash);
-
-        long LatestDeltaNumber { get; }
-
-        Cid LatestDelta { get; }
+        protected override UInt256? Handle(IWeb3EthApi api) => UInt256.Zero;
     }
 }

@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private readonly IPrivateKey _senderPrivateKey;
         private readonly IPublicKey _senderPublicKey;
         private readonly SigningContext _signingContext;
-        private readonly ITransactionReceiptRepository _receipts;
+        private readonly ITransactionRepository _receipts;
 
         public LedgerKvmTests()
         {
@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
             _deltaByNumber = Substitute.For<IDeltaByNumberRepository>();
-            _receipts = Substitute.For<ITransactionReceiptRepository>();
+            _receipts = Substitute.For<ITransactionRepository>();
 
             _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
 

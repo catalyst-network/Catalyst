@@ -21,10 +21,10 @@
 
 #endregion
 
-using Catalyst.Protocol.Cryptography;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using System.Reflection;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Protocol.Transaction
 {

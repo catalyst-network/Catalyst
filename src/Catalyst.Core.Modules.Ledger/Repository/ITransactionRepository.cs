@@ -21,32 +21,19 @@
 
 #endregion
 
-using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using LibP2P;
 using Nethermind.Core.Crypto;
-using Nethermind.Store;
 
-namespace Catalyst.Abstractions.Ledger
+namespace Catalyst.Core.Modules.Ledger.Repository
 {
-    public interface IWeb3EthApi
+    public interface ITransactionRepository
     {
-        IStateReader StateReader { get; }
-        IDeltaResolver DeltaResolver { get; }
-        IDeltaCache DeltaCache { get; }
-
-        IDeltaExecutor Executor { get; }
-        IStorageProvider StorageProvider { get; }
-        IStateProvider StateProvider { get; }
-        IHashProvider HashProvider { get; }
-
-        Keccak SendTransaction(PublicEntry publicEntry);
-        
-        TransactionReceipt FindReceipt(Keccak transactionHash);
-        bool FindTransactionData(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index);
+        void Put(Cid deltaHash, TransactionReceipt[] receipts, PublicEntry[] deltaPublicEntries);
+        bool TryFind(Cid deltaHash, out TransactionReceipt[] receipts);
+        bool TryFind(Keccak transactionHash, out TransactionReceipt receipts);
+        bool TryFind(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index);
     }
 }
