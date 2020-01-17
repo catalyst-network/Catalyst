@@ -1,7 +1,7 @@
 strategy:
   matrix:
     Windows-VS2019:
-      imageName: 'windows-2019'
+      imageName: 'vs2017-win2016'
       netcore_sdk: 3.0.100
       rustup_toolchain: stable
     Osx-Mojave:
