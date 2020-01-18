@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
@@ -35,14 +36,19 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override ReceiptForRpc Handle(Keccak txHash, IWeb3EthApi api)
         {
+            if (api == null) throw new ArgumentNullException(nameof(api));
+            if (txHash == null)
+            {
+                return null;
+            }
+            
             TransactionReceipt receipt = api.FindReceipt(txHash);
-
             if (receipt == null)
             {
                 return null;
             }
 
-            var receiptForRpc = new ReceiptForRpc
+            ReceiptForRpc receiptForRpc = new ReceiptForRpc
             {
                 TransactionHash = txHash,
                 TransactionIndex = receipt.Index,

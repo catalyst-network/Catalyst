@@ -32,12 +32,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     public abstract class EthWeb3RequestHandlerBase
     {
         public abstract int ParametersCount { get; }
+        
         public abstract object Handle(object[] parameters, IWeb3EthApi api, IJsonSerializer serializer);
 
         [Todo(Improve.MissingFunctionality, "Implement BlockParametersConverter")]
         protected TParam Deserialize<TParam>(object parameter, IJsonSerializer serializer)
         {
-            var parameterString = parameter is string ? $"\"{parameter}\"" : parameter.ToString();
+            var parameterString = parameter is string ? $"\"{parameter}\"" : parameter?.ToString();
 
             // use BlockParamConverter instead...
             if (typeof(TParam) == typeof(BlockParameter))
@@ -47,7 +48,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 return (TParam) Convert.ChangeType(blockParameter, typeof(TParam));
             }
 
-            return serializer.Deserialize<TParam>(parameterString);
+            return parameterString == null ? default : serializer.Deserialize<TParam>(parameterString);
         }
     }
 

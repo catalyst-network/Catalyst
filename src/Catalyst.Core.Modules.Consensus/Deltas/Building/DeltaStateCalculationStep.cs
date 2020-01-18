@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
 using Nethermind.Core.Crypto;
 using Nethermind.Evm.Tracing;
@@ -48,13 +49,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         public void Execute(DeltaBuilderContext context)
         {
             var previousRoot = context.PreviousDelta.StateRoot;
-            // Keccak stateRoot = previousRoot.IsEmpty ? Keccak.EmptyTreeHash : new Keccak(previousRoot.ToByteArray());
+            Keccak stateRoot = previousRoot.IsEmpty ? Keccak.EmptyTreeHash : new Keccak(previousRoot.ToByteArray());
 
             // here we need a read only delta executor (like in block builders - everything reverts in the end)
             // _stateProvider.StateRoot = stateRoot;
             //
             // _deltaExecutor.Execute(context.ProducedDelta, NullTxTracer.Instance);
-            // context.ProducedDelta.StateRoot = ByteString.CopyFrom(_stateProvider.StateRoot.Bytes);
+            context.ProducedDelta.StateRoot = stateRoot.ToByteString();
+            
             // _stateProvider.Reset();
         }
     }

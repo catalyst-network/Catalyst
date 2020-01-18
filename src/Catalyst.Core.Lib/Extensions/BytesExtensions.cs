@@ -30,10 +30,19 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
+using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.Extensions
 {
+    public static class KeccakExtensions
+    {
+        public static ByteString ToByteString(this Keccak keccak)
+        {
+            return keccak == null ? ByteString.Empty : ByteString.CopyFrom(keccak.Bytes);
+        }
+    }
+    
     public static class BytesExtensions
     {
         public static MemoryStream ToMemoryStream(this byte[] content)

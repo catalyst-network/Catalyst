@@ -35,6 +35,7 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
@@ -67,7 +68,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly IStateProvider _stateProvider;
         private readonly IStorageProvider _storageProvider;
         private readonly ISnapshotableDb _stateDb;
-        private readonly ISnapshotableDb _codeDb;
+        private readonly IDb _codeDb;
         private readonly IDeltaByNumberRepository _deltas;
         private readonly ITransactionRepository _receipts;
         private readonly ILedgerSynchroniser _synchroniser;
@@ -91,7 +92,7 @@ namespace Catalyst.Core.Modules.Ledger
             IStateProvider stateProvider,
             IStorageProvider storageProvider,
             ISnapshotableDb stateDb,
-            ISnapshotableDb codeDb,
+            IDb codeDb,
             IAccountRepository accounts,
             IDeltaByNumberRepository deltas,
             ITransactionRepository receipts,
@@ -185,14 +186,12 @@ namespace Catalyst.Core.Modules.Ledger
         private void UpdateLedgerFromDelta(Cid deltaHash)
         {
             var stateSnapshot = _stateDb.TakeSnapshot();
-            var codeSnapshot = _codeDb.TakeSnapshot();
-            if (stateSnapshot != -1 || codeSnapshot != -1)
+            if (stateSnapshot != -1)
             {
                 if (_logger.IsEnabled(LogEventLevel.Error))
                 {
-                    _logger.Error("Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}",
+                    _logger.Error("Uncommitted state ({stateSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}",
                         stateSnapshot,
-                        codeSnapshot,
                         null,
                         deltaHash);
                 }
@@ -228,13 +227,15 @@ namespace Catalyst.Core.Modules.Ledger
                 }
 
                 _stateDb.Commit();
-                _codeDb.Commit();
+
+                // this should be set in the builder
+                nextDeltaInChain.StateRoot = _stateProvider.StateRoot.Bytes.ToByteString();
 
                 WriteLatestKnownDelta(deltaHash);
             }
             catch
             {
-                Restore(stateSnapshot, codeSnapshot, snapshotStateRoot);
+                Restore(stateSnapshot, snapshotStateRoot);
             }
         }
 
@@ -246,7 +247,7 @@ namespace Catalyst.Core.Modules.Ledger
             _deltas.Map(_latestKnownDeltaNumber, deltaHash); // store delta numbers
         }
 
-        private void Restore(int stateSnapshot, int codeSnapshot, Keccak snapshotStateRoot)
+        private void Restore(int stateSnapshot, Keccak snapshotStateRoot)
         {
             if (_logger.IsEnabled(LogEventLevel.Verbose))
             {
@@ -254,7 +255,6 @@ namespace Catalyst.Core.Modules.Ledger
             }
 
             _stateDb.Restore(stateSnapshot);
-            _codeDb.Restore(codeSnapshot);
             _storageProvider.Reset();
             _stateProvider.Reset();
             _stateProvider.StateRoot = snapshotStateRoot;
