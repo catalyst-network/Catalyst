@@ -111,14 +111,15 @@ namespace Catalyst.Core.Modules.Web3
             var (delta, deltaCid) = deltaWithCid;
             var publicEntry = delta.PublicEntries[transactionIndex];
             var deltaNumber = delta.DeltaNumber;
+
             return new TransactionForRpc
             {
                 GasPrice = publicEntry.GasPrice.ToUInt256(),
                 BlockHash = deltaCid,
                 BlockNumber = (UInt256) deltaNumber,
                 Nonce = publicEntry.Nonce,
-                To = new Address(publicEntry.ReceiverAddress.ToByteArray()),
-                From = new Address(publicEntry.SenderAddress.ToByteArray()),
+                To = ToAddress(publicEntry.ReceiverAddress),
+                From = ToAddress(publicEntry.SenderAddress),
                 Value = publicEntry.Amount.ToUInt256(),
                 Hash = publicEntry.GetHash(api.HashProvider),
                 Data = publicEntry.Data.ToByteArray(),
@@ -128,6 +129,16 @@ namespace Catalyst.Core.Modules.Web3
                 Gas = publicEntry.GasLimit,
                 TransactionIndex = (UInt256) transactionIndex
             };
+        }
+
+        static Address ToAddress(ByteString address)
+        {
+            if (address == null || address.IsEmpty)
+            {
+                return null;
+            }
+
+            return new Address(address.ToByteArray());
         }
 
         public static CallOutputTracer CallAndRestore(this IWeb3EthApi api, TransactionForRpc transactionCall, DeltaWithCid deltaWithCid)
