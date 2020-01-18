@@ -59,7 +59,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             // here we need a read only delta executor (like in block builders - everything reverts in the end)
             _stateProvider.StateRoot = stateRoot;
             _deltaExecutor.CallAndReset(context.ProducedDelta, NullTxTracer.Instance);
-
+            _logger.Error("State root after update {root}.", _stateProvider.StateRoot);
+            _logger.Error("This root after update {root}.", context.ProducedDelta?.StateRoot?.ToKeccak());
+            
             _stateProvider.Reset();
         }
     }
