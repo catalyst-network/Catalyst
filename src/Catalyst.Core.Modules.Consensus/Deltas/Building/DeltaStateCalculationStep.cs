@@ -50,14 +50,17 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         {
             var previousRoot = context.PreviousDelta.StateRoot;
             Keccak stateRoot = previousRoot.IsEmpty ? Keccak.EmptyTreeHash : new Keccak(previousRoot.ToByteArray());
+            
+            _logger.Error($"Building delta {context.ProducedDelta.DeltaNumber} with state root ({stateRoot})");
+            _logger.Error("State root before update {root}.", _stateProvider.StateRoot);
+            _logger.Error("Parent root before update {root}.", context.PreviousDelta.StateRoot.ToByteArray());
+            _logger.Error("This root before update {root}.", context.ProducedDelta?.StateRoot?.ToKeccak());
 
             // here we need a read only delta executor (like in block builders - everything reverts in the end)
-            // _stateProvider.StateRoot = stateRoot;
-            //
-            // _deltaExecutor.Execute(context.ProducedDelta, NullTxTracer.Instance);
-            context.ProducedDelta.StateRoot = stateRoot.ToByteString();
-            
-            // _stateProvider.Reset();
+            _stateProvider.StateRoot = stateRoot;
+            _deltaExecutor.CallAndReset(context.ProducedDelta, NullTxTracer.Instance);
+
+            _stateProvider.Reset();
         }
     }
 }

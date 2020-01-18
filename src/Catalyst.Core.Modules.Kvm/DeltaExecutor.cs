@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
@@ -85,7 +86,7 @@ namespace Catalyst.Core.Modules.Kvm
         }
 
         [Todo("Wider work needed to split calls and execution properly")]
-        public void CallAndRestore(Delta stateUpdate, ITxTracer txTracer) { Execute(stateUpdate, txTracer, true); }
+        public void CallAndReset(Delta stateUpdate, ITxTracer txTracer) { Execute(stateUpdate, txTracer, true); }
 
         [Todo(
             "After delta is executed we should validate the state root and if it is not as expected we should revert all the changes.")]
@@ -170,19 +171,29 @@ namespace Catalyst.Core.Modules.Kvm
             // revert state if any fails (take snapshot)
             foreach (var publicEntry in delta.PublicEntries)
             {
-                Execute(publicEntry, stateUpdate, txTracer, readOnly);
+                Execute(publicEntry, stateUpdate, txTracer);
             }
-
+            
+            var spec = _specProvider.GetSpec(stateUpdate.Number);
+            _storageProvider.Commit(txTracer.IsTracingState ? txTracer : null);
+            _stateProvider.Commit(spec, txTracer.IsTracingState ? txTracer : null);
+            
             if (!readOnly)
             {
-                // we should assign block rewards here (or in Ledger)
+                // compare state roots
                 _stateProvider.CommitTree();
                 _storageProvider.CommitTrees();
+
+                if (new Keccak(delta.StateRoot.ToByteArray()) != _stateProvider.StateRoot)
+                {
+                    _logger.Error("Invalid delta state root - found {found} and should be {shouldBe}", _stateProvider.StateRoot, new Keccak(delta.StateRoot.ToByteArray()));
+                }
             }
             else
             {
-                _storageProvider.Reset();
+                delta.StateRoot = _stateProvider.StateRoot.ToByteString();
                 _stateProvider.Reset();
+                _storageProvider.Reset();
             }
         }
 
@@ -208,7 +219,7 @@ namespace Catalyst.Core.Modules.Kvm
         /// <param name="readOnly">Defines whether the state should be reverted after the execution.</param>
         /// <exception cref="TransactionCollisionException">Thrown when deployment address already has some code.</exception>
         /// <exception cref="OutOfGasException">Thrown when not enough gas is available for deposit.</exception>
-        private void Execute(PublicEntry entry, StateUpdate stateUpdate, ITxTracer txTracer, bool readOnly)
+        private void Execute(PublicEntry entry, StateUpdate stateUpdate, ITxTracer txTracer)
         {
             var spec = _specProvider.GetSpec(stateUpdate.Number);
 
@@ -338,18 +349,6 @@ namespace Catalyst.Core.Modules.Kvm
                 {
                     _stateProvider.AddToBalance(gasBeneficiary, spentGas * env.GasPrice, spec);
                 }
-            }
-
-            if (!readOnly)
-            {
-                _storageProvider.Commit(txTracer.IsTracingState ? txTracer : null);
-                _stateProvider.Commit(spec, txTracer.IsTracingState ? txTracer : null);
-                stateUpdate.GasUsed += (long) spentGas;
-            }
-            else
-            {
-                _storageProvider.Reset();
-                _stateProvider.Reset();
             }
 
             if (txTracer.IsTracingReceipt)

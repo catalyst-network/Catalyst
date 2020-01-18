@@ -35,7 +35,8 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             Delta delta = api.GetLatestDeltaWithCid().Delta;
             var stateRoot = delta.StateRootAsKeccak();
-            return api.StateReader.GetCode(stateRoot, address);
+            byte[] byteCode = api.StateReader.GetCode(stateRoot, address);
+            return byteCode;
         }
     }
 }

@@ -383,7 +383,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             balanceOf1Delta.PublicEntries[0].GasLimit = 200_000;
             balanceOf1Delta.PublicEntries[0].Signature = delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
-            _deltaExecutor.CallAndRestore(balanceOf1Delta, balanceOf1Tracer);
+            _deltaExecutor.CallAndReset(balanceOf1Delta, balanceOf1Tracer);
             balanceOf1Tracer.StatusCode.Should().Be(1);
             balanceOf1Tracer.ReturnValue.Should().Equal(Bytes.FromHexString("0x7a120").PadLeft(32));
 
@@ -399,7 +399,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             balanceOf2Delta.PublicEntries[0].Signature = balanceOf2Delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
             var balanceOf2Tracer = new CallOutputTracer();
-            _deltaExecutor.CallAndRestore(balanceOf2Delta, balanceOf2Tracer);
+            _deltaExecutor.CallAndReset(balanceOf2Delta, balanceOf2Tracer);
             balanceOf2Tracer.StatusCode.Should().Be(1);
             balanceOf2Tracer.ReturnValue.Should().Equal(Bytes.FromHexString("0x7a120").PadLeft(32));
 

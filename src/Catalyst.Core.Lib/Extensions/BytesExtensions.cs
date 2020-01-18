@@ -41,6 +41,11 @@ namespace Catalyst.Core.Lib.Extensions
         {
             return keccak == null ? ByteString.Empty : ByteString.CopyFrom(keccak.Bytes);
         }
+        
+        public static Keccak ToKeccak(this ByteString byteString)
+        {
+            return (byteString == null || byteString.IsEmpty) ? null : new Keccak(byteString.ToByteArray());
+        }
     }
     
     public static class BytesExtensions

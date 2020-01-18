@@ -196,7 +196,7 @@ namespace Catalyst.Core.Modules.Ledger
                         deltaHash);
                 }
             }
-
+            
             var snapshotStateRoot = _stateProvider.StateRoot;
 
             try
@@ -213,11 +213,19 @@ namespace Catalyst.Core.Modules.Ledger
                     return;
                 }
 
+                _logger.Error("State root before update {root}.", snapshotStateRoot);
+
                 _stateProvider.StateRoot = new Keccak(parentDelta.StateRoot.ToByteArray());
+                
+                _logger.Error("Parent root before update {root}.", _stateProvider.StateRoot);
 
                 ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash);
+                
+                _logger.Error("This root before update {root}.", new Keccak(nextDeltaInChain.StateRoot.ToByteArray()));
 
                 // add here a receipts tracer or similar, depending on what data needs to be stored for each contract
+                _stateProvider.Reset();
+                _storageProvider.Reset();
                 _deltaExecutor.Execute(nextDeltaInChain, tracer);
 
                 // store receipts
@@ -225,11 +233,12 @@ namespace Catalyst.Core.Modules.Ledger
                 {
                     _receipts.Put(deltaHash, tracer.Receipts.ToArray(), nextDeltaInChain.PublicEntries.ToArray());
                 }
-
+                
                 _stateDb.Commit();
+                
+                _logger.Error("After DB commit - {root}", _stateProvider.StateRoot);
 
                 // this should be set in the builder
-                nextDeltaInChain.StateRoot = _stateProvider.StateRoot.Bytes.ToByteString();
 
                 WriteLatestKnownDelta(deltaHash);
             }

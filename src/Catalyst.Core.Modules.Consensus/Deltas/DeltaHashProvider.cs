@@ -95,8 +95,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             if (previousDelta.TimeStamp >= newDelta.TimeStamp)
             {
-                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash} due to new delta being older than the previous one",
-                    previousHash, newHash);
+                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash} due to new delta being older {newTimestampe} than the previous one {oldTimestamp}",
+                    previousHash, newHash, newDelta.TimeStamp, previousDelta.TimeStamp);
                 return false;
             }
 

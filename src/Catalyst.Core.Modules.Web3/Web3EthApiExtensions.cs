@@ -158,7 +158,7 @@ namespace Catalyst.Core.Modules.Web3
             CallOutputTracer callOutputTracer = new CallOutputTracer();
 
             api.StateProvider.StateRoot = root;
-            api.Executor.CallAndRestore(newDelta, callOutputTracer);
+            api.Executor.CallAndReset(newDelta, callOutputTracer);
             api.StateProvider.Reset();
             api.StorageProvider.Reset();
             return callOutputTracer;
