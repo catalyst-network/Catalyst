@@ -48,13 +48,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         public void Execute(DeltaBuilderContext context)
         {
             var previousRoot = context.PreviousDelta.StateRoot;
-            Keccak stateRoot = previousRoot.IsEmpty ? Keccak.EmptyTreeHash : new Keccak(previousRoot.ToByteArray());
+            // Keccak stateRoot = previousRoot.IsEmpty ? Keccak.EmptyTreeHash : new Keccak(previousRoot.ToByteArray());
 
-            _stateProvider.StateRoot = stateRoot;
-
-            _deltaExecutor.Execute(context.ProducedDelta, NullTxTracer.Instance);
-            context.ProducedDelta.StateRoot = ByteString.CopyFrom(_stateProvider.StateRoot.Bytes);
-            _stateProvider.Reset();
+            // here we need a read only delta executor (like in block builders - everything reverts in the end)
+            // _stateProvider.StateRoot = stateRoot;
+            //
+            // _deltaExecutor.Execute(context.ProducedDelta, NullTxTracer.Instance);
+            // context.ProducedDelta.StateRoot = ByteString.CopyFrom(_stateProvider.StateRoot.Bytes);
+            // _stateProvider.Reset();
         }
     }
 }

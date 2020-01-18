@@ -25,6 +25,7 @@ using System.Linq;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
+using Nethermind.Core;
 using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
@@ -53,6 +54,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 To = receipt.Recipient,
                 ContractAddress = receipt.ContractAddress,
                 Logs = receipt.Logs.Select((l, idx) => new LogEntryForRpc(receipt, l, idx)).ToArray(),
+                LogsBloom = new Bloom(receipt.Logs),
                 Status = receipt.StatusCode,
             };
 

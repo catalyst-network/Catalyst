@@ -62,15 +62,21 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             IStorageProvider storageProvider,
             IStateProvider stateProvider,
+            ISnapshotableDb stateDb,
             ILogger logger)
         {
-            stateProvider.CreateAccount(new Address("0xb77aec9f59f9d6f39793289a09aea871932619ed"), new UInt256(long.MaxValue));
+            Address truffleTestAccount = new Address("0xb77aec9f59f9d6f39793289a09aea871932619ed");
+            stateProvider.CreateAccount(truffleTestAccount, 1_000_000_000.Kat());
 
             storageProvider.Commit();
             stateProvider.Commit(CatalystGenesisSpec.Instance);
 
             storageProvider.CommitTrees();
             stateProvider.CommitTree();
+            
+            stateDb.Commit();
+            
+            var senderBalance = stateProvider.GetBalance(truffleTestAccount);
 
             var genesisDelta = new Delta
             {

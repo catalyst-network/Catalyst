@@ -57,7 +57,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(LongConverter))]
         public long TransactionIndex { get; set; }
         
-        [JsonConverter(typeof(Cid.CidJsonConverter))]
+        [JsonConverter(typeof(CidJsonConverter))]
         public Cid BlockHash { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
@@ -79,6 +79,9 @@ namespace Catalyst.Abstractions.Kvm.Models
         public Address ContractAddress { get; set; }
         
         public LogEntryForRpc[] Logs { get; set; }
+        
+        [JsonConverter(typeof(BloomConverter))]
+        public Bloom LogsBloom { get; set; }
 
         [JsonConverter(typeof(BigIntegerConverter))]
         public BigInteger Status { get; set; }

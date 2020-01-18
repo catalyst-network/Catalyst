@@ -200,42 +200,26 @@ namespace Catalyst.Core.Modules.Ledger
 
             var snapshotStateRoot = _stateProvider.StateRoot;
 
-            // this code should be brought in / used as a reference if reorganization behaviour is known
-            //// if (branchStateRoot != null && _stateProvider.StateRoot != branchStateRoot)
-            //// {
-            ////     /* discarding the other branch data - chain reorganization */
-            ////     Metrics.Reorganizations++;
-            ////     _storageProvider.Reset();
-            ////     _stateProvider.Reset();
-            ////     _stateProvider.StateRoot = branchStateRoot;
-            //// }
-
             try
             {
                 if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out Delta nextDeltaInChain))
                 {
-                    _logger.Warning(
-                        "Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.",
-                        deltaHash);
+                    _logger.Warning("Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.", deltaHash);
+                    return;
+                }
+                
+                if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Cid.Read(nextDeltaInChain.PreviousDeltaDfsHash.ToByteArray()), out Delta parentDelta))
+                {
+                    _logger.Warning("Failed to retrieve parent Delta with hash {hash} from the Dfs, ledger has not been updated.", deltaHash);
                     return;
                 }
 
-                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash, LatestKnownDeltaNumber);
+                _stateProvider.StateRoot = new Keccak(parentDelta.StateRoot.ToByteArray());
+
+                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash);
 
                 // add here a receipts tracer or similar, depending on what data needs to be stored for each contract
                 _deltaExecutor.Execute(nextDeltaInChain, tracer);
-
-                // this code should be brought in / used as a reference if reorganization behaviour is known
-                //// delta testing here (for delta production)
-                //// if ((options & ProcessingOptions.ReadOnlyChain) != 0)
-                //// {
-                ////     Restore(stateSnapshot, codeSnapshot, snapshotStateRoot);
-                //// }
-                //// else
-                //// {
-                ////   _stateDb.Commit();
-                ////   _codeDb.Commit();
-                //// }
 
                 // store receipts
                 if (tracer.Receipts.Any())
@@ -297,7 +281,7 @@ namespace Catalyst.Core.Modules.Ledger
             GC.SuppressFinalize(this);
         }
 
-        class ReceiptDeltaTracer : ITxTracer
+        sealed class ReceiptDeltaTracer : ITxTracer
         {
             readonly Delta _delta;
             readonly long _deltaNumber;
@@ -305,11 +289,11 @@ namespace Catalyst.Core.Modules.Ledger
             readonly List<TransactionReceipt> _txReceipts;
             int _currentIndex;
 
-            public ReceiptDeltaTracer(Delta delta, Cid deltaHash, long deltaNumber)
+            public ReceiptDeltaTracer(Delta delta, Cid deltaHash)
             {
                 _delta = delta;
-                _deltaNumber = deltaNumber;
                 _deltaHash = deltaHash;
+                _deltaNumber = delta.DeltaNumber;
                 _txReceipts = new List<TransactionReceipt>(delta.PublicEntries.Count);
             }
 
