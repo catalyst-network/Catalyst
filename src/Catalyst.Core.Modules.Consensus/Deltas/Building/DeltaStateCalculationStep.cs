@@ -29,6 +29,7 @@ using Nethermind.Core.Crypto;
 using Nethermind.Evm.Tracing;
 using Nethermind.Store;
 using Serilog;
+using Serilog.Events;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
@@ -51,17 +52,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             var previousRoot = context.PreviousDelta.StateRoot;
             Keccak stateRoot = previousRoot.IsEmpty ? Keccak.EmptyTreeHash : new Keccak(previousRoot.ToByteArray());
             
-            _logger.Error($"Building delta {context.ProducedDelta.DeltaNumber} with state root ({stateRoot})");
-            _logger.Error("State root before update {root}.", _stateProvider.StateRoot);
-            _logger.Error("Parent root before update {root}.", context.PreviousDelta.StateRoot.ToByteArray());
-            _logger.Error("This root before update {root}.", context.ProducedDelta?.StateRoot?.ToKeccak());
+            if (_logger.IsEnabled(LogEventLevel.Debug)) _logger.Error($"Running state calculation for delta {context.ProducedDelta.DeltaNumber}");
 
             // here we need a read only delta executor (like in block builders - everything reverts in the end)
             _stateProvider.StateRoot = stateRoot;
             _deltaExecutor.CallAndReset(context.ProducedDelta, NullTxTracer.Instance);
-            _logger.Error("State root after update {root}.", _stateProvider.StateRoot);
-            _logger.Error("This root after update {root}.", context.ProducedDelta?.StateRoot?.ToKeccak());
-            
+
             _stateProvider.Reset();
         }
     }

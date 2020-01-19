@@ -97,23 +97,7 @@ namespace Catalyst.Node.POA.CE
         private static async Task CustomBootLogic(Kernel kernel)
         {
             RegisterNodeDependencies(Kernel.ContainerBuilder);
-
             kernel.StartContainer();
-
-            //var registrations = kernel.Instance.ComponentRegistry.Registrations;
-
-            //var providerRegistrations = registrations.Where(r => r.Activator.LimitType == typeof(StateProvider)).ToArray();
-            //var stateProviders = providerRegistrations
-            //   .Select(r => kernel.Instance.ResolveComponent(r, new Parameter[0]))
-            //   .ToArray();
-
-            //var executorRegistrations = registrations.Where(r => r.Activator.LimitType == typeof(DeltaExecutor)).ToArray();
-            //var executors = executorRegistrations
-            //   .Select(r => kernel.Instance.ResolveComponent(r, new Parameter[0]))
-            //   .ToArray();
-
-            var executor = kernel.Instance.Resolve<IDeltaBuilder>();
-
             kernel.Instance.Resolve<ICatalystNode>()
                .RunAsync(new CancellationToken())
 

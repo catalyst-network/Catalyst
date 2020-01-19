@@ -220,9 +220,6 @@ namespace Catalyst.Core.Modules.Ledger
                 _storageProvider.Reset();
                 
                 _stateProvider.StateRoot = new Keccak(parentDelta.StateRoot?.ToByteArray());
-                _logger.Error("State root before update {root}.", _stateProvider.StateRoot);
-                _logger.Error("Parent root before update {root}.", _stateProvider.StateRoot);
-                _logger.Error("This root before update {root}.", new Keccak(nextDeltaInChain.StateRoot.ToByteArray()));
                 _deltaExecutor.Execute(nextDeltaInChain, tracer);
 
                 // store receipts
@@ -232,8 +229,6 @@ namespace Catalyst.Core.Modules.Ledger
                 }
                 
                 _stateDb.Commit();
-
-                _logger.Error("After DB commit - {root}", _stateProvider.StateRoot);
 
                 // this should be set in the builder
 
