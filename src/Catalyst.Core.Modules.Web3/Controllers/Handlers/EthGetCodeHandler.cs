@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Nethermind.Core.Crypto;
 using Address = Nethermind.Core.Address;
@@ -34,7 +35,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         protected override byte[] Handle(Address address, IWeb3EthApi api)
         {
             Delta delta = api.GetLatestDeltaWithCid().Delta;
-            var stateRoot = delta.StateRootAsKeccak();
+            var stateRoot = delta.StateRoot.ToKeccak();
             byte[] byteCode = api.StateReader.GetCode(stateRoot, address);
             return byteCode;
         }

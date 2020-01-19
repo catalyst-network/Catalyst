@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Extensions;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Store;
 using Address = Nethermind.Core.Address;
@@ -37,7 +38,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             if (api.TryGetDeltaWithCid(block, out var deltaWithCid))
             {
-                var stateRoot = deltaWithCid.Delta.StateRootAsKeccak();
+                var stateRoot = deltaWithCid.Delta.StateRoot.ToKeccak();
 
                 if (!api.StateReader.AccountExists(stateRoot, address))
                 {

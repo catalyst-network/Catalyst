@@ -37,45 +37,13 @@ using Address = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    [EthWeb3RequestHandler("eth", "getBlockByNumber")]
-    public class EthGetBlockByNumberHandler : EthWeb3RequestHandler<BlockParameter, BlockForRpc>
+    [EthWeb3RequestHandler("eth", "getBlockByHash")]
+    public class EthGetBlockByHashHandler : EthWeb3RequestHandler<Keccak, BlockForRpc>
     {
-        protected override BlockForRpc Handle(BlockParameter block, IWeb3EthApi api)
+        protected override BlockForRpc Handle(Keccak deltaHash, IWeb3EthApi api)
         {
-            Cid deltaHash;
-            long blockNumber;
-
-            IDeltaCache deltaCache = api.DeltaCache;
-            IDeltaResolver deltaResolver = api.DeltaResolver;
-
-            switch (block.Type)
-            {
-                case BlockParameterType.Earliest:
-                    deltaHash = deltaCache.GenesisHash;
-                    blockNumber = 0;
-                    break;
-                case BlockParameterType.Latest:
-                    deltaHash = deltaResolver.LatestDelta;
-                    blockNumber = deltaResolver.LatestDeltaNumber;
-                    break;
-                case BlockParameterType.Pending:
-                    deltaHash = deltaResolver.LatestDelta;
-                    blockNumber = deltaResolver.LatestDeltaNumber;
-                    break;
-                case BlockParameterType.BlockNumber:
-                    blockNumber = block.BlockNumber.Value;
-                    if (!deltaResolver.TryResolve(blockNumber, out deltaHash))
-                    {
-                        return null;
-                    }
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            DeltaWithCid deltaWithCid = api.GetDeltaWithCid(deltaHash);
-            return BuildBlock(deltaWithCid, blockNumber);
+            DeltaWithCid deltaWithCid = api.GetDeltaWithCid(deltaHash.ToCid());
+            return BuildBlock(deltaWithCid, deltaWithCid.Delta.DeltaNumber);
         }
 
         private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber)

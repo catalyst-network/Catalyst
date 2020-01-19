@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Nethermind.Dirichlet.Numerics;
 using Address = Nethermind.Core.Address;
@@ -35,7 +36,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             Delta delta = api.GetLatestDeltaWithCid().Delta;
 
-            var stateRoot = delta.StateRootAsKeccak();
+            var stateRoot = delta.StateRoot.ToKeccak();
             return api.StateReader.GetBalance(stateRoot, address);
         }
     }

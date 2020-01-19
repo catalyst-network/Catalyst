@@ -23,16 +23,18 @@
 
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Extensions;
 using LibP2P;
+using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getTransactionByBlockHashAndIndex")]
-    public class EthGetTransactionByBlockHashAndIndex : EthWeb3RequestHandler<Cid, int, TransactionForRpc>
+    public class EthGetTransactionByBlockHashAndIndex : EthWeb3RequestHandler<Keccak, int, TransactionForRpc>
     {
-        protected override TransactionForRpc Handle(Cid deltaHash, int positionIndex, IWeb3EthApi api)
+        protected override TransactionForRpc Handle(Keccak deltaHash, int positionIndex, IWeb3EthApi api)
         {
-            var delta = api.GetDeltaWithCid(deltaHash);
+            var delta = api.GetDeltaWithCid(deltaHash.ToCid());
 
             return api.ToTransactionForRpc(delta, positionIndex);
         }

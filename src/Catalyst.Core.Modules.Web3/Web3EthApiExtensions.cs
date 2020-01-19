@@ -144,7 +144,7 @@ namespace Catalyst.Core.Modules.Web3
         public static CallOutputTracer CallAndRestore(this IWeb3EthApi api, TransactionForRpc transactionCall, DeltaWithCid deltaWithCid)
         {
             var parentDelta = deltaWithCid.Delta;
-            Keccak root = parentDelta.StateRootAsKeccak();
+            Keccak root = parentDelta.StateRoot.ToKeccak();
 
             if (transactionCall.Gas == null)
             {

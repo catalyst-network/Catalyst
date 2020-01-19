@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Extensions;
 using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
@@ -34,7 +35,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             var deltaWithCid = api.GetLatestDeltaWithCid();
             var parentDelta = deltaWithCid.Delta;
-            Keccak root = parentDelta.StateRootAsKeccak();
+            Keccak root = parentDelta.StateRoot.ToKeccak();
             var publicEntry = api.ToPublicEntry(transaction, root);
 
             return api.SendTransaction(publicEntry);

@@ -31,6 +31,7 @@ using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Services;
@@ -130,6 +131,7 @@ namespace Catalyst.Core.Modules.Web3
                 converters.Add(new NullableUInt256Converter());
                 converters.Add(new KeccakConverter());
                 converters.Add(new ByteArrayConverter());
+                converters.Add(new CidJsonConverter());
             }).AddApiExplorer();
 
             var mvcBuilder = services.AddRazorPages();

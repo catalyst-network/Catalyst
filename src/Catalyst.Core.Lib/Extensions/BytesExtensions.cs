@@ -30,8 +30,11 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
+using LibP2P;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
+using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Lib.Extensions
 {
@@ -45,6 +48,19 @@ namespace Catalyst.Core.Lib.Extensions
         public static Keccak ToKeccak(this ByteString byteString)
         {
             return (byteString == null || byteString.IsEmpty) ? null : new Keccak(byteString.ToByteArray());
+        }
+
+        public static Cid ToCid(this Keccak keccak)
+        {
+            Cid cid = new Cid
+            {
+                Version = 1,
+                Encoding = "base32",
+                ContentType = "raw",
+                Hash = new MultiHash("blake2b-256", keccak.Bytes)
+            };
+
+            return cid;
         }
     }
     
