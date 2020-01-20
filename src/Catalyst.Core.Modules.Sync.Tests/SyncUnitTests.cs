@@ -59,5 +59,21 @@ namespace Catalyst.Core.Modules.Sync.Tests
 
             sync.CurrentDeltaIndex.Should().Be(sampleCurrentDeltaHeight);
         }
+
+        //todo
+        [Fact]
+        public void Sync_Can_Request_DeltaIndexRange_From_Peer() { }
+
+        //todo
+        [Fact]
+        public void Sync_Can_Add_DeltaIndexRange_To_Memory() { }
+
+        //todo
+        [Fact]
+        public void Sync_Can_Update_CurrentDeltaIndex_From_Requested_DeltaIndexRange() { }
+
+        //todo
+        [Fact]
+        public void Sync_Can_Complete() { }
     }
 }
