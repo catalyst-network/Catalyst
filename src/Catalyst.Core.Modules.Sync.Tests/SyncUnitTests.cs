@@ -3,10 +3,10 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Sync.Tests
 {
-    public class UnitTest1
+    public class SyncUnitTests
     {
         [Fact]
-        public void Test1()
+        public void Can_Set_CurrentDeltaIndex()
         {
 
         }

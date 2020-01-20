@@ -6,6 +6,7 @@ namespace Catalyst.Core.Modules.Sync
     public interface IDeltaIndexService
     {
         void Add(DeltaIndexDao deltaIndex);
+        int Height();
     }
 
     public class DeltaIndexService : IDeltaIndexService
@@ -15,5 +16,7 @@ namespace Catalyst.Core.Modules.Sync
         public DeltaIndexService(IRepository<DeltaIndexDao> repository) { _repository = repository; }
 
         public void Add(DeltaIndexDao deltaIndex) { _repository.Add(deltaIndex); }
+
+        public int Height() { return _repository.Max(x => x.Height); }
     }
 }

@@ -3,7 +3,6 @@
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Sync</RootNamespace>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
-        <PublicSign>true</PublicSign>
     </PropertyGroup>
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
