@@ -22,11 +22,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Types;
 using Catalyst.Protocol.Cryptography;
+using Google.Protobuf;
 using Signature = Catalyst.Core.Modules.Cryptography.BulletProofs.Types.Signature;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs
@@ -155,6 +159,35 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             publickey_from_private(publicKeyBytes, privateKey);
 
             return new PublicKey(publicKeyBytes);
+        }
+
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
+        private static extern int batch_verify(byte[] batchInfo);
+
+        internal static bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context)
+        {
+            var sigBatch = new SignatureBatch();
+            sigBatch.Signatures.AddRange(signatures.Select(x => x.SignatureBytes.ToByteString()));
+            sigBatch.PublicKeys.AddRange(signatures.Select(x => x.PublicKeyBytes.ToByteString()));
+            sigBatch.Messages.AddRange(messages.Select(x => x.ToByteString()));
+            sigBatch.Context = context.ToArray().ToByteString();
+            var sigBatchBytes = sigBatch.ToByteArray();
+            var sigBatchBytess = sigBatch.ToByteArray().ToString();
+            var error_code = batch_verify(sigBatchBytes);
+
+            ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
+
+            if (errorCode == ErrorCode.NoError)
+            {
+                return true;
+            }
+
+            if (errorCode != ErrorCode.BatchVerificationFailure)
+            {
+                Error.ThrowErrorFromErrorCode(errorCode);
+            }
+
+            return false;
         }
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]

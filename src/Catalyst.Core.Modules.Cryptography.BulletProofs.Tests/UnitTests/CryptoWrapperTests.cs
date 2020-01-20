@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Exceptions;
@@ -270,6 +271,50 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             var context = Encoding.UTF8.GetBytes("context");
             var signature = _wrapper.Sign(privateKey, message, context);
             signature.PublicKeyBytes.Should().Equal(publicKey.Bytes);
+        }
+
+        [Fact]
+        public void Batch_Verification_Passes_For_Valid_Batch()
+        {
+            var sigs = new List<ISignature>();
+            var context = Encoding.UTF8.GetBytes("context");
+            var messages = new List<byte[]> 
+            {
+                Encoding.UTF8.GetBytes("rat"), 
+                Encoding.UTF8.GetBytes("hat"), 
+                Encoding.UTF8.GetBytes("hut"),
+                Encoding.UTF8.GetBytes("but"),
+                Encoding.UTF8.GetBytes("bun"),
+                Encoding.UTF8.GetBytes("run"),
+                Encoding.UTF8.GetBytes("ran"),
+                Encoding.UTF8.GetBytes("can"),
+                Encoding.UTF8.GetBytes("cat"),
+                Encoding.UTF8.GetBytes("rat")
+            };
+            messages.ForEach(x =>
+            {
+                sigs.Add(_wrapper.Sign(_wrapper.GeneratePrivateKey(), x, context));
+            });
+
+            var isVerified = _wrapper.BatchVerify(sigs, messages, context);
+            isVerified.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Batch_Verification_Fails_For_Invalid_Batch()
+        {
+            var sigs = new List<ISignature>();
+            var context = Encoding.UTF8.GetBytes("context");
+            var messages = new List<byte[]> 
+            {
+                Encoding.UTF8.GetBytes("abc"), 
+                Encoding.UTF8.GetBytes("123"), 
+                Encoding.UTF8.GetBytes("xyz"),
+            };
+            messages.ForEach(x => sigs.Add(_wrapper.Sign(_wrapper.GeneratePrivateKey(), Encoding.UTF8.GetBytes("change of message"), context)));
+
+            var isVerified = _wrapper.BatchVerify(sigs, messages, context);
+            isVerified.Should().BeFalse();
         }
 
         private static byte[] GenerateRandomByteArray(int length)
