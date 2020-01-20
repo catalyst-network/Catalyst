@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <RootNamespace>Catalyst.Core.Modules.Sync</RootNamespace>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+    <Import Project="../Common.Packable.props" />
+    <Import Project="../Common.Projects.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+    <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+    <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
+  </ItemGroup>
+
+</Project>
