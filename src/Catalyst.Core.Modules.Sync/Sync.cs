@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
@@ -25,21 +26,23 @@ namespace Catalyst.Core.Modules.Sync
         private readonly IPeerClient _peerClient;
         private readonly IDeltaIndexService _deltaIndexService;
         private readonly IPeerRepository _peerRepository;
-        private readonly DeltaHeightResponseObserver _deltaHeightResponseObserver;
-        private readonly DeltaHistoryResponseObserver _deltaHistoryResponseObserver;
+        private readonly IPeerClientObservable _deltaHeightResponseObserver;
+        private readonly IPeerClientObservable _deltaHistoryResponseObserver;
         private readonly IMapperProvider _mapperProvider;
 
         private IDisposable _deltaHeightSubscription;
         private IDisposable _deltaHistorySubscription;
-        private int _currentDeltaIndex;
+
+        public int CurrentDeltaIndex { private set; get; }
+        public bool IsSynchronized { private set; get; }
 
         public Sync(IPeerSettings peerSettings,
             ILedger ledger,
             IPeerClient peerClient,
             IDeltaIndexService deltaIndexService,
             IPeerRepository peerRepository,
-            DeltaHeightResponseObserver deltaHeightResponseObserver,
-            DeltaHistoryResponseObserver deltaHistoryResponseObserver,
+            IPeerClientObservable deltaHeightResponseObserver,
+            IPeerClientObservable deltaHistoryResponseObserver,
             IMapperProvider mapperProvider,
             int rangeSize = 20)
         {
@@ -70,11 +73,11 @@ namespace Catalyst.Core.Modules.Sync
 
         private void Progress()
         {
-            _currentDeltaIndex = _deltaIndexService.Height();
+            CurrentDeltaIndex = _deltaIndexService.Height();
 
             var peers = _peerRepository.GetActivePeers(10).First();
             var deltaHistoryRequest = new DeltaHistoryRequest
-                {Height = (uint) _currentDeltaIndex, Range = (uint) _rangeSize};
+                {Height = (uint) CurrentDeltaIndex, Range = (uint) _rangeSize};
             var protocolMessage = deltaHistoryRequest.ToProtocolMessage(_peerSettings.PeerId);
 
             _peerClient.SendMessage(new MessageDto(
@@ -97,7 +100,11 @@ namespace Catalyst.Core.Modules.Sync
 
         private void DeltaHistoryOnNext(IPeerClientMessageDto peerClientMessageDto)
         {
-            var deltaHistoryResponse = (DeltaHistoryResponse) peerClientMessageDto.Message;
+            if (!(peerClientMessageDto.Message is DeltaHistoryResponse deltaHistoryResponse))
+            {
+                return;
+            }
+
             var deltaIndexArray = deltaHistoryResponse.Result
                .Select(x => x.ToDao<DeltaIndex, DeltaIndexDao>(_mapperProvider)).OrderBy(x => x.Height);
 
@@ -105,9 +112,12 @@ namespace Catalyst.Core.Modules.Sync
             {
                 _ledger.Update(deltaIndex.Cid);
                 _deltaIndexService.Add(deltaIndex);
-                _currentDeltaIndex = deltaIndex.Height;
+                CurrentDeltaIndex = deltaIndex.Height;
 
-                if (_latestDeltaHash == deltaIndex.Cid) { }
+                if (_latestDeltaHash == deltaIndex.Cid)
+                {
+                    IsSynchronized = true;
+                }
             }
 
             Progress();
@@ -115,7 +125,11 @@ namespace Catalyst.Core.Modules.Sync
 
         private void DeltaHeightOnNext(IPeerClientMessageDto peerClientMessageDto)
         {
-            var latestDeltaHashResponse = (LatestDeltaHashResponse) peerClientMessageDto.Message;
+            if (!(peerClientMessageDto.Message is LatestDeltaHashResponse latestDeltaHashResponse))
+            {
+                return;
+            }
+
             _latestDeltaHash = latestDeltaHashResponse.DeltaHash.ToByteArray().ToCid();
         }
     }
