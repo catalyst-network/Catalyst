@@ -51,11 +51,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
         public Cid GenesisHash { get; set; }
 
-        public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate)
-        {
-            return nameof(DeltaCache) + "-LocalDelta-" + MultiBase.Encode(candidate.Hash.ToByteArray(), "base32");
-        }
-        
+        public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) { return nameof(DeltaCache) + "-LocalDelta-" + MultiBase.Encode(candidate.Hash.ToByteArray(), "base32"); }
+
         public static Address TruffleTestAccount = new Address("0xb77aec9f59f9d6f39793289a09aea871932619ed");
 
         public DeltaCache(IHashProvider hashProvider,
@@ -74,15 +71,15 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             storageProvider.CommitTrees();
             stateProvider.CommitTree();
-            
+
             stateDb.Commit();
-            
+
             var genesisDelta = new Delta
             {
                 TimeStamp = Timestamp.FromDateTime(DateTime.UnixEpoch),
                 StateRoot = ByteString.CopyFrom(stateProvider.StateRoot.Bytes),
             };
-            
+
             GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).CreateCid();
 
             _dfsReader = dfsReader;
@@ -95,10 +92,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _memoryCache.Set(GenesisHash, genesisDelta);
         }
 
-        private void EvictionCallback(object key, object value, EvictionReason reason, object state)
-        {
-            _logger.Debug("Evicted Delta {0} from cache.", key);
-        }
+        private void EvictionCallback(object key, object value, EvictionReason reason, object state) { _logger.Debug("Evicted Delta {0} from cache.", key); }
 
         /// <inheritdoc />
         public bool TryGetOrAddConfirmedDelta(Cid cid,
@@ -107,11 +101,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             //this calls for a TryGetOrCreate IMemoryCache extension function
             if (_memoryCache.TryGetValue(cid, out delta))
-            {
-                return true;
-            } 
-            
-            if (_memoryCache.TryGetValue(DummyConstDeltaName, out delta))
             {
                 return true;
             }
@@ -132,21 +121,24 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             return tryGetLocalDelta;
         }
 
+        public void AddLocalDelta(Cid cid, Delta delta)
+        {
+            _logger.Verbose("Adding local details of delta with CID {cid}", cid);
+            _memoryCache.Set(cid, delta, _entryOptions());
+            if (!TryGetOrAddConfirmedDelta(cid, out Delta retrieved, CancellationToken.None))
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
         public void AddLocalDelta(CandidateDeltaBroadcast localCandidate, Delta delta)
         {
             _logger.Verbose("Adding full details of candidate delta {candidate}", localCandidate);
             _memoryCache.Set(GetLocalDeltaCacheKey(localCandidate), delta, _entryOptions());
-
-            if (delta.PublicEntries.Count > 0)
-            {
-                _memoryCache.Set(DummyConstDeltaName, delta, _entryOptions());
-            }
         }
 
         protected virtual void Dispose(bool disposing) { _memoryCache.Dispose(); }
 
         public void Dispose() { Dispose(true); }
-
-        public const string DummyConstDeltaName = nameof(DummyConstDeltaName);
     }
 }

@@ -35,6 +35,8 @@ using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using LibP2P;
 using Nethermind.Dirichlet.Numerics;
+using Serilog;
+using Serilog.Events;
 using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building
@@ -44,14 +46,17 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         private readonly PeerId _producerUniqueId;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
+        private readonly ILogger _logger;
 
         public CandidateBuilderStep(PeerId producerUniqueId,
             IDeterministicRandomFactory randomFactory,
-            IHashProvider hashProvider)
+            IHashProvider hashProvider,
+            ILogger logger)
         {
             _producerUniqueId = producerUniqueId ?? throw new ArgumentNullException(nameof(producerUniqueId));
             _randomFactory = randomFactory ?? throw new ArgumentNullException(nameof(randomFactory));
             _hashProvider = hashProvider ?? throw new ArgumentNullException(nameof(hashProvider));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         
         private byte[] GetSaltFromPreviousDelta(Cid previousDeltaHash)
@@ -105,7 +110,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                 ProducerId = _producerUniqueId,
                 PreviousDeltaDfsHash = context.PreviousDeltaHash.ToArray().ToByteString()
             };
-
+            
             context.Candidate = candidate;
         }
         

@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             {
                 new PreviousDeltaResolverStep(_deltaCache, _logger),
                 new TransactionRetrieverStep(_transactionRetriever, _logger),
-                new CandidateBuilderStep(_producerUniqueId, _randomFactory, _hashProvider),
+                new CandidateBuilderStep(_producerUniqueId, _randomFactory, _hashProvider, _logger),
                 new ProducedDeltaBuilderStep(_dateTimeProvider, _logger),
                 new DeltaStateCalculationStep(_stateProvider, _deltaExecutor, _logger),
                 new DeltaRegistrationStep(_deltaCache, _logger)

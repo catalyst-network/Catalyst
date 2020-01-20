@@ -107,14 +107,16 @@ namespace Catalyst.Core.Modules.Consensus
                .Where(d => d != null)
                .Subscribe(d =>
                 {
-                    _logger.Information("New Delta following {deltaHash} published", 
-                        d.PreviousDeltaDfsHash);
-
                     var newCid = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                    _deltaCache.AddLocalDelta(newCid, d);
+                    
                     var previousHash = d.PreviousDeltaDfsHash.ToByteArray().ToCid();
+                    
+                    _logger.Information("New Delta following {deltaHash} published with new cid {newCid}", 
+                        d.PreviousDeltaDfsHash, newCid);
 
-                    _deltaHashProvider.TryUpdateLatestHash(previousHash, newCid.Hash);
+                    _deltaHashProvider.TryUpdateLatestHash(previousHash, newCid);
                 });
         }
         

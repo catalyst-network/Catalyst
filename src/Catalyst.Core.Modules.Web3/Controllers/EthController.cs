@@ -51,17 +51,20 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         [HttpPost]
         public JsonRpcResponse Request([FromBody] JsonRpcRequest request)
         {
-            _logger.Information("ETH JSON RPC request {id} {method} {params}", request.Id, request.Method, request.Params);
             EthWeb3RequestHandlerBase handler = _handlerResolver.Resolve(request.Method, request.Params.Length);
             if (handler == null)
             {
-                return new JsonRpcErrorResponse {Result = null, Error = new Error {Code = (int) ErrorType.MethodNotFound, Data = $"{request.Method}", Message = "Method not found"}};
+                JsonRpcErrorResponse errorResponse = new JsonRpcErrorResponse {Result = null, Error = new Error {Code = (int) ErrorType.MethodNotFound, Data = $"{request.Method}", Message = "Method not found"}};
+                _logger.Error("Failed ETH JSON RPC request {id} {method} {params}", request.Id, request.Method, request.Params);
+                return errorResponse;
             }
 
             lock (Lock)
             {
                 object result = handler.Handle(request.Params, _web3EthApi, _jsonSerializer);
-                return new JsonRpcResponse(request, result);
+                JsonRpcResponse response = new JsonRpcResponse(request, result);
+                _logger.Information("ETH JSON RPC request {id} {method} {params} returned {result}", request.Id, request.Method, request.Params, result);
+                return response;
             }
         }
     }

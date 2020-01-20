@@ -23,10 +23,14 @@
 
 using System;
 using Catalyst.Abstractions.Consensus;
+using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Transaction;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
+using Serilog.Events;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
@@ -52,12 +56,20 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                 {
                     context.CoinbaseEntry
                 },
+                
                 PublicEntries =
                 {
                     context.Transactions
                 },
+                
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
+            
+            if (_logger.IsEnabled(LogEventLevel.Information)) _logger.Information("Built a delta {number} {hash} based on {previousHash} with {txCount} transactions", context.ProducedDelta.DeltaNumber, context.Candidate.Hash, context.ProducedDelta.PreviousDeltaDfsHash, context.ProducedDelta.PublicEntries.Count);
+            foreach (PublicEntry publicEntry in context.ProducedDelta.PublicEntries)
+            {
+                if (_logger.IsEnabled(LogEventLevel.Information)) _logger.Information("Entry {from} -> {to} with nonce {nonce}", publicEntry.SenderAddress.ToAddress(), publicEntry.ReceiverAddress.ToAddress(), publicEntry.Nonce);
+            }
         }
     }
 }

@@ -21,15 +21,25 @@
 
 #endregion
 
-using System;
-using Catalyst.Abstractions.Consensus;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Core.Lib.Extensions;
+using Google.Protobuf;
+using Nethermind.Core;
+using Nethermind.Core.Crypto;
+using Nethermind.Core.Extensions;
 
-namespace Catalyst.Core.Modules.Consensus
+namespace Catalyst.Core.Modules.Kvm
 {
-    /// <inheritdoc />
-    public sealed class DateTimeProvider : IDateTimeProvider
+    public static class ByteStringExtensions
     {
-        /// <inheritdoc />
-        public DateTime UtcNow => DateTime.UtcNow;
+        public static Address ToAddress(this ByteString addressByteString)
+        {
+            if (addressByteString == null || addressByteString.IsEmpty)
+            {
+                return null;
+            }
+
+            return new Address(addressByteString.ToByteArray());
+        }
     }
 }

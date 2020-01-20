@@ -144,16 +144,6 @@ namespace Catalyst.Core.Modules.Kvm
             return result;
         }
 
-        private static Address GetAccountAddress(ByteString addressByteString)
-        {
-            if (addressByteString == null || addressByteString.IsEmpty)
-            {
-                return null;
-            }
-
-            return new Address(addressByteString.ToByteArray());
-        }
-
         private static void QuickFail(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
             // here we need to propagate back to Delta
@@ -416,8 +406,8 @@ namespace Catalyst.Core.Modules.Kvm
 
         private (Address sender, Address recipient) ExtractSenderAndRecipient(PublicEntry entry)
         {
-            var sender = GetAccountAddress(entry.SenderAddress);
-            var recipient = GetAccountAddress(entry.ReceiverAddress);
+            var sender = entry.SenderAddress.ToAddress();
+            var recipient = entry.ReceiverAddress.ToAddress();
             if (entry.IsValidDeploymentEntry)
             {
                 recipient = Address.OfContract(sender, _stateProvider.GetNonce(sender));
