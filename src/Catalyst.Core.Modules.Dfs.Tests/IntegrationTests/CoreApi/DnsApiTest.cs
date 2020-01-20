@@ -33,15 +33,19 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     public class DnsApiTest
     {
         private IDfsService ipfs;
+        private ITestOutputHelper testOutput;
 
         public DnsApiTest(ITestOutputHelper output)
         {
+            testOutput = output;
             ipfs = TestDfs.GetTestDfs(output);  
         }
 
         [Fact]
         public async Task Resolve()
         {
+            ipfs = TestDfs.GetTestDfs(testOutput);
+
             var path = await ipfs.DnsApi.ResolveAsync("ipfs.io");
             Assert.NotNull(path);
         }

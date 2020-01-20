@@ -36,9 +36,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     public class NameApiTest
     {
         private IDfsService ipfs;
+        private ITestOutputHelper testOutput;
 
         public NameApiTest(ITestOutputHelper output)
         {
+            testOutput = output;
             ipfs = TestDfs.GetTestDfs(output, null, null, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")));
         }
         
@@ -81,6 +83,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Resolve_DnsLink()
         {
+            ipfs = TestDfs.GetTestDfs(testOutput, null, null, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")));
+
             var iopath = await ipfs.NameApi.ResolveAsync("ipfs.io");
             Assert.NotNull(iopath);
 
