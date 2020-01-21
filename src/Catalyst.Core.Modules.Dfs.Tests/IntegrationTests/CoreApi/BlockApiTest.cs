@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public BlockApiTest(ITestOutputHelper output)
         {
             _output = output;
-            ipfs = TestDfs.GetTestDfs(output, null, null, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")));
+            ipfs = TestDfs.GetTestDfs(output, null, "sha2-256");
         }
         
         [Fact]
@@ -270,7 +270,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Put_Informs_Bitswap()
         {
-            ipfs = TestDfs.GetTestDfs(_output, null, null, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")));
+            ipfs = TestDfs.GetTestDfs(_output, null, "sha2-256");
             await ipfs.StartAsync();
 
             try

@@ -23,27 +23,25 @@
 
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.IPPN;
-using Google.Protobuf;
 using Lib.P2P;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.DAO.Ledger
 {
     public class DeltaIndexDao : DaoBase
     {
-        public int Height { get; }
-        public string Cid { get; }
+        public int Height { set; get; }
+        public Cid Cid { set; get; }
     }
-    
+
     public class DeltaIndexMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<DeltaIndex, DeltaIndexDao>()
                .ForMember(a => a.Height, opt => opt.UseDestinationValue())
-               .ForMember(a => a.Cid, opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
+               .ForMember(a => a.Cid, opt => opt.MapFrom(x => Cid.Decode(MultiBase.Encode(x.Cid.ToByteArray(), "base32"))));
         }
     }
 }

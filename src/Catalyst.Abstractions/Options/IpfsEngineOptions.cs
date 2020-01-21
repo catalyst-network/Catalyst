@@ -48,7 +48,7 @@ namespace Catalyst.Abstractions.Options
         /// <value>
         ///     Defaults to <see cref="Makaretu.Dns.DotClient" />, DNS over TLS.
         /// </value>
-        public IDnsClient Dns { get; set; } = new DotClient();
+        public IDnsClient Dns { get; set; }
 
         /// <summary>
         ///     Block options.
@@ -65,11 +65,12 @@ namespace Catalyst.Abstractions.Options
         /// </summary>
         public SwarmOptions Swarm { get; set; } = new SwarmOptions();
 
-        public DfsOptions(BlockOptions blockOptions, DiscoveryOptions discoveryOptions, RepositoryOptions repositoryOptions)
+        public DfsOptions(BlockOptions blockOptions, DiscoveryOptions discoveryOptions, RepositoryOptions repositoryOptions, DotClient dotClient)
         {
             Block = blockOptions;
             Discovery = discoveryOptions;
             Repository = repositoryOptions;
+            Dns = dotClient;
 
             var swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
 
@@ -82,6 +83,13 @@ namespace Catalyst.Abstractions.Options
                 new MultiAddress(
                     "/ip4/167.172.73.132/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe1E9wXdykR6h3Q9EaQcQc6hdNAXyCTEzoGfcA2wQgCRyg")
             };
+
+            //if (keyType == default)
+            //{
+            //    keyType = "rsa";
+
+            //    //"ed25519";
+            //}
 
             //KeyChain.DefaultKeyType = "ed25519";
 

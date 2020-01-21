@@ -1,19 +1,44 @@
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -76,6 +101,23 @@ namespace Catalyst.Core.Modules.Sync.Tests
             sync.CurrentDeltaIndex.Should().Be(sampleCurrentDeltaHeight);
         }
 
+        private DeltaHistoryResponse GenerateSampleData(int count)
+        {
+            var deltaHeightResponse = new DeltaHistoryResponse();
+            var deltaIndexList = new List<DeltaIndex>();
+            for (var i = 0; i < count; i++)
+            {
+                deltaIndexList.Add(new DeltaIndex
+                {
+                    Cid = ByteString.CopyFrom(_hashProvider.ComputeUtf8MultiHash(i.ToString()).ToCid().ToArray()),
+                    Height = (uint) i
+                });
+            }
+
+            deltaHeightResponse.Result.Add(deltaIndexList);
+            return deltaHeightResponse;
+        }
+
         //todo
         [Fact]
         public void Sync_Can_Request_DeltaIndexRange_From_Peer()
@@ -83,25 +125,19 @@ namespace Catalyst.Core.Modules.Sync.Tests
             var replaySubject = new ReplaySubject<IPeerClientMessageDto>(1);
             _deltaHistoryResponseObserver.MessageStream.Returns(replaySubject);
 
+            _peerClient.When(x => x.SendMessage(Arg.Any<MessageDto>())).Do(x =>
+            {
+                var messageDto = (MessageDto) x[0];
+                var deltaHeightResponse = GenerateSampleData(10);
+                var peerClientMessageDto = new PeerClientMessageDto(deltaHeightResponse, messageDto.SenderPeerIdentifier,
+                    CorrelationId.GenerateCorrelationId());
+                replaySubject.OnNext(peerClientMessageDto);
+            });
+
             var sync = new Sync(_peerSettings, _ledger, _peerClient, _deltaIndexService, _peerRepository,
                 _deltaHeightResponseObserver, _deltaHistoryResponseObserver, _mapperProvider);
 
             sync.Start();
-
-            var deltaHeightResponse = new DeltaHistoryResponse();
-            var deltaIndexList = new List<DeltaIndex>
-            {
-                new DeltaIndex {Cid = ByteString.CopyFrom(_hashProvider.ComputeUtf8MultiHash("1").ToArray()), Height = 1},
-                new DeltaIndex {Cid = ByteString.CopyFrom(_hashProvider.ComputeUtf8MultiHash("2").ToArray()), Height = 2},
-                new DeltaIndex {Cid = ByteString.CopyFrom(_hashProvider.ComputeUtf8MultiHash("3").ToArray()), Height = 3},
-                new DeltaIndex {Cid = ByteString.CopyFrom(_hashProvider.ComputeUtf8MultiHash("4").ToArray()), Height = 4},
-                new DeltaIndex {Cid = ByteString.CopyFrom(_hashProvider.ComputeUtf8MultiHash("5").ToArray()), Height = 5}
-            };
-
-            deltaHeightResponse.Result.Add(deltaIndexList);
-
-            var peerClientMessageDto = new PeerClientMessageDto(deltaHeightResponse, PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId());
-            replaySubject.OnNext(peerClientMessageDto);
         }
 
         //todo
