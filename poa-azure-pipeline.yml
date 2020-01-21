@@ -97,7 +97,7 @@ steps:
       projects: 'src/*[Tt]ests/*.csproj'
       arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
-    timeoutInMinutes: 15
+    timeoutInMinutes: 20
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
 
   - task: DotNetCoreCLI@2
