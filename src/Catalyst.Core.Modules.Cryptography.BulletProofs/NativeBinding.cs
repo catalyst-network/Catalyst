@@ -172,7 +172,6 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             sigBatch.Messages.AddRange(messages.Select(x => x.ToByteString()));
             sigBatch.Context = context.ToArray().ToByteString();
             var sigBatchBytes = sigBatch.ToByteArray();
-            var sigBatchBytess = sigBatch.ToByteArray().ToString();
             var error_code = batch_verify(sigBatchBytes);
 
             ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
