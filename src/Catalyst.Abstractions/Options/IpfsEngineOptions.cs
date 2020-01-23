@@ -70,6 +70,9 @@ namespace Catalyst.Abstractions.Options
             Block = blockOptions;
             Discovery = discoveryOptions;
             Repository = repositoryOptions;
+            KeyChain = keyChainOptions;
+            Swarm = swarmOptions;
+            Dns = dotClient;
 
             var swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
 
