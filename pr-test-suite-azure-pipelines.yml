@@ -92,7 +92,7 @@ steps:
     inputs:
       command: test
       projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '-v Normal'
+      arguments: '-v Normal --filter TestType!=IntegrationTest'
       failOnStandardError: 'true'
     timeoutInMinutes: 20
 

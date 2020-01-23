@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 
         public DagApiTest(ITestOutputHelper output)
         {
-            ipfs = TestDfs.GetTestDfs(output, null, null, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")));
+            ipfs = TestDfs.GetTestDfs(output, null, "sha2-256");
         }
 
         [Fact]

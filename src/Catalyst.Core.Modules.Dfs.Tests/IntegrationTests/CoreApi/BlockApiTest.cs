@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public BlockApiTest(ITestOutputHelper output)
         {
             _output = output;
-            ipfs = TestDfs.GetTestDfs(output, null, null, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")));
+            ipfs = TestDfs.GetTestDfs(output, null, "sha2-256");
         }
         
         [Fact]
@@ -270,7 +270,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Put_Informs_Bitswap()
         {
-            ipfs = TestDfs.GetTestDfs(_output, null, null, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")));
+            ipfs = TestDfs.GetTestDfs(_output, null, "sha2-256");
             await ipfs.StartAsync();
 
             try
@@ -281,9 +281,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     Hash = MultiHash.ComputeHash(data)
                 };
 
-                var wantTask = ipfs.BitSwapApi.GetAsync(cid);
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(20000);
 
-                var cid1 = await ipfs.BlockApi.PutAsync(data);
+                var wantTask = ipfs.BitSwapApi.GetAsync(cid, cts.Token);
+                var cid1 = await ipfs.BlockApi.PutAsync(data, cancel: cts.Token);
+
                 Assert.Equal(cid, cid1);
                 Assert.Equal(cid, wantTask.Result.Id);
                 Assert.Equal(data.Length, wantTask.Result.Size);

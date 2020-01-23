@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Dfs
 {
     public class DfsService : IDfsService
     {
-        static DfsService(){ /*LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); */ }
+        static DfsService() { LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); }
 
         // (IPasswordManager passwordReader,
         //             IFileSystem fileSystem,
@@ -350,7 +350,7 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 Log.Error("No listeners were created.");
             }
-            
+
             // Now that the listener addresses are established, the discovery 
             // services can begin.
             MulticastService multicast = null;
@@ -507,7 +507,7 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 return _keyStoreService;
             }
-            
+
             lock (this)
             {
                 if (_keyStoreService == null)

@@ -36,6 +36,7 @@ using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
+using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
 using Xunit.Abstractions;
 
@@ -48,27 +49,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             internal TestDfsFileSystem(ITestOutputHelper output) : base(output) { }
         }
 
-        public static IDfsService GetTestDfs(ITestOutputHelper output, IFileSystem fileSystem = default, string keyType = default, IHashProvider hashProvider = null)
+        public static IDfsService GetTestDfs(ITestOutputHelper output, IFileSystem fileSystem = default, string hashName = "blake2b-256")
         {
-            var type = output.GetType();
-            var testMember = type.GetField("test", BindingFlags.Instance | BindingFlags.NonPublic);
-            var test = (ITest) testMember.GetValue(output);
-
-            output.WriteLine("*************************** CI TEST:" + test.DisplayName + "******************************");
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();
-
-            //if (string.Equals(folderName, default, StringComparison.Ordinal))
-            //{
-            //    folderName = nodeGuid.ToString();
-            //}
-
-            if (keyType == default)
-            {
-                keyType = "rsa";
-
-                //"ed25519";
-            }
 
             if (fileSystem == null)
             {
@@ -79,24 +63,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             containerBuilder.RegisterInstance(fileSystem).As<IFileSystem>();
             containerBuilder.RegisterType<MigrationManager>().As<IMigrationManager>();
             containerBuilder.RegisterModule<HashingModule>();
-
-            if (hashProvider != null)
-            {
-                containerBuilder.RegisterInstance(hashProvider).As<IHashProvider>();
-            }
-
-            //containerBuilder.RegisterType<KatDhtService>().As<IDhtService>().SingleInstance();
-            //containerBuilder.RegisterType<DhtApi>().As<IDhtApi>().SingleInstance();
+            containerBuilder.RegisterInstance(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata(hashName))).As<IHashProvider>();
             containerBuilder.RegisterType<KeyStoreService>().As<IKeyStoreService>().SingleInstance();
             containerBuilder.RegisterModule(new DfsModule());
 
             var container = containerBuilder.Build();
             var scope = container.BeginLifetimeScope(nodeGuid);
             var dfsService = scope.Resolve<IDfsService>();
-            
-            //dfsService.Options.Repository.Folder = Path.Combine(fileSystem.GetCatalystDataDir().FullName);
-            //dfsService.Options.KeyChain.DefaultKeySize = 512;
-            //dfsService.Options.KeyChain.DefaultKeyType = keyType;
 
             dfsService.ConfigApi.SetAsync(
                 "Addresses.Swarm",
