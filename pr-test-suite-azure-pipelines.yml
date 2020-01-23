@@ -92,7 +92,7 @@ steps:
     inputs:
       command: test
       projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '-v Detailed'
+      arguments: '-v Normal'
       failOnStandardError: 'true'
     timeoutInMinutes: 20
 
