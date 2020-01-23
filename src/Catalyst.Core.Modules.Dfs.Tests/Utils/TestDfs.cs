@@ -50,11 +50,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
 
         public static IDfsService GetTestDfs(ITestOutputHelper output, IFileSystem fileSystem = default, string keyType = default, IHashProvider hashProvider = null)
         {
-            StackTrace st = new StackTrace();
-            StackFrame sf = st.GetFrame(0);
-            MethodBase currentMethodName = sf.GetMethod();
+            var type = output.GetType();
+            var testMember = type.GetField("test", BindingFlags.Instance | BindingFlags.NonPublic);
+            var test = (ITest) testMember.GetValue(output);
 
-            output.WriteLine("*************************** CI TEST:" + currentMethodName.ToString() + "******************************");
+            output.WriteLine("*************************** CI TEST:" + test.DisplayName + "******************************");
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();
 
