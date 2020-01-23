@@ -40,7 +40,7 @@ namespace Catalyst.Abstractions.Options
         /// <summary>
         ///     KeyChain options.
         /// </summary>
-        public KeyChainOptions KeyChain { get; set; } = new KeyChainOptions();
+        public KeyChainOptions KeyChain { get; set; }
 
         /// <summary>
         ///     Provides access to the Domain Name System.
@@ -48,7 +48,7 @@ namespace Catalyst.Abstractions.Options
         /// <value>
         ///     Defaults to <see cref="Makaretu.Dns.DotClient" />, DNS over TLS.
         /// </value>
-        public IDnsClient Dns { get; set; } = new DotClient();
+        public IDnsClient Dns { get; set; }
 
         /// <summary>
         ///     Block options.
@@ -63,9 +63,9 @@ namespace Catalyst.Abstractions.Options
         /// <summary>
         ///     Swarm (network) options.
         /// </summary>
-        public SwarmOptions Swarm { get; set; } = new SwarmOptions();
+        public SwarmOptions Swarm { get; set; }
 
-        public DfsOptions(BlockOptions blockOptions, DiscoveryOptions discoveryOptions, RepositoryOptions repositoryOptions)
+        public DfsOptions(BlockOptions blockOptions, DiscoveryOptions discoveryOptions, RepositoryOptions repositoryOptions, KeyChainOptions keyChainOptions, SwarmOptions swarmOptions, DotClient dotClient)
         {
             Block = blockOptions;
             Discovery = discoveryOptions;

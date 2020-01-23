@@ -107,6 +107,8 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<BlockOptions>().SingleInstance();
             builder.RegisterType<RepositoryOptions>().SingleInstance().WithParameter("dfsDirectory", Constants.DfsDataSubDir);
             builder.RegisterType<DiscoveryOptions>().SingleInstance();
+            builder.RegisterType<KeyChainOptions>().SingleInstance();
+            builder.RegisterType<SwarmOptions>().SingleInstance();
         }
     }
 }
