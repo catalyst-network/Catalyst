@@ -67,7 +67,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
                     var peerIdentifier = nodeSettings.PeerId;
                     var name = $"producer{i.ToString()}";
-                    var dfs = TestDfs.GetTestDfs(output, fileSystem, "ed25519");
+                    var dfs = TestDfs.GetTestDfs(output, fileSystem);
                     return new {index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem};
                 }
             ).ToList();
