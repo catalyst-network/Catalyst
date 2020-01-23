@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Dfs
 {
     public class DfsService : IDfsService
     {
-        static DfsService() { LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); }
+        static DfsService(){ /*LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); */ }
 
         // (IPasswordManager passwordReader,
         //             IFileSystem fileSystem,
