@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.Diagnostics;
+using System.Reflection;
 using Autofac;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
@@ -48,6 +50,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
 
         public static IDfsService GetTestDfs(ITestOutputHelper output, IFileSystem fileSystem = default, string keyType = default, IHashProvider hashProvider = null)
         {
+            StackTrace st = new StackTrace();
+            StackFrame sf = st.GetFrame(0);
+            MethodBase currentMethodName = sf.GetMethod();
+
+            output.WriteLine("*************************** CI TEST:" + currentMethodName.ToString() + "******************************");
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();
 
