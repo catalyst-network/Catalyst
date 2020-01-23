@@ -92,10 +92,9 @@ steps:
     inputs:
       command: test
       projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
+      arguments: '-v Detailed'
       failOnStandardError: 'true'
-    timeoutInMinutes: 20
-    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+    timeoutInMinutes: 20)
 
   - task: DotNetCoreCLI@2
     displayName: 'Run unit tests with coverage'
