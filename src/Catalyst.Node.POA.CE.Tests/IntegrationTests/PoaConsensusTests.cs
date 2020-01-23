@@ -101,17 +101,18 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     n?.Consensus.StartProducing();
                 });
 
-            await Task.Delay(Debugger.IsAttached
-                    ? TimeSpan.FromHours(3)
-                    : CycleConfiguration.Default.CycleDuration.Multiply(1.3))
+            await Task.Delay(CycleConfiguration.Default.CycleDuration.Multiply(1.3))
                .ConfigureAwait(false);
 
-            for (var i = 0; i < 3; i++)
+            var files = new List<string>();
+            for (var i = 0; i < _nodes.Count; i++)
             {
                 var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}/dfs", "blocks");
-                Directory.GetFiles(dfsDir).Length.Should().Be(1,
-                    "only the elected producer should score high enough to see his block elected.");
+                files.AddRange(Directory.GetFiles(dfsDir).Select(x => new FileInfo(x).Name));
             }
+
+            files.Distinct().Count().Should().Be(1,
+                "only the elected producer should score high enough to see his block elected.");
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
