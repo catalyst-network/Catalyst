@@ -94,7 +94,7 @@ steps:
       projects: 'src/*[Tt]ests/*.csproj'
       arguments: '-v Detailed'
       failOnStandardError: 'true'
-    timeoutInMinutes: 20)
+    timeoutInMinutes: 20
 
   - task: DotNetCoreCLI@2
     displayName: 'Run unit tests with coverage'
