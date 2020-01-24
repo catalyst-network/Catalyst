@@ -67,14 +67,14 @@ namespace Catalyst.Abstractions.Options
         /// </summary>
         public SwarmOptions Swarm { get; set; }
 
-        public DfsOptions(BlockOptions blockOptions, DiscoveryOptions discoveryOptions, RepositoryOptions repositoryOptions, KeyChainOptions keyChainOptions, SwarmOptions swarmOptions, DotClient dotClient)
+        public DfsOptions(BlockOptions blockOptions, DiscoveryOptions discoveryOptions, RepositoryOptions repositoryOptions, KeyChainOptions keyChainOptions, SwarmOptions swarmOptions, IDnsClient dnsClient)
         {
             Block = blockOptions;
             Discovery = discoveryOptions;
             Repository = repositoryOptions;
             KeyChain = keyChainOptions;
             Swarm = swarmOptions;
-            Dns = dotClient;
+            Dns = dnsClient;
 
             var swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
 

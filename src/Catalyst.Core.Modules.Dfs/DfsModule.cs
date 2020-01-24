@@ -21,8 +21,8 @@
 
 #endregion
 
+using System;
 using System.Reflection;
-using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
@@ -40,14 +40,9 @@ using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
-using Lib.P2P.Cryptography;
 using Lib.P2P.Protocols;
 using Lib.P2P.PubSub;
-using Lib.P2P.SecureCommunication;
 using Makaretu.Dns;
-using Microsoft.Extensions.Options;
-using MultiFormats;
-using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -146,7 +141,8 @@ namespace Catalyst.Core.Modules.Dfs
                 var localPeer = new Peer
                 {
                     Id = self.Id,
-                    PublicKey = keyStoreService.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult(),
+                    PublicKey =
+                        keyStoreService.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult(),
                     ProtocolVersion = "ipfs/0.1.0"
                 };
 
@@ -168,8 +164,8 @@ namespace Catalyst.Core.Modules.Dfs
                .As<PubSubService>()
                .SingleInstance();
 
-            builder.RegisterType<DotClient>()
-               .As<DotClient>();
+            builder.RegisterInstance(new DotClient {Timeout = TimeSpan.FromSeconds(30)})
+               .As<IDnsClient>();
 
             builder.RegisterType<Ping1>()
                .As<Ping1>();

@@ -35,15 +35,13 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         private readonly IDnsClient _dnsClient;
 
-        public DnsApi(DotClient dnsClient)
-        {
-            _dnsClient = dnsClient;
-        }
+        public DnsApi(IDnsClient dnsClient) { _dnsClient = dnsClient; }
 
-        public async Task<string> ResolveNameAsync(string name,
-            bool recursive = false,
-            bool nocache = false,
-            CancellationToken cancel = default)
+        public async Task<string>
+            ResolveNameAsync(string name,
+                bool recursive = false,
+                bool nocache = false,
+                CancellationToken cancel = default)
         {
             do
             {
