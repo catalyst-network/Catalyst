@@ -21,6 +21,8 @@
 
 #endregion
 
+using System.IO;
+using Lib.P2P.Cryptography;
 using Makaretu.Dns;
 using MultiFormats;
 
@@ -85,6 +87,17 @@ namespace Catalyst.Abstractions.Options
                 new MultiAddress(
                     "/ip4/167.172.73.132/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe1E9wXdykR6h3Q9EaQcQc6hdNAXyCTEzoGfcA2wQgCRyg")
             };
+
+            if (Swarm.PrivateNetworkKey == null)
+            {
+                var path = Path.Combine(Repository.Folder, "swarm.key");
+                if (File.Exists(path))
+                {
+                    using var x = File.OpenText(path);
+                    Swarm.PrivateNetworkKey = new PreSharedKey();
+                    Swarm.PrivateNetworkKey.Import(x);
+                }
+            }
 
             //KeyChain.DefaultKeyType = "ed25519";
 

@@ -81,6 +81,6 @@ namespace Catalyst.Abstractions.Dfs
         /// </summary>
         DhtService DhtService { get; }
 
-        Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default);
+        //Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default);
     }
 }

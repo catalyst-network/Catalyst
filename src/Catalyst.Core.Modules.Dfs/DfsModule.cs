@@ -21,13 +21,17 @@
 
 #endregion
 
+using System.Reflection;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
+using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Kernel;
 using Catalyst.Core.Lib.P2P;
@@ -36,9 +40,14 @@ using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
+using Lib.P2P.Cryptography;
 using Lib.P2P.Protocols;
 using Lib.P2P.PubSub;
+using Lib.P2P.SecureCommunication;
 using Makaretu.Dns;
+using Microsoft.Extensions.Options;
+using MultiFormats;
+using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -82,6 +91,71 @@ namespace Catalyst.Core.Modules.Dfs
                .As<BitSwapService>()
                .SingleInstance();
 
+            builder.RegisterBuildCallback(async x =>
+            {
+                //Log.Debug("Building bitswap service");
+                //Log.Debug("Built bitswap service");
+
+                var localPeer = x.Resolve<Peer>();
+                var swarmService = x.Resolve<SwarmService>();
+
+                var bitSwapService = x.Resolve<BitSwapService>();
+                bitSwapService.SwarmService = swarmService;
+                bitSwapService.BlockService = x.Resolve<IBlockApi>();
+
+                var pubService = x.Resolve<PubSubService>();
+                pubService.LocalPeer = localPeer;
+                pubService.Routers.Add(new FloodRouter
+                {
+                    SwarmService = swarmService
+                });
+
+                //var keyApi = x.Resolve<IKeyApi>();
+                //var swarmOptions = x.Resolve<SwarmOptions>();
+                //swarmService.LocalPeer = localPeer;
+                //swarmService.LocalPeerKey =
+                //    Key.CreatePrivateKey(await keyApi.GetPrivateKeyAsync("self").ConfigureAwait(false));
+                //swarmService.NetworkProtector = swarmOptions.PrivateNetworkKey == null
+                //    ? null
+                //    : new Psk1Protector
+                //    {
+                //        Key = swarmOptions.PrivateNetworkKey
+                //    };
+
+                //if (swarmOptions.PrivateNetworkKey != null)
+                //{
+                //    Log.Debug($"Private network {swarmOptions.PrivateNetworkKey.Fingerprint().ToHexString()}");
+                //}
+            });
+
+            builder.Register(x =>
+            {
+                var keyStoreService = x.Resolve<IKeyStoreService>();
+                var keyApi = x.Resolve<IKeyApi>();
+                var passwordManager = x.Resolve<IPasswordManager>();
+
+                var passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(
+                    PasswordRegistryTypes.IpfsPassword,
+                    "Please provide your IPFS password");
+
+                keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
+
+                var self = keyApi.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult()
+                 ?? keyApi.CreateAsync("self", "rsa", 0).ConfigureAwait(false).GetAwaiter().GetResult();
+
+                var localPeer = new Peer
+                {
+                    Id = self.Id,
+                    PublicKey = keyStoreService.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult(),
+                    ProtocolVersion = "ipfs/0.1.0"
+                };
+
+                var version = typeof(DfsService).GetTypeInfo().Assembly.GetName().Version;
+                localPeer.AgentVersion = $"net-ipfs/{version.Major}.{version.Minor}.{version.Revision}";
+
+                return localPeer;
+            }).As<Peer>();
+
             builder.RegisterType<SwarmService>()
                .As<SwarmService>()
                .SingleInstance();
@@ -99,13 +173,17 @@ namespace Catalyst.Core.Modules.Dfs
 
             builder.RegisterType<Ping1>()
                .As<Ping1>();
+
+            builder.RegisterType<MigrationManager>()
+               .As<IMigrationManager>();
         }
 
         protected override void LoadOptions(ContainerBuilder builder)
         {
             builder.RegisterType<DfsOptions>().SingleInstance();
             builder.RegisterType<BlockOptions>().SingleInstance();
-            builder.RegisterType<RepositoryOptions>().SingleInstance().WithParameter("dfsDirectory", Constants.DfsDataSubDir);
+            builder.RegisterType<RepositoryOptions>().SingleInstance()
+               .WithParameter("dfsDirectory", Constants.DfsDataSubDir);
             builder.RegisterType<DiscoveryOptions>().SingleInstance();
             builder.RegisterType<KeyChainOptions>().SingleInstance();
             builder.RegisterType<SwarmOptions>().SingleInstance();
