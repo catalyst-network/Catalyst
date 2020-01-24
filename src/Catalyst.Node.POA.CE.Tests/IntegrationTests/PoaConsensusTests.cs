@@ -101,17 +101,21 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     n?.Consensus.StartProducing();
                 });
 
-            await Task.Delay(CycleConfiguration.Default.CycleDuration.Multiply(1.3))
+            await Task.Delay(CycleConfiguration.Default.CycleDuration.Multiply(2.3))
                .ConfigureAwait(false);
-
+            
+            //At least one delta should be produced
+            var maxDeltasProduced = 1;
             var files = new List<string>();
             for (var i = 0; i < _nodes.Count; i++)
             {
                 var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}/dfs", "blocks");
-                files.AddRange(Directory.GetFiles(dfsDir).Select(x => new FileInfo(x).Name));
+                var deltaFiles = Directory.GetFiles(dfsDir).Select(x => new FileInfo(x).Name).ToList();
+                maxDeltasProduced = Math.Max(maxDeltasProduced, deltaFiles.Count());
+                files.AddRange(deltaFiles);
             }
 
-            files.Distinct().Count().Should().Be(1,
+            files.Distinct().Count().Should().Be(maxDeltasProduced,
                 "only the elected producer should score high enough to see his block elected.");
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
