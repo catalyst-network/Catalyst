@@ -100,7 +100,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     n?.Consensus.StartProducing();
                 });
 
-            await Task.Delay(CycleConfiguration.Default.CycleDuration.Multiply(2.3))
+            //CycleConfiguration.Default.CycleDuration.Multiply(2.3)
+            await Task.Delay(TimeSpan.FromSeconds(100000))
                .ConfigureAwait(false);
 
             //At least one delta should be produced
@@ -115,8 +116,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             }
 
             files.Distinct().Count().Should().Be(maxDeltasProduced,
-                "only the elected producer should score high enough to see his block elected.",
-                files.Aggregate((x, y) => x + "," + y));
+                "only the elected producer should score high enough to see his block elected. Found: " + files.Aggregate((x, y) => x + "," + y));
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }

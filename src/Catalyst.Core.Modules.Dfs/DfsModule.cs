@@ -164,7 +164,7 @@ namespace Catalyst.Core.Modules.Dfs
                .As<PubSubService>()
                .SingleInstance();
 
-            builder.RegisterInstance(new Makaretu.Dns.DnsClient())
+            builder.RegisterType<Makaretu.Dns.DnsClient>()
                .As<IDnsClient>();
 
             builder.RegisterType<Ping1>()
