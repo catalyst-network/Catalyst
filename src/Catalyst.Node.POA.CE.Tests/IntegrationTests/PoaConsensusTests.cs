@@ -100,8 +100,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     n?.Consensus.StartProducing();
                 });
 
-            //CycleConfiguration.Default.CycleDuration.Multiply(2.3)
-            await Task.Delay(TimeSpan.FromSeconds(100000))
+            await Task.Delay(CycleConfiguration.Default.CycleDuration.Multiply(2.3))
                .ConfigureAwait(false);
 
             //At least one delta should be produced
