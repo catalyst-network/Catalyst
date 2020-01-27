@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         
         /// <summary>
-        ///     Does check to see if it can process the msg, if object is T thn it fires the inheritor WriteAsync0
+        ///     Does check to see if it can process the msg, if object is T thn it fires the inheritor Write0Async
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="msg"></param>
@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
             {
                 if (msg is T msg1)
                 {
-                    writeTask = WriteAsync0(ctx, msg1);
+                    writeTask = Write0Async(ctx, msg1);
                 }
             }
             catch (Exception e)
@@ -68,8 +68,6 @@ namespace Catalyst.Core.Lib.IO.Handlers
         /// <param name="ctx"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-
-        // ReSharper disable once VSTHRD200
-        protected abstract Task WriteAsync0(IChannelHandlerContext ctx, T msg);
+        protected abstract Task Write0Async(IChannelHandlerContext ctx, T msg);
     }
 }

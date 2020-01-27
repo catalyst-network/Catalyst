@@ -72,7 +72,7 @@ namespace Catalyst.Core.Modules.Consensus
         public void StartProducing()
         {
             _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
-               .Where(p => p.Name == PhaseName.Construction && p.Status == PhaseStatus.Producing)
+               .Where(p => p.Name.Equals(PhaseName.Construction) && p.Status.Equals(PhaseStatus.Producing))
                .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
                .Subscribe(c =>
                 {
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus
                 });
 
             _campaigningProductionSubscription = _cycleEventsProvider.PhaseChanges
-               .Where(p => p.Name == PhaseName.Campaigning && p.Status == PhaseStatus.Producing)
+               .Where(p => p.Name.Equals(PhaseName.Campaigning) && p.Status.Equals(PhaseStatus.Producing))
                .Select(p =>
                 {
                     _deltaVoter.TryGetFavouriteDelta(p.PreviousDeltaDfsHash, out var favourite);
@@ -95,7 +95,7 @@ namespace Catalyst.Core.Modules.Consensus
                 });
 
             _votingProductionSubscription = _cycleEventsProvider.PhaseChanges
-               .Where(p => p.Name == PhaseName.Voting && p.Status == PhaseStatus.Producing)
+               .Where(p => p.Name.Equals(PhaseName.Voting) && p.Status.Equals(PhaseStatus.Producing))
                .Select(p => _deltaElector.GetMostPopularCandidateDelta(p.PreviousDeltaDfsHash))
                .Where(c => c != null)
                .Select(c =>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Cryptography.BulletProofs</RootNamespace>
@@ -7,6 +7,9 @@
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Cryptography.BulletProofs.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;CS8002</NoWarn>
     </PropertyGroup>
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
