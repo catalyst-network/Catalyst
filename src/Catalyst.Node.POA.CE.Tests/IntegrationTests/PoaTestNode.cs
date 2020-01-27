@@ -159,9 +159,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                 return;
             }
 
-            _scope?.Dispose();
-            _peerRepository?.Dispose();
-            _containerProvider?.Dispose();
+            //_scope?.Dispose();
+            //_peerRepository?.Dispose();
+            //_containerProvider?.Dispose();
         }
     }
 }
