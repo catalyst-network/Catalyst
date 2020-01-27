@@ -377,6 +377,12 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 header.Size = 0;
                 tar.PutNextEntry(entry);
                 tar.CloseEntry();
+
+                // Recurse over files and subdirectories
+                foreach (var link in dag?.Links)
+                {
+                    await AddTarNodeAsync(link.Id, $"{name}/{link.Name}", tar, cancel).ConfigureAwait(false);
+                }
             }
             else // Must be a file
             {
@@ -386,15 +392,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 tar.PutNextEntry(entry);
                 await content.CopyToAsync(tar, cancel);
                 tar.CloseEntry();
-            }
-
-            // Recurse over files and subdirectories
-            if (dm.Type == DataType.Directory)
-            {
-                foreach (var link in dag?.Links)
-                {
-                    await AddTarNodeAsync(link.Id, $"{name}/{link.Name}", tar, cancel).ConfigureAwait(false);
-                }
             }
         }
 

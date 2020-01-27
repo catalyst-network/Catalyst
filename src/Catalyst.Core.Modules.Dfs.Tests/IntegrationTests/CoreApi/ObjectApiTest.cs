@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var _ = ipfs.ObjectApi.NewAsync("unknown-template").Result;
+                ipfs.ObjectApi.NewAsync("unknown-template").GetAwaiter().GetResult();
             });
         }
 
