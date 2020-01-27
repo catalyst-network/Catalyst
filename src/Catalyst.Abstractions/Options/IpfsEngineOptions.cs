@@ -76,7 +76,21 @@ namespace Catalyst.Abstractions.Options
             Swarm = swarmOptions;
             Dns = dnsClient;
 
+            //KeyChain.DefaultKeyType = "ed25519";
+
+            //Constants.KeyChainDefaultKeyType;
+
+            // The seed nodes for the catalyst network.
+            //Options.Discovery.BootstrapPeers = seedServers;
+
             var swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
+
+            // Do not use the public IPFS network, use a private network
+            // of catalyst only nodes.
+            Swarm.PrivateNetworkKey = new PreSharedKey
+            {
+                Value = swarmKey.ToHexBuffer()
+            };
 
             var seedServers = new[]
             {
@@ -98,20 +112,6 @@ namespace Catalyst.Abstractions.Options
                     Swarm.PrivateNetworkKey.Import(x);
                 }
             }
-
-            //KeyChain.DefaultKeyType = "ed25519";
-
-            //Constants.KeyChainDefaultKeyType;
-
-            // The seed nodes for the catalyst network.
-            //Options.Discovery.BootstrapPeers = seedServers;
-
-            // Do not use the public IPFS network, use a private network
-            // of catalyst only nodes.
-            //Swarm.PrivateNetworkKey = new PreSharedKey
-            //{
-            //    Value = swarmKey.ToHexBuffer()
-            //};
         }
     }
 }

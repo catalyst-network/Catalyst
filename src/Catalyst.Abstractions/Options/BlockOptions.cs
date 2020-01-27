@@ -41,7 +41,7 @@ namespace Catalyst.Abstractions.Options
         ///   An "inline CID" places the content in the CID not in a seperate block.
         ///   It is used to speed up access to content that is small.
         /// </remarks>
-        public bool AllowInlineCid { get; set; } = false;
+        public bool AllowInlineCid { get; set; }
 
         /// <summary>
         ///   Used to determine if the content is small enough to be inlined.
