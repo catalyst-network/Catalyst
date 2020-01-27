@@ -46,9 +46,11 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private readonly CancellationTokenSource _endOfTestCancellationSource;
         private readonly ILifetimeScope _scope;
         private readonly List<PoaTestNode> _nodes;
+        private readonly ITestOutputHelper _output;
 
         public PoaConsensusTests(ITestOutputHelper output) : base(output)
         {
+            _output = output;
             ContainerProvider.ConfigureContainerBuilder(true, true, true);
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
 
@@ -94,6 +96,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         [Fact]
         public async Task Run_ConsensusAsync()
         {
+            _output.WriteLine("Starting nodes");
+
             _nodes.AsParallel()
                .ForAll(n =>
                 {
@@ -105,6 +109,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     ? TimeSpan.FromHours(3)
                     : CycleConfiguration.Default.CycleDuration.Multiply(2.3))
                .ConfigureAwait(false);
+
+            _output.WriteLine("Checking output of nodes");
 
             //At least one delta should be produced
             var maxDeltasProduced = 1;
@@ -120,6 +126,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             files.Distinct().Count().Should().Be(maxDeltasProduced,
                 "only the elected producer should score high enough to see his block elected. Found: " +
                 files.Aggregate((x, y) => x + "," + y));
+
+            _output.WriteLine("Ending test");
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
