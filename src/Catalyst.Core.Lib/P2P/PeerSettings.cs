@@ -28,10 +28,12 @@ using System.Net;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
+using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P
 {

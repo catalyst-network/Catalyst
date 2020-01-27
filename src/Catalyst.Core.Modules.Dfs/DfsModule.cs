@@ -181,7 +181,7 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<RepositoryOptions>().SingleInstance()
                .WithParameter("dfsDirectory", Constants.DfsDataSubDir);
             builder.RegisterType<DiscoveryOptions>().SingleInstance();
-            builder.RegisterType<KeyChainOptions>().SingleInstance();
+            builder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", "ed25519");
             builder.RegisterType<SwarmOptions>().SingleInstance();
         }
     }
