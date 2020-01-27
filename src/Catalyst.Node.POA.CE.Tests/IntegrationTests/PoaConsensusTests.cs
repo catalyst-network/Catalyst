@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -103,7 +102,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             await Task.Delay(CycleConfiguration.Default.CycleDuration.Multiply(2.3))
                .ConfigureAwait(false);
-            
+
             //At least one delta should be produced
             var maxDeltasProduced = 1;
             var files = new List<string>();
@@ -116,7 +115,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             }
 
             files.Distinct().Count().Should().Be(maxDeltasProduced,
-                "only the elected producer should score high enough to see his block elected.");
+                "only the elected producer should score high enough to see his block elected.",
+                files.Aggregate((x, y) => x + "," + y));
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }

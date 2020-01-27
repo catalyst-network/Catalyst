@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///   The CID.
         /// </summary>
         [JsonProperty(PropertyName = "/")]
-        public string Link;
+        public string Link { set; get; }
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   A link to the CID.
         /// </summary>
-        public LinkedDataDto Cid;
+        public LinkedDataDto Cid { set; get; }
     }
 
     /// <summary>

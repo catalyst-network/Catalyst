@@ -39,37 +39,37 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     TODO: Unknown.
         /// </summary>
-        public int ProvideBufLen;
+        public int ProvideBufLen { set; get; }
 
         /// <summary>
         ///     The content IDs that are wanted.
         /// </summary>
-        public IEnumerable<BitswapLinkDto> Wantlist;
+        public IEnumerable<BitswapLinkDto> Wantlist { set; get; }
 
         /// <summary>
         ///     The known peers.
         /// </summary>
-        public IEnumerable<string> Peers;
+        public IEnumerable<string> Peers { set; get; }
 
         /// <summary>
         ///     The number of blocks sent by other peers.
         /// </summary>
-        public ulong BlocksReceived;
+        public ulong BlocksReceived { set; get; }
 
         /// <summary>
         ///     The number of bytes sent by other peers.
         /// </summary>
-        public ulong DataReceived;
+        public ulong DataReceived { set; get; }
 
         /// <summary>
         ///     The number of blocks sent to other peers.
         /// </summary>
-        public ulong BlocksSent;
+        public ulong BlocksSent { set; get; }
 
         /// <summary>
         ///     The number of bytes sent to other peers.
         /// </summary>
-        public ulong DataSent;
+        public ulong DataSent { set; get; }
 
         /// <summary>
         ///     The number of duplicate blocks sent by other peers.
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///     A duplicate block is a block that is already stored in the
         ///     local repository.
         /// </remarks>
-        public ulong DupBlksReceived;
+        public ulong DupBlksReceived { set; get; }
 
         /// <summary>
         ///     The number of duplicate bytes sent by other peers.
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///     A duplicate block is a block that is already stored in the
         ///     local repository.
         /// </remarks>
-        public ulong DupDataReceived;
+        public ulong DupDataReceived { set; get; }
     }
 
     /// <summary>
