@@ -91,6 +91,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             }
         }
 
+        //todo - Socket handlers are being disposed somewhere causing test to fail when run in CI, need to move to Synchronization so will get back to this later.
         [Fact]
         public async Task Run_ConsensusAsync()
         {
