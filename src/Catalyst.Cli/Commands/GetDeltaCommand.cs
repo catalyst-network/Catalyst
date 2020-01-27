@@ -51,7 +51,7 @@ namespace Catalyst.Cli.Commands
             }
             catch (FormatException fe)
             {
-                Log.Warning("Unable to parse hash {0} as a Cid", option.Hash);
+                Log.Warning("Unable to parse hash {0} as a Cid {1}", option.Hash, fe);
                 CommandContext.UserOutput.WriteLine($"Unable to parse hash {option.Hash} as a Cid");
                 return default;
             }
