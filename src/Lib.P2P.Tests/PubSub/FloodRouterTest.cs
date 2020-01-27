@@ -1,27 +1,4 @@
-#region LICENSE
-
-/**
-* Copyright (c) 2019 Catalyst Network
-*
-* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
-*
-* Catalyst.Node is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-*
-* Catalyst.Node is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
-*/
-
-#endregion
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -104,19 +81,16 @@ namespace Lib.P2P.Tests.PubSub
 
                 var cs = new CancellationTokenSource();
                 await ns1.SubscribeAsync(topic, msg => { }, cs.Token);
-                await swarm1.ConnectAsync(other, cs.Token);
+                await swarm1.ConnectAsync(other);
 
                 var peers = new Peer[0];
                 var endTime = DateTime.Now.AddSeconds(3);
                 while (peers.Length == 0)
                 {
                     if (DateTime.Now > endTime)
-                    {
                         Assert.Fail("timeout");
-                    }
-                    
-                    await Task.Delay(100, cs.Token);
-                    peers = (await ns2.PeersAsync(topic, cs.Token)).ToArray();
+                    await Task.Delay(100);
+                    peers = (await ns2.PeersAsync(topic)).ToArray();
                 }
 
                 CollectionAssert.Contains(peers, self);
@@ -156,7 +130,7 @@ namespace Lib.P2P.Tests.PubSub
                 await swarm2.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
                 var cs = new CancellationTokenSource();
-                await swarm1.ConnectAsync(other, cs.Token);
+                await swarm1.ConnectAsync(other);
                 await ns1.SubscribeAsync(topic, msg => { }, cs.Token);
 
                 var peers = new Peer[0];
@@ -164,12 +138,9 @@ namespace Lib.P2P.Tests.PubSub
                 while (peers.Length == 0)
                 {
                     if (DateTime.Now > endTime)
-                    {
                         Assert.Fail("timeout");
-                    }
-                    
-                    await Task.Delay(100, cs.Token);
-                    peers = (await ns2.PeersAsync(topic, cs.Token)).ToArray();
+                    await Task.Delay(100);
+                    peers = (await ns2.PeersAsync(topic)).ToArray();
                 }
 
                 CollectionAssert.Contains(peers, self);
@@ -209,7 +180,7 @@ namespace Lib.P2P.Tests.PubSub
                 await swarm2.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
                 var cs = new CancellationTokenSource();
-                await swarm1.ConnectAsync(other, cs.Token);
+                await swarm1.ConnectAsync(other);
                 await ns1.SubscribeAsync(topic, msg => { }, cs.Token);
 
                 var peers = new Peer[0];
@@ -217,12 +188,9 @@ namespace Lib.P2P.Tests.PubSub
                 while (peers.Length == 0)
                 {
                     if (DateTime.Now > endTime)
-                    {
                         Assert.Fail("timeout");
-                    }
-                    
-                    await Task.Delay(100, cs.Token);
-                    peers = (await ns2.PeersAsync(topic, cs.Token)).ToArray();
+                    await Task.Delay(100);
+                    peers = (await ns2.PeersAsync(topic)).ToArray();
                 }
 
                 CollectionAssert.Contains(peers, self);
@@ -233,12 +201,9 @@ namespace Lib.P2P.Tests.PubSub
                 while (peers.Length != 0)
                 {
                     if (DateTime.Now > endTime)
-                    {
                         Assert.Fail("timeout");
-                    }
-                    
-                    await Task.Delay(100, cs.Token);
-                    peers = (await ns2.PeersAsync(topic, cs.Token)).ToArray();
+                    await Task.Delay(100);
+                    peers = (await ns2.PeersAsync(topic)).ToArray();
                 }
             }
             finally
@@ -288,34 +253,28 @@ namespace Lib.P2P.Tests.PubSub
                 var cs = new CancellationTokenSource();
                 await ns2.SubscribeAsync(topic, msg => lastMessage2 = msg, cs.Token);
                 await ns3.SubscribeAsync(topic, msg => lastMessage3 = msg, cs.Token);
-                await swarm1.ConnectAsync(other, cs.Token);
-                await swarm3.ConnectAsync(other, cs.Token);
+                await swarm1.ConnectAsync(other);
+                await swarm3.ConnectAsync(other);
 
                 var peers = new Peer[0];
                 var endTime = DateTime.Now.AddSeconds(3);
                 while (peers.Length == 0)
                 {
                     if (DateTime.Now > endTime)
-                    {
                         Assert.Fail("timeout");
-                    }
-                    
-                    await Task.Delay(100, cs.Token);
-                    peers = (await ns2.PeersAsync(topic, cs.Token)).ToArray();
+                    await Task.Delay(100);
+                    peers = (await ns2.PeersAsync(topic)).ToArray();
                 }
 
                 CollectionAssert.Contains(peers, other1);
 
-                await ns1.PublishAsync(topic, new byte[] {1}, cs.Token);
+                await ns1.PublishAsync(topic, new byte[] {1});
                 endTime = DateTime.Now.AddSeconds(3);
                 while (lastMessage2 == null || lastMessage3 == null)
                 {
                     if (DateTime.Now > endTime)
-                    {
                         Assert.Fail("timeout");
-                    }
-                    
-                    await Task.Delay(100, cs.Token);
+                    await Task.Delay(100);
                 }
 
                 Assert.IsNotNull(lastMessage2);

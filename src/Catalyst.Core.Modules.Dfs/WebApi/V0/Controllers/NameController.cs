@@ -39,12 +39,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     Path to the name, "/ipns/...".
         /// </summary>
-        public string Name;
+        public string Name { set; get; }
 
         /// <summary>
         ///     Path to the content, "/ipfs/...".
         /// </summary>
-        public string Value;
+        public string Value { set; get; }
     }
 
     /// <summary>

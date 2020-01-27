@@ -1,27 +1,4 @@
-#region LICENSE
-
-/**
-* Copyright (c) 2019 Catalyst Network
-*
-* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
-*
-* Catalyst.Node is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-*
-* Catalyst.Node is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
-*/
-
-#endregion
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -313,9 +290,9 @@ namespace Lib.P2P.Tests
             Assert.AreEqual(a0, a1);
             Assert.AreNotEqual(a0, b);
 
-            Assert.AreEqual(a0, a0);
-            Assert.AreEqual(a0, a1);
-            Assert.AreNotEqual(a0, b);
+            Assert.AreEqual<Cid>(a0, a0);
+            Assert.AreEqual<Cid>(a0, a1);
+            Assert.AreNotEqual<Cid>(a0, b);
 
             Assert.AreEqual(a0.GetHashCode(), a0.GetHashCode());
             Assert.AreEqual(a0.GetHashCode(), a1.GetHashCode());
@@ -424,7 +401,7 @@ namespace Lib.P2P.Tests
             ExceptionAssert.Throws<NotSupportedException>(() => cid.Version = 0);
         }
 
-        private sealed class CidAndX
+        private class CidAndX
         {
             public Cid Cid;
             public int X;

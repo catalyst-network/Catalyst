@@ -32,6 +32,8 @@ using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
 using Catalyst.TestUtils;
 using Lib.P2P;
+using Makaretu.Dns;
+using NSubstitute;
 using Org.BouncyCastle.Crypto.Parameters;
 using Xunit;
 using Xunit.Abstractions;
@@ -44,7 +46,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 
         public KeyApiTest(ITestOutputHelper output) : base(output)
         {
-            var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir));
+            var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _keyStoreService = new KeyStoreService(dfsOptions);
             _keyStoreService.SetPassphraseAsync(new SecureString()).Wait();
         }

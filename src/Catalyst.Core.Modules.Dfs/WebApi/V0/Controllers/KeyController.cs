@@ -38,12 +38,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   The key's local name.
         /// </summary>
-        public string Name;
+        public string Name { set; get; }
 
         /// <summary>
         ///   The key's global unique ID.
         /// </summary>
-        public string Id;
+        public string Id { set; get; }
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   A list of cryptographic keys.
         /// </summary>
-        public IEnumerable<CryptoKeyDto> Keys;
+        public IEnumerable<CryptoKeyDto> Keys { set; get; }
     }
 
     /// <summary>
@@ -65,22 +65,22 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   The key's local name.
         /// </summary>
-        public string Was;
+        public string Was { set; get; }
 
         /// <summary>
         ///   The key's global unique ID.
         /// </summary>
-        public string Now;
+        public string Now { set; get; }
 
         /// <summary>
         ///   The key's global unique ID.
         /// </summary>
-        public string Id;
+        public string Id { set; get; }
 
         /// <summary>
         ///   Indicates that a existing key was overwritten.
         /// </summary>
-        public bool Overwrite;
+        public bool Overwrite { set; get; }
     }
 
     /// <summary>

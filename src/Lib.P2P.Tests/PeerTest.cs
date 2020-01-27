@@ -1,27 +1,4 @@
-#region LICENSE
-
-/**
-* Copyright (c) 2019 Catalyst Network
-*
-* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
-*
-* Catalyst.Node is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-*
-* Catalyst.Node is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
-*/
-
-#endregion
-
-using System;
+﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats;
@@ -29,12 +6,12 @@ using MultiFormats;
 namespace Lib.P2P.Tests
 {
     [TestClass]
-    public sealed class PeerTest
+    public class PeerTest
     {
-        private const string MarsId = "QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
-        private const string PlutoId = "QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM";
+        private const string marsId = "QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
+        private const string plutoId = "QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM";
 
-        private const string MarsPublicKey =
+        private const string marsPublicKey =
             "CAASogEwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAKGUtbRQf+a9SBHFEruNAUatS/tsGUnHuCtifGrlbYPELD3UyyhWf/FYczBCavx3i8hIPEW2jQv4ehxQxi/cg9SHswZCQblSi0ucwTBFr8d40JEiyB9CcapiMdFQxdMgGvXEOQdLz1pz+UPUDojkdKZq8qkkeiBn7KlAoGEocnmpAgMBAAE=";
 
         private static string marsAddress =
@@ -44,7 +21,7 @@ namespace Lib.P2P.Tests
         public new void ToString()
         {
             Assert.AreEqual("", new Peer().ToString());
-            Assert.AreEqual(MarsId, new Peer {Id = MarsId}.ToString());
+            Assert.AreEqual(marsId, new Peer {Id = marsId}.ToString());
         }
 
         [TestMethod]
@@ -83,7 +60,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Validation_With_Id()
         {
-            Peer peer = MarsId;
+            Peer peer = marsId;
             Assert.AreEqual(true, peer.IsValid());
         }
 
@@ -92,8 +69,8 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer
             {
-                Id = MarsId,
-                PublicKey = MarsPublicKey
+                Id = marsId,
+                PublicKey = marsPublicKey
             };
             Assert.AreEqual(true, peer.IsValid());
         }
@@ -103,8 +80,8 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer
             {
-                Id = PlutoId,
-                PublicKey = MarsPublicKey
+                Id = plutoId,
+                PublicKey = marsPublicKey
             };
             Assert.AreEqual(false, peer.IsValid());
         }
@@ -112,9 +89,9 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Value_Equality()
         {
-            var a0 = new Peer {Id = MarsId};
-            var a1 = new Peer {Id = MarsId};
-            var b = new Peer {Id = PlutoId};
+            var a0 = new Peer {Id = marsId};
+            var a1 = new Peer {Id = marsId};
+            var b = new Peer {Id = plutoId};
             Peer c = null;
             Peer d = null;
 
@@ -144,9 +121,9 @@ namespace Lib.P2P.Tests
             Assert.AreEqual(a0, a1);
             Assert.AreNotEqual(a0, b);
 
-            Assert.AreEqual(a0, a0);
-            Assert.AreEqual(a0, a1);
-            Assert.AreNotEqual(a0, b);
+            Assert.AreEqual<Peer>(a0, a0);
+            Assert.AreEqual<Peer>(a0, a1);
+            Assert.AreNotEqual<Peer>(a0, b);
 
             Assert.AreEqual(a0.GetHashCode(), a0.GetHashCode());
             Assert.AreEqual(a0.GetHashCode(), a1.GetHashCode());
@@ -156,7 +133,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Implicit_Conversion_From_String()
         {
-            Peer a = MarsId;
+            Peer a = marsId;
             Assert.IsInstanceOfType(a, typeof(Peer));
         }
     }

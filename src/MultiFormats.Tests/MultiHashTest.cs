@@ -1,26 +1,3 @@
-#region LICENSE
-
-/**
-* Copyright (c) 2019 Catalyst Network
-*
-* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
-*
-* Catalyst.Node is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-*
-* Catalyst.Node is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
-*/
-
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,15 +10,15 @@ using Newtonsoft.Json;
 namespace MultiFormats.Tests
 {
     [TestClass]
-    public sealed class MultiHashTest
+    public class MultiHashTest
     {
         [TestMethod]
         public void HashNames()
         {
-            var _ = new MultiHash("sha1", new byte[20]);
-            _ = new MultiHash("sha2-256", new byte[32]);
-            _ = new MultiHash("sha2-512", new byte[64]);
-            _ = new MultiHash("keccak-512", new byte[64]);
+            var mh = new MultiHash("sha1", new byte[20]);
+            mh = new MultiHash("sha2-256", new byte[32]);
+            mh = new MultiHash("sha2-512", new byte[64]);
+            mh = new MultiHash("keccak-512", new byte[64]);
         }
 
         [TestMethod]
@@ -85,7 +62,6 @@ namespace MultiFormats.Tests
             }
             finally
             {
-                // ReSharper disable once DelegateSubtraction
                 MultiHash.UnknownHashingAlgorithm -= unknownHandler;
             }
         }
@@ -156,7 +132,7 @@ namespace MultiFormats.Tests
             }
             finally
             {
-                HashingAlgorithm.DeRegister(alg);
+                HashingAlgorithm.Deregister(alg);
             }
         }
 
@@ -267,9 +243,9 @@ namespace MultiFormats.Tests
             Assert.AreEqual(a0, a1);
             Assert.AreNotEqual(a0, b);
 
-            Assert.AreEqual(a0, a0);
-            Assert.AreEqual(a0, a1);
-            Assert.AreNotEqual(a0, b);
+            Assert.AreEqual<MultiHash>(a0, a0);
+            Assert.AreEqual<MultiHash>(a0, a1);
+            Assert.AreNotEqual<MultiHash>(a0, b);
 
             Assert.AreEqual(a0.GetHashCode(), a0.GetHashCode());
             Assert.AreEqual(a0.GetHashCode(), a1.GetHashCode());
@@ -317,7 +293,7 @@ namespace MultiFormats.Tests
         public void Example()
         {
             var hello = Encoding.UTF8.GetBytes("Hello world");
-            var mh = MultiHash.ComputeHash(hello);
+            var mh = MultiHash.ComputeHash(hello, "sha2-256");
             Console.WriteLine($"| hash code | 0x{mh.Algorithm.Code.ToString("x")} |");
             Console.WriteLine($"| digest length | 0x{mh.Digest.Length.ToString("x")} |");
             Console.WriteLine($"| digest value | {mh.Digest.ToHexString()} |");
@@ -326,7 +302,7 @@ namespace MultiFormats.Tests
             Console.WriteLine($"| base 32 | {mh.ToBase32()} |");
         }
 
-        private sealed class TestVector
+        private class TestVector
         {
             public string Algorithm { get; set; }
             public string Input { get; set; }
@@ -334,7 +310,7 @@ namespace MultiFormats.Tests
             public bool Ignore { get; set; }
         }
 
-        private TestVector[] TestVectors = 
+        private TestVector[] TestVectors = new TestVector[]
         {
             // From https://github.com/multiformats/js-multihashing-async/blob/master/test/fixtures/encodes.js
             new TestVector
@@ -527,11 +503,12 @@ namespace MultiFormats.Tests
         {
             var a = new MultiHash("QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB");
             var json = JsonConvert.SerializeObject(a);
-            Assert.AreEqual($"\"{a}\"", json);
+            Assert.AreEqual($"\"{a.ToString()}\"", json);
             var b = JsonConvert.DeserializeObject<MultiHash>(json);
             Assert.AreEqual(a, b);
-            
-            json = JsonConvert.SerializeObject(null);
+
+            a = null;
+            json = JsonConvert.SerializeObject(a);
             b = JsonConvert.DeserializeObject<MultiHash>(json);
             Assert.IsNull(b);
         }
@@ -549,7 +526,7 @@ namespace MultiFormats.Tests
         {
             Assert.IsNotNull(MultiHash.GetHashAlgorithm());
             Assert.IsNotNull(MultiHash.GetHashAlgorithm("sha2-512"));
-            var _ = ExceptionAssert.Throws<KeyNotFoundException>(() =>
+            var e = ExceptionAssert.Throws<KeyNotFoundException>(() =>
             {
                 var _ = MultiHash.GetHashAlgorithm("unknown");
             });

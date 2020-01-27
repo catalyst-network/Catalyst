@@ -1,27 +1,4 @@
-#region LICENSE
-
-/**
-* Copyright (c) 2019 Catalyst Network
-*
-* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
-*
-* Catalyst.Node is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-*
-* Catalyst.Node is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
-*/
-
-#endregion
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -89,8 +66,8 @@ namespace Lib.P2P.Tests.Multiplex
         {
             var channel = new MemoryStream();
             var muxer1 = new Muxer {Channel = channel, Initiator = true};
-            await muxer1.CreateStreamAsync("foo");
-            await muxer1.CreateStreamAsync("bar");
+            var foo = await muxer1.CreateStreamAsync("foo");
+            var bar = await muxer1.CreateStreamAsync("bar");
 
             channel.Position = 0;
             var muxer2 = new Muxer {Channel = channel};
@@ -105,9 +82,9 @@ namespace Lib.P2P.Tests.Multiplex
         {
             var channel = new MemoryStream();
             var muxer1 = new Muxer {Channel = channel, Initiator = true};
-            await muxer1.CreateStreamAsync("foo");
+            var foo = await muxer1.CreateStreamAsync("foo");
             var muxer2 = new Muxer {Channel = channel, Initiator = true};
-            await muxer2.CreateStreamAsync("bar");
+            var bar = await muxer2.CreateStreamAsync("bar");
 
             channel.Position = 0;
             var muxer3 = new Muxer {Channel = channel};
@@ -123,8 +100,8 @@ namespace Lib.P2P.Tests.Multiplex
         {
             var channel = new MemoryStream();
             var muxer1 = new Muxer {Channel = channel, Initiator = true};
-            await muxer1.CreateStreamAsync("foo");
-            await muxer1.CreateStreamAsync("bar");
+            var foo = await muxer1.CreateStreamAsync("foo");
+            var bar = await muxer1.CreateStreamAsync("bar");
 
             channel.Position = 0;
             var muxer2 = new Muxer {Channel = channel};
@@ -139,12 +116,10 @@ namespace Lib.P2P.Tests.Multiplex
         {
             var channel = new MemoryStream();
             var muxer1 = new Muxer {Channel = channel, Initiator = true};
-            await using (await muxer1.CreateStreamAsync("foo"))
+            using (var foo = await muxer1.CreateStreamAsync("foo"))
+            using (var bar = await muxer1.CreateStreamAsync("bar"))
             {
-                await using (await muxer1.CreateStreamAsync("bar"))
-                {
-                    // open and close a stream.
-                }
+                // open and close a stream.
             }
 
             channel.Position = 0;

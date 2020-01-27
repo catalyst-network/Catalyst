@@ -9,6 +9,9 @@
     <PropertyGroup>
         <RootNamespace>Catalyst.TestUtils</RootNamespace>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <NoWarn>1701;1702;VSTHRD200;CS8002</NoWarn>
+    </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
         <None Update="Config\**\*.json">

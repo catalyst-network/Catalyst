@@ -215,14 +215,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             Assert.Equal(r[0], r[1]);
         }
 
-        [Fact]
-        public async Task KeyChain_GetKey()
-        {
-            var keyChain = await _dfs1.KeyChainAsync();
-            var key = await keyChain.GetPrivateKeyAsync("self");
-            Assert.NotNull(key);
-            Assert.True(key.IsPrivate);
-        }
+        //todo
+        //[Fact]
+        //public async Task KeyChain_GetKey()
+        //{
+        //    var keyChain = await _dfs1.KeyChainAsync();
+        //    var key = await keyChain.GetPrivateKeyAsync("self");
+        //    Assert.NotNull(key);
+        //    Assert.True(key.IsPrivate);
+        //}
 
         [Fact]
         public async Task Swarm_Gets_Bootstrap_Peers()

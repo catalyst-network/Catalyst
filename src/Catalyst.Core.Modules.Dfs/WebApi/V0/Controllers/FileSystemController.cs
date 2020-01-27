@@ -45,17 +45,17 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   The file name.
         /// </summary>
-        public string Name;
+        public string Name { set; get; }
 
         /// <summary>
         ///   The CID of the file.
         /// </summary>
-        public string Hash;
+        public string Hash { set; get; }
 
         /// <summary>
         ///   The file size.
         /// </summary>
-        public string Size;
+        public string Size { set; get; }
     }
 
     /// <summary>
@@ -66,17 +66,17 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   The file name.
         /// </summary>
-        public string Name;
+        public string Name { set; get; }
 
         /// <summary>
         ///   The CID of the file.
         /// </summary>
-        public string Hash;
+        public string Hash { set; get; }
 
         /// <summary>
         ///   The file size.
         /// </summary>
-        public long Size;
+        public long Size { set; get; }
     }
 
     /// <summary>
@@ -87,22 +87,22 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   The CID of the file.
         /// </summary>
-        public string Hash;
+        public string Hash { set; get; }
 
         /// <summary>
         ///   The file size.
         /// </summary>
-        public long Size;
+        public long Size { set; get; }
 
         /// <summary>
         ///   "File" or "Directory"
         /// </summary>
-        public string Type;
+        public string Type { set; get; }
 
         /// <summary>
         ///   Links to other files.
         /// </summary>
-        public FileSystemLinkDto[] Links;
+        public FileSystemLinkDto[] Links { set; get; }
     }
 
     /// <summary>
@@ -113,12 +113,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///  A path and its CID.
         /// </summary>
-        public Dictionary<string, string> Arguments;
+        public Dictionary<string, string> Arguments { set; get; }
 
         /// <summary>
         ///   The pins.
         /// </summary>
-        public Dictionary<string, FileSystemDetailDto> Objects;
+        public Dictionary<string, FileSystemDetailDto> Objects { set; get; }
     }
 
     /// <summary>
