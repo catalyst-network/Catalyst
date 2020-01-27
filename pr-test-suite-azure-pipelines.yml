@@ -1,11 +1,7 @@
 strategy:
   matrix:
     Windows-VS2019:
-      imageName: 'windows-2019'
-      netcore_sdk: 3.0.100
-      rustup_toolchain: stable
-    Osx-Sierra:
-      imageName: 'macos-10.13'
+      imageName: 'vs2017-win2016'
       netcore_sdk: 3.0.100
       rustup_toolchain: stable
     Osx-Mojave:
@@ -14,10 +10,6 @@ strategy:
       rustup_toolchain: stable
     Ubuntu-1804:
       imageName: 'ubuntu-18.04'
-      netcore_sdk: 3.0.100
-      rustup_toolchain: stable
-    Ubuntu-1604:
-      imageName: 'ubuntu-16.04'
       netcore_sdk: 3.0.100
       rustup_toolchain: stable
   maxParallel: 3
@@ -44,7 +36,6 @@ pr:
   branches:
     include:
       - develop
-      - feature/*
     exclude:
       - master/*
       - release/*
@@ -57,7 +48,6 @@ schedules:
         - master
         - develop
         - releases/*
-        - feature/*
     always: true
 
 steps:
