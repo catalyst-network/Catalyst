@@ -79,7 +79,7 @@ namespace Catalyst.Core.Lib.Tests
 
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var _ = _configApi.GetAsync("Addresses.api").Result;
+                _configApi.GetAsync("Addresses.api").GetAwaiter().GetResult();
             });
         }
 
