@@ -1,4 +1,27 @@
-﻿using System;
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
+using System;
 using System.IO;
 using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -78,9 +101,9 @@ namespace MultiFormats.Tests
             Assert.AreEqual(a0, a1);
             Assert.AreNotEqual(a0, b);
 
-            Assert.AreEqual<MultiAddress>(a0, a0);
-            Assert.AreEqual<MultiAddress>(a0, a1);
-            Assert.AreNotEqual<MultiAddress>(a0, b);
+            Assert.AreEqual(a0, a0);
+            Assert.AreEqual(a0, a1);
+            Assert.AreNotEqual(a0, b);
 
             Assert.AreEqual(a0.GetHashCode(), a0.GetHashCode());
             Assert.AreEqual(a0.GetHashCode(), a1.GetHashCode());
@@ -116,7 +139,7 @@ namespace MultiFormats.Tests
         [TestMethod]
         public void Bad_Onion_MultiAdress()
         {
-            var badCases = new string[]
+            var badCases = new[]
             {
                 "/onion/9imaq4ygg2iegci7:80",
                 "/onion/aaimaq4ygg2iegci7:80",
@@ -125,7 +148,10 @@ namespace MultiFormats.Tests
                 "/onion/timaq4ygg2iegci7",
                 "/onion/timaq4ygg2iegci@:666",
             };
-            foreach (var badCase in badCases) ExceptionAssert.Throws<Exception>(() => new MultiAddress(badCase));
+            foreach (var badCase in badCases)
+            {
+                ExceptionAssert.Throws<Exception>(() => new MultiAddress(badCase));
+            }
         }
 
         [TestMethod]
@@ -163,13 +189,13 @@ namespace MultiFormats.Tests
                 ma0.Write(ms);
                 ms.Position = 0;
                 var ma1 = new MultiAddress(ms);
-                Assert.AreEqual<MultiAddress>(ma0, ma1);
+                Assert.AreEqual(ma0, ma1);
 
                 var ma2 = new MultiAddress(ma0.ToString());
-                Assert.AreEqual<MultiAddress>(ma0, ma2);
+                Assert.AreEqual(ma0, ma2);
 
                 var ma3 = new MultiAddress(ma0.ToArray());
-                Assert.AreEqual<MultiAddress>(ma0, ma3);
+                Assert.AreEqual(ma0, ma3);
             }
         }
 
@@ -323,12 +349,11 @@ namespace MultiFormats.Tests
         {
             var a = new MultiAddress("/ip6/fe80::7573:b0a8:46b0:0bad/tcp/4009");
             var json = JsonConvert.SerializeObject(a);
-            Assert.AreEqual($"\"{a.ToString()}\"", json);
+            Assert.AreEqual($"\"{a}\"", json);
             var b = JsonConvert.DeserializeObject<MultiAddress>(json);
             Assert.AreEqual(a.ToString(), b.ToString());
 
-            a = null;
-            json = JsonConvert.SerializeObject(a);
+            json = JsonConvert.SerializeObject(null);
             b = JsonConvert.DeserializeObject<MultiAddress>(json);
             Assert.IsNull(b);
         }
@@ -336,8 +361,8 @@ namespace MultiFormats.Tests
         [TestMethod]
         public void WithPeerId()
         {
-            var id = "QmQusTXc1Z9C1mzxsqC9ZTFXCgSkpBRGgW4Jk2QYHxKE22";
-            var id3 = "QmQusTXc1Z9C1mzxsqC9ZTFXCgSkpBRGgW4Jk2QYHxKE33";
+            const string id = "QmQusTXc1Z9C1mzxsqC9ZTFXCgSkpBRGgW4Jk2QYHxKE22";
+            const string id3 = "QmQusTXc1Z9C1mzxsqC9ZTFXCgSkpBRGgW4Jk2QYHxKE33";
 
             var ma1 = new MultiAddress("/ip4/127.0.0.1/tcp/4001");
             Assert.AreEqual($"{ma1}/p2p/{id}", ma1.WithPeerId(id));

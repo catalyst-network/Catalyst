@@ -1,4 +1,27 @@
-﻿using System.Text;
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
+using System.Text;
 using Lib.P2P.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats;
@@ -8,10 +31,10 @@ using Org.BouncyCastle.Crypto.Parameters;
 namespace Lib.P2P.Tests.Cryptography
 {
     [TestClass]
-    public class CtrStreamCipherTest
+    public sealed class CtrStreamCipherTest
     {
         [TestMethod]
-        public void SameAsNodeJS()
+        public void SameAsNodeJs()
         {
             var key = new byte[32];
             var iv = new byte[16];
@@ -19,7 +42,7 @@ namespace Lib.P2P.Tests.Cryptography
             var p = new ParametersWithIV(new KeyParameter(key), iv);
             encrypt.Init(true, p);
 
-            var plain = new byte[] {(byte) 'a'};
+            var plain = new[] {(byte) 'a'};
             var actual = new byte[plain.Length];
 
             var expected = new byte[] {0xbd};

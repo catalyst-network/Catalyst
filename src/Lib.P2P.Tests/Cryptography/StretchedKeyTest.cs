@@ -1,4 +1,27 @@
-﻿using Lib.P2P.Cryptography;
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
+using Lib.P2P.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests.Cryptography
@@ -21,7 +44,7 @@ namespace Lib.P2P.Tests.Cryptography
 
             Assert.IsNotNull(k1);
             CollectionAssert.AreEqual(
-                new byte[] {208, 132, 203, 169, 253, 52, 40, 83, 161, 91, 17, 71, 33, 136, 67, 96}, k1.IV);
+                new byte[] {208, 132, 203, 169, 253, 52, 40, 83, 161, 91, 17, 71, 33, 136, 67, 96}, k1.Iv);
             CollectionAssert.AreEqual(
                 new byte[]
                 {
@@ -34,7 +57,7 @@ namespace Lib.P2P.Tests.Cryptography
 
             Assert.IsNotNull(k2);
             CollectionAssert.AreEqual(
-                new byte[] {236, 17, 34, 141, 90, 106, 197, 56, 197, 184, 157, 135, 91, 88, 112, 19}, k2.IV);
+                new byte[] {236, 17, 34, 141, 90, 106, 197, 56, 197, 184, 157, 135, 91, 88, 112, 19}, k2.Iv);
             CollectionAssert.AreEqual(
                 new byte[]
                 {

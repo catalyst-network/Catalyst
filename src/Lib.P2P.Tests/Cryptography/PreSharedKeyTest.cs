@@ -1,4 +1,27 @@
-﻿using System;
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
+using System;
 using System.IO;
 using Lib.P2P.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -37,7 +60,7 @@ namespace Lib.P2P.Tests.Cryptography
         {
             var psk1 = new PreSharedKey().Generate();
             var s = new StringWriter();
-            psk1.Export(s, "base16");
+            psk1.Export(s);
 
             var psk2 = new PreSharedKey();
             psk2.Import(new StringReader(s.ToString()));
@@ -63,7 +86,7 @@ namespace Lib.P2P.Tests.Cryptography
             var s1 = new StringWriter();
             var s2 = new StringWriter();
             psk.Export(s1);
-            psk.Export(s2, "base16");
+            psk.Export(s2);
             Assert.AreEqual(s1.ToString(), s2.ToString());
         }
 

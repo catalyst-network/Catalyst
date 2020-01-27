@@ -1,4 +1,27 @@
-﻿using System;
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
+using System;
 using System.Linq;
 using Lib.P2P.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,7 +44,7 @@ namespace Lib.P2P.Tests.Routing
         {
             AgentVersion = "other",
             Id = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h",
-            Addresses = new MultiAddress[]
+            Addresses = new[]
             {
                 new MultiAddress("/ip4/127.0.0.1/tcp/4001")
             }
@@ -103,7 +126,7 @@ namespace Lib.P2P.Tests.Routing
                 var providers = router.Get(cid1);
                 Assert.AreEqual(0, providers.Count());
 
-                router.Add(cid1, self.Id, DateTime.MaxValue - router.ProviderTTL);
+                router.Add(cid1, self.Id, DateTime.MaxValue - router.ProviderTtl);
                 providers = router.Get(cid1);
                 Assert.AreEqual(1, providers.Count());
             }

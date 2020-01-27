@@ -1,4 +1,27 @@
-﻿using System.Linq;
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
+using System.Linq;
 using System.Threading.Tasks;
 using Lib.P2P.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,7 +44,7 @@ namespace Lib.P2P.Tests.Routing
         {
             AgentVersion = "other",
             Id = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h",
-            Addresses = new MultiAddress[]
+            Addresses = new[]
             {
                 new MultiAddress("/ip4/127.0.0.1/tcp/0")
             }
@@ -152,26 +175,26 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task ProcessFindNodeMessage_InSwarm()
         {
-            var swarm = new SwarmService {LocalPeer = self};
-            var other = swarm.RegisterPeerAddress(
+            var swarmA = new SwarmService {LocalPeer = self};
+            var swarmB = swarmA.RegisterPeerAddress(
                 "/ip4/127.0.0.1/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h");
-            var dht = new DhtService {SwarmService = swarm};
+            var dht = new DhtService {SwarmService = swarmA};
             await dht.StartAsync();
             try
             {
-                dht.RoutingTable.Add(other);
+                dht.RoutingTable.Add(swarmB);
                 var request = new DhtMessage
                 {
                     Type = MessageType.FindNode,
-                    Key = other.Id.ToArray()
+                    Key = swarmB.Id.ToArray()
                 };
                 var response = dht.ProcessFindNode(request, new DhtMessage());
                 Assert.AreEqual(1, response.CloserPeers.Length);
                 var ok = response.CloserPeers[0].TryToPeer(out var found);
                 Assert.IsTrue(ok);
-                Assert.AreEqual(other, found);
+                Assert.AreEqual(swarmB, found);
                 CollectionAssert.AreEqual(
-                    other.Addresses.Select(a => a.WithoutPeerId()).ToArray(),
+                    swarmB.Addresses.Select(a => a.WithoutPeerId()).ToArray(),
                     found.Addresses.Select(a => a.WithoutPeerId()).ToArray());
             }
             finally
@@ -326,7 +349,7 @@ namespace Lib.P2P.Tests.Routing
                 {
                     Type = MessageType.AddProvider,
                     Key = cid.Hash.ToArray(),
-                    ProviderPeers = new DhtPeerMessage[]
+                    ProviderPeers = new[]
                     {
                         new DhtPeerMessage
                         {
@@ -361,7 +384,7 @@ namespace Lib.P2P.Tests.Routing
                 "/ip4/104.236.76.40/tcp/4001/ipfs/QmSoLV4Bbm51jM9C4gDYZQ9Cy3U6aXMJDAbzgu2fzaDs64");
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
-            var task = dht.FindPeerAsync(unknownPeer);
+            await dht.FindPeerAsync(unknownPeer);
             await Task.Delay(400);
             await dht.StopAsync();
         }
@@ -440,7 +463,7 @@ namespace Lib.P2P.Tests.Routing
                 await swarm.StartAsync();
                 await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-                await dht.ProvideAsync(cid, true);
+                await dht.ProvideAsync(cid);
                 var peers = (await dht.FindProvidersAsync(cid, 1)).ToArray();
                 Assert.AreEqual(1, peers.Length);
                 Assert.AreEqual(self, peers[0]);

@@ -21,6 +21,7 @@
 <!--        <PackageReference Include="TheDotNetLeague.Ipfs.Core.Lib" Version="0.0.1" />-->
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Core.Modules.Dfs.Tests\Catalyst.Core.Modules.Dfs.Tests.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
