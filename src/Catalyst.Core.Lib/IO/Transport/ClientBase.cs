@@ -32,11 +32,19 @@ namespace Catalyst.Core.Lib.IO.Transport
 {
     public abstract class ClientBase : SocketBase, ISocketClient
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
-            : base(channelFactory, logger, handlerEventEventLoopGroupFactory) { }
+        private ILogger _logger;
+
+        protected ClientBase(IChannelFactory channelFactory,
+            ILogger logger,
+            IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
+            : base(channelFactory, logger, handlerEventEventLoopGroupFactory)
+        {
+            _logger = logger;
+        }
 
         public virtual void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
         {
+            _logger.Debug(Channel + "," + message);
             Channel.WriteAsync(message).ConfigureAwait(false);
         }
     }

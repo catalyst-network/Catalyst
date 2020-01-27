@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Transport;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P

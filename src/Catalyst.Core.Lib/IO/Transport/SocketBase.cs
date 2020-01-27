@@ -60,7 +60,9 @@ namespace Catalyst.Core.Lib.IO.Transport
             {
                 return;
             }
-            
+
+            _logger.Debug("Stacktrace: " + new System.Diagnostics.StackTrace());
+
             _logger.Debug($"Disposing{GetType().Name}");
             
             try
