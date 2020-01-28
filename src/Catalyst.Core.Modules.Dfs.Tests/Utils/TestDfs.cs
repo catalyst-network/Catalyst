@@ -22,8 +22,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
-using System.Reflection;
 using Autofac;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;

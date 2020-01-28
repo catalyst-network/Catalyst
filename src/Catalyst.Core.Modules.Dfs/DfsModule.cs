@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Reflection;
 using Autofac;
 using Catalyst.Abstractions.Consensus.Deltas;

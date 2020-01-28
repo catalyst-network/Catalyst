@@ -64,6 +64,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             _dfsServiceOther = TestDfs.GetTestDfs(output, fileSystem2);
         }
 
+        /// <summary>
+        ///     @TODO this assert is commented out
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="XunitException"></exception>
         [Fact]
         public async Task UnWant()
         {
@@ -78,7 +83,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var cts = new CancellationTokenSource();
                 var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block 2"));
-                Task wantTask = dfsService.BitSwapApi.GetAsync(block.Id, cts.Token);
+                var wantTask = dfsService.BitSwapApi.GetAsync(block.Id, cts.Token).ConfigureAwait(false);
 
                 var endTime = DateTime.Now.AddSeconds(10);
                 while (true)
@@ -102,7 +107,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 wants.ToArray().Should().NotContain(block.Id);
 
                 //Race condition between threads
-                //Assert.True(wantTask.IsCanceled);
+                // Assert.True(wantTask.GetAwaiter().IsCompleted);
             }
             finally
             {
@@ -116,13 +121,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var fileSystem = Substitute.For<IFileSystem>();
             fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
                 $"dfs1-_{DateTime.Now:yyMMddHHmmssffff}")));
+            
             var dfsService = TestDfs.GetTestDfs(_testOutputHelper, fileSystem);
             await dfsService.StartAsync();
+            
             try
             {
                 var cts = new CancellationTokenSource();
                 var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block"));
-                Task wantTask = dfsService.BitSwapApi.GetAsync(block.Id, cts.Token);
+                var wantTask = dfsService.BitSwapApi.GetAsync(block.Id, cts.Token);
 
                 var endTime = DateTime.Now.AddSeconds(10);
                 while (true)
@@ -144,8 +151,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 var wants = await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
                 wants.ToArray().Should().NotContain(block.Id);
 
-                //Race condition between threads
-                //Assert.True(wantTask.IsCanceled);
+                // Race condition between threads
+                // Assert.True(wantTask.IsCanceled);
             }
             finally
             {
