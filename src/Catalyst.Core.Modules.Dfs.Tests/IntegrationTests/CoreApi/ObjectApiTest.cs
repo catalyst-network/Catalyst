@@ -40,7 +40,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class ObjectApiTest
     {
-        private readonly IHashProvider _hashProvider;
         private IDfsService ipfs;
 
         public ObjectApiTest(ITestOutputHelper output)
@@ -70,7 +69,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var _ = ipfs.ObjectApi.NewAsync("unknown-template").Result;
+                ipfs.ObjectApi.NewAsync("unknown-template").GetAwaiter().GetResult();
             });
         }
 

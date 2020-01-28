@@ -281,9 +281,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     Hash = MultiHash.ComputeHash(data)
                 };
 
-                var wantTask = ipfs.BitSwapApi.GetAsync(cid);
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(20000);
 
-                var cid1 = await ipfs.BlockApi.PutAsync(data);
+                var wantTask = ipfs.BitSwapApi.GetAsync(cid, cts.Token);
+                var cid1 = await ipfs.BlockApi.PutAsync(data, cancel: cts.Token);
+
                 Assert.Equal(cid, cid1);
                 Assert.Equal(cid, wantTask.Result.Id);
                 Assert.Equal(data.Length, wantTask.Result.Size);

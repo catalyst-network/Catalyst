@@ -122,7 +122,7 @@ namespace Catalyst.Node.POA.CE
                     () => new ApiModule("http://*:5005", new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
-                {typeof(PoaP2PModule), () => new PoaP2PModule()},
+                {typeof(PoaP2PModule), () => new PoaP2PModule()}
             };
 
         public static void RegisterNodeDependencies(ContainerBuilder containerBuilder,
@@ -153,7 +153,10 @@ namespace Catalyst.Node.POA.CE
                .Select(p => p.Value())
                .Concat(extraModuleInstances ?? new List<IModule>());
 
-            foreach (var module in modulesToRegister) containerBuilder.RegisterModule(module);
+            foreach (var module in modulesToRegister)
+            {
+                containerBuilder.RegisterModule(module);
+            }
         }
 
         public static async Task<int> Main(string[] args)

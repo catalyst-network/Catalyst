@@ -25,6 +25,6 @@ namespace Catalyst.Core.Modules.Dfs
 {
     public class DfsState
     {
-        public bool IsStarted { set; get; } = false;
+        public bool IsStarted { set; get; }
     }
 }

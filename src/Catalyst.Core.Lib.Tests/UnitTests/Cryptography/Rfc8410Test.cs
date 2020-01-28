@@ -30,6 +30,7 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using Makaretu.Dns;
 using MultiFormats;
+using NSubstitute;
 using Org.BouncyCastle.Crypto.Parameters;
 using Xunit;
 using Xunit.Abstractions;
@@ -42,7 +43,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         
         public Rfc8410Test(ITestOutputHelper output) : base(output)
         {
-            var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), new DotClient());
+            var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _keyStoreService = new KeyStoreService(dfsOptions)
             {
                 Options = dfsOptions.KeyChain

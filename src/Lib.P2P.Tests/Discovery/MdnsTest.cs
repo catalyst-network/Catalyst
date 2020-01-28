@@ -34,6 +34,8 @@ namespace Lib.P2P.Tests.Discovery
     [TestClass]
     public class MdnsTest
     {
+        //Ignore test, contains race condition because of timing.
+        [Ignore]
         [TestMethod]
         public async Task DiscoveryNext()
         {
@@ -85,6 +87,8 @@ namespace Lib.P2P.Tests.Discovery
             }
         }
 
+        //Ignore test, contains race condition because of timing.
+        [Ignore]
         [TestMethod]
         public async Task DiscoveryJs()
         {

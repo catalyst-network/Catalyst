@@ -21,6 +21,8 @@
 
 #endregion
 
+using System.IO;
+using Lib.P2P.Cryptography;
 using Makaretu.Dns;
 using MultiFormats;
 
@@ -40,7 +42,7 @@ namespace Catalyst.Abstractions.Options
         /// <summary>
         ///     KeyChain options.
         /// </summary>
-        public KeyChainOptions KeyChain { get; set; } = new KeyChainOptions();
+        public KeyChainOptions KeyChain { get; set; }
 
         /// <summary>
         ///     Provides access to the Domain Name System.
@@ -63,16 +65,37 @@ namespace Catalyst.Abstractions.Options
         /// <summary>
         ///     Swarm (network) options.
         /// </summary>
-        public SwarmOptions Swarm { get; set; } = new SwarmOptions();
+        public SwarmOptions Swarm { get; set; }
 
-        public DfsOptions(BlockOptions blockOptions, DiscoveryOptions discoveryOptions, RepositoryOptions repositoryOptions, DotClient dotClient)
+        public DfsOptions(BlockOptions blockOptions,
+            DiscoveryOptions discoveryOptions,
+            RepositoryOptions repositoryOptions,
+            KeyChainOptions keyChainOptions,
+            SwarmOptions swarmOptions,
+            IDnsClient dnsClient)
         {
             Block = blockOptions;
             Discovery = discoveryOptions;
             Repository = repositoryOptions;
-            Dns = dotClient;
+            KeyChain = keyChainOptions;
+            Swarm = swarmOptions;
+            Dns = dnsClient;
+
+            //KeyChain.DefaultKeyType = "ed25519";
+
+            //Constants.KeyChainDefaultKeyType;
+
+            // The seed nodes for the catalyst network.
+            //Options.Discovery.BootstrapPeers = seedServers;
 
             var swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
+
+            // Do not use the public IPFS network, use a private network
+            // of catalyst only nodes.
+            Swarm.PrivateNetworkKey = new PreSharedKey
+            {
+                Value = swarmKey.ToHexBuffer()
+            };
 
             var seedServers = new[]
             {
@@ -84,26 +107,16 @@ namespace Catalyst.Abstractions.Options
                     "/ip4/167.172.73.132/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe1E9wXdykR6h3Q9EaQcQc6hdNAXyCTEzoGfcA2wQgCRyg")
             };
 
-            //if (keyType == default)
-            //{
-            //    keyType = "rsa";
-
-            //    //"ed25519";
-            //}
-
-            //KeyChain.DefaultKeyType = "ed25519";
-
-            //Constants.KeyChainDefaultKeyType;
-
-            // The seed nodes for the catalyst network.
-            //Options.Discovery.BootstrapPeers = seedServers;
-
-            // Do not use the public IPFS network, use a private network
-            // of catalyst only nodes.
-            //Swarm.PrivateNetworkKey = new PreSharedKey
-            //{
-            //    Value = swarmKey.ToHexBuffer()
-            //};
+            if (Swarm.PrivateNetworkKey == null)
+            {
+                var path = Path.Combine(Repository.Folder, "swarm.key");
+                if (File.Exists(path))
+                {
+                    using var x = File.OpenText(path);
+                    Swarm.PrivateNetworkKey = new PreSharedKey();
+                    Swarm.PrivateNetworkKey.Import(x);
+                }
+            }
         }
     }
 }

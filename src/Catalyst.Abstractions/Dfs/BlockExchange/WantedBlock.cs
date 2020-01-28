@@ -36,16 +36,16 @@ namespace Catalyst.Abstractions.Dfs.BlockExchange
         /// <summary>
         ///   The content ID of the block;
         /// </summary>
-        public Cid Id;
+        public Cid Id { set; get; }
 
         /// <summary>
         ///   The peers that want the block.
         /// </summary>
-        public List<MultiHash> Peers;
+        public List<MultiHash> Peers { set; get; }
 
         /// <summary>
         ///   The consumers that are waiting for the block.
         /// </summary>
-        public List<TaskCompletionSource<IDataBlock>> Consumers;
+        public List<TaskCompletionSource<IDataBlock>> Consumers { set; get; }
     }
 }

@@ -36,7 +36,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.BlockExchange
 {
     public sealed class BitSwapTest
     {
-        private Peer self = new Peer
+        private readonly Peer _self = new Peer
         {
             Id = "QmXK9VBxaXFuuT29AaPUTgW3jBWZ9JgLVZYdMYTHC6LLAH",
             PublicKey =
@@ -51,61 +51,53 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.BlockExchange
         [Fact]
         public void WantList()
         {
-            var bitswap = new BitSwapService {SwarmService = new SwarmService() {LocalPeer = self}};
-            Assert.Equal(0, bitswap.PeerWants(self.Id).Count());
+            var bitSwap = new BitSwapService {SwarmService = new SwarmService {LocalPeer = _self}};
+            Assert.Equal(0, bitSwap.PeerWants(_self.Id).Count());
 
             var cid = new DagNode(Encoding.UTF8.GetBytes("BitswapTest unknown block")).Id;
             var cancel = new CancellationTokenSource();
-            var _ = bitswap.WantAsync(cid, self.Id, cancel.Token);
-            bitswap.PeerWants(self.Id).ToArray().Should().Contain(cid);
+            var _ = bitSwap.WantAsync(cid, _self.Id, cancel.Token);
+            bitSwap.PeerWants(_self.Id).ToArray().Should().Contain(cid);
 
-            // Assert.Contains(bitswap.PeerWants(self.Id).ToArray(), cid);
-
-            bitswap.Unwant(cid);
-            bitswap.PeerWants(self.Id).ToArray().Should().NotContain(cid);
-
-            // Assert.DoesNotContain(bitswap.PeerWants(self.Id).ToArray(), cid);
+            bitSwap.Unwant(cid);
+            bitSwap.PeerWants(_self.Id).ToArray().Should().NotContain(cid);
         }
 
         [Fact]
         public void Want_Cancel()
         {
-            var bitswap = new BitSwapService {SwarmService = new SwarmService() {LocalPeer = self}};
+            var bitSwap = new BitSwapService {SwarmService = new SwarmService {LocalPeer = _self}};
             var cid = new DagNode(Encoding.UTF8.GetBytes("BitswapTest unknown block")).Id;
             var cancel = new CancellationTokenSource();
-            var task = bitswap.WantAsync(cid, self.Id, cancel.Token);
-
-            // Assert.Contains(bitswap.PeerWants(self.Id).ToArray(), cid);
-            bitswap.PeerWants(self.Id).ToArray().Should().Contain(cid);
+            var task = bitSwap.WantAsync(cid, _self.Id, cancel.Token);
+            bitSwap.PeerWants(_self.Id).ToArray().Should().Contain(cid);
 
             cancel.Cancel();
             Assert.True(task.IsCanceled);
-            
-            // Assert.DoesNotContain(bitswap.PeerWants(self.Id).ToArray(), cid);
 
-            bitswap.PeerWants(self.Id).ToArray().Should().NotContain(cid);
+            bitSwap.PeerWants(_self.Id).ToArray().Should().NotContain(cid);
         }
 
         [Fact]
         public void Block_Needed()
         {
-            var bitswap = new BitSwapService {SwarmService = new SwarmService() {LocalPeer = self}};
+            var bitSwap = new BitSwapService {SwarmService = new SwarmService {LocalPeer = _self}};
             var cid1 = new DagNode(Encoding.UTF8.GetBytes("BitswapTest unknown block y")).Id;
             var cid2 = new DagNode(Encoding.UTF8.GetBytes("BitswapTest unknown block z")).Id;
             var cancel = new CancellationTokenSource();
             var callCount = 0;
             
-            bitswap.BlockNeeded += (s, e) =>
+            bitSwap.BlockNeeded += (s, e) =>
             {
                 Assert.True(cid1 == e.Id || cid2 == e.Id);
                 ++callCount;
             };
             try
             {
-                bitswap.WantAsync(cid1, self.Id, cancel.Token);
-                bitswap.WantAsync(cid1, self.Id, cancel.Token);
-                bitswap.WantAsync(cid2, self.Id, cancel.Token);
-                bitswap.WantAsync(cid2, self.Id, cancel.Token);
+                bitSwap.WantAsync(cid1, _self.Id, cancel.Token);
+                bitSwap.WantAsync(cid1, _self.Id, cancel.Token);
+                bitSwap.WantAsync(cid2, _self.Id, cancel.Token);
+                bitSwap.WantAsync(cid2, _self.Id, cancel.Token);
                 Assert.Equal(2, callCount);
             }
             finally
@@ -115,59 +107,55 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.BlockExchange
         }
 
         [Fact]
-        public void Want_Unwant()
+        public void WantUnwantTests()
         {
-            var bitswap = new BitSwapService {SwarmService = new SwarmService() {LocalPeer = self}};
+            var bitSwapService = new BitSwapService {SwarmService = new SwarmService {LocalPeer = _self}};
             var cid = new DagNode(Encoding.UTF8.GetBytes("BitswapTest unknown block")).Id;
             var cancel = new CancellationTokenSource();
-            var task = bitswap.WantAsync(cid, self.Id, cancel.Token);
+            var task = bitSwapService.WantAsync(cid, _self.Id, cancel.Token);
             
-            bitswap.PeerWants(self.Id).ToArray().Should().Contain(cid);
+            bitSwapService.PeerWants(_self.Id).ToArray().Should().Contain(cid);
 
-            // Assert.Contains(bitswap.PeerWants(self.Id).ToArray(), cid);
-
-            bitswap.Unwant(cid);
+            bitSwapService.Unwant(cid);
             Assert.True(task.IsCanceled);
-            
-            // Assert.DoesNotContain(bitswap.PeerWants(self.Id).ToArray(), cid);
-            bitswap.PeerWants(self.Id).ToArray().Should().NotContain(cid);
+            bitSwapService.PeerWants(_self.Id).ToArray().Should().NotContain(cid);
         }
 
         [Fact]
         public void Found()
         {
-            var bitswap = new BitSwapService {SwarmService = new SwarmService() {LocalPeer = self}};
-            Assert.Equal(0, bitswap.PeerWants(self.Id).Count());
+            var bitSwapService = new BitSwapService {SwarmService = new SwarmService {LocalPeer = _self}};
+            Assert.Equal(0, bitSwapService.PeerWants(_self.Id).Count());
 
             var a = new DagNode(Encoding.UTF8.GetBytes("BitswapTest found block a"));
             var b = new DagNode(Encoding.UTF8.GetBytes("BitswapTest found block b"));
             var cancel = new CancellationTokenSource();
-            var task = bitswap.WantAsync(a.Id, self.Id, cancel.Token);
+            var task = bitSwapService.WantAsync(a.Id, _self.Id, cancel.Token);
             Assert.False(task.IsCompleted);
-            bitswap.PeerWants(self.Id).ToArray().Should().Contain(a.Id);
+            bitSwapService.PeerWants(_self.Id).ToArray().Should().Contain(a.Id);
 
-            bitswap.Found(b);
+            bitSwapService.Found(b);
             Assert.False(task.IsCompleted);
-            bitswap.PeerWants(self.Id).ToArray().Should().Contain(a.Id);
+            bitSwapService.PeerWants(_self.Id).ToArray().Should().Contain(a.Id);
 
-            bitswap.Found(a);
+            bitSwapService.Found(a);
             Assert.True(task.IsCompleted);
-            bitswap.PeerWants(self.Id).ToArray().Should().NotContain(a.Id);
+            bitSwapService.PeerWants(_self.Id).ToArray().Should().NotContain(a.Id);
             a.DataBytes.Should().Contain(task.Result.DataBytes);
         }
 
         [Fact]
         public void Found_Count()
         {
-            var bitswap = new BitSwapService {SwarmService = new SwarmService {LocalPeer = self}};
+            var bitSwapService = new BitSwapService {SwarmService = new SwarmService {LocalPeer = _self}};
 
             var a = new DagNode(Encoding.UTF8.GetBytes("BitswapTest found block a"));
-            Assert.Equal(0, bitswap.Found(a));
+            Assert.Equal(0, bitSwapService.Found(a));
 
             var cancel = new CancellationTokenSource();
-            var task1 = bitswap.WantAsync(a.Id, self.Id, cancel.Token);
-            var task2 = bitswap.WantAsync(a.Id, self.Id, cancel.Token);
-            Assert.Equal(2, bitswap.Found(a));
+            var task1 = bitSwapService.WantAsync(a.Id, _self.Id, cancel.Token);
+            var task2 = bitSwapService.WantAsync(a.Id, _self.Id, cancel.Token);
+            Assert.Equal(2, bitSwapService.Found(a));
 
             Assert.True(task1.IsCompleted);
             Assert.True(task2.IsCompleted);

@@ -50,7 +50,7 @@ namespace Catalyst.TestUtils
         protected readonly string CurrentTestName;
         public IFileSystem FileSystem;
         protected readonly ITestOutputHelper Output;
-        public DirectoryInfo TestDirectory;
+        public DirectoryInfo TestDirectory { set; get; }
         protected List<string> ConfigFilesUsed { get; }
         protected readonly ContainerProvider ContainerProvider;
         private DateTime _testStartTime;

@@ -34,11 +34,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     public class NameApiTest
     {
         private IDfsService ipfs;
-        private readonly ITestOutputHelper testOutput;
 
         public NameApiTest(ITestOutputHelper output)
         {
-            testOutput = output;
             ipfs = TestDfs.GetTestDfs(output, null, "sha2-256");
         }
 
@@ -81,8 +79,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Resolve_DnsLink()
         {
-            ipfs = TestDfs.GetTestDfs(testOutput, null, "sha2-256");
-
             var iopath = await ipfs.NameApi.ResolveAsync("ipfs.io");
             Assert.NotNull(iopath);
 
@@ -115,15 +111,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             });
         }
 
-        // [Fact]
-        // [Ignore("Need a working IPNS")]
-        // public async Task Resolve_DnsLink_Recursive()
-        // {
-        //     var ipfs = TestFixture.Ipfs;
-        //
-        //     var media = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io/media");
-        //     var actual = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io/media", recursive: true);
-        //     Assert.NotEqual(media, actual);
-        // }
+        //[Fact]
+        //[Ignore("Need a working IPNS")]
+        //public async Task Resolve_DnsLink_Recursive()
+        //{
+        //    var ipfs = TestFixture.Ipfs;
+
+        //    var media = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io/media");
+        //    var actual = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io/media", recursive: true);
+        //    Assert.NotEqual(media, actual);
+        //}
     }
 }

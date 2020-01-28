@@ -50,6 +50,7 @@ using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Hashing;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {

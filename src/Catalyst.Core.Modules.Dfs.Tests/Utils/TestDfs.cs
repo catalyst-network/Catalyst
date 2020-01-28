@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.Diagnostics;
+using System.Reflection;
 using Autofac;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
@@ -47,7 +49,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             internal TestDfsFileSystem(ITestOutputHelper output) : base(output) { }
         }
 
-        public static IDfsService GetTestDfs(ITestOutputHelper output, IFileSystem fileSystem = default, string hashName = null)
+        public static IDfsService GetTestDfs(ITestOutputHelper output, IFileSystem fileSystem = default, string hashName = "blake2b-256")
         {
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();
@@ -61,12 +63,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             containerBuilder.RegisterInstance(fileSystem).As<IFileSystem>();
             containerBuilder.RegisterType<MigrationManager>().As<IMigrationManager>();
             containerBuilder.RegisterModule<HashingModule>();
-
-            if (hashName != null)
-            {
-                containerBuilder.RegisterInstance(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata(hashName))).As<IHashProvider>();
-            }
-
+            containerBuilder.RegisterInstance(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata(hashName))).As<IHashProvider>();
             containerBuilder.RegisterType<KeyStoreService>().As<IKeyStoreService>().SingleInstance();
             containerBuilder.RegisterModule(new DfsModule());
 

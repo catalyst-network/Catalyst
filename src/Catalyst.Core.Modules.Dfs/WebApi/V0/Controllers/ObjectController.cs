@@ -43,7 +43,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     The CID of the object.
         /// </summary>
-        public string Hash;
+        public string Hash { set; get; }
 
         /// <summary>
         ///     Number of links.
@@ -79,17 +79,17 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     The object name.
         /// </summary>
-        public string Name;
+        public string Name { set; get; }
 
         /// <summary>
         ///     The CID of the object.
         /// </summary>
-        public string Hash;
+        public string Hash { set; get; }
 
         /// <summary>
         ///     The object size.
         /// </summary>
-        public long Size;
+        public long Size { set; get; }
     }
 
     /// <summary>
@@ -100,12 +100,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     The CID of the object.
         /// </summary>
-        public string Hash;
+        public string Hash { set; get; }
 
         /// <summary>
         ///     Links to other objects.
         /// </summary>
-        public IEnumerable<ObjectLinkDto> Links;
+        public IEnumerable<ObjectLinkDto> Links { set; get; }
     }
 
     /// <summary>
@@ -116,7 +116,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     The object data encoded as UTF-8.
         /// </summary>
-        public string Data;
+        public string Data { set; get; }
     }
 
     /// <summary>
