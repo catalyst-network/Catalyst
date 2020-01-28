@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, senderPeerId, correlationId));
             
             _peerQueryTipRequest.QueryTipResponseMessageStreamer.OnNext(
-                new PeerQueryTipResponse(senderPeerId, HashProvider.Parse(deltaHeightResponse.DeltaHash.ToString())
+                new PeerQueryTipResponse(senderPeerId, HashProvider.Parse(deltaHeightResponse.Result.ToString())
                 )
             );
         }

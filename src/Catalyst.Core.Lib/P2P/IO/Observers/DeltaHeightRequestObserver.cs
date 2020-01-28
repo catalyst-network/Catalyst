@@ -26,6 +26,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
@@ -59,9 +60,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             
             Logger.Debug("PeerId: {0} wants to know your current chain height", senderPeerId);
 
+            var deltaIndex = new DeltaIndex
+            {
+                Cid = MultiHash.ComputeHash(new byte[32]).Digest.ToByteString(), Height = 0
+            };
+
             return new LatestDeltaHashResponse
             {
-                DeltaHash = MultiHash.ComputeHash(new byte[32]).Digest.ToByteString()
+                Result = deltaIndex
             };
         }
     }

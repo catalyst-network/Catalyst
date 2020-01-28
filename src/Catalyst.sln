@@ -97,9 +97,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-
 		..\docfx-azure-pipeline.yml = ..\docfx-azure-pipeline.yml
 		..\mssql-e2e-azure-pipelines.yml = ..\mssql-e2e-azure-pipelines.yml
 		..\nuget-pre-release-azure-pipelines.yml = ..\nuget-pre-release-azure-pipelines.yml
-		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
-		..\docfx-azure-pipeline.yml = ..\docfx-azure-pipeline.yml
 		..\poa-azure-pipeline.yml = ..\poa-azure-pipeline.yml
+		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"
@@ -169,29 +168,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Documentation", ".
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Tools.KeyGenerator", "Catalyst.Tools.KeyGenerator\Catalyst.Tools.KeyGenerator.csproj", "{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Benchmark", "Catalyst.Benchmark\Catalyst.Benchmark.csproj", "{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Benchmark", "Catalyst.Benchmark\Catalyst.Benchmark.csproj", "{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{8B9E2D74-AD77-4B43-B7A5-5557428CC8C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{8B9E2D74-AD77-4B43-B7A5-5557428CC8C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.Tests", "Catalyst.Cli.Tests\Catalyst.Cli.Tests.csproj", "{5EEA2638-769D-4094-A417-0FE1396C1700}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.Tests", "Catalyst.Cli.Tests\Catalyst.Cli.Tests.csproj", "{5EEA2638-769D-4094-A417-0FE1396C1700}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.POA.CE", "Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj", "{3750275D-F73D-4078-80C4-734BBD830A4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE", "Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj", "{3750275D-F73D-4078-80C4-734BBD830A4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.POA.CE.Tests", "Catalyst.Node.POA.CE.Tests\Catalyst.Node.POA.CE.Tests.csproj", "{36F415B5-4101-476A-9BD2-F18A5879F388}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE.Tests", "Catalyst.Node.POA.CE.Tests\Catalyst.Node.POA.CE.Tests.csproj", "{36F415B5-4101-476A-9BD2-F18A5879F388}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.Server.Blazor", "Catalyst.Modules.Server.Blazor\Catalyst.Modules.Server.Blazor.csproj", "{A2B05AD3-06DA-46E6-8662-DD9757F547B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Server.Blazor", "Catalyst.Modules.Server.Blazor\Catalyst.Modules.Server.Blazor.csproj", "{A2B05AD3-06DA-46E6-8662-DD9757F547B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.P2P", "Lib.P2P\Lib.P2P.csproj", "{767E3E1E-43AF-4A7D-8638-84E81EB13F6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.P2P", "Lib.P2P\Lib.P2P.csproj", "{767E3E1E-43AF-4A7D-8638-84E81EB13F6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.KBucket", "Catalyst.KBucket\Catalyst.KBucket.csproj", "{F81AF4DE-30BC-48F3-B396-27087997B700}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.KBucket", "Catalyst.KBucket\Catalyst.KBucket.csproj", "{F81AF4DE-30BC-48F3-B396-27087997B700}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.KBucket.Tests", "Catalyst.KBucket.Tests\Catalyst.KBucket.Tests.csproj", "{D6C18FBF-8D79-4817-940C-BF066E4E363A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.KBucket.Tests", "Catalyst.KBucket.Tests\Catalyst.KBucket.Tests.csproj", "{D6C18FBF-8D79-4817-940C-BF066E4E363A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.P2P.Tests", "Lib.P2P.Tests\Lib.P2P.Tests.csproj", "{5BABC322-0C56-4477-978A-8EF49D7901B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.P2P.Tests", "Lib.P2P.Tests\Lib.P2P.Tests.csproj", "{5BABC322-0C56-4477-978A-8EF49D7901B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiFormats", "MultiFormats\MultiFormats.csproj", "{76AF1E5A-94AC-44C5-B968-F816CB3A9B2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiFormats", "MultiFormats\MultiFormats.csproj", "{76AF1E5A-94AC-44C5-B968-F816CB3A9B2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiFormats.Tests", "MultiFormats.Tests\MultiFormats.Tests.csproj", "{F6142130-599A-452E-92E9-348D0560E3E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiFormats.Tests", "MultiFormats.Tests\MultiFormats.Tests.csproj", "{F6142130-599A-452E-92E9-348D0560E3E7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Sync", "Catalyst.Core.Modules.Sync\Catalyst.Core.Modules.Sync.csproj", "{595CF1EC-2D9E-4AB9-BC25-640A5037B7AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Sync.Tests", "Catalyst.Core.Modules.Sync.Tests\Catalyst.Core.Modules.Sync.Tests.csproj", "{E7A434FA-9B53-47BA-835B-543A71BAF791}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -447,6 +450,14 @@ Global
 		{F6142130-599A-452E-92E9-348D0560E3E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6142130-599A-452E-92E9-348D0560E3E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6142130-599A-452E-92E9-348D0560E3E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{595CF1EC-2D9E-4AB9-BC25-640A5037B7AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{595CF1EC-2D9E-4AB9-BC25-640A5037B7AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{595CF1EC-2D9E-4AB9-BC25-640A5037B7AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{595CF1EC-2D9E-4AB9-BC25-640A5037B7AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7A434FA-9B53-47BA-835B-543A71BAF791}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7A434FA-9B53-47BA-835B-543A71BAF791}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7A434FA-9B53-47BA-835B-543A71BAF791}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7A434FA-9B53-47BA-835B-543A71BAF791}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

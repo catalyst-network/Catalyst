@@ -32,7 +32,7 @@ namespace Catalyst.Core.Lib.DAO.Ledger
     public class DeltaIndexDao : DaoBase
     {
         public int Height { set; get; }
-        public Cid Cid { set; get; }
+        public string Cid { set; get; }
     }
 
     public class DeltaIndexMapperInitialiser : IMapperInitializer
@@ -40,8 +40,10 @@ namespace Catalyst.Core.Lib.DAO.Ledger
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<DeltaIndex, DeltaIndexDao>()
+               .ForMember(a => a.Id, opt => opt.MapFrom(x => x.Height))
                .ForMember(a => a.Height, opt => opt.UseDestinationValue())
-               .ForMember(a => a.Cid, opt => opt.MapFrom(x => Cid.Decode(MultiBase.Encode(x.Cid.ToByteArray(), "base32"))));
+               .ForMember(a => a.Cid,
+                    opt => opt.MapFrom(x => Cid.Decode(MultiBase.Encode(x.Cid.ToByteArray(), "base32"))));
         }
     }
 }
