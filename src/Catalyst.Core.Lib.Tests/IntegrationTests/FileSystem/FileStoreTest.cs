@@ -44,8 +44,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             public string Value;
         }
 
-        private Entity a = new Entity {Number = 1, Value = "a"};
-        private Entity b = new Entity {Number = 2, Value = "b"};
+        private readonly Entity _a = new Entity {Number = 1, Value = "a"};
+        private readonly Entity _b = new Entity {Number = 2, Value = "b"};
 
         private FileStore<int, Entity> Store
         {
@@ -71,26 +71,26 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
         {
             var store = Store;
 
-            await store.PutAsync(a.Number, a);
-            await store.PutAsync(b.Number, b);
+            await store.PutAsync(_a.Number, _a);
+            await store.PutAsync(_b.Number, _b);
 
-            var a1 = await store.GetAsync(a.Number);
-            Assert.Equal(a.Number, a1.Number);
-            Assert.Equal(a.Value, a1.Value);
+            var a1 = await store.GetAsync(_a.Number);
+            Assert.Equal(_a.Number, a1.Number);
+            Assert.Equal(_a.Value, a1.Value);
 
-            var b1 = await store.GetAsync(b.Number);
-            Assert.Equal(b.Number, b1.Number);
-            Assert.Equal(b.Value, b1.Value);
+            var b1 = await store.GetAsync(_b.Number);
+            Assert.Equal(_b.Number, b1.Number);
+            Assert.Equal(_b.Value, b1.Value);
         }
 
         [Fact]
         public async Task TryGet()
         {
             var store = Store;
-            await store.PutAsync(3, a);
+            await store.PutAsync(3, _a);
             var a1 = await store.GetAsync(3);
-            Assert.Equal(a.Number, a1.Number);
-            Assert.Equal(a.Value, a1.Value);
+            Assert.Equal(_a.Number, a1.Number);
+            Assert.Equal(_a.Value, a1.Value);
 
             var a3 = await store.TryGetAsync(42);
             Assert.Null(a3);
@@ -109,7 +109,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
         public async Task Remove()
         {
             var store = Store;
-            await store.PutAsync(4, a);
+            await store.PutAsync(4, _a);
             Assert.NotNull(await store.TryGetAsync(4));
 
             await store.RemoveAsync(4);
@@ -127,7 +127,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
         public async Task Length()
         {
             var store = Store;
-            await store.PutAsync(6, a);
+            await store.PutAsync(6, _a);
             var length = await store.LengthAsync(6);
             Assert.True(length.HasValue);
             Assert.NotEqual(0, length.Value);
@@ -156,9 +156,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
         public async Task Names()
         {
             var store = Store;
-            await store.PutAsync(11, a);
-            await store.PutAsync(12, a);
-            await store.PutAsync(13, a);
+            await store.PutAsync(11, _a);
+            await store.PutAsync(12, _a);
+            await store.PutAsync(13, _a);
             var names = Store.Names.Where(n => n == 11 || n == 13).ToArray();
             Assert.Equal(2, names.Length);
         }
@@ -177,7 +177,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
 
         private async Task AtomicTask(FileStore<int, Entity> store)
         {
-            await store.PutAsync(1, a);
+            await store.PutAsync(1, _a);
             await store.TryGetAsync(1);
             await store.RemoveAsync(1);
         }
@@ -189,8 +189,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             var store = Store;
             store.Serialize = BadSerialize;
 
-            ExceptionAssert.Throws<Exception>(() => store.PutAsync(a.Number, a).Wait());
-            Assert.False(store.ExistsAsync(a.Number).Result);
+            ExceptionAssert.Throws<Exception>(() => store.PutAsync(_a.Number, _a).Wait());
+            Assert.False(store.ExistsAsync(_a.Number).Result);
         }
     }
 }

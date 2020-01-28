@@ -80,7 +80,5 @@ namespace Catalyst.Abstractions.Dfs
         ///   Finds information with a distributed hash table.
         /// </summary>
         DhtService DhtService { get; }
-
-        //Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default);
     }
 }
