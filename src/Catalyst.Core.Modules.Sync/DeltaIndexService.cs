@@ -13,33 +13,28 @@ namespace Catalyst.Core.Modules.Sync
 
     public class DeltaIndexService : IDeltaIndexService
     {
-        private readonly IRepository<DeltaIndexDao> _repository;
+        private readonly IRepository<DeltaIndexDao, string> _repository;
 
-        public DeltaIndexService(IRepository<DeltaIndexDao> repository) { _repository = repository; }
+        public DeltaIndexService(IRepository<DeltaIndexDao, string> repository) { _repository = repository; }
 
         public void Add(IEnumerable<DeltaIndexDao> deltaIndexes)
         {
-            var g = _repository.GetAll();
             _repository.Add(deltaIndexes);
-            var a = 0;
         }
 
         public void Add(DeltaIndexDao deltaIndex)
         {
-            var g = _repository.GetAll();
             _repository.Add(deltaIndex);
-            var a = 0;
         }
 
         public int Height()
         {
-            var count = _repository.Count();
             if (_repository.Count() == 0)
             {
                 return 0;
             }
-            var max = _repository.Max(x => x.Height);
-            return max;
+
+            return _repository.Max(x => x.Height);
         }
     }
 }

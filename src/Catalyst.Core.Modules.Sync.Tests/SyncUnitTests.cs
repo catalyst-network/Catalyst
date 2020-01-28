@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
@@ -50,8 +51,10 @@ using FluentAssertions;
 using Google.Protobuf;
 using Lib.P2P;
 using MultiFormats.Registry;
+using Newtonsoft.Json;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 using Xunit;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
@@ -81,11 +84,6 @@ namespace Catalyst.Core.Modules.Sync.Tests
 
         public SyncUnitTests()
         {
-            _deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao>());
-            _deltaIndexService.Add(new DeltaIndexDao() { Cid = null, Height = 1, Id = "1" });
-            _deltaIndexService.Add(new DeltaIndexDao() { Cid = null, Height = 2, Id = "2" });
-            var a = 0;
-
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _peerSettings = Substitute.For<IPeerSettings>();
@@ -95,6 +93,8 @@ namespace Catalyst.Core.Modules.Sync.Tests
             _deltaDfsReader.TryReadDeltaFromDfs(Arg.Any<Cid>(), out Arg.Any<Delta>()).Returns(x => true);
 
             _ledger = Substitute.For<ILedger>();
+
+            _deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
 
             _peerClient = Substitute.For<IPeerClient>();
             ModifyPeerClient<LatestDeltaHashRequest>((request, senderPeerIdentifier) =>
@@ -136,8 +136,6 @@ namespace Catalyst.Core.Modules.Sync.Tests
             _peerSyncManager = new PeerSyncManager(_peerSettings, _peerClient, _peerRepository);
             _deltaHeightWatcher =
                 new DeltaHeightWatcher(_peerSyncManager, _deltaHeightResponseObserver, _mapperProvider);
-
-            
         }
 
         private DeltaHistoryResponse GenerateSampleData(int height, int range)
