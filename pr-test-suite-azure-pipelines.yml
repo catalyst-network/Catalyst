@@ -1,17 +1,25 @@
 strategy:
   matrix:
     Windows-VS2019:
-      imageName: 'vs2017-win2016'
+      imageName: 'windows-2019'
       netcore_sdk: 3.0.100
-      rustup_toolchain: nightly
+      rustup_toolchain: stable
+    Osx-Sierra:
+      imageName: 'macos-10.13'
+      netcore_sdk: 3.0.100
+      rustup_toolchain: stable
     Osx-Mojave:
       imageName: 'macos-10.14'
       netcore_sdk: 3.0.100
-      rustup_toolchain: nightly
+      rustup_toolchain: stable
     Ubuntu-1804:
       imageName: 'ubuntu-18.04'
       netcore_sdk: 3.0.100
-      rustup_toolchain: nightly
+      rustup_toolchain: stable
+    Ubuntu-1604:
+      imageName: 'ubuntu-16.04'
+      netcore_sdk: 3.0.100
+      rustup_toolchain: stable
   maxParallel: 3
 
 variables:
@@ -36,6 +44,7 @@ pr:
   branches:
     include:
       - develop
+      - feature/*
     exclude:
       - master/*
       - release/*
@@ -48,6 +57,7 @@ schedules:
         - master
         - develop
         - releases/*
+        - feature/*
     always: true
 
 steps:
@@ -57,20 +67,23 @@ steps:
       version: 3.0.100
       failOnStandardError: 'true'
 
+  - bash: |
+      git submodule update --init --force --recursive
+    displayName: 'Clone submodules'
+
   - script: |
-      curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly
+      curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain $RUSTUP_TOOLCHAIN
       echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
     displayName: Install rust
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
 
   - script: |
-      rustup install nightly
-    displayName: rustup install nightly
-
-  - script: |
-      rustup override set nightly
-    displayName: rustup override set nightly  
-
+      curl -sSf -o rustup-init.exe https://win.rustup.rs
+      rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
+      echo "##vso[task.setvariable variable=PATH;]%PATH%;%USERPROFILE%\.cargo\bin"
+    displayName: Windows install rust
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+        
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
@@ -87,9 +100,9 @@ steps:
     inputs:
       command: test
       projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '-v Normal --filter TestType!=IntegrationTest'
+      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
-    timeoutInMinutes: 30
+    timeoutInMinutes: 10
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
 
   - task: DotNetCoreCLI@2
