@@ -32,22 +32,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///     Content that has an associated name.
-    /// </summary>
-    public class NamedContentDto
-    {
-        /// <summary>
-        ///     Path to the name, "/ipns/...".
-        /// </summary>
-        public string Name { set; get; }
-
-        /// <summary>
-        ///     Path to the content, "/ipfs/...".
-        /// </summary>
-        public string Value { set; get; }
-    }
-
-    /// <summary>
     ///     Manages the IPNS (Interplanetary Name Space).
     /// </summary>
     /// <remarks>
@@ -56,7 +40,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     ///     is the node's own <see cref="Peer.Id" />,
     ///     which is the hash of its public key.
     /// </remarks>
-    public class NameController : IpfsController
+    public sealed class NameController : DfsController
     {
         /// <summary>
         ///     Creates a new controller.
@@ -71,7 +55,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             bool recursive = false,
             bool nocache = false)
         {
-            var path = await IpfsCore.NameApi.ResolveAsync(arg, recursive, nocache, Cancel);
+            var path = await DfsService.NameApi.ResolveAsync(arg, recursive, nocache, Cancel);
             return new PathDto(path);
         }
 
@@ -112,7 +96,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             }
 
             var duration = Duration.Parse(lifetime);
-            var content = await IpfsCore.NameApi.PublishAsync(arg, resolve, key, duration, Cancel);
+            var content = await DfsService.NameApi.PublishAsync(arg, resolve, key, duration, Cancel);
             return new NamedContentDto
             {
                 Name = content.NamePath,

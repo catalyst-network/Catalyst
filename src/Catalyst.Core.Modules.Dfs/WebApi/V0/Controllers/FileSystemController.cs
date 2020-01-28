@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Options;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Lib.P2P;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,90 +39,6 @@ using MultiFormats;
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///  A created file.
-    /// </summary>
-    public class FileSystemNodeDto
-    {
-        /// <summary>
-        ///   The file name.
-        /// </summary>
-        public string Name { set; get; }
-
-        /// <summary>
-        ///   The CID of the file.
-        /// </summary>
-        public string Hash { set; get; }
-
-        /// <summary>
-        ///   The file size.
-        /// </summary>
-        public string Size { set; get; }
-    }
-
-    /// <summary>
-    ///  A link to a file.
-    /// </summary>
-    public class FileSystemLinkDto
-    {
-        /// <summary>
-        ///   The file name.
-        /// </summary>
-        public string Name { set; get; }
-
-        /// <summary>
-        ///   The CID of the file.
-        /// </summary>
-        public string Hash { set; get; }
-
-        /// <summary>
-        ///   The file size.
-        /// </summary>
-        public long Size { set; get; }
-    }
-
-    /// <summary>
-    ///   Details on a files.
-    /// </summary>
-    public class FileSystemDetailDto
-    {
-        /// <summary>
-        ///   The CID of the file.
-        /// </summary>
-        public string Hash { set; get; }
-
-        /// <summary>
-        ///   The file size.
-        /// </summary>
-        public long Size { set; get; }
-
-        /// <summary>
-        ///   "File" or "Directory"
-        /// </summary>
-        public string Type { set; get; }
-
-        /// <summary>
-        ///   Links to other files.
-        /// </summary>
-        public FileSystemLinkDto[] Links { set; get; }
-    }
-
-    /// <summary>
-    ///   A map of files.
-    /// </summary>
-    public class FileSystemDetailsDto
-    {
-        /// <summary>
-        ///  A path and its CID.
-        /// </summary>
-        public Dictionary<string, string> Arguments { set; get; }
-
-        /// <summary>
-        ///   The pins.
-        /// </summary>
-        public Dictionary<string, FileSystemDetailDto> Objects { set; get; }
-    }
-
-    /// <summary>
     ///   DNS mapping to IPFS.
     /// </summary>
     /// <remarks>
@@ -129,7 +46,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     ///   remember. To create memorable aliases for multihashes, DNS TXT
     ///   records can point to other DNS links, IPFS objects, IPNS keys, etc.
     /// </remarks>
-    public class FileSystemController : IpfsController
+    public sealed class FileSystemController : DfsController
     {
         /// <summary>
         ///   Creates a new controller.
@@ -156,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             long length = 0)
         {
             EntityTagHeaderValue etag = null;
-            var path = await IpfsCore.NameApi.ResolveAsync(arg, true, false, Cancel);
+            var path = await DfsService.NameApi.ResolveAsync(arg, true, false, Cancel);
             var cid = Cid.Decode(path.Substring(6)); // remove leading "/ipfs/"
 
             // Use an etag if the path is IPFS or CID.
@@ -168,7 +85,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 
             // Use the last part of the path as the download filename
             var filename = arg.Split('/').Last();
-            var stream = await IpfsCore.UnixFsApi.ReadFileAsync(cid, offset, length, Cancel);
+            var stream = await DfsService.UnixFsApi.ReadFileAsync(cid, offset, length, Cancel);
             return File(stream, "application/octet-stream", filename, null, etag);
         }
 
@@ -185,7 +102,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [Produces("application/tar")]
         public async Task Get(string arg, bool compress = false)
         {
-            var tar = await IpfsCore.UnixFsApi.GetAsync(arg, compress, Cancel);
+            var tar = await DfsService.UnixFsApi.GetAsync(arg, compress, Cancel);
             Response.ContentType = "application/tar";
             Response.Headers.Add("X-Stream-Output", "1");
             Response.Headers.Add("X-Content-Length", "4");
@@ -205,7 +122,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("file/ls")]
         public async Task<FileSystemDetailsDto> Stat(string arg)
         {
-            var node = await IpfsCore.UnixFsApi.ListFileAsync(arg, Cancel);
+            var node = await DfsService.UnixFsApi.ListFileAsync(arg, Cancel);
             var dto = new FileSystemDetailsDto
             {
                 Arguments = new Dictionary<string, string>(),
@@ -247,7 +164,9 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             bool progress = true)
         {
             if (file == null)
+            {
                 throw new ArgumentNullException(nameof(file));
+            }
 
             var options = new AddFileOptions
             {
@@ -281,7 +200,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             await using (var stream = file.OpenReadStream())
             {
                 // TODO: AddAsync returns a list of nodes containing every node added not just the top level.
-                var node = await IpfsCore.UnixFsApi.AddAsync(stream, file.FileName, options, Cancel);
+                var node = await DfsService.UnixFsApi.AddAsync(stream, file.FileName, options, Cancel);
                 StreamJson(new FileSystemNodeDto
                 {
                     Name = node.Id,

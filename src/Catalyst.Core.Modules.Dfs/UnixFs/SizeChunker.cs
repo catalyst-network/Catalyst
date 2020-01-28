@@ -96,100 +96,94 @@ namespace Catalyst.Core.Modules.Dfs.UnixFs
                 }
 
                 //  Only generate empty block, when the stream is empty.
-                if (length == 0 && nodes.Count > 0)
+                if (length != 0 || nodes.Count <= 0)
                 {
-                    chunking = false;
-                    break;
-                }
-
-                if (options.Progress != null)
-                {
-                    options.Progress.Report(new TransferProgress
+                    options.Progress?.Report(new TransferProgress
                     {
                         Name = name,
                         Bytes = totalBytes
                     });
-                }
 
-                // if protected data, then get CMS structure.
-                if (protecting)
-                {
-                    // TODO: Inefficent to copy chunk, use ArraySegment in DataMessage.Data
-                    var plain = new byte[length];
-                    Array.Copy(chunk, plain, length);
-                    var cipher = await keyChain.CreateProtectedDataAsync(options.ProtectionKey, plain, cancel)
-                       .ConfigureAwait(false);
-                    var cid = await blockService.PutAsync(
-                        cipher,
-                        "cms",
-                        options.Hash,
-                        options.Encoding,
-                        options.Pin,
-                        cancel).ConfigureAwait(false);
-                    nodes.Add(new UnixFsNode
+                    // if protected data, then get CMS structure.
+                    if (protecting)
                     {
-                        Id = cid,
-                        Size = length,
-                        DagSize = cipher.Length,
-                        Links = UnixFsLink.None
-                    });
-                }
-                else if (options.RawLeaves)
-                {
-                    // TODO: Inefficent to copy chunk, use ArraySegment in DataMessage.Data
-                    var data = new byte[length];
-                    Array.Copy(chunk, data, length);
-                    var cid = await blockService.PutAsync(
-                        data,
-                        "raw",
-                        options.Hash,
-                        options.Encoding,
-                        options.Pin,
-                        cancel).ConfigureAwait(false);
-                    nodes.Add(new UnixFsNode
-                    {
-                        Id = cid,
-                        Size = length,
-                        DagSize = length,
-                        Links = UnixFsLink.None
-                    });
-                }
-                else
-                {
-                    // Build the DAG.
-                    var dm = new DataMessage
-                    {
-                        Type = DataType.File,
-                        FileSize = (ulong) length
-                    };
-                    if (length > 0)
+                        // TODO: Inefficent to copy chunk, use ArraySegment in DataMessage.Data
+                        var plain = new byte[length];
+                        Array.Copy(chunk, plain, length);
+                        var cipher = await keyChain.CreateProtectedDataAsync(options.ProtectionKey, plain, cancel)
+                           .ConfigureAwait(false);
+                        var cid = await blockService.PutAsync(
+                            cipher,
+                            "cms",
+                            options.Hash,
+                            options.Encoding,
+                            options.Pin,
+                            cancel).ConfigureAwait(false);
+                        nodes.Add(new UnixFsNode
+                        {
+                            Id = cid,
+                            Size = length,
+                            DagSize = cipher.Length,
+                            Links = UnixFsLink.None
+                        });
+                    }
+                    else if (options.RawLeaves)
                     {
                         // TODO: Inefficent to copy chunk, use ArraySegment in DataMessage.Data
                         var data = new byte[length];
                         Array.Copy(chunk, data, length);
-                        dm.Data = data;
+                        var cid = await blockService.PutAsync(
+                            data,
+                            "raw",
+                            options.Hash,
+                            options.Encoding,
+                            options.Pin,
+                            cancel).ConfigureAwait(false);
+                        nodes.Add(new UnixFsNode
+                        {
+                            Id = cid,
+                            Size = length,
+                            DagSize = length,
+                            Links = UnixFsLink.None
+                        });
                     }
-
-                    var pb = new MemoryStream();
-                    Serializer.Serialize(pb, dm);
-                    var dag = new DagNode(pb.ToArray(), null, options.Hash);
-
-                    // Save it.
-                    dag.Id = await blockService.PutAsync(
-                        dag.ToArray(),
-                        multiHash: options.Hash,
-                        encoding: options.Encoding,
-                        pin: options.Pin,
-                        cancel: cancel).ConfigureAwait(false);
-
-                    var node = new UnixFsNode
+                    else
                     {
-                        Id = dag.Id,
-                        Size = length,
-                        DagSize = dag.Size,
-                        Links = UnixFsLink.None
-                    };
-                    nodes.Add(node);
+                        // Build the DAG.
+                        var dm = new DataMessage
+                        {
+                            Type = DataType.File,
+                            FileSize = (ulong) length
+                        };
+                        if (length > 0)
+                        {
+                            // TODO: Inefficent to copy chunk, use ArraySegment in DataMessage.Data
+                            var data = new byte[length];
+                            Array.Copy(chunk, data, length);
+                            dm.Data = data;
+                        }
+
+                        var pb = new MemoryStream();
+                        Serializer.Serialize(pb, dm);
+                        var dag = new DagNode(pb.ToArray(), null, options.Hash);
+
+                        // Save it.
+                        dag.Id = await blockService.PutAsync(
+                            dag.ToArray(),
+                            multiHash: options.Hash,
+                            encoding: options.Encoding,
+                            pin: options.Pin,
+                            cancel: cancel).ConfigureAwait(false);
+
+                        var node = new UnixFsNode
+                        {
+                            Id = dag.Id,
+                            Size = length,
+                            DagSize = dag.Size,
+                            Links = UnixFsLink.None
+                        };
+                        nodes.Add(node);
+                    }
                 }
             }
 

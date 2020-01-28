@@ -40,11 +40,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             public IPinApi PinApi { get; set; }
 
-            public Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default)
-            {
-                throw new NotImplementedException();
-            }
-
             public Task<Cid> PutAsync(byte[] data,
                 string contentType = Cid.DefaultContentType,
                 string multiHash = MultiHash.DefaultAlgorithmName,
@@ -60,6 +55,11 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                     Version = (contentType == "dag-pb" && multiHash == "sha2-256") ? 0 : 1
                 };
                 return Task.FromResult(cid);
+            }
+            
+            public Task<IDataBlock> GetAsync(Cid id, CancellationToken cancel = default)
+            {
+                throw new NotImplementedException();
             }
 
             public Task<Cid> PutAsync(Stream data,

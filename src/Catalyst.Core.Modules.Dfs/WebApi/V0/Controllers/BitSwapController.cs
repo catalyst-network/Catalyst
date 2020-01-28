@@ -21,71 +21,16 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Lib.P2P;
 using Microsoft.AspNetCore.Mvc;
 using MultiFormats;
-using Newtonsoft.Json;
 
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
-    /// <summary>
-    ///     Outstanding wants.
-    /// </summary>
-    public class BitswapWantsDto
-    {
-        /// <summary>
-        ///     All the links.
-        /// </summary>
-        public List<BitswapLinkDto> Keys;
-    }
-
-    /// <summary>
-    ///     A link to a CID.
-    /// </summary>
-    public class BitswapLinkDto
-    {
-        /// <summary>
-        ///     The CID.
-        /// </summary>
-        [JsonProperty(PropertyName = "/")]
-        public string Link;
-    }
-
-    /// <summary>
-    ///     The bitswap ledger with another peer.
-    /// </summary>
-    public class BitswapLedgerDto
-    {
-        /// <summary>
-        ///     The peer ID.
-        /// </summary>
-        public string Peer;
-
-        /// <summary>
-        ///     The debt ratio.
-        /// </summary>
-        public double Value;
-
-        /// <summary>
-        ///     The number of bytes sent.
-        /// </summary>
-        public ulong Sent;
-
-        /// <summary>
-        ///     The number of bytes received.
-        /// </summary>
-        public ulong Recv;
-
-        /// <summary>
-        ///     The number blocks exchanged.
-        /// </summary>
-        public ulong Exchanged;
-    }
-
     /// <summary>
     ///     Data trading module for IPFS. Its purpose is to request blocks from and
     ///     send blocks to other peers in the network.
@@ -95,12 +40,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     ///     have been requested by the client and (2) Judiciously(though strategically)
     ///     send blocks in its possession to other peers who want them.
     /// </remarks>
-    public class BitswapController : IpfsController
+    public sealed class BitSwapController : DfsController
     {
         /// <summary>
         ///     Creates a new controller.
         /// </summary>
-        public BitswapController(IDfsService dfs) : base(dfs) { }
+        public BitSwapController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///     The blocks that are needed by a peer.
@@ -109,13 +54,13 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///     A peer ID or empty for self.
         /// </param>
         [HttpGet] [HttpPost] [Route("bitswap/wantlist")]
-        public async Task<BitswapWantsDto> Wants(string arg)
+        public async Task<BitSwapWantsDto> Wants(string arg)
         {
             var peer = string.IsNullOrEmpty(arg) ? null : new MultiHash(arg);
-            var cids = await IpfsCore.BitSwapApi.WantsAsync(peer, Cancel);
-            return new BitswapWantsDto
+            var cids = await DfsService.BitSwapApi.WantsAsync(peer, Cancel);
+            return new BitSwapWantsDto
             {
-                Keys = cids.Select(cid => new BitswapLinkDto
+                Keys = cids.Select(cid => new BitSwapLinkDto
                 {
                     Link = cid
                 }).ToList()
@@ -129,7 +74,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///     The CID that is no longer needed.
         /// </param>
         [HttpGet] [HttpPost] [Route("bitswap/unwant")]
-        public void Unwants(string arg) { IpfsCore.BitSwapApi.UnWant(arg, Cancel); }
+        public void Unwants(string arg) { DfsService.BitSwapApi.UnWant(arg, Cancel); }
 
         /// <summary>
         ///     The blocks that are needed by a peer.
@@ -138,14 +83,14 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///     A peer ID.
         /// </param>
         [HttpGet] [HttpPost] [Route("bitswap/ledger")]
-        public BitswapLedgerDto Ledger(string arg)
+        public BitSwapLedgerDto Ledger(string arg)
         {
             var peer = new Peer
             {
                 Id = arg
             };
-            var ledger = IpfsCore.BitSwapApi.GetBitSwapLedger(peer, Cancel);
-            return new BitswapLedgerDto
+            var ledger = DfsService.BitSwapApi.GetBitSwapLedger(peer, Cancel);
+            return new BitSwapLedgerDto
             {
                 Peer = ledger.Peer.Id.ToBase58(),
                 Exchanged = ledger.BlocksExchanged,

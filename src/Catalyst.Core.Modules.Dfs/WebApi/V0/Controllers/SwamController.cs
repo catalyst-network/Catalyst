@@ -21,84 +21,18 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Core.Lib.Util;
-using Lib.P2P;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///   Addresses for peers.
-    /// </summary>
-    public class AddrsDto
-    {
-        /// <summary>
-        ///   Addresses for peers.
-        /// </summary>
-        public Dictionary<string, List<string>> Addrs = new Dictionary<string, List<string>>();
-    }
-
-    /// <summary>
-    ///   Information on a peer.
-    /// </summary>
-    public class ConnectedPeerDto
-    {
-        /// <summary>
-        ///  The unique ID of the peer.
-        /// </summary>
-        public string Peer;
-
-        /// <summary>
-        ///   The connected address.
-        /// </summary>
-        public string Addr;
-
-        /// <summary>
-        ///   Avg time to the peer.
-        /// </summary>
-        public string Latency;
-
-        /// <summary>
-        ///   Creates a new peer info.
-        /// </summary>
-        public ConnectedPeerDto(Peer peer)
-        {
-            Peer = peer.Id.ToString();
-            Addr = peer.ConnectedAddress?.WithoutPeerId().ToString();
-            Latency = peer.Latency == null ? "n/a" : Duration.Stringify(peer.Latency.Value, string.Empty);
-        }
-    }
-
-    /// <summary>
-    ///   Information on a peer.
-    /// </summary>
-    public class ConnectedPeersDto
-    {
-        /// <summary>
-        ///   The connected peers.
-        /// </summary>
-        public IEnumerable<ConnectedPeerDto> Peers;
-    }
-
-    /// <summary>
-    ///   A list of filters.
-    /// </summary>
-    public class FiltersDto
-    {
-        /// <summary>
-        ///   A list of multiaddresses.
-        /// </summary>
-        public string[] Strings;
-    }
-
-    /// <summary>
     ///   TODO
     /// </summary>
-    public class SwarmController : IpfsController
+    public class SwarmController : DfsController
     {
         /// <summary>
         ///   Creates a new controller.
@@ -111,7 +45,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("swarm/addrs")]
         public AddrsDto PeerAddresses()
         {
-            var peers = IpfsCore.SwarmApi.GetSwarmKnownPeers(Cancel);
+            var peers = DfsService.SwarmApi.GetSwarmKnownPeers(Cancel);
             var dto = new AddrsDto();
             foreach (var peer in peers)
             {
@@ -129,7 +63,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("swarm/peers")]
         public async Task<ConnectedPeersDto> ConnectedPeers()
         {
-            var peers = await IpfsCore.SwarmApi.PeersAsync(Cancel);
+            var peers = await DfsService.SwarmApi.PeersAsync(Cancel);
             return new ConnectedPeersDto
             {
                 Peers = peers.Select(peer => new ConnectedPeerDto(peer)).ToArray()
@@ -142,7 +76,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("swarm/filters")]
         public async Task<FiltersDto> ListFilters()
         {
-            var filters = await IpfsCore.SwarmApi.ListAddressFiltersAsync(persist: false, cancel: Cancel);
+            var filters = await DfsService.SwarmApi.ListAddressFiltersAsync(persist: false, cancel: Cancel);
             return new FiltersDto
             {
                 Strings = filters.Select(f => f.ToString()).ToArray()
@@ -158,7 +92,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("swarm/filters/add")]
         public async Task<FiltersDto> AddFilter(string arg)
         {
-            var filter = await IpfsCore.SwarmApi.AddAddressFilterAsync(arg, persist: false, cancel: Cancel);
+            var filter = await DfsService.SwarmApi.AddAddressFilterAsync(arg, persist: false, cancel: Cancel);
             return new FiltersDto
             {
                 Strings = filter == null ? new string[0] : new[] {filter.ToString()}
@@ -174,7 +108,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("swarm/filters/rm")]
         public async Task<FiltersDto> RemoveFilter(string arg)
         {
-            var filter = await IpfsCore.SwarmApi.RemoveAddressFilterAsync(arg, persist: false, cancel: Cancel);
+            var filter = await DfsService.SwarmApi.RemoveAddressFilterAsync(arg, persist: false, cancel: Cancel);
             return new FiltersDto
             {
                 Strings = filter == null ? new string[0] : new[] {filter.ToString()}
@@ -191,6 +125,6 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///   The multiaddress of the peer.
         /// </param>
         [HttpGet, HttpPost, Route("swarm/disconnect")]
-        public Task Disconnect(string arg) { return IpfsCore.SwarmApi.DisconnectAsync(arg, Cancel); }
+        public Task Disconnect(string arg) { return DfsService.SwarmApi.DisconnectAsync(arg, Cancel); }
     }
 }
