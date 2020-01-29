@@ -1,4 +1,8 @@
-trigger: master
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
 variables:
   release.type: '-alpha'
   BuildPlatform: 'x64'
