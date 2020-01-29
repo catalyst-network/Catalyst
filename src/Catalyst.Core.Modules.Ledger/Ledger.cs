@@ -84,6 +84,7 @@ namespace Catalyst.Core.Modules.Ledger
             _deltaExecutor = deltaExecutor;
             _stateProvider = stateProvider;
             _storageProvider = storageProvider;
+
             _stateDb = stateDb;
             _codeDb = codeDb;
             _synchroniser = synchroniser;

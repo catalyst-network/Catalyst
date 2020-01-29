@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Sync
 
     public class PeerSyncManager : IPeerSyncManager
     {
-        private const int PeerCount = 10;
+        private const int PeerCount = 5;
         private readonly IPeerSettings _peerSettings;
         private readonly IPeerClient _peerClient;
         private readonly IPeerRepository _peerRepository;
@@ -133,6 +133,7 @@ namespace Catalyst.Core.Modules.Sync
     public class Sync
     {
         private readonly int _rangeSize;
+        private readonly int _checkpoint;
         private readonly IUserOutput _userOutput;
         private readonly ILedger _ledger;
         private readonly IDeltaDfsReader _deltaDfsReader;
@@ -145,8 +146,9 @@ namespace Catalyst.Core.Modules.Sync
 
         private IDisposable _deltaHistorySubscription;
 
-        public int CurrentDeltaIndex { private set; get; }
+        public int CurrentDeltaIndex => _deltaIndexService.Height();
         public bool IsSynchronized { private set; get; }
+        public bool IsRunning { private set; get; }
 
         public Sync(IPeerSyncManager peerSyncManager,
             IDeltaHeightWatcher deltaHeightWatcher,
@@ -157,7 +159,7 @@ namespace Catalyst.Core.Modules.Sync
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
             int rangeSize = 100,
-            int checkpoint = 10000)
+            int checkpoint = 500)
         {
             _peerSyncManager = peerSyncManager;
             _deltaHeightWatcher = deltaHeightWatcher;
@@ -169,35 +171,54 @@ namespace Catalyst.Core.Modules.Sync
             _deltaHistoryResponseObserver = deltaHistoryResponseObserver;
             _mapperProvider = mapperProvider;
             _userOutput = userOutput;
+
+            _checkpoint = checkpoint;
         }
 
         public async Task StartAsync()
         {
             _userOutput.WriteLine("Starting Sync...");
+
             await _deltaHeightWatcher.StartAsync();
 
             _deltaHistorySubscription = _deltaHistoryResponseObserver.MessageStream.Subscribe(DeltaHistoryOnNext);
 
+            await _deltaHeightWatcher.WaitForDeltaHeightAsync(CurrentDeltaIndex);
+
             await ProgressAsync();
+
+            IsRunning = true;
         }
 
         public async Task StopAsync()
         {
-            _userOutput.WriteLine("Stopping Sync...");
+            if (!IsRunning)
+            {
+                _userOutput.WriteLine("Sync is not currently running.");
+                return;
+            }
+
+            _userOutput.WriteLine("Sync has been signaled to stop");
+
             await _deltaHeightWatcher.StopAsync();
 
             _deltaHistorySubscription.Dispose();
+
+            _userOutput.WriteLine("Sync has been stopped");
+
+            IsRunning = false;
         }
 
         private async Task ProgressAsync()
         {
-            CurrentDeltaIndex = _deltaIndexService.Height();
+            _userOutput.WriteLine("Sync has been signaled to stop");
 
-            await _deltaHeightWatcher.WaitForDeltaHeightAsync(CurrentDeltaIndex);
-
-            var deltaHistoryRequest = new DeltaHistoryRequest
-                {Height = (uint) CurrentDeltaIndex, Range = (uint) _rangeSize};
-            _peerSyncManager.SendToRandomPeers(deltaHistoryRequest);
+            if (!IsSynchronized)
+            {
+                var deltaHistoryRequest = new DeltaHistoryRequest
+                    {Height = (uint) CurrentDeltaIndex, Range = (uint) _rangeSize};
+                _peerSyncManager.SendToRandomPeers(deltaHistoryRequest);
+            }
         }
 
         private void DeltaHistoryOnNext(IPeerClientMessageDto peerClientMessageDto)
@@ -220,10 +241,6 @@ namespace Catalyst.Core.Modules.Sync
         private void UpdateIndexes(IEnumerable<DeltaIndexDao> deltaIndexes)
         {
             _deltaIndexService.Add(deltaIndexes);
-            if (_deltaIndexService.Height() >= _deltaHeightWatcher.LatestDeltaHash.Height)
-            {
-                IsSynchronized = true;
-            }
         }
 
         private void DownloadDeltas(IEnumerable<DeltaIndexDao> deltaIndexes)
@@ -237,6 +254,17 @@ namespace Catalyst.Core.Modules.Sync
             }
         }
 
-        private void UpdateState(IEnumerable<DeltaIndexDao> deltaIndexes) { }
+        private void UpdateState(IEnumerable<DeltaIndexDao> deltaIndexes)
+        {
+            foreach (var deltaIndex in deltaIndexes)
+            {
+                _ledger.Update(deltaIndex.Cid);
+            }
+
+            if (CurrentDeltaIndex >= _deltaHeightWatcher.LatestDeltaHash.Height)
+            {
+                IsSynchronized = true;
+            }
+        }
     }
 }
