@@ -76,6 +76,7 @@ namespace Catalyst.Core.Modules.Web3
 
             async void BuildCallback(IContainer container)
             {
+                
                 _container = container;
                 var logger = _container.Resolve<ILogger>();
 

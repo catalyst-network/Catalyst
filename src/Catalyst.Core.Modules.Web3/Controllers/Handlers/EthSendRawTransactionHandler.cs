@@ -31,6 +31,7 @@ using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Encoding;
 using Nethermind.Dirichlet.Numerics;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
@@ -39,23 +40,25 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override Keccak Handle(byte[] transaction, IWeb3EthApi api)
         {
-            Transaction tx = Rlp.Decode<Transaction>(transaction);
+            var transactionBroadcast = TransactionBroadcast.Parser.ParseFrom(transaction);
+            transactionBroadcast.PublicEntry.Timestamp = DateTimeOffset.UtcNow.ToTimestamp();
+            
+            // Transaction tx = Rlp.Decode<Transaction>(transaction);
 
-            tx.Timestamp = (UInt256) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            PublicEntry publicEntry = new PublicEntry
-            {
-                Data = (tx.Data ?? tx.Init).ToByteString(),
-                GasLimit = (ulong) tx.GasLimit,
-                GasPrice = tx.GasPrice.ToUint256ByteString(),
-                Nonce = (ulong) tx.Nonce,
-                SenderAddress = new Address("0xb77aec9f59f9d6f39793289a09aea871932619ed").Bytes.ToByteString(),
-                ReceiverAddress = tx.To?.Bytes.ToByteString() ?? ByteString.Empty,
-                Amount = tx.Value.ToUint256ByteString(),
-                Timestamp = new Timestamp {Seconds = (long) tx.Timestamp},
-            };
+            // PublicEntry publicEntry = new PublicEntry
+            // {
+            //     Data = (tx.Data ?? tx.Init).ToByteString(),
+            //     GasLimit = (ulong) tx.GasLimit,
+            //     GasPrice = tx.GasPrice.ToUint256ByteString(),
+            //     Nonce = (ulong) tx.Nonce,
+            //     SenderAddress = new Address("0xb77aec9f59f9d6f39793289a09aea871932619ed").Bytes.ToByteString(),
+            //     ReceiverAddress = tx.To?.Bytes.ToByteString() ?? ByteString.Empty,
+            //     Amount = tx.Value.ToUint256ByteString(),
+            //     Timestamp = new Timestamp {Seconds = (long) tx.Timestamp},
+            // };
 
-            return api.SendTransaction(publicEntry);
+            return api.SendTransaction(transactionBroadcast.PublicEntry);
         }
     }
 }
