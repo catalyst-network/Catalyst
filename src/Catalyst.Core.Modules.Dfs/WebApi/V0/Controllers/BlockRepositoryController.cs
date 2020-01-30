@@ -24,25 +24,15 @@
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///   A wrapped version number.
-    /// </summary>
-    public class VersionBlockRepositoryDto
-    {
-        /// <summary>
-        ///   The version number.
-        /// </summary>
-        public string Version;
-    }
-
-    /// <summary>
     ///    Manages all the blocks in teh repository.
     /// </summary>
-    public class BlockRepositoryController : IpfsController
+    public sealed class BlockRepositoryController : DfsController
     {
         /// <summary>
         ///   Creates a new controller.
@@ -53,19 +43,19 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///   Garbage collection.
         /// </summary>
         [HttpGet, HttpPost, Route("repo/gc")]
-        public Task GarbageCollection() { return IpfsCore.BlockRepositoryApi.RemoveGarbageAsync(Cancel); }
+        public Task GarbageCollection() { return DfsService.BlockRepositoryApi.RemoveGarbageAsync(Cancel); }
 
         /// <summary>
         ///   Get repository information.
         /// </summary>
         [HttpGet, HttpPost, Route("repo/stat")]
-        public Task<RepositoryData> Statistics() { return IpfsCore.BlockRepositoryApi.StatisticsAsync(Cancel); }
+        public Task<RepositoryData> Statistics() { return DfsService.BlockRepositoryApi.StatisticsAsync(Cancel); }
 
         /// <summary>
         ///   Verify that the blocks are not corrupt.
         /// </summary>
         [HttpGet, HttpPost, Route("repo/verify")]
-        public Task Verify() { return IpfsCore.BlockRepositoryApi.VerifyAsync(Cancel); }
+        public Task Verify() { return DfsService.BlockRepositoryApi.VerifyAsync(Cancel); }
 
         /// <summary>
         ///   Get repository information.
@@ -75,7 +65,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         {
             return new VersionBlockRepositoryDto
             {
-                Version = await IpfsCore.BlockRepositoryApi.VersionAsync(Cancel)
+                Version = await DfsService.BlockRepositoryApi.VersionAsync(Cancel)
             };
         }
     }

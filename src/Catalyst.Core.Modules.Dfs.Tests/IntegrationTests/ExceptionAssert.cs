@@ -57,7 +57,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             catch (T e)
             {
                 if (expectedMessage != null)
+                {
                     Assert.Equal(expectedMessage, e.Message);
+                }
+                
                 return e;
             }
 

@@ -36,7 +36,7 @@ using Newtonsoft.Json;
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///   A base controller for IPFS HTTP API.
+    ///   A base controller for Dfs HTTP API.
     /// </summary>
     /// <remarks>
     ///   Any unhandled exceptions are translated into an <see cref="ApiError"/> by the
@@ -45,20 +45,20 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     [Route("api/v0")]
     [Produces("application/json")]
     [ApiExceptionFilter]
-    public abstract class IpfsController : Controller
+    public abstract class DfsController : Controller
     {
         /// <summary>
         ///   Creates a new instance of the controller.
         /// </summary>
-        /// <param name="ipfs">
-        ///   An implementation of the IPFS Core API.
+        /// <param name="dfs">
+        ///   An implementation of the Dfs Core API.
         /// </param>
-        public IpfsController(ICoreApi ipfs) { IpfsCore = ipfs; }
+        protected DfsController(ICoreApi dfs) { DfsService = dfs; }
 
         /// <summary>
-        ///   An implementation of the IPFS Core API.
+        ///   An implementation of the Dfs Core API.
         /// </summary>
-        protected ICoreApi IpfsCore { get; }
+        protected ICoreApi DfsService { get; }
 
         /// <summary>
         ///   Notifies when the request is cancelled.
@@ -68,12 +68,14 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// </value>
         /// <remarks>
         ///   There is no timeout for a request, because of the 
-        ///   distributed nature of IPFS.
+        ///   distributed nature of Dfs.
         /// </remarks>
-        protected CancellationToken Cancel { get { return HttpContext.RequestAborted; } }
+        protected CancellationToken Cancel => HttpContext.RequestAborted;
 
         /// <summary>
         ///   Declare that the response is immutable and should be cached forever.
+        /// @TODO lets look if there is any type of response interrceptor
+        /// in the request lifecycle so we can force outgoing response to be immutable rather than adhock calling it
         /// </summary>
         protected void Immutable()
         {
@@ -92,7 +94,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///   Immediately send the JSON.
         /// </summary>
         /// <param name="o">
-        ///   The object to send to the requestor.
+        ///   The object to send to the requester.
         /// </param>
         /// <remarks>
         ///   Immediately sends the Line Delimited JSON (LDJSON) representation

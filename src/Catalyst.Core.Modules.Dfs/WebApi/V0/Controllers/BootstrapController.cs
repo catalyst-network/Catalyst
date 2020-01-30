@@ -21,25 +21,14 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
-    /// <summary>
-    ///  A list of peers.
-    /// </summary>
-    public class BootstrapPeersDto
-    {
-        /// <summary>
-        ///   The multiaddress of a peer.
-        /// </summary>
-        public IEnumerable<string> Peers;
-    }
-
     /// <summary>
     ///   Manages the list of initial peers.
     /// </summary>
@@ -48,7 +37,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     ///  the addresses of the bootstrap nodes. These are the trusted peers from
     ///  which to learn about other peers in the network.
     /// </remarks>
-    public class BootstrapController : IpfsController
+    public sealed class BootstrapController : DfsController
     {
         /// <summary>
         ///   Creates a new controller.
@@ -61,7 +50,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("bootstrap/list")]
         public async Task<BootstrapPeersDto> List()
         {
-            var peers = await IpfsCore.BootstrapApi.ListAsync(Cancel);
+            var peers = await DfsService.BootstrapApi.ListAsync(Cancel);
             return new BootstrapPeersDto
             {
                 Peers = peers.Select(peer => peer.ToString())
@@ -72,7 +61,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///   Remove all the bootstrap peers.
         /// </summary>
         [HttpGet, HttpPost, Route("bootstrap/rm/all")]
-        public async Task RemoveAll() { await IpfsCore.BootstrapApi.RemoveAllAsync(Cancel); }
+        public async Task RemoveAll() { await DfsService.BootstrapApi.RemoveAllAsync(Cancel); }
 
         /// <summary>
         ///   Add the default bootstrap peers.
@@ -80,7 +69,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("bootstrap/add/default")]
         public async Task<BootstrapPeersDto> AddDefaults()
         {
-            var peers = await IpfsCore.BootstrapApi.AddDefaultsAsync(Cancel);
+            var peers = await DfsService.BootstrapApi.AddDefaultsAsync(Cancel);
             return new BootstrapPeersDto
             {
                 Peers = peers.Select(peer => peer.ToString())
@@ -102,14 +91,14 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         {
             if (@default)
             {
-                var peers = await IpfsCore.BootstrapApi.AddDefaultsAsync(Cancel);
+                var peers = await DfsService.BootstrapApi.AddDefaultsAsync(Cancel);
                 return new BootstrapPeersDto
                 {
                     Peers = peers.Select(p => p.ToString())
                 };
             }
 
-            var peer = await IpfsCore.BootstrapApi.AddAsync(arg, Cancel);
+            var peer = await DfsService.BootstrapApi.AddAsync(arg, Cancel);
             return new BootstrapPeersDto
             {
                 Peers = new[] {peer?.ToString()}
@@ -131,11 +120,11 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         {
             if (all)
             {
-                await IpfsCore.BootstrapApi.RemoveAllAsync(Cancel);
+                await DfsService.BootstrapApi.RemoveAllAsync(Cancel);
                 return new BootstrapPeersDto {Peers = new string[0]};
             }
 
-            var peer = await IpfsCore.BootstrapApi.RemoveAsync(arg, Cancel);
+            var peer = await DfsService.BootstrapApi.RemoveAsync(arg, Cancel);
             return new BootstrapPeersDto
             {
                 Peers = new[] {peer?.ToString()}

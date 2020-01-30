@@ -49,6 +49,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly INameApi _nameApi;
         private readonly DfsState _dfsState;
 
+        /// <summary>
+        /// @TODO magic numbers be the devils work, WHY ONLY 174??
+        /// </summary>
         private const int DefaultLinksPerBlock = 174;
 
         public UnixFsApi(IDhtApi dhtApi, IBlockApi blockApi, IKeyApi keyApi, INameApi nameApi, DfsState dfsState)
@@ -146,7 +149,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                         break;
                     }
 
-                    var node = await BuildTreeNodeAsync(unixFsNodes, options, cancel);
+                    var node = await BuildTreeNodeAsync(unixFsNodes, options, cancel).ConfigureAwait(false);
                     tree.Add(node);
                 }
 
@@ -377,6 +380,12 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 header.Size = 0;
                 tar.PutNextEntry(entry);
                 tar.CloseEntry();
+
+                // Recurse over files and subdirectories
+                foreach (var link in dag?.Links)
+                {
+                    await AddTarNodeAsync(link.Id, $"{name}/{link.Name}", tar, cancel).ConfigureAwait(false);
+                }
             }
             else // Must be a file
             {
@@ -386,15 +395,6 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 tar.PutNextEntry(entry);
                 await content.CopyToAsync(tar, cancel);
                 tar.CloseEntry();
-            }
-
-            // Recurse over files and subdirectories
-            if (dm.Type == DataType.Directory)
-            {
-                foreach (var link in dag?.Links)
-                {
-                    await AddTarNodeAsync(link.Id, $"{name}/{link.Name}", tar, cancel).ConfigureAwait(false);
-                }
             }
         }
 

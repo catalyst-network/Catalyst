@@ -6,6 +6,7 @@
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Lib.P2P.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />

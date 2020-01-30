@@ -29,10 +29,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
-using Catalyst.Core.Modules.Hashing;
 using Lib.P2P;
 using MultiFormats;
-using MultiFormats.Registry;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -40,45 +38,47 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public sealed class BlockApiTest
     {
-        private IDfsService ipfs;
-        private string id = "QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
-        private byte[] blob = Encoding.UTF8.GetBytes("blorb");
+        private IDfsService _dfs;
+        private readonly ITestOutputHelper _output;
+        private const string Id = "QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
+        private readonly byte[] _blob = Encoding.UTF8.GetBytes("blorb");
 
         public BlockApiTest(ITestOutputHelper output)
         {
-            ipfs = TestDfs.GetTestDfs(output, null, null, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")));
+            _output = output;
+            _dfs = TestDfs.GetTestDfs(output, null, "sha2-256");
         }
         
         [Fact]
         public async Task Put_Bytes()
         {
-            var cid = await ipfs.BlockApi.PutAsync(blob);
-            Assert.Equal(id, cid);
+            var cid = await _dfs.BlockApi.PutAsync(_blob);
+            Assert.Equal(Id, cid);
 
-            var data = ipfs.BlockApi.GetAsync(cid).Result;
-            Assert.Equal(blob.Length, data.Size);
-            Assert.Equal(blob, data.DataBytes);
+            var data = _dfs.BlockApi.GetAsync(cid).Result;
+            Assert.Equal(_blob.Length, data.Size);
+            Assert.Equal(_blob, data.DataBytes);
         }
 
         [Fact]
         public void Put_Bytes_TooBig()
         {
-            var data = new byte[ipfs.Options.Block.MaxBlockSize + 1];
+            var data = new byte[_dfs.Options.Block.MaxBlockSize + 1];
             ExceptionAssert.Throws<ArgumentOutOfRangeException>(() =>
             {
-                var _ = ipfs.BlockApi.PutAsync(data).Result;
+                var _ = _dfs.BlockApi.PutAsync(data).Result;
             });
         }
 
         [Fact]
         public void Put_Bytes_ContentType()
         {
-            var cid = ipfs.BlockApi.PutAsync(blob, "raw").Result;
+            var cid = _dfs.BlockApi.PutAsync(_blob, "raw").Result;
             Assert.Equal("bafkreiaxnnnb7qz2focittuqq3ya25q7rcv3bqynnczfzako47346wosmu", cid);
 
-            var data = ipfs.BlockApi.GetAsync(cid).Result;
-            Assert.Equal(blob.Length, data.Size);
-            Assert.Equal(blob, data.DataBytes);
+            var data = _dfs.BlockApi.GetAsync(cid).Result;
+            Assert.Equal(_blob.Length, data.Size);
+            Assert.Equal(_blob, data.DataBytes);
         }
 
         [Fact]
@@ -86,109 +86,109 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             try
             {
-                ipfs.Options.Block.AllowInlineCid = true;
-                var cid = ipfs.BlockApi.PutAsync(blob, "raw").Result;
+                _dfs.Options.Block.AllowInlineCid = true;
+                var cid = _dfs.BlockApi.PutAsync(_blob, "raw").Result;
                 Assert.True(cid.Hash.IsIdentityHash);
                 Assert.Equal("bafkqablcnrxxeyq", cid);
 
-                var data = ipfs.BlockApi.GetAsync(cid).Result;
-                Assert.Equal(blob.Length, data.Size);
-                Assert.Equal(blob, data.DataBytes);
+                var data = _dfs.BlockApi.GetAsync(cid).Result;
+                Assert.Equal(_blob.Length, data.Size);
+                Assert.Equal(_blob, data.DataBytes);
 
-                var content = new byte[ipfs.Options.Block.InlineCidLimit];
-                cid = ipfs.BlockApi.PutAsync(content, "raw").Result;
+                var content = new byte[_dfs.Options.Block.InlineCidLimit];
+                cid = _dfs.BlockApi.PutAsync(content, "raw").Result;
                 Assert.True(cid.Hash.IsIdentityHash);
 
-                content = new byte[ipfs.Options.Block.InlineCidLimit + 1];
-                cid = ipfs.BlockApi.PutAsync(content, "raw").Result;
+                content = new byte[_dfs.Options.Block.InlineCidLimit + 1];
+                cid = _dfs.BlockApi.PutAsync(content, "raw").Result;
                 Assert.False(cid.Hash.IsIdentityHash);
             }
             finally
             {
-                ipfs.Options.Block.AllowInlineCid = false;
+                _dfs.Options.Block.AllowInlineCid = false;
             }
         }
 
         [Fact]
         public void Put_Bytes_Hash()
         {
-            var cid = ipfs.BlockApi.PutAsync(blob, "raw", "sha2-512").Result;
+            var cid = _dfs.BlockApi.PutAsync(_blob, "raw", "sha2-512").Result;
             Assert.Equal(
                 "bafkrgqelljziv4qfg5mefz36m2y3h6voaralnw6lwb4f53xcnrf4mlsykkn7vt6eno547tw5ygcz62kxrle45wnbmpbofo5tvu57jvuaf7k7e",
                 cid);
 
-            var data = ipfs.BlockApi.GetAsync(cid).Result;
-            Assert.Equal(blob.Length, data.Size);
-            Assert.Equal(blob, data.DataBytes);
+            var data = _dfs.BlockApi.GetAsync(cid).Result;
+            Assert.Equal(_blob.Length, data.Size);
+            Assert.Equal(_blob, data.DataBytes);
         }
 
         [Fact]
         public void Put_Bytes_Cid_Encoding()
         {
-            var cid = ipfs.BlockApi.PutAsync(blob,
+            var cid = _dfs.BlockApi.PutAsync(_blob,
                 "raw",
                 encoding: "base32").Result;
             Assert.Equal(1, cid.Version);
             Assert.Equal("base32", cid.Encoding);
 
-            var data = ipfs.BlockApi.GetAsync(cid).Result;
-            Assert.Equal(blob.Length, data.Size);
-            Assert.Equal(blob, data.DataBytes);
+            var data = _dfs.BlockApi.GetAsync(cid).Result;
+            Assert.Equal(_blob.Length, data.Size);
+            Assert.Equal(_blob, data.DataBytes);
         }
 
         [Fact]
         public void Put_Stream()
         {
-            var cid = ipfs.BlockApi.PutAsync(new MemoryStream(blob)).Result;
-            Assert.Equal(id, cid);
+            var cid = _dfs.BlockApi.PutAsync(new MemoryStream(_blob)).Result;
+            Assert.Equal(Id, cid);
 
-            var data = ipfs.BlockApi.GetAsync(cid).Result;
-            Assert.Equal(blob.Length, data.Size);
-            Assert.Equal(blob, data.DataBytes);
+            var data = _dfs.BlockApi.GetAsync(cid).Result;
+            Assert.Equal(_blob.Length, data.Size);
+            Assert.Equal(_blob, data.DataBytes);
         }
 
         [Fact]
         public void Put_Stream_ContentType()
         {
-            var cid = ipfs.BlockApi.PutAsync(new MemoryStream(blob), "raw").Result;
+            var cid = _dfs.BlockApi.PutAsync(new MemoryStream(_blob), "raw").Result;
             Assert.Equal("bafkreiaxnnnb7qz2focittuqq3ya25q7rcv3bqynnczfzako47346wosmu", cid);
 
-            var data = ipfs.BlockApi.GetAsync(cid).Result;
-            Assert.Equal(blob.Length, data.Size);
-            Assert.Equal(blob, data.DataBytes);
+            var data = _dfs.BlockApi.GetAsync(cid).Result;
+            Assert.Equal(_blob.Length, data.Size);
+            Assert.Equal(_blob, data.DataBytes);
         }
 
         [Fact]
         public void Put_Stream_Hash()
         {
-            var cid = ipfs.BlockApi.PutAsync(new MemoryStream(blob), "raw", "sha2-512").Result;
+            var cid = _dfs.BlockApi.PutAsync(new MemoryStream(_blob), "raw", "sha2-512").Result;
             Assert.Equal(
                 "bafkrgqelljziv4qfg5mefz36m2y3h6voaralnw6lwb4f53xcnrf4mlsykkn7vt6eno547tw5ygcz62kxrle45wnbmpbofo5tvu57jvuaf7k7e",
                 cid);
 
-            var data = ipfs.BlockApi.GetAsync(cid).Result;
-            Assert.Equal(blob.Length, data.Size);
-            Assert.Equal(blob, data.DataBytes);
+            var data = _dfs.BlockApi.GetAsync(cid).Result;
+            Assert.Equal(_blob.Length, data.Size);
+            Assert.Equal(_blob, data.DataBytes);
         }
 
         [Fact]
         public void Get()
         {
-            var _ = ipfs.BlockApi.PutAsync(blob).Result;
-            var block = ipfs.BlockApi.GetAsync(id).Result;
-            Assert.Equal(id, block.Id);
-            Assert.Equal(blob, block.DataBytes);
-            var blob1 = new byte[blob.Length];
+            var _ = _dfs.BlockApi.PutAsync(_blob).Result;
+            var block = _dfs.BlockApi.GetAsync(Id).Result;
+            Assert.Equal(Id, block.Id);
+            Assert.Equal(_blob, block.DataBytes);
+            var blob1 = new byte[_blob.Length];
             block.DataStream.Read(blob1, 0, blob1.Length);
-            Assert.Equal(blob, blob1);
+            Assert.Equal(_blob, blob1);
         }
 
         [Fact]
         public void Stat()
         {
-            var _ = ipfs.BlockApi.PutAsync(blob).Result;
-            var info = ipfs.BlockApi.StatAsync(id).Result;
-            Assert.Equal(id, info.Id);
+            var _ = _dfs.BlockApi.PutAsync(_blob).Result;
+            var info = _dfs.BlockApi.StatAsync(Id).Result;
+            Assert.Equal(Id, info.Id);
             Assert.Equal(5, info.Size);
         }
 
@@ -199,9 +199,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var cid = new Cid
             {
                 ContentType = "raw",
-                Hash = MultiHash.ComputeHash(blob, "identity")
+                Hash = MultiHash.ComputeHash(_blob, "identity")
             };
-            var info = await ipfs.BlockApi.StatAsync(cid, cts.Token);
+            var info = await _dfs.BlockApi.StatAsync(cid, cts.Token);
             Assert.Equal(cid.Encode(), info.Id);
             Assert.Equal(5, info.Size);
         }
@@ -209,17 +209,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task Stat_Unknown()
         {
-            var cid = "QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rFF";
-            var block = await ipfs.BlockApi.StatAsync(cid);
+            const string cid = "QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rFF";
+            var block = await _dfs.BlockApi.StatAsync(cid);
             Assert.Null(block);
         }
 
         [Fact]
         public async Task Remove()
         {
-            var _ = ipfs.BlockApi.PutAsync(blob).Result;
-            var cid = await ipfs.BlockApi.RemoveAsync(id);
-            Assert.Equal(id, cid);
+            var _ = _dfs.BlockApi.PutAsync(_blob).Result;
+            var cid = await _dfs.BlockApi.RemoveAsync(Id);
+            Assert.Equal(Id, cid);
         }
 
         [Fact]
@@ -228,9 +228,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var cid = new Cid
             {
                 ContentType = "raw",
-                Hash = MultiHash.ComputeHash(blob, "identity")
+                Hash = MultiHash.ComputeHash(_blob, "identity")
             };
-            var removedCid = await ipfs.BlockApi.RemoveAsync(cid);
+            var removedCid = await _dfs.BlockApi.RemoveAsync(cid);
             Assert.Equal(cid.Encode(), removedCid.Encode());
         }
 
@@ -239,14 +239,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var _ = ipfs.BlockApi.RemoveAsync("QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rFF").Result;
+                var _ = _dfs.BlockApi.RemoveAsync("QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rFF").Result;
             });
         }
 
         [Fact]
         public async Task Remove_Unknown_OK()
         {
-            var cid = await ipfs.BlockApi.RemoveAsync("QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rFF", true);
+            var cid = await _dfs.BlockApi.RemoveAsync("QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rFF", true);
             Assert.Equal(null, cid);
         }
 
@@ -257,18 +257,19 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var cid = new Cid
             {
                 ContentType = "raw",
-                Hash = MultiHash.ComputeHash(blob, "identity")
+                Hash = MultiHash.ComputeHash(_blob, "identity")
             };
-            var block = await ipfs.BlockApi.GetAsync(cid, cts.Token);
+            var block = await _dfs.BlockApi.GetAsync(cid, cts.Token);
             Assert.Equal(cid.Encode(), block.Id.Encode());
-            Assert.Equal(blob.Length, block.Size);
-            Assert.Equal(blob, block.DataBytes);
+            Assert.Equal(_blob.Length, block.Size);
+            Assert.Equal(_blob, block.DataBytes);
         }
 
         [Fact]
         public async Task Put_Informs_Bitswap()
         {
-            await ipfs.StartAsync();
+            _dfs = TestDfs.GetTestDfs(_output, null, "sha2-256");
+            await _dfs.StartAsync();
 
             try
             {
@@ -278,9 +279,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     Hash = MultiHash.ComputeHash(data)
                 };
 
-                var wantTask = ipfs.BitSwapApi.GetAsync(cid);
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(20000);
 
-                var cid1 = await ipfs.BlockApi.PutAsync(data);
+                var wantTask = _dfs.BitSwapApi.GetAsync(cid, cts.Token);
+                var cid1 = await _dfs.BlockApi.PutAsync(data, cancel: cts.Token);
+
                 Assert.Equal(cid, cid1);
                 Assert.Equal(cid, wantTask.Result.Id);
                 Assert.Equal(data.Length, wantTask.Result.Size);
@@ -288,7 +292,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
             finally
             {
-                await ipfs.StopAsync();
+                await _dfs.StopAsync();
             }
         }
 
@@ -296,18 +300,18 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task Put_Informs_Dht()
         {
             var data = Guid.NewGuid().ToByteArray();
-            await ipfs.StartAsync();
+            await _dfs.StartAsync();
             try
             {
-                var self = ipfs.LocalPeer;
-                var cid = await ipfs.BlockApi.PutAsync(data);
+                var self = _dfs.LocalPeer;
+                var cid = await _dfs.BlockApi.PutAsync(data);
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-                var peers = await ipfs.DhtApi.FindProvidersAsync(cid, 1, cancel: cts.Token);
+                var peers = await _dfs.DhtApi.FindProvidersAsync(cid, 1, cancel: cts.Token);
                 Assert.Equal(self, peers.First());
             }
             finally
             {
-                await ipfs.StopAsync();
+                await _dfs.StopAsync();
             }
         }
     }

@@ -103,7 +103,7 @@ namespace Catalyst.Node.POA.CE
 
                 _logger.Debug("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
-            } while (!ct.IsCancellationRequested && !exit);
+            } while (!ct.IsCancellationRequested);
 
             _logger.Debug("Stopping the Catalyst Node");
         }

@@ -37,10 +37,10 @@ using ProtoBuf;
 namespace Catalyst.Core.Modules.Dfs.UnixFs
 {
     /// <summary>
-    ///   Provides read-only access to a chunked file.
+    ///     Provides read-only access to a chunked file.
     /// </summary>
     /// <remarks>
-    ///   Internal class to support <see cref="UnixFs"/>.
+    ///     Internal class to support <see cref="UnixFs" />.
     /// </remarks>
     public sealed class ChunkedStream : Stream
     {
@@ -50,12 +50,11 @@ namespace Catalyst.Core.Modules.Dfs.UnixFs
             public long Position;
         }
 
-        private List<BlockInfo> blocks = new List<BlockInfo>();
-        private long fileSize;
+        private readonly List<BlockInfo> blocks = new List<BlockInfo>();
 
         /// <summary>
-        ///   Creates a new instance of the <see cref="ChunkedStream"/> class with
-        ///   the specified <see cref="IBlockApi"/> and <see cref="DagNode"/>.
+        ///     Creates a new instance of the <see cref="ChunkedStream" /> class with
+        ///     the specified <see cref="IBlockApi" /> and <see cref="DagNode" />.
         /// </summary>
         /// <param name="blockService"></param>
         /// <param name="keyChain"></param>
@@ -66,7 +65,11 @@ namespace Catalyst.Core.Modules.Dfs.UnixFs
             KeyChain = keyChain;
             var links = dag.Links.ToArray();
             var dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
-            if (dm.FileSize != null) fileSize = (long) dm.FileSize;
+            if (dm.FileSize != null)
+            {
+                Length = (long) dm.FileSize;
+            }
+
             ulong position = 0;
             for (var i = 0; i < dm.BlockSizes.Length; ++i)
             {
@@ -83,7 +86,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFs
         private IKeyApi KeyChain { get; }
 
         /// <inheritdoc />
-        public override long Length => fileSize;
+        public override long Length { get; }
 
         /// <inheritdoc />
         public override void SetLength(long value) { throw new NotSupportedException(); }
@@ -142,7 +145,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFs
             {
                 return k;
             }
-            
+
             Array.Copy(block.Array ?? throw new NullReferenceException(), block.Offset, buffer, offset, k);
             Position += k;
 

@@ -26,8 +26,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
-using Catalyst.Core.Modules.Hashing;
-using MultiFormats.Registry;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -39,9 +37,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 
         public NameApiTest(ITestOutputHelper output)
         {
-            ipfs = TestDfs.GetTestDfs(output, null, null, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256")));
+            ipfs = TestDfs.GetTestDfs(output, null, "sha2-256");
         }
-        
+
         [Fact]
         public async Task Resolve_Cid()
         {
@@ -68,7 +66,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Directory.Delete(temp, true);
             }
         }
-        
+
         [Fact]
         public void Resolve_Cid_Invalid()
         {
@@ -112,16 +110,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 var _ = ipfs.DnsApi.ResolveAsync("google.com").Result;
             });
         }
-        
-        // [Fact]
-        // [Ignore("Need a working IPNS")]
-        // public async Task Resolve_DnsLink_Recursive()
-        // {
-        //     var ipfs = TestFixture.Ipfs;
-        //
-        //     var media = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io/media");
-        //     var actual = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io/media", recursive: true);
-        //     Assert.NotEqual(media, actual);
-        // }
+
+        //[Fact]
+        //[Ignore("Need a working IPNS")]
+        //public async Task Resolve_DnsLink_Recursive()
+        //{
+        //    var ipfs = TestFixture.Ipfs;
+
+        //    var media = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io/media");
+        //    var actual = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io/media", recursive: true);
+        //    Assert.NotEqual(media, actual);
+        //}
     }
 }

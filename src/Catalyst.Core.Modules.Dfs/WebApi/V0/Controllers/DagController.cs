@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MultiFormats;
@@ -34,32 +35,9 @@ using Newtonsoft.Json.Linq;
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///   A link to a CID.
-    /// </summary>
-    public class LinkedDataDto
-    {
-        /// <summary>
-        ///   The CID.
-        /// </summary>
-        [JsonProperty(PropertyName = "/")]
-        public string Link;
-    }
-
-    /// <summary>
-    ///   A CID as linked data.
-    /// </summary>
-    public class LinkedDataCidDto
-    {
-        /// <summary>
-        ///   A link to the CID.
-        /// </summary>
-        public LinkedDataDto Cid;
-    }
-
-    /// <summary>
     ///   Manages the IPLD (linked data) Directed Acrylic Graph.
     /// </summary>
-    public class DagController : IpfsController
+    public class DagController : DfsController
     {
         /// <summary>
         ///   Creates a new controller.
@@ -82,7 +60,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///   A path, such as "cid", "/ipfs/cid/" or "cid/a".
         /// </param>
         [HttpGet, HttpPost, Route("dag/get")]
-        public async Task<JToken> Get(string arg) { return await IpfsCore.DagApi.GetAsync(arg, Cancel); }
+        public async Task<JToken> Get(string arg) { return await DfsService.DagApi.GetAsync(arg, Cancel); }
 
         /// <summary>
         ///   Add some linked data.
@@ -110,23 +88,29 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             [ModelBinder(Name = "cid-base")] string cidBase = MultiBase.DefaultAlgorithmName)
         {
             if (file == null)
+            {
                 throw new ArgumentNullException(nameof(file));
+            }
 
             await using (var stream = file.OpenReadStream())
-            using (var sr = new StreamReader(stream))
-            using (var tr = new JsonTextReader(sr))
             {
-                var serializer = new JsonSerializer();
-                JObject json = (JObject) serializer.Deserialize(tr);
+                using (var sr = new StreamReader(stream))
+                {
+                    using (var tr = new JsonTextReader(sr))
+                    {
+                        var serializer = new JsonSerializer();
+                        JObject json = (JObject) serializer.Deserialize(tr);
 
-                var cid = await IpfsCore.DagApi.PutAsync(
-                    json,
-                    contentType: format,
-                    multiHash: hash,
-                    encoding: cidBase,
-                    pin: false,
-                    cancel: Cancel);
-                return new LinkedDataCidDto {Cid = new LinkedDataDto {Link = cid}};
+                        var cid = await DfsService.DagApi.PutAsync(
+                            json,
+                            contentType: format,
+                            multiHash: hash,
+                            encoding: cidBase,
+                            pin: false,
+                            cancel: Cancel);
+                        return new LinkedDataCidDto {Cid = new LinkedDataDto {Link = cid}};
+                    }
+                }
             }
         }
     }

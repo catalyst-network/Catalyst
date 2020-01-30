@@ -170,13 +170,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             try
             {
                 await ipfs.PubSubApi.SubscribeAsync(topic, msg => { Interlocked.Increment(ref _messageCount1); }, cs.Token);
-                await ipfs.PubSubApi.PublishAsync(topic, "hello world!", cs.Token);
-                await Task.Delay(100, cs.Token);
+                await ipfs.PubSubApi.PublishAsync(topic, "hello world!", default);
+                await Task.Delay(100, default);
                 Assert.Equal(1, _messageCount1);
 
                 cs.Cancel();
-                await ipfs.PubSubApi.PublishAsync(topic, "hello world!!!", cs.Token);
-                await Task.Delay(100, cs.Token);
+                await ipfs.PubSubApi.PublishAsync(topic, "hello world!!!", default);
+                await Task.Delay(100, default);
                 Assert.Equal(1, _messageCount1);
             }
             finally

@@ -9,6 +9,9 @@
     <PropertyGroup>
         <RootNamespace>Catalyst.Modules.POA.P2P.Tests</RootNamespace>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <NoWarn>1701;1702;VSTHRD200;CS8002</NoWarn>
+    </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />

@@ -189,6 +189,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                     : (int) Math.Max(GetMaxGossipCycles(broadcastMessage), MaxGossipPeersPerRound);
 
                 var peersToGossip = GetRandomPeers(fanOut);
+
                 var correlationId = innerMessage.CorrelationId.ToCorrelationId();
 
                 //CLEAN UP

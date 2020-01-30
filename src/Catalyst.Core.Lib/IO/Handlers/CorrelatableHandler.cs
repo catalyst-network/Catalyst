@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         }
         
         /// <inheritdoc />
-        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
+        protected override Task Write0Async(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             if (message.Content.TypeUrl.EndsWith(MessageTypes.Request.Name))
             {

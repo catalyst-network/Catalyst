@@ -34,12 +34,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Dto
         ///   Typically a CID.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Hash;
+        public string Hash { set; get; }
 
         /// <summary>
         ///   An error message.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string Error;
+        public string Error { set; get; }
     }
 }

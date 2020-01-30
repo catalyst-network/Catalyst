@@ -24,11 +24,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Security;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
@@ -38,11 +34,8 @@ using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
-using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
-using Catalyst.Core.Modules.Dfs.Migration;
-using Catalyst.Core.Modules.Keystore;
 using Common.Logging;
 using Common.Logging.Serilog;
 using Lib.P2P;
@@ -62,47 +55,6 @@ namespace Catalyst.Core.Modules.Dfs
     {
         static DfsService() { LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger); }
 
-        // (IPasswordManager passwordReader,
-        //             IFileSystem fileSystem,
-        //             ILogger logger,
-        //             string swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3",
-        //             IEnumerable<MultiAddress> seedServers = null)
-        //         {
-        //             if (seedServers == null || seedServers.Count() == 0)
-        //             {
-        //                 seedServers = new[]
-        //                 {
-        //                     new MultiAddress("/ip4/46.101.132.61/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdtAkDHgs8MDwwhtyLu8JpYitY4Nk8jmyGgQ4Gt3VKNson"),
-        //                     new MultiAddress("/ip4/188.166.13.135/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe2AAPTCoujCxhJHECaySDEsPrEz9W2u7uo6hAbJhYzhPg"),
-        //                     new MultiAddress("/ip4/167.172.73.132/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe1E9wXdykR6h3Q9EaQcQc6hdNAXyCTEzoGfcA2wQgCRyg")
-        //                 };
-        //             }
-        //             
-        //             _logger = logger;
-        //
-        //             // The password is used to access the private keys.
-        //             var password = passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your IPFS password");
-        //             _ipfs = new Dfs();
-        //             _ipfs.Options.KeyChain.DefaultKeyType = Constants.KeyChainDefaultKeyType;
-        //
-        //             // The IPFS repository is inside the catalyst home folder.
-        //             _ipfs.Options.Repository.Folder = Path.Combine(
-        //                 fileSystem.GetCatalystDataDir().FullName,
-        //                 Constants.DfsDataSubDir);
-        //
-        //             // The seed nodes for the catalyst network.
-        //             _ipfs.Options.Discovery.BootstrapPeers = seedServers;
-        //
-        //             // Do not use the public IPFS network, use a private network
-        //             // of catalyst only nodes.
-        //             _ipfs.Options.Swarm.PrivateNetworkKey = new PreSharedKey
-        //             {
-        //                 Value = swarmKey.ToHexBuffer()
-        //             };
-        //
-        //             _logger.Information("IPFS configured.");
-        //         }
-
         /// <summary>
         ///     Determines if the engine has started.
         /// </summary>
@@ -114,7 +66,6 @@ namespace Catalyst.Core.Modules.Dfs
         public bool IsStarted => _stopTasks.Count > 0;
 
         private readonly DfsState _dfsState;
-        private readonly SecureString _passphrase;
         private readonly IHashProvider _hashProvider;
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
 
@@ -142,7 +93,9 @@ namespace Catalyst.Core.Modules.Dfs
             DfsOptions dfsOptions,
             IHashProvider hashProvider,
             DfsState dfsState,
-            IPasswordManager passwordManager)
+            IPasswordManager passwordManager,
+            IMigrationManager migrationManager,
+            Peer localPeer)
         {
             BitSwapApi = bitSwapApi;
             BitSwapService = bitSwapService;
@@ -168,9 +121,8 @@ namespace Catalyst.Core.Modules.Dfs
             _hashProvider = hashProvider;
             _dfsState = dfsState;
             DnsApi = dnsApi;
-
-            _passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword,
-                "Please provide your IPFS password");
+            MigrationManager = migrationManager;
+            LocalPeer = localPeer;
 
             InitAsync().Wait();
         }
@@ -189,46 +141,12 @@ namespace Catalyst.Core.Modules.Dfs
         /// </summary>
         public DfsOptions Options { get; set; }
 
-        private IKeyStoreService _keyStoreService;
+        //private IKeyStoreService _keyStoreService;
 
         private async Task InitAsync()
         {
-            MigrationManager = new MigrationManager(Options.Repository);
-
-            Log.Debug("Building local peer");
-            Log.Debug("Getting key info about self");
-            await KeyApi.SetPassphraseAsync(_passphrase).ConfigureAwait(false);
-
-            var self = await KeyApi.GetPublicKeyAsync("self").ConfigureAwait(false)
-             ?? await KeyApi.CreateAsync("self", "rsa", 0).ConfigureAwait(false);
-
-            var localPeer = new Peer
-            {
-                Id = self.Id,
-                PublicKey = await (await KeyChainAsync()).GetPublicKeyAsync("self").ConfigureAwait(false),
-                ProtocolVersion = "ipfs/0.1.0"
-            };
-
-            var version = typeof(DfsService).GetTypeInfo().Assembly.GetName().Version;
-            localPeer.AgentVersion = $"net-ipfs/{version.Major}.{version.Minor}.{version.Revision}";
-            Log.Debug("Built local peer");
-            LocalPeer = localPeer;
-
             //Swarm
             Log.Debug("Building swarm service");
-
-            if (Options.Swarm.PrivateNetworkKey == null)
-            {
-                var path = Path.Combine(Options.Repository.Folder, "swarm.key");
-                if (File.Exists(path))
-                {
-                    using (var x = File.OpenText(path))
-                    {
-                        Options.Swarm.PrivateNetworkKey = new PreSharedKey();
-                        Options.Swarm.PrivateNetworkKey.Import(x);
-                    }
-                }
-            }
 
             SwarmService.LocalPeer = LocalPeer;
             SwarmService.LocalPeerKey =
@@ -245,17 +163,9 @@ namespace Catalyst.Core.Modules.Dfs
                 Log.Debug($"Private network {Options.Swarm.PrivateNetworkKey.Fingerprint().ToHexString()}");
             }
 
-            Log.Debug("Building bitswap service");
-            Log.Debug("Built bitswap service");
-            BitSwapService.SwarmService = SwarmService;
-            BitSwapService.BlockService = BlockApi;
-
             Log.Debug("Building PubSub service");
-            PubSubService.LocalPeer = LocalPeer;
-            PubSubService.Routers.Add(new FloodRouter
-            {
-                SwarmService = SwarmService
-            });
+
+            //PubSubService.LocalPeer = LocalPeer;
             Log.Debug("Built PubSub service");
         }
 
@@ -283,17 +193,15 @@ namespace Catalyst.Core.Modules.Dfs
             // Repository must be at the correct version.
             await MigrationManager.MirgrateToVersionAsync(MigrationManager.LatestVersion).ConfigureAwait(false);
 
-            var localPeer = LocalPeer;
-            Log.Debug("starting " + localPeer.Id);
+            Log.Debug("starting " + LocalPeer.Id);
 
             // Everybody needs the swarm.
-            var swarm = SwarmService;
-            _stopTasks.Add(async () => { await swarm.StopAsync().ConfigureAwait(false); });
-            await swarm.StartAsync().ConfigureAwait(false);
+            _stopTasks.Add(async () => { await SwarmService.StopAsync().ConfigureAwait(false); });
+            await SwarmService.StartAsync().ConfigureAwait(false);
 
             var peerManager = new PeerManager
             {
-                SwarmService = swarm
+                SwarmService = SwarmService
             };
             await peerManager.StartAsync().ConfigureAwait(false);
             _stopTasks.Add(async () => { await peerManager.StopAsync().ConfigureAwait(false); });
@@ -303,27 +211,23 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 async () =>
                 {
-                    var bitSwap = BitSwapService;
-                    _stopTasks.Add(async () => await bitSwap.StopAsync().ConfigureAwait(false));
-                    await bitSwap.StartAsync().ConfigureAwait(false);
+                    _stopTasks.Add(async () => await BitSwapService.StopAsync().ConfigureAwait(false));
+                    await BitSwapService.StartAsync().ConfigureAwait(false);
                 },
                 async () =>
                 {
-                    var dht = DhtService;
-                    _stopTasks.Add(async () => await dht.StopAsync().ConfigureAwait(false));
-                    await dht.StartAsync().ConfigureAwait(false);
+                    _stopTasks.Add(async () => await DhtService.StopAsync().ConfigureAwait(false));
+                    await DhtService.StartAsync().ConfigureAwait(false);
                 },
                 async () =>
                 {
-                    var ping = PingService;
-                    _stopTasks.Add(async () => await ping.StopAsync().ConfigureAwait(false));
-                    await ping.StartAsync().ConfigureAwait(false);
+                    _stopTasks.Add(async () => await PingService.StopAsync().ConfigureAwait(false));
+                    await PingService.StartAsync().ConfigureAwait(false);
                 },
                 async () =>
                 {
-                    var pubsub = PubSubService;
-                    _stopTasks.Add(async () => await pubsub.StopAsync().ConfigureAwait(false));
-                    await pubsub.StartAsync().ConfigureAwait(false);
+                    _stopTasks.Add(async () => await PubSubService.StopAsync().ConfigureAwait(false));
+                    await PubSubService.StartAsync().ConfigureAwait(false);
                 }
             };
 
@@ -337,7 +241,7 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 try
                 {
-                    await swarm.StartListeningAsync(a).ConfigureAwait(false);
+                    await SwarmService.StartListeningAsync(a).ConfigureAwait(false);
                     ++numberListeners;
                 }
                 catch (Exception e)
@@ -350,7 +254,7 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 Log.Error("No listeners were created.");
             }
-            
+
             // Now that the listener addresses are established, the discovery 
             // services can begin.
             MulticastService multicast = null;
@@ -362,7 +266,7 @@ namespace Catalyst.Core.Modules.Dfs
 #pragma warning restore CS1998
             }
 
-            var autodialer = new AutoDialer(swarm)
+            var autodialer = new AutoDialer(SwarmService)
             {
                 MinConnections = Options.Swarm.MinConnections
             };
@@ -478,8 +382,7 @@ namespace Catalyst.Core.Modules.Dfs
         {
             try
             {
-                var swarm = SwarmService;
-                swarm.RegisterPeer(peer);
+                SwarmService.RegisterPeer(peer);
             }
             catch (Exception ex)
             {
@@ -487,42 +390,6 @@ namespace Catalyst.Core.Modules.Dfs
 
                 // eat it, nothing we can do.
             }
-        }
-
-        /// <summary>
-        ///     @TODO this should reeally go lower down in the kernal when we load keystores
-        ///     Provides access to the <see cref="KeyStoreService" />.
-        /// </summary>
-        /// <param name="cancel">
-        ///     Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException" /> is raised.
-        /// </param>
-        /// <returns>
-        ///     A task that represents the asynchronous operation. The task's result is
-        ///     the <see cref="KeyStoreService" />.
-        /// </returns>
-        public async Task<IKeyStoreService> KeyChainAsync(CancellationToken cancel = default)
-        {
-            // TODO: this should be a LazyAsync property.
-            if (_keyStoreService != null)
-            {
-                return _keyStoreService;
-            }
-            
-            lock (this)
-            {
-                if (_keyStoreService == null)
-                {
-                    _keyStoreService = new KeyStoreService(Options);
-                }
-            }
-
-            await _keyStoreService.SetPassphraseAsync(_passphrase, cancel).ConfigureAwait(false);
-
-            // Maybe create "self" key, this is the local peer's id.
-            var _ = await _keyStoreService.FindKeyByNameAsync("self", cancel).ConfigureAwait(false) ??
-                await _keyStoreService.CreateAsync("self", null, 0, cancel).ConfigureAwait(false);
-
-            return _keyStoreService;
         }
 
         #region Class members
@@ -539,7 +406,7 @@ namespace Catalyst.Core.Modules.Dfs
         ///     A task that represents the asynchronous operation. The task's result is
         ///     a <see cref="Peer" />.
         /// </returns>
-        public Peer LocalPeer { get; private set; }
+        public Peer LocalPeer { get; }
 
         /// <summary>
         ///     Manages the version of the repository.
@@ -649,7 +516,6 @@ namespace Catalyst.Core.Modules.Dfs
                 return;
             }
 
-            _passphrase?.Dispose();
             Stop();
         }
 

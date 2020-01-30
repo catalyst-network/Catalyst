@@ -36,7 +36,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     ///   remember. To create memorable aliases for multihashes, DNS TXT
     ///   records can point to other DNS links, IPFS objects, IPNS keys, etc.
     /// </remarks>
-    public class DnsController : IpfsController
+    public sealed class DnsController : DfsController
     {
         /// <summary>
         ///   Creates a new controller.
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("dns")]
         public async Task<PathDto> Get(string arg, bool recursive = false)
         {
-            var path = await IpfsCore.DnsApi.ResolveAsync(arg, recursive, Cancel);
+            var path = await DfsService.DnsApi.ResolveAsync(arg, recursive, Cancel);
             return new PathDto(path);
         }
     }

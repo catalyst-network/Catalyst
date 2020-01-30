@@ -33,7 +33,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         // ReSharper disable once StaticMemberInGenericType
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected override Task WriteAsync0(IChannelHandlerContext ctx, T msg)
+        protected override Task Write0Async(IChannelHandlerContext ctx, T msg)
         {
             Logger.Verbose("Received {msg}", msg);
             return ctx.WriteAndFlushAsync(msg);

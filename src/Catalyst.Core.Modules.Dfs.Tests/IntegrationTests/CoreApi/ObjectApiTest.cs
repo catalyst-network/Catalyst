@@ -27,11 +27,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
-using Catalyst.Core.Modules.Hashing;
-using MultiFormats.Registry;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -40,13 +37,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class ObjectApiTest
     {
-        private readonly IHashProvider _hashProvider;
         private IDfsService ipfs;
 
         public ObjectApiTest(ITestOutputHelper output)
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("sha2-256"));
-            ipfs = TestDfs.GetTestDfs(output, null, null, _hashProvider);
+            ipfs = TestDfs.GetTestDfs(output, null, "sha2-256");
         }
 
         [Fact]
@@ -71,7 +66,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             ExceptionAssert.Throws<Exception>(() =>
             {
-                var _ = ipfs.ObjectApi.NewAsync("unknown-template").Result;
+                ipfs.ObjectApi.NewAsync("unknown-template").GetAwaiter().GetResult();
             });
         }
 

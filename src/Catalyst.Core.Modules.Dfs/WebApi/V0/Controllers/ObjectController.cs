@@ -43,7 +43,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     The CID of the object.
         /// </summary>
-        public string Hash;
+        public string Hash { set; get; }
 
         /// <summary>
         ///     Number of links.
@@ -79,17 +79,17 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     The object name.
         /// </summary>
-        public string Name;
+        public string Name { set; get; }
 
         /// <summary>
         ///     The CID of the object.
         /// </summary>
-        public string Hash;
+        public string Hash { set; get; }
 
         /// <summary>
         ///     The object size.
         /// </summary>
-        public long Size;
+        public long Size { set; get; }
     }
 
     /// <summary>
@@ -100,12 +100,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     The CID of the object.
         /// </summary>
-        public string Hash;
+        public string Hash { set; get; }
 
         /// <summary>
         ///     Links to other objects.
         /// </summary>
-        public IEnumerable<ObjectLinkDto> Links;
+        public IEnumerable<ObjectLinkDto> Links { set; get; }
     }
 
     /// <summary>
@@ -116,7 +116,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///     The object data encoded as UTF-8.
         /// </summary>
-        public string Data;
+        public string Data { set; get; }
     }
 
     /// <summary>
@@ -127,7 +127,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     ///         This is being obsoleted by <see cref="IDagApi" />.
     ///     </note>
     /// </remarks>
-    public sealed class ObjectController : IpfsController
+    public sealed class ObjectController : DfsController
     {
         /// <summary>
         ///     Creates a new controller.
@@ -143,7 +143,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet] [HttpPost] [Route("object/new")]
         private async Task<ObjectLinkDetailDto> Create(string arg)
         {
-            var node = await IpfsCore.ObjectApi.NewAsync(arg, Cancel);
+            var node = await DfsService.ObjectApi.NewAsync(arg, Cancel);
             Immutable();
             return new ObjectLinkDetailDto
             {
@@ -191,7 +191,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                     await using (var stream = file.OpenReadStream())
                     {
                         var dag = new DagNode(stream);
-                        node = await IpfsCore.ObjectApi.PutAsync(dag, Cancel);
+                        node = await DfsService.ObjectApi.PutAsync(dag, Cancel);
                     }
 
                     break;
@@ -203,7 +203,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 
             if (pin)
             {
-                await IpfsCore.PinApi.AddAsync(node.Id, false, Cancel);
+                await DfsService.PinApi.AddAsync(node.Id, false, Cancel);
             }
 
             return new ObjectLinkDetailDto
@@ -232,7 +232,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         private async Task<ObjectDataDetailDto> Get(string arg,
             [ModelBinder(Name = "data-encoding")] string dataEncoding)
         {
-            var node = await IpfsCore.ObjectApi.GetAsync(arg, Cancel);
+            var node = await DfsService.ObjectApi.GetAsync(arg, Cancel);
             Immutable();
             var dto = new ObjectDataDetailDto
             {
@@ -261,7 +261,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             HttpGet] [HttpPost] [Route("object/links")]
         private async Task<ObjectLinkDetailDto> Links(string arg)
         {
-            var links = await IpfsCore.ObjectApi.LinksAsync(arg, Cancel);
+            var links = await DfsService.ObjectApi.LinksAsync(arg, Cancel);
             Immutable();
             return new ObjectLinkDetailDto
             {
@@ -286,9 +286,9 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [Produces("text/plain")]
         private async Task<IActionResult> Data(string arg)
         {
-            var r = await IpfsCore.NameApi.ResolveAsync(arg, true, false, Cancel);
+            var r = await DfsService.NameApi.ResolveAsync(arg, true, false, Cancel);
             var cid = Cid.Decode(r.Remove(0, 6)); // strip '/ipfs/'.
-            var stream = await IpfsCore.ObjectApi.DataAsync(cid, Cancel);
+            var stream = await DfsService.ObjectApi.DataAsync(cid, Cancel);
 
             return File(stream, "text/plain");
         }
@@ -303,7 +303,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             HttpGet] [HttpPost] [Route("object/stat")]
         private async Task<ObjectStatDto> Stat(string arg)
         {
-            var info = await IpfsCore.ObjectApi.StatAsync(arg, Cancel);
+            var info = await DfsService.ObjectApi.StatAsync(arg, Cancel);
             Immutable();
             return new ObjectStatDto
             {

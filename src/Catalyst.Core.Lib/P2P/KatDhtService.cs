@@ -22,7 +22,7 @@
 #endregion
 
 using Lib.P2P;
-using DhtService = Lib.P2P.Routing.DhtService;
+using Lib.P2P.Routing;
 
 namespace Catalyst.Core.Lib.P2P
 {
@@ -36,8 +36,7 @@ namespace Catalyst.Core.Lib.P2P
         {
             SwarmService = swarmService;
         }
-
-        //"catalyst/kad";
-        public override string Name { get; } = "ipfs/kad";
+        
+        public override string Name { get; } = "catalyst/kad";
     }
 }

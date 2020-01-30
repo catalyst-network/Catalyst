@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>Catalyst.Simulator</RootNamespace>
@@ -7,6 +7,9 @@
         <AssemblyOriginatorKeyFile>Catalyst.Simulator.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
         <OutputType>Exe</OutputType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;CS8002</NoWarn>
     </PropertyGroup>
     <Import Project="../Common.Projects.props" />
     <ItemGroup>

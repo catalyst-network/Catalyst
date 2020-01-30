@@ -1,10 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <Title>James Kirby (nshcore@protonmail.com)</Title>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Modules.POA.Consensus.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;CS8002</NoWarn>
     </PropertyGroup>
     <PropertyGroup>
         <RootNamespace>Catalyst.Modules.POA.Consensus</RootNamespace>

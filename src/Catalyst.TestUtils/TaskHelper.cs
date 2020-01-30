@@ -46,7 +46,7 @@ namespace Catalyst.TestUtils
                     {
                         if (!condition())
                         {
-                            Task.Delay(100, tokenSource.Token).ConfigureAwait(false).GetAwaiter().GetResult();
+                            Task.Delay(100, default).ConfigureAwait(false).GetAwaiter().GetResult();
                         }
                         else
                         {

@@ -21,50 +21,36 @@
 
 #endregion
 
-using System;
-using System.Linq;
-using Lib.P2P.PubSub;
-
-namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
+namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Dto
 {
     /// <summary>
-    ///     A published message.
+    ///     The bitswap ledger with another peer.
     /// </summary>
-    internal sealed class MessageDto
+    public sealed class BitSwapLedgerDto
     {
         /// <summary>
-        ///     The base-64 encoding of the author's peer id.
+        ///     The peer ID.
         /// </summary>
-        public string From;
+        internal string Peer;
 
         /// <summary>
-        ///     The base-64 encoding of the author's unique sequence number.
+        ///     The debt ratio.
         /// </summary>
-        public string Seqno;
+        internal double Value;
 
         /// <summary>
-        ///     The base-64 encoding of the message data.
+        ///     The number of bytes sent.
         /// </summary>
-        public string Data;
+        internal ulong Sent;
 
         /// <summary>
-        ///     The topics associated with the message.
+        ///     The number of bytes received.
         /// </summary>
-        public string[] TopicIDs;
+        internal ulong Recv;
 
         /// <summary>
-        ///     Create a new instance of the <see cref="MessageDto" />
-        ///     from the <see cref="IPublishedMessage" />.
+        ///     The number blocks exchanged.
         /// </summary>
-        /// <param name="msg">
-        ///     A pubsub messagee.
-        /// </param>
-        public MessageDto(IPublishedMessage msg)
-        {
-            From = Convert.ToBase64String(msg.Sender.Id.ToArray());
-            Seqno = Convert.ToBase64String(msg.SequenceNumber);
-            Data = Convert.ToBase64String(msg.DataBytes);
-            TopicIDs = msg.Topics.ToArray();
-        }
+        internal ulong Exchanged;
     }
 }

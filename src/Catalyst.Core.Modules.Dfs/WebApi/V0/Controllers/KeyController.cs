@@ -22,71 +22,19 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///   A cryptographic key.
-    /// </summary>
-    public class CryptoKeyDto
-    {
-        /// <summary>
-        ///   The key's local name.
-        /// </summary>
-        public string Name;
-
-        /// <summary>
-        ///   The key's global unique ID.
-        /// </summary>
-        public string Id;
-    }
-
-    /// <summary>
-    ///   A list of cryptographic keys.
-    /// </summary>
-    public class CryptoKeysDto
-    {
-        /// <summary>
-        ///   A list of cryptographic keys.
-        /// </summary>
-        public IEnumerable<CryptoKeyDto> Keys;
-    }
-
-    /// <summary>
-    ///   A cryptographic key.
-    /// </summary>
-    public class CryptoKeyRenameDto
-    {
-        /// <summary>
-        ///   The key's local name.
-        /// </summary>
-        public string Was;
-
-        /// <summary>
-        ///   The key's global unique ID.
-        /// </summary>
-        public string Now;
-
-        /// <summary>
-        ///   The key's global unique ID.
-        /// </summary>
-        public string Id;
-
-        /// <summary>
-        ///   Indicates that a existing key was overwritten.
-        /// </summary>
-        public bool Overwrite;
-    }
-
-    /// <summary>
     ///   Manages the cryptographic keys.
+    /// @TODO use Dawn guards rather than if evaluations for arg params in methods
     /// </summary>
-    public class KeyController : IpfsController
+    public class KeyController : DfsController
     {
         /// <summary>
         ///   Creates a new controller.
@@ -99,7 +47,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("key/list")]
         public async Task<CryptoKeysDto> List()
         {
-            var keys = await IpfsCore.KeyApi.ListAsync(Cancel);
+            var keys = await DfsService.KeyApi.ListAsync(Cancel);
             return new CryptoKeysDto
             {
                 Keys = keys.Select(key => new CryptoKeyDto
@@ -127,12 +75,17 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             string type,
             int size)
         {
-            if (String.IsNullOrWhiteSpace(arg))
+            if (string.IsNullOrWhiteSpace(arg))
+            {
                 throw new ArgumentNullException(nameof(arg), "The key name is required.");
-            if (String.IsNullOrWhiteSpace(type))
-                throw new ArgumentNullException(nameof(type), "The key type is required.");
+            }
 
-            var key = await IpfsCore.KeyApi.CreateAsync(arg, type, size, Cancel);
+            if (string.IsNullOrWhiteSpace(type))
+            {
+                throw new ArgumentNullException(nameof(type), "The key type is required.");
+            }
+
+            var key = await DfsService.KeyApi.CreateAsync(arg, type, size, Cancel);
             return new CryptoKeyDto
             {
                 Name = key.Name,
@@ -149,10 +102,12 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("key/rm")]
         public async Task<CryptoKeysDto> Remove(string arg)
         {
-            if (String.IsNullOrWhiteSpace(arg))
+            if (string.IsNullOrWhiteSpace(arg))
+            {
                 throw new ArgumentNullException(nameof(arg), "The key name is required.");
+            }
 
-            var key = await IpfsCore.KeyApi.RemoveAsync(arg, Cancel);
+            var key = await DfsService.KeyApi.RemoveAsync(arg, Cancel);
             var dto = new CryptoKeysDto();
             if (key != null)
             {
@@ -179,9 +134,11 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         public async Task<CryptoKeyRenameDto> Rename(string[] arg)
         {
             if (arg.Length != 2)
+            {
                 throw new ArgumentException("Missing the old and/or new key name.");
+            }
 
-            var key = await IpfsCore.KeyApi.RenameAsync(arg[0], arg[1], Cancel);
+            var key = await DfsService.KeyApi.RenameAsync(arg[0], arg[1], Cancel);
             var dto = new CryptoKeyRenameDto
             {
                 Was = arg[0],
