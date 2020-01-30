@@ -1,16 +1,10 @@
 using System.Collections.Generic;
 using Catalyst.Core.Lib.DAO.Ledger;
+using Catalyst.Core.Modules.Sync.Interface;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Sync
 {
-    public interface IDeltaIndexService
-    {
-        void Add(DeltaIndexDao deltaIndex);
-        void Add(IEnumerable<DeltaIndexDao> deltaIndexes);
-        int Height();
-    }
-
     public class DeltaIndexService : IDeltaIndexService
     {
         private readonly IRepository<DeltaIndexDao, string> _repository;
