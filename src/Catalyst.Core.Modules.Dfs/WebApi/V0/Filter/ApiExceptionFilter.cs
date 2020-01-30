@@ -37,7 +37,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Filter
     /// <remarks>
     ///     Returns a <see cref="ApiError" /> to the caller.
     /// </remarks>
-    public class ApiExceptionFilter : ExceptionFilterAttribute
+    internal sealed class ApiExceptionFilter : ExceptionFilterAttribute
     {
         /// <inheritdoc />
         public override void OnException(ExceptionContext context)
@@ -46,27 +46,24 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Filter
             var message = context.Exception.Message;
             string[] details = null;
 
-            // Map special exceptions to a status code.
-            if (context.Exception is FormatException)
+            switch (context.Exception)
             {
-                statusCode = 400; // Bad Request
-            }
-            else if (context.Exception is KeyNotFoundException)
-            {
-                statusCode = 400; // Bad Request
-            }
-            else if (context.Exception is TaskCanceledException)
-            {
-                statusCode = 504; // Gateway Timeout
-                message = "The request took too long to process or was cancelled.";
-            }
-            else if (context.Exception is NotImplementedException)
-            {
-                statusCode = 501; // Not Implemented
-            }
-            else if (context.Exception is TargetInvocationException)
-            {
-                message = context.Exception.InnerException.Message;
+                // Map special exceptions to a status code.
+                case FormatException _:
+                // Bad Request
+                case KeyNotFoundException _:
+                    statusCode = 400; // Bad Request
+                    break;
+                case TaskCanceledException _:
+                    statusCode = 504; // Gateway Timeout
+                    message = "The request took too long to process or was cancelled.";
+                    break;
+                case NotImplementedException _:
+                    statusCode = 501; // Not Implemented
+                    break;
+                case TargetInvocationException _:
+                    message = context.Exception.InnerException?.Message;
+                    break;
             }
 
             // Internal Server Error or Not Implemented get a stack dump.

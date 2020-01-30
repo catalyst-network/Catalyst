@@ -26,16 +26,16 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Dto
     /// <summary>
     ///   Statistics on a block.
     /// </summary>
-    public class BlockStatsDto
+    public sealed class BlockStatsDto
     {
         /// <summary>
         ///   Something like "QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao".
         /// </summary>
-        public string Key;
+        internal string Key;
 
         /// <summary>
         ///   The size, in bytes, of the block.
         /// </summary>
-        public long Size;
+        internal long Size;
     }
 }
