@@ -1,7 +1,7 @@
 {
   "Serilog": {
     "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
-    "MinimumLevel": "Verbose",
+    "MinimumLevel": "Warning",
     "WriteTo": [
       {
         "Name": "Console",

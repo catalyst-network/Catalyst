@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.P2P;
@@ -33,8 +34,9 @@ namespace Catalyst.Core.Modules.Sync
         private readonly IDeltaIndexService _deltaIndexService;
         private readonly ReplaySubject<RepeatedField<DeltaIndex>> _scoredDeltaIndexRangeSubject;
         public IObservable<RepeatedField<DeltaIndex>> ScoredDeltaIndexRange { get; }
+        private Timer _timer;
 
-        private readonly ConcurrentDictionary<int, List<DeltaIndexScore>> _deltaIndexesScored;
+        private readonly ConcurrentDictionary<int, DeltaIndexSyncItem> _deltaIndexSyncPool;
 
         public PeerSyncManager(IPeerSettings peerSettings,
             IPeerClient peerClient,
@@ -51,18 +53,29 @@ namespace Catalyst.Core.Modules.Sync
             _userOutput = userOutput;
             _deltaIndexService = deltaIndexService;
 
-            _scoredDeltaIndexRangeSubject = new ReplaySubject<RepeatedField<DeltaIndex>>(1, scheduler ?? Scheduler.Default);
+            _scoredDeltaIndexRangeSubject =
+                new ReplaySubject<RepeatedField<DeltaIndex>>(1, scheduler ?? Scheduler.Default);
             ScoredDeltaIndexRange = _scoredDeltaIndexRangeSubject.AsObservable();
 
-            _deltaIndexesScored = new ConcurrentDictionary<int, List<DeltaIndexScore>>();
+            _deltaIndexSyncPool = new ConcurrentDictionary<int, DeltaIndexSyncItem>();
         }
 
-        public void GetDeltaIndexRangeFromPeers(IMessage message) { SendMessageToRandomPeers(message); }
-
-        public void GetDeltaHeight()
+        public void GetDeltaIndexRangeFromPeers(int index, int range)
         {
-            SendMessageToRandomPeers(new LatestDeltaHashRequest());
+            var deltaHistoryRequest = new DeltaHistoryRequest
+                {Height = (uint) index, Range = (uint) range};
+
+            var deltaIndexRange = new DeltaIndexSyncItem
+            {
+                Request = deltaHistoryRequest, DeltaIndexRangeRanked = new List<DeltaIndexScore>()
+            };
+
+            _deltaIndexSyncPool.TryAdd(index, deltaIndexRange);
+
+            SendMessageToRandomPeers(deltaHistoryRequest);
         }
+
+        public void GetDeltaHeight() { SendMessageToRandomPeers(new LatestDeltaHashRequest()); }
 
         private void SendMessageToRandomPeers(IMessage message)
         {
@@ -76,40 +89,46 @@ namespace Catalyst.Core.Modules.Sync
             }
         }
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await Task.Run(WorkerAsync);
+            OnCheckSyncPool();
+            _timer = new Timer(OnCheckSyncPool, this, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
         }
 
-        private async Task WorkerAsync()
+        public async Task StopAsync(CancellationToken cancellationToken) { }
+
+        private void OnCheckSyncPool(object state) { ((PeerSyncManager) state).OnCheckSyncPool(); }
+
+        private void OnCheckSyncPool()
         {
-            while (true)
+            if (_deltaIndexSyncPool.Keys.Count <= 0)
             {
-                //await ProgressAsync();
-                var key = _deltaIndexesScored.Keys.FirstOrDefault();
+                return;
+            }
+
+            foreach (var key in _deltaIndexSyncPool.Keys)
+            {
+                var deltaIndexSyncItem = _deltaIndexSyncPool[key];
+                var combinedScores = deltaIndexSyncItem.DeltaIndexRangeRanked.Select(x => x.Score).Sum();
+
+                if (combinedScores < PeerCount * 0.8)
                 {
-                    if (_deltaIndexService.Height() > key)
-                    {
-                        continue;
-                    }
-
-                    var deltaIndexScored = _deltaIndexesScored[key];
-                    var combinedScores = deltaIndexScored.Select(x => x.Score).Aggregate((x, y) => x + y);
-
-                    if (combinedScores >= PeerCount)
-                    {
-                        var deltaIndexScoredByDescendingOrder = deltaIndexScored.OrderByDescending(x => x.Score);
-                        var highestScoreDeltaIndexRange = deltaIndexScoredByDescendingOrder.First();
-                        var accuracyPercentage = highestScoreDeltaIndexRange.Score / (double) combinedScores * 100d;
-                        if (accuracyPercentage >= 99)
-                        {
-                            _deltaIndexesScored.TryRemove(key, out _);
-                            _scoredDeltaIndexRangeSubject.OnNext(highestScoreDeltaIndexRange.DeltaIndexes);
-                        }
-                    }
+                    continue;
                 }
 
-                await Task.Delay(100);
+                var deltaIndexScoredByDescendingOrder =
+                    deltaIndexSyncItem.DeltaIndexRangeRanked.OrderByDescending(x => x.Score);
+                var highestScoreDeltaIndexRange = deltaIndexScoredByDescendingOrder.First();
+                var accuracyPercentage = highestScoreDeltaIndexRange.Score / (double) combinedScores * 100d;
+                if (!(accuracyPercentage >= 99))
+                {
+                    continue;
+                }
+
+                if (_deltaIndexSyncPool.TryRemove(key, out _))
+                {
+                    _scoredDeltaIndexRangeSubject.OnNext(highestScoreDeltaIndexRange.DeltaIndexes);
+                }
             }
         }
 
@@ -120,28 +139,35 @@ namespace Catalyst.Core.Modules.Sync
                 return;
             }
 
-            var startHeight = deltaHistoryResponse.Result.First().Height;
-
-            var newDeltaIndexScores = new DeltaIndexScore {DeltaIndexes = deltaHistoryResponse.Result, Score = 1};
-            if (_deltaIndexesScored.TryGetValue((int) startHeight, out var deltaIndexScores))
+            if (deltaHistoryResponse.Result.Count == 0)
             {
-                var exists = deltaIndexScores.FirstOrDefault(x => x.DeltaIndexes.Equals(deltaHistoryResponse.Result));
-                if (exists != null)
-                {
-                    exists.Score++;
-                }
-                else
-                {
-                    deltaIndexScores.Add(newDeltaIndexScores);
-                }
+                return;
+            }
+
+            var startHeight = deltaHistoryResponse.Result.First().Height;
+            var newDeltaIndexScores = new DeltaIndexScore {DeltaIndexes = deltaHistoryResponse.Result, Score = 1};
+            if (!_deltaIndexSyncPool.TryGetValue((int) startHeight, out var deltaIndexScores))
+            {
+                return;
+            }
+
+            var exists =
+                deltaIndexScores.DeltaIndexRangeRanked.FirstOrDefault(x =>
+                    x.DeltaIndexes.Equals(deltaHistoryResponse.Result));
+            if (exists != null)
+            {
+                exists.Score++;
             }
             else
             {
-                _deltaIndexesScored.TryAdd((int) startHeight,
-                    new List<DeltaIndexScore> {newDeltaIndexScores});
+                deltaIndexScores.DeltaIndexRangeRanked.Add(newDeltaIndexScores);
             }
         }
 
-        public void Dispose() { _deltaHistorySubscription.Dispose(); }
+        public void Dispose()
+        {
+            _timer.Dispose();
+            _deltaHistorySubscription.Dispose();
+        }
     }
 }

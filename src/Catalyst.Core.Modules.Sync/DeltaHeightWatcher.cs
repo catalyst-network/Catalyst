@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
@@ -28,12 +29,12 @@ namespace Catalyst.Core.Modules.Sync
             _mapperProvider = mapperProvider;
         }
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             _deltaHeightSubscription = _deltaHeightResponseObserver.MessageStream.Subscribe(DeltaHeightOnNext);
         }
 
-        public async Task StopAsync() { _deltaHeightSubscription.Dispose(); }
+        public async Task StopAsync(CancellationToken cancellationToken) { _deltaHeightSubscription.Dispose(); }
 
         public async Task WaitForDeltaHeightAsync(int currentDeltaIndex)
         {
