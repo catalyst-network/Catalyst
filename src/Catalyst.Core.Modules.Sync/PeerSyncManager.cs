@@ -37,6 +37,9 @@ namespace Catalyst.Core.Modules.Sync
         private Timer _timer;
 
         private readonly ConcurrentDictionary<int, DeltaIndexSyncItem> _deltaIndexSyncPool;
+        public int MaxSyncPoolSize { private set; get; } = 4;
+
+        public bool IsPoolAvailable() { return MaxSyncPoolSize - _deltaIndexSyncPool.Count() > 0; }
 
         public PeerSyncManager(IPeerSettings peerSettings,
             IPeerClient peerClient,

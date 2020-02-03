@@ -385,7 +385,7 @@ namespace Lib.P2P.Tests.Routing
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
             await dht.FindPeerAsync(unknownPeer);
-            await Task.Delay(400);
+            await Task.Delay(400).ConfigureAwait(false);
             await dht.StopAsync();
         }
 

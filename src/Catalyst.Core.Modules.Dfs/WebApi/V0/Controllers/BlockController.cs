@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
     ///   This may be very good or bad, we haven't decided yet 😄
     ///   </note>
     /// </remarks>
-    public class BlockController : IpfsController
+    public sealed class BlockController : DfsController
     {
         /// <summary>
         ///   Creates a new controller.
@@ -65,8 +65,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [Produces("application/octet-stream")]
         public async Task<IActionResult> Get(string arg)
         {
-            //var cid = new MultiHash(arg.FromBase32()).ToCid();
-            var block = await IpfsCore.BlockApi.GetAsync(arg, Cancel);
+            var block = await DfsService.BlockApi.GetAsync(arg, Cancel);
             Immutable();
             return File(block.DataStream, "application/octet-stream", arg, null, ETag(block.Id));
         }
@@ -80,7 +79,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("block/stat")]
         public async Task<BlockStatsDto> Stats(string arg)
         {
-            var info = await IpfsCore.BlockApi.StatAsync(arg, Cancel);
+            var info = await DfsService.BlockApi.StatAsync(arg, Cancel);
             if (info == null)
             {
                 throw new KeyNotFoundException($"Block '{arg}' does not exist.");
@@ -121,7 +120,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 
             await using (var data = file.OpenReadStream())
             {
-                var cid = await IpfsCore.BlockApi.PutAsync(
+                var cid = await DfsService.BlockApi.PutAsync(
                     data,
                     format,
                     encoding: cidBase,
@@ -145,7 +144,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         public async Task<HashDto> Remove(string arg,
             bool force = false)
         {
-            var cid = await IpfsCore.BlockApi.RemoveAsync(arg, true, Cancel);
+            var cid = await DfsService.BlockApi.RemoveAsync(arg, true, Cancel);
             var dto = new HashDto();
             if (cid == null && !force)
             {

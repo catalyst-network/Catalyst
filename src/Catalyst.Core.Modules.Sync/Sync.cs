@@ -24,6 +24,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
@@ -33,7 +36,6 @@ using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Modules.Sync.Interface;
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.IPPN;
 using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Modules.Sync
@@ -41,7 +43,6 @@ namespace Catalyst.Core.Modules.Sync
     public class Sync
     {
         private readonly int _rangeSize;
-        private readonly int _checkpoint;
         private readonly int _syncTaskPoolLimit;
         private readonly IUserOutput _userOutput;
         private readonly ILedger _ledger;
@@ -51,11 +52,15 @@ namespace Catalyst.Core.Modules.Sync
 
         private readonly IPeerSyncManager _peerSyncManager;
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
+        private Timer _timer;
 
-        public int CurrentDeltaIndex { private set; get; } = 0;
+        public int CurrentDeltaIndex { private set; get; }
         public int MaxDeltaIndexStored => _deltaIndexService.Height();
         public bool IsSynchronized { private set; get; }
         public bool IsRunning { private set; get; }
+
+        public IObservable<int> SyncCompleted { get; }
+        private readonly ReplaySubject<int> _syncCompletedReplaySubject;
 
         public Sync(IPeerSyncManager peerSyncManager,
             IDeltaHeightWatcher deltaHeightWatcher,
@@ -65,8 +70,8 @@ namespace Catalyst.Core.Modules.Sync
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
             int rangeSize = 100,
-            int checkpoint = 500,
-            int syncTaskPoolLimit = 4)
+            int syncTaskPoolLimit = 4,
+            IScheduler scheduler = null)
         {
             _peerSyncManager = peerSyncManager;
             _deltaHeightWatcher = deltaHeightWatcher;
@@ -78,31 +83,48 @@ namespace Catalyst.Core.Modules.Sync
             _mapperProvider = mapperProvider;
             _userOutput = userOutput;
 
-            _checkpoint = checkpoint;
             _syncTaskPoolLimit = syncTaskPoolLimit;
+
+            _syncCompletedReplaySubject = new ReplaySubject<int>(1, scheduler ?? Scheduler.Default);
+            SyncCompleted = _syncCompletedReplaySubject.AsObservable();
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            IsRunning = true;
             _userOutput.WriteLine("Starting Sync...");
 
             await _deltaHeightWatcher.StartAsync(cancellationToken);
-
-            await _deltaHeightWatcher.WaitForDeltaHeightAsync(MaxDeltaIndexStored);
+            await _deltaHeightWatcher.WaitForDeltaHeightAsync(MaxDeltaIndexStored, cancellationToken);
 
             _peerSyncManager.ScoredDeltaIndexRange.Subscribe(OnNextScoredDeltaIndexRange);
 
-            var currentMaxDeltaIndexStored = MaxDeltaIndexStored;
-            for (var i = 0; i < _syncTaskPoolLimit; i++)
+            _currentSyncIndex = MaxDeltaIndexStored;
 
-            {
-                await ProgressAsync(currentMaxDeltaIndexStored, _rangeSize);
-                currentMaxDeltaIndexStored += _rangeSize;
-            }
-
-            IsRunning = true;
+            var syncDeltaIndexTask = Task.Factory.StartNew(OnSyncDeltaIndex, cancellationToken);
 
             await _peerSyncManager.StartAsync(cancellationToken);
+        }
+
+        private int _currentSyncIndex;
+
+        private async Task OnSyncDeltaIndex()
+        {
+            while (IsRunning)
+            {
+                while (_peerSyncManager.IsPoolAvailable())
+                {
+                    if (_deltaHeightWatcher.LatestDeltaHash.Height <= _currentSyncIndex)
+                    {
+                        break;
+                    }
+
+                    ProgressAsync(_currentSyncIndex, _rangeSize).GetAwaiter().GetResult();
+                    _currentSyncIndex += _rangeSize;
+                }
+
+                await Task.Delay(100);
+            }
         }
 
         private void OnNextScoredDeltaIndexRange(RepeatedField<DeltaIndex> deltaIndexRange)
@@ -117,12 +139,6 @@ namespace Catalyst.Core.Modules.Sync
             var percentageSync = _deltaIndexService.Height() /
                 (decimal) _deltaHeightWatcher.LatestDeltaHash.Height * 100;
             _userOutput.WriteLine($"Sync Progress: {percentageSync}%");
-
-            var index = deltaIndexRange.First().Height + (_syncTaskPoolLimit * _rangeSize);
-            if (index < _deltaHeightWatcher.LatestDeltaHash.Height)
-            {
-                ProgressAsync((int) index, _rangeSize).Wait();
-            }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
@@ -174,6 +190,7 @@ namespace Catalyst.Core.Modules.Sync
             if (MaxDeltaIndexStored >= _deltaHeightWatcher.LatestDeltaHash.Height)
             {
                 IsSynchronized = true;
+                _syncCompletedReplaySubject.OnNext(CurrentDeltaIndex);
             }
         }
     }

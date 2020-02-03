@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 // TODO: need MultiAddress.WithOutPeer (should be in DFS code)
@@ -32,55 +33,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 {
     /// <summary>
-    ///   Information from the Distributed Hash Table.
-    /// </summary>
-    public sealed class DhtPeerDto
-    {
-        /// <summary>
-        ///   The ID of the peer that provided the response.
-        /// </summary>
-        internal string Id;
-
-        /// <summary>
-        ///   Unknown.
-        /// </summary>
-        public int Type; // TODO: what is the type?
-
-        /// <summary>
-        ///   The peer that has the information.
-        /// </summary>
-        internal IEnumerable<DhtPeerResponseDto> Responses;
-
-        /// <summary>
-        ///   Unknown.
-        /// </summary>
-        public string Extra = string.Empty;
-    }
-
-    /// <summary>
-    ///   Information on a peer that has the information.
-    /// </summary>
-    internal sealed class DhtPeerResponseDto
-    {
-        /// <summary>
-        ///   The peer ID.
-        /// </summary>
-        public string Id;
-
-        /// <summary>
-        ///   The listening addresses of the peer.
-        /// </summary>
-        public IEnumerable<string> Addrs;
-    }
-
-    /// <summary>
     ///   Distributed Hash Table.
     /// </summary>
     /// <remarks>
     ///   The DHT is a place to store, not the value, but pointers to peers who have 
     ///   the actual value.
     /// </remarks>
-    public sealed class DhtController : IpfsController
+    public sealed class DhtController : DfsController
     {
         /// <summary>
         ///   Creates a new controller.
@@ -99,7 +58,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         [HttpGet, HttpPost, Route("dht/findpeer")]
         public async Task<DhtPeerDto> FindPeer(string arg)
         {
-            var peer = await IpfsCore.DhtApi.FindPeerAsync(arg, Cancel);
+            var peer = await DfsService.DhtApi.FindPeerAsync(arg, Cancel);
             return new DhtPeerDto
             {
                 Id = peer.Id.ToBase58(),
@@ -130,7 +89,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         public async Task<IEnumerable<DhtPeerDto>> FindProviders(string arg,
             [ModelBinder(Name = "num-providers")] int limit = 20)
         {
-            var peers = await IpfsCore.DhtApi.FindProvidersAsync(arg, limit, null, Cancel);
+            var peers = await DfsService.DhtApi.FindProvidersAsync(arg, limit, null, Cancel);
             return peers.Select(peer => new DhtPeerDto
             {
                 Id = peer.Id.ToBase58(), // TODO: should be the peer ID that answered the query

@@ -52,7 +52,6 @@ namespace Catalyst.Core.Lib.Cryptography
             finally
             {
                 Marshal.ZeroFreeGlobalAllocAnsi(p);
-                p = IntPtr.Zero;
                 Array.Clear(plain, 0, length);
             }
         }

@@ -22,12 +22,9 @@
 #endregion
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Lib.P2P;
 using Lib.P2P.Protocols;

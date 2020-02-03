@@ -29,24 +29,24 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
-    public class StatsApiTest
+    public sealed class StatsApiTest
     {
-        private IDfsService ipfs;
+        private readonly IDfsService _dfs;
 
         public StatsApiTest(ITestOutputHelper output)
         {
-            ipfs = TestDfs.GetTestDfs(output);
+            _dfs = TestDfs.GetTestDfs(output);
         }
         
         [Fact]
-        public void Exists() { Assert.NotNull(ipfs.StatsApi); }
+        public void Exists() { Assert.NotNull(_dfs.StatsApi); }
 
         [Fact]
         public async Task SmokeTest()
         {
-            await ipfs.StatsApi.GetBandwidthStatsAsync();
-            ipfs.StatsApi.GetBitSwapStats();
-            await ipfs.StatsApi.GetRepositoryStatsAsync();
+            await _dfs.StatsApi.GetBandwidthStatsAsync();
+            _dfs.StatsApi.GetBitSwapStats();
+            await _dfs.StatsApi.GetRepositoryStatsAsync();
         }
     }
 }

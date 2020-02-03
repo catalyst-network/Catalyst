@@ -27,11 +27,13 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Modules.Ledger.Repository;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Core.Modules.Sync.Interface;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Lib.P2P;
@@ -40,7 +42,6 @@ using Nethermind.Evm.Tracing;
 using Nethermind.Store;
 using Serilog;
 using Serilog.Events;
-using Account = Catalyst.Abstractions.Ledger.Models.Account;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -65,6 +66,10 @@ namespace Catalyst.Core.Modules.Ledger
 
         private readonly object _synchronisationLock = new object();
 
+        private readonly IDeltaIndexService _deltaIndexService;
+
+        private readonly int syncPos = 1;
+
         public Cid LatestKnownDelta { get; private set; }
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
@@ -77,6 +82,7 @@ namespace Catalyst.Core.Modules.Ledger
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
             IMempool<PublicEntryDao> mempool,
+            IDeltaIndexService deltaIndexService,
             IMapperProvider mapperProvider,
             ILogger logger)
         {
@@ -93,6 +99,8 @@ namespace Catalyst.Core.Modules.Ledger
             _logger = logger;
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
+            _deltaIndexService = deltaIndexService;
+            
             LatestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
         }
 
@@ -101,7 +109,8 @@ namespace Catalyst.Core.Modules.Ledger
             _synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var delta);
             if (delta != null)
             {
-                var deltaTransactions = delta.PublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
+                var deltaTransactions =
+                    delta.PublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
                 _mempool.Service.Delete(deltaTransactions);
             }
         }
@@ -166,7 +175,8 @@ namespace Catalyst.Core.Modules.Ledger
             {
                 if (_logger.IsEnabled(LogEventLevel.Error))
                 {
-                    _logger.Error("Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}",
+                    _logger.Error(
+                        "Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}",
                         stateSnapshot,
                         codeSnapshot,
                         null,
@@ -188,7 +198,7 @@ namespace Catalyst.Core.Modules.Ledger
 
             try
             {
-                if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out Delta nextDeltaInChain))
+                if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var nextDeltaInChain))
                 {
                     _logger.Warning(
                         "Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.",
@@ -215,6 +225,8 @@ namespace Catalyst.Core.Modules.Ledger
                 _codeDb.Commit();
 
                 LatestKnownDelta = deltaHash;
+
+                _deltaIndexService.Add(new DeltaIndexDao {Cid = LatestKnownDelta, Id = syncPos.ToString()});
             }
             catch
             {

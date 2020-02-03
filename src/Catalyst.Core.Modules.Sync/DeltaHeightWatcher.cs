@@ -36,12 +36,12 @@ namespace Catalyst.Core.Modules.Sync
 
         public async Task StopAsync(CancellationToken cancellationToken) { _deltaHeightSubscription.Dispose(); }
 
-        public async Task WaitForDeltaHeightAsync(int currentDeltaIndex)
+        public async Task WaitForDeltaHeightAsync(int currentDeltaIndex, CancellationToken cancellationToken)
         {
             while (LatestDeltaHash == null || LatestDeltaHash.Height == currentDeltaIndex)
             {
                 _peerSyncManager.GetDeltaHeight();
-                await Task.Delay(10000);
+                await Task.Delay(10000, cancellationToken);
             }
         }
 
@@ -53,6 +53,11 @@ namespace Catalyst.Core.Modules.Sync
             }
 
             LatestDeltaHash = latestDeltaHashResponse.Result.ToDao<DeltaIndex, DeltaIndexDao>(_mapperProvider);
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

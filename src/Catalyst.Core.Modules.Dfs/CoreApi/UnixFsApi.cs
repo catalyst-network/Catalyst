@@ -49,6 +49,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly INameApi _nameApi;
         private readonly DfsState _dfsState;
 
+        /// <summary>
+        /// @TODO magic numbers be the devils work, WHY ONLY 174??
+        /// </summary>
         private const int DefaultLinksPerBlock = 174;
 
         public UnixFsApi(IDhtApi dhtApi, IBlockApi blockApi, IKeyApi keyApi, INameApi nameApi, DfsState dfsState)
@@ -146,7 +149,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                         break;
                     }
 
-                    var node = await BuildTreeNodeAsync(unixFsNodes, options, cancel);
+                    var node = await BuildTreeNodeAsync(unixFsNodes, options, cancel).ConfigureAwait(false);
                     tree.Add(node);
                 }
 

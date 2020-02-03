@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,7 +58,7 @@ using SharpRepository.InMemoryRepository;
 using Xunit;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
-namespace Catalyst.Core.Modules.Sync.Tests
+namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
     public class SyncUnitTests
     {
@@ -84,10 +85,14 @@ namespace Catalyst.Core.Modules.Sync.Tests
 
         private readonly IDeltaHashProvider _deltaHashProvider;
 
-        private readonly int _syncTestHeight = 1005;
+        private int _syncTestHeight = 1005;
+
+        private readonly ManualResetEventSlim _manualResetEventSlim;
 
         public SyncUnitTests()
         {
+            _manualResetEventSlim = new ManualResetEventSlim(false);
+
             _testScheduler = new TestScheduler();
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
@@ -131,14 +136,7 @@ namespace Catalyst.Core.Modules.Sync.Tests
             });
 
             _peerRepository = Substitute.For<IPeerRepository>();
-            var peers = new List<Peer>
-            {
-                new Peer {PeerId = PeerIdHelper.GetPeerId()},
-                new Peer {PeerId = PeerIdHelper.GetPeerId()},
-                new Peer {PeerId = PeerIdHelper.GetPeerId()},
-                new Peer {PeerId = PeerIdHelper.GetPeerId()},
-                new Peer {PeerId = PeerIdHelper.GetPeerId()}
-            };
+            var peers = Enumerable.Repeat(new Peer {PeerId = PeerIdHelper.GetPeerId()}, 5);
             _peerRepository.GetActivePeers(Arg.Any<int>()).Returns(peers);
 
             _deltaHeightResponseObserver = Substitute.For<IPeerClientObservable>();
@@ -165,13 +163,15 @@ namespace Catalyst.Core.Modules.Sync.Tests
         {
             var deltaHeightResponse = new DeltaHistoryResponse();
             var deltaIndexList = new List<DeltaIndex>();
-            for (var i = height; i <= height + range; i++)
-            {
-                if (maxHeight < i)
-                {
-                    break;
-                }
+            var heightSum = height + range;
 
+            if (heightSum > maxHeight)
+            {
+                heightSum = maxHeight;
+            }
+
+            for (var i = height; i <= heightSum; i++)
+            {
                 deltaIndexList.Add(new DeltaIndex
                 {
                     Cid = ByteString.CopyFrom(_hashProvider.ComputeUtf8MultiHash(i.ToString()).ToCid().ToArray()),
@@ -249,141 +249,84 @@ namespace Catalyst.Core.Modules.Sync.Tests
         }
 
         [Fact]
-        public async Task Sync_Can_Request_DeltaIndexRange_From_Peer()
+        public async Task Sync_Can_Receive_DeltaIndexRange_From_Peers()
         {
-            var firstResponseReceived = false;
+            var deltaIndexService = Substitute.For<IDeltaIndexService>();
+            deltaIndexService.When(x => x.Add(Arg.Any<IEnumerable<DeltaIndexDao>>())).Do(
+                callInfo => { _manualResetEventSlim.Set(); });
 
-            ModifyPeerClient<DeltaHistoryRequest>((request, senderPeerIdentifier) =>
-            {
-                if (firstResponseReceived)
-                {
-                    return;
-                }
-
-                var peerClientMessageDto = new PeerClientMessageDto(GenerateSampleData(0, 10),
-                    senderPeerIdentifier,
-                    CorrelationId.GenerateCorrelationId());
-                _deltaHistoryReplaySubject.OnNext(peerClientMessageDto);
-                firstResponseReceived = true;
-            });
-
-            var sync = new Sync(_peerSyncManager, _deltaHeightWatcher, _ledger, _deltaDfsReader, _deltaIndexService,
+            var sync = new Sync(_peerSyncManager, _deltaHeightWatcher, _ledger, _deltaDfsReader, deltaIndexService,
                 _mapperProvider, _userOutput);
 
             await sync.StartAsync(CancellationToken.None);
 
-            sync.MaxDeltaIndexStored.Should().Be(10);
+            _manualResetEventSlim.Wait();
         }
 
         [Fact]
         public async Task Sync_Can_Add_DeltaIndexRange_To_Repository()
         {
-            var firstResponseReceived = false;
-            var deltaHeightResponse = GenerateSampleData(0, 10);
-
-            ModifyPeerClient<DeltaHistoryRequest>((request, senderPeerIdentifier) =>
-            {
-                if (firstResponseReceived)
-                {
-                    return;
-                }
-
-                var peerClientMessageDto = new PeerClientMessageDto(deltaHeightResponse,
-                    senderPeerIdentifier,
-                    CorrelationId.GenerateCorrelationId());
-                _deltaHistoryReplaySubject.OnNext(peerClientMessageDto);
-                firstResponseReceived = true;
-            });
-
+            _syncTestHeight = 10;
+            var expectedData = GenerateSampleData(0, _syncTestHeight, _syncTestHeight);
             var sync = new Sync(_peerSyncManager, _deltaHeightWatcher, _ledger, _deltaDfsReader, _deltaIndexService,
-                _mapperProvider, _userOutput);
+                _mapperProvider, _userOutput, _syncTestHeight, 1);
+
+            sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
 
             await sync.StartAsync(CancellationToken.None);
 
-            _peerRepository.GetAll().Should().AllBeEquivalentTo(deltaHeightResponse);
+            _manualResetEventSlim.Wait();
+
+            _peerRepository.GetAll().Should().AllBeEquivalentTo(expectedData);
         }
 
         [Fact]
         public async Task Sync_Can_Download_Deltas()
         {
-            const int deltaIndexCount = 10;
-            var firstResponseReceived = false;
-            var deltaHeightResponse = GenerateSampleData(0, deltaIndexCount);
-
-            ModifyPeerClient<DeltaHistoryRequest>((request, senderPeerIdentifier) =>
-            {
-                if (firstResponseReceived)
-                {
-                    return;
-                }
-
-                var peerClientMessageDto = new PeerClientMessageDto(deltaHeightResponse,
-                    senderPeerIdentifier,
-                    CorrelationId.GenerateCorrelationId());
-                _deltaHistoryReplaySubject.OnNext(peerClientMessageDto);
-                firstResponseReceived = true;
-            });
+            _syncTestHeight = 10;
 
             var sync = new Sync(_peerSyncManager, _deltaHeightWatcher, _ledger, _deltaDfsReader, _deltaIndexService,
-                _mapperProvider, _userOutput);
+                _mapperProvider, _userOutput, _syncTestHeight, 1);
+
+            sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
 
             await sync.StartAsync(CancellationToken.None);
 
-            _deltaDfsReader.Received(deltaIndexCount).TryReadDeltaFromDfs(Arg.Any<Cid>(), out Arg.Any<Delta>());
+            _manualResetEventSlim.Wait();
+
+            _deltaDfsReader.Received(_syncTestHeight + 1).TryReadDeltaFromDfs(Arg.Any<Cid>(), out Arg.Any<Delta>());
         }
 
         [Fact]
         public async Task Sync_Can_Update_State()
         {
-            const int deltaIndexCount = 10;
-            var firstResponseReceived = false;
-            var deltaHeightResponse = GenerateSampleData(0, deltaIndexCount);
-
-            ModifyPeerClient<DeltaHistoryRequest>((request, senderPeerIdentifier) =>
-            {
-                if (firstResponseReceived)
-                {
-                    return;
-                }
-
-                var peerClientMessageDto = new PeerClientMessageDto(deltaHeightResponse,
-                    senderPeerIdentifier,
-                    CorrelationId.GenerateCorrelationId());
-                _deltaHistoryReplaySubject.OnNext(peerClientMessageDto);
-                firstResponseReceived = true;
-            });
+            _syncTestHeight = 10;
 
             var sync = new Sync(_peerSyncManager, _deltaHeightWatcher, _ledger, _deltaDfsReader, _deltaIndexService,
-                _mapperProvider, _userOutput);
+                _mapperProvider, _userOutput, _syncTestHeight, 1);
+
+            sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
 
             await sync.StartAsync(CancellationToken.None);
 
-            _ledger.Received(deltaIndexCount).Update(Arg.Any<Cid>());
+            _manualResetEventSlim.Wait();
+
+            _ledger.Received(_syncTestHeight + 1).Update(Arg.Any<Cid>());
         }
 
         [Fact]
         public async Task Sync_Can_Update_CurrentDeltaIndex_From_Requested_DeltaIndexRange()
         {
-            var firstResponseReceived = false;
-
-            ModifyPeerClient<DeltaHistoryRequest>((request, senderPeerIdentifier) =>
-            {
-                if (firstResponseReceived)
-                {
-                    return;
-                }
-
-                var peerClientMessageDto = new PeerClientMessageDto(GenerateSampleData(0, 10),
-                    senderPeerIdentifier,
-                    CorrelationId.GenerateCorrelationId());
-                _deltaHistoryReplaySubject.OnNext(peerClientMessageDto);
-                firstResponseReceived = true;
-            });
+            _syncTestHeight = 10;
 
             var sync = new Sync(_peerSyncManager, _deltaHeightWatcher, _ledger, _deltaDfsReader, _deltaIndexService,
                 _mapperProvider, _userOutput);
 
+            sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
+
             await sync.StartAsync(CancellationToken.None);
+
+            _manualResetEventSlim.Wait();
 
             sync.MaxDeltaIndexStored.Should().Be(10);
         }
@@ -397,12 +340,11 @@ namespace Catalyst.Core.Modules.Sync.Tests
             var sync = new Sync(_peerSyncManager, _deltaHeightWatcher, _ledger, _deltaDfsReader, _deltaIndexService,
                 _mapperProvider, _userOutput);
 
+            sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
+
             await sync.StartAsync(CancellationToken.None);
 
-            while (!sync.IsSynchronized)
-            {
-                await Task.Delay(100);
-            }
+            _manualResetEventSlim.Wait();
 
             sync.MaxDeltaIndexStored.Should().Be(_syncTestHeight);
         }

@@ -28,7 +28,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Dto
     /// <summary>
     ///  A hash to some data.
     /// </summary>
-    public class HashDto
+    public sealed class HashDto
     {
         /// <summary>
         ///   Typically a CID.
