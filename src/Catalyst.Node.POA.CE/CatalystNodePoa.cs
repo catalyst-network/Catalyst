@@ -36,6 +36,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using MultiFormats;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Modules.Sync;
 using Serilog;
 
 namespace Catalyst.Node.POA.CE
@@ -53,6 +54,7 @@ namespace Catalyst.Node.POA.CE
         private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
         private readonly IPublicKey _publicKey;
+        private readonly Sync _sync;
 
         public CatalystNodePoa(IKeySigner keySigner,
             IPeerService peer,
@@ -63,6 +65,7 @@ namespace Catalyst.Node.POA.CE
             IPeerClient peerClient,
             IPeerSettings peerSettings,
             IMempool<PublicEntryDao> memPool,
+            Sync sync,
             IContract contract = null)
         {
             _peer = peer;
@@ -75,6 +78,7 @@ namespace Catalyst.Node.POA.CE
             _logger = logger;
             _memPool = memPool;
             _contract = contract;
+            _sync = sync;
 
             var privateKey = keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
             _publicKey = keySigner.CryptoContext.GetPublicKeyFromPrivateKey(privateKey);
@@ -91,8 +95,9 @@ namespace Catalyst.Node.POA.CE
             _logger.Information("Starting the Catalyst Node");
             _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase32()} *****");
 
-            await _dfsService.StartAsync();
             await StartSocketsAsync().ConfigureAwait(false);
+            _dfsService.StartAsync().ConfigureAwait(false);
+            _sync.StartAsync().ConfigureAwait(false);
             Consensus.StartProducing();
 
             bool exit;

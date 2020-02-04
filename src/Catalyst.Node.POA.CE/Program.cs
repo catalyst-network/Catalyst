@@ -50,6 +50,7 @@ using Catalyst.Core.Modules.Ledger;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings;
 using Catalyst.Core.Modules.Rpc.Server;
+using Catalyst.Core.Modules.Sync;
 using Catalyst.Core.Modules.Web3;
 using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
@@ -107,6 +108,7 @@ namespace Catalyst.Node.POA.CE
                 {typeof(CoreLibProvider), () => new CoreLibProvider()},
                 {typeof(MempoolModule), () => new MempoolModule()},
                 {typeof(ConsensusModule), () => new ConsensusModule()},
+                {typeof(SyncModule), () => new SyncModule()},
                 {typeof(KvmModule), () => new KvmModule()},
                 {typeof(LedgerModule), () => new LedgerModule()},
                 {typeof(HashingModule), () => new HashingModule()},

@@ -72,18 +72,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task UnWant()
         {
-            var fileSystem = Substitute.For<IFileSystem>();
-            fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
-                $"dfs1-_{DateTime.Now:yyMMddHHmmssffff}")));
-
-            var dfsService = TestDfs.GetTestDfs(_testOutputHelper, fileSystem);
-            await dfsService.StartAsync();
+            await _dfsService.StartAsync();
             
             try
             {
                 var cts = new CancellationTokenSource();
                 var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block 2"));
-                var wantTask = dfsService.BitSwapApi.GetAsync(block.Id, cts.Token).ConfigureAwait(false);
+                var wantTask = _dfsService.BitSwapApi.GetAsync(block.Id, cts.Token).ConfigureAwait(false);
 
                 var endTime = DateTime.Now.AddSeconds(10);
                 while (true)
@@ -94,7 +89,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     }
 
                     await Task.Delay(100, cts.Token);
-                    var w = await dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
+                    var w = await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
                     if (w.Contains(block.Id))
                     {
                         break;
@@ -102,51 +97,29 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 }
 
                 cts.Cancel();
-                dfsService.BitSwapApi.UnWant(block.Id, cts.Token);
-                var wants = await dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
+                _dfsService.BitSwapApi.UnWant(block.Id, cts.Token);
+                var wants = await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
                 wants.ToArray().Should().NotContain(block.Id);
 
-<<<<<<< HEAD
                 //Race condition as wantTask will be on another thread and could create unpredictable behaviour
                 //Assert.True(wantTask.IsCanceled);
-=======
-                //Race condition between threads
-                // Assert.True(wantTask.GetAwaiter().IsCompleted);
->>>>>>> 16567ecd9adf66e2d9e207540746b2710930dff5
             }
             finally
             {
-                await dfsService.StopAsync();
+                await _dfsService.StopAsync();
             }
         }
         
         [Fact]
         public async Task Wants()
         {
-<<<<<<< HEAD
-            //var fileSystem = Substitute.For<IFileSystem>();
-            //fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
-            //    $"dfs1-_{DateTime.Now:yyMMddHHmmssffff}")));
-            //var dfsService = TestDfs.GetTestDfs(_testOutputHelper, fileSystem);
             await _dfsService.StartAsync();
-=======
-            var fileSystem = Substitute.For<IFileSystem>();
-            fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
-                $"dfs1-_{DateTime.Now:yyMMddHHmmssffff}")));
             
-            var dfsService = TestDfs.GetTestDfs(_testOutputHelper, fileSystem);
-            await dfsService.StartAsync();
-            
->>>>>>> 16567ecd9adf66e2d9e207540746b2710930dff5
             try
             {
                 var cts = new CancellationTokenSource();
                 var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block"));
-<<<<<<< HEAD
-                Task wantTask = _dfsService.BitSwapApi.GetAsync(block.Id, cts.Token);
-=======
-                var wantTask = dfsService.BitSwapApi.GetAsync(block.Id, cts.Token);
->>>>>>> 16567ecd9adf66e2d9e207540746b2710930dff5
+                var wantTask = _dfsService.BitSwapApi.GetAsync(block.Id, cts.Token);
 
                 var endTime = DateTime.Now.AddSeconds(10);
                 while (true)
@@ -168,13 +141,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 var wants = await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
                 wants.ToArray().Should().NotContain(block.Id);
 
-<<<<<<< HEAD
                 //Race condition as wantTask will be on another thread and could create unpredictable behaviour
                 //Assert.True(wantTask.IsCanceled);
-=======
-                // Race condition between threads
-                // Assert.True(wantTask.IsCanceled);
->>>>>>> 16567ecd9adf66e2d9e207540746b2710930dff5
             }
             finally
             {

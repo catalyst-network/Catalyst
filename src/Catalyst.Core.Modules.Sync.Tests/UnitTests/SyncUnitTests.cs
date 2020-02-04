@@ -24,30 +24,33 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO;
-using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
+using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
-using Catalyst.Core.Modules.Sync.Interface;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
+using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
 using Lib.P2P;
@@ -71,11 +74,13 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         private IDeltaIndexService _deltaIndexService;
         private readonly IPeerRepository _peerRepository;
 
-        private readonly IPeerClientObservable _deltaHeightResponseObserver;
-        private readonly ReplaySubject<IPeerClientMessageDto> _deltaHeightReplaySubject;
+        private readonly IPeerService _peerService;
 
-        private readonly IPeerClientObservable _deltaHistoryResponseObserver;
-        private readonly ReplaySubject<IPeerClientMessageDto> _deltaHistoryReplaySubject;
+        private readonly IP2PMessageObserver _deltaHeightResponseObserver;
+        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
+
+        private readonly IP2PMessageObserver _deltaHistoryResponseObserver;
+        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHistoryReplaySubject;
 
         private readonly IMapperProvider _mapperProvider;
         private readonly IUserOutput _userOutput;
@@ -104,6 +109,8 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _ledger = Substitute.For<ILedger>();
 
+            _peerService = Substitute.For<IPeerService>();
+
             _deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
 
             _peerClient = Substitute.For<IPeerClient>();
@@ -119,33 +126,43 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                     }
                 };
 
-                var peerClientMessageDto = new PeerClientMessageDto(deltaHeightResponse,
-                    senderPeerIdentifier,
-                    CorrelationId.GenerateCorrelationId());
-                _deltaHeightReplaySubject.OnNext(peerClientMessageDto);
+                //var peerClientMessageDto = new PeerClientMessageDto(deltaHeightResponse,
+                //    senderPeerIdentifier,
+                //    CorrelationId.GenerateCorrelationId());
+                _deltaHeightReplaySubject.OnNext(new ObserverDto(Substitute.For<IChannelHandlerContext>(),
+                    deltaHeightResponse.ToProtocolMessage(senderPeerIdentifier, CorrelationId.GenerateCorrelationId())));
             });
 
             ModifyPeerClient<DeltaHistoryRequest>((request, senderPeerIdentifier) =>
             {
-                var peerClientMessageDto = new PeerClientMessageDto(
-                    GenerateSampleData((int) request.Height, (int) request.Range, _syncTestHeight),
-                    senderPeerIdentifier,
-                    CorrelationId.GenerateCorrelationId());
+                //var peerClientMessageDto = new PeerClientMessageDto(
+                //    GenerateSampleData((int) request.Height, (int) request.Range, _syncTestHeight),
+                //    senderPeerIdentifier,
+                //    CorrelationId.GenerateCorrelationId());
 
-                _deltaHistoryReplaySubject.OnNext(peerClientMessageDto);
+                _deltaHistoryReplaySubject.OnNext(new ObserverDto(Substitute.For<IChannelHandlerContext>(),
+                    GenerateSampleData((int) request.Height, (int) request.Range, _syncTestHeight)
+                       .ToProtocolMessage(senderPeerIdentifier, CorrelationId.GenerateCorrelationId())));
             });
 
             _peerRepository = Substitute.For<IPeerRepository>();
             var peers = Enumerable.Repeat(new Peer {PeerId = PeerIdHelper.GetPeerId()}, 5);
             _peerRepository.GetActivePeers(Arg.Any<int>()).Returns(peers);
 
-            _deltaHeightResponseObserver = Substitute.For<IPeerClientObservable>();
-            _deltaHeightReplaySubject = new ReplaySubject<IPeerClientMessageDto>(1);
-            _deltaHeightResponseObserver.MessageStream.Returns(_deltaHeightReplaySubject);
+            //_deltaHeightResponseObserver = Substitute.For<IP2PMessageObserver>();
+            _deltaHeightReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
 
-            _deltaHistoryResponseObserver = Substitute.For<IPeerClientObservable>();
-            _deltaHistoryReplaySubject = new ReplaySubject<IPeerClientMessageDto>(1);
-            _deltaHistoryResponseObserver.MessageStream.Returns(_deltaHistoryReplaySubject);
+            //_deltaHeightResponseObserver.StartObserving().Returns(_deltaHeightReplaySubject);
+
+            //_deltaHistoryResponseObserver = Substitute.For<IP2PMessageObserver>();
+            _deltaHistoryReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
+
+            //_deltaHistoryResponseObserver.StartObserving();.Returns(_deltaHistoryReplaySubject);
+
+            var mergeMessageStreams = _deltaHeightReplaySubject.AsObservable()
+               .Merge(_deltaHistoryReplaySubject.AsObservable());
+
+            _peerService.MessageStream.Returns(mergeMessageStreams);
 
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
 
@@ -154,9 +171,9 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             _userOutput = Substitute.For<IUserOutput>();
 
             _peerSyncManager = new PeerSyncManager(_peerSettings, _peerClient, _peerRepository,
-                _deltaHistoryResponseObserver, _userOutput, _deltaIndexService);
+                _peerService, _userOutput, _deltaIndexService);
             _deltaHeightWatcher =
-                new DeltaHeightWatcher(_peerSyncManager, _deltaHeightResponseObserver, _mapperProvider);
+                new DeltaHeightWatcher(_peerSyncManager, _peerService, _mapperProvider);
         }
 
         private DeltaHistoryResponse GenerateSampleData(int height, int range, int maxHeight = -1)

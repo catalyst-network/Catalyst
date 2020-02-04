@@ -29,6 +29,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Serilog;
+using Catalyst.Core.Modules.Sync;
 
 namespace Catalyst.Core.Modules.Consensus
 {
@@ -48,6 +49,7 @@ namespace Catalyst.Core.Modules.Consensus
         private readonly IDeltaHub _deltaHub;
         private readonly IDeltaCache _deltaCache;
         private readonly ILogger _logger;
+        private readonly Sync.Sync _sync;
 
         public Consensus(IDeltaBuilder deltaBuilder,
             IDeltaVoter deltaVoter,
@@ -56,6 +58,7 @@ namespace Catalyst.Core.Modules.Consensus
             IDeltaHub deltaHub,
             ICycleEventsProvider cycleEventsProvider,
             IDeltaHashProvider deltaHashProvider,
+            Sync.Sync sync,
             ILogger logger)
         {
             _deltaVoter = deltaVoter;
@@ -66,13 +69,14 @@ namespace Catalyst.Core.Modules.Consensus
             _deltaHub = deltaHub;
             _deltaCache = deltaCache;
             _logger = logger;
+            _sync = sync;
             logger.Information("Consensus repository initialised.");
         }
 
         public void StartProducing()
         {
             _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
-               .Where(p => p.Name.Equals(PhaseName.Construction) && p.Status.Equals(PhaseStatus.Producing))
+               .Where(p => _sync.IsSynchronized && p.Name.Equals(PhaseName.Construction) && p.Status.Equals(PhaseStatus.Producing))
                .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
                .Subscribe(c =>
                 {

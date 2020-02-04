@@ -8,13 +8,13 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO;
-using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
+using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Repository;
-using Catalyst.Core.Modules.Sync.Interface;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
@@ -29,6 +29,7 @@ namespace Catalyst.Core.Modules.Sync
         private readonly IPeerSettings _peerSettings;
         private readonly IPeerClient _peerClient;
         private readonly IPeerRepository _peerRepository;
+        private readonly IPeerService _peerService;
         private readonly IDisposable _deltaHistorySubscription;
         private readonly IUserOutput _userOutput;
         private readonly IDeltaIndexService _deltaIndexService;
@@ -37,14 +38,14 @@ namespace Catalyst.Core.Modules.Sync
         private Timer _timer;
 
         private readonly ConcurrentDictionary<int, DeltaIndexSyncItem> _deltaIndexSyncPool;
-        public int MaxSyncPoolSize { private set; get; } = 4;
+        public int MaxSyncPoolSize { get; } = 4;
 
         public bool IsPoolAvailable() { return MaxSyncPoolSize - _deltaIndexSyncPool.Count() > 0; }
 
         public PeerSyncManager(IPeerSettings peerSettings,
             IPeerClient peerClient,
             IPeerRepository peerRepository,
-            IPeerClientObservable deltaHistoryResponseObserver,
+            IPeerService peerService,
             IUserOutput userOutput,
             IDeltaIndexService deltaIndexService,
             IScheduler scheduler = null)
@@ -52,7 +53,7 @@ namespace Catalyst.Core.Modules.Sync
             _peerSettings = peerSettings;
             _peerClient = peerClient;
             _peerRepository = peerRepository;
-            _deltaHistorySubscription = deltaHistoryResponseObserver.MessageStream.Subscribe(DeltaHistoryOnNext);
+            _peerService = peerService;
             _userOutput = userOutput;
             _deltaIndexService = deltaIndexService;
 
@@ -61,6 +62,22 @@ namespace Catalyst.Core.Modules.Sync
             ScoredDeltaIndexRange = _scoredDeltaIndexRangeSubject.AsObservable();
 
             _deltaIndexSyncPool = new ConcurrentDictionary<int, DeltaIndexSyncItem>();
+        }
+
+        public bool PeersAvailable()
+        {
+            var arePeersAvailable = _peerRepository.GetActivePeers(PeerCount).Any();
+            return arePeersAvailable;
+        }
+
+        public bool ContainsPeerHistory() { return _peerRepository.GetAll().Any(); }
+
+        public async Task WaitForPeersAsync(CancellationToken cancellationToken = default)
+        {
+            while (!PeersAvailable())
+            {
+                await Task.Delay(1000, cancellationToken);
+            }
         }
 
         public void GetDeltaIndexRangeFromPeers(int index, int range)
@@ -94,6 +111,10 @@ namespace Catalyst.Core.Modules.Sync
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            _peerService.MessageStream.Where(x => x.Payload != null &&
+                    x.Payload.TypeUrl.EndsWith(typeof(DeltaHistoryResponse).ShortenedProtoFullName()))
+               .Select(x => x.Payload.FromProtocolMessage<DeltaHistoryResponse>()).Subscribe(DeltaHistoryOnNext);
+
             OnCheckSyncPool();
             _timer = new Timer(OnCheckSyncPool, this, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
         }
@@ -135,13 +156,8 @@ namespace Catalyst.Core.Modules.Sync
             }
         }
 
-        private void DeltaHistoryOnNext(IPeerClientMessageDto peerClientMessageDto)
+        private void DeltaHistoryOnNext(DeltaHistoryResponse deltaHistoryResponse)
         {
-            if (!(peerClientMessageDto.Message is DeltaHistoryResponse deltaHistoryResponse))
-            {
-                return;
-            }
-
             if (deltaHistoryResponse.Result.Count == 0)
             {
                 return;

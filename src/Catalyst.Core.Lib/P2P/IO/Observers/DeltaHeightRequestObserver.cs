@@ -24,8 +24,11 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
@@ -40,9 +43,18 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : RequestObserverBase<LatestDeltaHashRequest, LatestDeltaHashResponse>,
             IP2PMessageObserver
     {
+        private readonly IDeltaIndexService _deltaIndexService;
+        private readonly IMapperProvider _mapperProvider;
+
         public DeltaHeightRequestObserver(IPeerSettings peerSettings,
+            IDeltaIndexService deltaIndexService,
+            IMapperProvider mapperProvider,
             ILogger logger)
-            : base(logger, peerSettings) { }
+            : base(logger, peerSettings)
+        {
+            _deltaIndexService = deltaIndexService;
+            _mapperProvider = mapperProvider;
+        }
         
         /// <param name="deltaHeightRequest"></param>
         /// <param name="channelHandlerContext"></param>
@@ -60,11 +72,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             
             Logger.Debug("PeerId: {0} wants to know your current chain height", senderPeerId);
 
-            var deltaIndex = new DeltaIndex
-            {
-                Cid = MultiHash.ComputeHash(new byte[32]).Digest.ToByteString(), Height = 0
-            };
-
+            var deltaIndexDao = _deltaIndexService.LatestDeltaIndex();
+            var deltaIndex = deltaIndexDao.ToProtoBuff<DeltaIndexDao, DeltaIndex>(_mapperProvider);
             return new LatestDeltaHashResponse
             {
                 Result = deltaIndex

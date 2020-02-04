@@ -32,9 +32,10 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
-using Catalyst.Core.Modules.Sync.Interface;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf.Collections;
 
@@ -69,7 +70,7 @@ namespace Catalyst.Core.Modules.Sync
             IDeltaIndexService deltaIndexService,
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
-            int rangeSize = 100,
+            int rangeSize = 10,
             int syncTaskPoolLimit = 4,
             IScheduler scheduler = null)
         {
@@ -89,20 +90,27 @@ namespace Catalyst.Core.Modules.Sync
             SyncCompleted = _syncCompletedReplaySubject.AsObservable();
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             IsRunning = true;
             _userOutput.WriteLine("Starting Sync...");
 
             await _deltaHeightWatcher.StartAsync(cancellationToken);
-            await _deltaHeightWatcher.WaitForDeltaHeightAsync(MaxDeltaIndexStored, cancellationToken);
+            if (_peerSyncManager.ContainsPeerHistory())
+            {
+                await _peerSyncManager.WaitForPeersAsync();
+                await _deltaHeightWatcher.WaitForDeltaHeightAsync(MaxDeltaIndexStored, cancellationToken);
+            }
 
             _peerSyncManager.ScoredDeltaIndexRange.Subscribe(OnNextScoredDeltaIndexRange);
+            if (_deltaHeightWatcher.LatestDeltaHash == null)
+            {
+                return;
+            }
 
             _currentSyncIndex = MaxDeltaIndexStored;
 
             var syncDeltaIndexTask = Task.Factory.StartNew(OnSyncDeltaIndex, cancellationToken);
-
             await _peerSyncManager.StartAsync(cancellationToken);
         }
 
@@ -162,6 +170,11 @@ namespace Catalyst.Core.Modules.Sync
         {
             if (!IsSynchronized)
             {
+                if (!_peerSyncManager.PeersAvailable())
+                {
+                    IsSynchronized = true;
+                }
+
                 _peerSyncManager.GetDeltaIndexRangeFromPeers(index, range);
             }
         }

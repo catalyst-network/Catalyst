@@ -24,10 +24,13 @@
 using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
+using Catalyst.Core.Lib.Service;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -50,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            _deltaHeightRequestObserver = new DeltaHeightRequestObserver(peerSettings,
+            _deltaHeightRequestObserver = new DeltaHeightRequestObserver(peerSettings, Substitute.For<IDeltaIndexService>(), (IMapperProvider) new TestMapperProvider(), 
                 _subbedLogger
             );
         }
@@ -59,11 +62,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         public async Task Can_Process_DeltaHeightRequest_Correctly()
         {
             var deltaHeightRequestMessage = new LatestDeltaHashRequest();
-            
+
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ObserverDto(fakeContext, deltaHeightRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
+            var channeledAny = new ObserverDto(fakeContext,
+                deltaHeightRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                    CorrelationId.GenerateCorrelationId()));
             var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
-            
+
             _deltaHeightRequestObserver.StartObserving(observableStream);
 
             _testScheduler.Start();
@@ -74,15 +79,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(new LatestDeltaHashResponse
                 {
-                    DeltaHash = deltaHash.Digest.ToByteString()
-                }.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).ConfigureAwait(false);
-            
+                    Result = new DeltaIndex {Cid = deltaHash.Digest.ToByteString(), Height = 100}
+                }.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()))
+               .ConfigureAwait(false);
+
             _subbedLogger.ReceivedWithAnyArgs(1);
         }
-        
-        public void Dispose()
-        {
-            _deltaHeightRequestObserver?.Dispose();
-        }
+
+        public void Dispose() { _deltaHeightRequestObserver?.Dispose(); }
     }
 }

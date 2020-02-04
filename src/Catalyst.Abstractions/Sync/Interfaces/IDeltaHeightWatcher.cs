@@ -1,13 +1,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Core.Lib.DAO.Ledger;
+using Catalyst.Protocol.Deltas;
 
-namespace Catalyst.Core.Modules.Sync.Interface
+namespace Catalyst.Abstractions.Sync.Interfaces
 {
     public interface IDeltaHeightWatcher : IDisposable
     {
-        DeltaIndexDao LatestDeltaHash { get; }
+        DeltaIndex LatestDeltaHash { get; }
         Task StartAsync(CancellationToken cancellationToken);
         Task StopAsync(CancellationToken cancellationToken);
         Task WaitForDeltaHeightAsync(int currentDeltaIndex, CancellationToken cancellationToken);

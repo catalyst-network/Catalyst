@@ -32,8 +32,8 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Ledger.Repository;
-using Catalyst.Core.Modules.Sync.Interface;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Lib.P2P;
@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Ledger
 
         private readonly IDeltaIndexService _deltaIndexService;
 
-        private readonly int syncPos = 1;
+        private int _syncPos = 0;
 
         public Cid LatestKnownDelta { get; private set; }
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
@@ -220,13 +220,15 @@ namespace Catalyst.Core.Modules.Ledger
                 ////   _stateDb.Commit();
                 ////   _codeDb.Commit();
                 //// }
+                /// 
 
                 _stateDb.Commit();
                 _codeDb.Commit();
 
                 LatestKnownDelta = deltaHash;
 
-                _deltaIndexService.Add(new DeltaIndexDao {Cid = LatestKnownDelta, Id = syncPos.ToString()});
+                _deltaIndexService.Add(new DeltaIndexDao {Cid = LatestKnownDelta, Height = _syncPos});
+                _syncPos++;
             }
             catch
             {

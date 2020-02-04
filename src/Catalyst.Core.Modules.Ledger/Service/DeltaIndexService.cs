@@ -4,7 +4,7 @@ using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Service;
 using SharpRepository.Repository;
 
-namespace Catalyst.Core.Modules.Sync
+namespace Catalyst.Core.Modules.Ledger.Service
 {
     public class DeltaIndexService : IDeltaIndexService
     {
@@ -23,12 +23,7 @@ namespace Catalyst.Core.Modules.Sync
 
         public int Height()
         {
-            if (_repository.Count() == 0)
-            {
-                return 0;
-            }
-
-            return _repository.Max(x => x.Height);
+            return _repository.Count() == 0 ? 0 : _repository.Max(x => x.Height);
         }
 
         public DeltaIndexDao LatestDeltaIndex() { return _repository.Find(x => x.Height == Height()); }
