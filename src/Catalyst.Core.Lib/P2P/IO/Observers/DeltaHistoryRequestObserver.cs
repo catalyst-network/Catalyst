@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
@@ -43,19 +42,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : RequestObserverBase<DeltaHistoryRequest, DeltaHistoryResponse>,
             IP2PMessageObserver
     {
-        private readonly IHashProvider _hashProvider;
         private readonly IDeltaIndexService _deltaIndexService;
         private readonly IMapperProvider _mapperProvider;
 
         public DeltaHistoryRequestObserver(IPeerSettings peerSettings,
             IDeltaIndexService deltaIndexService,
-            ILogger logger,
-            IHashProvider hashProvider,
-            IMapperProvider mapperProvider)
+            IMapperProvider mapperProvider,
+            ILogger logger)
             : base(logger, peerSettings)
         {
             _deltaIndexService = deltaIndexService;
-            _hashProvider = hashProvider;
             _mapperProvider = mapperProvider;
         }
 
