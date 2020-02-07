@@ -29,7 +29,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO.Ledger
 {
-    internal class DeltaIndexDao : DaoBase
+    public class DeltaIndexDao : DaoBase
     {
         public int Height { set; get; }
         public string Cid { set; get; }

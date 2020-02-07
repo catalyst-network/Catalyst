@@ -91,8 +91,8 @@ namespace Catalyst.Node.POA.CE
             _logger.Information("Starting the Catalyst Node");
             _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase32()} *****");
 
-            await _dfsService.StartAsync();
             await StartSocketsAsync().ConfigureAwait(false);
+            _dfsService.StartAsync();
             Consensus.StartProducing();
 
             bool exit;
