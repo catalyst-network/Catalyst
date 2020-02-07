@@ -24,12 +24,14 @@
 using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.Core.Modules.Ledger.Service;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -38,6 +40,7 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
+using SharpRepository.InMemoryRepository;
 using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
@@ -55,10 +58,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _subbedLogger = Substitute.For<ILogger>();
             
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            
+            var deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
+
             _deltaHistoryRequestObserver = new DeltaHistoryRequestObserver(peerSettings,
-                _subbedLogger,
-                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"))
+                deltaIndexService,
+                new TestMapperProvider(), 
+                _subbedLogger
             );
         }
 
