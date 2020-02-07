@@ -104,7 +104,7 @@ namespace Catalyst.Core.Modules.Consensus
                     return delta;
                 })
                .Where(d => d != null)
-               .Subscribe(d =>
+               .Subscribe(async d =>
                 {
                     _logger.Information("New Delta following {deltaHash} published", 
                         d.PreviousDeltaDfsHash);

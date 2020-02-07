@@ -45,5 +45,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
+        <ProjectReference Include="..\Lib.P2P\Lib.P2P.csproj" />
+        <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
     </ItemGroup>
 </Project>

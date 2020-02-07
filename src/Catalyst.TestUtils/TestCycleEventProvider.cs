@@ -28,9 +28,9 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Hashing;
 using Microsoft.Reactive.Testing;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.TestUtils
 {

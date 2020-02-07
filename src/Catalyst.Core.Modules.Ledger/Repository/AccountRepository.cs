@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Repository;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Ledger.Repository

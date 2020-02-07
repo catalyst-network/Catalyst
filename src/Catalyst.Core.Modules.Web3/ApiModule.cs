@@ -30,12 +30,13 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -109,7 +110,7 @@ namespace Catalyst.Core.Modules.Web3
         {
             builder.RegisterType<Web3HandlerResolver>().As<IWeb3HandlerResolver>().SingleInstance();
             builder.RegisterType<EthereumJsonSerializer>().As<IJsonSerializer>().SingleInstance();
-            
+
             //Mempool repo
             builder.RegisterInstance(_container.Resolve<IRepository<PublicEntryDao, string>>())
                .As<IRepository<PublicEntryDao, string>>()
@@ -123,9 +124,6 @@ namespace Catalyst.Core.Modules.Web3
             builder.RegisterInstance(_container.Resolve<IDeltaHashProvider>())
                .As<IDeltaHashProvider>()
                .SingleInstance();
-            builder.RegisterInstance(_container.Resolve<IDfs>())
-               .As<IDfs>()
-               .SingleInstance();
             builder.RegisterInstance(_container.Resolve<IMapperProvider>())
                .As<IMapperProvider>()
                .SingleInstance();
@@ -134,6 +132,9 @@ namespace Catalyst.Core.Modules.Web3
                .SingleInstance();
             builder.RegisterInstance(_container.Resolve<ILogger>())
                .As<ILogger>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IDfsService>())
+               .As<ICoreApi>()
                .SingleInstance();
         }
 

@@ -42,7 +42,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             //Arrange
             var getPeerCountResponse = new GetPeerCountResponse {PeerCount = 50};
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var getPeerCountCommand = new PeerCountCommand(commandContext, Substitute.For<ILogger>());
+            new PeerCountCommand(commandContext, Substitute.For<ILogger>());
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, getPeerCountResponse);

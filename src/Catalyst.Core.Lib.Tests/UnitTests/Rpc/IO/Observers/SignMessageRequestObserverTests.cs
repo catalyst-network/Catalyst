@@ -33,6 +33,7 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Fakes;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;

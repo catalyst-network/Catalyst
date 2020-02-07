@@ -34,12 +34,12 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers

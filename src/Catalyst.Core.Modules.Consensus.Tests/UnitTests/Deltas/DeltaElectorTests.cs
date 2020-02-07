@@ -39,13 +39,13 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Reactive.Testing;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
@@ -207,8 +207,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             {
                 var producers = "abc".Select(c => PeerIdHelper.GetPeerId(c.ToString()))
                    .ToArray();
-                var hashProduced = _hashProvider.ComputeUtf8MultiHash("newHash").CreateCid();
-                var previousHash = _hashProvider.ComputeUtf8MultiHash("prevHash").CreateCid();
+                var hashProduced = _hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
+                var previousHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
                 var candidates = producers.Select((p, i) =>
                     DeltaHelper.GetCandidateDelta(_hashProvider, previousHash, hashProduced, producers[i])
                 ).ToArray();
@@ -249,8 +249,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             {
                 var producers = "ab".Select(c => PeerIdHelper.GetPeerId(c.ToString()))
                    .ToArray();
-                var previousHash = _hashProvider.ComputeUtf8MultiHash("previousHash").CreateCid();
-                var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").CreateCid();
+                var previousHash = _hashProvider.ComputeUtf8MultiHash("previousHash").ToCid();
+                var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
                 var candidates = producers.Select((p, i) =>
                     DeltaHelper.GetCandidateDelta(_hashProvider, previousHash, newHash, producers[i])
                 ).ToArray();
@@ -291,7 +291,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
-            var previousHash = _hashProvider.ComputeUtf8MultiHash("previous").CreateCid();
+            var previousHash = _hashProvider.ComputeUtf8MultiHash("previous").ToCid();
 
             var popular = elector.GetMostPopularCandidateDelta(previousHash);
 

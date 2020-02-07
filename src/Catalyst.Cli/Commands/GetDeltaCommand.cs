@@ -28,9 +28,8 @@ using Catalyst.Cli.Options;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Rpc.Node;
+using MultiFormats;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Cli.Commands
 {
@@ -46,7 +45,7 @@ namespace Catalyst.Cli.Commands
             {
                 var hashBytes = MultiBase.Decode(option.Hash);
                 var cid = hashBytes.ToCid();
-                var multiHash = new MultiHash(cid.Hash.ToArray());
+                new MultiHash(cid.Hash.ToArray());
                 return new GetDeltaRequest {DeltaDfsHash = hashBytes.ToByteString()};
             }
             catch (FormatException fe)

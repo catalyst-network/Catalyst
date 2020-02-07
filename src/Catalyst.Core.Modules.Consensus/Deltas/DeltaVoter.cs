@@ -33,11 +33,11 @@ using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using MultiFormats;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

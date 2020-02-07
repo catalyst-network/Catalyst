@@ -31,9 +31,9 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 

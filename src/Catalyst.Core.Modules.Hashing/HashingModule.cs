@@ -23,7 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.Hashing;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using MultiFormats.Registry;
 
 namespace Catalyst.Core.Modules.Hashing
 {

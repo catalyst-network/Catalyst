@@ -19,17 +19,17 @@
     <PackageReference Include="DnsClient" Version="1.2.0" />
     <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
     <PackageReference Include="Google.Protobuf" Version="3.9.1" />
+    <PackageReference Include="Makaretu.Dns.Unicast" Version="0.11.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.0.0" />
     <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
     <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
     <PackageReference Include="System.Reactive" Version="4.1.6" />
-    <PackageReference Include="TheDotNetLeague.Ipfs.Abstractions" Version="0.0.1" />
-    <PackageReference Include="TheDotNetLeague.Ipfs.Core.Lib" Version="0.0.1" />
-    <PackageReference Include="TheDotNetLeague.MultiFormats.MultiHash" Version="0.0.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
     <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
     <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
+    <ProjectReference Include="..\Lib.P2P\Lib.P2P.csproj" />
+    <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
   </ItemGroup>
 </Project>

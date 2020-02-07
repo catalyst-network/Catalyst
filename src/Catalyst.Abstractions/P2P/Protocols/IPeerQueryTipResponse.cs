@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Protocol.Peer;
-using LibP2P;
+using Lib.P2P;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {

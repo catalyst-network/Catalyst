@@ -17,10 +17,11 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
         <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
         <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
-        <PackageReference Include="TheDotNetLeague.Ipfs.Abstractions" Version="0.0.1" />
-        <PackageReference Include="TheDotNetLeague.Ipfs.Core.Lib" Version="0.0.1" />
+<!--        <PackageReference Include="TheDotNetLeague.Ipfs.Abstractions" Version="0.0.1" />-->
+<!--        <PackageReference Include="TheDotNetLeague.Ipfs.Core.Lib" Version="0.0.1" />-->
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Core.Modules.Dfs.Tests\Catalyst.Core.Modules.Dfs.Tests.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />

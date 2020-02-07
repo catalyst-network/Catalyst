@@ -38,8 +38,8 @@ namespace Catalyst.Modules.Repository.MongoDb.Util
             AddSerializer<PublicEntry>();
             AddSerializer<ConfidentialEntry>();
         }
-        
-        static void AddSerializer<TType>() where TType : IMessage, new()
+
+        private static void AddSerializer<TType>() where TType : IMessage, new()
         {
             BsonSerializer.RegisterSerializer(typeof(TType),
                 new ProtoBsonSerializer<TType>());

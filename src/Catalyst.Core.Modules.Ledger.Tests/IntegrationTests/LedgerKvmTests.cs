@@ -42,8 +42,10 @@ using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
+using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
@@ -52,7 +54,6 @@ using Nethermind.Evm.Tracing;
 using Nethermind.Logging;
 using Nethermind.Store;
 using NSubstitute;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using ILogger = Serilog.ILogger;
 
@@ -145,7 +146,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid) h).ToObservable(_testScheduler));
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
-            var classUnderTest = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
+            var _ = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
                 _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
 
             _testScheduler.Start();

@@ -33,10 +33,10 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using LibP2P;
+using Lib.P2P;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -62,14 +62,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             _deltaCache.GenesisHash.Returns(
-                _hashProvider.ComputeMultiHash(new Delta().ToByteArray()).CreateCid());
+                _hashProvider.ComputeMultiHash(new Delta().ToByteArray()).ToCid());
         }
 
         [Fact]
         public void Generate_Genesis_Hash()
         {
             var emptyDelta = new Delta();
-            var hash = _hashProvider.ComputeMultiHash(emptyDelta.ToByteArray()).CreateCid();
+            var hash = _hashProvider.ComputeMultiHash(emptyDelta.ToByteArray()).ToCid();
 
             Output.WriteLine(hash);
         }

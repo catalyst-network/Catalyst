@@ -31,5 +31,6 @@
       <ProjectReference Include="..\Catalyst.Modules.Repository.CosmosDb\Catalyst.Modules.Repository.CosmosDb.csproj" />
       <ProjectReference Include="..\Catalyst.Modules.Repository.MongoDb\Catalyst.Modules.Repository.MongoDb.csproj" />
       <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+      <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
     </ItemGroup>
 </Project>

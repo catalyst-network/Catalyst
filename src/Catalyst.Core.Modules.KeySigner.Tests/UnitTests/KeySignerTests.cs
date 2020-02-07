@@ -129,9 +129,9 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             Assert.Equal(_signature, actualSignature);
         }
 
-        class CryptoContext : ICryptoContext
+        private sealed class CryptoContext : ICryptoContext
         {
-            readonly ISignature _signature;
+            private readonly ISignature _signature;
             public CryptoContext(ISignature signature) { _signature = signature; }
 
             public int PrivateKeyLength { get; }

@@ -23,7 +23,7 @@
 
 using System.Threading;
 using Catalyst.Protocol.Deltas;
-using LibP2P;
+using Lib.P2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {

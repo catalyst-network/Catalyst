@@ -154,8 +154,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             return this;
         }
 
-        public DiscoveryTestBuilder WithPeerMessageCorrelationManager(
-            IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
+        public DiscoveryTestBuilder WithPeerMessageCorrelationManager(IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
             IReputationManager reputationManager = default,
             IMemoryCache memoryCache = default,
             IChangeTokenProvider changeTokenProvider = default)

@@ -58,7 +58,7 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 
             Enumerable.Range(0, count).ToList().ForEach(i =>
             {
-                contractList.Add(ContractEntryHelper.GetContractEntry());
+                contractList.Add(GetContractEntry());
             });
             return contractList;
         }

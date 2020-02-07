@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <AssemblyName>Catalyst.KBucket</AssemblyName>
+        <RootNamespace>Catalyst.KBucket</RootNamespace>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+        <DebugType>full</DebugType>
+
+        <!-- developer build is always 0.42 -->
+        <AssemblyVersion>0.42</AssemblyVersion>
+        <Version>0.42</Version>
+
+        <!-- Nuget specs -->
+        <PackageId>Makaretu.KBucket</PackageId>
+        <Authors>Richard Schneider</Authors>
+        <Title>Kademlia DHT K-bucket</Title>
+        <Description>Kademlia DHT K-bucket C# implementation as a binary tree.</Description>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageReleaseNotes>https://github.com/richardschneider/k-bucket/releases</PackageReleaseNotes>
+        <Copyright>© 2018 Richard Schneider</Copyright>
+        <PackageTags>kademlia DHT distributed k-bucket</PackageTags>
+        <IncludeSymbols>True</IncludeSymbols>
+        <PackageLicenseUrl>https://github.com/richardschneider/k-bucket/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/richardschneider/k-bucket</PackageProjectUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
+    </ItemGroup>
+</Project>

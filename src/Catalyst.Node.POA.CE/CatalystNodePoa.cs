@@ -34,18 +34,17 @@ using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.DAO;
+using MultiFormats;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Node.POA.CE
 {
-    public class CatalystNodePoa : ICatalystNode
+    public sealed class CatalystNodePoa : ICatalystNode
     {
         public IConsensus Consensus { get; }
         private readonly IContract _contract;
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
         private readonly ILedger _ledger;
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
@@ -58,7 +57,7 @@ namespace Catalyst.Node.POA.CE
         public CatalystNodePoa(IKeySigner keySigner,
             IPeerService peer,
             IConsensus consensus,
-            IDfs dfs,
+            IDfsService dfsService,
             ILedger ledger,
             ILogger logger,
             IPeerClient peerClient,
@@ -70,7 +69,7 @@ namespace Catalyst.Node.POA.CE
             _peerClient = peerClient;
             _peerSettings = peerSettings;
             Consensus = consensus;
-            _dfs = dfs;
+            _dfsService = dfsService;
             _ledger = ledger;
             _keySigner = keySigner;
             _logger = logger;
@@ -93,6 +92,7 @@ namespace Catalyst.Node.POA.CE
             _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase32()} *****");
 
             await StartSocketsAsync().ConfigureAwait(false);
+            _dfsService.StartAsync();
             Consensus.StartProducing();
 
             bool exit;
@@ -103,7 +103,7 @@ namespace Catalyst.Node.POA.CE
 
                 _logger.Debug("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
-            } while (!ct.IsCancellationRequested && !exit);
+            } while (!ct.IsCancellationRequested);
 
             _logger.Debug("Stopping the Catalyst Node");
         }

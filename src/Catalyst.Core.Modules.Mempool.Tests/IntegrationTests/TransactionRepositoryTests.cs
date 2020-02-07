@@ -28,7 +28,7 @@ using Autofac;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Core.Lib.DAO.Transaction;
-using Catalyst.Core.Lib.Repository;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;

@@ -31,10 +31,10 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
-using LibP2P;
+using Lib.P2P;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
@@ -146,7 +146,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 
             _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(default)
                .ReturnsForAnyArgs(
-                    _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(1000)).CreateCid());
+                    _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(1000)).ToCid());
 
             _cycleEventProvider.MovePastNextPhase(PhaseName.Voting);
             _cycleEventProvider.Scheduler.Stop();

@@ -26,8 +26,6 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Core.Lib.P2P.Repository;
 using Dawn;

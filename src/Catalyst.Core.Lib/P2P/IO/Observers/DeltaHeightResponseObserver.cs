@@ -35,7 +35,7 @@ using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
-using LibP2P;
+using Lib.P2P;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
