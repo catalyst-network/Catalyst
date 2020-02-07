@@ -26,10 +26,12 @@ using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Serilog;
 using Catalyst.Core.Modules.Sync;
+using Catalyst.Core.Modules.Sync.Modal;
 
 namespace Catalyst.Core.Modules.Consensus
 {
@@ -49,7 +51,8 @@ namespace Catalyst.Core.Modules.Consensus
         private readonly IDeltaHub _deltaHub;
         private readonly IDeltaCache _deltaCache;
         private readonly ILogger _logger;
-        private readonly Sync.Sync _sync;
+        private readonly ILedger _ledger;
+        private readonly SyncState _syncState;
 
         public Consensus(IDeltaBuilder deltaBuilder,
             IDeltaVoter deltaVoter,
@@ -58,7 +61,8 @@ namespace Catalyst.Core.Modules.Consensus
             IDeltaHub deltaHub,
             ICycleEventsProvider cycleEventsProvider,
             IDeltaHashProvider deltaHashProvider,
-            Sync.Sync sync,
+            SyncState syncState,
+            ILedger ledger,
             ILogger logger)
         {
             _deltaVoter = deltaVoter;
@@ -69,14 +73,15 @@ namespace Catalyst.Core.Modules.Consensus
             _deltaHub = deltaHub;
             _deltaCache = deltaCache;
             _logger = logger;
-            _sync = sync;
+            _ledger = ledger;
+            _syncState = syncState;
             logger.Information("Consensus repository initialised.");
         }
 
         public void StartProducing()
         {
             _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
-               .Where(p => _sync.IsSynchronized && p.Name.Equals(PhaseName.Construction) && p.Status.Equals(PhaseStatus.Producing))
+               .Where(p => _syncState.IsSynchronized && p.Name.Equals(PhaseName.Construction) && p.Status.Equals(PhaseStatus.Producing))
                .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
                .Subscribe(c =>
                 {
@@ -85,7 +90,7 @@ namespace Catalyst.Core.Modules.Consensus
                 });
 
             _campaigningProductionSubscription = _cycleEventsProvider.PhaseChanges
-               .Where(p => p.Name.Equals(PhaseName.Campaigning) && p.Status.Equals(PhaseStatus.Producing))
+               .Where(p => _syncState.IsSynchronized && p.Name.Equals(PhaseName.Campaigning) && p.Status.Equals(PhaseStatus.Producing))
                .Select(p =>
                 {
                     _deltaVoter.TryGetFavouriteDelta(p.PreviousDeltaDfsHash, out var favourite);
@@ -99,7 +104,7 @@ namespace Catalyst.Core.Modules.Consensus
                 });
 
             _votingProductionSubscription = _cycleEventsProvider.PhaseChanges
-               .Where(p => p.Name.Equals(PhaseName.Voting) && p.Status.Equals(PhaseStatus.Producing))
+               .Where(p => _syncState.IsSynchronized && p.Name.Equals(PhaseName.Voting) && p.Status.Equals(PhaseStatus.Producing))
                .Select(p => _deltaElector.GetMostPopularCandidateDelta(p.PreviousDeltaDfsHash))
                .Where(c => c != null)
                .Select(c =>

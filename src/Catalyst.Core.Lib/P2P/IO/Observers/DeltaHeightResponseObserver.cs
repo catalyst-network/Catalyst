@@ -61,7 +61,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ICorrelationId correlationId)
         {
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, senderPeerId, correlationId));
-            
+
             //_peerQueryTipRequest.QueryTipResponseMessageStreamer.OnNext(
             //    new PeerQueryTipResponse(senderPeerId, HashProvider.Parse(deltaHeightResponse.Result.ToString())
             //    )

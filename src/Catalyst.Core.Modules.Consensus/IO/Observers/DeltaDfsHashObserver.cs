@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
+using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Wire;
 using Serilog;
 
@@ -36,15 +37,22 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public class DeltaDfsHashObserver : BroadcastObserverBase<DeltaDfsHashBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly SyncState _syncState;
 
-        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, ILogger logger)
+        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, SyncState syncState, ILogger logger)
             : base(logger)
         {
+            _syncState = syncState;
             _deltaHashProvider = deltaHashProvider;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {
+            if (!_syncState.IsSynchronized)
+            {
+                return;
+            }
+
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();

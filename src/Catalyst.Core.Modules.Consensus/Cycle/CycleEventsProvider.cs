@@ -71,7 +71,7 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
                .Merge(votingStatusChanges, Scheduler)
                .Merge(synchronisationStatusChanges, Scheduler)
                .Delay(synchronisationOffset, Scheduler)
-               .Select(s => new Phase(deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow), s.Name, s.Status, _dateTimeProvider.UtcNow))
+               .Select(s => new Phase(deltaHashProvider.GetLatestDeltaHash(), s.Name, s.Status, _dateTimeProvider.UtcNow))
                .Do(p => logger.Debug("Current delta production phase {phase}", p), 
                     exception => logger.Error(exception, "{PhaseChanges} stream failed and will stop producing cycle events.", nameof(PhaseChanges)),
                     () => logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges)))

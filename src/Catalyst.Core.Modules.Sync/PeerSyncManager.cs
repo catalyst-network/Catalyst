@@ -8,7 +8,6 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
@@ -25,7 +24,7 @@ namespace Catalyst.Core.Modules.Sync
 {
     public class PeerSyncManager : IPeerSyncManager
     {
-        public int PeerCount { get; } = 5;
+        public int PeerCount { private set; get; } = 5;
         private readonly IPeerSettings _peerSettings;
         private readonly IPeerClient _peerClient;
         private readonly IPeerRepository _peerRepository;
@@ -38,7 +37,7 @@ namespace Catalyst.Core.Modules.Sync
         private Timer _timer;
 
         private readonly ConcurrentDictionary<int, DeltaIndexSyncItem> _deltaIndexSyncPool;
-        public int MaxSyncPoolSize { get; } = 4;
+        public int MaxSyncPoolSize { get; } = 1;
 
         public bool IsPoolAvailable() { return MaxSyncPoolSize - _deltaIndexSyncPool.Count() > 0; }
 
@@ -66,15 +65,15 @@ namespace Catalyst.Core.Modules.Sync
 
         public bool PeersAvailable()
         {
-            var arePeersAvailable = _peerRepository.GetActivePeers(PeerCount).Any();
-            return arePeersAvailable;
+            PeerCount = Math.Min(_peerRepository.GetActivePeers(PeerCount).Count(), 5);
+            return PeerCount > 0;
         }
 
         public bool ContainsPeerHistory() { return _peerRepository.GetAll().Any(); }
 
         public async Task WaitForPeersAsync(CancellationToken cancellationToken = default)
         {
-            while (!PeersAvailable())
+            while (!PeersAvailable() && !cancellationToken.IsCancellationRequested)
             {
                 await Task.Delay(1000, cancellationToken);
             }
@@ -111,48 +110,54 @@ namespace Catalyst.Core.Modules.Sync
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _peerService.MessageStream.Where(x => x.Payload != null &&
+            _peerService.MessageStream.Where(x => x.Payload?.TypeUrl != null &&
                     x.Payload.TypeUrl.EndsWith(typeof(DeltaHistoryResponse).ShortenedProtoFullName()))
                .Select(x => x.Payload.FromProtocolMessage<DeltaHistoryResponse>()).Subscribe(DeltaHistoryOnNext);
 
-            OnCheckSyncPool();
-            _timer = new Timer(OnCheckSyncPool, this, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+            var syncDeltaIndexTask = Task.Factory.StartNew(SyncDeltaIndexes, cancellationToken);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken) { }
 
-        private void OnCheckSyncPool(object state) { ((PeerSyncManager) state).OnCheckSyncPool(); }
-
-        private void OnCheckSyncPool()
+        private async Task SyncDeltaIndexes()
         {
-            if (_deltaIndexSyncPool.Keys.Count <= 0)
+            while (true)
             {
-                return;
-            }
-
-            foreach (var key in _deltaIndexSyncPool.Keys)
-            {
-                var deltaIndexSyncItem = _deltaIndexSyncPool[key];
-                var combinedScores = deltaIndexSyncItem.DeltaIndexRangeRanked.Select(x => x.Score).Sum();
-
-                if (combinedScores < PeerCount * 0.8)
+                foreach (var key in _deltaIndexSyncPool.Keys)
                 {
-                    continue;
+                    var deltaIndexSyncItem = _deltaIndexSyncPool[key];
+                    var combinedScores = deltaIndexSyncItem.DeltaIndexRangeRanked.Select(x => x.Score).Sum();
+
+                    var lastUpdatedOffset = deltaIndexSyncItem.LastUpdated - DateTime.UtcNow;
+                    if (lastUpdatedOffset > TimeSpan.FromSeconds(5))
+                    {
+                        if (combinedScores <= 0)
+                        {
+                            SendMessageToRandomPeers(deltaIndexSyncItem.Request);
+                        }
+                    }
+
+                    if (combinedScores < PeerCount * 0.5d)
+                    {
+                        continue;
+                    }
+
+                    var deltaIndexScoredByDescendingOrder =
+                        deltaIndexSyncItem.DeltaIndexRangeRanked.OrderByDescending(x => x.Score);
+                    var highestScoreDeltaIndexRange = deltaIndexScoredByDescendingOrder.First();
+                    var accuracyPercentage = highestScoreDeltaIndexRange.Score / (double) combinedScores * 100d;
+                    if (!(accuracyPercentage >= 99))
+                    {
+                        continue;
+                    }
+
+                    if (key == _deltaIndexSyncPool.Keys.Min() && _deltaIndexSyncPool.TryRemove(key, out _))
+                    {
+                        _scoredDeltaIndexRangeSubject.OnNext(highestScoreDeltaIndexRange.DeltaIndexes);
+                    }
                 }
 
-                var deltaIndexScoredByDescendingOrder =
-                    deltaIndexSyncItem.DeltaIndexRangeRanked.OrderByDescending(x => x.Score);
-                var highestScoreDeltaIndexRange = deltaIndexScoredByDescendingOrder.First();
-                var accuracyPercentage = highestScoreDeltaIndexRange.Score / (double) combinedScores * 100d;
-                if (!(accuracyPercentage >= 99))
-                {
-                    continue;
-                }
-
-                if (_deltaIndexSyncPool.TryRemove(key, out _))
-                {
-                    _scoredDeltaIndexRangeSubject.OnNext(highestScoreDeltaIndexRange.DeltaIndexes);
-                }
+                await Task.Delay(100);
             }
         }
 
@@ -181,6 +186,8 @@ namespace Catalyst.Core.Modules.Sync
             {
                 deltaIndexScores.DeltaIndexRangeRanked.Add(newDeltaIndexScores);
             }
+
+            deltaIndexScores.LastUpdated = DateTime.UtcNow;
         }
 
         public void Dispose()

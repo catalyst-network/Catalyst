@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Ledger
 
         private readonly IDeltaIndexService _deltaIndexService;
 
-        private int _syncPos = 0;
+        private int _blockHeight;
 
         public Cid LatestKnownDelta { get; private set; }
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
@@ -100,8 +100,16 @@ namespace Catalyst.Core.Modules.Ledger
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
             _deltaIndexService = deltaIndexService;
-            
+
             LatestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
+
+            _blockHeight = _deltaIndexService.Height();
+            if (_blockHeight != 0)
+            {
+                return;
+            }
+
+            UpdateLedgerFromDelta(LatestKnownDelta);
         }
 
         private void FlushTransactionsFromDelta(Cid deltaHash)
@@ -151,6 +159,8 @@ namespace Catalyst.Core.Modules.Ledger
                             LatestKnownDelta);
                         return;
                     }
+
+                    chainedDeltaHashes.Remove(LatestKnownDelta);
 
                     foreach (var chainedDeltaHash in chainedDeltaHashes)
                     {
@@ -227,8 +237,12 @@ namespace Catalyst.Core.Modules.Ledger
 
                 LatestKnownDelta = deltaHash;
 
-                _deltaIndexService.Add(new DeltaIndexDao {Cid = LatestKnownDelta, Height = _syncPos});
-                _syncPos++;
+                if (_blockHeight > 106)
+                {
+                    var a = 0;
+                }
+
+                _deltaIndexService.Add(new DeltaIndexDao {Cid = LatestKnownDelta, Height = _blockHeight++});
             }
             catch
             {

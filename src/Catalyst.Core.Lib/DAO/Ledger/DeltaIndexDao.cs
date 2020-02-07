@@ -23,10 +23,9 @@
 
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Deltas;
-using Lib.P2P;
-using MultiFormats;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO.Ledger
 {
@@ -40,18 +39,16 @@ namespace Catalyst.Core.Lib.DAO.Ledger
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<DeltaIndex, DeltaIndexDao>().ReverseMap();
-
             cfg.CreateMap<DeltaIndex, DeltaIndexDao>()
-               .ForMember(a => a.Id, opt => opt.MapFrom(x => x.Height))
+               .ForMember(a => a.Id, opt => opt.MapFrom(x => x.Height.ToString()))
                .ForMember(a => a.Height, opt => opt.UseDestinationValue())
                .ForMember(a => a.Cid,
-                    opt => opt.MapFrom(x => Cid.Decode(MultiBase.Encode(x.Cid.ToByteArray(), "base32"))));
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
 
             cfg.CreateMap<DeltaIndexDao, DeltaIndex>()
                .ForMember(a => a.Height, opt => opt.UseDestinationValue())
                .ForMember(a => a.Cid,
-                    opt => opt.MapFrom(x => x.Cid.FromBase32().ToByteString()));
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
         }
     }
 }

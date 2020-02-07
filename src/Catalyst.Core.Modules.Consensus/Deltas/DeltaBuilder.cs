@@ -80,6 +80,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         ///<inheritdoc />
         public CandidateDeltaBroadcast BuildCandidateDelta(Cid previousDeltaHash)
         {
+            if (_producerUniqueId.Port == 2001)
+            {
+                
+                var a = 0;
+            }
+
             _logger.Debug("Building candidate delta locally");
 
             var allTransactions = _transactionRetriever.GetMempoolTransactionsByPriority();

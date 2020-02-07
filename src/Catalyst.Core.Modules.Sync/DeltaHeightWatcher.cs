@@ -51,13 +51,15 @@ namespace Catalyst.Core.Modules.Sync
             while (LatestDeltaHash == null || LatestDeltaHash.Height == currentDeltaIndex)
             {
                 _peerSyncManager.GetDeltaHeight();
-                await Task.Delay(10000, cancellationToken);
+                await Task.Delay(100, cancellationToken);
             }
         }
 
+        //Use more peers for samples
         private void DeltaHeightOnNext(LatestDeltaHashResponse latestDeltaHashResponse)
         {
-            LatestDeltaHash = latestDeltaHashResponse.Result;
+            LatestDeltaHash = 107;
+            //LatestDeltaHash = latestDeltaHashResponse.Result;
         }
 
         public void Dispose() { }

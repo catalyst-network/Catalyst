@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Core.Lib.DAO.Ledger;
-using Catalyst.Core.Lib.Service;
 using SharpRepository.Repository;
 
-namespace Catalyst.Core.Modules.Ledger.Service
+namespace Catalyst.Core.Lib.Service
 {
     public class DeltaIndexService : IDeltaIndexService
     {
@@ -12,13 +11,28 @@ namespace Catalyst.Core.Modules.Ledger.Service
 
         public DeltaIndexService(IRepository<DeltaIndexDao, string> repository) { _repository = repository; }
 
-        public void Add(IEnumerable<DeltaIndexDao> deltaIndexes) { _repository.Add(deltaIndexes); }
+        public void Add(IEnumerable<DeltaIndexDao> deltaIndexes)
+        {
+            var c = deltaIndexes.Count();
+            _repository.Add(deltaIndexes);
+            if (_repository.Count() > 100)
+            {
+                var a = 0;
+            }
+        }
 
-        public void Add(DeltaIndexDao deltaIndex) { _repository.Add(deltaIndex); }
+        public void Add(DeltaIndexDao deltaIndex)
+        {
+            _repository.Add(deltaIndex);
+            if (_repository.Count() > 100)
+            {
+                var a = 0;
+            }
+        }
 
         public IEnumerable<DeltaIndexDao> GetRange(int start, int count)
         {
-            return _repository.FindAll(x => x.Height >= start && x.Height < count).OrderBy(x => x.Height);
+            return _repository.FindAll(x => x.Height >= start && x.Height < start + count).OrderBy(x => x.Height);
         }
 
         public int Height()

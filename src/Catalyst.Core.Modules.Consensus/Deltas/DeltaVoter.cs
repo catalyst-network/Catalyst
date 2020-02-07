@@ -191,7 +191,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 throw new KeyNotFoundException(
                     $"Producer {candidate.ProducerId} " +
                     "should not be sending candidate deltas with previous hash " +
-                    $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToCid()}");
+                    $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToCid()} {candidate.PreviousDeltaDfsHash.ToByteArray().ToCid().Hash.ToBase32()}");
             }
 
             return preferredProducers.Count - ranking;
