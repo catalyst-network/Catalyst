@@ -76,8 +76,9 @@ namespace Catalyst.Core.Modules.Web3
 
                 try
                 {
-                    var host = Host.CreateDefaultBuilder()
+                    await Host.CreateDefaultBuilder()
                        .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                       .UseConsoleLifetime()
                        .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
                        .ConfigureWebHostDefaults(
                             webHostBuilder =>
@@ -88,8 +89,10 @@ namespace Catalyst.Core.Modules.Web3
                                    .UseUrls(_apiBindingAddress)
                                    .UseWebRoot(webDirectory.FullName)
                                    .UseSerilog();
-                            }).Build();
-                    await host.StartAsync();
+                            }).RunConsoleAsync();
+
+                    //SIGINT is caught from kestrel because we are using RunConsoleAsync in HostBuilder, the SIGINT will not be received in the main console so we need to exit the process manually, to prevent needing to use two SIGINT's
+                    Environment.Exit(2);
                 }
                 catch (Exception e)
                 {
