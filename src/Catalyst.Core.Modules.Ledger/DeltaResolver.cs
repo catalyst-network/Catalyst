@@ -25,7 +25,7 @@ using System;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Modules.Ledger.Repository;
-using LibP2P;
+using Lib.P2P;
 
 namespace Catalyst.Core.Modules.Ledger
 {

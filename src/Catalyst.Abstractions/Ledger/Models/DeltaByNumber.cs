@@ -22,7 +22,8 @@
 #endregion
 
 using Catalyst.Abstractions.Repository;
-using LibP2P;
+using Lib.P2P;
+using Lib.P2P;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
 

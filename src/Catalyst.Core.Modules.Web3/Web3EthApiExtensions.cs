@@ -31,7 +31,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
+using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;

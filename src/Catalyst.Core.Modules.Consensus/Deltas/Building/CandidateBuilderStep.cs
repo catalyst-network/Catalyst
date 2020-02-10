@@ -33,7 +33,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
-using LibP2P;
+using Lib.P2P;
 using Nethermind.Dirichlet.Numerics;
 using Serilog;
 using Serilog.Events;

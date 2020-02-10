@@ -30,11 +30,10 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
-using LibP2P;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Lib.P2P;
+using MultiFormats;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Lib.Extensions
 {

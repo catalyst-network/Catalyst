@@ -38,7 +38,7 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
-using LibP2P;
+using Lib.P2P;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -51,7 +51,6 @@ using Nethermind.Core.Json;
 using Newtonsoft.Json;
 using Serilog;
 using SharpRepository.Repository;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Module = Autofac.Module;
 
 namespace Catalyst.Core.Modules.Web3

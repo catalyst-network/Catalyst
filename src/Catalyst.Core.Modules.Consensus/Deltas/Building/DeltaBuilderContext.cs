@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
-using LibP2P;
+using Lib.P2P;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {

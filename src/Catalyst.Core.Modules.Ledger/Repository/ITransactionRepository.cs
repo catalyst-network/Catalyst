@@ -24,7 +24,7 @@
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
-using LibP2P;
+using Lib.P2P;
 using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Ledger.Repository

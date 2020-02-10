@@ -42,7 +42,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
-using LibP2P;
+using Lib.P2P;
 using Nethermind.Core;
 using Lib.P2P;
 using Nethermind.Core.Crypto;

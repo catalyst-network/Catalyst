@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger.Models;
-using LibP2P;
+using Lib.P2P;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Ledger.Repository

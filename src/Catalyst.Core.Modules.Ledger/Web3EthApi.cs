@@ -36,7 +36,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
-using LibP2P;
+using Lib.P2P;
 using Nethermind.Core.Crypto;
 using Nethermind.Store;
 

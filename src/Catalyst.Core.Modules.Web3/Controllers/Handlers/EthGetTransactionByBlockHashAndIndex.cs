@@ -24,7 +24,7 @@
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
-using LibP2P;
+using Lib.P2P;
 using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 

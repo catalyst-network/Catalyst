@@ -23,9 +23,8 @@
 
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
-using LibP2P;
+using Lib.P2P;
 using Nethermind.Core.Crypto;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {

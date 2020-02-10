@@ -22,7 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
-using LibP2P;
+using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Json;

@@ -30,7 +30,7 @@ using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
-using LibP2P;
+using Lib.P2P;
 using Nethermind.Store;
 using Serilog;
 
