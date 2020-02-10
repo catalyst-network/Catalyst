@@ -73,10 +73,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
             var deltaIndexDao = _deltaIndexService.LatestDeltaIndex();
             var deltaIndex = deltaIndexDao.ToProtoBuff<DeltaIndexDao, DeltaIndex>(_mapperProvider);
-            return new LatestDeltaHashResponse
-            {
-                Result = deltaIndex
-            };
+            return new LatestDeltaHashResponse();
+
+            // {
+            //     // is it some merge issue here? class is latest hash but it tries to return index
+            //     // Result = deltaIndex
+            // }
         }
     }
 }
