@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.Ledger.Models;
 using Lib.P2P;
-using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Json;

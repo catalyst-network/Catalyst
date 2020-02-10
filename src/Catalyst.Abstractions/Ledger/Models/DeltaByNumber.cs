@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.Repository;
 using Lib.P2P;
-using Lib.P2P;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
 

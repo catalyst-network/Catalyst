@@ -70,13 +70,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            var validTransactionsForDelta = new List<PublicEntry>();
-            var rejectedTransactions = new List<PublicEntry>();
+            List<PublicEntry> validTransactionsForDelta = new List<PublicEntry>();
+            List<PublicEntry> rejectedTransactions = new List<PublicEntry>();
 
-            var allTransactionsCount = allTransactions.Count;
-            for (var i = 0; i < allTransactionsCount; i++)
+            int allTransactionsCount = allTransactions.Count;
+            for (int i = 0; i < allTransactionsCount; i++)
             {
-                var currentItem = allTransactions[i];
+                PublicEntry currentItem = allTransactions[i];
                 if (!IsTransactionOfAcceptedType(currentItem))
                 {
                     rejectedTransactions.Add(currentItem);
@@ -88,16 +88,16 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 
             validTransactionsForDelta.Sort(AveragePriceComparer.InstanceDesc);
 
-            var totalLimit = 0UL;
-            var allValidCount = validTransactionsForDelta.Count;
-            var rejectedCountBeforeLimitChecks = rejectedTransactions.Count;
-            for (var i = 0; i < allValidCount; i++)
+            ulong totalLimit = 0UL;
+            int allValidCount = validTransactionsForDelta.Count;
+            int rejectedCountBeforeLimitChecks = rejectedTransactions.Count;
+            for (int i = 0; i < allValidCount; i++)
             {
-                var currentItem = validTransactionsForDelta[i];
-                var remainingLimit = DeltaGasLimit - totalLimit;
+                PublicEntry currentItem = validTransactionsForDelta[i];
+                ulong remainingLimit = DeltaGasLimit - totalLimit;
                 if (remainingLimit < MinTransactionEntryGasLimit)
                 {
-                    for (var j = i; j < allValidCount; j++)
+                    for (int j = i; j < allValidCount; j++)
                     {
                         currentItem = validTransactionsForDelta[j];
                         rejectedTransactions.Add(currentItem);
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                     break;
                 }
 
-                var currentItemGasLimit = currentItem.GasLimit;
+                ulong currentItemGasLimit = currentItem.GasLimit;
                 if (remainingLimit < currentItemGasLimit)
                 {
                     rejectedTransactions.Add(currentItem);
@@ -117,7 +117,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                 }
             }
 
-            for (var i = rejectedCountBeforeLimitChecks; i < rejectedTransactions.Count; i++)
+            for (int i = rejectedCountBeforeLimitChecks; i < rejectedTransactions.Count; i++)
             {
                 validTransactionsForDelta.Remove(rejectedTransactions[i]);
             }
