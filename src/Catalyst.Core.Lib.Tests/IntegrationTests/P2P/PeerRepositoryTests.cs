@@ -29,7 +29,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Peer;
-using Catalyst.Core.Lib.Repository;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Peer;
 using SharpRepository.Repository;
 using FluentAssertions;

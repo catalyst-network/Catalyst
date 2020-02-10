@@ -23,7 +23,7 @@
 
 using System.IO;
 using Catalyst.Abstractions.FileSystem;
-using Catalyst.Core.Lib.Repository;
+using Catalyst.Core.Lib.Service;
 using NSubstitute;
 using Xunit;
 

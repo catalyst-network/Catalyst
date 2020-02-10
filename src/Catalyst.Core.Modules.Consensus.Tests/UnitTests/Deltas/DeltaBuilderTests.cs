@@ -45,7 +45,8 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using LibP2P;
+using Lib.P2P;
+using MultiFormats.Registry;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Specs;
@@ -54,6 +55,7 @@ using Nethermind.Logging;
 using Nethermind.Store;
 using NSubstitute;
 using TheDotNetLeague.MultiFormats.MultiHash;
+using Serilog;
 using Xunit;
 using ILogger = Serilog.ILogger;
 
@@ -89,7 +91,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _producerId = PeerIdHelper.GetPeerId("producer");
             _peerSettings = _producerId.ToSubstitutedPeerSettings();
 
-            _previousDeltaHash = _hashProvider.ComputeUtf8MultiHash("previousDelta").CreateCid();
+            _previousDeltaHash = _hashProvider.ComputeUtf8MultiHash("previousDelta").ToCid();
             _zeroCoinbaseEntry = new CoinbaseEntry
             {
                 Amount = UInt256.Zero.ToUint256ByteString(),
@@ -371,7 +373,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             candidate.ProducerId.Should().Be(_producerId);
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash.ToArray()).Should().BeTrue();
 
-            var expectedHash = _hashProvider.ComputeMultiHash(expectedBytesToHash).CreateCid();
+            var expectedHash = _hashProvider.ComputeMultiHash(expectedBytesToHash).ToCid();
             candidate.Hash.ToByteArray().Should().BeEquivalentTo(expectedHash.ToArray());
         }
     }

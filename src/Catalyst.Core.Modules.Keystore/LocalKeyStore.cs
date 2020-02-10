@@ -36,14 +36,13 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Network;
-using Nethereum.KeyStore;
+using MultiFormats;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Keystore
 {
-    public sealed class LocalKeyStore : KeyStoreService, IKeyStore
+    public sealed class LocalKeyStore : Nethereum.KeyStore.KeyStoreService, IKeyStore
     {
         private readonly ILogger _logger;
         private readonly IFileSystem _fileSystem;

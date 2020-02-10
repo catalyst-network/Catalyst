@@ -21,37 +21,40 @@
 
 #endregion
 
-using Catalyst.Abstractions.Hashing;
+using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
-    public sealed class DeltaHistoryRequestObserver 
+    public sealed class DeltaHistoryRequestObserver
         : RequestObserverBase<DeltaHistoryRequest, DeltaHistoryResponse>,
             IP2PMessageObserver
     {
-        private readonly IHashProvider _hashProvider;
+        private readonly IDeltaIndexService _deltaIndexService;
+        private readonly IMapperProvider _mapperProvider;
 
         public DeltaHistoryRequestObserver(IPeerSettings peerSettings,
-            ILogger logger,
-            IHashProvider hashProvider)
+            IDeltaIndexService deltaIndexService,
+            IMapperProvider mapperProvider,
+            ILogger logger)
             : base(logger, peerSettings)
         {
-            _hashProvider = hashProvider;
+            _deltaIndexService = deltaIndexService;
+            _mapperProvider = mapperProvider;
         }
-        
+
         /// <param name="deltaHeightRequest"></param>
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerId"></param>
@@ -65,32 +68,15 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
-            
-            Logger.Debug("PeerId: {0} requests: {1} deltas from height: {2}", senderPeerId, deltaHeightRequest.Range, deltaHeightRequest.Height);
-            
-            // @TODO actually get this from some where for now provide a bunch of fake linked deltas
-            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            Logger.Debug("PeerId: {0} requests: {1} deltas from height: {2}", senderPeerId, deltaHeightRequest.Range,
+                deltaHeightRequest.Height);
+
+            var count = deltaHeightRequest.Height + deltaHeightRequest.Range;
+            var range = _deltaIndexService.GetRange((int) deltaHeightRequest.Height, (int) count);
+            var rangeDao = range.Select(x => x.ToProtoBuff<DeltaIndexDao, DeltaIndex>(_mapperProvider));
             var response = new DeltaHistoryResponse();
-            var lastDeltaHash = _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
-
-            for (uint x = 0; x < deltaHeightRequest.Range; x++)
-            {
-                var delta = new Delta
-                {
-                    PreviousDeltaDfsHash = lastDeltaHash.Digest.ToByteString()
-                };
-
-                var index = new DeltaIndex
-                {
-                    Height = deltaHeightRequest.Height,
-                    Cid = delta.ToByteString()
-                };
-
-                response.Result.Add(index);
-                lastDeltaHash = _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
-            }
-            /////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+            response.Result.Add(rangeDao);
             return response;
         }
     }

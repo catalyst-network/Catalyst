@@ -30,8 +30,8 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
-using TheDotNetLeague.MultiFormats.MultiBase;
+using Lib.P2P;
+using MultiFormats;
 
 namespace Catalyst.TestUtils
 {
@@ -44,7 +44,7 @@ namespace Catalyst.TestUtils
             DateTime? timestamp = default)
         {
             var previousHash = previousDeltaHash ??
-                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
+                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
             var root = merkleRoot ?? ByteUtil.GenerateRandomByteArray(32);
             var poda = merklePoda ?? ByteUtil.GenerateRandomByteArray(32);
             var nonNullTimestamp =
@@ -67,9 +67,9 @@ namespace Catalyst.TestUtils
             PeerId producerId = null)
         {
             var candidateHash = hash ??
-                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
+                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
             var previousHash = previousDeltaHash ??
-                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
+                hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
             var producer = producerId
              ?? PeerIdHelper.GetPeerId(ByteUtil.GenerateRandomByteArray(32));
 

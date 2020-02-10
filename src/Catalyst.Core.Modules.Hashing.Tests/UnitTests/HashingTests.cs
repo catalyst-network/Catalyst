@@ -28,8 +28,8 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
+using MultiFormats.Registry;
 using Google.Protobuf;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests

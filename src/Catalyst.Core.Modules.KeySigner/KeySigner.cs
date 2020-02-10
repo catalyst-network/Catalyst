@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.KeySigner
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier)
+        private IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier)
         {
             var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
             if (privateKey == null && !TryPopulateRegistryFromKeyStore(keyIdentifier, out privateKey))

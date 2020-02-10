@@ -32,7 +32,7 @@ namespace Catalyst.Protocol
     /// </summary>
     public static class Extensions
     {
-        static readonly ArrayPool<byte> Pool = ArrayPool<byte>.Shared;
+        private static readonly ArrayPool<byte> Pool = ArrayPool<byte>.Shared;
 
         /// <summary>
         /// Serializes a message using a pooled array.
@@ -57,8 +57,8 @@ namespace Catalyst.Protocol
         /// </summary>
         public ref struct PooledSerializedMessage
         {
-            readonly byte[] _array;
-            readonly int _size;
+            private readonly byte[] _array;
+            private readonly int _size;
 
             public PooledSerializedMessage(byte[] array, int size)
             {

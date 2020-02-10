@@ -31,13 +31,13 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Nethermind.Core;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Store;
+using MultiFormats;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 StateRoot = ByteString.CopyFrom(stateProvider.StateRoot.Bytes),
             };
 
-            GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).CreateCid();
+            GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).ToCid();
 
             _dfsReader = dfsReader;
             _logger = logger;

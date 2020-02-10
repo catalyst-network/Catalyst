@@ -31,6 +31,7 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Fakes;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
 using NSubstitute;

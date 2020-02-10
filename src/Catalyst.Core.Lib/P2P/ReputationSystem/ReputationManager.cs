@@ -26,7 +26,6 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Core.Lib.P2P.Repository;
 using Dawn;
@@ -41,17 +40,16 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
         public readonly ReplaySubject<IPeerReputationChange> ReputationEvent;
         public IObservable<IPeerReputationChange> ReputationEventStream => ReputationEvent.AsObservable();
         public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
-        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
 
-        public ReputationManager(IPeerRepository peerRepository, ILogger logger)
+        public ReputationManager(IPeerRepository peerRepository, ILogger logger, IScheduler scheduler = null)
         {
+            var observableScheduler = scheduler ?? Scheduler.Default;
+
             _logger = logger;
             PeerRepository = peerRepository;
-            ReputationEvent = new ReplaySubject<IPeerReputationChange>(0);
+            ReputationEvent = new ReplaySubject<IPeerReputationChange>(0, observableScheduler);
 
-            ReputationEventStream
-               .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(OnNext, OnError, OnCompleted);
+            ReputationEventStream.Subscribe(OnNext, OnError, OnCompleted);
         }
 
         /// <summary>
@@ -68,13 +66,10 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
 
         private void OnError(Exception exc) { _logger.Error("ReputationManager error: {@Exc}", exc); }
 
-        // ReSharper disable once VSTHRD100
-        public async void OnNext(IPeerReputationChange peerReputationChange)
+        public void OnNext(IPeerReputationChange peerReputationChange)
         {
             try
             {
-                await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
-
                 var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
                 Guard.Argument(peer, nameof(peer)).NotNull();
 
@@ -85,10 +80,6 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             catch (Exception e)
             {
                 _logger.Error(e, e.Message);
-            }
-            finally
-            {
-                SemaphoreSlim.Release();
             }
         }
 

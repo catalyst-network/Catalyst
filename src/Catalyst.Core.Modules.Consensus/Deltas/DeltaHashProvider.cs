@@ -29,7 +29,7 @@ using System.Reactive.Subjects;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
+using Lib.P2P;
 using Nito.Comparers;
 using Serilog;
 
@@ -105,6 +105,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             lock (_hashesByTimeDescending)
             {
+                if (_hashesByTimeDescending.ContainsValue(newHash))
+                {
+                    return false;
+                }
+
                 _hashesByTimeDescending.Add(newDelta.TimeStamp, newHash);
                 if (_hashesByTimeDescending.Count > _capacity)
                 {

@@ -34,11 +34,11 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using LibP2P;
+using Lib.P2P;
+using MultiFormats.Registry;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
@@ -46,7 +46,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     public sealed class DeltaDfsReaderTests
     {
         private readonly IHashProvider _hashProvider;
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
         private readonly ILogger _logger;
         private readonly IDeltaDfsReader _dfsReader;
 
@@ -54,20 +54,20 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
             _hashProvider = new HashProvider(hashingAlgorithm);
-            _dfs = Substitute.For<IDfs>();
+            _dfsService = Substitute.For<IDfsService>();
             _logger = Substitute.For<ILogger>();
 
-            _dfsReader = new DeltaDfsReader(_dfs, _logger);
+            _dfsReader = new DeltaDfsReader(_dfsService, _logger);
         }
 
         [Fact]
         public void TryReadDeltaFromDfs_Should_Return_False_And_Log_When_Hash_Not_Found_On_Dfs()
         {
             var exception = new FileNotFoundException("that hash is not good");
-            _dfs.ReadAsync(Arg.Any<Cid>(), Arg.Any<CancellationToken>())
+            _dfsService.UnixFsApi.ReadFileAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Throws(exception);
 
-            var cid = _hashProvider.ComputeUtf8MultiHash("bad hash").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("bad hash").ToCid();
             _dfsReader.TryReadDeltaFromDfs(cid, out _, CancellationToken.None).Should().BeFalse();
             _logger.Received(1).Error(exception,
                 Arg.Any<string>(),
@@ -77,10 +77,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void TryReadDeltaFromDfs_Should_Return_True_When_Hash_Found_On_Dfs_And_Delta_Is_Valid()
         {
-            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").ToCid().ToString();
             var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
 
-            _dfs.ReadAsync(cid, CancellationToken.None)
+            _dfsService.UnixFsApi.ReadFileAsync(cid, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());
 
             var found = _dfsReader.TryReadDeltaFromDfs(cid, out var delta, CancellationToken.None);
@@ -92,14 +92,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void TryReadDeltaFromDfs_Should_Return_False_When_Hash_Found_On_Dfs_And_Delta_Is_Not_Valid()
         {
-            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").ToCid();
             var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
             matchingDelta.PreviousDeltaDfsHash = ByteString.Empty;
 
             new Action(() => matchingDelta.IsValid()).Should()
                .Throw<InvalidDataException>("otherwise this test is useless");
 
-            _dfs.ReadAsync(cid, CancellationToken.None)
+            _dfsService.UnixFsApi.ReadFileAsync(cid, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());
 
             var found = _dfsReader.TryReadDeltaFromDfs(cid, out var delta, CancellationToken.None);
@@ -111,16 +111,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void TryReadDeltaFromDfs_Should_Pass_Cancellation_Token()
         {
-            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("good hash").ToCid();
             var cancellationToken = new CancellationToken();
 
             var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
-            _dfs.ReadAsync(cid, CancellationToken.None)
+            _dfsService.UnixFsApi.ReadFileAsync(cid, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());
 
             _dfsReader.TryReadDeltaFromDfs(cid, out _, CancellationToken.None);
 
-            _dfs.Received(1)?.ReadAsync(Arg.Is(cid), Arg.Is(cancellationToken));
+            _dfsService.UnixFsApi.Received(1)?.ReadFileAsync(Arg.Is(cid.ToString()), Arg.Is(cancellationToken));
         }
     }
 }

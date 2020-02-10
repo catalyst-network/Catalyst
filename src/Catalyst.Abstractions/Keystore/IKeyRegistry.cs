@@ -21,9 +21,9 @@
 
 #endregion
 
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
-using IPrivateKey = Catalyst.Abstractions.Cryptography.IPrivateKey;
 
 namespace Catalyst.Abstractions.Keystore
 {

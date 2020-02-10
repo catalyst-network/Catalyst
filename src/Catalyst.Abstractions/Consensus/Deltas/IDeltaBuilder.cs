@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Protocol.Wire;
-using LibP2P;
+using Lib.P2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {

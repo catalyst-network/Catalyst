@@ -42,7 +42,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             //Arrange
             var signMessageResponse = new SignMessageResponse();
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var messageSignCommand = new MessageSignCommand(commandContext, Substitute.For<ILogger>());
+            new MessageSignCommand(commandContext, Substitute.For<ILogger>());
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, signMessageResponse);

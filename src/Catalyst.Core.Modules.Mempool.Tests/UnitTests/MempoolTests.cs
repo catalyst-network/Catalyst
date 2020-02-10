@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
@@ -34,24 +33,23 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats.Registry;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 {
     public sealed class MempoolTests
     {
-        private readonly IHashProvider _hashProvider;
         private readonly Mempool _memPool;
         private readonly PublicEntryDao _mempoolItem;
         private readonly TestMapperProvider _mapperProvider;
 
         public MempoolTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _memPool = new Mempool(Substitute.For<IMempoolService<PublicEntryDao>>());
             _mapperProvider = new TestMapperProvider();
             _mempoolItem = TransactionHelper

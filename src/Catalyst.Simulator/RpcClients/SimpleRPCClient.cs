@@ -54,9 +54,9 @@ using Catalyst.Simulator.Interfaces;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Simulator.RpcClients
 {

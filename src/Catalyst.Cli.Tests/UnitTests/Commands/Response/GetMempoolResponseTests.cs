@@ -42,7 +42,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             //Arrange
             var getMempoolResponse = new GetMempoolResponse();
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var getMempoolCommand = new GetMempoolCommand(commandContext, Substitute.For<ILogger>());
+            new GetMempoolCommand(commandContext, Substitute.For<ILogger>());
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, getMempoolResponse);

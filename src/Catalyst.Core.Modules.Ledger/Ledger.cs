@@ -44,6 +44,7 @@ using Dawn;
 using Google.Protobuf;
 using LibP2P;
 using Nethermind.Core;
+using Lib.P2P;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm;

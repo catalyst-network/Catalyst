@@ -32,13 +32,14 @@ using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Catalyst.Core.Lib.DAO.Transaction;
 using LibP2P;
+using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -82,8 +83,9 @@ namespace Catalyst.Core.Modules.Web3
 
                 try
                 {
-                    var host = Host.CreateDefaultBuilder()
-                       .UseServiceProviderFactory(new SharedContainerProviderFactory(_container))
+                    await Host.CreateDefaultBuilder()
+                       .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                       .UseConsoleLifetime()
                        .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
                        .ConfigureWebHostDefaults(
                             webHostBuilder =>
@@ -94,8 +96,10 @@ namespace Catalyst.Core.Modules.Web3
                                    .UseUrls(_apiBindingAddress)
                                    .UseWebRoot(webDirectory.FullName)
                                    .UseSerilog();
-                            }).Build();
-                    await host.StartAsync();
+                            }).RunConsoleAsync();
+
+                    //SIGINT is caught from kestrel because we are using RunConsoleAsync in HostBuilder, the SIGINT will not be received in the main console so we need to exit the process manually, to prevent needing to use two SIGINT's
+                    Environment.Exit(2);
                 }
                 catch (Exception e)
                 {
@@ -111,6 +115,32 @@ namespace Catalyst.Core.Modules.Web3
         {
             builder.RegisterType<Web3HandlerResolver>().As<IWeb3HandlerResolver>().SingleInstance();
             builder.RegisterType<EthereumJsonSerializer>().As<IJsonSerializer>().SingleInstance();
+
+            //Mempool repo
+            builder.RegisterInstance(_container.Resolve<IRepository<PublicEntryDao, string>>())
+               .As<IRepository<PublicEntryDao, string>>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IMempoolService<PublicEntryDao>>())
+               .As<IMempoolService<PublicEntryDao>>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IMempool<PublicEntryDao>>())
+               .As<IMempool<PublicEntryDao>>().SingleInstance();
+
+            builder.RegisterInstance(_container.Resolve<IDeltaHashProvider>())
+               .As<IDeltaHashProvider>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IMapperProvider>())
+               .As<IMapperProvider>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IWeb3EthApi>())
+               .As<IWeb3EthApi>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<ILogger>())
+               .As<ILogger>()
+               .SingleInstance();
+            builder.RegisterInstance(_container.Resolve<IDfsService>())
+               .As<ICoreApi>()
+               .SingleInstance();
         }
 
         public void ConfigureServices(IServiceCollection services)

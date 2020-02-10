@@ -29,7 +29,7 @@ using LibP2P;
 
 namespace Catalyst.Core.Modules.Ledger
 {
-    public class DeltaResolver : IDeltaResolver
+    public sealed class DeltaResolver : IDeltaResolver
     {
         readonly IDeltaByNumberRepository _deltaByNumber;
         readonly ILedger _ledger;
