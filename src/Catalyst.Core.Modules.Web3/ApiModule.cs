@@ -27,7 +27,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
-using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
@@ -38,7 +37,6 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
-using Lib.P2P;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,9 +44,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Nethermind.Core;
-using Nethermind.Core.Crypto;
 using Nethermind.Core.Json;
-using Newtonsoft.Json;
 using Serilog;
 using SharpRepository.Repository;
 using Module = Autofac.Module;
@@ -194,31 +190,6 @@ namespace Catalyst.Core.Modules.Web3
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(swagger => { swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API"); });
-            }
-        }
-
-        private sealed class SharedContainerProviderFactory : IServiceProviderFactory<ContainerBuilder>
-        {
-            readonly IContainer _container;
-
-            public SharedContainerProviderFactory(IContainer container)
-            {
-                _container = container;
-            }
-
-            public ContainerBuilder CreateBuilder(IServiceCollection services)
-            {
-                var builder = new ContainerBuilder();
-                builder.Populate(services);
-                return builder;
-            }
-
-            public IServiceProvider CreateServiceProvider(ContainerBuilder containerBuilder)
-            {
-                // using an obsolete way of updating an already created container
-                containerBuilder.Update(_container);
-
-                return new AutofacServiceProvider(_container);
             }
         }
     }
