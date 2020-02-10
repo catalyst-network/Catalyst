@@ -52,7 +52,6 @@ using Nethermind.Evm.Tracing;
 using Nethermind.Store;
 using Serilog;
 using Serilog.Events;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Account = Catalyst.Abstractions.Ledger.Models.Account;
 
 namespace Catalyst.Core.Modules.Ledger

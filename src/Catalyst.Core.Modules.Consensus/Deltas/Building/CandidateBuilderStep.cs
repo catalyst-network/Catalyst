@@ -34,10 +34,10 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Lib.P2P;
+using MultiFormats;
 using Nethermind.Dirichlet.Numerics;
 using Serilog;
 using Serilog.Events;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
@@ -103,7 +103,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             CandidateDeltaBroadcast candidate = new CandidateDeltaBroadcast
             {
                 // h∆j
-                Hash = MultiBase.Decode(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate).CreateCid())
+                Hash = MultiBase.Decode(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate).ToCid())
                    .ToByteString(),
 
                 // Idj

@@ -62,8 +62,7 @@ namespace Catalyst.Abstractions.Kvm.Models
             BlockHash = blockHash;
             RequireCanonical = requireCanonical;
         }
-
-        [Todo(Improve.Refactor,"Move it to converters")]
+        
         public static BlockParameter FromJson(string jsonValue)
         {
             switch (jsonValue)

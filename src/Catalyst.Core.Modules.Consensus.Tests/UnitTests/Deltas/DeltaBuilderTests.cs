@@ -54,7 +54,6 @@ using Nethermind.Dirichlet.Numerics;
 using Nethermind.Logging;
 using Nethermind.Store;
 using NSubstitute;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Serilog;
 using Xunit;
 using ILogger = Serilog.ILogger;

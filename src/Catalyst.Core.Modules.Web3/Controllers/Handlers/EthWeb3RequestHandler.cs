@@ -43,8 +43,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             // use BlockParamConverter instead...
             if (typeof(TParam) == typeof(BlockParameter))
             {
-                BlockParameter blockParameter = new BlockParameter();
-                blockParameter.FromJson(parameterString);
+                BlockParameter blockParameter = BlockParameter.FromJson(parameterString);
                 return (TParam) Convert.ChangeType(blockParameter, typeof(TParam));
             }
 
