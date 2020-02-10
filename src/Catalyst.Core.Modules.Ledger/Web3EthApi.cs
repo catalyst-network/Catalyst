@@ -42,14 +42,23 @@ using Nethermind.Store;
 
 namespace Catalyst.Core.Modules.Ledger
 {
-    public class Web3EthApi : IWeb3EthApi
+    public sealed class Web3EthApi : IWeb3EthApi
     {
         private readonly ITransactionRepository _receipts;
         private readonly ITransactionReceivedEvent _transactionReceived;
         public IHashProvider HashProvider { get; }
         private readonly PeerId _peerId;
 
-        public Web3EthApi(IStateReader stateReader, IDeltaResolver deltaResolver, IDeltaCache deltaCache, IDeltaExecutor executor, IStorageProvider storageProvider, IStateProvider stateProvider, ITransactionRepository receipts, ITransactionReceivedEvent transactionReceived, IHashProvider hashProvider, IPeerSettings peerSettings)
+        public Web3EthApi(IStateReader stateReader,
+            IDeltaResolver deltaResolver,
+            IDeltaCache deltaCache,
+            IDeltaExecutor executor,
+            IStorageProvider storageProvider,
+            IStateProvider stateProvider,
+            ITransactionRepository receipts,
+            ITransactionReceivedEvent transactionReceived,
+            IHashProvider hashProvider,
+            IPeerSettings peerSettings)
         {
             _receipts = receipts;
             _transactionReceived = transactionReceived ?? throw new ArgumentNullException(nameof(transactionReceived));
