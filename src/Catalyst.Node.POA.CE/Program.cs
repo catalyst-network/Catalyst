@@ -172,9 +172,10 @@ namespace Catalyst.Node.POA.CE
 
         private static async Task<int> RunAsync(Options options)
         {
-            options.IpfsPassword = options.IpfsPassword ?? "ipfs";
-            options.NodePassword = options.NodePassword ?? "node";
-            options.SslCertPassword = options.SslCertPassword ?? "cert";
+            // uncomment to speed up node launching
+            // options.IpfsPassword = options.IpfsPassword ?? "ipfs";
+            // options.NodePassword = options.NodePassword ?? "node";
+            // options.SslCertPassword = options.SslCertPassword ?? "cert";
 
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 Process.GetCurrentProcess().Id.ToString());
