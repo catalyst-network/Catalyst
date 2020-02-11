@@ -180,8 +180,10 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         public void Should_Update_State_On_Contract_Entry()
         {
             var recipient = _cryptoContext.GeneratePrivateKey().GetPublicKey();
-            _stateProvider.CreateAccount(_senderPublicKey.ToKvmAddress(), 1000);
+            _stateProvider.CreateAccount(_senderAddress, 1000);
             _stateProvider.CreateAccount(recipient.ToKvmAddress(), UInt256.Zero);
+            _stateProvider.Commit(CatalystGenesisSpec.Instance);
+            _stateProvider.CommitTree();
 
             var delta = new Delta
             {
@@ -189,7 +191,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 PublicEntries =
                 {
-                    EntryUtils.PrepareContractEntry(recipient, _senderPublicKey, 7)
+                    EntryUtils.PrepareContractEntry(recipient.ToKvmAddress(), _senderAddress, 7)
                 }
             };
             delta.PublicEntries[0].Signature = delta.PublicEntries[0]
@@ -206,7 +208,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         public void Should_Update_State_On_Public_Entry()
         {
             var recipient = _cryptoContext.GeneratePrivateKey().GetPublicKey();
-            _stateProvider.CreateAccount(_senderPublicKey.ToKvmAddress(), 1000);
+            _stateProvider.CreateAccount(_senderAddress, 1000);
             _stateProvider.CreateAccount(recipient.ToKvmAddress(), UInt256.Zero);
             _stateProvider.Commit(CatalystGenesisSpec.Instance);
             _stateProvider.CommitTree();
@@ -249,7 +251,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 PublicEntries =
                 {
-                    EntryUtils.PrepareContractEntry(null, _senderPublicKey, 5, initCodeHex)
+                    EntryUtils.PrepareContractEntry(null, _senderAddress, 5, initCodeHex)
                 }
             };
 
@@ -279,7 +281,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             var contractAddress1 = Address.OfContract(_senderAddress,
                 _stateProvider.GetNonce(_senderAddress) + 0);
             var contractAddress2 = Address.OfContract(_senderAddress,
-                _stateProvider.GetNonce(_senderAddress) + 1);
+                _stateProvider.GetNonce(_senderAddress) + 2);
 
             const string migrationInitHex =
                 "608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506102f8806100606000396000f300608060405260043610610062576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630900f01014610067578063445df0ac146100aa5780638da5cb5b146100d5578063fdacd5761461012c575b600080fd5b34801561007357600080fd5b506100a8600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610159565b005b3480156100b657600080fd5b506100bf610241565b6040518082815260200191505060405180910390f35b3480156100e157600080fd5b506100ea610247565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561013857600080fd5b506101576004803603810190808035906020019092919050505061026c565b005b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561023d578190508073ffffffffffffffffffffffffffffffffffffffff1663fdacd5766001546040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050600060405180830381600087803b15801561022457600080fd5b505af1158015610238573d6000803e3d6000fd5b505050505b5050565b60015481565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614156102c957806001819055505b505600a165627a7a723058206bf582fa33b86704b115209928731f910b5f9872d5a4c376fe8d639aa373ad790029";
@@ -292,13 +294,14 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             var delta = new Delta
             {
+                StateRoot = _stateProvider.StateRoot.ToByteString(),
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 PublicEntries =
                 {
-                    EntryUtils.PrepareContractEntry(null, _senderPublicKey, 0, migrationInitHex),
-                    EntryUtils.PrepareContractEntry(null, _senderPublicKey, 0, call1Hex, 1),
-                    EntryUtils.PrepareContractEntry(null, _senderPublicKey, 0, initCodeHex, 2),
-                    EntryUtils.PrepareContractEntry(null, _senderPublicKey, 0, call2Hex, 3)
+                    EntryUtils.PrepareContractEntry(null, _senderAddress, 0, migrationInitHex),
+                    EntryUtils.PrepareContractEntry(contractAddress1, _senderAddress, 0, call1Hex, 1),
+                    EntryUtils.PrepareContractEntry(null, _senderAddress, 0, initCodeHex, 2),
+                    EntryUtils.PrepareContractEntry(contractAddress1, _senderAddress, 0, call2Hex, 3)
                 }
             };
 
@@ -371,11 +374,11 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 PublicEntries =
                 {
-                    EntryUtils.PrepareContractEntry(null, _senderPublicKey, 0, migrationInitHex),
-                    EntryUtils.PrepareContractEntry(null, _senderPublicKey, 0, call1Hex, 1),
-                    EntryUtils.PrepareContractEntry(null, _senderPublicKey, 0, initCodeHex, 2),
-                    EntryUtils.PrepareContractEntry(null, _senderPublicKey, 0, call2Hex, 3),
-                    EntryUtils.PrepareContractEntry(_senderPublicKey, _senderPublicKey, 0, transfer, 4)
+                    EntryUtils.PrepareContractEntry(null, _senderAddress, 0, migrationInitHex),
+                    EntryUtils.PrepareContractEntry(contractAddress1, _senderAddress, 0, call1Hex, 1),
+                    EntryUtils.PrepareContractEntry(null, _senderAddress, 0, initCodeHex, 2),
+                    EntryUtils.PrepareContractEntry(contractAddress1, _senderAddress, 0, call2Hex, 3),
+                    EntryUtils.PrepareContractEntry(contractAddress2, _senderAddress, 0, transfer, 4)
                 }
             };
 
