@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Nethermind.Core;
@@ -38,12 +39,12 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         [Todo(Improve.MissingFunctionality, "Implement BlockParametersConverter")]
         protected TParam Deserialize<TParam>(object parameter, IJsonSerializer serializer)
         {
-            var parameterString = parameter is string ? $"{parameter}" : parameter?.ToString();
+            var parameterString = parameter is string ? $"\"{parameter}\"" : parameter?.ToString();
 
             // use BlockParamConverter instead...
             if (typeof(TParam) == typeof(BlockParameter))
             {
-                BlockParameter blockParameter = BlockParameter.FromJson(parameterString);
+                BlockParameter blockParameter = BlockParameter.FromJson(parameter as string);
                 return (TParam) Convert.ChangeType(blockParameter, typeof(TParam));
             }
 

@@ -120,6 +120,7 @@ namespace Catalyst.Core.Modules.Web3
                 converters.Add(new UInt256Converter());
                 converters.Add(new NullableUInt256Converter());
                 converters.Add(new KeccakConverter());
+                converters.Add(new AddressConverter());
                 converters.Add(new ByteArrayConverter());
                 converters.Add(new CidJsonConverter());
             }).AddApiExplorer();
