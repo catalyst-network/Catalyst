@@ -194,8 +194,9 @@ namespace Catalyst.Core.Modules.Ledger
                     _logger.Warning("Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.", deltaHash);
                     return;
                 }
-                
-                if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Cid.Read(nextDeltaInChain.PreviousDeltaDfsHash.ToByteArray()), out Delta parentDelta))
+
+                Cid parentCid = Cid.Read(nextDeltaInChain.PreviousDeltaDfsHash.ToByteArray());
+                if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(parentCid, out Delta parentDelta))
                 {
                     _logger.Warning("Failed to retrieve parent Delta with hash {hash} from the Dfs, ledger has not been updated.", deltaHash);
                     return;
