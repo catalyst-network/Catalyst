@@ -38,7 +38,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         [Todo(Improve.MissingFunctionality, "Implement BlockParametersConverter")]
         protected TParam Deserialize<TParam>(object parameter, IJsonSerializer serializer)
         {
-            var parameterString = parameter is string ? $"\"{parameter}\"" : parameter?.ToString();
+            var parameterString = parameter is string ? $"{parameter}" : parameter?.ToString();
 
             // use BlockParamConverter instead...
             if (typeof(TParam) == typeof(BlockParameter))
