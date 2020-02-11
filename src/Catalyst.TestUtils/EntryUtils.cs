@@ -29,6 +29,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 
@@ -64,6 +65,7 @@ namespace Catalyst.TestUtils
             return new Delta
             {
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
+                StateRoot = ByteString.CopyFrom(Keccak.EmptyTreeHash.Bytes),
                 PublicEntries =
                 {
                     PrepareContractEntry(recipient, sender, amount, dataHex, nonce)
@@ -75,6 +77,7 @@ namespace Catalyst.TestUtils
         {
             return new Delta
             {
+                StateRoot = ByteString.CopyFrom(Keccak.EmptyTreeHash.Bytes),
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 PublicEntries =
                 {
