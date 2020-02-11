@@ -96,10 +96,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                 step.Execute(context);
             }
 
-            if ((context.Transactions?.Count ?? 0) == 0)
-            {
-                return null;
-            }
+            // to simplify cases when we test truffle
+            // if ((context.Transactions?.Count ?? 0) == 0)
+            // {
+            //     return null;
+            // }
 
             return context.Candidate;
         }

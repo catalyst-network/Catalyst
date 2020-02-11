@@ -70,8 +70,8 @@ namespace Catalyst.TestUtils
             UInt256 amount,
             uint gasLimit,
             UInt256 gasPrice,
-            string senderPublicKey = "sender",
-            string receiverPublicKey = "receiver",
+            string senderPublicKey = null,
+            string receiverPublicKey = null,
             string signature = "signature",
             long timestamp = 12345,
             ulong nonce = 0,
@@ -83,8 +83,8 @@ namespace Catalyst.TestUtils
                 {
                     Amount = amount.ToUint256ByteString(),
                     Nonce = nonce,
-                    ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
-                    SenderAddress = senderPublicKey.ToUtf8ByteString(),
+                    ReceiverAddress = receiverPublicKey?.ToUtf8ByteString() ?? ByteString.CopyFrom(new byte[20]),
+                    SenderAddress = senderPublicKey?.ToUtf8ByteString() ?? ByteString.CopyFrom(new byte[20]),
                     Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {

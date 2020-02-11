@@ -54,7 +54,6 @@ using Nethermind.Dirichlet.Numerics;
 using Nethermind.Logging;
 using Nethermind.Store;
 using NSubstitute;
-using Serilog;
 using Xunit;
 using ILogger = Serilog.ILogger;
 
@@ -247,8 +246,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     UInt256.Zero,
                     21000,
                     (20 + i).GFul(),
-                    senderPublicKey: "01234567012345670123456701234567",
-                    receiverPublicKey: "01234567012345670123456701234567",
+                    null,
+                    null,
                     timestamp: _random.Next(),
                     signature: i.ToString());
                 return transaction.PublicEntry;
@@ -300,8 +299,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                         ? (uint) DeltaGasLimit / 8U - 10000U
                         : 70000U, // to test scenarios when both single transaction is ignored and all remaining
                     (20 + i).GFul(),
-                    senderPublicKey: "01234567012345670123456701234567",
-                    receiverPublicKey: "01234567012345670123456701234567",
+                    null,
+                    null,
                     timestamp: _random.Next(),
                     signature: i.ToString());
                 return transaction.PublicEntry;

@@ -42,10 +42,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         public void Execute(DeltaBuilderContext context)
         {
             if (_logger.IsEnabled(LogEventLevel.Debug)) _logger.Debug("Registering new delta with parent ({previousHash})", context.PreviousDeltaHash);
-            if ((context.ProducedDelta.PublicEntries?.Count ?? 0) > 0)
-            {
-                _deltaCache.AddLocalDelta(context.Candidate, context.ProducedDelta);
-            }
+            _deltaCache.AddLocalDelta(context.Candidate, context.ProducedDelta);
+
+            // for easier delta tracking when testing truffle
+            // if ((context.ProducedDelta.PublicEntries?.Count ?? 0) > 0)
+            // {
+            //     _deltaCache.AddLocalDelta(context.Candidate, context.ProducedDelta);
+            // }
         }
     }
 }
