@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Consensus
                 return -1;
             }
 
-            var gasComparison = x.GasPrice.ToUInt256().CompareTo(x.GasPrice.ToUInt256());
+            var gasComparison = x.GasPrice.ToUInt256().CompareTo(y.GasPrice.ToUInt256());
 
             if (gasComparison != 0)
             {
