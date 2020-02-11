@@ -60,6 +60,8 @@ using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
+// ReSharper disable WrongIndentSize
+
 namespace Catalyst.Core.Lib
 {
     /// <summary>

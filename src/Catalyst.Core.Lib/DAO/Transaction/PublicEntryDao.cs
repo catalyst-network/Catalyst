@@ -32,6 +32,8 @@ using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
+// ReSharper disable WrongIndentSize
+
 namespace Catalyst.Core.Lib.DAO.Transaction
 {
     public class PublicEntryDao : DaoBase

@@ -68,6 +68,7 @@ namespace Catalyst.Core.Modules.Ledger.Repository
                     {
                         _transactionToDeltaRepository.Delete(transactionHash);
                     }
+                    
                     _transactionToDeltaRepository.Add(new TransactionToDelta {DeltaHash = deltaHash, DocumentId = transactionHash});
                 }
             }

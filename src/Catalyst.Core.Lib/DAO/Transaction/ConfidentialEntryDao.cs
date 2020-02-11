@@ -28,6 +28,7 @@ using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
+// ReSharper disable WrongIndentSize
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace Catalyst.Core.Lib.DAO.Transaction
 {
