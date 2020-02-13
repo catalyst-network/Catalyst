@@ -25,6 +25,8 @@ using System;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.Sync.Interfaces;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -37,6 +39,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public class DeltaDfsHashObserver : BroadcastObserverBase<DeltaDfsHashBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly IDeltaHeightWatcher _deltaHeightWatcher;
         private readonly SyncState _syncState;
 
         public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, SyncState syncState, ILogger logger)
@@ -50,6 +53,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         {
             if (!_syncState.IsSynchronized)
             {
+                //_deltaHeightWatcher.LatestDeltaHash = deserialised.DeltaDfsHash;
                 return;
             }
 

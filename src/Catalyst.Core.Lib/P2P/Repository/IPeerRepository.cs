@@ -41,6 +41,8 @@ namespace Catalyst.Core.Lib.P2P.Repository
         void Add(Peer peer);
         void Add(IEnumerable<Peer> peer);
 
+        IEnumerable<Peer> TakeHighestReputationPeers(int page, int count);
+
         void Update(Peer peer);
 
         void Delete(Peer peer);

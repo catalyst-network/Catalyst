@@ -22,37 +22,28 @@
 #endregion
 
 using Autofac;
-using Catalyst.Abstractions.Kvm;
-using Catalyst.Abstractions.Ledger;
-using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Abstractions.Sync.Interfaces;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Service;
-using Catalyst.Core.Modules.Ledger.Repository;
+using Catalyst.Core.Modules.Sync.Manager;
+using Catalyst.Core.Modules.Sync.Modal;
+using Catalyst.Core.Modules.Sync.Watcher;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 
-namespace Catalyst.Core.Modules.Ledger
+namespace Catalyst.Core.Modules.Sync
 {
-    public class LedgerModule : Module 
+    public class SynchronizerModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new InMemoryRepository<DeltaIndexDao, string>())
-               .As<IRepository<DeltaIndexDao, string>>()
-               .SingleInstance();
-
+            builder.RegisterType<Synchronizer>().As<ISynchronizer>().SingleInstance();
+            builder.RegisterType<SyncState>().SingleInstance();
+            builder.RegisterType<PeerSyncManager>().As<IPeerSyncManager>().SingleInstance();
+            builder.RegisterType<DeltaHeightWatcher>().As<IDeltaHeightWatcher>().SingleInstance();
+            builder.RegisterType<InMemoryRepository<DeltaIndexDao>>().As<IRepository<DeltaIndexDao>>().SingleInstance();
             builder.RegisterType<DeltaIndexService>().As<IDeltaIndexService>().SingleInstance();
-
-            builder.Register(c => new InMemoryRepository<Account, string>())
-               .As<IRepository<Account, string>>()
-               .SingleInstance();
-
-            builder.RegisterType<LedgerSynchroniser>().As<ILedgerSynchroniser>();
-            builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
-            builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();
-            builder.RegisterType<StateRootResolver>().As<IStateRootResolver>().SingleInstance();
-            builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance();
-            builder.RegisterType<Ledger>().As<ILedger>().SingleInstance();
-        }  
+        }
     }
 }

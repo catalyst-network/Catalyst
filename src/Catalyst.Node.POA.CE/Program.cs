@@ -108,7 +108,7 @@ namespace Catalyst.Node.POA.CE
                 {typeof(CoreLibProvider), () => new CoreLibProvider()},
                 {typeof(MempoolModule), () => new MempoolModule()},
                 {typeof(ConsensusModule), () => new ConsensusModule()},
-                {typeof(SyncModule), () => new SyncModule()},
+                {typeof(SynchronizerModule), () => new SynchronizerModule()},
                 {typeof(KvmModule), () => new KvmModule()},
                 {typeof(LedgerModule), () => new LedgerModule()},
                 {typeof(HashingModule), () => new HashingModule()},

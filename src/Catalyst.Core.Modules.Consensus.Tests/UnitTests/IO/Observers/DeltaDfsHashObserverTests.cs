@@ -25,6 +25,7 @@ using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
@@ -45,6 +46,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         private readonly IHashProvider _hashProvider;
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IChannelHandlerContext _fakeChannelContext;
+        private readonly SyncState _syncState;
         private readonly ILogger _logger;
 
         public DeltaDfsHashObserverTests()
@@ -52,6 +54,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
+            _syncState = new SyncState {IsSynchronized = true, IsRunning = true};
             _logger = Substitute.For<ILogger>();
         }
 
@@ -62,7 +65,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
@@ -76,7 +79,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash.ToArray());
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 

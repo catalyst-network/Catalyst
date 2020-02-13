@@ -237,11 +237,6 @@ namespace Catalyst.Core.Modules.Ledger
 
                 LatestKnownDelta = deltaHash;
 
-                if (_blockHeight > 106)
-                {
-                    var a = 0;
-                }
-
                 _deltaIndexService.Add(new DeltaIndexDao {Cid = LatestKnownDelta, Height = _blockHeight++});
             }
             catch

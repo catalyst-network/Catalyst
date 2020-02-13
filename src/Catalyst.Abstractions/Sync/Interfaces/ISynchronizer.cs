@@ -22,17 +22,14 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using Catalyst.Protocol.IPPN;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Catalyst.Core.Modules.Sync.Modal
+namespace Catalyst.Abstractions.Sync.Interfaces
 {
-    public class DeltaIndexSyncItem
+    public interface ISynchronizer : IDisposable
     {
-        public DeltaHistoryRequest Request { set; get; }
-        public List<DeltaIndexScore> DeltaIndexRangeRanked { set; get; }
-        public DateTime LastUpdated { set; get; }
-        public DeltaIndexSyncItem() { LastUpdated = DateTime.UtcNow; }
-        public bool Complete { set; get; }
+        Task StartAsync(CancellationToken cancellationToken = default);
+        Task StopAsync(CancellationToken cancellationToken = default);
     }
 }

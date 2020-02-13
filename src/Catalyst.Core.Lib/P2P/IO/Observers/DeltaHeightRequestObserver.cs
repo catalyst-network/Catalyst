@@ -24,9 +24,9 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Deltas;
@@ -34,28 +34,30 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
-using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
-    public sealed class DeltaHeightRequestObserver 
+    public sealed class DeltaHeightRequestObserver
         : RequestObserverBase<LatestDeltaHashRequest, LatestDeltaHashResponse>,
             IP2PMessageObserver
     {
         private readonly IDeltaIndexService _deltaIndexService;
         private readonly IMapperProvider _mapperProvider;
+        private readonly SyncState _syncState;
 
         public DeltaHeightRequestObserver(IPeerSettings peerSettings,
             IDeltaIndexService deltaIndexService,
             IMapperProvider mapperProvider,
+            SyncState syncState,
             ILogger logger)
             : base(logger, peerSettings)
         {
             _deltaIndexService = deltaIndexService;
             _mapperProvider = mapperProvider;
+            _syncState = syncState;
         }
-        
+
         /// <param name="deltaHeightRequest"></param>
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerId"></param>
@@ -69,14 +71,15 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
-            
+
             Logger.Debug("PeerId: {0} wants to know your current chain height", senderPeerId);
 
             var deltaIndexDao = _deltaIndexService.LatestDeltaIndex();
             var deltaIndex = deltaIndexDao.ToProtoBuff<DeltaIndexDao, DeltaIndex>(_mapperProvider);
             return new LatestDeltaHashResponse
             {
-                Result = deltaIndex
+                IsSync = _syncState.IsSynchronized,
+                DeltaIndex = deltaIndex
             };
         }
     }

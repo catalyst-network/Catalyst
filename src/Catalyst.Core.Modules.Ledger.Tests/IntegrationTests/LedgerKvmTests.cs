@@ -30,8 +30,10 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Kvm;
@@ -54,6 +56,7 @@ using Nethermind.Evm.Tracing;
 using Nethermind.Logging;
 using Nethermind.Store;
 using NSubstitute;
+using SharpRepository.InMemoryRepository;
 using Xunit;
 using ILogger = Serilog.ILogger;
 
@@ -80,6 +83,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private readonly IPrivateKey _senderPrivateKey;
         private readonly IPublicKey _senderPublicKey;
         private readonly SigningContext _signingContext;
+        private readonly IDeltaIndexService _deltaIndexService;
 
         public LedgerKvmTests()
         {
@@ -114,6 +118,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _deltaExecutor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, kvm, new FfiWrapper(),
                 _logger);
 
+            _deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
+
             _senderPrivateKey = _cryptoContext.GeneratePrivateKey();
             _senderPublicKey = _senderPrivateKey.GetPublicKey();
             _signingContext = new SigningContext
@@ -147,7 +153,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
             var _ = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
-                _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _logger);
+                _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _deltaIndexService, _mapperProvider, _logger);
 
             _testScheduler.Start();
         }

@@ -61,8 +61,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         {
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, senderPeerId, correlationId));
 
-            _deltaHistoryRequest.DeltaHistoryResponseMessageStreamer
-               .OnNext(new PeerDeltaHistoryResponse(senderPeerId, deltaHeightResponse.Result));
+            //_deltaHistoryRequest.DeltaHistoryResponseMessageStreamer
+            //   .OnNext(new PeerDeltaHistoryResponse(senderPeerId, deltaHeightResponse.Result));
         }
     }
 }

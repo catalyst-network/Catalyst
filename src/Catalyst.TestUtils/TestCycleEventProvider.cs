@@ -55,13 +55,13 @@ namespace Catalyst.TestUtils
             dateTimeProvider.UtcNow.Returns(_ => Scheduler.Now.DateTime);
 
             _cycleEventsProvider = new CycleEventsProvider(
-                CycleConfiguration.Default, dateTimeProvider, schedulerProvider, deltaHashProvider,
+                CycleConfiguration.Default, dateTimeProvider, schedulerProvider, deltaHashProvider, new Core.Abstractions.Sync.SyncState() { IsSynchronized = true },
                 logger ?? Substitute.For<ILogger>());
 
             deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
                .Returns(ci => hashingProvider.ComputeMultiHash(
-                    BitConverter.GetBytes(((DateTime) ci[0]).Ticks /
-                        (int) _cycleEventsProvider.Configuration.CycleDuration.Ticks)));
+                    BitConverter.GetBytes(((DateTime)ci[0]).Ticks /
+                        (int)_cycleEventsProvider.Configuration.CycleDuration.Ticks)));
 
             _deltaUpdatesSubscription = PhaseChanges.Subscribe(p => CurrentPhase = p);
         }

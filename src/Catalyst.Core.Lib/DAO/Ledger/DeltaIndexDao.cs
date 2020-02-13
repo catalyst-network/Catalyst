@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.DAO.Ledger
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<DeltaIndex, DeltaIndexDao>()
-               .ForMember(a => a.Id, opt => opt.MapFrom(x => x.Height.ToString()))
+               .ForMember(a => a.Id, opt => opt.MapFrom(x => x.Height))
                .ForMember(a => a.Height, opt => opt.UseDestinationValue())
                .ForMember(a => a.Cid,
                     opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());

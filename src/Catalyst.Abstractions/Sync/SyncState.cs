@@ -21,18 +21,11 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using Catalyst.Protocol.IPPN;
-
-namespace Catalyst.Core.Modules.Sync.Modal
+namespace Catalyst.Core.Abstractions.Sync
 {
-    public class DeltaIndexSyncItem
+    public class SyncState
     {
-        public DeltaHistoryRequest Request { set; get; }
-        public List<DeltaIndexScore> DeltaIndexRangeRanked { set; get; }
-        public DateTime LastUpdated { set; get; }
-        public DeltaIndexSyncItem() { LastUpdated = DateTime.UtcNow; }
-        public bool Complete { set; get; }
+        public bool IsSynchronized { set; get; }
+        public bool IsRunning { set; get; }
     }
 }

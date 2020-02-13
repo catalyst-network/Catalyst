@@ -40,6 +40,7 @@ using MultiFormats;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
@@ -48,7 +49,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         private readonly IDfsService _dfsService;
         private readonly IDfsService _dfsServiceOther;
         private readonly ITestOutputHelper _testOutputHelper;
-        
+
         public BitSwapApiTest(ITestOutputHelper output)
         {
             var fileSystem1 = Substitute.For<IFileSystem>();
@@ -73,7 +74,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task UnWant()
         {
             await _dfsService.StartAsync();
-            
+
             try
             {
                 var cts = new CancellationTokenSource();
@@ -85,10 +86,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 {
                     if (DateTime.Now > endTime)
                     {
-                        throw new Xunit.Sdk.XunitException("wanted block is missing");
+                        throw new XunitException("wanted block is missing");
                     }
 
                     await Task.Delay(100, cts.Token);
+
                     var w = await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
                     if (w.Contains(block.Id))
                     {
@@ -109,12 +111,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await _dfsService.StopAsync();
             }
         }
-        
+
         [Fact]
         public async Task Wants()
         {
             await _dfsService.StartAsync();
-            
+
             try
             {
                 var cts = new CancellationTokenSource();
@@ -126,17 +128,18 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 {
                     if (DateTime.Now > endTime)
                     {
-                        throw new Xunit.Sdk.XunitException("wanted block is missing");
+                        throw new XunitException("wanted block is missing");
                     }
-                    
+
                     await Task.Delay(100, cts.Token);
+
                     var w = await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
                     if (w.Contains(block.Id))
                     {
                         break;
                     }
                 }
-                
+
                 cts.Cancel();
                 var wants = await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token);
                 wants.ToArray().Should().NotContain(block.Id);
@@ -160,7 +163,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             _dfsServiceOther.Options.Discovery.DisableMdns = true;
             _dfsServiceOther.Options.Discovery.BootstrapPeers = new MultiAddress[0];
             await _dfsServiceOther.StartAsync();
-            
+
             try
             {
                 var local = _dfsService.LocalPeer;
@@ -173,7 +176,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 {
                     Hash = MultiHash.ComputeHash(data)
                 };
-                
+
                 var _ = _dfsService.BlockApi.GetAsync(cid);
                 await _dfsService.SwarmApi.ConnectAsync(remote.Addresses.First());
 
@@ -185,11 +188,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     {
                         return;
                     }
-                    
+
                     await Task.Delay(200);
                 }
 
-                throw new Xunit.Sdk.XunitException("want list not sent");
+                throw new XunitException("want list not sent");
             }
             finally
             {
@@ -211,7 +214,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             _dfsServiceOther.Options.Discovery.DisableMdns = true;
             _dfsServiceOther.Options.Discovery.BootstrapPeers = new MultiAddress[0];
             await _dfsServiceOther.StartAsync();
-            
+
             try
             {
                 var data = Guid.NewGuid().ToByteArray();
@@ -228,12 +231,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Assert.False(getTask.IsFaulted, "task faulted");
                 Assert.True(getTask.IsCompleted, "task not completed");
                 Assert.Equal(cid, block.Id);
-                
+
                 data.Should().BeEquivalentTo(block.DataBytes);
 
                 var otherPeer = _dfsServiceOther.LocalPeer;
                 var ledger = _dfsService.BitSwapApi.GetBitSwapLedger(otherPeer, cts.Token);
-                
+
                 Assert.Equal(otherPeer, ledger.Peer);
                 Assert.NotEqual(0UL, ledger.BlocksExchanged);
                 Assert.NotEqual(0UL, ledger.DataReceived);
@@ -346,22 +349,22 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Fact]
         public async Task GetsBlock_OnConnect_BitSwap11()
         {
-            var originalProtocols = (_dfsService.BitSwapService).Protocols;
-            var otherOriginalProtocols = (_dfsServiceOther.BitSwapService).Protocols;
+            var originalProtocols = _dfsService.BitSwapService.Protocols;
+            var otherOriginalProtocols = _dfsServiceOther.BitSwapService.Protocols;
 
-            (_dfsService.BitSwapService).Protocols = new IBitswapProtocol[]
+            _dfsService.BitSwapService.Protocols = new IBitswapProtocol[]
             {
                 new Bitswap11
                 {
                     BitswapService = _dfsService.BitSwapService
                 }
             };
-            
+
             _dfsService.Options.Discovery.DisableMdns = true;
             _dfsService.Options.Discovery.BootstrapPeers = new MultiAddress[0];
             await _dfsService.StartAsync();
 
-            (_dfsServiceOther.BitSwapService).Protocols = new IBitswapProtocol[]
+            _dfsServiceOther.BitSwapService.Protocols = new IBitswapProtocol[]
             {
                 new Bitswap11
                 {
@@ -417,8 +420,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 _dfsService.Options.Discovery = new DiscoveryOptions();
                 _dfsServiceOther.Options.Discovery = new DiscoveryOptions();
 
-                (_dfsService.BitSwapService).Protocols = originalProtocols;
-                (_dfsServiceOther.BitSwapService).Protocols = otherOriginalProtocols;
+                _dfsService.BitSwapService.Protocols = originalProtocols;
+                _dfsServiceOther.BitSwapService.Protocols = otherOriginalProtocols;
             }
         }
 
@@ -432,7 +435,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             _dfsServiceOther.Options.Discovery.DisableMdns = true;
             _dfsServiceOther.Options.Discovery.BootstrapPeers = new MultiAddress[0];
             await _dfsServiceOther.StartAsync();
-            
+
             try
             {
                 var cts = new CancellationTokenSource(10000);
@@ -443,7 +446,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await _dfsService.SwarmApi.ConnectAsync(remote.Addresses.First(), cts.Token);
 
                 var block = await _dfsService.BlockApi.GetAsync(cid, cts.Token);
-                
+
                 Assert.Equal(cid, block.Id);
                 Assert.Equal(data, block.DataBytes);
             }
@@ -464,14 +467,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             try
             {
                 var data = Guid.NewGuid().ToByteArray();
-                var cid = await _dfsServiceOther.BlockApi.PutAsync(data, "raw"); // @TODO get this from a test prop so we can test against multiple hash algos
+                var cid = await _dfsServiceOther.BlockApi.PutAsync(data,
+                    "raw"); // @TODO get this from a test prop so we can test against multiple hash algos
 
                 var remote = _dfsServiceOther.LocalPeer;
                 await _dfsService.SwarmApi.ConnectAsync(remote.Addresses.First());
 
                 var cts = new CancellationTokenSource(3000);
                 var block = await _dfsService.BlockApi.GetAsync(cid, cts.Token);
-                
+
                 Assert.Equal(cid, block.Id);
                 Assert.Equal(data, block.DataBytes);
             }
@@ -487,7 +491,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block"));
             await _dfsService.StartAsync();
-            
+
             try
             {
                 var cts = new CancellationTokenSource(300);
@@ -508,7 +512,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task PeerLedger()
         {
             await _dfsService.StartAsync();
-         
+
             try
             {
                 var peer = _dfsServiceOther.LocalPeer;

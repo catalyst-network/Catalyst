@@ -27,7 +27,10 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Sync.Interfaces;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Sync.Modal;
 using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using Nito.Comparers;
@@ -44,10 +47,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly ReplaySubject<Cid> _deltaHashUpdatesSubject;
         private readonly SortedList<Timestamp, Cid> _hashesByTimeDescending;
         private readonly int _capacity;
+        private readonly IDeltaHeightWatcher _deltaHeightWatcher;
+        private readonly SyncState _syncState;
 
         public IObservable<Cid> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
 
         public DeltaHashProvider(IDeltaCache deltaCache,
+            //IDeltaHeightWatcher deltaHeightWatcher,
+            SyncState syncState,
             ILogger logger,
             int capacity = 10_000)
         {
@@ -63,6 +70,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
                 _deltaCache.GenesisHash);
+
+            //_deltaHeightWatcher = deltaHeightWatcher;
+            _syncState = syncState;
         }
 
         /// <inheritdoc />
@@ -87,6 +97,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             _logger.Debug("Successfully to updated latest hash from {previousHash} to {newHash}",
                 previousAddress, newAddress);
+
+
+            //if (!_syncState.IsSynchronized)
+            //{
+            //    _deltaHeightWatcher.LatestDeltaHash = newDelta.
+            //}
 
             lock (_hashesByTimeDescending)
             {

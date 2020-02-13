@@ -40,21 +40,18 @@ using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
-using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using Catalyst.Core.Modules.Rpc.Server;
-using Catalyst.Core.Modules.Sync;
 using Catalyst.Core.Modules.Web3;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
-using SharpRepository.Repository;
 using Xunit.Abstractions;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests

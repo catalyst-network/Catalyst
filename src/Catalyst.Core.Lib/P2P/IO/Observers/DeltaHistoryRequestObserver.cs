@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
@@ -48,8 +47,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
         public DeltaHistoryRequestObserver(IPeerSettings peerSettings,
             IDeltaIndexService deltaIndexService,
-            ILogger logger,
-            IMapperProvider mapperProvider)
+            IMapperProvider mapperProvider,
+            ILogger logger)
             : base(logger, peerSettings)
         {
             _deltaIndexService = deltaIndexService;
@@ -73,11 +72,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             Logger.Debug("PeerId: {0} requests: {1} deltas from height: {2}", senderPeerId, deltaHeightRequest.Range,
                 deltaHeightRequest.Height);
 
-            var rangeDao = _deltaIndexService.GetRange((int) deltaHeightRequest.Height, (int) deltaHeightRequest.Range).ToList();
+            var rangeDao = _deltaIndexService.GetRange((int) deltaHeightRequest.Height, (int) deltaHeightRequest.Range)
+               .ToList();
             var range = rangeDao.Select(x => x.ToProtoBuff<DeltaIndexDao, DeltaIndex>(_mapperProvider)).ToList();
 
             var response = new DeltaHistoryResponse();
-            response.Result.Add(range); 
+            response.DeltaIndex.Add(range);
             return response;
         }
     }

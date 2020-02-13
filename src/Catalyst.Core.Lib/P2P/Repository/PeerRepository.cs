@@ -28,6 +28,7 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Queries;
 using SharpRepository.Repository.Specifications;
 
 namespace Catalyst.Core.Lib.P2P.Repository
@@ -58,6 +59,11 @@ namespace Catalyst.Core.Lib.P2P.Repository
         {
             return _repository.FindAll(m =>
                 m.PeerId.Ip == ip && (publicKey.IsEmpty || m.PeerId.PublicKey == publicKey));
+        }
+
+        public IEnumerable<Peer> TakeHighestReputationPeers(int page, int count)
+        {
+            return _repository.GetAll(new PagingOptions<Peer, int>(page, count, x => x.Reputation, isDescending: true));
         }
 
         public void Add(Peer peer) { _repository.Add(peer); }

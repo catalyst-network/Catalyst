@@ -22,13 +22,13 @@
 #endregion
 
 using Catalyst.Protocol.Peer;
-using MultiFormats;
+using Lib.P2P;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IPeerQueryTipResponse
     {
         PeerId PeerId { get; }
-        MultiHash DeltaHash { get; }
+        Cid DeltaHash { get; }
     }
 }
