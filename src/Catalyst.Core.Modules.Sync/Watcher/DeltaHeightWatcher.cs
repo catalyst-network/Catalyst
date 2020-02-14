@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
@@ -31,12 +30,9 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Repository;
-using Catalyst.Core.Modules.Sync.Extensions;
 using Catalyst.Core.Modules.Sync.Manager;
-using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Modules.Sync.Watcher

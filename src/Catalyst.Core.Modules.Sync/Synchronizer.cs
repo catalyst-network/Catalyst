@@ -136,7 +136,6 @@ namespace Catalyst.Core.Modules.Sync
                 return;
             }
 
-            //_peerSyncManager.ScoredDeltaIndexRange.Subscribe(OnNextScoredDeltaIndexRange);
             _currentSyncIndex = CurrentHighestDeltaIndexStored;
 
             _peerSyncManager.Start();
