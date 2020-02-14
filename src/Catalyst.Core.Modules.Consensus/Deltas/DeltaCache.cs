@@ -63,7 +63,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             _dfsReader = dfsReader;
             _logger = logger;
-            _logger.Error("GENISIS HASH IS: " + GenesisHash);
+            _logger.Error("GENISIS HASH IS: " + GenesisHash + " _ "+ DateTime.MinValue.ToUniversalTime());
             _entryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(changeTokenProvider.GetChangeToken())
                .RegisterPostEvictionCallback(EvictionCallback);
