@@ -42,6 +42,7 @@ namespace Catalyst.Core.Modules.Sync
             builder.RegisterType<Messenger>().As<IMessenger>().SingleInstance();
             builder.RegisterType<PeerSyncManager>().As<IPeerSyncManager>().SingleInstance();
             builder.RegisterType<DeltaHeightWatcher>().As<IDeltaHeightWatcher>().SingleInstance();
+            //builder.RegisterInstance(new XmlRepository<DeltaIndexDao, string>(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir))).As<IRepository<DeltaIndexDao, string>>().SingleInstance();
             builder.RegisterType<InMemoryRepository<DeltaIndexDao>>().As<IRepository<DeltaIndexDao>>().SingleInstance();
             builder.RegisterType<DeltaIndexService>().As<IDeltaIndexService>().SingleInstance();
         }

@@ -42,6 +42,7 @@ using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
+using Lib.P2P;
 
 namespace Catalyst.Core.Modules.Sync
 {
@@ -181,6 +182,9 @@ namespace Catalyst.Core.Modules.Sync
             var deltaIndexRangeDao = deltaIndexRange.Select(x =>
                 x.ToDao<DeltaIndex, DeltaIndexDao>(_mapperProvider)).Where(x => x.Cid != _deltaCache.GenesisHash).ToList();
 
+            var cid2 = Cid.Decode(deltaIndexRangeDao[0].Cid);
+            var hash = cid2.Hash.ToBase32();
+
             DownloadDeltas(deltaIndexRangeDao);
             UpdateState(deltaIndexRangeDao);
             CheckSyncProgressAsync().ConfigureAwait(false).GetAwaiter().GetResult();
@@ -202,8 +206,6 @@ namespace Catalyst.Core.Modules.Sync
                 _userOutput.WriteLine("Sync is not currently running.");
                 return;
             }
-
-            _userOutput.WriteLine("Sync has been signaled to stop");
 
             _deltaHeightWatcher.Stop();
             _peerSyncManager.Stop();
