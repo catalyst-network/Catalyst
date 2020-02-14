@@ -83,6 +83,11 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private int GetPages()
         {
             var peerCount = _peerRepository.Count();
+            if (peerCount == 0)
+            {
+                return 1;
+            }
+
             var pages = (int) Math.Ceiling(peerCount / (decimal)_peersPerCycle);
             return pages;
         }
