@@ -57,13 +57,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
         {
-            var genesisDelta = new Delta { TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()) };
+            var genesisDelta = new Delta { TimeStamp = Timestamp.FromDateTime(new DateTime(2020, 1, 1, 0, 0, 0).ToUniversalTime()) };
 
             GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).ToCid();
 
             _dfsReader = dfsReader;
             _logger = logger;
-            _logger.Error("GENISIS HASH IS: " + GenesisHash + " _ "+ DateTime.MinValue.ToUniversalTime());
+            _logger.Error("GENISIS HASH IS: " + GenesisHash + " _ " + new DateTime(2020, 1, 1, 0, 0, 0).ToUniversalTime());
             _entryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(changeTokenProvider.GetChangeToken())
                .RegisterPostEvictionCallback(EvictionCallback);
