@@ -101,8 +101,10 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         public bool PeersAvailable()
         {
-            PeerCount = Math.Min(_peerRepository.GetActivePeers(PeerCount).Count(), 5);
-            return PeerCount > 0;
+            //PeerCount = Math.Min(_peerRepository.GetActivePeers(PeerCount).Count(), 5);
+            //return PeerCount > 0;
+            //PeerCount = Math.Min(_peerRepository.GetActivePeers(PeerCount).Count(), 5);
+            return _peerRepository.Count() > 0;
         }
 
         public bool ContainsPeerHistory() { return _peerRepository.GetAll().Any(); }
