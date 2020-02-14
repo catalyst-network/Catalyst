@@ -60,10 +60,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var genesisDelta = new Delta { TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()) };
 
             GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).ToCid();
-            _logger.Error("GENISIS HASH IS: " + GenesisHash);
 
             _dfsReader = dfsReader;
             _logger = logger;
+            _logger.Error("GENISIS HASH IS: " + GenesisHash);
             _entryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(changeTokenProvider.GetChangeToken())
                .RegisterPostEvictionCallback(EvictionCallback);
