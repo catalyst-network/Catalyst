@@ -129,8 +129,7 @@ namespace Catalyst.Core.Modules.Sync
 
             //await _deltaHeightWatcher.WaitForDeltaHeightAsync(cancellationToken);
             var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();
-            
-            if (highestDeltaIndex.Height <= CurrentHighestDeltaIndexStored)
+            if (highestDeltaIndex == null || highestDeltaIndex.Height <= CurrentHighestDeltaIndexStored)
             {
                 await Completed().ConfigureAwait(false);
                 return;
