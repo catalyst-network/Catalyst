@@ -29,6 +29,7 @@ namespace Catalyst.Abstractions.Sync.Interfaces
 {
     public interface IDeltaHeightWatcher : IDisposable
     {
+        public IDeltaHeightRanker DeltaHeightRanker { get; }
         DeltaIndex LatestDeltaHash { get; }
         Task<DeltaIndex> GetHighestDeltaIndexAsync();
         void Start();

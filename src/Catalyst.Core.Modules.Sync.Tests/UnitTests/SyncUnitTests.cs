@@ -70,6 +70,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
     public class SyncUnitTests
     {
+        private IMessenger _messenger;
         private readonly TestScheduler _testScheduler;
         private readonly IHashProvider _hashProvider;
         private readonly IPeerSettings _peerSettings;
@@ -103,6 +104,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
         public SyncUnitTests()
         {
+            _messenger = Substitute.For<IMessenger>();
             _manualResetEventSlim = new ManualResetEventSlim(false);
 
             _testScheduler = new TestScheduler();
@@ -180,10 +182,10 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _userOutput = Substitute.For<IUserOutput>();
 
-            _peerSyncManager = new PeerSyncManager(_peerSettings, _peerClient, _peerRepository,
-                _peerService, _userOutput, _deltaIndexService);
+            _peerSyncManager = new PeerSyncManager(Substitute.For<IMessenger>(), _peerRepository,
+                _peerService, _userOutput, _deltaIndexService, Substitute.For<IDeltaHeightWatcher>());
             _deltaHeightWatcher =
-                new DeltaHeightWatcher(_peerSyncManager, _peerRepository, _peerService);
+                new DeltaHeightWatcher(_messenger, _peerRepository, _peerService);
         }
 
         private DeltaHistoryResponse GenerateSampleData(int height, int range, int maxHeight = -1)

@@ -27,7 +27,6 @@ using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Sync.Manager;
-using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Core.Modules.Sync.Watcher;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
@@ -40,6 +39,7 @@ namespace Catalyst.Core.Modules.Sync
         {
             builder.RegisterType<Synchronizer>().As<ISynchronizer>().SingleInstance();
             builder.RegisterType<SyncState>().SingleInstance();
+            builder.RegisterType<Messenger>().As<IMessenger>().SingleInstance();
             builder.RegisterType<PeerSyncManager>().As<IPeerSyncManager>().SingleInstance();
             builder.RegisterType<DeltaHeightWatcher>().As<IDeltaHeightWatcher>().SingleInstance();
             builder.RegisterType<InMemoryRepository<DeltaIndexDao>>().As<IRepository<DeltaIndexDao>>().SingleInstance();

@@ -129,18 +129,19 @@ namespace Catalyst.Core.Modules.Sync
 
             //await _deltaHeightWatcher.WaitForDeltaHeightAsync(cancellationToken);
             var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();
+            
             if (highestDeltaIndex.Height <= CurrentHighestDeltaIndexStored)
             {
                 await Completed().ConfigureAwait(false);
                 return;
             }
 
-            _peerSyncManager.ScoredDeltaIndexRange.Subscribe(OnNextScoredDeltaIndexRange);
+            //_peerSyncManager.ScoredDeltaIndexRange.Subscribe(OnNextScoredDeltaIndexRange);
             _currentSyncIndex = CurrentHighestDeltaIndexStored;
 
             _peerSyncManager.Start();
 
-            //_syncDeltaIndexTask = Task.Factory.StartNew(SyncDeltaIndexes, TaskCreationOptions.LongRunning, cancellationToken);
+            _syncDeltaIndexTask = Task.Factory.StartNew(SyncDeltaIndexes, TaskCreationOptions.LongRunning, cancellationToken);
 
             Progress(_currentSyncIndex, _rangeSize);
         }
@@ -148,31 +149,36 @@ namespace Catalyst.Core.Modules.Sync
         private int _currentSyncIndex;
         private uint _previousDeltaWatcherHeight;
 
-        //private async Task SyncDeltaIndexes(object state)
-        //{
-        //    while (SyncState.IsRunning)
-        //    {
-        //        var height = (int)(await _deltaHeightWatcher.GetHighestDeltaIndexAsync()).Height;
-        //        if (_peerSyncManager.IsPoolAvailable() && height > 0)
-        //        {
-        //            var range = _rangeSize;
-        //            if (_currentSyncIndex + _rangeSize > height)
-        //            {
-        //                range = height - _currentSyncIndex;
-        //            }
+        private async Task SyncDeltaIndexes(object state)
+        {
+            while (!SyncState.IsSynchronized)
+            {
+                ProcessDeltaIndexRange(_peerSyncManager.DeltaHistoryOutputQueue.Take());
+            }
 
-        //            if (height > _currentSyncIndex)
-        //            {
-        //                await ProgressAsync(_currentSyncIndex, range).ConfigureAwait(false);
-        //                _currentSyncIndex += _rangeSize;
-        //            }
-        //        }
+            //while (SyncState.IsRunning)
+            //{
+            //    var height = (int)(await _deltaHeightWatcher.GetHighestDeltaIndexAsync()).Height;
+            //    if (_peerSyncManager.IsPoolAvailable() && height > 0)
+            //    {
+            //        var range = _rangeSize;
+            //        if (_currentSyncIndex + _rangeSize > height)
+            //        {
+            //            range = height - _currentSyncIndex;
+            //        }
 
-        //        await Task.Delay(100).ConfigureAwait(false);
-        //    }
-        //}
+            //        if (height > _currentSyncIndex)
+            //        {
+            //            await ProgressAsync(_currentSyncIndex, range).ConfigureAwait(false);
+            //            _currentSyncIndex += _rangeSize;
+            //        }
+            //    }
 
-        private void OnNextScoredDeltaIndexRange(IEnumerable<DeltaIndex> deltaIndexRange)
+            //    await Task.Delay(100).ConfigureAwait(false);
+            //}
+        }
+
+        private void ProcessDeltaIndexRange(IEnumerable<DeltaIndex> deltaIndexRange)
         {
             var deltaIndexRangeDao = deltaIndexRange.Select(x =>
                 x.ToDao<DeltaIndex, DeltaIndexDao>(_mapperProvider)).Where(x => x.Cid != _deltaCache.GenesisHash).ToList();

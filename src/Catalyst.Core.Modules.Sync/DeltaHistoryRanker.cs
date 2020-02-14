@@ -1,4 +1,5 @@
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.IPPN;
 using Google.Protobuf.Collections;
 using System.Linq;
 using System.Threading;
@@ -10,9 +11,12 @@ namespace Catalyst.Core.Modules.Sync
         private int _totalScore;
         public int TotalScore => _totalScore;
 
-        public DeltaHistoryRanker()
+        public int Height { set; get; }
+        public DeltaHistoryRequest DeltaHistoryRequest { private set; get; }
+
+        public DeltaHistoryRanker(DeltaHistoryRequest deltaHistoryRequest)
         {
-            _totalScore = 0;
+            DeltaHistoryRequest = deltaHistoryRequest;
         }
 
         public void Add(RepeatedField<DeltaIndex> key)
@@ -30,6 +34,10 @@ namespace Catalyst.Core.Modules.Sync
 
         public int GetHighestScore()
         {
+            if (_messages.Count == 0)
+            {
+                return 0;
+            }
             return _messages.Values.Max(x => x);
         }
 

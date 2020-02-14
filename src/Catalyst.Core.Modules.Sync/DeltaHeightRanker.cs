@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Deltas;
@@ -35,8 +36,7 @@ using System.Reactive.Subjects;
 
 namespace Catalyst.Core.Modules.Sync
 {
-    public delegate void FoundSyncDeltaHeight(IOrderedEnumerable<RankedItem<LatestDeltaHashResponse>> rankedItems);
-    public class DeltaHeightRanker : PeerMessageRankManager<PeerId, LatestDeltaHashResponse>, IDisposable
+    public class DeltaHeightRanker : PeerMessageRankManager<PeerId, LatestDeltaHashResponse>, IDeltaHeightRanker
     {
         private bool _disposed;
         private readonly double _threshold;
@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Sync
             }
         }
 
-        private void ClearPeersOutOfRange(IOrderedEnumerable<RankedItem<LatestDeltaHashResponse>> mostPopularMessages)
+        private void ClearPeersOutOfRange(IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> mostPopularMessages)
         {
             while (_maxPeersInStore < _messages.Count())
             {
@@ -86,7 +86,7 @@ namespace Catalyst.Core.Modules.Sync
             return _messages.Count();
         }
 
-        public IOrderedEnumerable<RankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular(Func<KeyValuePair<PeerId, LatestDeltaHashResponse>, bool> filter = null)
+        public IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular(Func<KeyValuePair<PeerId, LatestDeltaHashResponse>, bool> filter = null)
         {
             return _messages.GroupBy(x => x.Value).Select(x => new RankedItem<LatestDeltaHashResponse> { Item = x.Key, Score = x.Count() }).OrderByDescending(x => x.Score).ThenByDescending(x => x.Item.DeltaIndex.Height);
         }

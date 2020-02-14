@@ -32,6 +32,8 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.Core.Modules.Sync.Extensions;
+using Catalyst.Core.Modules.Sync.Manager;
 using Catalyst.Core.Modules.Sync.Watcher;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
@@ -54,8 +56,8 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
     public class DeltaHeightWatcherUnitTests
     {
+        private IMessenger _messenger;
         private IHashProvider _hashProvider;
-        private IPeerSyncManager _peerSyncManager;
         private IPeerService _peerService;
         private IPeerRepository _peerRepository;
         private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
@@ -63,8 +65,8 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         public DeltaHeightWatcherUnitTests()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-            _peerSyncManager = Substitute.For<IPeerSyncManager>();
             _peerService = Substitute.For<IPeerService>();
+            _messenger = Substitute.For<IMessenger>();
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             _deltaHeightReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
             _peerService.MessageStream.Returns(_deltaHeightReplaySubject.AsObservable());
@@ -88,7 +90,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var deltaHeight = 100u;
             GeneratePeers(100);
 
-            _peerSyncManager.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+            _messenger.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
               {
                   var peerIds = (IEnumerable<PeerId>)x[1];
                   foreach (var peerId in peerIds)
@@ -104,7 +106,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                   }
               });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_peerSyncManager, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_messenger, _peerRepository, _peerService);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
@@ -118,7 +120,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var deltaHeight = 100u;
             GeneratePeers(100);
 
-            _peerSyncManager.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+            _messenger.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
             {
                 var peerIds = (IEnumerable<PeerId>)x[1];
                 foreach (var peerId in peerIds)
@@ -150,7 +152,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 }
             });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_peerSyncManager, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_messenger, _peerRepository, _peerService);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
@@ -163,7 +165,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         {
             GeneratePeers(100);
 
-            _peerSyncManager.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+            _messenger.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
             {
                 var peerIds = (IEnumerable<PeerId>)x[1];
                 foreach (var peerId in peerIds)
@@ -180,7 +182,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 }
             });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_peerSyncManager, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_messenger, _peerRepository, _peerService);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
@@ -193,7 +195,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         {
             GeneratePeers(1);
 
-            _peerSyncManager.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+            _messenger.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
             {
                 var peerIds = (IEnumerable<PeerId>)x[1];
                 foreach (var peerId in peerIds)
@@ -210,12 +212,53 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 }
             });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_peerSyncManager, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_messenger, _peerRepository, _peerService);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
 
             deltaIndex.Height.Should().Be((uint)(_peerRepository.Count() - 1));
         }
+
+        //todo optimize test
+ //       [Fact]
+ //       public async Task GetHighestDeltaIndexAsync_DeltaIndex_Updates()
+ //       {
+ //           var deltaHeight = 100u;
+ //           GeneratePeers(1);
+
+ //           _peerSyncManager.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+ //           {
+ //               var peerIds = (IEnumerable<PeerId>)x[1];
+ //               foreach (var peerId in peerIds)
+ //               {
+ //                   var height = peerId.Port;
+ //                   var deltaHeightResponse = new LatestDeltaHashResponse
+ //                   {
+ //                       DeltaIndex = new DeltaIndex { Cid = _hashProvider.ComputeUtf8MultiHash(deltaHeight.ToString()).ToCid().ToArray().ToByteString(), Height = deltaHeight },
+ //                       IsSync = false
+ //                   };
+
+ //                   _deltaHeightReplaySubject.OnNext(new ObserverDto(Substitute.For<IChannelHandlerContext>(),
+ //deltaHeightResponse.ToProtocolMessage(peerId, CorrelationId.GenerateCorrelationId())));
+
+ //                   deltaHeight++;
+ //               }
+ //           });
+
+ //           var deltaHeightWatcher = new DeltaHeightWatcher(_peerSyncManager, _peerRepository, _peerService);
+ //           deltaHeightWatcher.Start();
+
+ //           var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
+ //           deltaIndex.Height.Should().Be(100u);
+
+ //           while (deltaIndex.Height == deltaHeight)
+ //           {
+ //               await Task.Delay(1000);
+ //               deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
+ //           }
+
+ //           deltaIndex.Height.Should().NotBe(100u);
+ //       }
     }
 }

@@ -38,11 +38,13 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Service;
+using Catalyst.Core.Modules.Sync.Extensions;
 using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Modules.Sync.Manager
 {
@@ -51,8 +53,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
         public int PeerCount { private set; get; } = 5;
 
         private bool _disposed;
-        private readonly IPeerSettings _peerSettings;
-        private readonly IPeerClient _peerClient;
+        private readonly IMessenger _messenger;
         private readonly IPeerRepository _peerRepository;
         private readonly IPeerService _peerService;
         private readonly IUserOutput _userOutput;
@@ -71,24 +72,26 @@ namespace Catalyst.Core.Modules.Sync.Manager
         public IDictionary<int, DeltaHistoryRanker> _deltaHistoryRankers;
 
         public BlockingCollection<DeltaHistoryRanker> DeltaHistoryInputQueue { private set; get; }
-        public BlockingCollection<DeltaHistoryRanker> DeltaHistoryOutputQueue { private set; get; }
+        public BlockingCollection<RepeatedField<DeltaIndex>> DeltaHistoryOutputQueue { private set; get; }
 
         //public bool IsPoolAvailable() { return MaxSyncPoolSize - _deltaIndexSyncPool.Count() > 0; }
 
-        public PeerSyncManager(IPeerSettings peerSettings,
-            IPeerClient peerClient,
+        private readonly IDeltaHeightWatcher _deltaHeightWatcher;
+
+        public PeerSyncManager(IMessenger messenger,
             IPeerRepository peerRepository,
             IPeerService peerService,
             IUserOutput userOutput,
             IDeltaIndexService deltaIndexService,
+            IDeltaHeightWatcher deltaHeightWatcher,
             IScheduler scheduler = null)
         {
-            _peerSettings = peerSettings;
-            _peerClient = peerClient;
+            _messenger = messenger;
             _peerRepository = peerRepository;
             _peerService = peerService;
             _userOutput = userOutput;
             _deltaIndexService = deltaIndexService;
+            _deltaHeightWatcher = deltaHeightWatcher;
 
             _deltaHistoryRankers = new ConcurrentDictionary<int, DeltaHistoryRanker>();
 
@@ -97,7 +100,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             ScoredDeltaIndexRange = _scoredDeltaIndexRangeSubject.AsObservable();
 
             DeltaHistoryInputQueue = new BlockingCollection<DeltaHistoryRanker>();
-            DeltaHistoryOutputQueue = new BlockingCollection<DeltaHistoryRanker>();
+            DeltaHistoryOutputQueue = new BlockingCollection<RepeatedField<DeltaIndex>>();
 
             //_deltaIndexSyncPool = new ConcurrentDictionary<int, DeltaIndexSyncItem>();
         }
@@ -129,25 +132,14 @@ namespace Catalyst.Core.Modules.Sync.Manager
             //    DeltaIndexRangeRanked = new List<DeltaIndexScore>()
             //};
 
-            _deltaHistoryRankers.Add(index, new DeltaHistoryRanker());
+            _deltaHistoryRankers.Add(index, new DeltaHistoryRanker(deltaHistoryRequest));
 
             //_deltaIndexSyncPool.TryAdd(index, deltaIndexRange);
 
-            SendMessageToRandomPeers(deltaHistoryRequest);
+            //_messenger.SendMessageToPeers(deltaHistoryRequest, _deltaHeightWatcher.DeltaHeightRanker.GetPeers());
         }
 
-        private void SendMessageToRandomPeers(IMessage message) => SendMessageToPeers(message, _peerRepository.GetActivePeers(PeerCount).Select(x=>x.PeerId));
-
-        public void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers)
-        {
-            var protocolMessage = message.ToProtocolMessage(_peerSettings.PeerId);
-            foreach (var peer in peers)
-            {
-                _peerClient.SendMessage(new MessageDto(
-                    protocolMessage,
-                    peer));
-            }
-        }
+        //private void SendMessageToRandomPeers(IMessage message) => _messenger.SendMessageToPeers(message);
 
         public void Start()
         {
@@ -164,8 +156,23 @@ namespace Catalyst.Core.Modules.Sync.Manager
         {
             while (true)
             {
-                var deltaHistoryRanker = DeltaHistoryInputQueue.Take();
-                
+                var peers = _deltaHeightWatcher.DeltaHeightRanker.GetPeers();
+                foreach (var key in _deltaHistoryRankers.Keys)
+                {
+                    var first = _deltaHistoryRankers.Keys.First() == key;
+                    var messageCount = Math.Min(peers.Count(), 50);
+                    var minimumThreshold = messageCount * 0.5;
+                    var deltaHistoryRanker = _deltaHistoryRankers[key];
+                    var score = deltaHistoryRanker.GetHighestScore();
+                    if (score > minimumThreshold && first)
+                    {
+                        DeltaHistoryOutputQueue.Add(deltaHistoryRanker.GetMostPopular());
+                        _deltaHistoryRankers.Remove(key);
+                    }
+                    _messenger.SendMessageToPeers(deltaHistoryRanker.DeltaHistoryRequest, peers);
+                }
+
+                await Task.Delay(1000);
             }
 
             //while (true)
@@ -220,7 +227,10 @@ namespace Catalyst.Core.Modules.Sync.Manager
             }
 
             var startHeight = (int)deltaHistoryResponse.DeltaIndex.First().Height;
-            _deltaHistoryRankers[startHeight].Add(deltaHistoryResponse.DeltaIndex);
+            if (_deltaHistoryRankers.ContainsKey(startHeight))
+            {
+                _deltaHistoryRankers[startHeight].Add(deltaHistoryResponse.DeltaIndex);
+            }
 
             //var startHeight = deltaHistoryResponse.DeltaIndex.First().Height;
             //var newDeltaIndexScores = new DeltaIndexScore { DeltaIndexes = deltaHistoryResponse.DeltaIndex, Score = 1 };

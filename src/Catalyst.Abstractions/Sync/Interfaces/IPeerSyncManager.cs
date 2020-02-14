@@ -22,19 +22,18 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.Peer;
-using Google.Protobuf;
 using Google.Protobuf.Collections;
 
 namespace Catalyst.Abstractions.Sync.Interfaces
 {
     public interface IPeerSyncManager : IDisposable
     {
+        BlockingCollection<RepeatedField<DeltaIndex>> DeltaHistoryOutputQueue { get; }
         int PeerCount { get; }
         int MaxSyncPoolSize { get; }
         IObservable<IEnumerable<DeltaIndex>> ScoredDeltaIndexRange { get; }
@@ -42,7 +41,7 @@ namespace Catalyst.Abstractions.Sync.Interfaces
         bool PeersAvailable();
         bool ContainsPeerHistory();
         void GetDeltaIndexRangeFromPeers(int index, int range);
-        void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers);
+        //void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers);
         Task WaitForPeersAsync(CancellationToken cancellationToken = default);
         void Start();
         void Stop();

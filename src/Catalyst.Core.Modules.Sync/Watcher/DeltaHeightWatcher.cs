@@ -31,6 +31,8 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Modules.Sync.Extensions;
+using Catalyst.Core.Modules.Sync.Manager;
 using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
@@ -43,11 +45,11 @@ namespace Catalyst.Core.Modules.Sync.Watcher
     {
         private bool _disposed;
         private readonly double _threshold;
-        private readonly DeltaHeightRanker _deltaHeightRanker;
-        private readonly IPeerSyncManager _peerSyncManager;
+        public IDeltaHeightRanker DeltaHeightRanker { private set; get; }
         private IDisposable _deltaHeightSubscription;
         private readonly IPeerRepository _peerRepository;
         private readonly IPeerService _peerService;
+        private readonly IMessenger _messenger;
 
         public DeltaIndex LatestDeltaHash { set; get; }
 
@@ -55,13 +57,13 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private ManualResetEventSlim _manualResetEventSlim;
         private readonly int _peersPerCycle = 50;
 
-        public DeltaHeightWatcher(IPeerSyncManager peerSyncManager,
+        public DeltaHeightWatcher(IMessenger messenger,
             IPeerRepository peerRepository,
             IPeerService peerService,
             double threshold = 0.5d)
         {
-            _deltaHeightRanker = new DeltaHeightRanker(peerRepository, 100, threshold);
-            _peerSyncManager = peerSyncManager;
+            _messenger = messenger;
+            DeltaHeightRanker = new DeltaHeightRanker(peerRepository, 100, threshold);
             _peerRepository = peerRepository;
             _peerService = peerService;
             _manualResetEventSlim = new ManualResetEventSlim(false);
@@ -95,10 +97,10 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             return GetMostPopularMessage()?.Item.DeltaIndex;
         }
 
-        private RankedItem<LatestDeltaHashResponse> GetMostPopularMessage()
+        private IRankedItem<LatestDeltaHashResponse> GetMostPopularMessage()
         {
             //Responses that have fully sync
-            var rankedResponses = _deltaHeightRanker.GetMessagesByMostPopular();
+            var rankedResponses = DeltaHeightRanker.GetMessagesByMostPopular();
             var highestRankedSyncResponse = rankedResponses.Where(x => x.Item.IsSync).FirstOrDefault();
             if (highestRankedSyncResponse != null)
             {
@@ -121,8 +123,8 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             var totalPages = GetPages();
             _page %= totalPages;
             _page++;
-            var peers = _deltaHeightRanker.GetPeers().Union(_peerRepository.TakeHighestReputationPeers(_page, _peersPerCycle).Select(x => x.PeerId));
-            _peerSyncManager.SendMessageToPeers(new LatestDeltaHashRequest(), peers);
+            var peers = DeltaHeightRanker.GetPeers().Union(_peerRepository.TakeHighestReputationPeers(_page, _peersPerCycle).Select(x => x.PeerId));
+            _messenger.SendMessageToPeers(new LatestDeltaHashRequest(), peers);
 
             if (_page == totalPages)
             {
@@ -132,7 +134,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
 
         private void DeltaHeightOnNext(ProtocolMessage protocolMessage)
         {
-            _deltaHeightRanker.Add(protocolMessage.PeerId, protocolMessage.FromProtocolMessage<LatestDeltaHashResponse>());
+            DeltaHeightRanker.Add(protocolMessage.PeerId, protocolMessage.FromProtocolMessage<LatestDeltaHashResponse>());
         }
 
         public void Start()
