@@ -182,8 +182,10 @@ namespace Catalyst.Core.Modules.Sync
             var deltaIndexRangeDao = deltaIndexRange.Select(x =>
                 x.ToDao<DeltaIndex, DeltaIndexDao>(_mapperProvider)).Where(x => x.Cid != _deltaCache.GenesisHash).ToList();
 
-            var cid2 = Cid.Decode(deltaIndexRangeDao[0].Cid);
-            var hash = cid2.Hash.ToBase32();
+            var hashes = deltaIndexRangeDao.Select(x => Cid.Decode(x.Cid).Hash.ToBase32());
+
+            //var cid2 = Cid.Decode(deltaIndexRangeDao[0].Cid);
+            //var hash = cid2.Hash.ToBase32();
 
             DownloadDeltas(deltaIndexRangeDao);
             UpdateState(deltaIndexRangeDao);
