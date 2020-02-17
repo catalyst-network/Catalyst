@@ -56,13 +56,15 @@ namespace Catalyst.Core.Modules.Sync
         private readonly IDeltaDfsReader _deltaDfsReader;
         private readonly IDeltaIndexService _deltaIndexService;
         private readonly IMapperProvider _mapperProvider;
-
+        private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IPeerSyncManager _peerSyncManager;
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
         private readonly IDfsService _dfsService;
         private readonly IHashProvider _hashProvider;
 
         private readonly IDeltaCache _deltaCache;
+
+        private Cid _previousHash;
 
         private Task _syncDeltaIndexTask;
 
@@ -76,6 +78,7 @@ namespace Catalyst.Core.Modules.Sync
             IDeltaCache deltaCache,
             IDeltaHeightWatcher deltaHeightWatcher,
             ILedger ledger,
+            IDeltaHashProvider deltaHashProvider,
             IDeltaDfsReader deltaDfsReader,
             IDeltaIndexService deltaIndexService,
             IDfsService dfsService,
@@ -96,11 +99,15 @@ namespace Catalyst.Core.Modules.Sync
             _mapperProvider = mapperProvider;
             _userOutput = userOutput;
 
+            _deltaHashProvider = deltaHashProvider;
+
             _dfsService = dfsService;
             _hashProvider = hashProvider;
 
             _syncCompletedReplaySubject = new ReplaySubject<int>(1, scheduler ?? Scheduler.Default);
             SyncCompleted = _syncCompletedReplaySubject.AsObservable();
+
+            _previousHash = deltaCache.GenesisHash;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken = default)
@@ -266,7 +273,10 @@ namespace Catalyst.Core.Modules.Sync
             while (highestDeltaIndex.Height > CurrentHighestDeltaIndexStored && highestDeltaIndex.Height < CurrentHighestDeltaIndexStored + _rangeSize)
             {
                 var cid = highestDeltaIndex.Cid.ToArray().ToCid();
-                _ledger.Update(cid);
+                //_ledger.Update(cid);
+
+                _deltaHashProvider.TryUpdateLatestHash(_previousHash, cid);
+                _previousHash = cid;
 
                 highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync().ConfigureAwait(false);
             }

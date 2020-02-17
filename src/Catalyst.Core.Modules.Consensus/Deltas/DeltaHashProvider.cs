@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Capacity = _capacity
             };
 
-            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
+            _hashesByTimeDescending.Add(Timestamp.FromDateTime(new DateTime(2020, 1, 1, 0, 0, 0).ToUniversalTime()),
                 _deltaCache.GenesisHash);
 
             //_deltaHeightWatcher = deltaHeightWatcher;
