@@ -29,6 +29,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Serilog;
+using Catalyst.Core.Lib.Service;
 
 namespace Catalyst.Core.Modules.Consensus
 {
@@ -106,7 +107,7 @@ namespace Catalyst.Core.Modules.Consensus
                .Where(d => d != null)
                .Subscribe(async d =>
                 {
-                    _logger.Information("New Delta following {deltaHash} published", 
+                    _logger.Information("New Delta following {deltaHash} published",
                         d.PreviousDeltaDfsHash);
 
                     var newHashCid = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
@@ -116,7 +117,7 @@ namespace Catalyst.Core.Modules.Consensus
                     _deltaHashProvider.TryUpdateLatestHash(previousHashCid, newHashCid);
                 });
         }
-        
+
         public void Dispose()
         {
             _constructionProducingSubscription?.Dispose();

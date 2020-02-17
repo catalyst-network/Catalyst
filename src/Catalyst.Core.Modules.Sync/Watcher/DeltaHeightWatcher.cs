@@ -95,7 +95,8 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public async Task<DeltaIndex> GetHighestDeltaIndexAsync()
         {
             _manualResetEventSlim.Wait();
-            return GetMostPopularMessage()?.Item.DeltaIndex;
+            var highestDeltaIndex = GetMostPopularMessage()?.Item.DeltaIndex;
+            return highestDeltaIndex;
         }
 
         private IRankedItem<LatestDeltaHashResponse> GetMostPopularMessage()
