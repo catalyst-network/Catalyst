@@ -254,7 +254,12 @@ namespace Catalyst.Core.Modules.Sync
             });
         }
 
-        private void UpdateState(List<DeltaIndexDao> deltaIndexes) => deltaIndexes.ForEach(x => _ledger.Update(x.Cid));
+        private void UpdateState(List<DeltaIndexDao> deltaIndexes) => deltaIndexes.ForEach(x =>
+        {
+            _deltaHashProvider.TryUpdateLatestHash(_previousHash, x.Cid);
+            _previousHash = x.Cid;
+            //_ledger.Update(x.Cid);
+        });
 
         private async Task CheckSyncProgressAsync()
         {
