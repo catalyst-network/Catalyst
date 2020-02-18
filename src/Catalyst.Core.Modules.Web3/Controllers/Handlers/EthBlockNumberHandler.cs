@@ -30,8 +30,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override long Handle(IWeb3EthApi api)
         {
-            // return api.DeltaResolver.Latest.Number;
-            return 1;
+            return api.DeltaResolver.LatestDeltaNumber;
         }
     }
 }

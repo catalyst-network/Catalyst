@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Consensus</RootNamespace>
@@ -16,6 +16,7 @@
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Kvm\Catalyst.Core.Modules.Kvm.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.8.1" />

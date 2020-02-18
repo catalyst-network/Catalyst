@@ -30,6 +30,6 @@ namespace Catalyst.Abstractions.Kvm
     {
         void Execute(Delta delta, ITxTracer txTracer);
 
-        void CallAndRestore(Delta delta, ITxTracer txTracer);
+        void CallAndReset(Delta delta, ITxTracer txTracer);
     }
 }

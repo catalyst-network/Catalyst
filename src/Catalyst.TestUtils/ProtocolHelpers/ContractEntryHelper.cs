@@ -46,7 +46,6 @@ namespace Catalyst.TestUtils.ProtocolHelpers
             {
                 Data = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                 Amount = amount.ToByteString(),
-                TransactionFees = fees.ToByteString(),
                 ReceiverAddress = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                 SenderAddress = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
             };

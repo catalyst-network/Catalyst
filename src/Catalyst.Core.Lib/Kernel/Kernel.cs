@@ -38,6 +38,7 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Network;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Filters;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 
@@ -81,6 +82,7 @@ namespace Catalyst.Core.Lib.Kernel
             Logger = new LoggerConfiguration()
                .WriteTo.Console()
                .WriteTo.File(Path.Combine(Path.GetTempPath(), fileName), rollingInterval: RollingInterval.Day)
+               .Filter.ByExcluding(Matching.FromSource("Microsoft"))
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -114,6 +116,8 @@ namespace Catalyst.Core.Lib.Kernel
                .File(Path.Combine(_targetConfigFolder, _fileName),
                     rollingInterval: RollingInterval.Day,
                     outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
+               .Filter.ByExcluding(Matching.FromSource("Microsoft"))
+               .Filter.ByExcluding(Matching.FromSource("LibP2P"))
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
             ContainerBuilder.RegisterLogger(Logger);

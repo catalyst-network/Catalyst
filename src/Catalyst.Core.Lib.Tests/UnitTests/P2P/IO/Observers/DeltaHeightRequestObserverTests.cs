@@ -81,11 +81,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var hash = MultiHash.ComputeHash(new byte[32]);
             var cid = new Cid {Hash = hash};
-
+            
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(new LatestDeltaHashResponse
                 {
-                    Result = new DeltaIndex {Cid = cid.ToArray().ToByteString(), Height = 0}
+                    // TODO: ???
+                    // Result = new DeltaIndex {Cid = cid.ToArray().ToByteString(), Height = 0}
                 }.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()))
                .ConfigureAwait(false);
 

@@ -25,7 +25,7 @@ using System;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    public class EthWeb3RequestHandlerAttribute : Attribute
+    internal sealed class EthWeb3RequestHandlerAttribute : Attribute
     {
         private readonly string _module;
         private readonly string _method;

@@ -34,6 +34,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
@@ -43,6 +44,9 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Modules.Dfs;
+using Catalyst.Core.Modules.Hashing;
+using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using Catalyst.Core.Modules.Rpc.Server;
@@ -68,6 +72,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private readonly IRpcServerSettings _rpcSettings;
         private readonly ILifetimeScope _scope;
         private readonly ContainerProvider _containerProvider;
+        private readonly IDeltaByNumberRepository _deltaByNumber;
 
         public PoaTestNode(string name,
             IPrivateKey privateKey,
@@ -94,6 +99,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                 PeerId = p
             }).ToList();
             _peerRepository.Add(peersInRepo);
+
+            _deltaByNumber = new DeltaByNumberRepository(new InMemoryRepository<DeltaByNumber, string>());
 
             _containerProvider = new ContainerProvider(new[]
                 {
@@ -140,6 +147,14 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
         protected void OverrideContainerBuilderRegistrations()
         {
+            var builder = _containerProvider.ContainerBuilder;
+
+            builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
+            builder.RegisterInstance(new InMemoryRepository<TransactionReceipts, string>())
+               .AsImplementedInterfaces();
+            builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())
+               .AsImplementedInterfaces();
+
             _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
             _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
             _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();

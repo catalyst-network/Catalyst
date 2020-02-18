@@ -22,63 +22,18 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
+using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Encoding;
-using Nethermind.Core.Extensions;
 using Nethermind.Core.Json;
 using Nethermind.Dirichlet.Numerics;
 using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {
+    [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore)]
     public class BlockForRpc
     {
-        private readonly BlockDecoder _blockDecoder = new BlockDecoder();
-
-        public BlockForRpc() { }
-        
-        public BlockForRpc(Block block, bool includeFullTransactionData)
-        {
-            var isAuRaBlock = block.Header.AuRaSignature != null;
-            Author = block.Author;
-            Difficulty = block.Difficulty;
-            ExtraData = block.ExtraData;
-            GasLimit = block.GasLimit;
-            GasUsed = block.GasUsed;
-            Hash = block.Hash;
-            LogsBloom = block.Bloom;
-            Miner = block.Beneficiary;
-            if (!isAuRaBlock)
-            {
-                MixHash = block.MixHash;
-                Nonce = ((BigInteger) block.Nonce).ToBigEndianByteArray().PadLeft(8);
-            }
-            else
-            {
-                Step = block.Header.AuRaStep;
-                Signature = block.Header.AuRaSignature;
-            }
-
-            Number = block.Number;
-            ParentHash = block.ParentHash;
-            ReceiptsRoot = block.ReceiptsRoot;
-            Sha3Uncles = block.OmmersHash;
-            Size = _blockDecoder.GetLength(block, RlpBehaviors.None);
-            StateRoot = block.StateRoot;
-
-            Timestamp = block.Timestamp;
-            TotalDifficulty = block.TotalDifficulty ?? 0;
-            Transactions = includeFullTransactionData
-                ? block.Transactions.Select((t, idx) => { return new TransactionForRpc(block.Hash, block.Number, idx, t); }).ToArray()
-                : (object[]) block.Transactions.Select(t => t.Hash).AsEnumerable();
-
-            TransactionsRoot = block.TransactionsRoot;
-            Uncles = block.Ommers.Select(o => o.Hash);
-        }
-
         [JsonConverter(typeof(AddressConverter))]
         public Address Author { get; set; }
         
@@ -93,9 +48,9 @@ namespace Catalyst.Abstractions.Kvm.Models
         
         [JsonConverter(typeof(LongConverter))]
         public long GasUsed { get; set; }
-        
-        [JsonConverter(typeof(KeccakConverter))]
-        public Keccak Hash { get; set; }
+
+        [JsonConverter(typeof(CidJsonConverter))]
+        public Cid Hash { get; set; }
         
         [JsonConverter(typeof(BloomConverter))]
         public Bloom LogsBloom { get; set; }
@@ -111,9 +66,9 @@ namespace Catalyst.Abstractions.Kvm.Models
         
         [JsonConverter(typeof(LongConverter))]
         public long Number { get; set; }
-        
-        [JsonConverter(typeof(KeccakConverter))]
-        public Keccak ParentHash { get; set; }
+
+        [JsonConverter(typeof(CidJsonConverter))]
+        public Cid ParentHash { get; set; }
         
         [JsonConverter(typeof(KeccakConverter))]
         public Keccak ReceiptsRoot { get; set; }
