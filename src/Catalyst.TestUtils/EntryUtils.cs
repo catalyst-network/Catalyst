@@ -24,10 +24,13 @@
 using System;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Nethermind.Core;
+using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 
@@ -35,17 +38,16 @@ namespace Catalyst.TestUtils
 {
     public static class EntryUtils
     {
-        public static PublicEntry PrepareContractEntry(IPublicKey recipient,
-            IPublicKey sender,
+        public static PublicEntry PrepareContractEntry(Address recipient,
+            Address sender,
             UInt256 amount,
             string dataHex = "0x",
             ulong nonce = 0)
         {
             return new PublicEntry
             {
-                ReceiverAddress = recipient == null ? ByteString.Empty : ByteString.CopyFrom(recipient.Bytes),
-                SenderAddress = ByteString.CopyFrom(sender.Bytes),
-                TransactionFees = ByteString.CopyFrom(1),
+                ReceiverAddress = ByteString.CopyFrom(recipient?.Bytes ?? Bytes.Empty),
+                SenderAddress = ByteString.CopyFrom(sender?.Bytes ?? Bytes.Empty),
                 Nonce = nonce,
                 Amount = amount.ToUint256ByteString(),
                 Data = ByteString.CopyFrom(Bytes.FromHexString(dataHex)),
@@ -64,9 +66,10 @@ namespace Catalyst.TestUtils
             return new Delta
             {
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
+                StateRoot = ByteString.CopyFrom(Keccak.EmptyTreeHash.Bytes),
                 PublicEntries =
                 {
-                    PrepareContractEntry(recipient, sender, amount, dataHex, nonce)
+                    PrepareContractEntry(recipient.ToKvmAddress(), sender.ToKvmAddress(), amount, dataHex, nonce)
                 }
             };
         }
@@ -75,6 +78,7 @@ namespace Catalyst.TestUtils
         {
             return new Delta
             {
+                StateRoot = ByteString.CopyFrom(Keccak.EmptyTreeHash.Bytes),
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 PublicEntries =
                 {
@@ -87,9 +91,8 @@ namespace Catalyst.TestUtils
         {
             return new PublicEntry
             {
-                ReceiverAddress = ByteString.CopyFrom(recipient.Bytes),
-                SenderAddress = ByteString.CopyFrom(sender.Bytes),
-                TransactionFees = ByteString.CopyFrom(1),
+                ReceiverAddress = recipient.ToKvmAddressByteString(),
+                SenderAddress = sender.ToKvmAddressByteString(),
                 Nonce = 0,
                 Amount = amount.ToUint256ByteString(),
                 GasLimit = 21000,

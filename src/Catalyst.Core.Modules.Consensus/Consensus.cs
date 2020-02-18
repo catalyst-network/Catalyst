@@ -75,6 +75,7 @@ namespace Catalyst.Core.Modules.Consensus
             _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name.Equals(PhaseName.Construction) && p.Status.Equals(PhaseStatus.Producing))
                .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
+               .Where(c => c != null)
                .Subscribe(c =>
                 {
                     _deltaVoter.OnNext(c);
@@ -107,6 +108,20 @@ namespace Catalyst.Core.Modules.Consensus
                .Where(d => d != null)
                .Subscribe(async d =>
                 {
+                    // here were some importnt changes for Web3 so need to have a look if I can delete the comments
+                    // <<<<<<< HEAD
+                    //                     var newCid = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
+                    //                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                    //                     _deltaCache.AddLocalDelta(newCid, d);
+                    //                     
+                    //                     var previousHash = d.PreviousDeltaDfsHash.ToByteArray().ToCid();
+                    //                     
+                    //                     _logger.Information("New Delta following {deltaHash} published with new cid {newCid}", 
+                    //                         d.PreviousDeltaDfsHash, newCid);
+                    //
+                    //                     _deltaHashProvider.TryUpdateLatestHash(previousHash, newCid);
+                    // =======
+
                     _logger.Information("New Delta following {deltaHash} published",
                         d.PreviousDeltaDfsHash);
 

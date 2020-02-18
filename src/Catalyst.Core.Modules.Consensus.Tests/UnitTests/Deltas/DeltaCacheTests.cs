@@ -34,7 +34,9 @@ using FluentAssertions;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using Nethermind.Store;
 using MultiFormats.Registry;
+using Nethermind.Core.Crypto;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -59,7 +61,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var tokenProvider = Substitute.For<IDeltaCacheChangeTokenProvider>();
             tokenProvider.GetChangeToken().Returns(Substitute.For<IChangeToken>());
 
-            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, _logger);
+            var storageProvider = Substitute.For<IStorageProvider>();
+            var stateProvider = Substitute.For<IStateProvider>();
+            stateProvider.StateRoot.Returns(Keccak.Zero);
+
+            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, storageProvider, stateProvider, new StateDb(), _logger);
         }
 
         [Fact]

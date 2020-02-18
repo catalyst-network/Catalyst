@@ -22,15 +22,14 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Types;
+using Catalyst.Protocol.Network;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("net", "version")]
     public class NetVersionHandler : EthWeb3RequestHandler<long>
     {
-        protected override long Handle(IWeb3EthApi api)
-        {
-            throw new System.NotImplementedException();
-        }
+        protected override long Handle(IWeb3EthApi api) { return (long) NetworkType.Devnet; }
     }
 }

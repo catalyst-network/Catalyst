@@ -21,16 +21,11 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Core;
 using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Types;
@@ -56,6 +51,12 @@ using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
 using Catalyst.Protocol.Network;
 using CommandLine;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.POA.CE
 {
@@ -97,7 +98,6 @@ namespace Catalyst.Node.POA.CE
         private static async Task CustomBootLogicAsync(Kernel kernel)
         {
             RegisterNodeDependencies(Kernel.ContainerBuilder);
-
             kernel.StartContainer();
             await kernel.Instance.Resolve<ICatalystNode>().RunAsync(new CancellationToken());
         }
@@ -174,6 +174,11 @@ namespace Catalyst.Node.POA.CE
 
         private static async Task<int> RunAsync(Options options)
         {
+            // uncomment to speed up node launching
+            // options.IpfsPassword = options.IpfsPassword ?? "ipfs";
+            // options.NodePassword = options.NodePassword ?? "node";
+            // options.SslCertPassword = options.SslCertPassword ?? "cert";
+
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 Process.GetCurrentProcess().Id.ToString());
 

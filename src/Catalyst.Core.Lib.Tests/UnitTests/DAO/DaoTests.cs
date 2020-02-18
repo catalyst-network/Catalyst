@@ -253,7 +253,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             {
                 Amount = 8855274.ToUint256ByteString(),
                 SenderAddress = pubKeyBytes.ToByteString(),
-                TransactionFees = UInt256.Zero.ToUint256ByteString(),
                 Signature = new Signature
                 {
                     RawBytes = new byte[] {0x0}.ToByteString(),
@@ -269,7 +268,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             transactionEntryDao.Amount.Should().Be(8855274.ToString());
 
             var reconverted = transactionEntryDao.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
-            reconverted.TransactionFees.ToUInt256().Should().Be(UInt256.Zero);
             reconverted.Should().Be(original);
         }
 

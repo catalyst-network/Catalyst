@@ -34,98 +34,99 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {
-    public class TransactionComparerByFeeTimestampAndHashTests
+    public class TransactionComparerByPriceTimestampAndHashTests
     {
         private readonly ITestOutputHelper _output;
         private readonly Random _random;
 
-        public TransactionComparerByFeeTimestampAndHashTests(ITestOutputHelper output)
+        public TransactionComparerByPriceTimestampAndHashTests(ITestOutputHelper output)
         {
             _output = output;
             _random = new Random();
         }
 
         [Fact]
-        public void Comparer_should_Order_By_Fees_First()
+        public void Comparer_should_Order_By_GasPrice_First()
         {
             var transactions = Enumerable.Range(0, 100)
                .Select(i => TransactionHelper.GetPublicTransaction(
                     transactionFees: (ulong) _random.Next(int.MaxValue),
+                    gasPrice: (ulong) _random.Next(int.MaxValue),
                     timestamp: _random.Next(int.MaxValue),
                     signature: _random.Next(int.MaxValue).ToString()).PublicEntry
                 ).ToList();
 
             var ordered = transactions
-               .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
+               .OrderByDescending(t => t, TransactionComparerByPriceTimestampAndHash.Default)
                .ToArray();
 
-            ordered.Select(o => o.TransactionFees.ToUInt256()).Should().BeInDescendingOrder(t => t);
+            ordered.Select(o => o.GasPrice.ToUInt256()).Should().BeInDescendingOrder(t => t);
             ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeAscendingInOrder();
             ordered.Should().NotBeInDescendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
 
         [Fact]
-        public void Comparer_should_Order_By_Fees_First_Then_By_TimeStamp()
+        public void Comparer_should_Order_By_GasPrice_First_Then_By_TimeStamp()
         {
             var transactions = Enumerable.Range(0, 100)
                .Select(i => TransactionHelper.GetPublicTransaction(
-                    transactionFees: (ulong) i % 3,
+                    gasPrice: (ulong) i % 3,
                     timestamp: _random.Next(int.MaxValue),
                     signature: _random.Next(int.MaxValue).ToString()).PublicEntry
                 ).ToList();
 
             var ordered = transactions
-               .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
+               .OrderByDescending(t => t, TransactionComparerByPriceTimestampAndHash.Default)
                .ToArray();
 
-            ordered.Select(o => o.TransactionFees.ToUInt256()).Should().BeInDescendingOrder(t => t);
+            ordered.Select(o => o.GasPrice.ToUInt256()).Should().BeInDescendingOrder(t => t);
             ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeDescendingInOrder();
 
             Enumerable.Range(0, 3).ToList().ForEach(i =>
-                ordered.Where(t => t.TransactionFees.ToUInt256() == (ulong) i)
+                ordered.Where(t => t.GasPrice.ToUInt256() == (ulong) i)
                    .Select(t => t.Timestamp.ToDateTime()).Should().BeInAscendingOrder());
 
             ordered.Should().NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
 
         [Fact]
-        public void Comparer_should_Order_By_Fees_First_Then_By_TimeStamp_Then_By_Signature()
+        public void Comparer_should_Order_By_GasPrice_First_Then_By_TimeStamp_Then_By_Signature()
         {
             var transactions = Enumerable.Range(0, 100)
                .Select(i => TransactionHelper.GetPublicTransaction(
-                    transactionFees: (ulong) i % 2,
+                    gasPrice: (ulong) i % 2,
                     timestamp: i % 3,
                     signature: _random.Next(int.MaxValue).ToString()).PublicEntry
                 ).ToList();
 
             var ordered = transactions
-               .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
+               .OrderByDescending(t => t, TransactionComparerByPriceTimestampAndHash.Default)
                .ToArray();
 
             ordered.Select(s =>
-                    s.TransactionFees + "|" + s.Timestamp + "|" +
+                    s.GasPrice + "|" + s.Timestamp + "|" +
                     s.Signature.RawBytes.ToBase64())
                .ToList().ForEach(x => _output.WriteLine(x));
 
-            ordered.Select(o => o.TransactionFees.ToUInt256()).Should().BeInDescendingOrder(t => t);
+            ordered.Select(o => o.GasPrice.ToUInt256()).Should().BeInDescendingOrder(t => t);
 
             Enumerable.Range(0, 2).ToList().ForEach(i =>
             {
                 ordered
-                   .Select(t => t.TransactionFees.ToUInt256() == (ulong) i ? t.Timestamp.Seconds : int.MaxValue)
+                   .Select(t => t.GasPrice.ToUInt256() == (ulong) i ? t.Timestamp.Seconds : int.MaxValue)
                    .ToArray()
                    .Where(z => z != int.MaxValue)
                    .Should().BeInAscendingOrder();
 
                 Enumerable.Range(0, 3).ToList().ForEach(j =>
-                    ordered.Where(t => t.TransactionFees.ToUInt256() == (ulong) i
+                    ordered.Where(t => t.GasPrice.ToUInt256() == (ulong) i
                          && t.Timestamp.ToDateTime() == DateTime.FromOADate(j)).ToArray()
                        .Select(t => t.Signature.ToByteArray())
                        .Should().BeInAscendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default));
             });
 
             ordered.Select(s =>
-                    s.TransactionFees.ToUInt256() + "|" + s.Timestamp + "|" +
+                    s.GasPrice.ToUInt256() + "|" + s.Timestamp + "|" +
                     s.Signature.RawBytes.ToBase64())
                .ToList().ForEach(x => _output.WriteLine(x));
 

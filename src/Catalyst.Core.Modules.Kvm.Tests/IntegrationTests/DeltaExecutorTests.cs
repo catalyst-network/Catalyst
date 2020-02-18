@@ -301,7 +301,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             var tracer = Substitute.For<ITxTracer>();
             tracer.IsTracingReceipt.Returns(true);
 
-            _executor.CallAndRestore(delta, tracer);
+            _executor.CallAndReset(delta, tracer);
 
             var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsSuccess(contractAddress, 53370, Arg.Any<byte[]>(), Arg.Any<LogEntry[]>());

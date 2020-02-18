@@ -52,7 +52,7 @@ namespace Catalyst.Benchmark.Catalyst.Abstractions
             _entry = new PublicEntry
             {
                 Amount = amount,
-                TransactionFees = amount,
+                GasPrice = amount,
                 ReceiverAddress = bytes,
                 SenderAddress = bytes
             };
