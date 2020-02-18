@@ -37,11 +37,11 @@ namespace Catalyst.Core.Modules.Ledger
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new InMemoryRepository<DeltaIndexDao, string>())
-               .As<IRepository<DeltaIndexDao, string>>()
-               .SingleInstance();
+            //builder.Register(c => new InMemoryRepository<DeltaIndexDao, string>())
+            //   .As<IRepository<DeltaIndexDao, string>>()
+            //   .SingleInstance();
 
-            builder.RegisterType<DeltaIndexService>().As<IDeltaIndexService>().SingleInstance();
+            //builder.RegisterType<DeltaIndexService>().As<IDeltaIndexService>().SingleInstance();
 
             builder.Register(c => new InMemoryRepository<Account, string>())
                .As<IRepository<Account, string>>()

@@ -21,6 +21,7 @@
     <PackageReference Include="Google.Protobuf" Version="3.9.1" />
     <PackageReference Include="Makaretu.Dns.Unicast" Version="0.11.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.0.0" />
+    <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.1.0-prerelease" />
     <PackageReference Include="SharpRepository.Repository" Version="2.1.1-prerelease" />
     <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
     <PackageReference Include="System.Reactive" Version="4.1.6" />

@@ -106,6 +106,8 @@ namespace Catalyst.Core.Modules.Ledger
             _blockHeight = _deltaIndexService.Height();
             if (_blockHeight != 0)
             {
+                LatestKnownDelta = _deltaIndexService.LatestDeltaIndex().Cid;
+                _blockHeight++;
                 return;
             }
 

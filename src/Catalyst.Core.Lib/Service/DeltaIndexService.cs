@@ -48,10 +48,6 @@ namespace Catalyst.Core.Lib.Service
         public void Add(DeltaIndexDao deltaIndex)
         {
             _repository.Add(deltaIndex);
-            if (_repository.Count() > 100)
-            {
-                var a = 0;
-            }
         }
 
         public IEnumerable<DeltaIndexDao> GetRange(int start, int count)

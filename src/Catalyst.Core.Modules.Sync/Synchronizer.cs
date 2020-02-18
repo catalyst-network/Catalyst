@@ -107,7 +107,8 @@ namespace Catalyst.Core.Modules.Sync
             _syncCompletedReplaySubject = new ReplaySubject<int>(1, scheduler ?? Scheduler.Default);
             SyncCompleted = _syncCompletedReplaySubject.AsObservable();
 
-            _previousHash = deltaCache.GenesisHash;
+            _previousHash = _deltaIndexService.LatestDeltaIndex().Cid;
+            //_previousHash = deltaCache.GenesisHash;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken = default)
@@ -187,15 +188,31 @@ namespace Catalyst.Core.Modules.Sync
         private void ProcessDeltaIndexRange(IEnumerable<DeltaIndex> deltaIndexRange)
         {
             var deltaIndexRangeDao = deltaIndexRange.Select(x =>
-                x.ToDao<DeltaIndex, DeltaIndexDao>(_mapperProvider)).Where(x => x.Cid != _deltaCache.GenesisHash).ToList();
+                x.ToDao<DeltaIndex, DeltaIndexDao>(_mapperProvider)).ToList();
 
-            var hashes = deltaIndexRangeDao.Select(x => Cid.Decode(x.Cid).Hash.ToBase32());
+            var firstDeltaIndex = deltaIndexRangeDao.FirstOrDefault();
+            if (firstDeltaIndex == null || firstDeltaIndex.Cid != _previousHash)
+            {
+                return;
+            }
+
+            deltaIndexRangeDao.Remove(firstDeltaIndex);
+
+            //.Where(x => x.Cid != _deltaCache.GenesisHash)
+
+            //var hashes = deltaIndexRangeDao.Select(x => Cid.Decode(x.Cid).Hash.ToBase32());
 
             //var cid2 = Cid.Decode(deltaIndexRangeDao[0].Cid);
             //var hash = cid2.Hash.ToBase32();
 
             DownloadDeltas(deltaIndexRangeDao);
             UpdateState(deltaIndexRangeDao);
+
+            //if (!CheckSyncProgressAsync().ConfigureAwait(false).GetAwaiter().GetResult())
+            //{
+            //    Progress(_deltaIndexService.Height(), _rangeSize);
+            //}
+
             CheckSyncProgressAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
             Progress(_deltaIndexService.Height(), _rangeSize);
@@ -256,20 +273,26 @@ namespace Catalyst.Core.Modules.Sync
 
         private void UpdateState(List<DeltaIndexDao> deltaIndexes) => deltaIndexes.ForEach(x =>
         {
-            _deltaHashProvider.TryUpdateLatestHash(_previousHash, x.Cid);
-            _previousHash = x.Cid;
+            if (_deltaHashProvider.TryUpdateLatestHash(_previousHash, x.Cid))
+            {
+                _previousHash = x.Cid;
+            }
             //_ledger.Update(x.Cid);
         });
 
-        private async Task CheckSyncProgressAsync()
+        private async Task<bool> CheckSyncProgressAsync()
         {
-            var highestDeltaIndex = await FinalizeSyncToEndAsync().ConfigureAwait(false);
+            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();
+                //await FinalizeSyncToEndAsync().ConfigureAwait(false);
             if (CurrentHighestDeltaIndexStored >= highestDeltaIndex.Height)
             {
+                _userOutput.WriteLine($"Sync Progress: {GetSyncProgressPercentage()}%");
                 await Completed().ConfigureAwait(false);
+                return true;
             }
 
             _userOutput.WriteLine($"Sync Progress: {GetSyncProgressPercentage()}%");
+            return false;
         }
 
         private async Task<DeltaIndex> FinalizeSyncToEndAsync()
