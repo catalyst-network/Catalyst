@@ -22,8 +22,11 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Deltas;
 using Nethermind.Core;
 using Nethermind.Dirichlet.Numerics;
+using Address = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
@@ -32,12 +35,9 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         protected override UInt256 Handle(Address address, IWeb3EthApi api)
         {
-            // change to appropriate hash
-            var _ = api.DeltaResolver.Latest;
-
-            // Keccak stateRoot = api.StateRootResolver.Resolve(delta.Hash); <-- we need a delta hash
-            // return api.StateReader.GetBalance(stateRoot, address);
-            return new UInt256(1000000);
+            Delta delta = api.GetLatestDeltaWithCid().Delta;
+            var stateRoot = delta.StateRoot.ToKeccak();
+            return api.StateReader.GetBalance(stateRoot, address);
         }
     }
 }

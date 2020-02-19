@@ -23,8 +23,8 @@
 
 using ProtoBuf;
 
-#pragma warning disable 0649 // disable warning about unassinged fields
-#pragma warning disable 0169// disable warning about unassinged fields
+#pragma warning disable 0649 // disable warning about unassigned fields
+#pragma warning disable 0169 // disable warning about unassigned fields
 
 namespace Catalyst.Core.Modules.Dfs.UnixFs
 {

@@ -55,9 +55,12 @@ using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Lib.Validators;
+using Catalyst.Protocol.Transaction;
 using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+
+// ReSharper disable WrongIndentSize
 
 namespace Catalyst.Core.Lib
 {
@@ -152,7 +155,8 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<UploadFileTransferFactory>().As<IUploadFileTransferFactory>().SingleInstance();
 
             // Transaction validators
-            builder.RegisterType<TransactionValidator>().As<ITransactionValidator>().SingleInstance();
+            // builder.RegisterType<TransactionValidator>().As<ITransactionValidator>().SingleInstance();
+            builder.RegisterType<AlwaysTrueTransactionValidator>().As<ITransactionValidator>().SingleInstance();
             builder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>().SingleInstance();
 
             // Register PRNG
@@ -163,6 +167,12 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<LookupClient>().As<ILookupClient>().UsingConstructor();
 
             base.Load(builder);
+        }
+
+        // TODO: rethink validation of transaction signature
+        class AlwaysTrueTransactionValidator : ITransactionValidator
+        {
+            public bool ValidateTransaction(PublicEntry transaction) => true;
         }
     }
 }

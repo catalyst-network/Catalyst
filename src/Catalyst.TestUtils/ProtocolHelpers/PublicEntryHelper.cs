@@ -45,7 +45,6 @@ namespace Catalyst.TestUtils.ProtocolHelpers
             return new PublicEntry
             {
                 Amount = amount.ToByteString(),
-                TransactionFees = fees.ToByteString(),
                 ReceiverAddress = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                 SenderAddress = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
             };

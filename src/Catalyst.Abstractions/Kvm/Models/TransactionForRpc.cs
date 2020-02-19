@@ -21,74 +21,60 @@
 
 #endregion
 
-using System.Numerics;
+using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Extensions;
+using Nethermind.Core.Json;
 using Nethermind.Dirichlet.Numerics;
+using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {
     public class TransactionForRpc
     {
-        public TransactionForRpc(Keccak blockHash, BigInteger? blockNumber, int? txIndex, Transaction transaction)
-        {
-            Hash = transaction.Hash;
-            Nonce = transaction.Nonce;
-            BlockHash = blockHash;
-            BlockNumber = blockNumber;
-            TransactionIndex = txIndex;
-            From = transaction.SenderAddress;
-            To = transaction.To;
-            Value = transaction.Value;
-            GasPrice = transaction.GasPrice;
-            Gas = transaction.GasLimit;
-            Input = Data = transaction.Data ?? transaction.Init;
-            R = transaction.Signature?.R;
-            S = transaction.Signature?.S;
-            V = (UInt256?) transaction.Signature?.V;
-        }
-
-        // ReSharper disable once UnusedMember.Global
-        public TransactionForRpc() { }
-
+        [JsonConverter(typeof(KeccakConverter))]
         public Keccak Hash { get; set; }
-        public BigInteger? Nonce { get; set; }
-        public Keccak BlockHash { get; set; }
-        public BigInteger? BlockNumber { get; set; }
-        public BigInteger? TransactionIndex { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
+        public UInt256? Nonce { get; set; }
+
+        [JsonConverter(typeof(CidJsonConverter))]
+        public Cid BlockHash { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
+        public UInt256? BlockNumber { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
+        public UInt256? TransactionIndex { get; set; }
+
+        [JsonConverter(typeof(AddressConverter))]
         public Address From { get; set; }
+
+        [JsonConverter(typeof(AddressConverter))]
         public Address To { get; set; }
-        public BigInteger? Value { get; set; }
-        public BigInteger? GasPrice { get; set; }
-        public BigInteger? Gas { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
+        public UInt256? Value { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
+        public UInt256? GasPrice { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
+        public UInt256? Gas { get; set; }
+
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Data { get; set; }
+
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Input { get; set; }
+
+        [JsonConverter(typeof(NullableUInt256Converter))]
         public UInt256? V { get; set; }
 
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] S { get; set; }
 
+        [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] R { get; set; }
-
-        public Transaction ToTransaction()
-        {
-            Transaction tx = new Transaction();
-            tx.GasLimit = (long) (Gas ?? 90000);
-            tx.GasPrice = (UInt256) (GasPrice ?? 20.GWei());
-            tx.Nonce = (ulong) (Nonce ?? 0); // here pick the last nonce?
-            tx.To = To;
-            tx.SenderAddress = From;
-            tx.Value = (UInt256) (Value ?? 0);
-            if (tx.To == null)
-            {
-                tx.Init = Data ?? Input;
-            }
-            else
-            {
-                tx.Data = Data ?? Input;
-            }
-
-            return tx;
-        }
     }
 }

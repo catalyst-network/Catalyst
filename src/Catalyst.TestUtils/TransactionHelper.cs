@@ -41,6 +41,7 @@ namespace Catalyst.TestUtils
             long timestamp = 12345,
             ulong transactionFees = 2,
             ulong nonce = 0,
+            ulong gasPrice = 1,
             NetworkType networkType = NetworkType.Devnet)
         {
             var transaction = new TransactionBroadcast
@@ -51,7 +52,7 @@ namespace Catalyst.TestUtils
                     Nonce = nonce,
                     ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
                     SenderAddress = senderPublicKey.ToUtf8ByteString(),
-                    TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
+                    GasPrice = ((UInt256) gasPrice).ToUint256ByteString(),
                     Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {
@@ -69,12 +70,10 @@ namespace Catalyst.TestUtils
             UInt256 amount,
             uint gasLimit,
             UInt256 gasPrice,
-            byte[] targetContract = null, // to be reviewed
-            string senderPublicKey = "sender",
-            string receiverPublicKey = "receiver",
+            string senderPublicKey = null,
+            string receiverPublicKey = null,
             string signature = "signature",
             long timestamp = 12345,
-            ulong transactionFees = 2,
             ulong nonce = 0,
             NetworkType networkType = NetworkType.Devnet)
         {
@@ -84,9 +83,8 @@ namespace Catalyst.TestUtils
                 {
                     Amount = amount.ToUint256ByteString(),
                     Nonce = nonce,
-                    ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
-                    SenderAddress = senderPublicKey.ToUtf8ByteString(),
-                    TransactionFees = ((UInt256) transactionFees).ToUint256ByteString(),
+                    ReceiverAddress = receiverPublicKey?.ToUtf8ByteString() ?? ByteString.CopyFrom(new byte[20]),
+                    SenderAddress = senderPublicKey?.ToUtf8ByteString() ?? ByteString.CopyFrom(new byte[20]),
                     Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {
@@ -97,7 +95,6 @@ namespace Catalyst.TestUtils
                     Data = data,
                     GasLimit = gasLimit,
                     GasPrice = gasPrice.ToUint256ByteString(),
-                    TargetContract = targetContract
                 }
             };
 

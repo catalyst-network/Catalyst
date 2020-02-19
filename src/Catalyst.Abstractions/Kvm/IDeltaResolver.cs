@@ -21,19 +21,16 @@
 
 #endregion
 
-using Catalyst.Protocol.Deltas;
-using Nethermind.Core.Crypto;
+using Lib.P2P;
 
 namespace Catalyst.Abstractions.Kvm
 {
     public interface IDeltaResolver
     {
-        Keccak Resolve(int deltaNumber);
+        bool TryResolve(long deltaNumber, out Cid deltaHash);
 
-        Delta Latest { get; }
+        long LatestDeltaNumber { get; }
 
-        Delta Earliest { get; }
-        
-        Delta Pending { get; }
+        Cid LatestDelta { get; }
     }
 }

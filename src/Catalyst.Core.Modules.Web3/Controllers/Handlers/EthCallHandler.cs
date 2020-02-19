@@ -21,16 +21,25 @@
 
 #endregion
 
-using Catalyst.Abstractions.Kvm;
-using Nethermind.Core.Crypto;
+using System;
+using Catalyst.Abstractions.Kvm.Models;
+using Catalyst.Abstractions.Ledger;
 
-namespace Catalyst.Core.Modules.Ledger
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
-    public class StateRootResolver : IStateRootResolver
+    [EthWeb3RequestHandler("eth", "call")]
+    public class EthCallHandler : EthWeb3RequestHandler<TransactionForRpc, BlockParameter, byte[]>
     {
-        public Keccak Resolve(Keccak deltaHash)
+        protected override byte[] Handle(TransactionForRpc transactionCall, BlockParameter block, IWeb3EthApi api)
         {
-            throw new System.NotImplementedException();
+            if (api.TryGetDeltaWithCid(block, out var deltaWithCid))
+            {
+                var callOutputTracer = api.CallAndRestore(transactionCall, deltaWithCid);
+
+                return callOutputTracer.ReturnValue;
+            }
+
+            throw new InvalidOperationException($"Delta not found: '{block}'");
         }
     }
 }

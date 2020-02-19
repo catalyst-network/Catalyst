@@ -29,9 +29,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     [EthWeb3RequestHandler("eth", "estimateGas")]
     public class EthEstimateGasHandler : EthWeb3RequestHandler<TransactionForRpc, long>
     {
-        protected override long Handle(TransactionForRpc param1, IWeb3EthApi api)
+        protected override long Handle(TransactionForRpc transactionCall, IWeb3EthApi api)
         {
-            throw new System.NotImplementedException();
+            var deltaWithCid = api.GetLatestDeltaWithCid();
+
+            var callOutputTracer = api.CallAndRestore(transactionCall, deltaWithCid);
+
+            return callOutputTracer.GasSpent;
         }
     }
 }

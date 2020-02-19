@@ -75,9 +75,11 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private readonly IDeltaExecutor _executor;
         private readonly IStateProvider _stateProvider;
         private readonly IStorageProvider _storageProvider;
+        private readonly IDeltaByNumberRepository _deltaByNumber;
         private readonly ICryptoContext _cryptoContext;
         private readonly SigningContext _signingContext;
         private readonly IDeltaIndexService _deltaIndexService;
+        private readonly ITransactionRepository _receipts;
 
         public LedgerTests()
         {
@@ -89,6 +91,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _logger = Substitute.For<ILogger>();
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
+            _receipts = Substitute.For<ITransactionRepository>();
+            _deltaByNumber = Substitute.For<IDeltaByNumberRepository>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis").ToCid();
             _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
@@ -108,7 +112,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         public void Save_Account_State_To_Ledger_Repository()
         {
             _ledger = new Ledger(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
-                _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _deltaIndexService, _mapperProvider, _logger);
+                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _deltaIndexService, _mapperProvider, _hashProvider, _logger);
+
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
@@ -132,7 +137,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 
             _ledger = new Ledger(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
-                _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _deltaIndexService, _mapperProvider, _logger);
+                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _deltaIndexService, _mapperProvider, _hashProvider, _logger);
 
             _testScheduler.Start();
 
@@ -185,7 +190,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 
             _ledger = new Ledger(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
-                _fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _deltaIndexService, _mapperProvider, _logger);
+                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _deltaIndexService, _mapperProvider, _hashProvider, _logger);
 
             _testScheduler.Start();
 

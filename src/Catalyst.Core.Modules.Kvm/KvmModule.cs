@@ -21,12 +21,16 @@
 
 #endregion
 
+using System;
 using Autofac;
+using Autofac.Builder;
+using Autofac.Core;
 using Catalyst.Abstractions.Kvm;
 using Nethermind.Core.Specs;
 using Nethermind.Evm;
 using Nethermind.Logging;
 using Nethermind.Store;
+using Module = Autofac.Module;
 
 namespace Catalyst.Core.Modules.Kvm
 {
@@ -34,19 +38,66 @@ namespace Catalyst.Core.Modules.Kvm
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<DeltaExecutor>().As<IDeltaExecutor>().SingleInstance();
-            builder.RegisterType<KatVirtualMachine>().As<IKvm>().SingleInstance();
             builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
 
-            builder.RegisterType<StateProvider>().As<IStateProvider>().SingleInstance();
-            builder.RegisterType<StorageProvider>().As<IStorageProvider>().SingleInstance();
-            builder.RegisterType<StateUpdateHashProvider>().As<IStateUpdateHashProvider>().SingleInstance();
+            builder.RegisterType<StateUpdateHashProvider>().As<IStateUpdateHashProvider>().SingleInstance(); 
+            
+            // builder.RegisterInstance(new OneLoggerLogManager(new SimpleConsoleLogger())).As<ILogManager>();
             builder.RegisterInstance(LimboLogs.Instance).As<ILogManager>();
 
-            builder.RegisterType<MemDb>().As<IDb>();               // code db
-            builder.RegisterType<StateDb>().As<ISnapshotableDb>(); // state db
-            builder.RegisterType<EthRpcService>().As<IEthRpcService>().SingleInstance();
+            builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();               // code db
+            builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance(); // state db
+
             builder.RegisterType<StateReader>().As<IStateReader>(); // state db
-        }  
+        }
+    }
+
+    public static class ExecutionRegistrations
+    {
+        /// <summary>
+        /// Registers a custom set of the following components: <see cref="IStateProvider"/>, <see cref="IStorageProvider"/>, <see cref="IKvm"/> and <see cref="IDeltaExecutor"/> for the given <paramref name="registration"/>.
+        /// </summary>
+        /// <param name="registration">The registration to be enhanced.</param>
+        /// <param name="builder">The container builder.</param>
+        /// <returns>The <paramref name="registration"/>.</returns>
+        public static IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> WithExecutionParameters<TLimit, TReflectionActivatorData, TStyle>(this IRegistrationBuilder<TLimit, TReflectionActivatorData, TStyle> registration, ContainerBuilder builder)
+            where TReflectionActivatorData : ReflectionActivatorData
+        {
+            var serviceName = Guid.NewGuid().ToString();
+
+            var stateProvider = new ByTypeNamedParameter<IStateProvider>(serviceName);
+            var storageProvider = new ByTypeNamedParameter<IStorageProvider>(serviceName);
+            var kvm = new ByTypeNamedParameter<IKvm>(serviceName); 
+            var executor = new ByTypeNamedParameter<IDeltaExecutor>(serviceName); 
+
+            builder.RegisterType<StateProvider>().Named<IStateProvider>(serviceName).SingleInstance();
+            builder.RegisterType<StorageProvider>().Named<IStorageProvider>(serviceName).SingleInstance()
+               .WithParameter(stateProvider);
+            builder.RegisterType<KatVirtualMachine>().Named<IKvm>(serviceName).SingleInstance()
+               .WithParameter(stateProvider)
+               .WithParameter(storageProvider);
+            builder.RegisterType<DeltaExecutor>().Named<IDeltaExecutor>(serviceName).SingleInstance()
+               .WithParameter(stateProvider)
+               .WithParameter(storageProvider)
+               .WithParameter(kvm);
+
+            // parameter registration
+            registration
+               .WithParameter(stateProvider)
+               .WithParameter(storageProvider)
+               .WithParameter(kvm)
+               .WithParameter(executor);
+
+            return registration;
+        }
+
+        /// <summary>
+        /// Resolves a parameter of specific type with its named service.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        sealed class ByTypeNamedParameter<T> : ResolvedParameter
+        {
+            public ByTypeNamedParameter(string name) : base((p, _) => p.ParameterType == typeof(T), (_, c) => c.ResolveNamed<T>(name)) { }
+        }
     }
 }

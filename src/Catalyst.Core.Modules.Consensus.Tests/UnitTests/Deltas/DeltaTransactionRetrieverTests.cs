@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Returns(_transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(mapperProvider)));
 
             _transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider,
-                TransactionComparerByFeeTimestampAndHash.Default);
+                TransactionComparerByPriceTimestampAndHash.Default);
         }
 
         [Fact]
@@ -118,9 +118,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 }
 
                 // just a sanity check to make sure that the order is not opposite of what was intended in
-                // TransactionComparerByFeeTimestampAndHash
-                retrievedTransactions[i - 1].TransactionFees.ToUInt256().Should()
-                   .BeGreaterOrEqualTo(retrievedTransactions[i].TransactionFees.ToUInt256());
+                // TransactionComparerByPriceTimestampAndHash
+                retrievedTransactions[i - 1].GasPrice.ToUInt256().Should()
+                   .BeGreaterOrEqualTo(retrievedTransactions[i].GasPrice.ToUInt256());
             }
         }
     }

@@ -43,6 +43,7 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Extensions.Logging;
+using Serilog.Filters;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
@@ -126,11 +127,16 @@ namespace Catalyst.TestUtils
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);
         }
 
-        private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile, bool logDotNettyTraffic = false)
+        private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile, bool logDotNettyTraffic = false, bool logAspTraffic = false)
         {
             var loggerConfiguration = new LoggerConfiguration()
                .ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose()
                .Enrich.WithThreadId();
+
+            if (!logAspTraffic)
+            {
+                loggerConfiguration = loggerConfiguration.Filter.ByExcluding(Matching.FromSource("Microsoft"));
+            }
 
             if (writeLogsToTestOutput)
             {
