@@ -76,11 +76,13 @@ namespace Catalyst.Modules.POA.P2P.Discovery
                         $"Heartbeat result: {result.ToString()} Peer: {peer.PeerId} Non-Responsive Counter: {counterValue}");
                     if (!result)
                     {
+                        // @TODO touch last seen on peer
                         _nonResponsivePeerMap[peer.DocumentId] += 1;
                         counterValue += 1;
 
                         if (counterValue >= _maxNonResponsiveCounter)
                         {
+                            // @TODO dont remove just dont touch peer
                             _peerRepository.Delete(peer.DocumentId);
                             _nonResponsivePeerMap.TryRemove(peer.DocumentId, out _);
                             _logger.Verbose(

@@ -28,6 +28,9 @@ namespace Catalyst.Core.Lib.P2P.Protocols
 {
     public sealed class PeerChallengeResponse : ProtocolResponseBase, IPeerChallengeResponse
     {
-        public PeerChallengeResponse(PeerId peerId) : base(peerId) { }
+        public PeerChallengeResponse(PeerId peerId) : base(peerId)
+        {
+            // @TODO touch last seen of peers
+        }
     }
 }
