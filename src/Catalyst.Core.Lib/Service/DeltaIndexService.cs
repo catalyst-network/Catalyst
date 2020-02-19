@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Core.Lib.DAO.Ledger;
+using Lib.P2P;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Queries;
 
@@ -37,12 +38,7 @@ namespace Catalyst.Core.Lib.Service
 
         public void Add(IEnumerable<DeltaIndexDao> deltaIndexes)
         {
-            var c = deltaIndexes.Count();
             _repository.Add(deltaIndexes);
-            if (_repository.Count() > 100)
-            {
-                var a = 0;
-            }
         }
 
         public void Add(DeltaIndexDao deltaIndex)
@@ -50,12 +46,12 @@ namespace Catalyst.Core.Lib.Service
             _repository.Add(deltaIndex);
         }
 
-        public IEnumerable<DeltaIndexDao> GetRange(int start, int count)
+        public IEnumerable<DeltaIndexDao> GetRange(long start, long count)
         {
             return _repository.FindAll(x => x.Height >= start && x.Height < start + count).OrderBy(x => x.Height);
         }
 
-        public int Height()
+        public long Height()
         {
             var deltaIndex = LatestDeltaIndex();
             if (deltaIndex == null)
@@ -65,9 +61,30 @@ namespace Catalyst.Core.Lib.Service
             return deltaIndex.Height;
         }
 
-        public DeltaIndexDao LatestDeltaIndex() {
-            var pagingOptions = new PagingOptions<DeltaIndexDao, int>(1, 2, x => x.Height, isDescending: true);
+        public DeltaIndexDao LatestDeltaIndex()
+        {
+            var pagingOptions = new PagingOptions<DeltaIndexDao, long>(1, 2, x => x.Height, isDescending: true);
             return _repository.GetAll(pagingOptions).FirstOrDefault();
+        }
+
+        public void Map(long deltaNumber, Cid deltaHash)
+        {
+            if (!_repository.TryGet(DeltaIndexDao.BuildDocumentId(deltaNumber), out _))
+            {
+                _repository.Add(new DeltaIndexDao { Height = deltaNumber, Cid = deltaHash });
+            }
+        }
+
+        public bool TryFind(long deltaNumber, out Cid deltaHash)
+        {
+            if (_repository.TryGet(DeltaIndexDao.BuildDocumentId(deltaNumber), out var delta))
+            {
+                deltaHash = delta.Cid;
+                return true;
+            }
+
+            deltaHash = default;
+            return false;
         }
     }
 }

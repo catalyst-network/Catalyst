@@ -39,6 +39,7 @@ using Nethermind.Dirichlet.Numerics;
 using Nethermind.Store;
 using MultiFormats;
 using Serilog;
+using Catalyst.Core.Lib.DAO.Ledger;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -48,6 +49,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private readonly IMemoryCache _memoryCache;
         private readonly IDeltaDfsReader _dfsReader;
+        private readonly IDeltaIndexService _deltaIndexService;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
         public Cid GenesisHash { get; set; }
@@ -63,9 +65,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IStorageProvider storageProvider,
             IStateProvider stateProvider,
             ISnapshotableDb stateDb,
+            IDeltaIndexService deltaIndexService,
             ILogger logger)
         {
-            //var genesisDelta = new Delta { TimeStamp = Timestamp.FromDateTime(new DateTime(2020, 1, 1, 0, 0, 0).ToUniversalTime()) };
+            _deltaIndexService = deltaIndexService;
 
             stateProvider.CreateAccount(TruffleTestAccount, 1_000_000_000.Kat());
 
@@ -87,7 +90,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             _dfsReader = dfsReader;
             _logger = logger;
-            _logger.Error("GENISIS HASH IS: " + GenesisHash + " _ " + new DateTime(2020, 1, 1, 0, 0, 0).ToUniversalTime());
             _entryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(changeTokenProvider.GetChangeToken())
                .RegisterPostEvictionCallback(EvictionCallback);

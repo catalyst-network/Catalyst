@@ -26,13 +26,32 @@ using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
+using Newtonsoft.Json;
+using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.DAO.Ledger
 {
-    public class DeltaIndexDao : DaoBase
+    public class DeltaIndexDao
     {
-        public int Height { set; get; }
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("id")]
+        public new string Id => BuildDocumentId(Height);
+        public long Height { set; get; }
         public string Cid { set; get; }
+
+        public static string BuildDocumentId(long number) => number.ToString("D");
+
+        public static TProto ToProtoBuff<TProto>(DeltaIndexDao dao, IMapperProvider mapperProvider)
+            where TProto : IMessage
+        {
+            return mapperProvider.Mapper.Map<TProto>(dao);
+        }
+
+        public static DeltaIndexDao ToDao<TProto>(DeltaIndex protoBuff, IMapperProvider mapperProvider)
+            where TProto : IMessage
+        {
+            return mapperProvider.Mapper.Map<DeltaIndexDao>(protoBuff);
+        }
     }
 
     public class DeltaIndexMapperInitialiser : IMapperInitializer
@@ -40,7 +59,6 @@ namespace Catalyst.Core.Lib.DAO.Ledger
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<DeltaIndex, DeltaIndexDao>()
-               .ForMember(a => a.Id, opt => opt.MapFrom(x => x.Height))
                .ForMember(a => a.Height, opt => opt.UseDestinationValue())
                .ForMember(a => a.Cid,
                     opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());

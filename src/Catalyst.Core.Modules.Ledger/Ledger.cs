@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly IStorageProvider _storageProvider;
         private readonly ISnapshotableDb _stateDb;
         private readonly IDb _codeDb;
-        private readonly IDeltaByNumberRepository _deltas;
+        //private readonly IDeltaByNumberRepository _deltas;
         private readonly ITransactionRepository _receipts;
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<PublicEntryDao> _mempool;
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Ledger
 
         private readonly IDeltaIndexService _deltaIndexService;
 
-        private int _blockHeight;
+        //private int _blockHeight;
 
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Modules.Ledger
 
             _stateDb = stateDb;
             _codeDb = codeDb;
-            _deltas = deltas;
+            //_deltas = deltas;
             _synchroniser = synchroniser;
             _mempool = mempool;
             _mapperProvider = mapperProvider;
@@ -119,15 +119,14 @@ namespace Catalyst.Core.Modules.Ledger
 
             _latestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
 
-            _blockHeight = _deltaIndexService.Height();
-            if (_blockHeight != 0)
-            {
-                _latestKnownDelta = _deltaIndexService.LatestDeltaIndex().Cid;
-                _blockHeight++;
-                return;
-            }
+            //var latestDeltaIndex = _deltaIndexService.LatestDeltaIndex();
+            //if (latestDeltaIndex != null)
+            //{
+            //    _latestKnownDelta = latestDeltaIndex.Cid;
+            //    _latestKnownDeltaNumber = latestDeltaIndex.Height;
+            //    return;
+            //}
 
-            UpdateLedgerFromDelta(LatestKnownDelta);
             WriteLatestKnownDelta(_synchroniser.DeltaCache.GenesisHash);
         }
 
@@ -245,7 +244,7 @@ namespace Catalyst.Core.Modules.Ledger
 
                 _latestKnownDelta = deltaHash;
 
-                _deltaIndexService.Add(new DeltaIndexDao { Cid = LatestKnownDelta, Height = _blockHeight++ });
+                //_deltaIndexService.Add(new DeltaIndexDao { Cid = LatestKnownDelta, Height = _blockHeight++ });
 
                 WriteLatestKnownDelta(deltaHash);
             }
@@ -260,7 +259,7 @@ namespace Catalyst.Core.Modules.Ledger
             _latestKnownDelta = deltaHash;
 
             Volatile.Write(ref _latestKnownDeltaNumber, _latestKnownDeltaNumber + 1);
-            _deltas.Map(_latestKnownDeltaNumber, deltaHash); // store delta numbers
+            _deltaIndexService.Map(_latestKnownDeltaNumber, deltaHash); // store delta numbers
         }
 
         private void Restore(int stateSnapshot, Keccak snapshotStateRoot)

@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Sync
     {
         public SyncState SyncState { get; }
         private bool _disposed;
-        private readonly int _rangeSize;
+        private readonly long _rangeSize;
         private readonly IUserOutput _userOutput;
         private readonly ILedger _ledger;
         private readonly IDeltaDfsReader _deltaDfsReader;
@@ -68,10 +68,10 @@ namespace Catalyst.Core.Modules.Sync
 
         private Task _syncDeltaIndexTask;
 
-        public int CurrentHighestDeltaIndexStored => _deltaIndexService.Height();
+        public long CurrentHighestDeltaIndexStored => _deltaIndexService.Height();
 
-        public IObservable<int> SyncCompleted { get; }
-        private readonly ReplaySubject<int> _syncCompletedReplaySubject;
+        public IObservable<long> SyncCompleted { get; }
+        private readonly ReplaySubject<long> _syncCompletedReplaySubject;
 
         public Synchronizer(SyncState syncState,
             IPeerSyncManager peerSyncManager,
@@ -85,7 +85,7 @@ namespace Catalyst.Core.Modules.Sync
             IHashProvider hashProvider,
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
-            int rangeSize = 20, //cannot go over 20 until udp network fragmentation is fixed
+            long rangeSize = 20, //cannot go over 20 until udp network fragmentation is fixed
             IScheduler scheduler = null)
         {
             SyncState = syncState;
@@ -104,10 +104,10 @@ namespace Catalyst.Core.Modules.Sync
             _dfsService = dfsService;
             _hashProvider = hashProvider;
 
-            _syncCompletedReplaySubject = new ReplaySubject<int>(1, scheduler ?? Scheduler.Default);
+            _syncCompletedReplaySubject = new ReplaySubject<long>(1, scheduler ?? Scheduler.Default);
             SyncCompleted = _syncCompletedReplaySubject.AsObservable();
 
-            _previousHash = _deltaIndexService.LatestDeltaIndex().Cid;
+            //_previousHash = _deltaIndexService.LatestDeltaIndex().Cid;
             //_previousHash = deltaCache.GenesisHash;
         }
 
@@ -153,8 +153,8 @@ namespace Catalyst.Core.Modules.Sync
             Progress(_currentSyncIndex, _rangeSize);
         }
 
-        private int _currentSyncIndex;
-        private uint _previousDeltaWatcherHeight;
+        private long _currentSyncIndex;
+        private long _previousDeltaWatcherHeight;
 
         private async Task SyncDeltaIndexes(object state)
         {
@@ -188,7 +188,7 @@ namespace Catalyst.Core.Modules.Sync
         private void ProcessDeltaIndexRange(IEnumerable<DeltaIndex> deltaIndexRange)
         {
             var deltaIndexRangeDao = deltaIndexRange.Select(x =>
-                x.ToDao<DeltaIndex, DeltaIndexDao>(_mapperProvider)).ToList();
+                DeltaIndexDao.ToDao<DeltaIndex>(x, _mapperProvider)).ToList();
 
             var firstDeltaIndex = deltaIndexRangeDao.FirstOrDefault();
             if (firstDeltaIndex == null || firstDeltaIndex.Cid != _previousHash)
@@ -241,7 +241,7 @@ namespace Catalyst.Core.Modules.Sync
             SyncState.IsRunning = false;
         }
 
-        private void Progress(int index, int range)
+        private void Progress(long index, long range)
         {
             if (!SyncState.IsSynchronized)
             {

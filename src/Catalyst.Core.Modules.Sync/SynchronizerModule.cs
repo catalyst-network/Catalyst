@@ -38,18 +38,13 @@ namespace Catalyst.Core.Modules.Sync
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //builder.RegisterInstance(new XmlRepository<DeltaIndexDao, string>(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir))).As<IRepository<DeltaIndexDao, string>>().SingleInstance();
-            //builder.RegisterType<InMemoryRepository<DeltaIndexDao>>().As<IRepository<DeltaIndexDao>>().SingleInstance();
-
-            //var m = (IRepository<DeltaIndexDao, string>) new MongoDbRepository<DeltaIndexDao, string>();
-            //m.Add(new DeltaIndexDao() { Height = 10 });
             builder.RegisterType<Synchronizer>().As<ISynchronizer>().SingleInstance();
             builder.RegisterType<SyncState>().SingleInstance();
             builder.RegisterType<Messenger>().As<IMessenger>().SingleInstance();
             builder.RegisterType<PeerSyncManager>().As<IPeerSyncManager>().SingleInstance();
             builder.RegisterType<DeltaHeightWatcher>().As<IDeltaHeightWatcher>().SingleInstance();
-            //builder.RegisterInstance(new XmlRepository<DeltaIndexDao, string>(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir))).As<IRepository<DeltaIndexDao, string>>().SingleInstance();
-            builder.RegisterInstance(new MongoDbRepository<DeltaIndexDao, string>()).As<IRepository<DeltaIndexDao, string>>().SingleInstance();
+            builder.RegisterType<InMemoryRepository<DeltaIndexDao>>().As<IRepository<DeltaIndexDao>>().SingleInstance();
+            //builder.RegisterInstance(new MongoDbRepository<DeltaIndexDao, string>()).As<IRepository<DeltaIndexDao, string>>().SingleInstance();
             builder.RegisterType<DeltaIndexService>().As<IDeltaIndexService>().SingleInstance();
         }
     }

@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             Logger.Debug("PeerId: {0} wants to know your current chain height", senderPeerId);
 
             var deltaIndexDao = _deltaIndexService.LatestDeltaIndex();
-            var deltaIndex = deltaIndexDao.ToProtoBuff<DeltaIndexDao, DeltaIndex>(_mapperProvider);
+            var deltaIndex = DeltaIndexDao.ToProtoBuff<DeltaIndex>(deltaIndexDao, _mapperProvider);
 
             return new LatestDeltaHashResponse
             {

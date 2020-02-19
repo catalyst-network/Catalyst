@@ -40,7 +40,7 @@ namespace Catalyst.Abstractions.Sync.Interfaces
         //bool IsPoolAvailable();
         bool PeersAvailable();
         bool ContainsPeerHistory();
-        void GetDeltaIndexRangeFromPeers(int index, int range);
+        void GetDeltaIndexRangeFromPeers(long index, long range);
         //void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers);
         Task WaitForPeersAsync(CancellationToken cancellationToken = default);
         void Start();

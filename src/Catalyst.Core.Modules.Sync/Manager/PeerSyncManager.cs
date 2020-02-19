@@ -67,7 +67,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         public int MaxSyncPoolSize { get; } = 1;
 
-        public IDictionary<int, DeltaHistoryRanker> _deltaHistoryRankers;
+        public IDictionary<long, DeltaHistoryRanker> _deltaHistoryRankers;
 
         public BlockingCollection<DeltaHistoryRanker> DeltaHistoryInputQueue { private set; get; }
         public BlockingCollection<RepeatedField<DeltaIndex>> DeltaHistoryOutputQueue { private set; get; }
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             _deltaIndexService = deltaIndexService;
             _deltaHeightWatcher = deltaHeightWatcher;
 
-            _deltaHistoryRankers = new ConcurrentDictionary<int, DeltaHistoryRanker>();
+            _deltaHistoryRankers = new ConcurrentDictionary<long, DeltaHistoryRanker>();
 
             _scoredDeltaIndexRangeSubject =
                 new ReplaySubject<IEnumerable<DeltaIndex>>(1, scheduler ?? Scheduler.Default);
@@ -117,7 +117,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             }
         }
 
-        public void GetDeltaIndexRangeFromPeers(int index, int range)
+        public void GetDeltaIndexRangeFromPeers(long index, long range)
         {
             var deltaHistoryRequest = new DeltaHistoryRequest
             { Height = (uint)index, Range = (uint)range };
