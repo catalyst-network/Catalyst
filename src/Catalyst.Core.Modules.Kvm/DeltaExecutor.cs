@@ -184,6 +184,7 @@ namespace Catalyst.Core.Modules.Kvm
             }
             else
             {
+
                 delta.StateRoot = _stateProvider.StateRoot.ToByteString(); 
                 if (_logger.IsEnabled(LogEventLevel.Debug)) _logger.Debug($"Setting candidate delta {delta.DeltaNumber} root to {delta.StateRoot.ToKeccak()}");
                 _stateProvider.Reset();

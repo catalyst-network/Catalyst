@@ -117,17 +117,16 @@ namespace Catalyst.Core.Modules.Ledger
 
             _deltaIndexService = deltaIndexService;
 
+            var latestDeltaIndex = _deltaIndexService.LatestDeltaIndex();
+            if (latestDeltaIndex != null)
+            {
+                _latestKnownDelta = latestDeltaIndex.Cid;
+                _latestKnownDeltaNumber = latestDeltaIndex.Height;
+                return;
+            }
+
             _latestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
-
-            //var latestDeltaIndex = _deltaIndexService.LatestDeltaIndex();
-            //if (latestDeltaIndex != null)
-            //{
-            //    _latestKnownDelta = latestDeltaIndex.Cid;
-            //    _latestKnownDeltaNumber = latestDeltaIndex.Height;
-            //    return;
-            //}
-
-            WriteLatestKnownDelta(_synchroniser.DeltaCache.GenesisHash);
+            WriteLatestKnownDelta(_latestKnownDelta);
         }
 
         private void FlushTransactionsFromDelta(Cid deltaHash)

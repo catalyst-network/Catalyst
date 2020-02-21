@@ -107,7 +107,7 @@ namespace Catalyst.Core.Modules.Sync
             _syncCompletedReplaySubject = new ReplaySubject<long>(1, scheduler ?? Scheduler.Default);
             SyncCompleted = _syncCompletedReplaySubject.AsObservable();
 
-            //_previousHash = _deltaIndexService.LatestDeltaIndex().Cid;
+            _previousHash = _deltaIndexService.LatestDeltaIndex().Cid;
             //_previousHash = deltaCache.GenesisHash;
         }
 
@@ -162,27 +162,6 @@ namespace Catalyst.Core.Modules.Sync
             {
                 ProcessDeltaIndexRange(_peerSyncManager.DeltaHistoryOutputQueue.Take());
             }
-
-            //while (SyncState.IsRunning)
-            //{
-            //    var height = (int)(await _deltaHeightWatcher.GetHighestDeltaIndexAsync()).Height;
-            //    if (_peerSyncManager.IsPoolAvailable() && height > 0)
-            //    {
-            //        var range = _rangeSize;
-            //        if (_currentSyncIndex + _rangeSize > height)
-            //        {
-            //            range = height - _currentSyncIndex;
-            //        }
-
-            //        if (height > _currentSyncIndex)
-            //        {
-            //            await ProgressAsync(_currentSyncIndex, range).ConfigureAwait(false);
-            //            _currentSyncIndex += _rangeSize;
-            //        }
-            //    }
-
-            //    await Task.Delay(100).ConfigureAwait(false);
-            //}
         }
 
         private void ProcessDeltaIndexRange(IEnumerable<DeltaIndex> deltaIndexRange)
@@ -199,11 +178,6 @@ namespace Catalyst.Core.Modules.Sync
             deltaIndexRangeDao.Remove(firstDeltaIndex);
 
             //.Where(x => x.Cid != _deltaCache.GenesisHash)
-
-            //var hashes = deltaIndexRangeDao.Select(x => Cid.Decode(x.Cid).Hash.ToBase32());
-
-            //var cid2 = Cid.Decode(deltaIndexRangeDao[0].Cid);
-            //var hash = cid2.Hash.ToBase32();
 
             DownloadDeltas(deltaIndexRangeDao);
             UpdateState(deltaIndexRangeDao);
@@ -277,7 +251,6 @@ namespace Catalyst.Core.Modules.Sync
             {
                 _previousHash = x.Cid;
             }
-            //_ledger.Update(x.Cid);
         });
 
         private async Task<bool> CheckSyncProgressAsync()
@@ -330,7 +303,7 @@ namespace Catalyst.Core.Modules.Sync
             {
                 if (disposing)
                 {
-                    _syncDeltaIndexTask?.Dispose();
+                    //_syncDeltaIndexTask?.Dispose();
                     _peerSyncManager.Dispose();
                     _deltaHeightWatcher.Dispose();
                 }

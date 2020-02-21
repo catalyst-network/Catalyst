@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public DeltaHeightWatcher(IMessenger messenger,
             IPeerRepository peerRepository,
             IPeerService peerService,
-            double threshold = 0.5d)
+            double threshold = 0.7d)
         {
             _messenger = messenger;
             DeltaHeightRanker = new DeltaHeightRanker(peerRepository, 100, threshold);
@@ -71,7 +71,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
 
         public void RequestDeltaHeightTimerCallback(object state)
         {
-            var acceptanceThreshold = (_peersPerCycle * 0.5);
+            var acceptanceThreshold = (_peersPerCycle * _threshold);
             if (_hasLooped || GetMostPopularMessage()?.Score > acceptanceThreshold)
             {
                 _manualResetEventSlim.Set();
@@ -128,7 +128,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             var peers = DeltaHeightRanker.GetPeers().Union(_peerRepository.TakeHighestReputationPeers(_page, _peersPerCycle).Select(x => x.PeerId));
             _messenger.SendMessageToPeers(new LatestDeltaHashRequest(), peers);
 
-            if (_page == totalPages)
+            if (_page >= totalPages)
             {
                 _hasLooped = true;
             }

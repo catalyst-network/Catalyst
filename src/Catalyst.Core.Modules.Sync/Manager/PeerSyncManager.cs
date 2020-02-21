@@ -53,6 +53,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
         public int PeerCount { private set; get; } = 5;
 
         private bool _disposed;
+        private readonly double _threshold;
         private readonly IMessenger _messenger;
         private readonly IPeerRepository _peerRepository;
         private readonly IPeerService _peerService;
@@ -80,6 +81,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             IUserOutput userOutput,
             IDeltaIndexService deltaIndexService,
             IDeltaHeightWatcher deltaHeightWatcher,
+            double threshold = 0.7d,
             IScheduler scheduler = null)
         {
             _messenger = messenger;
@@ -97,6 +99,8 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
             DeltaHistoryInputQueue = new BlockingCollection<DeltaHistoryRanker>();
             DeltaHistoryOutputQueue = new BlockingCollection<RepeatedField<DeltaIndex>>();
+
+            _threshold = threshold;
         }
 
         public bool PeersAvailable()
@@ -145,7 +149,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
                 {
                     var first = _deltaHistoryRankers.Keys.First() == key;
                     var messageCount = Math.Min(peers.Count(), 50);
-                    var minimumThreshold = messageCount * 0.5;
+                    var minimumThreshold = messageCount * _threshold;
                     var deltaHistoryRanker = _deltaHistoryRankers[key];
                     var score = deltaHistoryRanker.GetHighestScore();
                     if (score > minimumThreshold && first)
