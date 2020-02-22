@@ -27,7 +27,9 @@ using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Nethermind.Core;
+using Newtonsoft.Json.Linq;
 using Serilog;
+using Serilog.Events;
 
 namespace Catalyst.Core.Modules.Web3.Controllers
 {
@@ -48,8 +50,32 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
         }
 
+        private JsonRpcResponse[] HandleManyRequests(JsonRpcRequest[] requests)
+        {
+            JsonRpcResponse[] responses = new JsonRpcResponse[requests.Length];
+            for (int i = 0; i < requests.Length; i++)
+            {
+                responses[i] = HandleSingleRequest(requests[i]);
+            }
+
+            return responses;
+        }
+
         [HttpPost]
-        public JsonRpcResponse Request([FromBody] JsonRpcRequest request)
+        public object Request([FromBody] object body)
+        {
+            JObject jObject = body as JObject;
+            if (jObject?.Type == JTokenType.Array)
+            {
+                JsonRpcRequest[] requests = jObject.ToObject<JsonRpcRequest[]>();
+                return HandleManyRequests(requests);
+            }
+
+            JsonRpcRequest request = jObject?.ToObject<JsonRpcRequest>();
+            return HandleSingleRequest(request);
+        }
+
+        private JsonRpcResponse HandleSingleRequest(JsonRpcRequest request)
         {
             EthWeb3RequestHandlerBase handler = _handlerResolver.Resolve(request.Method, request.Params.Length);
             if (handler == null)
