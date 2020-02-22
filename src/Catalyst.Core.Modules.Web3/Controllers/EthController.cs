@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             _handlerResolver = handlerResolver ?? throw new ArgumentNullException(nameof(handlerResolver));
             _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
         }
-
+        
         private JsonRpcResponse[] HandleManyRequests(JsonRpcRequest[] requests)
         {
             JsonRpcResponse[] responses = new JsonRpcResponse[requests.Length];
