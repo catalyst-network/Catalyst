@@ -156,7 +156,7 @@ namespace Catalyst.Core.Lib
 
             // Transaction validators
             // builder.RegisterType<TransactionValidator>().As<ITransactionValidator>().SingleInstance();
-            builder.RegisterType<AlwaysTrueTransactionValidator>().As<ITransactionValidator>().SingleInstance();
+            builder.RegisterType<TransactionValidator>().As<ITransactionValidator>().SingleInstance();
             builder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>().SingleInstance();
 
             // Register PRNG

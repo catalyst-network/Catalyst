@@ -36,7 +36,10 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
+using MultiFormats;
 using Nethermind.Core.Crypto;
 using Nethermind.Store;
 
@@ -87,8 +90,18 @@ namespace Catalyst.Core.Modules.Ledger
             {
                 PublicEntry = publicEntry
             };
-
+            
+            publicEntry.Timestamp = Timestamp.FromDateTime(DateTime.UtcNow);
             _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId));
+            
+            byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();
+            string hex = kvmAddressBytes.ToHexString() ?? throw new ArgumentNullException("kvmAddressBytes.ToHexString()");
+            publicEntry.SenderAddress = kvmAddressBytes.ToByteString();
+                
+            if (publicEntry.ReceiverAddress.Length == 1)
+            {
+                publicEntry.ReceiverAddress = ByteString.Empty;
+            }
 
             return publicEntry.GetHash(HashProvider);
         }

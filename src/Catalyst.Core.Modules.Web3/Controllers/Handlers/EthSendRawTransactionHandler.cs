@@ -73,19 +73,6 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 {
                     TransactionBroadcast transactionBroadcast = TransactionBroadcast.Parser.ParseFrom(transaction);
                     publicEntry = transactionBroadcast.PublicEntry;
-                    if (publicEntry.ReceiverAddress.Length == 1)
-                    {
-                        publicEntry.ReceiverAddress = ByteString.Empty;
-                    }
-
-                    if (publicEntry.SenderAddress.Length == 32)
-                    {
-                        byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();
-                        string hex = kvmAddressBytes.ToHexString() ?? throw new ArgumentNullException("kvmAddressBytes.ToHexString()");
-                        publicEntry.SenderAddress = kvmAddressBytes.ToByteString();
-                    }
-
-                    publicEntry.Timestamp = Timestamp.FromDateTime(DateTime.UtcNow);
                 }
                 catch (Exception)
                 {
