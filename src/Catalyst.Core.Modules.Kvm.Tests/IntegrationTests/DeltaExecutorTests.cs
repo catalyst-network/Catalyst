@@ -26,10 +26,12 @@ using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using Google.Protobuf;
+using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Extensions;
 using Nethermind.Evm.Tracing;
@@ -63,7 +65,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             _stateProvider = new StateProvider(new StateDb(), new StateDb(), LimboLogs.Instance);
             var storageProvider = new StorageProvider(new StateDb(), _stateProvider, LimboLogs.Instance);
             IKvm virtualMachine = new KatVirtualMachine(_stateProvider, storageProvider, new StateUpdateHashProvider(),
-                _specProvider, LimboLogs.Instance);
+                _specProvider, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")), new FfiWrapper(), LimboLogs.Instance);
             var logger = Substitute.For<ILogger>();
             logger.IsEnabled(Arg.Any<LogEventLevel>()).Returns(true);
 

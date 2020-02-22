@@ -120,6 +120,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 storageProvider,
                 new StateUpdateHashProvider(),
                 specProvider,
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new FfiWrapper(), 
                 LimboLogs.Instance);
             _deltaExecutor = new DeltaExecutor(specProvider,
                 _stateProvider,

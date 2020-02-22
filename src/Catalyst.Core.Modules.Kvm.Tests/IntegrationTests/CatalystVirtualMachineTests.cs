@@ -23,9 +23,14 @@
 
 using System;
 using System.Linq;
+using System.Text;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats.Registry;
 using Nethermind.Core;
+using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Json;
 using Nethermind.Core.Specs;
@@ -35,6 +40,7 @@ using Nethermind.Logging;
 using Nethermind.Store;
 using Xunit;
 using Xunit.Abstractions;
+using IPrivateKey = Catalyst.Abstractions.Cryptography.IPrivateKey;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 {
@@ -188,6 +194,70 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesOne32.ToHexString());
         }
 
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Blake_precompile()
+        {
+            Address blakeAddress = Address.FromNumber(1 + KatVirtualMachine.CatalystPrecompilesAddressingSpace);
+            string addressCode = blakeAddress.Bytes.ToHexString(false);
+            var code = Bytes.FromHexString("0x602060006080600073" + addressCode + "45fa00");
+            var txTracer = RunVirtualMachine(code);
+            var serializer = new EthereumJsonSerializer();
+            var trace = txTracer.BuildResult();
+            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000001");
+            trace.Entries.Last().Memory.First().Should().Be("378d0caaaa3855f1b38693c1d6ef004fd118691c95c959d4efa950d6d6fcf7c1");
+        }
+        
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Ed25519_verify_precompile()
+        {
+            HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            
+            FfiWrapper cryptoContext = new FfiWrapper();
+            var privateKey = cryptoContext.GeneratePrivateKey();
+            
+            var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
+            var message = hashProvider.ComputeMultiHash(data).Digest;
+            
+            var signingContext = Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
+            var context = hashProvider.ComputeMultiHash(signingContext).Digest;
+            
+            var signature = cryptoContext.Sign(privateKey, message, context);
+            var signatureBytes = signature.SignatureBytes;
+            
+            var publicKeyBytes = privateKey.GetPublicKey().Bytes;
+            var signatureFromBytes = cryptoContext.GetSignatureFromBytes(signatureBytes,
+                publicKeyBytes);
+
+            cryptoContext.Verify(signatureFromBytes, message, context)
+               .Should().BeTrue("signature generated with private key should verify with corresponding public key");
+
+            var pushToMemoryAt0 = "7f" + message.ToHexString(false) + "600052";
+            var pushToMemoryAt32 = "7f" + signatureBytes.AsSpan(0, 32).ToHexString(false) + "602052";
+            var pushToMemoryAt64 = "7f" + signatureBytes.AsSpan(32, 32).ToHexString(false) + "604052";
+            var pushToMemoryAt96 = "7f" + context.ToHexString(false) + "606052";
+            var pushToMemoryAt128 = "7f" + publicKeyBytes.ToHexString(false) + "608052";
+            
+            Address edAddress = Address.FromNumber(2 + KatVirtualMachine.CatalystPrecompilesAddressingSpace);
+            string addressCode = edAddress.Bytes.ToHexString(false);
+            
+            var code = Bytes.FromHexString("0x" + pushToMemoryAt0 +
+                pushToMemoryAt32 +
+                pushToMemoryAt64 +
+                pushToMemoryAt96 +
+                pushToMemoryAt128 + "6020600060a0600073" + addressCode + "45fa00");
+            _testOutputHelper.WriteLine(code.ToHexString());
+            
+            var txTracer = RunVirtualMachine(code);
+            var serializer = new EthereumJsonSerializer();
+            var trace = txTracer.BuildResult();
+            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000001");
+            trace.Entries.Last().Memory.First().Should().Be(publicKeyBytes.ToHexString(false));
+        }
+
         /*
          * also need to test:
          * BALANCE
@@ -246,8 +316,14 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             // this would be set by the tx processor that understands the type of transaction
             var vmState = new VmState(1_000_000L, env, ExecutionType.Transaction, false, true, false);
 
-            var virtualMachine = new KatVirtualMachine(stateProvider, storageProvider, stateUpdateHashProvider,
-                specProvider, LimboLogs.Instance);
+            var virtualMachine = new KatVirtualMachine(
+                stateProvider,
+                storageProvider,
+                stateUpdateHashProvider,
+                specProvider,
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new FfiWrapper(),
+                LimboLogs.Instance);
             virtualMachine.Run(vmState, txTracer);
             return txTracer;
         }
