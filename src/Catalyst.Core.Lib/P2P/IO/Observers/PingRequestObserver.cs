@@ -66,7 +66,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             
             Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
 
-            if (_peerRepository.Get(senderPeerId) == null)
+            var peer = _peerRepository.Get(senderPeerId);
+            if (peer == null)
             {
                 _peerRepository.Add(new Peer
                 {

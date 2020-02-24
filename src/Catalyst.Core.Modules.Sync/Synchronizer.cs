@@ -274,7 +274,6 @@ namespace Catalyst.Core.Modules.Sync
             while (highestDeltaIndex.Height > CurrentHighestDeltaIndexStored && highestDeltaIndex.Height < CurrentHighestDeltaIndexStored + _rangeSize)
             {
                 var cid = highestDeltaIndex.Cid.ToArray().ToCid();
-                //_ledger.Update(cid);
 
                 _deltaHashProvider.TryUpdateLatestHash(_previousHash, cid);
                 _previousHash = cid;
@@ -304,8 +303,8 @@ namespace Catalyst.Core.Modules.Sync
                 if (disposing)
                 {
                     //_syncDeltaIndexTask?.Dispose();
-                    _peerSyncManager.Dispose();
-                    _deltaHeightWatcher.Dispose();
+                    _peerSyncManager?.Dispose();
+                    _deltaHeightWatcher?.Dispose();
                 }
             }
             _disposed = true;

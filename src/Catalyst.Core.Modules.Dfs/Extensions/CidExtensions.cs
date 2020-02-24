@@ -55,7 +55,8 @@ namespace Catalyst.Core.Modules.Dfs.Extensions
 
         public static Cid ToCid(this string cid)
         {
-            return Cid.Decode(MultiBase.Encode(cid.ToUtf8Bytes(), Encoding));
+            //MultiBase.Encode(cid.ToUtf8Bytes(), Encoding)
+            return Cid.Decode(cid);
         }
     }
 }

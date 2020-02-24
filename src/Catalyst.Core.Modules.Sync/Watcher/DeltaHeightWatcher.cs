@@ -153,8 +153,8 @@ namespace Catalyst.Core.Modules.Sync.Watcher
 
         private void CleanUp()
         {
-            _deltaHeightSubscription.Dispose();
-            _requestDeltaHeightTimer.Dispose();
+            _deltaHeightSubscription?.Dispose();
+            _requestDeltaHeightTimer?.Dispose();
         }
 
         public void Dispose()

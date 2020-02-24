@@ -105,10 +105,8 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         public bool PeersAvailable()
         {
-            //PeerCount = Math.Min(_peerRepository.GetActivePeers(PeerCount).Count(), 5);
-            //return PeerCount > 0;
-            //PeerCount = Math.Min(_peerRepository.GetActivePeers(PeerCount).Count(), 5);
-            return _peerRepository.Count() > 0;
+            var peerCount = _peerRepository.Count();
+            return peerCount > 0;
         }
 
         public bool ContainsPeerHistory() { return _peerRepository.GetAll().Any(); }
@@ -191,7 +189,6 @@ namespace Catalyst.Core.Modules.Sync.Manager
                 if (disposing)
                 {
                     _deltaHistorySubscription?.Dispose();
-                    _syncDeltaIndexesTask?.Dispose();
                 }
             }
             _disposed = true;

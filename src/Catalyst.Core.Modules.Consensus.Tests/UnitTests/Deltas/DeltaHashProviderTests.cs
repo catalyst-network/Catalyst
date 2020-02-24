@@ -121,6 +121,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             updated = hashProvider.TryUpdateLatestHash(GetHash(1), GetHash(2));
             updated.Should().BeTrue();
 
+            var a1 = GetHash(0);
+            var a2 = GetHash(1);
+            var a = GetHash(2);
+            var b = hashProvider.GetLatestDeltaHash();
+
             hashProvider.GetLatestDeltaHash()
                .Should().Be(GetHash(2));
         }

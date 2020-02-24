@@ -40,7 +40,9 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public Peer Get(string id) { return _repository.Get(id); }
 
-        public Peer Get(PeerId id) { return _repository.Find(x => x.PeerId.Equals(id)); }
+        public Peer Get(PeerId id) {
+            return _repository.Find(x => x.PeerId.Equals(id)); 
+        }
 
         public IEnumerable<Peer> GetAll() { return _repository.GetAll(); }
 

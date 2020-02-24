@@ -86,6 +86,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 StateRoot = ByteString.CopyFrom(stateProvider.StateRoot.Bytes),
             };
 
+            
             GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).ToCid();
 
             _dfsReader = dfsReader;
