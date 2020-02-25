@@ -1,7 +1,17 @@
 [
-  {
-    "Ip": "127.0.0.1",
-    "Port": 42076,
-    "PublicKey": ""
-  }
+    {
+        "Ip": "192.168.1.45",
+        "Port": 42076,
+        "PublicKey": "gk42ocz447ybr62miwnnlyeb7m4ufzddsgykhuwjgwojlrb7pezq"
+    },
+    {
+        "Ip": "192.168.1.46",
+        "Port": 42076,
+        "PublicKey": "a3jcezxg5r2jiwna4kftzw7dknn3bxxa7vxu675uo2n5st2uuvva"
+    },
+    {
+        "Ip": "192.168.1.47",
+        "Port": 42076,
+        "PublicKey": "yfbwgsnde3uqwoiv5mxxxvez7tkc2vjfijjkokz4qxqagppmcbhq"
+    }
 ]

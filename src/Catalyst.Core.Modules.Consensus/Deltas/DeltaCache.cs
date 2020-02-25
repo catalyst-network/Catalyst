@@ -58,6 +58,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         public static Address TruffleTestAccount = new Address("0xb77aec9f59f9d6f39793289a09aea871932619ed");
 
+        public static Address CatalystTruffleTestAccount = new Address("0x58BeB247771F0B6f87AA099af479aF767CcC0F00");
+        
         public DeltaCache(IHashProvider hashProvider,
             IMemoryCache memoryCache,
             IDeltaDfsReader dfsReader,
@@ -71,7 +73,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _deltaIndexService = deltaIndexService;
 
             stateProvider.CreateAccount(TruffleTestAccount, 1_000_000_000.Kat());
-
+            stateProvider.CreateAccount(CatalystTruffleTestAccount, 1_000_000_000.Kat());
+            
             storageProvider.Commit();
             stateProvider.Commit(CatalystGenesisSpec.Instance);
 

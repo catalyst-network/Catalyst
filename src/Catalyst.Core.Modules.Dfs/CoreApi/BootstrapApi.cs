@@ -37,7 +37,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         // From https://github.com/libp2p/go-libp2p-daemon/blob/master/bootstrap.go#L14
         public static MultiAddress[] Defaults =
         {
-            "/ip4/192.168.1.38/tcp/4001/ipfs/QmR7UM1QSh9h87SccdCxivtZiW6taYfRoLJgjBGBMtNBU4"
+            "/ip4/192.168.1.45/tcp/4001/ipfs/Qmbe3YRyYuFFZCyJw5JubpRYC85ujYxzHuFpx3KXaQ31wR",
+            "/ip4/192.168.1.46/tcp/4001/ipfs/QmS4nDMnRZWRDWMPqxLyp7hvvXZp64n9UkMDbey6uTdcMm",
+            "/ip4/192.168.1.47/tcp/4001/ipfs/QmYer7o676UWuvyPdav1q9NVWfMoXXFj4XAX7NXHHxtbQe"
+            //"/ip4/192.168.1.38/tcp/4001/ipfs/QmR7UM1QSh9h87SccdCxivtZiW6taYfRoLJgjBGBMtNBU4"
             //"/ip4/134.209.180.20/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdr2BeLZ4Kg7CeAUJqSW7Wps3BZyNwDyto9NFGreeNzLv8",
             //"/ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",            // mars.i.ipfs.io
             //"/ip4/104.236.179.241/tcp/4001/ipfs/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM",           // pluto.i.ipfs.io
