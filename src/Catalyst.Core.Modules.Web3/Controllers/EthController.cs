@@ -64,14 +64,13 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         [HttpPost]
         public object Request([FromBody] object body)
         {
-            JObject jObject = body as JObject;
-            if (jObject?.Type == JTokenType.Array)
+            JToken jToken = body as JToken;
+            if (jToken?.Type == JTokenType.Array)
             {
-                JsonRpcRequest[] requests = jObject.ToObject<JsonRpcRequest[]>();
+                JsonRpcRequest[] requests = jToken.ToObject<JsonRpcRequest[]>();
                 return HandleManyRequests(requests);
             }
-
-            JsonRpcRequest request = jObject?.ToObject<JsonRpcRequest>();
+            JsonRpcRequest request = jToken?.ToObject<JsonRpcRequest>();
             return HandleSingleRequest(request);
         }
 
