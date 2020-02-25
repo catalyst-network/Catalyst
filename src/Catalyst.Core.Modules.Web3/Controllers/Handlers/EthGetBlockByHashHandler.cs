@@ -50,6 +50,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             var (delta, deltaHash) = deltaWithCid;
 
+
             var nonce = new byte[8];
             BinaryPrimitives.WriteUInt64BigEndian(nonce, 42);
 

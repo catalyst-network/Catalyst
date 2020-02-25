@@ -35,15 +35,16 @@ namespace Catalyst.Protocol.Deltas
                 throw new InvalidDataException($"{nameof(PreviousDeltaDfsHash)} cannot be null or empty");
             }
 
-            if (MerkleRoot == null || MerkleRoot.IsEmpty)
-            {
-                throw new InvalidDataException($"{nameof(MerkleRoot)} cannot be null or empty");
-            }
+            //todo
+            //if (MerkleRoot == null || MerkleRoot.IsEmpty)
+            //{
+            //    throw new InvalidDataException($"{nameof(MerkleRoot)} cannot be null or empty");
+            //}
 
-            if (TimeStamp == null || TimeStamp.CompareTo(new Timestamp()) == 0)
-            {
-                throw new InvalidDataException($"{nameof(TimeStamp)} cannot be null or default");
-            }
+            //if (TimeStamp == null || TimeStamp.CompareTo(new Timestamp()) == 0)
+            //{
+            //    throw new InvalidDataException($"{nameof(TimeStamp)} cannot be null or default");
+            //}
 
             return true;
         }
