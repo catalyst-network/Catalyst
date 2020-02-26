@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 
             var nonce = new byte[8];
             BinaryPrimitives.WriteUInt64BigEndian(nonce, 42);
-
+            //Timestamp = new UInt256(delta.TimeStamp.Seconds),
             BlockForRpc blockForRpc = new BlockForRpc
             {
                 ExtraData = new byte[0],
@@ -63,7 +63,6 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 Number = blockNumber,
                 GasLimit = (long) delta.GasLimit,
                 GasUsed = delta.GasUsed,
-                Timestamp = new UInt256(delta.TimeStamp.Seconds),
                 ParentHash = blockNumber == 0 ? null : Cid.Read(delta.PreviousDeltaDfsHash.ToByteArray()),
                 StateRoot = delta.StateRoot.ToKeccak(),
                 ReceiptsRoot = Keccak.EmptyTreeHash,
