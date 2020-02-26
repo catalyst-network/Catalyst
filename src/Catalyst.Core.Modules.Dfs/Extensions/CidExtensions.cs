@@ -43,7 +43,7 @@ namespace Catalyst.Core.Modules.Dfs.Extensions
             {
                 Version = 1,
                 Hash = multiHash,
-                ContentType = "raw",
+                ContentType = "dag-pb",
                 Encoding = Encoding
             };
         }
