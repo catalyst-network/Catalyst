@@ -276,6 +276,7 @@ namespace Catalyst.Core.Modules.Sync
                 var cid = highestDeltaIndex.Cid.ToArray().ToCid();
 
                 _deltaHashProvider.TryUpdateLatestHash(_previousHash, cid);
+
                 _previousHash = cid;
 
                 highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync().ConfigureAwait(false);
