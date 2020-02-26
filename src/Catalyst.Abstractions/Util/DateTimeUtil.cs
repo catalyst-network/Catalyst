@@ -24,7 +24,7 @@
 using System;
 using Dawn;
 
-namespace Catalyst.Core.Lib.Util
+namespace Catalyst.Abstractions.Lib.Util
 {
     public static class DateTimeUtil
     {

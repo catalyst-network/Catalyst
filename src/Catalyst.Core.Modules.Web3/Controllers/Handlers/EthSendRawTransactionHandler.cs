@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Transaction;

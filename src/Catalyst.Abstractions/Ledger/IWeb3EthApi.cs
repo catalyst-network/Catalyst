@@ -25,6 +25,8 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Lib.P2P;
@@ -43,6 +45,8 @@ namespace Catalyst.Abstractions.Ledger
         IStorageProvider StorageProvider { get; }
         IStateProvider StateProvider { get; }
         IHashProvider HashProvider { get; }
+        IPeerRepository PeerRepository { get; }
+        SyncState SyncState { get; }
 
         Keccak SendTransaction(PublicEntry publicEntry);
         

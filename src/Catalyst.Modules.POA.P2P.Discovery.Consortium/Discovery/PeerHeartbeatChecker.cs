@@ -27,7 +27,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Serilog;
 
 namespace Catalyst.Modules.POA.P2P.Discovery

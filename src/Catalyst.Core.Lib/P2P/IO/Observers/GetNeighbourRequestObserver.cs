@@ -24,10 +24,10 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;

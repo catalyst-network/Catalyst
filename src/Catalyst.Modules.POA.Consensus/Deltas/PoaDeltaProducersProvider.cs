@@ -27,7 +27,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Peer;

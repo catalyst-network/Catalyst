@@ -29,7 +29,7 @@ using System.Reactive.Linq;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
@@ -48,6 +48,7 @@ using Serilog;
 using SharpRepository.InMemoryRepository;
 using Xunit;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
+using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {

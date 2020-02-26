@@ -36,6 +36,7 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Abstractions.P2P.Protocols;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Util;
 using Catalyst.Abstractions.Validators;
@@ -50,7 +51,7 @@ using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Protocols;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
@@ -59,6 +60,7 @@ using Catalyst.Protocol.Transaction;
 using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Catalyst.Core.Lib.P2P.Repository;
 
 // ReSharper disable WrongIndentSize
 

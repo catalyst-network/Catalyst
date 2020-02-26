@@ -21,14 +21,15 @@
 
 #endregion
 
-namespace Catalyst.Core.Abstractions.Sync
+using Catalyst.Abstractions.Ledger;
+
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    public class SyncState
+    [EthWeb3RequestHandler("net", "peerCount")]
+    public class NetPeerCountHandler : EthWeb3RequestHandler<string>
     {
-        public bool IsSynchronized { set; get; }
-        public long StartingBlock { set; get; }
-        public long CurrentBlock { set; get; }
-        public long HighestBlock { set; get; }
-        public bool IsRunning { set; get; }
+        protected override string Handle(IWeb3EthApi api) {
+            return string.Format("0x{0:X}", api.PeerRepository.Count());
+        }
     }
 }

@@ -43,7 +43,7 @@ using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -67,6 +67,8 @@ using SharpRepository.InMemoryRepository;
 using Xunit;
 using Serilog;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
+using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {

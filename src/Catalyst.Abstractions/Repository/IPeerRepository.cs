@@ -27,7 +27,7 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
-namespace Catalyst.Core.Lib.P2P.Repository
+namespace Catalyst.Abstractions.P2P.Repository
 {
     public interface IPeerRepository : IDisposable
     {

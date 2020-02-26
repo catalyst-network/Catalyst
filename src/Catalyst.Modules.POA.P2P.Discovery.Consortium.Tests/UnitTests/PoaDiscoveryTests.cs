@@ -24,7 +24,7 @@
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;

@@ -43,7 +43,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Ledger.Repository;
@@ -57,6 +57,7 @@ using Catalyst.TestUtils;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
 using Xunit.Abstractions;
+using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {

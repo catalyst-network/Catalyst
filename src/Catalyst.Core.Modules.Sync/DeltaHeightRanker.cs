@@ -21,8 +21,8 @@
 
 #endregion
 
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;

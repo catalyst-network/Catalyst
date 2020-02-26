@@ -22,9 +22,9 @@
 #endregion
 
 using System;
+using Catalyst.Abstractions.Lib.Util;
 using Catalyst.Abstractions.P2P.Models;
-using Catalyst.Core.Lib.Service.Attributes;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Abstractions.Service.Attributes;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 using SharpRepository.Repository;

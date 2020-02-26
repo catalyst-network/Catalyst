@@ -21,32 +21,22 @@
 
 #endregion
 
-using System;
-using Catalyst.Abstractions.Lib.Util;
-using FluentAssertions;
-using Xunit;
+using Catalyst.Abstractions.Ledger;
 
-namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
+namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
-    public sealed class DateTimeUtilTests
+    [EthWeb3RequestHandler("eth", "syncing")]
+    public class EthSycningHandler : EthWeb3RequestHandler<object>
     {
-        [Fact]
-        public void ExponentialTimeSpan_Should_Return_Exponential_TimeSpan()
+        protected override object Handle(IWeb3EthApi api)
         {
-            var maxTimeSpan = TimeSpan.MaxValue;
-            var retryCount = 0;
-            var milliseconds = Math.Pow(2, retryCount);
-
-            while (milliseconds < maxTimeSpan.TotalMilliseconds)
+            var syncState = api.SyncState;
+            return syncState.IsSynchronized?(object)false:new
             {
-                var result = DateTimeUtil.GetExponentialTimeSpan(retryCount);
-                var target = TimeSpan.FromMilliseconds(milliseconds);
-                var comparison = TimeSpan.Compare(result, target);
-                comparison.Should().Be(0);
-
-                retryCount++;
-                milliseconds = Math.Pow(2, retryCount);
-            }
+                StartingBlock = string.Format("0x{0:X}", syncState.StartingBlock),
+                CurrentBlock = string.Format("0x{0:X}", syncState.CurrentBlock),
+                HighestBlock = string.Format("0x{0:X}", syncState.HighestBlock),
+            };
         }
     }
 }

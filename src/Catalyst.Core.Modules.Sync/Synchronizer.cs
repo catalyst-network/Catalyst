@@ -144,6 +144,9 @@ namespace Catalyst.Core.Modules.Sync
                 return;
             }
 
+            SyncState.CurrentBlock = SyncState.StartingBlock = CurrentHighestDeltaIndexStored;
+            SyncState.HighestBlock = highestDeltaIndex.Height;
+
             _currentSyncIndex = CurrentHighestDeltaIndexStored;
 
             _peerSyncManager.Start();
@@ -256,7 +259,10 @@ namespace Catalyst.Core.Modules.Sync
         private async Task<bool> CheckSyncProgressAsync()
         {
             var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();
-                //await FinalizeSyncToEndAsync().ConfigureAwait(false);
+            SyncState.CurrentBlock = CurrentHighestDeltaIndexStored;
+            SyncState.HighestBlock = highestDeltaIndex.Height;
+
+            //await FinalizeSyncToEndAsync().ConfigureAwait(false);
             if (CurrentHighestDeltaIndexStored >= highestDeltaIndex.Height)
             {
                 _userOutput.WriteLine($"Sync Progress: {GetSyncProgressPercentage()}%");
