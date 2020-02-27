@@ -54,7 +54,7 @@ namespace Catalyst.Node.POA.CE
         private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
         private readonly IPublicKey _publicKey;
-        private readonly ISynchronizer _synchronizer;
+        private readonly ISynchroniser _synchronizer;
 
         public CatalystNodePoa(IKeySigner keySigner,
             IPeerService peer,
@@ -65,7 +65,7 @@ namespace Catalyst.Node.POA.CE
             IPeerClient peerClient,
             IPeerSettings peerSettings,
             IMempool<PublicEntryDao> memPool,
-            ISynchronizer synchronizer,
+            ISynchroniser synchronizer,
             IContract contract = null)
         {
             _peer = peer;
