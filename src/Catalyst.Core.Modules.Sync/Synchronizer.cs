@@ -110,11 +110,6 @@ namespace Catalyst.Core.Modules.Sync
             Cid targetDeltaHash,
             CancellationToken cancellationToken)
         {
-            if (!State.IsSynchronized)
-            {
-                yield break;
-            }
-
             var thisHash = targetDeltaHash;
 
             do
