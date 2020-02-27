@@ -34,11 +34,11 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Sync
 {
-    public class SynchronizerModule : Module
+    public class SynchroniserModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<Synchronizer>().As<ISynchronizer>().SingleInstance();
+            builder.RegisterType<Synchroniser>().As<ISynchroniser>().SingleInstance();
             builder.RegisterType<SyncState>().SingleInstance();
             builder.RegisterType<Messenger>().As<IMessenger>().SingleInstance();
             builder.RegisterType<PeerSyncManager>().As<IPeerSyncManager>().SingleInstance();

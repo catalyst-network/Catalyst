@@ -30,6 +30,7 @@ using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.DAO.Transaction;
@@ -59,9 +60,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly IStorageProvider _storageProvider;
         private readonly ISnapshotableDb _stateDb;
         private readonly IDb _codeDb;
-        //private readonly IDeltaByNumberRepository _deltas;
         private readonly ITransactionRepository _receipts;
-        private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IMapperProvider _mapperProvider;
         private readonly IHashProvider _hashProvider;
@@ -78,7 +77,7 @@ namespace Catalyst.Core.Modules.Ledger
 
         private readonly IDeltaIndexService _deltaIndexService;
 
-        //private int _blockHeight;
+        private readonly ISynchroniser _synchroniser;
 
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
@@ -88,12 +87,11 @@ namespace Catalyst.Core.Modules.Ledger
             ISnapshotableDb stateDb,
             IDb codeDb,
             IAccountRepository accounts,
-            IDeltaByNumberRepository deltas,
+            IDeltaIndexService deltaIndexService,
             ITransactionRepository receipts,
             IDeltaHashProvider deltaHashProvider,
-            ILedgerSynchroniser synchroniser,
+            ISynchroniser synchroniser,
             IMempool<PublicEntryDao> mempool,
-            IDeltaIndexService deltaIndexService,
             IMapperProvider mapperProvider,
             IHashProvider hashProvider,
             ILogger logger)
@@ -105,13 +103,12 @@ namespace Catalyst.Core.Modules.Ledger
 
             _stateDb = stateDb;
             _codeDb = codeDb;
-            //_deltas = deltas;
-            _synchroniser = synchroniser;
             _mempool = mempool;
             _mapperProvider = mapperProvider;
             _hashProvider = hashProvider;
             _logger = logger;
             _receipts = receipts;
+            _synchroniser = synchroniser;
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
 
@@ -165,7 +162,7 @@ namespace Catalyst.Core.Modules.Ledger
                 lock (_synchronisationLock)
                 {
                     var chainedDeltaHashes = _synchroniser
-                       .CacheDeltasBetween(LatestKnownDelta, deltaHash, CancellationToken.None)
+                       .CacheDeltasBetween(LatestKnownDelta, deltaHash, CancellationToken.None)?
                        .Reverse()
                        .ToList();
 
@@ -229,7 +226,7 @@ namespace Catalyst.Core.Modules.Ledger
 
                 _stateProvider.Reset();
                 _storageProvider.Reset();
-                
+
                 _stateProvider.StateRoot = new Keccak(parentDelta.StateRoot?.ToByteArray());
                 _deltaExecutor.Execute(nextDeltaInChain, tracer);
 
@@ -242,8 +239,6 @@ namespace Catalyst.Core.Modules.Ledger
                 _stateDb.Commit();
 
                 _latestKnownDelta = deltaHash;
-
-                //_deltaIndexService.Add(new DeltaIndexDao { Cid = LatestKnownDelta, Height = _blockHeight++ });
 
                 WriteLatestKnownDelta(deltaHash);
             }

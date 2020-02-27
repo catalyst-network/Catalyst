@@ -49,7 +49,7 @@ module.exports = {
     },
 
     catalyst: {
-      provider: () => new HDWalletProvider(mnemonic, `http://127.0.0.1:5005/api/eth/request`),
+        provider: () => new HDWalletProvider(mnemonic, `http://192.168.1.45:5005/api/eth/request`),
       network_id: "*",       // Any network (default: none)
     },
 

@@ -96,7 +96,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             containerBuilder.RegisterModule(new KeystoreModule());
             containerBuilder.RegisterModule(new BulletProofsModule());
             containerBuilder.RegisterModule(new AuthenticationModule());
-            containerBuilder.RegisterModule(new SynchronizerModule());
+            containerBuilder.RegisterModule(new SynchroniserModule());
 
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                .AssignableTo<IMapperInitializer>().As<IMapperInitializer>();

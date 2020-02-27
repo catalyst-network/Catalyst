@@ -51,11 +51,11 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {
-            if (!_syncState.IsSynchronized)
-            {
-                //_deltaHeightWatcher.LatestDeltaHash = deserialised.DeltaDfsHash;
-                return;
-            }
+            //if (!_syncState.IsSynchronized)
+            //{
+            //    //_deltaHeightWatcher.LatestDeltaHash = deserialised.DeltaDfsHash;
+            //    return;
+            //}
 
             try
             {

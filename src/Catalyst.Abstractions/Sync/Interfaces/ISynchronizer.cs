@@ -21,15 +21,26 @@
 
 #endregion
 
+using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Core.Abstractions.Sync;
+using Lib.P2P;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Catalyst.Abstractions.Sync.Interfaces
 {
-    public interface ISynchronizer : IDisposable
+    public interface ISynchroniser : IDisposable
     {
+        SyncState State { get; }
+        IDeltaCache DeltaCache { get; }
+
         Task StartAsync(CancellationToken cancellationToken = default);
         Task StopAsync(CancellationToken cancellationToken = default);
+
+        IEnumerable<Cid> CacheDeltasBetween(Cid latestKnownDeltaHash,
+            Cid targetDeltaHash,
+            CancellationToken cancellationToken);
     }
 }

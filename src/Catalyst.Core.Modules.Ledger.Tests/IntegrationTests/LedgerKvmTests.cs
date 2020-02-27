@@ -29,6 +29,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.DAO.Transaction;
@@ -79,7 +80,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
         private readonly ICryptoContext _cryptoContext;
         private readonly IAccountRepository _fakeRepository;
         private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly ILedgerSynchroniser _ledgerSynchroniser;
+        private readonly ISynchroniser _synchroniser;
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IDeltaExecutor _deltaExecutor;
         private readonly IStorageProvider _storageProvider;
@@ -105,11 +106,11 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _logger = Substitute.For<ILogger>();
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
-            _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
+            _synchroniser = Substitute.For<ISynchroniser>();
             _deltaByNumber = Substitute.For<IDeltaByNumberRepository>();
             _receipts = Substitute.For<ITransactionRepository>();
 
-            _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
+            _synchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
 
             var stateDbDevice = new MemDb();
             var codeDbDevice = new MemDb();
@@ -154,13 +155,13 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             {
                 hash1
             };
-            _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
+            _synchroniser.CacheDeltasBetween(default, default, default)
                .ReturnsForAnyArgs(new Cid[]
                 {
                     hash1, _genesisHash
                 });
 
-            _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
+            _synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
                .Returns(c =>
                 {
                     delta.PreviousDeltaDfsHash = hash1.ToCid().ToArray().ToByteString(); // lol
@@ -176,7 +177,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
             var _ = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
-                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _deltaIndexService, _mapperProvider, _hashProvider, _logger);
+                _fakeRepository, _deltaIndexService, _receipts, _deltaHashProvider, _synchroniser, _mempool, _mapperProvider, _hashProvider, _logger);
 
             _testScheduler.Start();
         }
