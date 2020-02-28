@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger.Models;
@@ -47,6 +48,7 @@ namespace Catalyst.Abstractions.Ledger
         IStateProvider StateProvider { get; }
         IHashProvider HashProvider { get; }
         IPeerRepository PeerRepository { get; }
+        IDfsService DfsService { get; }
         SyncState SyncState { get; }
 
         Keccak SendTransaction(PublicEntry publicEntry);

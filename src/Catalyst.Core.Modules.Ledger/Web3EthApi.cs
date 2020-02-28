@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Kvm;
@@ -59,6 +60,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ITransactionReceivedEvent _transactionReceived;
         private readonly IMapperProvider _mapperProvider;
         public IHashProvider HashProvider { get; }
+        public IDfsService DfsService { get; }
         public SyncState SyncState { get; }
         private readonly PeerId _peerId;
 
@@ -72,6 +74,7 @@ namespace Catalyst.Core.Modules.Ledger
             ITransactionReceivedEvent transactionReceived,
             IPeerRepository peerRepository,
             IMempool<PublicEntryDao> mempoolRepository,
+            IDfsService dfsService,
             IHashProvider hashProvider,
             SyncState syncState,
             IMapperProvider mapperProvider,
@@ -91,6 +94,7 @@ namespace Catalyst.Core.Modules.Ledger
             Executor = executor ?? throw new ArgumentNullException(nameof(executor));
             StorageProvider = storageProvider ?? throw new ArgumentNullException(nameof(storageProvider));
             StateProvider = stateProvider ?? throw new ArgumentNullException(nameof(stateProvider));
+            DfsService = dfsService;
             SyncState = syncState;
         }
 

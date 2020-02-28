@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger;
+using System.Linq;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
@@ -29,7 +30,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     public class NetPeerCountHandler : EthWeb3RequestHandler<string>
     {
         protected override string Handle(IWeb3EthApi api) {
-            return string.Format("0x{0:X}", api.PeerRepository.Count());
+            return string.Format("0x{0:X}", api.DfsService.SwarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult().Count());
         }
     }
 }
