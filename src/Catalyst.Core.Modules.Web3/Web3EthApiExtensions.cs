@@ -131,7 +131,7 @@ namespace Catalyst.Core.Modules.Web3
             };
         }
 
-        static Address ToAddress(ByteString address)
+        public static Address ToAddress(ByteString address)
         {
             if (address == null || address.IsEmpty)
             {

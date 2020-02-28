@@ -32,6 +32,7 @@ using Catalyst.Protocol.Transaction;
 using Lib.P2P;
 using Nethermind.Core.Crypto;
 using Nethermind.Store;
+using System.Collections.Generic;
 
 namespace Catalyst.Abstractions.Ledger
 {
@@ -52,5 +53,6 @@ namespace Catalyst.Abstractions.Ledger
         
         TransactionReceipt FindReceipt(Keccak transactionHash);
         bool FindTransactionData(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index);
+        IEnumerable<PublicEntry> GetPendingTransactions();
     }
 }
