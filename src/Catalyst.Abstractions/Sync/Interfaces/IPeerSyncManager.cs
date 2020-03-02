@@ -33,15 +33,11 @@ namespace Catalyst.Abstractions.Sync.Interfaces
 {
     public interface IPeerSyncManager : IDisposable
     {
-        BlockingCollection<RepeatedField<DeltaIndex>> DeltaHistoryOutputQueue { get; }
         int PeerCount { get; }
-        int MaxSyncPoolSize { get; }
         IObservable<IEnumerable<DeltaIndex>> ScoredDeltaIndexRange { get; }
-        //bool IsPoolAvailable();
         bool PeersAvailable();
         bool ContainsPeerHistory();
         void GetDeltaIndexRangeFromPeers(long index, long range);
-        //void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers);
         Task WaitForPeersAsync(CancellationToken cancellationToken = default);
         void Start();
         void Stop();

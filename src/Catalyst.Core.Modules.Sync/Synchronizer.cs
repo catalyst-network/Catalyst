@@ -43,8 +43,6 @@ using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
 using Serilog;
 using Lib.P2P;
-using System.IO;
-using MultiFormats;
 
 namespace Catalyst.Core.Modules.Sync
 {
@@ -63,6 +61,8 @@ namespace Catalyst.Core.Modules.Sync
         private readonly IDfsService _dfsService;
         private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
+
+        private IDisposable _scoredDeltaIndexRangeDisposable;
 
         private Cid _previousHash;
 
@@ -147,21 +147,12 @@ namespace Catalyst.Core.Modules.Sync
             _previousHash = _deltaIndexService.LatestDeltaIndex().Cid;
             _userOutput.WriteLine("Starting Sync...");
 
-            _deltaHeightWatcher.Start();
+            _scoredDeltaIndexRangeDisposable = _peerSyncManager.ScoredDeltaIndexRange.Subscribe(ProcessDeltaIndexRange);
 
-            //if (_peerSyncManager.ContainsPeerHistory())
-            //var test = new CancellationTokenSource();
-            //test.CancelAfter(TimeSpan.FromSeconds(5));test.Token
+            _deltaHeightWatcher.Start();
 
             await _peerSyncManager.WaitForPeersAsync(cancellationToken).ConfigureAwait(false);
 
-            //if (test.Token.IsCancellationRequested)
-            //{
-            //    SyncState.IsSynchronized = true;
-            //    return;
-            //}
-
-            //await _deltaHeightWatcher.WaitForDeltaHeightAsync(cancellationToken);
             var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();
             if (highestDeltaIndex == null || highestDeltaIndex.Height <= CurrentHighestDeltaIndexStored)
             {
@@ -174,17 +165,7 @@ namespace Catalyst.Core.Modules.Sync
 
             _peerSyncManager.Start();
 
-            Task.Factory.StartNew(SyncDeltaIndexes, TaskCreationOptions.LongRunning, cancellationToken);
-
             Progress(CurrentHighestDeltaIndexStored, _rangeSize);
-        }
-
-        private async Task SyncDeltaIndexes(object state)
-        {
-            while (!State.IsSynchronized)
-            {
-                ProcessDeltaIndexRange(_peerSyncManager.DeltaHistoryOutputQueue.Take());
-            }
         }
 
         private void ProcessDeltaIndexRange(IEnumerable<DeltaIndex> deltaIndexRange)
@@ -200,19 +181,34 @@ namespace Catalyst.Core.Modules.Sync
 
             deltaIndexRangeDao.Remove(firstDeltaIndex);
 
-            //.Where(x => x.Cid != _deltaCache.GenesisHash)
-
             DownloadDeltas(deltaIndexRangeDao);
             UpdateState(deltaIndexRangeDao);
 
-            //if (!CheckSyncProgressAsync().ConfigureAwait(false).GetAwaiter().GetResult())
-            //{
-            //    Progress(_deltaIndexService.Height(), _rangeSize);
-            //}
-
             CheckSyncProgressAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
-            Progress(_deltaIndexService.Height(), _rangeSize);
+            Progress(CurrentHighestDeltaIndexStored, _rangeSize);
+        }
+
+        private void DownloadDeltas(IList<DeltaIndexDao> deltaIndexes)
+        {
+            Parallel.ForEach(deltaIndexes, async deltaIndex =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        var deltaStream =
+                            await _dfsService.UnixFsApi.ReadFileAsync(deltaIndex.Cid).ConfigureAwait(false);
+                        await _dfsService.UnixFsApi
+                           .AddAsync(deltaStream, options: new AddFileOptions { Hash = _hashProvider.HashingAlgorithm.Name })
+                           .ConfigureAwait(false);
+                        return;
+                    }
+                    catch (Exception exc) { }
+
+                    await Task.Delay(100).ConfigureAwait(false);
+                }
+            });
         }
 
         private int GetSyncProgressPercentage()
@@ -246,28 +242,6 @@ namespace Catalyst.Core.Modules.Sync
             }
         }
 
-        private void DownloadDeltas(IList<DeltaIndexDao> deltaIndexes)
-        {
-            Parallel.ForEach(deltaIndexes, async deltaIndex =>
-            {
-                while (true)
-                {
-                    try
-                    {
-                        var deltaStream =
-                            await _dfsService.UnixFsApi.ReadFileAsync(deltaIndex.Cid).ConfigureAwait(false);
-                        await _dfsService.UnixFsApi
-                           .AddAsync(deltaStream, options: new AddFileOptions { Hash = _hashProvider.HashingAlgorithm.Name })
-                           .ConfigureAwait(false);
-                        return;
-                    }
-                    catch (Exception exc) { }
-
-                    await Task.Delay(100).ConfigureAwait(false);
-                }
-            });
-        }
-
         private void UpdateState(List<DeltaIndexDao> deltaIndexes) => deltaIndexes.ForEach(x =>
         {
             if (_deltaHashProvider.TryUpdateLatestHash(_previousHash, x.Cid))
@@ -282,7 +256,6 @@ namespace Catalyst.Core.Modules.Sync
             State.CurrentBlock = CurrentHighestDeltaIndexStored;
             State.HighestBlock = highestDeltaIndex.Height;
 
-            //await FinalizeSyncToEndAsync().ConfigureAwait(false);
             if (CurrentHighestDeltaIndexStored >= highestDeltaIndex.Height)
             {
                 _userOutput.WriteLine($"Sync Progress: {GetSyncProgressPercentage()}%");
@@ -292,22 +265,6 @@ namespace Catalyst.Core.Modules.Sync
 
             _userOutput.WriteLine($"Sync Progress: {GetSyncProgressPercentage()}%");
             return false;
-        }
-
-        private async Task<DeltaIndex> FinalizeSyncToEndAsync()
-        {
-            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync().ConfigureAwait(false);
-            while (highestDeltaIndex.Height > CurrentHighestDeltaIndexStored && highestDeltaIndex.Height < CurrentHighestDeltaIndexStored + _rangeSize)
-            {
-                var cid = highestDeltaIndex.Cid.ToArray().ToCid();
-
-                _deltaHashProvider.TryUpdateLatestHash(_previousHash, cid);
-
-                _previousHash = cid;
-
-                highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync().ConfigureAwait(false);
-            }
-            return highestDeltaIndex;
         }
 
         private async Task Completed()
@@ -329,6 +286,7 @@ namespace Catalyst.Core.Modules.Sync
             {
                 if (disposing)
                 {
+                    _scoredDeltaIndexRangeDisposable?.Dispose();
                     _peerSyncManager?.Dispose();
                     _deltaHeightWatcher?.Dispose();
                 }

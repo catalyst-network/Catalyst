@@ -40,6 +40,7 @@ namespace Catalyst.Core.Modules.Sync
         public DeltaHistoryRanker(DeltaHistoryRequest deltaHistoryRequest)
         {
             DeltaHistoryRequest = deltaHistoryRequest;
+            Height = (int) deltaHistoryRequest.Height;
         }
 
         public void Add(RepeatedField<DeltaIndex> key)

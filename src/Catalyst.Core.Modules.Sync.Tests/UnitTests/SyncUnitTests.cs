@@ -106,8 +106,12 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
         private readonly ManualResetEventSlim _manualResetEventSlim;
 
+        private readonly CancellationToken _cancellationToken;
+
         public SyncUnitTests()
         {
+            _cancellationToken = new CancellationToken();
+
             _manualResetEventSlim = new ManualResetEventSlim(false);
 
             _testScheduler = new TestScheduler();
@@ -407,6 +411,103 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             _manualResetEventSlim.Wait();
 
             sync.CurrentHighestDeltaIndexStored.Should().Be(_syncTestHeight);
+        }
+
+        private Dictionary<Cid, Delta> BuildChainedDeltas(int chainSize)
+        {
+            var chainedDeltas = Enumerable.Range(0, chainSize + 1).ToDictionary(
+                i => _hashProvider.ComputeUtf8MultiHash(i.ToString()).ToCid(),
+                i =>
+                {
+                    var previousHash = _hashProvider.ComputeUtf8MultiHash((i - 1).ToString()).ToCid();
+                    var delta = DeltaHelper.GetDelta(_hashProvider, previousHash);
+                    return delta;
+                });
+
+            _userOutput.WriteLine("chain is:");
+            _userOutput.WriteLine(string.Join(Environment.NewLine,
+                chainedDeltas.Select((c, i) =>
+                    $"{i}: current {c.Key} | previous {c.Value.PreviousDeltaDfsHash.ToByteArray().ToCid()}")));
+            return chainedDeltas;
+        }
+
+        private void SetCacheExpectations(Dictionary<Cid, Delta> deltasByHash)
+        {
+            foreach (var delta in deltasByHash)
+            {
+                _deltaCache.TryGetOrAddConfirmedDelta(delta.Key, out Arg.Any<Delta>())
+                   .Returns(ci =>
+                   {
+                       ci[1] = delta.Value;
+                       return true;
+                   });
+            }
+        }
+
+        [Fact]
+        public void CacheDeltasBetween_Should_Stop_When_One_Of_Deltas_Is_Missing()
+        {
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader, _deltaIndexService,
+            Substitute.For<IDfsService>(), _hashProvider, _mapperProvider, _userOutput, Substitute.For<ILogger>());
+
+            var chainSize = 5;
+            var chain = BuildChainedDeltas(chainSize);
+            SetCacheExpectations(chain);
+
+            var hashes = chain.Keys.ToArray();
+            var brokenChainIndex = 2;
+            _deltaCache.TryGetOrAddConfirmedDelta(hashes[brokenChainIndex], out Arg.Any<Delta>())
+               .Returns(false);
+            _userOutput.WriteLine($"chain is broken for {hashes[brokenChainIndex]}, it cannot be found on Dfs.");
+
+            var cachedHashes = sync.CacheDeltasBetween(hashes.First(),
+                hashes.Last(), _cancellationToken).ToList();
+
+            OutputCachedHashes(cachedHashes);
+
+            cachedHashes.Count.Should().Be(chainSize - brokenChainIndex);
+            hashes.TakeLast(chainSize - brokenChainIndex + 1).ToList().ForEach(h =>
+            {
+                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h,
+                    out Arg.Any<Delta>(), _cancellationToken);
+            });
+        }
+
+        private void OutputCachedHashes(List<Cid> cachedHashes)
+        {
+            _userOutput.WriteLine("cached hashes between: ");
+            _userOutput.WriteLine(string.Join(", ", cachedHashes));
+        }
+
+        [Fact]
+        public void CacheDeltasBetween_Should_Complete_When_LatestKnownDelta_Is_Found()
+        {
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader, _deltaIndexService,
+            Substitute.For<IDfsService>(), _hashProvider, _mapperProvider, _userOutput, Substitute.For<ILogger>());
+
+            var chainSize = 7;
+            var chain = BuildChainedDeltas(chainSize);
+            SetCacheExpectations(chain);
+
+            var hashes = chain.Keys.ToArray();
+
+            var latestHashIndex = 3;
+            _userOutput.WriteLine($"Caching deltas between {hashes[latestHashIndex]} and {hashes.Last()}");
+            var cachedHashes = sync.CacheDeltasBetween(hashes[latestHashIndex],
+                hashes.Last(), _cancellationToken).ToList();
+
+            var expectedResultLength = chainSize - latestHashIndex + 1;
+            cachedHashes.Count.Should().Be(expectedResultLength);
+
+            OutputCachedHashes(cachedHashes);
+
+            cachedHashes.Should().BeEquivalentTo(hashes.TakeLast(expectedResultLength));
+
+            hashes.TakeLast(expectedResultLength - 1).Reverse().ToList().ForEach(h =>
+            {
+                _deltaCache.Received(1).TryGetOrAddConfirmedDelta(h,
+                    out Arg.Any<Delta>(), _cancellationToken);
+            });
         }
     }
 }

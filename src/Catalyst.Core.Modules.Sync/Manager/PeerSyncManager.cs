@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -32,24 +31,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.Service;
-using Catalyst.Core.Modules.Sync.Extensions;
-using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
-using Google.Protobuf;
-using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Modules.Sync.Manager
 {
     public class PeerSyncManager : IPeerSyncManager
     {
+        private bool _isRunning;
         public int PeerCount { private set; get; } = 5;
 
         private bool _disposed;
@@ -58,20 +50,16 @@ namespace Catalyst.Core.Modules.Sync.Manager
         private readonly IPeerRepository _peerRepository;
         private readonly IPeerService _peerService;
         private readonly IUserOutput _userOutput;
-        private readonly IDeltaIndexService _deltaIndexService;
         private readonly ReplaySubject<IEnumerable<DeltaIndex>> _scoredDeltaIndexRangeSubject;
 
         private IDisposable _deltaHistorySubscription;
-        private Task _syncDeltaIndexesTask;
 
         public IObservable<IEnumerable<DeltaIndex>> ScoredDeltaIndexRange { get; }
 
         public int MaxSyncPoolSize { get; } = 1;
 
-        public IDictionary<long, DeltaHistoryRanker> _deltaHistoryRankers;
+        public DeltaHistoryRanker _deltaHistoryRanker;
 
-        public BlockingCollection<DeltaHistoryRanker> DeltaHistoryInputQueue { private set; get; }
-        public BlockingCollection<RepeatedField<DeltaIndex>> DeltaHistoryOutputQueue { private set; get; }
 
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
 
@@ -79,7 +67,6 @@ namespace Catalyst.Core.Modules.Sync.Manager
             IPeerRepository peerRepository,
             IPeerService peerService,
             IUserOutput userOutput,
-            IDeltaIndexService deltaIndexService,
             IDeltaHeightWatcher deltaHeightWatcher,
             double threshold = 0.7d,
             IScheduler scheduler = null)
@@ -88,17 +75,10 @@ namespace Catalyst.Core.Modules.Sync.Manager
             _peerRepository = peerRepository;
             _peerService = peerService;
             _userOutput = userOutput;
-            _deltaIndexService = deltaIndexService;
             _deltaHeightWatcher = deltaHeightWatcher;
-
-            _deltaHistoryRankers = new ConcurrentDictionary<long, DeltaHistoryRanker>();
-
             _scoredDeltaIndexRangeSubject =
                 new ReplaySubject<IEnumerable<DeltaIndex>>(1, scheduler ?? Scheduler.Default);
             ScoredDeltaIndexRange = _scoredDeltaIndexRangeSubject.AsObservable();
-
-            DeltaHistoryInputQueue = new BlockingCollection<DeltaHistoryRanker>();
-            DeltaHistoryOutputQueue = new BlockingCollection<RepeatedField<DeltaIndex>>();
 
             _threshold = threshold;
         }
@@ -124,41 +104,41 @@ namespace Catalyst.Core.Modules.Sync.Manager
             var deltaHistoryRequest = new DeltaHistoryRequest
             { Height = (uint)index, Range = (uint)range };
 
-            _deltaHistoryRankers.Add(index, new DeltaHistoryRanker(deltaHistoryRequest));
+            _deltaHistoryRanker = new DeltaHistoryRanker(deltaHistoryRequest);
         }
 
         public void Start()
         {
+            _isRunning = true;
             _deltaHistorySubscription = _peerService.MessageStream.Where(x => x.Payload?.TypeUrl != null &&
                     x.Payload.TypeUrl.EndsWith(typeof(DeltaHistoryResponse).ShortenedProtoFullName()))
                .Select(x => x.Payload.FromProtocolMessage<DeltaHistoryResponse>()).Subscribe(DeltaHistoryOnNext);
 
-            _syncDeltaIndexesTask = Task.Factory.StartNew(SyncDeltaIndexes);
+            Task.Factory.StartNew(SyncDeltaIndexes);
         }
 
         public void Stop() => Dispose();
 
         private async Task SyncDeltaIndexes()
         {
-            while (true)
+            while (_isRunning)
             {
-                var peers = _deltaHeightWatcher.DeltaHeightRanker.GetPeers();
-                foreach (var key in _deltaHistoryRankers.Keys)
+                if (_deltaHistoryRanker != null)
                 {
-                    var first = _deltaHistoryRankers.Keys.First() == key;
+                    var peers = _deltaHeightWatcher.DeltaHeightRanker.GetPeers();
                     var messageCount = Math.Min(peers.Count(), 50);
                     var minimumThreshold = messageCount * _threshold;
-                    var deltaHistoryRanker = _deltaHistoryRankers[key];
-                    var score = deltaHistoryRanker.GetHighestScore();
-                    if (score > minimumThreshold && first)
+                    var score = _deltaHistoryRanker.GetHighestScore();
+                    if (score > minimumThreshold)
                     {
-                        DeltaHistoryOutputQueue.Add(deltaHistoryRanker.GetMostPopular());
-                        _deltaHistoryRankers.Remove(key);
+                        var deltaIndexes = _deltaHistoryRanker.GetMostPopular();
+                        _deltaHistoryRanker = null;
+                        _scoredDeltaIndexRangeSubject.OnNext(deltaIndexes);
+                        continue;
                     }
-                    _messenger.SendMessageToPeers(deltaHistoryRanker.DeltaHistoryRequest, peers);
+                    _messenger.SendMessageToPeers(_deltaHistoryRanker.DeltaHistoryRequest, peers);
                 }
-
-                await Task.Delay(1000);
+                await Task.Delay(2000);
             }
         }
 
@@ -169,15 +149,16 @@ namespace Catalyst.Core.Modules.Sync.Manager
                 return;
             }
 
-            var startHeight = (int)deltaHistoryResponse.DeltaIndex.First().Height;
-            if (_deltaHistoryRankers.ContainsKey(startHeight))
+            var startHeight = (int)deltaHistoryResponse.DeltaIndex.FirstOrDefault()?.Height;
+            if (startHeight == _deltaHistoryRanker.Height)
             {
-                _deltaHistoryRankers[startHeight].Add(deltaHistoryResponse.DeltaIndex);
+                _deltaHistoryRanker.Add(deltaHistoryResponse.DeltaIndex);
             }
         }
 
         public void Dispose()
         {
+            _isRunning = false;
             Dispose(true);
             GC.SuppressFinalize(this);
         }
