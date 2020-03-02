@@ -34,6 +34,7 @@ using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Common.Logging;

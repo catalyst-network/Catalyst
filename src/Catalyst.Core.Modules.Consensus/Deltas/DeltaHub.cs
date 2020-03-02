@@ -170,9 +170,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                return await _dfsService.UnixFsApi.AddAsync(memoryStream, string.Empty,
-                        new AddFileOptions {Hash = _hashProvider.HashingAlgorithm.Name}, cancellationToken)
+                var node = await _dfsService.UnixFsApi.AddAsync(memoryStream, string.Empty,
+                        new AddFileOptions { Hash = _hashProvider.HashingAlgorithm.Name }, cancellationToken)
                    .ConfigureAwait(false);
+                
+                return node;
             }
         }
     }

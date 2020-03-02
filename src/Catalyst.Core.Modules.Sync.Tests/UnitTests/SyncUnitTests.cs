@@ -126,7 +126,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _peerService = Substitute.For<IPeerService>();
 
-            _deltaHashProvider = new DeltaHashProvider(_deltaCache, new SyncState(), Substitute.For<ILogger>());
+            _deltaHashProvider = new DeltaHashProvider(_deltaCache, Substitute.For<ILogger>());
 
             _deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
             _deltaIndexService.Add(new DeltaIndexDao { Cid = _hashProvider.ComputeUtf8MultiHash("0").ToCid(), Height = 0 });

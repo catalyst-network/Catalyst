@@ -43,6 +43,8 @@ using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
 using Serilog;
 using Lib.P2P;
+using System.IO;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Sync
 {
