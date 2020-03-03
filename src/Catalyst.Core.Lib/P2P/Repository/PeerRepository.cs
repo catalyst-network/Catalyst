@@ -52,6 +52,11 @@ namespace Catalyst.Core.Lib.P2P.Repository
             return _repository.FindAll(new Specification<Peer>(p => !p.IsAwolPeer)).Take(count);
         }
 
+        public IEnumerable<Peer> GetAllActivePeers()
+        {
+            return _repository.FindAll(new Specification<Peer>(p => p.InactiveFor.TotalSeconds <= 10d));
+        }
+
         public IEnumerable<Peer> GetRandomPeers(int count)
         {
             return _repository.AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(_repository.Get)

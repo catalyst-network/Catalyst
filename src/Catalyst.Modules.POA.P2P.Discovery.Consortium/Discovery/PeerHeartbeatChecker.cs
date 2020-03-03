@@ -91,6 +91,8 @@ namespace Catalyst.Modules.POA.P2P.Discovery
                     }
                     else
                     {
+                        peer.Touch();
+                        _peerRepository.Update(peer);
                         _nonResponsivePeerMap[peer.DocumentId] = 0;
                     }
                 }).ConfigureAwait(false);

@@ -35,6 +35,7 @@ namespace Catalyst.Abstractions.P2P.Repository
         Peer Get(PeerId id);
         IEnumerable<Peer> GetAll();
         IEnumerable<Peer> GetActivePeers(int count);
+        IEnumerable<Peer> GetAllActivePeers();
         IEnumerable<Peer> GetRandomPeers(int count);
         IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey);
 
