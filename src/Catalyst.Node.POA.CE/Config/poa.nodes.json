@@ -23,5 +23,10 @@
         "Ip": "192.168.1.233",
         "Port": 42076,
         "PublicKey": "45u2xtv5ripmx4etpsjg6pyq3pr6wtumobhfhlleljpi56f34hra"
+    },
+    {
+        "Ip": "192.168.1.232",
+        "Port": 42076,
+        "PublicKey": "3edzejbuvme3ed4wqr5pp23if7rguoy7yddlcy3whijywzvo7lfq"
     }
 ]

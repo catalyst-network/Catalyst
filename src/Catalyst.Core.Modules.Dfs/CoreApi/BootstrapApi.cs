@@ -41,7 +41,8 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             "/ip4/192.168.1.46/tcp/4001/ipfs/QmNNdTXfLRqo4Puc6JPGq2o3xDBcJhxDXCbThuzDV6nRP1",
             "/ip4/192.168.1.47/tcp/4001/ipfs/QmQVoUpHf3yveqcrF2cFTWgutrSFo1Cm1CSffqKQZ52WHL",
             "/ip4/192.168.1.233/tcp/4001/ipfs/QmPDpc3KHGtomZjAsfuw7ZaYrahVNBtXX8Kjoy6cCMRLp7",
-            "/ip4/192.168.1.40/tcp/4001/ipfs/QmbRNTx28U6Wptthtog4vwXF5QtMyTfZdEX56MCFFPdZHB"
+            "/ip4/192.168.1.40/tcp/4001/ipfs/QmbRNTx28U6Wptthtog4vwXF5QtMyTfZdEX56MCFFPdZHB",
+            "/ip4/192.168.1.232/tcp/4001/ipfs/QmaZtpXfM713jTpLACJ2njMm7Qi4D2FNrAjZKM1e6L9bLM"
             //"/ip4/192.168.1.38/tcp/4001/ipfs/QmR7UM1QSh9h87SccdCxivtZiW6taYfRoLJgjBGBMtNBU4"
             //"/ip4/134.209.180.20/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdr2BeLZ4Kg7CeAUJqSW7Wps3BZyNwDyto9NFGreeNzLv8",
             //"/ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",            // mars.i.ipfs.io
