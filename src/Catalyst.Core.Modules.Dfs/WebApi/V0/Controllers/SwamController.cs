@@ -23,6 +23,7 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.WebApi.V0.Dto;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         /// <summary>
         ///   Creates a new controller.
         /// </summary>
-        public SwarmController(ICoreApi dfs) : base(dfs) { }
+        public SwarmController(IDfsService dfs) : base(dfs) { }
 
         /// <summary>
         ///   Peer addresses.

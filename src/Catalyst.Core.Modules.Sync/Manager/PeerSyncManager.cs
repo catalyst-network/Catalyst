@@ -90,7 +90,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
         public bool PeersAvailable()
         {
             var peerCount = _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult().Count();
-            return peerCount >= 3;
+            return peerCount >= 2;
         }
 
         public bool ContainsPeerHistory() { return _peerRepository.GetAll().Any(); }
