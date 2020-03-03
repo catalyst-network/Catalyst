@@ -58,7 +58,9 @@ namespace Catalyst.Core.Lib.DAO.Transaction
     {
         private readonly IHashProvider _hashProvider;
 
-        public PublicEntryMapperInitialiser(IHashProvider hashProvider) { _hashProvider = hashProvider; }
+        public PublicEntryMapperInitialiser(IHashProvider hashProvider) { 
+            _hashProvider = hashProvider; 
+        }
 
         public void InitMappers(IMapperConfigurationExpression cfg)
         {

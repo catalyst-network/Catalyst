@@ -71,6 +71,12 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             try
             {
                 var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
+                //todo come back to later
+                if (peer == null)
+                {
+                    return;
+                }
+
                 Guard.Argument(peer, nameof(peer)).NotNull();
 
                 // ReSharper disable once PossibleNullReferenceException

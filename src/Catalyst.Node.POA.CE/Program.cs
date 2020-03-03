@@ -52,6 +52,7 @@ using Catalyst.Modules.POA.P2P;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Network;
 using CommandLine;
+using MultiFormats;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -209,7 +209,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             _deltaHeightWatcher = new DeltaHeightWatcher(_messenger, _peerRepository, _peerService);
 
             _peerSyncManager = new PeerSyncManager(_messenger, _peerRepository,
-                _peerService, _userOutput, _deltaIndexService, _deltaHeightWatcher);
+                _peerService, _userOutput, _deltaHeightWatcher);
         }
 
         private DeltaHistoryResponse GenerateSampleData(int height, int range, int maxHeight = -1)

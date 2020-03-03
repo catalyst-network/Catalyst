@@ -30,6 +30,7 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
@@ -50,6 +51,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
         private readonly IPeerRepository _peerRepository;
         private readonly IPeerService _peerService;
         private readonly IUserOutput _userOutput;
+        private readonly IDfsService _dfsService;
         private readonly ReplaySubject<IEnumerable<DeltaIndex>> _scoredDeltaIndexRangeSubject;
 
         private IDisposable _deltaHistorySubscription;
@@ -68,6 +70,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             IPeerService peerService,
             IUserOutput userOutput,
             IDeltaHeightWatcher deltaHeightWatcher,
+            IDfsService dfsService,
             double threshold = 0.7d,
             IScheduler scheduler = null)
         {
@@ -76,6 +79,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             _peerService = peerService;
             _userOutput = userOutput;
             _deltaHeightWatcher = deltaHeightWatcher;
+            _dfsService = dfsService;
             _scoredDeltaIndexRangeSubject =
                 new ReplaySubject<IEnumerable<DeltaIndex>>(1, scheduler ?? Scheduler.Default);
             ScoredDeltaIndexRange = _scoredDeltaIndexRangeSubject.AsObservable();
@@ -85,8 +89,8 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         public bool PeersAvailable()
         {
-            var peerCount = _peerRepository.Count();
-            return peerCount > 0;
+            var peerCount = _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult().Count();
+            return peerCount >= 3;
         }
 
         public bool ContainsPeerHistory() { return _peerRepository.GetAll().Any(); }
@@ -95,6 +99,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
         {
             while (!PeersAvailable() && !cancellationToken.IsCancellationRequested)
             {
+                _userOutput.WriteLine("Waiting for peers..");
                 await Task.Delay(1000, cancellationToken);
             }
         }

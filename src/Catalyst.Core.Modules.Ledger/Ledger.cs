@@ -39,9 +39,11 @@ using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Dawn;
+using Google.Protobuf;
 using Lib.P2P;
 using Nethermind.Core.Crypto;
 using Nethermind.Store;
+using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
 
@@ -133,6 +135,7 @@ namespace Catalyst.Core.Modules.Ledger
             {
                 var deltaTransactions =
                     delta.PublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
+
                 _mempool.Service.Delete(deltaTransactions);
             }
         }
