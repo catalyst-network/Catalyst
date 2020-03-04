@@ -36,6 +36,8 @@ namespace Catalyst.Abstractions.Sync.Interfaces
         SyncState State { set; get; }
         IDeltaCache DeltaCache { get; }
 
+        void UpdateState(ulong _latestKnownDeltaNumber);
+
         Task StartAsync(CancellationToken cancellationToken = default);
         Task StopAsync(CancellationToken cancellationToken = default);
 

@@ -107,6 +107,11 @@ namespace Catalyst.Core.Modules.Sync
             SyncCompleted = _syncCompletedReplaySubject.AsObservable();
         }
 
+        public void UpdateState(ulong _latestKnownDeltaNumber)
+        {
+            State.CurrentBlock = _latestKnownDeltaNumber;
+        }
+
         /// <inheritdoc />
         public IEnumerable<Cid> CacheDeltasBetween(Cid latestKnownDeltaHash,
             Cid targetDeltaHash,
