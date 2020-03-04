@@ -22,9 +22,11 @@
 #endregion
 
 using System;
+using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
@@ -32,6 +34,7 @@ using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Wire;
+using Dawn;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
@@ -40,13 +43,21 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
-        private readonly SyncState _syncState;
 
-        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, SyncState syncState, ILogger logger)
+        private readonly SyncState _syncState;
+        private readonly IPeerRepository _peerRepository;
+
+        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider,
+            SyncState syncState,
+            IPeerRepository peerRepository,
+            ILogger logger)
             : base(logger)
         {
+            Guard.Argument(peerRepository, nameof(peerRepository)).NotNull();
+
             _syncState = syncState;
             _deltaHashProvider = deltaHashProvider;
+            _peerRepository = peerRepository;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
@@ -72,6 +83,13 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                 if (newHash == null)
                 {
                     Logger.Error("DeltaDfsHash is not a valid hash");
+                    return;
+                }
+
+                var messagePoaNode = _peerRepository.GetPeersByIpAndPublicKey(messageDto.Payload.PeerId.Ip, messageDto.Payload.PeerId.PublicKey).FirstOrDefault();
+                if (messagePoaNode == null)
+                {
+                    Logger.Error($"Message from IP address '{messageDto.Payload.PeerId.Ip}' with public key '{messageDto.Payload.PeerId.PublicKey}' is not found in producer node list.");
                     return;
                 }
 

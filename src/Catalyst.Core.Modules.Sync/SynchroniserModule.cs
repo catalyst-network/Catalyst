@@ -29,7 +29,6 @@ using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Sync.Manager;
 using Catalyst.Core.Modules.Sync.Watcher;
 using SharpRepository.InMemoryRepository;
-using SharpRepository.MongoDbRepository;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Sync
