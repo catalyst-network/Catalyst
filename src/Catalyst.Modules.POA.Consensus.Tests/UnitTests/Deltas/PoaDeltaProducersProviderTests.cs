@@ -58,20 +58,20 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             var peerSettings = PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings();
-            _selfAsPeer = new Peer {PeerId = peerSettings.PeerId};
+            _selfAsPeer = new Peer { PeerId = peerSettings.PeerId };
             var rand = new Random();
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>
                 {
                     var peerIdentifier = PeerIdHelper.GetPeerId(rand.Next().ToString());
-                    var peer = new Peer {PeerId = peerIdentifier};
+                    var peer = new Peer { PeerId = peerIdentifier, LastSeen = DateTime.UtcNow };
                     return peer;
                 }).ToList();
 
             var logger = Substitute.For<ILogger>();
 
             var peerRepository = Substitute.For<IPeerRepository>();
-            peerRepository.GetAll().Returns(_ => _peers);
+            peerRepository.GetActivePoaPeers().Returns(_ => _peers);
 
             _previousDeltaHash =
                 _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
@@ -90,7 +90,8 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         {
             _producersByPreviousDelta.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(false);
 
-            var peers = _peers.Concat(new[] {_selfAsPeer});
+            var peers = _peers;
+            //.Concat(new[] { _selfAsPeer });
 
             var expectedProducers = peers.Select(p =>
                 {
