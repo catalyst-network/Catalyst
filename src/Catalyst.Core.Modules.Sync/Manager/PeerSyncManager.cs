@@ -47,6 +47,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         private bool _disposed;
         private readonly double _threshold;
+        private int _minimumPeers;
         private readonly IMessenger _messenger;
         private readonly IPeerRepository _peerRepository;
         private readonly IPeerService _peerService;
@@ -72,6 +73,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             IDeltaHeightWatcher deltaHeightWatcher,
             IDfsService dfsService,
             double threshold = 0.7d,
+            int minimumPeers = 2,
             IScheduler scheduler = null)
         {
             _messenger = messenger;
@@ -85,12 +87,12 @@ namespace Catalyst.Core.Modules.Sync.Manager
             ScoredDeltaIndexRange = _scoredDeltaIndexRangeSubject.AsObservable();
 
             _threshold = threshold;
+            _minimumPeers = minimumPeers;
         }
 
         public bool PeersAvailable()
         {
-            var peerCount = _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult().Count();
-            return peerCount >= 2;
+            return _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult().Count() >= _minimumPeers;
         }
 
         public bool ContainsPeerHistory() { return _peerRepository.GetAll().Any(); }
@@ -155,7 +157,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             }
 
             var startHeight = (int)deltaHistoryResponse.DeltaIndex.FirstOrDefault()?.Height;
-            if (startHeight == _deltaHistoryRanker.Height)
+            if (_deltaHistoryRanker != null && startHeight == _deltaHistoryRanker.Height)
             {
                 _deltaHistoryRanker.Add(deltaHistoryResponse.DeltaIndex);
             }

@@ -83,7 +83,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
                         if (counterValue >= _maxNonResponsiveCounter)
                         {
                             // @TODO dont remove just dont touch peer
-                            _peerRepository.Delete(peer.DocumentId);
+                            //_peerRepository.Delete(peer.DocumentId);
                             _nonResponsivePeerMap.TryRemove(peer.DocumentId, out _);
                             _logger.Verbose(
                                 $"Peer reached maximum non-responsive count: {peer.PeerId}. Evicted from repository");
