@@ -29,7 +29,6 @@ using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Sync.Manager;
 using Catalyst.Core.Modules.Sync.Watcher;
 using SharpRepository.InMemoryRepository;
-using SharpRepository.MongoDbRepository;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Sync
@@ -43,7 +42,6 @@ namespace Catalyst.Core.Modules.Sync
             builder.RegisterType<Messenger>().As<IMessenger>().SingleInstance();
             builder.RegisterType<PeerSyncManager>().As<IPeerSyncManager>().SingleInstance();
             builder.RegisterType<DeltaHeightWatcher>().As<IDeltaHeightWatcher>().SingleInstance();
-            builder.RegisterType<DeltaDownloadManager>().As<IDeltaDownloadManager>().SingleInstance();
             builder.RegisterType<InMemoryRepository<DeltaIndexDao>>().As<IRepository<DeltaIndexDao>>().SingleInstance();
             //builder.RegisterInstance(new MongoDbRepository<DeltaIndexDao, string>()).As<IRepository<DeltaIndexDao, string>>().SingleInstance();
             builder.RegisterType<DeltaIndexService>().As<IDeltaIndexService>().SingleInstance();
