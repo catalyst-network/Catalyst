@@ -257,6 +257,7 @@ namespace Catalyst.Core.Modules.Ledger
 
             Volatile.Write(ref _latestKnownDeltaNumber, _latestKnownDeltaNumber + 1);
             _deltaIndexService.Map(_latestKnownDeltaNumber, deltaHash); // store delta numbers
+            _synchroniser.State.CurrentBlock = (ulong)_latestKnownDeltaNumber;
         }
 
         private void Restore(int stateSnapshot, Keccak snapshotStateRoot)

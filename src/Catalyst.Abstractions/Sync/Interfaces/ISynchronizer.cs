@@ -33,7 +33,7 @@ namespace Catalyst.Abstractions.Sync.Interfaces
 {
     public interface ISynchroniser : IDisposable
     {
-        SyncState State { get; }
+        SyncState State { set; get; }
         IDeltaCache DeltaCache { get; }
 
         Task StartAsync(CancellationToken cancellationToken = default);

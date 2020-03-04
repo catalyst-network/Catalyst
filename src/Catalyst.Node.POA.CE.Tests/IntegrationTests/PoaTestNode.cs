@@ -98,6 +98,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             var peersInRepo = knownPeerIds.Select(p => new Peer
             {
                 PeerId = p,
+                IsSynchronised = true,
+                Height = 0,
+                IsPoaNode = true,
                 LastSeen = DateTime.UtcNow
             }).ToList();
             _peerRepository.Add(peersInRepo);

@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Sync
 {
     public class Synchroniser : ISynchroniser
     {
-        public SyncState State { get; }
+        public SyncState State { set; get; }
         private bool _disposed;
         private readonly int _rangeSize;
         private readonly IUserOutput _userOutput;
