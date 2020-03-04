@@ -36,10 +36,10 @@ namespace Catalyst.Core.Lib.DAO.Ledger
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
         public new string Id => BuildDocumentId(Height);
-        public long Height { set; get; }
+        public ulong Height { set; get; }
         public string Cid { set; get; }
 
-        public static string BuildDocumentId(long number) => number.ToString("D");
+        public static string BuildDocumentId(ulong number) => number.ToString("D");
 
         public static TProto ToProtoBuff<TProto>(DeltaIndexDao dao, IMapperProvider mapperProvider)
             where TProto : IMessage

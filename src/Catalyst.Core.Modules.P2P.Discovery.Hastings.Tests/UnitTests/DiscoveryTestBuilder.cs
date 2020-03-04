@@ -187,7 +187,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             switch (type.Name)
             {
                 case nameof(PingResponseObserver):
-                    return new PingResponseObserver(logger, Substitute.For<IPeerChallengeRequest>());
+                    return new PingResponseObserver(Substitute.For<IPeerChallengeRequest>(), Substitute.For<IPeerRepository>(), logger);
 
                 case nameof(GetNeighbourResponseObserver):
                     return new GetNeighbourResponseObserver(logger);

@@ -29,6 +29,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Protocols;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Protocols;
@@ -48,14 +49,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : ResponseObserverBase<PingResponse>,
             IP2PMessageObserver, IPeerClientObservable
     {
+        private readonly IPeerRepository _peerRepository;
         private readonly IPeerChallengeRequest _peerChallengeRequest;
         public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
         
-        public PingResponseObserver(ILogger logger, IPeerChallengeRequest peerChallengeRequest)
+        public PingResponseObserver(IPeerChallengeRequest peerChallengeRequest, IPeerRepository peerRepository, ILogger logger)
             : base(logger)
         {
             _peerChallengeRequest = peerChallengeRequest;
+            _peerRepository = peerRepository;
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
@@ -64,6 +67,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             PeerId senderPeerId,
             ICorrelationId correlationId)
         {
+            var peer = _peerRepository.Get(senderPeerId);
+            if (peer != null)
+            {
+                peer.Height = pingResponse.Height;
+                peer.IsSynchronised = pingResponse.IsSync;
+                _peerRepository.Update(peer);
+            }
+
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, senderPeerId, correlationId));
             _peerChallengeRequest.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(senderPeerId));
         }

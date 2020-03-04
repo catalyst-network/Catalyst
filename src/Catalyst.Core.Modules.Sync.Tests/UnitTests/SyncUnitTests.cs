@@ -162,7 +162,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 //    senderPeerIdentifier,
                 //    CorrelationId.GenerateCorrelationId());
 
-                var data = GenerateSampleData((int)request.Height, (int)request.Range, _syncTestHeight);
+                var data = GenerateSampleData((int)request.Height, (int)request.Range, (int)_syncTestHeight);
                 _deltaIndexService.Add(data.DeltaIndex.Select(x => DeltaIndexDao.ToDao<DeltaIndex>(x, _mapperProvider)));
 
                 _deltaHistoryReplaySubject.OnNext(new ObserverDto(Substitute.For<IChannelHandlerContext>(),
@@ -327,7 +327,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _manualResetEventSlim.Wait();
 
-            var range = _deltaIndexService.GetRange(0, _syncTestHeight).Select(x => DeltaIndexDao.ToProtoBuff<DeltaIndex>(x, _mapperProvider));
+            var range = _deltaIndexService.GetRange(0, (ulong)_syncTestHeight).Select(x => DeltaIndexDao.ToProtoBuff<DeltaIndex>(x, _mapperProvider));
             range.Should().BeEquivalentTo(expectedData.DeltaIndex);
         }
 
@@ -394,7 +394,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _manualResetEventSlim.Wait();
 
-            sync.CurrentHighestDeltaIndexStored.Should().Be(_syncTestHeight);
+            sync.CurrentHighestDeltaIndexStored.Should().Be((ulong)_syncTestHeight);
         }
 
         private Dictionary<Cid, Delta> BuildChainedDeltas(int chainSize)

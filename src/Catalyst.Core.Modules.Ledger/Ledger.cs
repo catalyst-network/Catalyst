@@ -120,7 +120,7 @@ namespace Catalyst.Core.Modules.Ledger
             if (latestDeltaIndex != null)
             {
                 _latestKnownDelta = latestDeltaIndex.Cid;
-                _latestKnownDeltaNumber = latestDeltaIndex.Height;
+                _latestKnownDeltaNumber = (long)latestDeltaIndex.Height;
                 return;
             }
 

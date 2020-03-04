@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Sync
     {
         public SyncState State { get; }
         private bool _disposed;
-        private readonly long _rangeSize;
+        private readonly int _rangeSize;
         private readonly IUserOutput _userOutput;
         private readonly IDeltaDfsReader _deltaDfsReader;
         private readonly IDeltaIndexService _deltaIndexService;
@@ -66,11 +66,11 @@ namespace Catalyst.Core.Modules.Sync
 
         private Cid _previousHash;
 
-        public long CurrentHighestDeltaIndexStored => _deltaIndexService.Height();
+        public ulong CurrentHighestDeltaIndexStored => _deltaIndexService.Height();
         public IDeltaCache DeltaCache { get; }
 
-        public IObservable<long> SyncCompleted { get; }
-        private readonly ReplaySubject<long> _syncCompletedReplaySubject;
+        public IObservable<ulong> SyncCompleted { get; }
+        private readonly ReplaySubject<ulong> _syncCompletedReplaySubject;
 
         public Synchroniser(SyncState syncState,
             IPeerSyncManager peerSyncManager,
@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Sync
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
             ILogger logger,
-            long rangeSize = 20, //cannot go over 20 until udp network fragmentation is fixed
+            int rangeSize = 20, //cannot go over 20 until udp network fragmentation is fixed
             IScheduler scheduler = null)
         {
             State = syncState;
@@ -103,7 +103,7 @@ namespace Catalyst.Core.Modules.Sync
             _hashProvider = hashProvider;
             _logger = logger;
 
-            _syncCompletedReplaySubject = new ReplaySubject<long>(1, scheduler ?? Scheduler.Default);
+            _syncCompletedReplaySubject = new ReplaySubject<ulong>(1, scheduler ?? Scheduler.Default);
             SyncCompleted = _syncCompletedReplaySubject.AsObservable();
         }
 
@@ -237,7 +237,7 @@ namespace Catalyst.Core.Modules.Sync
             State.IsRunning = false;
         }
 
-        private void Progress(long index, long range)
+        private void Progress(ulong index, int range)
         {
             if (!State.IsSynchronized)
             {

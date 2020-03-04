@@ -22,12 +22,10 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Deltas;
-using Google.Protobuf.Collections;
 
 namespace Catalyst.Abstractions.Sync.Interfaces
 {
@@ -37,7 +35,7 @@ namespace Catalyst.Abstractions.Sync.Interfaces
         IObservable<IEnumerable<DeltaIndex>> ScoredDeltaIndexRange { get; }
         bool PeersAvailable();
         bool ContainsPeerHistory();
-        void GetDeltaIndexRangeFromPeers(long index, long range);
+        void GetDeltaIndexRangeFromPeers(ulong index, int range);
         Task WaitForPeersAsync(CancellationToken cancellationToken = default);
         void Start();
         void Stop();

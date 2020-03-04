@@ -46,12 +46,12 @@ namespace Catalyst.Core.Lib.Service
             _repository.Add(deltaIndex);
         }
 
-        public IEnumerable<DeltaIndexDao> GetRange(long start, long count)
+        public IEnumerable<DeltaIndexDao> GetRange(ulong start, ulong count)
         {
             return _repository.FindAll(x => x.Height >= start && x.Height <= start + count).OrderBy(x => x.Height);
         }
 
-        public long Height()
+        public ulong Height()
         {
             var deltaIndex = LatestDeltaIndex();
             if (deltaIndex == null)
@@ -63,21 +63,21 @@ namespace Catalyst.Core.Lib.Service
 
         public DeltaIndexDao LatestDeltaIndex()
         {
-            var pagingOptions = new PagingOptions<DeltaIndexDao, long>(1, 2, x => x.Height, isDescending: true);
+            var pagingOptions = new PagingOptions<DeltaIndexDao, ulong>(1, 2, x => x.Height, isDescending: true);
             return _repository.GetAll(pagingOptions).FirstOrDefault();
         }
 
         public void Map(long deltaNumber, Cid deltaHash)
         {
-            if (!_repository.TryGet(DeltaIndexDao.BuildDocumentId(deltaNumber), out _))
+            if (!_repository.TryGet(DeltaIndexDao.BuildDocumentId((ulong)deltaNumber), out _))
             {
-                _repository.Add(new DeltaIndexDao { Height = deltaNumber, Cid = deltaHash });
+                _repository.Add(new DeltaIndexDao { Height = (ulong)deltaNumber, Cid = deltaHash });
             }
         }
 
         public bool TryFind(long deltaNumber, out Cid deltaHash)
         {
-            if (_repository.TryGet(DeltaIndexDao.BuildDocumentId(deltaNumber), out var delta))
+            if (_repository.TryGet(DeltaIndexDao.BuildDocumentId((ulong)deltaNumber), out var delta))
             {
                 deltaHash = delta.Cid;
                 return true;

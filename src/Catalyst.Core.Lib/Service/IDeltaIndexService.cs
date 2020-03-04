@@ -31,8 +31,8 @@ namespace Catalyst.Core.Lib.Service
     {
         void Add(DeltaIndexDao deltaIndex);
         void Add(IEnumerable<DeltaIndexDao> deltaIndexes);
-        long Height();
-        IEnumerable<DeltaIndexDao> GetRange(long start, long count);
+        ulong Height();
+        IEnumerable<DeltaIndexDao> GetRange(ulong start, ulong count);
         DeltaIndexDao LatestDeltaIndex();
         void Map(long deltaNumber, Cid deltaHash);
         bool TryFind(long deltaNumber, out Cid deltaHash);

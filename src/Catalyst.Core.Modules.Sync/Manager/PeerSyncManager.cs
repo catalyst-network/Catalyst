@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             }
         }
 
-        public void GetDeltaIndexRangeFromPeers(long index, long range)
+        public void GetDeltaIndexRangeFromPeers(ulong index, int range)
         {
             var deltaHistoryRequest = new DeltaHistoryRequest
             { Height = (uint)index, Range = (uint)range };

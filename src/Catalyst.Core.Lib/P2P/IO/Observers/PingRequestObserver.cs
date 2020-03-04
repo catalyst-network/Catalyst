@@ -25,6 +25,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.IPPN;
@@ -32,6 +33,7 @@ using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
+using System;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
@@ -40,11 +42,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             IP2PMessageObserver
     {
         private readonly IPeerRepository _peerRepository;
+        private readonly SyncState _syncState;
         public PingRequestObserver(IPeerSettings peerSettings, 
             IPeerRepository peerRepository,
+            SyncState syncState,
             ILogger logger)
             : base(logger, peerSettings) {
             _peerRepository = peerRepository;
+            _syncState = syncState;
         }
         
         /// <summary>
@@ -62,6 +67,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         {
             Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             
             Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
@@ -71,11 +77,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             {
                 _peerRepository.Add(new Peer
                 {
-                    PeerId = senderPeerId
+                    PeerId = senderPeerId,
+                    LastSeen = DateTime.UtcNow
                 });
             }
+            else
+            {
+                peer.LastSeen = DateTime.UtcNow;
+            }
 
-            return new PingResponse();
+            return new PingResponse() { Height = _syncState.HighestBlock, IsSync = _syncState.IsSynchronized } ;
         }
     }
 }

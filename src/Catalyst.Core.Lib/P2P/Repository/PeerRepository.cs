@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public IEnumerable<Peer> GetActivePoaPeers()
         {
-            return _repository.FindAll(new Specification<Peer>(p => !p.IsAwolPeer));
+            return _repository.FindAll(new Specification<Peer>(p => !p.IsAwolPeer && p.IsPoaNode && p.IsSynchronised));
         }
 
         public IEnumerable<Peer> GetRandomPeers(int count)

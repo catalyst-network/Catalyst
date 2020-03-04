@@ -26,9 +26,9 @@ namespace Catalyst.Core.Abstractions.Sync
     public class SyncState
     {
         public bool IsSynchronized { set; get; }
-        public long StartingBlock { set; get; }
-        public long CurrentBlock { set; get; }
-        public long HighestBlock { set; get; }
+        public ulong StartingBlock { set; get; }
+        public ulong CurrentBlock { set; get; }
+        public ulong HighestBlock { set; get; }
         public bool IsRunning { set; get; }
     }
 }
