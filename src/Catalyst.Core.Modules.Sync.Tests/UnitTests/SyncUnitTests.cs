@@ -211,7 +211,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var dfsService = Substitute.For<IDfsService>();
 
             _peerSyncManager = new PeerSyncManager(_messenger, _peerRepository,
-                _peerService, _userOutput, _deltaHeightWatcher, Substitute.For<IDfsService>(), 0);
+                _peerService, _userOutput, _deltaHeightWatcher, Substitute.For<IDfsService>(), 0.7, 0);
         }
 
         private DeltaHistoryResponse GenerateSampleData(int height, int range, int maxHeight = -1)
@@ -314,25 +314,6 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         }
 
         [Fact]
-        public async Task Sync_Can_Receive_DeltaIndexRange_From_Peers()
-        {
-            var deltaIndexService = Substitute.For<IDeltaIndexService>();
-            var cid = _deltaCache.GenesisHash;
-            deltaIndexService.LatestDeltaIndex().Returns(new DeltaIndexDao() { Cid = cid, Height = 0 });
-            deltaIndexService.When(x => x.Add(Arg.Any<IEnumerable<DeltaIndexDao>>())).Do(
-                callInfo => { 
-                    _manualResetEventSlim.Set(); 
-                });
-
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader, deltaIndexService,
-                Substitute.For<IDfsService>(), _hashProvider, _mapperProvider, _userOutput, Substitute.For<ILogger>());
-
-            await sync.StartAsync(CancellationToken.None);
-
-            _manualResetEventSlim.Wait();
-        }
-
-        [Fact]
         public async Task Sync_Can_Add_DeltaIndexRange_To_Repository()
         {
             _syncTestHeight = 10;
@@ -346,7 +327,8 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _manualResetEventSlim.Wait();
 
-            _peerRepository.GetAll().Should().AllBeEquivalentTo(expectedData);
+            var range = _deltaIndexService.GetRange(0, _syncTestHeight).Select(x => DeltaIndexDao.ToProtoBuff<DeltaIndex>(x, _mapperProvider));
+            range.Should().BeEquivalentTo(expectedData.DeltaIndex);
         }
 
         [Fact]
@@ -363,7 +345,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _manualResetEventSlim.Wait();
 
-            _deltaDfsReader.Received(_syncTestHeight + 1).TryReadDeltaFromDfs(Arg.Any<Cid>(), out Arg.Any<Delta>());
+            _deltaCache.Received(_syncTestHeight).TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>());
         }
 
         [Fact]

@@ -197,12 +197,15 @@ namespace Catalyst.Core.Modules.Sync
                 {
                     try
                     {
-                        var deltaStream =
-                            await _dfsService.UnixFsApi.ReadFileAsync(deltaIndex.Cid).ConfigureAwait(false);
-                        await _dfsService.UnixFsApi
-                           .AddAsync(deltaStream, options: new AddFileOptions { Hash = _hashProvider.HashingAlgorithm.Name })
-                           .ConfigureAwait(false);
-                        return;
+                        if(DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
+                        {
+                            return;
+                        }
+                        //var deltaStream =
+                        //    await _dfsService.UnixFsApi.ReadFileAsync(deltaIndex.Cid).ConfigureAwait(false);
+                        //await _dfsService.UnixFsApi
+                        //   .AddAsync(deltaStream, options: new AddFileOptions { Hash = _hashProvider.HashingAlgorithm.Name })
+                        //   .ConfigureAwait(false);
                     }
                     catch (Exception exc) { }
 

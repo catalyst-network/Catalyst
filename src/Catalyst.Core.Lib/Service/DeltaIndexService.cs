@@ -48,7 +48,7 @@ namespace Catalyst.Core.Lib.Service
 
         public IEnumerable<DeltaIndexDao> GetRange(long start, long count)
         {
-            return _repository.FindAll(x => x.Height >= start && x.Height < start + count).OrderBy(x => x.Height);
+            return _repository.FindAll(x => x.Height >= start && x.Height <= start + count).OrderBy(x => x.Height);
         }
 
         public long Height()
