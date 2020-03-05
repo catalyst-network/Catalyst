@@ -81,7 +81,7 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
 
                 // ReSharper disable once PossibleNullReferenceException
                 peer.Reputation += peerReputationChange.ReputationEvent.Amount;
-                //PeerRepository.Update(peer);
+                PeerRepository.Update(peer);
             }
             catch (Exception e)
             {
