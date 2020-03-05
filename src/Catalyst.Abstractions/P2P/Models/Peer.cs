@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.P2P.Models
         public DateTime LastSeen { get; set; }
 
         /// <inheritdoc />
-        public bool IsAwolPeer => InactiveFor > TimeSpan.FromMinutes(1);
+        public bool IsAwolPeer => InactiveFor > TimeSpan.FromMinutes(30);
 
         /// <inheritdoc />
         public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;

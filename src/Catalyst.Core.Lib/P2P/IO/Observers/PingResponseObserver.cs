@@ -67,6 +67,15 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             PeerId senderPeerId,
             ICorrelationId correlationId)
         {
+            var peer = _peerRepository.Get(senderPeerId);
+            if (peer != null)
+            {
+                peer.Height = pingResponse.Height;
+                peer.IsSynchronised = pingResponse.IsSync;
+                peer.Touch();
+                _peerRepository.Update(peer);
+            }
+
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, senderPeerId, correlationId));
             _peerChallengeRequest.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(senderPeerId));
         }
