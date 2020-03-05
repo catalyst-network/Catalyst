@@ -61,7 +61,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             ILogger logger)
         {
             _logger = logger;
-            _selfAsPeer = new Peer {PeerId = peerSettings.PeerId};
+            _selfAsPeer = new Peer { PeerId = peerSettings.PeerId };
             PeerRepository = peerRepository;
             _hashProvider = hashProvider;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
@@ -85,8 +85,13 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             _logger.Information("Calculating favourite delta producers for the successor of {0}.",
                 previousDeltaHash);
 
+            //Refactor this
             var allPeers = PeerRepository.GetActivePoaPeers();
-                //.Concat(new[] {_selfAsPeer});
+            if (!allPeers.Contains(_selfAsPeer))
+            {
+                allPeers.Concat(new[] { _selfAsPeer });
+            }
+            //.Concat(new[] {_selfAsPeer});
 
             var previous = previousDeltaHash.ToArray();
 
