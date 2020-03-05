@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;
@@ -46,6 +47,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
 
         private readonly ILogger _logger;
 
+        private readonly IDfsService _dfsService;
         private readonly IMemoryCache _producersByPreviousDelta;
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         private readonly Peer _selfAsPeer;
@@ -57,6 +59,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         public PoaDeltaProducersProvider(IPeerRepository peerRepository,
             IPeerSettings peerSettings,
             IMemoryCache producersByPreviousDelta,
+            IDfsService dfsService,
             IHashProvider hashProvider,
             ILogger logger)
         {
@@ -68,10 +71,13 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
                .AddExpirationToken(
                     new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
             _producersByPreviousDelta = producersByPreviousDelta;
+            _dfsService = dfsService;
+
         }
 
         public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
         {
+            //var peers = _dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult().ToList();
             Guard.Argument(previousDeltaHash, nameof(previousDeltaHash)).NotNull();
 
             if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHash),

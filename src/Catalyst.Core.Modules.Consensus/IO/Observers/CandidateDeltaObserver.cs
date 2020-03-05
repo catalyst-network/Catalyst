@@ -26,6 +26,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.Service;
@@ -44,17 +45,24 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         private readonly IDeltaVoter _deltaVoter;
         private readonly IDeltaIndexService _deltaIndexService;
         private readonly IHashProvider _hashProvider;
+        private readonly SyncState _syncState;
 
-        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IDeltaIndexService deltaIndexService, IHashProvider provider, ILogger logger)
+        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IDeltaIndexService deltaIndexService, SyncState syncState, IHashProvider provider, ILogger logger)
             : base(logger)
         {
             _deltaVoter = deltaVoter;
             _deltaIndexService = deltaIndexService;
+            _syncState = syncState;
             _hashProvider = provider;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {
+            if (!_syncState.IsSynchronized)
+            {
+                return;
+            }
+
             try
             {
                 Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(),
