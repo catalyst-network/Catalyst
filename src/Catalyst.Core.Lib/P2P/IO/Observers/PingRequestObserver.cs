@@ -87,6 +87,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
                 peer.Height = pingRequest.Height;
                 peer.IsSynchronised = pingRequest.IsSync;
                 peer.LastSeen = DateTime.UtcNow;
+                _peerRepository.Update(peer);
             }
 
             return new PingResponse();

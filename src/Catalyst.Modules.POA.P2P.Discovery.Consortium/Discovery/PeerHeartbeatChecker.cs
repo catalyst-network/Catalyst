@@ -61,7 +61,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             var currentSeconds = DateTime.UtcNow.Second;
             var delay = TimeSpan.FromSeconds(currentSeconds % _checkHeartbeatInterval.TotalSeconds);
             _subscription = Observable
-               .Timer(_checkHeartbeatInterval)
+               .Interval(_checkHeartbeatInterval)
                ///.Delay(delay)
                .StartWith(-1L)
                .Subscribe(interval => CheckHeartbeat());
