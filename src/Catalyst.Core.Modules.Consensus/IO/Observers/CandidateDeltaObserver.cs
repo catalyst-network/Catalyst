@@ -64,8 +64,8 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                 /////////////////////////////////////////////////////////////////////////////////////////////////
                 var deserialized = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
                 var previousDeltaDfsHashCid = deserialized.PreviousDeltaDfsHash.ToByteArray().ToCid();
-
-                if (_deltaIndexService.LatestDeltaIndex().Cid != previousDeltaDfsHashCid)
+                var p = _deltaIndexService.LatestDeltaIndex().Cid;
+                if (p != previousDeltaDfsHashCid)
                 {
                     Logger.Verbose("Omiting CandidateDeltaBroadcast as previous delta does not match");
                     return;
