@@ -31,6 +31,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -46,6 +47,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         private readonly ILogger _logger;
         private readonly PeerId _senderIdentifier;
         private readonly IPeerClient _peerClient;
+        private readonly SyncState _syncState;
         private readonly int _ttl;
 
         public ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
@@ -53,8 +55,9 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         public PeerChallengeRequest(ILogger logger,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
+            SyncState syncState,
             int ttl,
-            IScheduler scheduler = null) 
+            IScheduler scheduler = null)
             : base(logger,
                 peerSettings.PeerId,
                 new CancellationTokenProvider(ttl),
@@ -66,6 +69,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             _logger = logger;
             _peerClient = peerClient;
             _ttl = ttl;
+            _syncState = syncState;
         }
 
         public async Task<bool> ChallengePeerAsync(PeerId recipientPeerId)
@@ -73,7 +77,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             try
             {
                 var correlationId = CorrelationId.GenerateCorrelationId();
-                var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier, correlationId);
+                var protocolMessage = new PingRequest() { Height = _syncState.CurrentBlock, IsSync = _syncState.IsSynchronized }.ToProtocolMessage(_senderIdentifier, correlationId);
                 var messageDto = new MessageDto(
                     protocolMessage,
                     recipientPeerId
@@ -85,8 +89,8 @@ namespace Catalyst.Core.Lib.P2P.Protocols
                     new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
                 {
                     await ChallengeResponseMessageStreamer
-                       .FirstAsync(a => a != null 
-                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
+                       .FirstAsync(a => a != null
+                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey)
                          && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
                        .ToTask(cancellationTokenSource.Token)
                        .ConfigureAwait(false);

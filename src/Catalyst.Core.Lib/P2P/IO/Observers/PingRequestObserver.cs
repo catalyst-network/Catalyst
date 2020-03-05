@@ -67,7 +67,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         {
             Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             
             Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
@@ -78,15 +77,19 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
                 _peerRepository.Add(new Peer
                 {
                     PeerId = senderPeerId,
+                    Height = pingRequest.Height,
+                    IsSynchronised = pingRequest.IsSync,
                     LastSeen = DateTime.UtcNow
                 });
             }
             else
             {
+                peer.Height = pingRequest.Height;
+                peer.IsSynchronised = pingRequest.IsSync;
                 peer.LastSeen = DateTime.UtcNow;
             }
 
-            return new PingResponse() { Height = _syncState.HighestBlock, IsSync = _syncState.IsSynchronized } ;
+            return new PingResponse();
         }
     }
 }
