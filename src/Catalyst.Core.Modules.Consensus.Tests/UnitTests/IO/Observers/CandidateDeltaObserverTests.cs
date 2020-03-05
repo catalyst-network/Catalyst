@@ -27,6 +27,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
@@ -60,7 +61,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _newHash = hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
             _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
-            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, hashProvider, logger);
+
+            var deltaIndexService = Substitute.For<IDeltaIndexService>();
+            deltaIndexService.LatestDeltaIndex().Returns(new Lib.DAO.Ledger.DeltaIndexDao() { Cid = _prevHash, Height = 0 });
+            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, deltaIndexService, hashProvider, logger);
         }
 
         [Fact]

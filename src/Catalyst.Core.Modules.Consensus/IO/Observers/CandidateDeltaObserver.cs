@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
 using Serilog;
@@ -41,12 +42,14 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public sealed class CandidateDeltaObserver : BroadcastObserverBase<CandidateDeltaBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaVoter _deltaVoter;
+        private readonly IDeltaIndexService _deltaIndexService;
         private readonly IHashProvider _hashProvider;
 
-        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IHashProvider provider, ILogger logger)
+        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IDeltaIndexService deltaIndexService, IHashProvider provider, ILogger logger)
             : base(logger)
         {
             _deltaVoter = deltaVoter;
+            _deltaIndexService = deltaIndexService;
             _hashProvider = provider;
         }
 
@@ -56,13 +59,20 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             {
                 Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(),
                     messageDto.Payload.PeerId.Port);
-                
+
                 // @TODO here we use the protobuff message to parse rather than using the CandidateDeltaBroadcastDao
                 /////////////////////////////////////////////////////////////////////////////////////////////////
                 var deserialized = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
                 var previousDeltaDfsHashCid = deserialized.PreviousDeltaDfsHash.ToByteArray().ToCid();
+
+                if (_deltaIndexService.LatestDeltaIndex().Cid != previousDeltaDfsHashCid)
+                {
+                    Logger.Verbose("Omiting CandidateDeltaBroadcast as previous delta does not match");
+                    return;
+                }
+
                 /////////////////////////////////////////////////////////////////////////////////////////////////
-                
+
                 if (!_hashProvider.IsValidHash(previousDeltaDfsHashCid.Hash.ToArray()))
                 {
                     Logger.Error("PreviousDeltaDfsHash is not a valid hash");
