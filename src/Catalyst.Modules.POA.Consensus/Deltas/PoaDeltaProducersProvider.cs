@@ -93,10 +93,10 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
 
             //Refactor this
             var allPeers = PeerRepository.GetActivePoaPeers();
-            if (!allPeers.Contains(_selfAsPeer))
-            {
-                allPeers.Concat(new[] { _selfAsPeer });
-            }
+            //if (!allPeers.Contains(_selfAsPeer))
+            //{
+            //    allPeers.Concat(new[] { _selfAsPeer });
+            //}
             //.Concat(new[] {_selfAsPeer});
 
             var previous = previousDeltaHash.ToArray();
