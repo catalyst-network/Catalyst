@@ -42,14 +42,11 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             IP2PMessageObserver
     {
         private readonly IPeerRepository _peerRepository;
-        private readonly SyncState _syncState;
         public PingRequestObserver(IPeerSettings peerSettings, 
             IPeerRepository peerRepository,
-            SyncState syncState,
             ILogger logger)
             : base(logger, peerSettings) {
             _peerRepository = peerRepository;
-            _syncState = syncState;
         }
         
         /// <summary>
