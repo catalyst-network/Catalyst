@@ -96,6 +96,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 var rankingFactor = GetProducerRankFactor(candidate);
 
+
                 var candidateCacheKey = GetCandidateCacheKey(candidate);
                 if (_candidatesCache.TryGetValue<IScoredCandidateDelta>(candidateCacheKey, out var retrievedScoredDelta)
                 )

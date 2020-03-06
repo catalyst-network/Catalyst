@@ -77,17 +77,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
                 _peerRepository.Add(new Peer
                 {
                     PeerId = senderPeerId,
-                    Height = pingRequest.Height,
-                    IsSynchronised = pingRequest.IsSync,
                     LastSeen = DateTime.UtcNow
                 });
-            }
-            else
-            {
-                peer.Height = pingRequest.Height;
-                peer.IsSynchronised = pingRequest.IsSync;
-                peer.LastSeen = DateTime.UtcNow;
-                _peerRepository.Update(peer);
             }
 
             return new PingResponse();

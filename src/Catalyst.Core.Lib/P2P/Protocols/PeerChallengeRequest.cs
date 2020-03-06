@@ -47,7 +47,6 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         private readonly ILogger _logger;
         private readonly PeerId _senderIdentifier;
         private readonly IPeerClient _peerClient;
-        private readonly SyncState _syncState;
         private readonly int _ttl;
 
         public ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
@@ -55,7 +54,6 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         public PeerChallengeRequest(ILogger logger,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
-            SyncState syncState,
             int ttl,
             IScheduler scheduler = null)
             : base(logger,
@@ -69,7 +67,6 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             _logger = logger;
             _peerClient = peerClient;
             _ttl = ttl;
-            _syncState = syncState;
         }
 
         public async Task<bool> ChallengePeerAsync(PeerId recipientPeerId)
@@ -77,7 +74,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             try
             {
                 var correlationId = CorrelationId.GenerateCorrelationId();
-                var protocolMessage = new PingRequest() { Height = _syncState.CurrentBlock, IsSync = _syncState.IsSynchronized }.ToProtocolMessage(_senderIdentifier, correlationId);
+                var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier, correlationId);
                 var messageDto = new MessageDto(
                     protocolMessage,
                     recipientPeerId

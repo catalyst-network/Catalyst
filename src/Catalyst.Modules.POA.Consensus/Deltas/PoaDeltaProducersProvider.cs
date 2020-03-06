@@ -46,8 +46,6 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         private static string GetCacheKey(string rawKey) { return nameof(PoaDeltaProducersProvider) + "-" + rawKey; }
 
         private readonly ILogger _logger;
-
-        private readonly IDfsService _dfsService;
         private readonly IMemoryCache _producersByPreviousDelta;
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         private readonly Peer _selfAsPeer;
@@ -59,7 +57,6 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         public PoaDeltaProducersProvider(IPeerRepository peerRepository,
             IPeerSettings peerSettings,
             IMemoryCache producersByPreviousDelta,
-            IDfsService dfsService,
             IHashProvider hashProvider,
             ILogger logger)
         {
@@ -71,13 +68,11 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
                .AddExpirationToken(
                     new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
             _producersByPreviousDelta = producersByPreviousDelta;
-            _dfsService = dfsService;
 
         }
 
         public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
         {
-            //var peers = _dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult().ToList();
             Guard.Argument(previousDeltaHash, nameof(previousDeltaHash)).NotNull();
 
             if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHash),
@@ -91,12 +86,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             _logger.Information("Calculating favourite delta producers for the successor of {0}.",
                 previousDeltaHash);
 
-            //Refactor this
             var allPeers = PeerRepository.GetActivePoaPeers();
-            if (!allPeers.Contains(_selfAsPeer))
-            {
-                allPeers.Concat(new[] { _selfAsPeer });
-            }
             //.Concat(new[] { _selfAsPeer });
 
             var previous = previousDeltaHash.ToArray();
