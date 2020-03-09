@@ -43,12 +43,10 @@ namespace Catalyst.Core.Modules.Sync.Manager
     public class PeerSyncManager : IPeerSyncManager
     {
         private bool _isRunning;
-        public int PeerCount { private set; get; } = 5;
-
         private bool _disposed;
         private readonly double _threshold;
         private int _minimumPeers;
-        private readonly IMessenger _messenger;
+        private readonly IPeerClient _peerClient;
         private readonly IPeerRepository _peerRepository;
         private readonly IPeerService _peerService;
         private readonly IUserOutput _userOutput;
@@ -66,7 +64,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
 
-        public PeerSyncManager(IMessenger messenger,
+        public PeerSyncManager(IPeerClient peerClient,
             IPeerRepository peerRepository,
             IPeerService peerService,
             IUserOutput userOutput,
@@ -76,7 +74,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             int minimumPeers = 2,
             IScheduler scheduler = null)
         {
-            _messenger = messenger;
+            _peerClient = peerClient;
             _peerRepository = peerRepository;
             _peerService = peerService;
             _userOutput = userOutput;
@@ -133,7 +131,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
                 if (_deltaHistoryRanker != null)
                 {
                     var peers = _deltaHeightWatcher.DeltaHeightRanker.GetPeers();
-                    var messageCount = Math.Min(peers.Count(), 50);
+                    var messageCount = Math.Min(_minimumPeers, 50);
                     var minimumThreshold = messageCount * _threshold;
                     var score = _deltaHistoryRanker.GetHighestScore();
                     if (score > minimumThreshold)
@@ -143,7 +141,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
                         _scoredDeltaIndexRangeSubject.OnNext(deltaIndexes);
                         continue;
                     }
-                    _messenger.SendMessageToPeers(_deltaHistoryRanker.DeltaHistoryRequest, peers);
+                    _peerClient.SendMessageToPeers(_deltaHistoryRanker.DeltaHistoryRequest, peers);
                 }
                 await Task.Delay(2000);
             }
@@ -165,7 +163,6 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         public void Dispose()
         {
-            _isRunning = false;
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -180,6 +177,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
                 }
             }
             _disposed = true;
+            _isRunning = false;
         }
     }
 }

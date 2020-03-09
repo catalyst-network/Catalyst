@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
     public class DeltaHeightWatcherUnitTests
     {
-        private IMessenger _messenger;
+        private IPeerClient _peerClient;
         private IHashProvider _hashProvider;
         private IPeerService _peerService;
         private IPeerRepository _peerRepository;
@@ -63,9 +63,9 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
         public DeltaHeightWatcherUnitTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _peerService = Substitute.For<IPeerService>();
-            _messenger = Substitute.For<IMessenger>();
+            _peerClient = Substitute.For<IPeerClient>();
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             _deltaHeightReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
             _peerService.MessageStream.Returns(_deltaHeightReplaySubject.AsObservable());
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var deltaHeight = 100u;
             GeneratePeers(100);
 
-            _messenger.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+            _peerClient.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
               {
                   var peerIds = (IEnumerable<PeerId>)x[1];
                   foreach (var peerId in peerIds)
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                   }
               });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_messenger, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
@@ -119,7 +119,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var deltaHeight = 100u;
             GeneratePeers(100);
 
-            _messenger.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+            _peerClient.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
             {
                 var peerIds = (IEnumerable<PeerId>)x[1];
                 foreach (var peerId in peerIds)
@@ -151,7 +151,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 }
             });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_messenger, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
@@ -164,7 +164,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         {
             GeneratePeers(100);
 
-            _messenger.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+            _peerClient.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
             {
                 var peerIds = (IEnumerable<PeerId>)x[1];
                 foreach (var peerId in peerIds)
@@ -181,7 +181,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 }
             });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_messenger, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
@@ -194,7 +194,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         {
             GeneratePeers(1);
 
-            _messenger.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+            _peerClient.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
             {
                 var peerIds = (IEnumerable<PeerId>)x[1];
                 foreach (var peerId in peerIds)
@@ -211,7 +211,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 }
             });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_messenger, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();

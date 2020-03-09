@@ -45,7 +45,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private IDisposable _deltaHeightSubscription;
         private readonly IPeerRepository _peerRepository;
         private readonly IPeerService _peerService;
-        private readonly IMessenger _messenger;
+        private readonly IPeerClient _peerClient;
 
         public DeltaIndex LatestDeltaHash { set; get; }
 
@@ -53,12 +53,12 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private ManualResetEventSlim _manualResetEventSlim;
         private readonly int _peersPerCycle = 50;
 
-        public DeltaHeightWatcher(IMessenger messenger,
+        public DeltaHeightWatcher(IPeerClient peerClient,
             IPeerRepository peerRepository,
             IPeerService peerService,
             double threshold = 0.7d)
         {
-            _messenger = messenger;
+            _peerClient = peerClient;
             DeltaHeightRanker = new DeltaHeightRanker(peerRepository, 100, threshold);
             _peerRepository = peerRepository;
             _peerService = peerService;
@@ -126,7 +126,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             _page %= totalPages;
             _page++;
             var peers = DeltaHeightRanker.GetPeers().Union(_peerRepository.TakeHighestReputationPeers(_page, _peersPerCycle).Select(x => x.PeerId));
-            _messenger.SendMessageToPeers(new LatestDeltaHashRequest(), peers);
+            _peerClient.SendMessageToPeers(new LatestDeltaHashRequest(), peers);
 
             if (_page >= totalPages)
             {

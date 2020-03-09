@@ -196,6 +196,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Sync"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Sync.Tests", "Catalyst.Core.Modules.Sync.Tests\Catalyst.Core.Modules.Sync.Tests.csproj", "{E7A434FA-9B53-47BA-835B-543A71BAF791}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocksDbSharp", "..\submodules\nethermind\src\rocksdb-sharp\RocksDbSharp\RocksDbSharp.csproj", "{EFF149E3-13B9-4228-82CF-79BAF3C419B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -458,6 +460,10 @@ Global
 		{E7A434FA-9B53-47BA-835B-543A71BAF791}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7A434FA-9B53-47BA-835B-543A71BAF791}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7A434FA-9B53-47BA-835B-543A71BAF791}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFF149E3-13B9-4228-82CF-79BAF3C419B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFF149E3-13B9-4228-82CF-79BAF3C419B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFF149E3-13B9-4228-82CF-79BAF3C419B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFF149E3-13B9-4228-82CF-79BAF3C419B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -473,6 +479,7 @@ Global
 		{46B22170-3D54-43F4-9474-C9F02DEF3A14} = {3339A04C-D933-4712-A556-F8F1B74B9753}
 		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{BAB02934-9818-4691-91AF-8B56980C82C7} = {3339A04C-D933-4712-A556-F8F1B74B9753}
+		{EFF149E3-13B9-4228-82CF-79BAF3C419B3} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}

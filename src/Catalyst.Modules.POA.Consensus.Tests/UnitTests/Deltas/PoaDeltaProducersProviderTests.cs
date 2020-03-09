@@ -55,7 +55,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
         public PoaDeltaProducersProviderTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var peerSettings = PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings();
             _selfAsPeer = new Peer { PeerId = peerSettings.PeerId };

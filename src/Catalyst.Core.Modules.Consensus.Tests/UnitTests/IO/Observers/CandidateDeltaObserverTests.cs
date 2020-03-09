@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 
         public CandidateDeltaObserverTests()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaVoter = Substitute.For<IDeltaVoter>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();

@@ -99,7 +99,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _testScheduler = new TestScheduler();
             _cryptoContext = new FfiWrapper();
             _fakeRepository = Substitute.For<IAccountRepository>();
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _mapperProvider = new TestMapperProvider();
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
 

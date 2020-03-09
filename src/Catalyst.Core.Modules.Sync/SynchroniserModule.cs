@@ -39,7 +39,6 @@ namespace Catalyst.Core.Modules.Sync
         {
             builder.RegisterType<Synchroniser>().As<ISynchroniser>().SingleInstance();
             builder.RegisterType<SyncState>().SingleInstance();
-            builder.RegisterType<Messenger>().As<IMessenger>().SingleInstance();
             builder.RegisterType<PeerSyncManager>().As<IPeerSyncManager>().SingleInstance();
             builder.RegisterType<DeltaHeightWatcher>().As<IDeltaHeightWatcher>().SingleInstance();
             builder.RegisterType<InMemoryRepository<DeltaIndexDao>>().As<IRepository<DeltaIndexDao>>().SingleInstance();

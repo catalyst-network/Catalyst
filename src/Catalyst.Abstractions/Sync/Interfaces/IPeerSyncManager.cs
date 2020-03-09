@@ -31,7 +31,6 @@ namespace Catalyst.Abstractions.Sync.Interfaces
 {
     public interface IPeerSyncManager : IDisposable
     {
-        int PeerCount { get; }
         IObservable<IEnumerable<DeltaIndex>> ScoredDeltaIndexRange { get; }
         bool PeersAvailable();
         bool ContainsPeerHistory();

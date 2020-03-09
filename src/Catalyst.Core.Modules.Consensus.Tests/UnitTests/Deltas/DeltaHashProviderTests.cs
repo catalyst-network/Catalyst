@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _deltaCache.GenesisHash.Returns(
                 _hashProvider.ComputeMultiHash(new Delta().ToByteArray()).ToCid());

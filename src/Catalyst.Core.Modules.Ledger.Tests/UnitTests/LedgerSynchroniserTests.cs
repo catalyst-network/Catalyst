@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
         public LedgerSynchroniserTests(ITestOutputHelper output)
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _output = output;
             _deltaCache = Substitute.For<IDeltaCache>();
