@@ -161,7 +161,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var options = new AddFileOptions
             {
-                Hash = "keccak-256",
+                Hash = "blake2b-256",
                 RawLeaves = true
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);

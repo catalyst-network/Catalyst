@@ -194,20 +194,21 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesOne32.ToHexString());
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Blake_precompile()
-        {
-            Address blakeAddress = Address.FromNumber(1 + KatVirtualMachine.CatalystPrecompilesAddressingSpace);
-            string addressCode = blakeAddress.Bytes.ToHexString(false);
-            var code = Bytes.FromHexString("0x602060006080600073" + addressCode + "45fa00");
-            var txTracer = RunVirtualMachine(code);
-            var serializer = new EthereumJsonSerializer();
-            var trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
-            trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000001");
-            trace.Entries.Last().Memory.First().Should().Be("378d0caaaa3855f1b38693c1d6ef004fd118691c95c959d4efa950d6d6fcf7c1");
-        }
+        //todo using keccak for testnet and blake2b precompile for mainnet.
+        //[Fact]
+        //[Trait(Traits.TestType, Traits.IntegrationTest)]
+        //public void Blake_precompile()
+        //{
+        //    Address blakeAddress = Address.FromNumber(1 + KatVirtualMachine.CatalystPrecompilesAddressingSpace);
+        //    string addressCode = blakeAddress.Bytes.ToHexString(false);
+        //    var code = Bytes.FromHexString("0x602060006080600073" + addressCode + "45fa00");
+        //    var txTracer = RunVirtualMachine(code);
+        //    var serializer = new EthereumJsonSerializer();
+        //    var trace = txTracer.BuildResult();
+        //    _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+        //    trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000001");
+        //    trace.Entries.Last().Memory.First().Should().Be("378d0caaaa3855f1b38693c1d6ef004fd118691c95c959d4efa950d6d6fcf7c1");
+        //}
         
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
