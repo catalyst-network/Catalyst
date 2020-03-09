@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
         public DaoTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var initialisers = new IMapperInitializer[]
             {

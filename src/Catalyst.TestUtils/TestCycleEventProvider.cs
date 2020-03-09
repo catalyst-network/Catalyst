@@ -49,7 +49,7 @@ namespace Catalyst.TestUtils
             var dateTimeProvider = Substitute.For<IDateTimeProvider>();
             var deltaHashProvider = Substitute.For<IDeltaHashProvider>();
 
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("keccak-256");
             var hashingProvider = new HashProvider(hashingAlgorithm);
 
             dateTimeProvider.UtcNow.Returns(_ => Scheduler.Now.DateTime);

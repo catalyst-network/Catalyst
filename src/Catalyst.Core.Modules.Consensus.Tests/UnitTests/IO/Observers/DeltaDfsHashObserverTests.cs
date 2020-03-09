@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 
         public DeltaDfsHashObserverTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             _syncState = new SyncState {IsSynchronized = true, IsRunning = true};

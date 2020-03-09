@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             _passwordManager.RetrieveOrPromptPassword(default)
                .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("test password"));
 
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _keystore = new LocalKeyStore(_passwordManager,
                 _context,

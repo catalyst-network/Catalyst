@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 
         public ConsensusTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _cycleEventProvider = new TestCycleEventProvider();
             _deltaBuilder = Substitute.For<IDeltaBuilder>();
             _deltaVoter = Substitute.For<IDeltaVoter>();

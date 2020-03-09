@@ -184,7 +184,7 @@
 //
 //         DfsService CreateNode()
 //         {
-//             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+//             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 //             var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
 //             var ipfs = new DfsService(hashProvider, testPasswordManager);
 //             ipfs.Options.Repository.Folder = Path.Combine(Path.GetTempPath(), $"swarm-{nodeNumber++}");

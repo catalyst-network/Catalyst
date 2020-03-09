@@ -213,7 +213,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_verify_precompile()
         {
-            HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             
             FfiWrapper cryptoContext = new FfiWrapper();
             var privateKey = cryptoContext.GeneratePrivateKey();
@@ -321,7 +321,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
                 storageProvider,
                 stateUpdateHashProvider,
                 specProvider,
-                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
                 new FfiWrapper(),
                 LimboLogs.Instance);
             virtualMachine.Run(vmState, txTracer);

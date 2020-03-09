@@ -85,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler.Start();
 
             var response = new DeltaHistoryResponse();
-            var hp = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hp = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             var lastDeltaHash = hp.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
 
             for (uint x = 0; x < 10; x++)

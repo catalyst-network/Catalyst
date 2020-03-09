@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     {
         public BadFavouritesData()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             Add(null, typeof(ArgumentNullException));
             Add(new FavouriteDeltaBroadcast(), typeof(InvalidDataException));
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public DeltaElectorTests()
         {
             _testScheduler = new TestScheduler();
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _logger = Substitute.For<ILogger>();
             _reputationManager =
                 new ReputationManager(new PeerRepository(new InMemoryRepository<Peer, string>()), _logger, _testScheduler);

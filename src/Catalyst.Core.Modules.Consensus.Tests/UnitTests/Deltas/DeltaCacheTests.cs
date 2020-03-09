@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaCacheTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _memoryCache = Substitute.For<IMemoryCache>();
             _dfsReader = Substitute.For<IDeltaDfsReader>();
             _logger = Substitute.For<ILogger>();

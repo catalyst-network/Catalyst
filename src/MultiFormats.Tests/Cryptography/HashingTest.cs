@@ -169,7 +169,7 @@ namespace MultiFormats.Tests.Cryptography
             },
             new TestVector
             {
-                Algorithm = "blake2b-256", Input = Merkle,
+                Algorithm = "keccak-256", Input = Merkle,
                 Digest = "7d0a1371550f3306532ff44520b649f8be05b72674e46fc24468ff74323ab030"
             },
             new TestVector

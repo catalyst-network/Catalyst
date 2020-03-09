@@ -63,7 +63,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 
         public CycleEventsProviderTests(ITestOutputHelper output)
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _output = output;
             _testScheduler = new TestScheduler();
