@@ -204,7 +204,7 @@ namespace Catalyst.Core.Modules.Sync
                     {
                         if(DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
                         {
-                            continue;
+                            break;
                         }
                     }
                     catch (Exception exc) { }
