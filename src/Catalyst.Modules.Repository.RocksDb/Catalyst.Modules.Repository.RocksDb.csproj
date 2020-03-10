@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <RootNamespace>Catalyst.Modules.Repository.RocksDb</RootNamespace>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Modules.Repository.RocksDb.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SharpRepository.Repository" Version="2.1.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\submodules\nethermind\src\rocksdb-sharp\RocksDbSharp\RocksDbSharp.csproj" />
+    </ItemGroup>
+</Project>

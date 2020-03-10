@@ -31,6 +31,7 @@ using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Ledger.Repository;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
+using SharpRepository.MongoDbRepository;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -44,13 +45,21 @@ namespace Catalyst.Core.Modules.Ledger
 
             //builder.RegisterType<DeltaIndexService>().As<IDeltaIndexService>().SingleInstance();
 
-            builder.Register(c => new InMemoryRepository<Account, string>())
+            builder.Register(c => new MongoDbRepository<Account, string>())
                .As<IRepository<Account, string>>()
                .SingleInstance();
 
+            builder.Register(c => new MongoDbRepository<TransactionReceipts, string>())
+               .As<IRepository<TransactionReceipts, string>>()
+               .SingleInstance();
+
+            builder.Register(c => new MongoDbRepository<TransactionToDelta, string>())
+            .As<IRepository<TransactionToDelta, string>>()
+            .SingleInstance();
+
             builder.RegisterType<LedgerSynchroniser>().As<ILedgerSynchroniser>();
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
-            builder.RegisterType<DeltaByNumberRepository>().As<IDeltaByNumberRepository>().SingleInstance();
+            //builder.RegisterType<DeltaByNumberRepository>().As<IDeltaByNumberRepository>().SingleInstance();
             builder.RegisterType<TransactionRepository>().As<ITransactionRepository>().SingleInstance();
             builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();
 

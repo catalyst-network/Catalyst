@@ -26,16 +26,18 @@ using Lib.P2P;
 using Nethermind.Core;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
+using System.ComponentModel.DataAnnotations;
 
 namespace Catalyst.Abstractions.Ledger.Models
 {
-    public class TransactionReceipts : IDocument
+    public class TransactionReceipts
     {
         public TransactionReceipt[] Receipts { get; set; }
 
         [RepositoryPrimaryKey(Order = 1)]
+        [Key]
         [JsonProperty("id")]
-        public string DocumentId { get; set; }
+        public string Id { get; set; }
     }
 
     public class TransactionReceipt
@@ -52,11 +54,12 @@ namespace Catalyst.Abstractions.Ledger.Models
         public LogEntry[] Logs { get; set; }
     }
 
-    public class TransactionToDelta : IDocument
+    public class TransactionToDelta
     {
         [RepositoryPrimaryKey(Order = 1)]
+        [Key]
         [JsonProperty("id")]
-        public string DocumentId { get; set; }
+        public string Id { get; set; }
 
         public Cid DeltaHash { get; set; }
     }

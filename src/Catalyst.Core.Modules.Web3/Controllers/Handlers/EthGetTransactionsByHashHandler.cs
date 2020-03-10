@@ -34,7 +34,8 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             if (api.FindTransactionData(transactionHash, out var deltaHash, out var delta, out var index))
             {
-                return api.ToTransactionForRpc(new DeltaWithCid {Cid = deltaHash, Delta = delta}, index);
+                var a = api.ToTransactionForRpc(new DeltaWithCid { Cid = deltaHash, Delta = delta }, index);
+                return a;
             }
 
             return default;
