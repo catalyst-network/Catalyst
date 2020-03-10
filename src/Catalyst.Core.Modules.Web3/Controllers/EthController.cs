@@ -70,10 +70,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
                 JsonRpcRequest[] requests = jToken.ToObject<JsonRpcRequest[]>();
                 return HandleManyRequests(requests);
             }
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/add-catalyst-provider-support
             JsonRpcRequest request = jToken?.ToObject<JsonRpcRequest>();
             return HandleSingleRequest(request);
         }

@@ -195,7 +195,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesOne32.ToHexString());
         }
 
-<<<<<<< HEAD
         //todo using keccak for testnet and blake2b precompile for mainnet.
         //[Fact]
         //[Trait(Traits.TestType, Traits.IntegrationTest)]
@@ -211,7 +210,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         //    trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000001");
         //    trace.Entries.Last().Memory.First().Should().Be("378d0caaaa3855f1b38693c1d6ef004fd118691c95c959d4efa950d6d6fcf7c1");
         //}
-=======
+
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Blake_precompile()
@@ -246,19 +245,13 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000001");
             trace.Entries.Last().Memory.First().Should().StartWith("01");
         }
->>>>>>> origin/add-blake2-and-ed25519-precompiles
         
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_verify_incorrect_sig()
         {
-<<<<<<< HEAD
             HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-            
-=======
-            HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
->>>>>>> origin/add-blake2-and-ed25519-precompiles
             FfiWrapper cryptoContext = new FfiWrapper();
             IPrivateKey signingPrivateKey = cryptoContext.GeneratePrivateKey();
             IPrivateKey otherPrivateKey = cryptoContext.GeneratePrivateKey();
