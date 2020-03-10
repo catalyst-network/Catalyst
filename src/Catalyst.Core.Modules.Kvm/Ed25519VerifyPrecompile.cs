@@ -34,22 +34,19 @@ namespace Catalyst.Core.Modules.Kvm
     {
         private readonly ICryptoContext _cryptoContext;
 
-        public Ed25519VerifyPrecompile(ICryptoContext cryptoContext)
-        {
-            _cryptoContext = cryptoContext ?? throw new ArgumentNullException(nameof(cryptoContext));
-        }
+        public Ed25519VerifyPrecompile(ICryptoContext cryptoContext) { _cryptoContext = cryptoContext ?? throw new ArgumentNullException(nameof(cryptoContext)); }
 
         public Address Address { get; } = Address.FromNumber(2 + KatVirtualMachine.CatalystPrecompilesAddressingSpace);
 
         public long DataGasCost(byte[] inputData, IReleaseSpec releaseSpec) { return 0L; }
 
         public long BaseGasCost(IReleaseSpec releaseSpec) { return 3000L; }
-        
+
         public (byte[], bool) Run(byte[] inputData)
         {
             if (inputData.Length != 160)
             {
-                return (Bytes.Empty, true);
+                return (Bytes.Empty, false);
             }
 
             byte[] message = inputData.AsSpan().Slice(0, 32).ToArray();
@@ -59,8 +56,8 @@ namespace Catalyst.Core.Modules.Kvm
 
             ISignature signature = _cryptoContext.GetSignatureFromBytes(signatureBytes, publicKey);
             return _cryptoContext.Verify(signature, message, signingContext)
-                ? (publicKey, true)
-                : (Bytes.Empty, true);
+                ? (new byte[] {1}, true)
+                : (new byte[] {0}, true);
         }
     }
 }
