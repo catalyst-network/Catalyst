@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.Repository;
 using Lib.P2P;
 using Nethermind.Core;
 using Newtonsoft.Json;
@@ -47,9 +46,9 @@ namespace Catalyst.Abstractions.Ledger.Models
         public long DeltaNumber { get; set; }
         public long GasUsedTotal { get; set; }
         public long GasUsed { get; set; }
-        public Address Sender { get; set; }
-        public Address Recipient { get; set; }
-        public Address ContractAddress { get; set; }
+        public string Sender { get; set; }
+        public string Recipient { get; set; }
+        public string ContractAddress { get; set; }
         public byte StatusCode { get; set; }
         public LogEntry[] Logs { get; set; }
     }
