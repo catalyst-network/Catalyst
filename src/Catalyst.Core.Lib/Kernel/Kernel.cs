@@ -31,9 +31,11 @@ using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Network;
 using Microsoft.Extensions.Configuration;
@@ -222,6 +224,53 @@ namespace Catalyst.Core.Lib.Kernel
                 Instance = ContainerBuilder.Build()
                    .BeginLifetimeScope(declaringType.AssemblyQualifiedName);
             }
+        }
+
+        public Kernel Reset(bool reset)
+        {
+            if (reset)
+            {
+                Logger.Information("Resetting State");
+
+                Logger.Information("Deleting EVM State");
+                Directory.Delete(Path.Join(_targetConfigFolder, "state"));
+
+                Logger.Information("Deleting EVM Code");
+                Directory.Delete(Path.Join(_targetConfigFolder, "code"));
+
+                Logger.Information("Deleting DFS Blocks");
+                Directory.Delete(Path.Join(_targetConfigFolder, "dfs", "blocks"));
+
+                Logger.Information("Deleting DFS Pins");
+                Directory.Delete(Path.Join(_targetConfigFolder, "dfs", "pins"));
+
+                ContainerBuilder.RegisterBuildCallback(buildCallback =>
+                {
+                    var deltaIndexes = buildCallback.Resolve<IRepository<DeltaIndexDao, string>>();
+                    var transactionReceipts = buildCallback.Resolve<IRepository<TransactionReceipts, string>>();
+                    var transactionToDeltas = buildCallback.Resolve<IRepository<TransactionToDelta, string>>();
+
+                    Logger.Information("Deleting DeltaIndexes");
+                    foreach (var deltaIndex in deltaIndexes.GetAll())
+                    {
+                        deltaIndexes.Delete(deltaIndex);
+                    }
+
+                    Logger.Information("Deleting transactionReceipts");
+                    foreach (var transactionReceipt in transactionReceipts.GetAll())
+                    {
+                        transactionReceipts.Delete(transactionReceipt);
+                    }
+
+                    Logger.Information("Deleting transactionToDeltas");
+                    foreach (var transactionToDelta in transactionToDeltas.GetAll())
+                    {
+                        transactionToDeltas.Delete(transactionToDelta);
+                    }
+                });
+            }
+
+            return this;
         }
     }
 }

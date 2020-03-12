@@ -54,5 +54,6 @@ namespace Catalyst.Abstractions.P2P.Repository
         bool Exists(string id);
 
         int Count();
+        int CountActivePeers();
     }
 }

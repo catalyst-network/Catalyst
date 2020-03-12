@@ -52,11 +52,13 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private Timer _requestDeltaHeightTimer;
         private ManualResetEventSlim _manualResetEventSlim;
         private readonly int _peersPerCycle = 50;
+        private readonly int _minimumPeers;
 
         public DeltaHeightWatcher(IPeerClient peerClient,
             IPeerRepository peerRepository,
             IPeerService peerService,
-            double threshold = 0.7d)
+            double threshold = 0.7d,
+            int minimumPeers = 2)
         {
             _peerClient = peerClient;
             DeltaHeightRanker = new DeltaHeightRanker(peerRepository, 100, threshold);
@@ -64,6 +66,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             _peerService = peerService;
             _manualResetEventSlim = new ManualResetEventSlim(false);
             _threshold = threshold;
+            _minimumPeers = minimumPeers;
         }
 
         private int _page;
@@ -71,8 +74,9 @@ namespace Catalyst.Core.Modules.Sync.Watcher
 
         public void RequestDeltaHeightTimerCallback(object state)
         {
-            var acceptanceThreshold = (_peersPerCycle * _threshold);
-            if (_hasLooped || GetMostPopularMessage()?.Score > acceptanceThreshold)
+            //Can improve this later when networking layers get reduced
+            var peerCount = DeltaHeightRanker.GetPeers().Count();
+            if (_hasLooped && peerCount >= _minimumPeers)
             {
                 _manualResetEventSlim.Set();
             }
@@ -88,7 +92,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
                 return 1;
             }
 
-            var pages = (int) Math.Ceiling(peerCount / (decimal)_peersPerCycle);
+            var pages = (int)Math.Ceiling(peerCount / (decimal)_peersPerCycle);
             return pages;
         }
 
@@ -128,7 +132,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             var peers = DeltaHeightRanker.GetPeers().Union(_peerRepository.TakeHighestReputationPeers(_page, _peersPerCycle).Select(x => x.PeerId));
             _peerClient.SendMessageToPeers(new LatestDeltaHashRequest(), peers);
 
-            if (_page >= totalPages)
+            if (_page >= totalPages && DeltaHeightRanker.GetPeers().Count() >= _minimumPeers)
             {
                 _hasLooped = true;
             }

@@ -79,6 +79,9 @@ namespace Catalyst.Node.POA.CE
 
         [Option("network-file", HelpText = "The name of the network file")]
         public string OverrideNetworkFile { get; set; }
+
+        [Option('r', "reset", HelpText = "Reset the state")]
+        public bool Reset { get; set; }
     }
 
     public static class Program
@@ -197,6 +200,7 @@ namespace Catalyst.Node.POA.CE
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
                    .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
+                   .Reset(options.Reset)
                    .StartCustomAsync(CustomBootLogicAsync);
 
                 return 0;

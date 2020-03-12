@@ -38,6 +38,8 @@ namespace Catalyst.Abstractions.Sync.Interfaces
 
         void UpdateState(ulong _latestKnownDeltaNumber);
 
+        IObservable<ulong> SyncCompleted { get; }
+
         Task StartAsync(CancellationToken cancellationToken = default);
         Task StopAsync(CancellationToken cancellationToken = default);
 

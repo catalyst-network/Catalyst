@@ -105,7 +105,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                   }
               });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, minimumPeers: 0);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
@@ -151,7 +151,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 }
             });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, minimumPeers: 0);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
@@ -181,12 +181,12 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 }
             });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, minimumPeers: 0);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
 
-            deltaIndex.Height.Should().Be((uint) (_peerRepository.Count()-1));
+            deltaIndex.Height.Should().Be((uint)(_peerRepository.Count() - 1));
         }
 
         [Fact]
@@ -211,7 +211,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 }
             });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, minimumPeers: 0);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
@@ -220,44 +220,44 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         }
 
         //todo optimize test
- //       [Fact]
- //       public async Task GetHighestDeltaIndexAsync_DeltaIndex_Updates()
- //       {
- //           var deltaHeight = 100u;
- //           GeneratePeers(1);
+        //       [Fact]
+        //       public async Task GetHighestDeltaIndexAsync_DeltaIndex_Updates()
+        //       {
+        //           var deltaHeight = 100u;
+        //           GeneratePeers(1);
 
- //           _peerSyncManager.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
- //           {
- //               var peerIds = (IEnumerable<PeerId>)x[1];
- //               foreach (var peerId in peerIds)
- //               {
- //                   var height = peerId.Port;
- //                   var deltaHeightResponse = new LatestDeltaHashResponse
- //                   {
- //                       DeltaIndex = new DeltaIndex { Cid = _hashProvider.ComputeUtf8MultiHash(deltaHeight.ToString()).ToCid().ToArray().ToByteString(), Height = deltaHeight },
- //                       IsSync = false
- //                   };
+        //           _peerSyncManager.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+        //           {
+        //               var peerIds = (IEnumerable<PeerId>)x[1];
+        //               foreach (var peerId in peerIds)
+        //               {
+        //                   var height = peerId.Port;
+        //                   var deltaHeightResponse = new LatestDeltaHashResponse
+        //                   {
+        //                       DeltaIndex = new DeltaIndex { Cid = _hashProvider.ComputeUtf8MultiHash(deltaHeight.ToString()).ToCid().ToArray().ToByteString(), Height = deltaHeight },
+        //                       IsSync = false
+        //                   };
 
- //                   _deltaHeightReplaySubject.OnNext(new ObserverDto(Substitute.For<IChannelHandlerContext>(),
- //deltaHeightResponse.ToProtocolMessage(peerId, CorrelationId.GenerateCorrelationId())));
+        //                   _deltaHeightReplaySubject.OnNext(new ObserverDto(Substitute.For<IChannelHandlerContext>(),
+        //deltaHeightResponse.ToProtocolMessage(peerId, CorrelationId.GenerateCorrelationId())));
 
- //                   deltaHeight++;
- //               }
- //           });
+        //                   deltaHeight++;
+        //               }
+        //           });
 
- //           var deltaHeightWatcher = new DeltaHeightWatcher(_peerSyncManager, _peerRepository, _peerService);
- //           deltaHeightWatcher.Start();
+        //           var deltaHeightWatcher = new DeltaHeightWatcher(_peerSyncManager, _peerRepository, _peerService);
+        //           deltaHeightWatcher.Start();
 
- //           var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
- //           deltaIndex.Height.Should().Be(100u);
+        //           var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
+        //           deltaIndex.Height.Should().Be(100u);
 
- //           while (deltaIndex.Height == deltaHeight)
- //           {
- //               await Task.Delay(1000);
- //               deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
- //           }
+        //           while (deltaIndex.Height == deltaHeight)
+        //           {
+        //               await Task.Delay(1000);
+        //               deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
+        //           }
 
- //           deltaIndex.Height.Should().NotBe(100u);
- //       }
+        //           deltaIndex.Height.Should().NotBe(100u);
+        //       }
     }
 }

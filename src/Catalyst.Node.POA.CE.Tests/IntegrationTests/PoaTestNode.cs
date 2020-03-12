@@ -58,6 +58,9 @@ using NSubstitute;
 using SharpRepository.InMemoryRepository;
 using Xunit.Abstractions;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.DAO.Ledger;
+using SharpRepository.Repository;
+using Nethermind.Store;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
@@ -155,6 +158,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             var builder = _containerProvider.ContainerBuilder;
 
             builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
+            builder.RegisterType<MemDb>().As<IDb>().SingleInstance();
+            builder.RegisterType<StateDb>().As<ISnapshotableDb>().SingleInstance();
+            builder.RegisterInstance(new InMemoryRepository<DeltaIndexDao, string>()).As<IRepository<DeltaIndexDao, string>>().SingleInstance();
             builder.RegisterInstance(new InMemoryRepository<TransactionReceipts, string>())
                .AsImplementedInterfaces();
             builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())

@@ -52,14 +52,11 @@ namespace Catalyst.Core.Modules.Sync
         private bool _disposed;
         private readonly int _rangeSize;
         private readonly IUserOutput _userOutput;
-        private readonly IDeltaDfsReader _deltaDfsReader;
         private readonly IDeltaIndexService _deltaIndexService;
         private readonly IMapperProvider _mapperProvider;
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IPeerSyncManager _peerSyncManager;
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
-        private readonly IDfsService _dfsService;
-        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
 
         private IDisposable _scoredDeltaIndexRangeDisposable;
@@ -79,8 +76,6 @@ namespace Catalyst.Core.Modules.Sync
             IDeltaHashProvider deltaHashProvider,
             IDeltaDfsReader deltaDfsReader,
             IDeltaIndexService deltaIndexService,
-            IDfsService dfsService,
-            IHashProvider hashProvider,
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
             ILogger logger,
@@ -92,15 +87,12 @@ namespace Catalyst.Core.Modules.Sync
             _deltaHeightWatcher = deltaHeightWatcher;
             DeltaCache = deltaCache;
             _rangeSize = rangeSize;
-            _deltaDfsReader = deltaDfsReader;
             _deltaIndexService = deltaIndexService;
             _mapperProvider = mapperProvider;
             _userOutput = userOutput;
 
             _deltaHashProvider = deltaHashProvider;
 
-            _dfsService = dfsService;
-            _hashProvider = hashProvider;
             _logger = logger;
 
             _syncCompletedReplaySubject = new ReplaySubject<ulong>(1, scheduler ?? Scheduler.Default);
@@ -181,6 +173,7 @@ namespace Catalyst.Core.Modules.Sync
             var firstDeltaIndex = deltaIndexRangeDao.FirstOrDefault();
             if (firstDeltaIndex == null || firstDeltaIndex.Cid != _previousHash)
             {
+                _logger.Error($"Sync Error - Previous delta({_previousHash}) does not match next delta({firstDeltaIndex.Cid})");
                 return;
             }
 
@@ -272,7 +265,7 @@ namespace Catalyst.Core.Modules.Sync
 
         private async Task Completed()
         {
-            State.IsSynchronized = true;
+           State.IsSynchronized = true;
             _syncCompletedReplaySubject.OnNext(CurrentHighestDeltaIndexStored);
             await StopAsync();
         }

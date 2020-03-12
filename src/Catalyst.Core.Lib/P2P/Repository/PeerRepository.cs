@@ -47,15 +47,13 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public IEnumerable<Peer> GetAll() { return _repository.GetAll(); }
 
-        public IEnumerable<Peer> GetActivePeers(int count)
+        public IEnumerable<Peer> GetActivePeers(int count = -1)
         {
             return _repository.FindAll(new Specification<Peer>(p => !p.IsAwolPeer)).Take(count);
         }
 
         public IEnumerable<Peer> GetActivePoaPeers()
         {
-            //!p.IsAwolPeer && p.IsPoaNode && p.IsSynchronised
-            //return _repository.GetAll();
             return _repository.FindAll(new Specification<Peer>(p => p.IsPoaNode));
         }
 
@@ -103,6 +101,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
         public void Delete(string id) { _repository.Delete(id); }
 
         public int Count() { return _repository.Count(); }
+        public int CountActivePeers() { return _repository.FindAll(x=>!x.IsAwolPeer).Count(); }
 
         public void Dispose() { _repository.Dispose(); }
     }

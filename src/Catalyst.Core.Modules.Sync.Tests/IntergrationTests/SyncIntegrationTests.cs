@@ -35,6 +35,7 @@ using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Options;
+using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -45,6 +46,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Nethermind.Core.Crypto;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
@@ -75,7 +77,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
                     var peerIdentifier = nodeSettings.PeerId;
                     var name = $"producer{i.ToString()}";
                     var dfs = TestDfs.GetTestDfs(output, fileSystem);
-                    return new {index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem};
+                    return new { index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem };
                 }
             ).ToList();
 
@@ -84,13 +86,13 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
             _nodes = new List<PoaTestNode>();
             foreach (var nodeDetails in poaNodeDetails)
             {
-                nodeDetails.dfs.Options.Discovery.BootstrapPeers = poaNodeDetails.Except(new[] {nodeDetails})
+                nodeDetails.dfs.Options.Discovery.BootstrapPeers = poaNodeDetails.Except(new[] { nodeDetails })
                    .Select(x => x.dfs.LocalPeer.Addresses.First());
                 var node = new PoaTestNode(nodeDetails.name,
                     nodeDetails.privateKey,
                     nodeDetails.nodeSettings,
                     nodeDetails.dfs,
-                    peerIdentifiers.Except(new[] {nodeDetails.peerIdentifier}),
+                    peerIdentifiers.Except(new[] { nodeDetails.peerIdentifier }),
                     nodeDetails.fileSystem,
                     output);
 
@@ -135,76 +137,73 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
         //}
 
         [Fact]
-        public async Task Can_Sync_From_Another_Node()
+        public async Task Can_Sync_From_Another_Nodes()
         {
-            var t = DateTime.UtcNow;
+            var manualResetEvent = new ManualResetEvent(false);
+            var tasks = _nodes.Count();
+            var utcNow = DateTime.UtcNow;
             var cids = new List<string>();
-            for (var j = 0; j < 3; j++)
+            Delta previousDelta = null;
+            for (var j = 0; j < _nodes.Count(); j++)
             {
                 var nodeJ = _nodes[j];
                 var ledger = nodeJ._containerProvider.Container.Resolve<ILedger>();
                 var deltaHashProvider = nodeJ._containerProvider.Container.Resolve<IDeltaHashProvider>();
                 var hashProvider = nodeJ._containerProvider.Container.Resolve<IHashProvider>();
                 var dfsService = nodeJ._containerProvider.Container.Resolve<IDfsService>();
+                var deltaCache = nodeJ._containerProvider.Container.Resolve<IDeltaCache>();
+                var sync = nodeJ._containerProvider.Container.Resolve<ISynchroniser>();
+                sync.SyncCompleted.Subscribe(x =>
+                {
+                    tasks--;
+                    if (tasks <= 0)
+                    {
+                        _endOfTestCancellationSource.Cancel();
+                        manualResetEvent.Set();
+                    }
+                });
 
-                for (var i = 1; i < 57; i++)
+                if (previousDelta == null)
+                {
+                    deltaCache.TryGetOrAddConfirmedDelta(deltaCache.GenesisHash, out previousDelta);
+                }
+
+                for (var i = 1; i < 25; i++)
                 {
                     if (j == 2)
                     {
                         break;
                     }
 
-                    if (j == 1 && i > 20)
+                    if (j == 1 && i > 15)
                     {
                         break;
                     }
 
                     var delta = new Delta
                     {
+                        StateRoot = previousDelta.StateRoot.ToByteString(),
                         PreviousDeltaDfsHash = ledger.LatestKnownDelta.ToArray().ToByteString(),
                         MerkleRoot = hashProvider.ComputeMultiHash(ledger.LatestKnownDelta.ToArray()).ToCid().ToArray()
                            .ToByteString(),
-                        TimeStamp = Timestamp.FromDateTime(t.AddMilliseconds(i + 1))
+                        TimeStamp = Timestamp.FromDateTime(utcNow.AddMilliseconds(i + 1))
                     };
 
                     var node = await dfsService.UnixFsApi.AddAsync(delta.ToByteArray().ToMemoryStream(), string.Empty,
-                            new AddFileOptions {Hash = hashProvider.HashingAlgorithm.Name}, CancellationToken.None)
+                            new AddFileOptions { Hash = hashProvider.HashingAlgorithm.Name }, CancellationToken.None)
                        .ConfigureAwait(false);
 
-                    if (j == 0)
-                    {
-                        var a = node.Id.Hash.ToBase32();
-                        cids.Add(a);
-                    }
+                    cids.Add(node.Id.Hash.ToBase32());
 
                     deltaHashProvider.TryUpdateLatestHash(ledger.LatestKnownDelta, node.Id);
                 }
             }
 
-            var s = cids.Aggregate((x, y) => x + "," + y);
+            Task.Run(() => _nodes[0].RunAsync(_endOfTestCancellationSource.Token));
+            Task.Run(() => _nodes[1].RunAsync(_endOfTestCancellationSource.Token));
+            Task.Run(() => _nodes[2].RunAsync(_endOfTestCancellationSource.Token));
 
-            //ledger.Update(node.Id);
-            var poaTestNode1 = _nodes[0];
-            Task.Run(() =>
-            {
-                poaTestNode1.RunAsync(_endOfTestCancellationSource.Token);
-            });
-
-            var poaTestNode2 = _nodes[1];
-            Task.Run(() =>
-            {
-                poaTestNode2.RunAsync(_endOfTestCancellationSource.Token);
-            });
-
-            var poaTestNode3 = _nodes[2];
-            Task.Run(() =>
-            {
-                poaTestNode3.RunAsync(_endOfTestCancellationSource.Token);
-            });
-
-            await Task.Delay(Debugger.IsAttached
-                ? TimeSpan.FromHours(3)
-                : CycleConfiguration.Default.CycleDuration.Multiply(2.3)).ConfigureAwait(false);
+            manualResetEvent.WaitOne(TimeSpan.FromMinutes(5));
         }
     }
 }
