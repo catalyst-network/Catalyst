@@ -155,8 +155,7 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<UploadFileTransferFactory>().As<IUploadFileTransferFactory>().SingleInstance();
 
             // Transaction validators
-            // builder.RegisterType<TransactionValidator>().As<ITransactionValidator>().SingleInstance();
-            builder.RegisterType<AlwaysTrueTransactionValidator>().As<ITransactionValidator>().SingleInstance();
+            builder.RegisterType<TransactionValidator>().As<ITransactionValidator>().SingleInstance();
             builder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>().SingleInstance();
 
             // Register PRNG
