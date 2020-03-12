@@ -232,17 +232,33 @@ namespace Catalyst.Core.Lib.Kernel
             {
                 Logger.Information("Resetting State");
 
-                Logger.Information("Deleting EVM State");
-                Directory.Delete(Path.Join(_targetConfigFolder, "state"), true);
+                var stateFolder = Path.Join(_targetConfigFolder, "state");
+                if (Directory.Exists(stateFolder))
+                {
+                    Logger.Information("Deleting EVM State");
+                    Directory.Delete(stateFolder, true);
+                }
 
-                Logger.Information("Deleting EVM Code");
-                Directory.Delete(Path.Join(_targetConfigFolder, "code"), true);
+                var codeFolder = Path.Join(_targetConfigFolder, "code");
+                if (Directory.Exists(codeFolder))
+                {
+                    Logger.Information("Deleting EVM Code");
+                    Directory.Delete(codeFolder, true);
+                }
 
-                Logger.Information("Deleting DFS Blocks");
-                Directory.Delete(Path.Join(_targetConfigFolder, "dfs", "blocks"), true);
+                var blockFolder = Path.Join(_targetConfigFolder, "dfs", "blocks");
+                if (Directory.Exists(blockFolder))
+                {
+                    Logger.Information("Deleting DFS Blocks");
+                    Directory.Delete(blockFolder, true);
+                }
 
-                Logger.Information("Deleting DFS Pins");
-                Directory.Delete(Path.Join(_targetConfigFolder, "dfs", "pins"), true);
+                var pinFolder = Path.Join(_targetConfigFolder, "dfs", "pins");
+                if (Directory.Exists(pinFolder))
+                {
+                    Logger.Information("Deleting DFS Pins");
+                    Directory.Delete(pinFolder, true);
+                }
 
                 ContainerBuilder.RegisterBuildCallback(buildCallback =>
                 {
