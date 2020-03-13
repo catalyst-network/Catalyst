@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<DeltaTransactionRetriever>().As<IDeltaTransactionRetriever>().SingleInstance();
             builder.RegisterType<CycleSchedulerProvider>().As<ICycleSchedulerProvider>();
             builder.RegisterType<Consensus>().As<IConsensus>().SingleInstance();
-            builder.RegisterInstance(CycleConfiguration.Default).As<ICycleConfiguration>();
+            builder.RegisterInstance(CycleConfiguration.Speed).As<ICycleConfiguration>();
 
             builder.RegisterType<DeltaBuilder>().As<IDeltaBuilder>().SingleInstance()
                .WithExecutionParameters(builder);
