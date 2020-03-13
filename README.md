@@ -55,9 +55,9 @@ Catalyst was designed by an experienced team of engineers and researchers who we
 
 Our api docs can be found on our documentation site [https://catalyst-network.github.io/Catalyst/api](https://catalyst-network.github.io/Catalyst/api)
 
-## Quick Start Guide
+## Quick Start Guide for Node
 
-This is a quick start guide for new and existing .Net developers
+This is a quick start guide for running a node on the Catalyst test network 
 
 #### 1. Install .Net
 
@@ -90,7 +90,20 @@ If you have not done so before, download and install the Microsoft Visual C++ Bu
 
 Go to https://www.rust-lang.org/tools/install, then download and execute `rustup-init.exe`
 
-#### 3. Clone the repository
+#### 3. Install Snappy for rocksdb (Unix systems only)
+Snappy must be installed for Linux and MacOS opperating sytems using:
+'sudo apt-get install libsnappy-dev'
+
+#### 4. Create a self signed certificate (Linux only)
+
+If you're on Linux, you need to create a Self Signed Certificate the instructions for which are found here:
+
+[Create a Self Signed Certificate](https://github.com/catalyst-network/Catalyst.Node/wiki/Create-a-Self-Signed-Certificate)
+
+#### 4. Install MongoDB
+Instructions to install MongoDB can be found [here](https://docs.mongodb.com/manual/administration/install-community/) for each operating system. 
+
+#### 5. Clone the repository
 
 To clone the repository it is assumed you have Git installed.
 If you do not, then follow the [Git install instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for Linux/Windows/macOS.
@@ -105,28 +118,31 @@ If you do not, then follow the [Git install instructions](https://git-scm.com/bo
 
 The clone command is:
 
-`git clone --recurse-submodules -j8 git@github.com:catalyst-network/Catalyst.git`
+'git clone https://github.com/catalyst-network/Catalyst.git'
 
 
-#### 4. Install Nuget dependencies
+Then navigate into the repository:
 
-Now we have our code and submodules, the next step is to install the dependencies from .Net's package manager Nuget.
+'cd Catalyst'
 
-Navigate to the src folder:
+Install the dependencies using the command: 
 
-`cd src`
+'git submodule update --init --recursive --force'
 
-Next restore the dependencies:
 
-`dotnet restore Catalyst.sln`
 
 #### 5. Build the solution
 
-Still in the `src` folder:
+Navigate to the 'src' folder:
+
+'cd src'
+
+
+In the `src` folder build the solution:
 
 `dotnet build Catalyst.sln`
 
-#### 6. Run the test suite
+#### 6. Run the node 
 
 To check all is good under the hood, you can run the test suite. If you're on Linux, you need to [Create a Self Signed Certificate](https://github.com/catalyst-network/Catalyst.Node/wiki/Create-a-Self-Signed-Certificate)
 
