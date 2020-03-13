@@ -150,7 +150,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
         private void DeltaHistoryOnNext(DeltaHistoryResponse deltaHistoryResponse)
         {
             //First block is always previous block
-            if (deltaHistoryResponse.DeltaIndex.Count == 1)
+            if (deltaHistoryResponse.DeltaIndex.Count <= 1)
             {
                 return;
             }
