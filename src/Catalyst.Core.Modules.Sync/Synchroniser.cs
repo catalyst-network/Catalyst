@@ -79,7 +79,7 @@ namespace Catalyst.Core.Modules.Sync
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
             ILogger logger,
-            int rangeSize = 15, //cannot go over 20 until udp network fragmentation is fixed
+            int rangeSize = 20, //cannot go over 20 until udp network fragmentation is fixed
             IScheduler scheduler = null)
         {
             State = syncState;
