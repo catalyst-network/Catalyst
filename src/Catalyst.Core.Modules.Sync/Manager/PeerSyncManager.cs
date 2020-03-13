@@ -155,10 +155,16 @@ namespace Catalyst.Core.Modules.Sync.Manager
                 return;
             }
 
-            var startHeight = (int)deltaHistoryResponse.DeltaIndex.FirstOrDefault()?.Height;
-            if (_deltaHistoryRanker != null && startHeight == _deltaHistoryRanker.Height)
+            var deltaHistoryRanker = _deltaHistoryRanker;
+            if(deltaHistoryRanker == null)
             {
-                _deltaHistoryRanker.Add(deltaHistoryResponse.DeltaIndex);
+                return;
+            }
+
+            var startHeight = (int)deltaHistoryResponse.DeltaIndex.FirstOrDefault()?.Height;
+            if (startHeight == deltaHistoryRanker.Height)
+            {
+                deltaHistoryRanker.Add(deltaHistoryResponse.DeltaIndex);
             }
         }
 

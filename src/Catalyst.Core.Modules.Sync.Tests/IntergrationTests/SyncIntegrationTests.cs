@@ -168,7 +168,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
                     deltaCache.TryGetOrAddConfirmedDelta(deltaCache.GenesisHash, out previousDelta);
                 }
 
-                for (var i = 1; i < 25; i++)
+                for (var i = 1; i < 125; i++)
                 {
                     if (j == 2)
                     {
@@ -203,7 +203,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
             Task.Run(() => _nodes[1].RunAsync(_endOfTestCancellationSource.Token));
             Task.Run(() => _nodes[2].RunAsync(_endOfTestCancellationSource.Token));
 
-            manualResetEvent.WaitOne(TimeSpan.FromMinutes(5));
+            manualResetEvent.WaitOne(TimeSpan.FromMinutes(60));
         }
     }
 }
