@@ -37,23 +37,17 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         // From https://github.com/libp2p/go-libp2p-daemon/blob/master/bootstrap.go#L14
         public static MultiAddress[] Defaults =
         {
-            "/ip4/192.168.1.45/tcp/4001/ipfs/QmUUNAUD5YLrCZ4vBn8WsxTbMjtgJYkAkAYiFyoEdb3edu",
-            "/ip4/192.168.1.46/tcp/4001/ipfs/QmNNdTXfLRqo4Puc6JPGq2o3xDBcJhxDXCbThuzDV6nRP1",
-            "/ip4/192.168.1.47/tcp/4001/ipfs/QmQVoUpHf3yveqcrF2cFTWgutrSFo1Cm1CSffqKQZ52WHL",
-            "/ip4/192.168.1.233/tcp/4001/ipfs/QmPDpc3KHGtomZjAsfuw7ZaYrahVNBtXX8Kjoy6cCMRLp7",
-            "/ip4/192.168.1.40/tcp/4001/ipfs/QmbRNTx28U6Wptthtog4vwXF5QtMyTfZdEX56MCFFPdZHB",
-            "/ip4/192.168.1.232/tcp/4001/ipfs/QmaZtpXfM713jTpLACJ2njMm7Qi4D2FNrAjZKM1e6L9bLM"
-            //"/ip4/192.168.1.38/tcp/4001/ipfs/QmR7UM1QSh9h87SccdCxivtZiW6taYfRoLJgjBGBMtNBU4"
-            //"/ip4/134.209.180.20/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdr2BeLZ4Kg7CeAUJqSW7Wps3BZyNwDyto9NFGreeNzLv8",
-            //"/ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ",            // mars.i.ipfs.io
-            //"/ip4/104.236.179.241/tcp/4001/ipfs/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM",           // pluto.i.ipfs.io
-            //"/ip4/128.199.219.111/tcp/4001/ipfs/QmSoLSafTMBsPKadTEgaXctDQVcqN88CNLHXMkTNwMKPnu",           // saturn.i.ipfs.io
-            //"/ip4/104.236.76.40/tcp/4001/ipfs/QmSoLV4Bbm51jM9C4gDYZQ9Cy3U6aXMJDAbzgu2fzaDs64",             // venus.i.ipfs.io
-            //"/ip4/178.62.158.247/tcp/4001/ipfs/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd",            // earth.i.ipfs.io
-            //"/ip6/2604:a880:1:20::203:d001/tcp/4001/ipfs/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM",  // pluto.i.ipfs.io
-            //"/ip6/2400:6180:0:d0::151:6001/tcp/4001/ipfs/QmSoLSafTMBsPKadTEgaXctDQVcqN88CNLHXMkTNwMKPnu",  // saturn.i.ipfs.io
-            //"/ip6/2604:a880:800:10::4a:5001/tcp/4001/ipfs/QmSoLV4Bbm51jM9C4gDYZQ9Cy3U6aXMJDAbzgu2fzaDs64", // venus.i.ipfs.io
-            //"/ip6/2a03:b0c0:0:1010::23:1001/tcp/4001/ipfs/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd", // earth.i.ipfs.io
+            "/ip4/77.68.110.194/tcp/4001/ipfs/QmX3Ye8zfH1u46pyzWAeJjCLbH4XTVA89LGYK6fZsPFAkw",
+            "/ip4/77.68.110.195/tcp/4001/ipfs/QmVgGUKQw9FFX5iqKK2ZxHQtSfpDNiSiwUfykWrLQkBagK",
+            "/ip4/77.68.110.196/tcp/4001/ipfs/QmU9yjJLChQucWkjAiKD5HkMCoPdoo3ndP1kkkDqWUKeDN",
+            "/ip4/77.68.110.197/tcp/4001/ipfs/QmZf3ARncMmSZoNm5QZm4QXPsTjLJpUDKHsEQEhoPTwzuf"
+
+            //"/ip4/192.168.1.45/tcp/4001/ipfs/QmUUNAUD5YLrCZ4vBn8WsxTbMjtgJYkAkAYiFyoEdb3edu",
+            //"/ip4/192.168.1.46/tcp/4001/ipfs/QmNNdTXfLRqo4Puc6JPGq2o3xDBcJhxDXCbThuzDV6nRP1",
+            //"/ip4/192.168.1.47/tcp/4001/ipfs/QmQVoUpHf3yveqcrF2cFTWgutrSFo1Cm1CSffqKQZ52WHL",
+            //"/ip4/192.168.1.233/tcp/4001/ipfs/QmPDpc3KHGtomZjAsfuw7ZaYrahVNBtXX8Kjoy6cCMRLp7",
+            //"/ip4/192.168.1.40/tcp/4001/ipfs/QmbRNTx28U6Wptthtog4vwXF5QtMyTfZdEX56MCFFPdZHB",
+            //"/ip4/192.168.1.232/tcp/4001/ipfs/QmaZtpXfM713jTpLACJ2njMm7Qi4D2FNrAjZKM1e6L9bLM"
         };
 
         private readonly IConfigApi _configApi;
@@ -104,7 +98,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             try
             {
                 var json = await _configApi.GetAsync("Bootstrap", cancel);
-                return json == null ? new MultiAddress[0] : json.Select(a => MultiAddress.TryCreate((string) a)).Where(a => a != null);
+                return json == null ? new MultiAddress[0] : json.Select(a => MultiAddress.TryCreate((string)a)).Where(a => a != null);
             }
             catch (KeyNotFoundException)
             {

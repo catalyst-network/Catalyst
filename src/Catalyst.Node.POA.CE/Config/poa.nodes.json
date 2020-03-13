@@ -1,32 +1,55 @@
 [
     {
-        "Ip": "192.168.1.45",
+        "Ip": "77.68.110.194",
         "Port": 42076,
-        "PublicKey": "gk42ocz447ybr62miwnnlyeb7m4ufzddsgykhuwjgwojlrb7pezq"
+        "PublicKey": "ethay56ivymefuzejdck7hek5y7g2b5fryxl5hmwka74orwi7rzq"
     },
     {
-        "Ip": "192.168.1.46",
+        "Ip": "77.68.110.195",
         "Port": 42076,
-        "PublicKey": "a3jcezxg5r2jiwna4kftzw7dknn3bxxa7vxu675uo2n5st2uuvva"
+        "PublicKey": "aowryb5lxzvz3pt4encbmq6fyokbzwb4i7lrdykunczubpowyqeq"
     },
     {
-        "Ip": "192.168.1.47",
+        "Ip": "77.68.110.196",
         "Port": 42076,
-        "PublicKey": "yfbwgsnde3uqwoiv5mxxxvez7tkc2vjfijjkokz4qxqagppmcbhq"
+        "PublicKey": "f3pxmguzliuzv3mk6bkdm4qro5qv5jvweutkvxtqfg35qnzfvogq"
     },
     {
-        "Ip": "192.168.1.40",
+        "Ip": "77.68.110.197",
         "Port": 42076,
-        "PublicKey": "oshnkiamoh7ond6zy4aqirhjfe22skapt7h2rbb4surgyhh2br6q"
-    },
-    {
-        "Ip": "192.168.1.233",
-        "Port": 42076,
-        "PublicKey": "45u2xtv5ripmx4etpsjg6pyq3pr6wtumobhfhlleljpi56f34hra"
-    },
-    {
-        "Ip": "192.168.1.232",
-        "Port": 42076,
-        "PublicKey": "3edzejbuvme3ed4wqr5pp23if7rguoy7yddlcy3whijywzvo7lfq"
+        "PublicKey": "3s3vlmivyoox7hyuk6zbpiti5lfvnvp2btwoubgp6i3ui5x4nydq"
     }
 ]
+
+//[
+//    {
+//        "Ip": "192.168.1.45",
+//        "Port": 42076,
+//        "PublicKey": "gk42ocz447ybr62miwnnlyeb7m4ufzddsgykhuwjgwojlrb7pezq"
+//    },
+//    {
+//        "Ip": "192.168.1.46",
+//        "Port": 42076,
+//        "PublicKey": "a3jcezxg5r2jiwna4kftzw7dknn3bxxa7vxu675uo2n5st2uuvva"
+//    },
+//    {
+//        "Ip": "192.168.1.47",
+//        "Port": 42076,
+//        "PublicKey": "yfbwgsnde3uqwoiv5mxxxvez7tkc2vjfijjkokz4qxqagppmcbhq"
+//    },
+//    {
+//        "Ip": "192.168.1.40",
+//        "Port": 42076,
+//        "PublicKey": "oshnkiamoh7ond6zy4aqirhjfe22skapt7h2rbb4surgyhh2br6q"
+//    },
+//    {
+//        "Ip": "192.168.1.233",
+//        "Port": 42076,
+//        "PublicKey": "45u2xtv5ripmx4etpsjg6pyq3pr6wtumobhfhlleljpi56f34hra"
+//    },
+//    {
+//        "Ip": "192.168.1.232",
+//        "Port": 42076,
+//        "PublicKey": "3edzejbuvme3ed4wqr5pp23if7rguoy7yddlcy3whijywzvo7lfq"
+//    }
+//]
