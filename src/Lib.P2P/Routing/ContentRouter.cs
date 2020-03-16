@@ -62,7 +62,7 @@ namespace Lib.P2P.Routing
         /// <value>
         ///   Defaults to 24 hours (1 day).
         /// </value>
-        public TimeSpan ProviderTtl { get; set; } = TimeSpan.FromHours(24);
+        public TimeSpan ProviderTtl { get; set; } = TimeSpan.FromHours(1);
 
         /// <summary>
         ///    Adds the <see cref="Cid"/> and <see cref="Peer"/> to the content routing system.

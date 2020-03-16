@@ -24,6 +24,10 @@
 using Catalyst.Core.Lib.Extensions;
 using FluentAssertions;
 using Nethermind.Dirichlet.Numerics;
+using System;
+using System.Globalization;
+using System.Numerics;
+using System.Text;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
@@ -56,6 +60,34 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
             xAgain.S1.Should().Be(x.S1);
             xAgain.S2.Should().Be(x.S2);
             xAgain.S3.Should().Be(x.S3);
+        } 
+        
+        //[Theory]
+        //[ClassData(typeof(UInt256ConversionTestData))]
+        //public void Hex_To_UInt256(UInt256 bigInt)
+        //{
+        //    byte[] bytes = { 0, 222, 11, 107, 58, 118, 64};
+        //    BigInteger number = BigInteger.Parse("0de0b6b3a76400000", NumberStyles.AllowHexSpecifier);
+        //    Array.Reverse(bytes);
+        //    var a = new BigInteger(bytes);
+        //    var a2 = a + 105000000000000;
+        //    var b = new BigInteger(1000000000000000000);
+        //    var b3 = BitConverter.GetBytes(1000000000000000000);
+        //    var arr = b.ToByteArray();
+        //    var b2 = new BigInteger(arr);
+        //    var c = ByteArrayToString(bytes);
+        //    var d = ByteArrayToString(arr);
+        //    var sum = b - a;
+        //    var hex = "0xfffffff";
+        //    int value = Convert.ToInt32(hex, 16);
+        //}
+
+        public static string ByteArrayToString(byte[] ba)
+        {
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba)
+                hex.AppendFormat("{0:x2}", b);
+            return hex.ToString();
         }
     }
 }
