@@ -91,8 +91,24 @@ If you have not done so before, download and install the Microsoft Visual C++ Bu
 Go to https://www.rust-lang.org/tools/install, then download and execute `rustup-init.exe`
 
 #### 3. Install Snappy for rocksdb (Unix systems only)
-Snappy must be installed for Linux and MacOS opperating sytems using:
+Snappy must be installed for Linux and MacOS opperating sytems 
+
+For linux using:
 'sudo apt-get install libsnappy-dev'
+
+For MacOS install brew following: 
+'https://brew.sh/'
+
+Then: 
+
+'brew install snappy'
+
+Followed by: 
+
+' cd /usr/local/lib/
+ ln -s /usr/local/Cellar/snappy/1.1.1/lib/libsnappy.1.dylib
+ ln -s /usr/local/Cellar/snappy/1.1.1/lib/libsnappy.a
+ ln -s /usr/local/Cellar/snappy/1.1.1/lib/libsnappy.dylib'
 
 #### 4. Create a self signed certificate (Linux only)
 
@@ -100,10 +116,10 @@ If you're on Linux, you need to create a Self Signed Certificate the instruction
 
 [Create a Self Signed Certificate](https://github.com/catalyst-network/Catalyst.Node/wiki/Create-a-Self-Signed-Certificate)
 
-#### 4. Install MongoDB
+#### 5. Install MongoDB
 Instructions to install MongoDB can be found [here](https://docs.mongodb.com/manual/administration/install-community/) for each operating system. 
 
-#### 5. Clone the repository
+#### 6. Clone the repository
 
 To clone the repository it is assumed you have Git installed.
 If you do not, then follow the [Git install instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for Linux/Windows/macOS.
@@ -116,7 +132,7 @@ If you do not, then follow the [Git install instructions](https://git-scm.com/bo
 >     start a git terminal as administrator
 >     run the following command : `git config --system core.longpaths true`
 
-The clone command is:
+To clone the Catalyst repository use the command:
 
 'git clone https://github.com/catalyst-network/Catalyst.git'
 
@@ -131,7 +147,7 @@ Install the dependencies using the command:
 
 
 
-#### 5. Build the solution
+#### 7. Build the solution
 
 Navigate to the 'src' folder:
 
@@ -142,11 +158,15 @@ In the `src` folder build the solution:
 
 `dotnet build Catalyst.sln`
 
-#### 6. Run the node 
+#### 7. Run the node 
 
-To check all is good under the hood, you can run the test suite. If you're on Linux, you need to [Create a Self Signed Certificate](https://github.com/catalyst-network/Catalyst.Node/wiki/Create-a-Self-Signed-Certificate)
+To run the node change to: 
 
-`dotnet test Catalyst.sln`
+'cd Catalyst.Node.POA.CE'
+
+Then use the command 
+
+'dotnet run'
 
 ## Modules
 
