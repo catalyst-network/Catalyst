@@ -158,7 +158,7 @@ In the `src` folder build the solution:
 
 `dotnet build Catalyst.sln`
 
-#### 7. Run the node 
+#### 8. Run the node 
 
 To run the node change to: 
 
@@ -167,6 +167,15 @@ To run the node change to:
 Then use the command 
 
 'dotnet run'
+
+
+
+### Configuring the node
+
+Once the above steps have been completed the node must be manually configured following:
+
+[How to configure a Catalyst POA node](https://github.com/catalyst-network/Catalyst/wiki/Configuring-a-Catalyst-POA-Node)
+
 
 ## Modules
 
