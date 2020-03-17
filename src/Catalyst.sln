@@ -201,6 +201,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Db", "..\submodu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Specs", "..\submodules\nethermind\src\Nethermind\Nethermind.Specs\Nethermind.Specs.csproj", "{6BEAE603-2C31-4D0D-8A69-434392BE6A1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Config", "..\submodules\nethermind\src\Nethermind\Nethermind.Config\Nethermind.Config.csproj", "{1B71B1A0-F7BC-44C5-970E-3205AA615853}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Serialization.Json", "..\submodules\nethermind\src\Nethermind\Nethermind.Serialization.Json\Nethermind.Serialization.Json.csproj", "{65C36E26-6674-4457-A8FB-0F33EDA76759}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Crypto", "..\submodules\nethermind\src\Nethermind\Nethermind.Crypto\Nethermind.Crypto.csproj", "{DE28EED6-7281-4827-92C9-16B511BC617D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -471,6 +477,18 @@ Global
 		{6BEAE603-2C31-4D0D-8A69-434392BE6A1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BEAE603-2C31-4D0D-8A69-434392BE6A1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BEAE603-2C31-4D0D-8A69-434392BE6A1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B71B1A0-F7BC-44C5-970E-3205AA615853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B71B1A0-F7BC-44C5-970E-3205AA615853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B71B1A0-F7BC-44C5-970E-3205AA615853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B71B1A0-F7BC-44C5-970E-3205AA615853}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65C36E26-6674-4457-A8FB-0F33EDA76759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65C36E26-6674-4457-A8FB-0F33EDA76759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65C36E26-6674-4457-A8FB-0F33EDA76759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65C36E26-6674-4457-A8FB-0F33EDA76759}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE28EED6-7281-4827-92C9-16B511BC617D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE28EED6-7281-4827-92C9-16B511BC617D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE28EED6-7281-4827-92C9-16B511BC617D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE28EED6-7281-4827-92C9-16B511BC617D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -490,6 +508,9 @@ Global
 		{6646C9CA-1E73-4738-A298-7672677B5209} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{4DB10FC6-57AD-44AF-9623-4B1521EF5607} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{6BEAE603-2C31-4D0D-8A69-434392BE6A1D} = {6074E807-FBBC-41D0-9205-C7B79513D683}
+		{1B71B1A0-F7BC-44C5-970E-3205AA615853} = {6074E807-FBBC-41D0-9205-C7B79513D683}
+		{65C36E26-6674-4457-A8FB-0F33EDA76759} = {6074E807-FBBC-41D0-9205-C7B79513D683}
+		{DE28EED6-7281-4827-92C9-16B511BC617D} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}
