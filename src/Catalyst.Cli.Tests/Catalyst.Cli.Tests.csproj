@@ -8,7 +8,7 @@
         <PublicSign>true</PublicSign>
     </PropertyGroup>
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
     <PropertyGroup>
         <RootNamespace>Catalyst.Cli.Tests</RootNamespace>

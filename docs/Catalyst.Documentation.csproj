@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -9,35 +9,35 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp3.0\Catalyst.Documentation.csproj.ResolveComReference.cache" />
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp3.1\Catalyst.Documentation.csproj.ResolveComReference.cache" />
     </ItemGroup>
 
     <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netcoreapp3.0\Catalyst.Documentation.dll" />
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp3.1\Catalyst.Documentation.dll" />
     </ItemGroup>
 
     <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp3.0\Catalyst.Documentation.pdb" />
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp3.1\Catalyst.Documentation.pdb" />
     </ItemGroup>
 
     <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp3.0\Catalyst.Documentation.dll" />
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp3.1\Catalyst.Documentation.dll" />
     </ItemGroup>
 
     <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netcoreapp3.0\Native.Catalyst.Documentation.manifest" />
+      <ApplicationManifest Remove="obj\Debug\netcoreapp3.1\Native.Catalyst.Documentation.manifest" />
     </ItemGroup>
 
     <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netcoreapp3.0\Catalyst.Documentation.application" />
+      <DeployManifest Remove="obj\Debug\netcoreapp3.1\Catalyst.Documentation.application" />
     </ItemGroup>
 
     <ItemGroup>
-      <ClsidMap Remove="obj\Debug\netcoreapp3.0\Catalyst.Documentation.clsidmap" />
+      <ClsidMap Remove="obj\Debug\netcoreapp3.1\Catalyst.Documentation.clsidmap" />
     </ItemGroup>
 
     <ItemGroup>
-      <RegFreeComManifest Remove="obj\Debug\netcoreapp3.0\Catalyst.Documentation.X.manifest" />
+      <RegFreeComManifest Remove="obj\Debug\netcoreapp3.1\Catalyst.Documentation.X.manifest" />
     </ItemGroup>
 
     <ItemGroup>
