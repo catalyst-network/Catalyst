@@ -36,7 +36,6 @@ using Nethermind.Core;
 using Nethermind.Core.Extensions;
 using Nethermind.Evm.Tracing;
 using Nethermind.Logging;
-using Nethermind.Store;
 using NSubstitute;
 using Serilog.Events;
 using Xunit;

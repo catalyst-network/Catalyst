@@ -25,7 +25,8 @@ using System;
 using Lib.P2P;
 using MultiFormats;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Json;
+
+using Nethermind.Serialization.Json;
 using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm

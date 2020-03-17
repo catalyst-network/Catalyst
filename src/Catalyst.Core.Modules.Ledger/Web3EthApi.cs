@@ -41,7 +41,7 @@ using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using MultiFormats;
 using Nethermind.Core.Crypto;
-using Nethermind.Store;
+using Nethermind.State;
 
 namespace Catalyst.Core.Modules.Ledger
 {

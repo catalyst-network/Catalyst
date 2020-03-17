@@ -31,7 +31,7 @@ using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
 using Nethermind.Evm;
 using Nethermind.Logging;
-using Nethermind.Store;
+using Nethermind.State;
 
 namespace Catalyst.Core.Modules.Kvm
 {

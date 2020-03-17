@@ -24,8 +24,8 @@
 using System.Threading;
 using Nethermind.Core;
 using Nethermind.Core.Specs;
-using Nethermind.Core.Specs.Forks;
 using Nethermind.Dirichlet.Numerics;
+using Nethermind.Specs.Forks;
 
 namespace Catalyst.Core.Modules.Kvm
 {
@@ -56,9 +56,6 @@ namespace Catalyst.Core.Modules.Kvm
 
         /// <inheritdoc />
         public long GasLimitBoundDivisor { get; } = Istanbul.Instance.GasLimitBoundDivisor;
-
-        /// <inheritdoc />
-        public Address Registrar { get; } = Istanbul.Instance.Registrar;
 
         /// <inheritdoc />
         public UInt256 BlockReward { get; } = Istanbul.Instance.BlockReward;

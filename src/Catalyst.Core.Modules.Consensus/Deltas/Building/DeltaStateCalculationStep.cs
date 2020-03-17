@@ -23,11 +23,9 @@
 
 using System;
 using Catalyst.Abstractions.Kvm;
-using Catalyst.Core.Lib.Extensions;
-using Google.Protobuf;
 using Nethermind.Core.Crypto;
 using Nethermind.Evm.Tracing;
-using Nethermind.Store;
+using Nethermind.State;
 using Serilog;
 using Serilog.Events;
 

@@ -13,7 +13,7 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
-        <PackageReference Include="Dawn.Guard" Version="1.9.0" />
+        <PackageReference Include="Dawn.Guard" Version="1.11.0" />
         <PackageReference Include="Google.Protobuf" Version="3.9.1" />
         <PackageReference Include="Grpc.Tools" Version="1.22.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
         <PackageReference Include="Serilog" Version="2.8.0" />

@@ -30,10 +30,11 @@ using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Lib.P2P;
 using Nethermind.Core;
+using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
-using Nethermind.Store;
+using Nethermind.State;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -57,9 +58,10 @@ namespace Catalyst.Core.Modules.Ledger
 
         public bool IsTracingReceipt => true;
 
-        public void MarkAsSuccess(Address recipient, long gasSpent, byte[] output, LogEntry[] logs) { _txReceipts.Add(BuildReceipt(recipient, gasSpent, StatusCode.Success, logs)); }
+        public bool IsTracingBlockHash => false;
+        public void MarkAsSuccess(Address recipient, long gasSpent, byte[] output, LogEntry[] logs, Keccak _) { _txReceipts.Add(BuildReceipt(recipient, gasSpent, StatusCode.Success, logs)); }
 
-        public void MarkAsFailed(Address recipient, long gasSpent, byte[] output, string error) { _txReceipts.Add(BuildFailedReceipt(recipient, gasSpent)); }
+        public void MarkAsFailed(Address recipient, long gasSpent, byte[] output, string error, Keccak _) { _txReceipts.Add(BuildFailedReceipt(recipient, gasSpent)); }
 
         private TransactionReceipt BuildFailedReceipt(Address recipient, long gasSpent) { return BuildReceipt(recipient, gasSpent, StatusCode.Failure, LogEntry.EmptyLogs); }
 
@@ -100,13 +102,15 @@ namespace Catalyst.Core.Modules.Ledger
         public bool IsTracingOpLevelStorage => false;
         public bool IsTracingMemory => false;
         public bool IsTracingInstructions => false;
+        public bool IsTracingRefunds => false;
         public bool IsTracingCode => false;
         public bool IsTracingStack => false;
         public bool IsTracingState => false;
         public void ReportBalanceChange(Address address, UInt256? before, UInt256? after) { throw new NotImplementedException(); }
         public void ReportCodeChange(Address address, byte[] before, byte[] after) { throw new NotImplementedException(); }
         public void ReportNonceChange(Address address, UInt256? before, UInt256? after) { throw new NotImplementedException(); }
-        public void ReportStorageChange(StorageAddress storageAddress, byte[] before, byte[] after) { throw new NotImplementedException(); }
+        public void ReportAccountRead(Address address) { throw new NotImplementedException(); }
+        public void ReportStorageChange(StorageCell storageAddress, byte[] before, byte[] after) { throw new NotImplementedException(); }
         public void StartOperation(int depth, long gas, Instruction opcode, int pc) { throw new NotImplementedException(); }
         public void ReportOperationError(EvmExceptionType error) { throw new NotImplementedException(); }
         public void ReportOperationRemainingGas(long gas) { throw new NotImplementedException(); }
@@ -133,7 +137,10 @@ namespace Catalyst.Core.Modules.Ledger
         public void ReportActionEnd(long gas, byte[] output) { throw new NotImplementedException(); }
         public void ReportActionError(EvmExceptionType evmExceptionType) { throw new NotImplementedException(); }
         public void ReportActionEnd(long gas, Address deploymentAddress, byte[] deployedCode) { throw new NotImplementedException(); }
+        public void ReportBlockHash(Keccak blockHash) { throw new NotImplementedException(); }
         public void ReportByteCode(byte[] byteCode) { throw new NotImplementedException(); }
+        public void ReportGasUpdateForVmTrace(long refund, long gasAvailable) { throw new NotImplementedException(); }
         public void ReportRefund(long gasAvailable) { throw new NotImplementedException(); }
+        public void ReportExtraGasPressure(long extraGasPressure) { throw new NotImplementedException(); }
     }
 }

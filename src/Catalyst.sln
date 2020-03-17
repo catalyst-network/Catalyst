@@ -207,6 +207,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Serialization.Js
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Crypto", "..\submodules\nethermind\src\Nethermind\Nethermind.Crypto\Nethermind.Crypto.csproj", "{DE28EED6-7281-4827-92C9-16B511BC617D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksDbSharp", "..\submodules\nethermind\src\rocksdb-sharp\RocksDbSharp\RocksDbSharp.csproj", "{36528129-62DF-4A4E-9337-85D51DA94EA4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -489,6 +491,10 @@ Global
 		{DE28EED6-7281-4827-92C9-16B511BC617D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE28EED6-7281-4827-92C9-16B511BC617D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE28EED6-7281-4827-92C9-16B511BC617D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36528129-62DF-4A4E-9337-85D51DA94EA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36528129-62DF-4A4E-9337-85D51DA94EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36528129-62DF-4A4E-9337-85D51DA94EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36528129-62DF-4A4E-9337-85D51DA94EA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -511,6 +517,7 @@ Global
 		{1B71B1A0-F7BC-44C5-970E-3205AA615853} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{65C36E26-6674-4457-A8FB-0F33EDA76759} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{DE28EED6-7281-4827-92C9-16B511BC617D} = {6074E807-FBBC-41D0-9205-C7B79513D683}
+		{36528129-62DF-4A4E-9337-85D51DA94EA4} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}

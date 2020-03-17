@@ -22,18 +22,15 @@
 #endregion
 
 using Autofac;
-using Autofac.Core;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Consensus.Deltas.Building;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Kvm;
-using Nethermind.Store;
 
 namespace Catalyst.Core.Modules.Consensus
 {
