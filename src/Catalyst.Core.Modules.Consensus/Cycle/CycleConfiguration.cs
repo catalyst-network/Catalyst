@@ -93,6 +93,6 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
             new PhaseTimings(SynchronisationOffset, SynchronisationProduction, SynchronisationCollection);
 
         public static readonly CycleConfiguration Default = new CycleConfiguration(DefaultConstructionTimings, DefaultCampaigningTimings, DefaultVotingTimings, DefaultSynchronisationTimings);
-        public static readonly CycleConfiguration Speed = new CycleConfiguration(new PhaseTimings(TimeSpan.Zero, TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500)), new PhaseTimings(TimeSpan.FromMilliseconds(1000), TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500)), new PhaseTimings(TimeSpan.FromMilliseconds(2000), TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500)), new PhaseTimings(TimeSpan.FromMilliseconds(3000), TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500)));
+        public static readonly CycleConfiguration Speed = new CycleConfiguration(new PhaseTimings(TimeSpan.Zero, TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100)), new PhaseTimings(TimeSpan.FromMilliseconds(200), TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(200)), new PhaseTimings(TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(200)), new PhaseTimings(TimeSpan.FromMilliseconds(800), TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100)));
     }
 }
