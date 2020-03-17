@@ -8,7 +8,7 @@
     </PropertyGroup>
     <Import Project="./Common.Projects.props" />
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="5.9.0" />
+        <PackageReference Include="FluentAssertions" Version="5.10.2" />
         <PackageReference Include="NSubstitute" Version="4.2.0" />
         <PackageReference Include="xunit.core" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
@@ -19,7 +19,7 @@
         <PackageReference Include="Microsoft.Reactive.Testing" Version="4.1.6" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="coverlet.msbuild" Version="2.6.2">
+        <PackageReference Include="coverlet.msbuild" Version="2.8.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
