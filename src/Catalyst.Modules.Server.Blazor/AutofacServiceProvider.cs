@@ -72,11 +72,11 @@ namespace Catalyst.Modules.Server.Blazor
     /// </summary>
     /// <seealso cref="System.IServiceProvider" />
     /// <seealso cref="Microsoft.Extensions.DependencyInjection.ISupportRequiredService" />
-    internal class AutofacServiceProvider : IServiceProvider, ISupportRequiredService, IDisposable
+    internal sealed class AutofacServiceProvider : IServiceProvider, ISupportRequiredService, IDisposable
     {
         public ILifetimeScope LifetimeScope { get; set; }
 
-        private bool _disposed = false;
+        private bool _disposed;
 
         /// <summary>
         /// Gets service of type <paramref name="serviceType" /> from the
@@ -115,14 +115,16 @@ namespace Catalyst.Modules.Server.Blazor
         /// <see langword="true" /> to release both managed and unmanaged resources;
         /// <see langword="false" /> to release only unmanaged resources.
         /// </param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
-            if (!_disposed)
+            if (_disposed)
             {
-                if (disposing) LifetimeScope.Dispose();
-
-                _disposed = true;
+                return;
             }
+            
+            if (disposing) LifetimeScope.Dispose();
+
+            _disposed = true;
         }
 
         /// <summary>

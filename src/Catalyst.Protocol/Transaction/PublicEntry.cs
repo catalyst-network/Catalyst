@@ -21,10 +21,10 @@
 
 #endregion
 
-using Catalyst.Protocol.Cryptography;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using System.Reflection;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Protocol.Transaction
 {
@@ -40,15 +40,19 @@ namespace Catalyst.Protocol.Transaction
                 return false;
             }
 
-            var isTimestampValid = Timestamp != default(Timestamp) && Timestamp != new Timestamp();
+            var isTimestampValid = Timestamp != default && Timestamp != new Timestamp();
             if (!isTimestampValid)
             {
                 Logger.Debug("{timestamp} cannot be null or 0.");
                 return false;
             }
 
-            var hasValidSignature = Signature.IsValid(SignatureType.TransactionPublic);
-            return hasValidSignature;
+            return true;
+
+            // TODO: reconsider signature
+
+            //var hasValidSignature = Signature.IsValid(SignatureType.TransactionPublic);
+            //return hasValidSignature;
         }
 
         /// <summary>bytes
@@ -62,8 +66,6 @@ namespace Catalyst.Protocol.Transaction
         /// otherwise <value>false</value>.
         /// </summary>
         public bool IsValidCallEntry => IsValid() && !ReceiverAddress.IsEmpty;
-
-        public byte[] TargetContract { get; set; }
 
         public bool IsContractDeployment => IsValidDeploymentEntry;
         public bool IsContractCall => IsValidCallEntry;

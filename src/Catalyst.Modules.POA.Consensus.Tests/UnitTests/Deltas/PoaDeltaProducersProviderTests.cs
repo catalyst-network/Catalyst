@@ -34,11 +34,11 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
@@ -74,7 +74,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             peerRepository.GetAll().Returns(_ => _peers);
 
             _previousDeltaHash =
-                _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
+                _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
 
             _producersByPreviousDelta = Substitute.For<IMemoryCache>();
 

@@ -28,7 +28,7 @@ using Catalyst.Core.Lib.DAO.Deltas;
 using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Modules.Hashing;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using MultiFormats.Registry;
 
 namespace Catalyst.TestUtils
 {

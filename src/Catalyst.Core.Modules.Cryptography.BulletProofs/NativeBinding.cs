@@ -37,16 +37,16 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 {
     public static class NativeBinding
     {
-        private const string Library = "catalystffi";
+        private const string Library = "catalyst_ffi";
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int generate_key(byte[] bytes);
+        private static extern int generate_private_key(byte[] bytes);
 
         internal static IPrivateKey GeneratePrivateKey()
         {
             var key = new byte[PrivateKeyLength];
-            var error_code = generate_key(key);
-            if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+            var responseCode = generate_private_key(key);
+            if (Enum.TryParse<ErrorCode>(responseCode.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
             {
                 Error.ThrowErrorFromErrorCode(errorCode);
             }
@@ -74,9 +74,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             {
                 fixed (byte* contextHandle = context)
                 {
-                    var error_code = std_sign(signature, publicKey, privateKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
+                    var responseCode = std_sign(signature, publicKey, privateKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
 
-                    if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+                    if (Enum.TryParse<ErrorCode>(responseCode.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
                     {
                         Error.ThrowErrorFromErrorCode(errorCode);
                     }
@@ -108,9 +108,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             {
                 fixed (byte* contextHandle = context)
                 {
-                    var error_code = std_verify(signature, publicKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
+                    var responseCode = std_verify(signature, publicKey, message.Length > 0 ? messageHandle : empty, message.Length, context.Length > 0 ? contextHandle : empty, context.Length);
 
-                    ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
+                    Enum.TryParse<ErrorCode>(responseCode.ToString(), out var errorCode);
 
                     if (errorCode == ErrorCode.NoError)
                     {
@@ -137,9 +137,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
                 Error.ThrowArgumentExceptionPublicKeyLength(PublicKeyLength);
             }
 
-            var error_code = validate_public_key(publicKey);
+            var responseCode = validate_public_key(publicKey);
 
-            if (ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
+            if (Enum.TryParse<ErrorCode>(responseCode.ToString(), out var errorCode) && errorCode != ErrorCode.NoError)
             {
                 Error.ThrowErrorFromErrorCode(errorCode);
             }
@@ -162,7 +162,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         }
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int batch_verify(byte[] batchInfo);
+        private static extern int verify_batch(byte[] batchInfo);
 
         internal static bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context)
         {
@@ -172,7 +172,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             sigBatch.Messages.AddRange(messages.Select(x => x.ToByteString()));
             sigBatch.Context = context.ToArray().ToByteString();
             var sigBatchBytes = sigBatch.ToByteArray();
-            var error_code = batch_verify(sigBatchBytes);
+            var error_code = verify_batch(sigBatchBytes);
 
             ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
 

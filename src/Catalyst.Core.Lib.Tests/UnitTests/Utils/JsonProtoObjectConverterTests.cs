@@ -41,7 +41,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         {
             _jsonProtoObjectConverter = new JsonProtoObjectConverter<TransactionBroadcast>();
             _transaction = TransactionHelper.GetContractTransaction(ByteString.CopyFromUtf8("test"), 10, 10, 10);
-            _transactionJson = "{ \"publicEntry\": { \"receiverAddress\": \"cmVjZWl2ZXI=\", \"senderAddress\": \"c2VuZGVy\", \"amount\": \"Cg==\", \"data\": \"dGVzdA==\", \"timestamp\": \"1970-01-01T03:25:45Z\", \"gasPrice\": \"Cg==\", \"gasLimit\": \"10\", \"transactionFees\": \"Ag==\", \"signature\": { \"signingContext\": { \"networkType\": \"DEVNET\", \"signatureType\": \"TRANSACTION_PUBLIC\" }, \"rawBytes\": \"c2lnbmF0dXJl\" } } }";
+            _transactionJson = "{ \"publicEntry\": { \"receiverAddress\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"senderAddress\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"amount\": \"Cg==\", \"data\": \"dGVzdA==\", \"timestamp\": \"1970-01-01T03:25:45Z\", \"gasPrice\": \"Cg==\", \"gasLimit\": \"10\", \"signature\": { \"signingContext\": { \"networkType\": \"DEVNET\", \"signatureType\": \"TRANSACTION_PUBLIC\" }, \"rawBytes\": \"c2lnbmF0dXJl\" } } }";
+            _transactionJson = "{ \"publicEntry\": { \"receiverAddress\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"senderAddress\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"amount\": \"Cg==\", \"data\": \"dGVzdA==\", \"timestamp\": \"1970-01-01T03:25:45Z\", \"gasPrice\": \"Cg==\", \"gasLimit\": \"10\", \"signature\": { \"signingContext\": { \"networkType\": \"DEVNET\", \"signatureType\": \"TRANSACTION_PUBLIC\" }, \"rawBytes\": \"c2lnbmF0dXJl\" } } }";
+            _transactionJson = "{ \"publicEntry\": { \"receiverAddress\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"senderAddress\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"amount\": \"Cg==\", \"data\": \"dGVzdA==\", \"timestamp\": \"1970-01-01T03:25:45Z\", \"gasPrice\": \"Cg==\", \"gasLimit\": \"10\", \"signature\": { \"signingContext\": { \"networkType\": \"DEVNET\", \"signatureType\": \"TRANSACTION_PUBLIC\" }, \"rawBytes\": \"c2lnbmF0dXJl\" } } }";
         }
 
         [Fact]

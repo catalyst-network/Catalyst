@@ -28,6 +28,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         Earliest,
         Latest,
         Pending,
-        BlockNumber
+        BlockNumber,
+        BlockHash,
     }
 }

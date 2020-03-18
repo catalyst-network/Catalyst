@@ -21,6 +21,9 @@
 
 #endregion
 
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
+using MultiFormats.Registry;
 using Nethermind.Evm;
 using Nethermind.Logging;
 using Nethermind.Store;
@@ -39,6 +42,8 @@ namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
                 Substitute.For<IStorageProvider>(),
                 Substitute.For<IStateUpdateHashProvider>(),
                 new CatalystSpecProvider(),
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new FfiWrapper(), 
                 LimboLogs.Instance);
             Assert.NotNull(virtualMachine);
         }

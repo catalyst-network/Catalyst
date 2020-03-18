@@ -32,6 +32,8 @@ using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
+// ReSharper disable WrongIndentSize
+
 namespace Catalyst.Core.Lib.DAO.Transaction
 {
     public class PublicEntryDao : DaoBase
@@ -39,11 +41,12 @@ namespace Catalyst.Core.Lib.DAO.Transaction
         public ulong Nonce { get; set; }
         public string ReceiverAddress { get; set; }
         public string SenderAddress { get; set; }
-        public string TransactionFees { get; set; }
         public string Data { get; set; }
         public string Amount { get; set; }
         public DateTime TimeStamp { get; set; }
         public SignatureDao Signature { set; get; }
+        public string GasPrice { get; set; }
+        public ulong GasLimit { get; set; }
 
         [Column]
 
@@ -62,7 +65,7 @@ namespace Catalyst.Core.Lib.DAO.Transaction
             cfg.AllowNullDestinationValues = true;
 
             cfg.CreateMap<PublicEntry, PublicEntryDao>()
-               .ForMember(d => d.Id, opt => opt.MapFrom(src => _hashProvider.ComputeMultiHash(src.ToByteArray())))
+               .ForMember(d => d.Id, opt => opt.MapFrom(src => _hashProvider.ComputeMultiHash(src)))
                .ForMember(d => d.Amount,
                     opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
                .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToBase32Converter, ByteString>())
@@ -70,8 +73,10 @@ namespace Catalyst.Core.Lib.DAO.Transaction
                     opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.ReceiverAddress))
                .ForMember(d => d.SenderAddress,
                     opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.SenderAddress))
-               .ForMember(d => d.TransactionFees,
-                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.TransactionFees));
+               .ForMember(d => d.Nonce, opt => opt.MapFrom(s => s.Nonce))
+               .ForMember(d => d.GasPrice, opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.GasPrice))
+               .ForMember(d => d.GasLimit, opt => opt.MapFrom(s => s.GasLimit))
+               .ForMember(d => d.TimeStamp, opt => opt.MapFrom(s => s.Timestamp));
 
             cfg.CreateMap<PublicEntryDao, PublicEntry>()
                .ForMember(d => d.Amount,
@@ -81,8 +86,10 @@ namespace Catalyst.Core.Lib.DAO.Transaction
                     opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.ReceiverAddress))
                .ForMember(d => d.SenderAddress,
                     opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.SenderAddress))
-               .ForMember(d => d.TransactionFees,
-                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.TransactionFees));
+               .ForMember(d => d.Nonce, opt => opt.MapFrom(s => s.Nonce))
+               .ForMember(d => d.GasPrice, opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.GasPrice))
+               .ForMember(d => d.GasLimit, opt => opt.MapFrom(s => s.GasLimit))
+               .ForMember(d => d.Timestamp, opt => opt.MapFrom(s => s.TimeStamp));
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());

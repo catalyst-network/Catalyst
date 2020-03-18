@@ -64,6 +64,7 @@ namespace Catalyst.Core.Lib.Validators
             // passing message+sig will mean your verifying an incorrect message and always return false, so just null the sig.
             var transactionClone = transaction.Clone();
             transactionClone.Signature = null;
+            transactionClone.Timestamp = null;
 
             if (_cryptoContext.Verify(transactionSignature, transactionClone.ToByteArray(), signingContext))
             {

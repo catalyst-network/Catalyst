@@ -25,7 +25,11 @@ using Autofac;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Core.Modules.Kvm;
+using Catalyst.Core.Lib.DAO.Ledger;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Ledger.Repository;
+using Catalyst.Core.Modules.Ledger.Service;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 
@@ -35,16 +39,27 @@ namespace Catalyst.Core.Modules.Ledger
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new InMemoryRepository<DeltaIndexDao, string>())
+               .As<IRepository<DeltaIndexDao, string>>()
+               .SingleInstance();
+
+            builder.RegisterType<DeltaIndexService>().As<IDeltaIndexService>().SingleInstance();
+
             builder.Register(c => new InMemoryRepository<Account, string>())
                .As<IRepository<Account, string>>()
                .SingleInstance();
 
             builder.RegisterType<LedgerSynchroniser>().As<ILedgerSynchroniser>();
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
+            builder.RegisterType<DeltaByNumberRepository>().As<IDeltaByNumberRepository>().SingleInstance();
+            builder.RegisterType<TransactionRepository>().As<ITransactionRepository>().SingleInstance();
             builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();
-            builder.RegisterType<StateRootResolver>().As<IStateRootResolver>().SingleInstance();
-            builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance();
-            builder.RegisterType<Ledger>().As<ILedger>().SingleInstance();
+
+            builder.RegisterType<Ledger>().As<ILedger>().SingleInstance()
+               .WithExecutionParameters(builder);
+
+            builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance()
+               .WithExecutionParameters(builder);
         }  
     }
 }

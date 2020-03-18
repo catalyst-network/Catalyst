@@ -28,10 +28,10 @@ using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
+using MultiFormats.Registry;
 using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 using Xunit.Abstractions;
 

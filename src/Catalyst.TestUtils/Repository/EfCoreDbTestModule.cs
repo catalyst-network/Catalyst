@@ -24,7 +24,7 @@
 using Autofac;
 using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.DAO.Transaction;
-using Catalyst.Core.Lib.Repository;
+using Catalyst.Core.Lib.Service;
 using SharpRepository.EfCoreRepository;
 using SharpRepository.Repository;
 

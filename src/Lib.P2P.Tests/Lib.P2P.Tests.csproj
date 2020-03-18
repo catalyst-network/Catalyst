@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <RootNamespace>Lib.P2P.Tests</RootNamespace>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Lib.P2P.Tests.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1" PrivateAssets="all" />
+        <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" PrivateAssets="all" />
+        <PackageReference Include="MSTest.TestFramework" Version="1.4.0" PrivateAssets="all" />
+        <PackageReference Include="coverlet.msbuild" Version="2.6.2" PrivateAssets="all" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Lib.P2P\Lib.P2P.csproj" />
+    </ItemGroup>
+</Project>

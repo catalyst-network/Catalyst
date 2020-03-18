@@ -7,6 +7,9 @@
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Kvm.Tests.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <NoWarn>1701;1702;VSTHRD200;CS8002</NoWarn>
+    </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Core.Modules.Kvm\Catalyst.Core.Modules.Kvm.csproj" />

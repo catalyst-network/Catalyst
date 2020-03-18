@@ -30,10 +30,11 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
+using MultiFormats;
+using MultiFormats.Registry;
 using Nethermind.Core.Extensions;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
+namespace Catalyst.Benchmark.Catalyst.Abstractions
 {
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.CoreRt30)]
@@ -51,7 +52,7 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
             _entry = new PublicEntry
             {
                 Amount = amount,
-                TransactionFees = amount,
+                GasPrice = amount,
                 ReceiverAddress = bytes,
                 SenderAddress = bytes
             };

@@ -31,12 +31,14 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using Nethermind.Store;
+using MultiFormats.Registry;
+using Nethermind.Core.Crypto;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
@@ -59,7 +61,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var tokenProvider = Substitute.For<IDeltaCacheChangeTokenProvider>();
             tokenProvider.GetChangeToken().Returns(Substitute.For<IChangeToken>());
 
-            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, _logger);
+            var storageProvider = Substitute.For<IStorageProvider>();
+            var stateProvider = Substitute.For<IStateProvider>();
+            stateProvider.StateRoot.Returns(Keccak.Zero);
+
+            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, storageProvider, stateProvider, new StateDb(), _logger);
         }
 
         [Fact]
@@ -73,7 +79,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             _memoryCache.ClearReceivedCalls(); // needed because of the CreateEntry call from the DeltaCache .ctor
             var deltaFromCache = DeltaHelper.GetDelta(_hashProvider);
-            var cid = _hashProvider.ComputeUtf8MultiHash("abc").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("abc").ToCid();
 
             _memoryCache.TryGetValue(Arg.Is(cid), out Arg.Any<Delta>())
                .Returns(ci =>
@@ -96,7 +102,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             var deltaFromDfs = DeltaHelper.GetDelta(_hashProvider);
 
-            var cid = _hashProvider.ComputeUtf8MultiHash("def").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("def").ToCid();
             ExpectDeltaFromDfsAndNotFromCache(cid, deltaFromDfs);
 
             var cacheEntry = Substitute.For<ICacheEntry>();
@@ -116,7 +122,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void TryGetDelta_Should_Cache_Delta_With_Expiry_Options_When_Delta_Is_Not_In_Cache()
         {
             var deltaFromDfs = DeltaHelper.GetDelta(_hashProvider);
-            var cid = _hashProvider.ComputeUtf8MultiHash("ijk").CreateCid();
+            var cid = _hashProvider.ComputeUtf8MultiHash("ijk").ToCid();
             ExpectDeltaFromDfsAndNotFromCache(cid, deltaFromDfs);
 
             var cacheEntry = Substitute.For<ICacheEntry>();

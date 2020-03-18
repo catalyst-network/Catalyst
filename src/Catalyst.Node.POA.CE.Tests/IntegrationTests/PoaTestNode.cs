@@ -34,6 +34,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
@@ -41,12 +42,11 @@ using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO.Transaction;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.FileSystem;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using Catalyst.Core.Modules.Rpc.Server;
@@ -56,14 +56,13 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit.Abstractions;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
     public class PoaTestNode : ICatalystNode, IDisposable
     {
-        private readonly DevDfs _dfs;
+        private readonly IDfsService _dfsService;
         private readonly IMempool<PublicEntryDao> _memPool;
         private readonly ICatalystNode _node;
         private readonly DirectoryInfo _nodeDirectory;
@@ -73,10 +72,12 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private readonly IRpcServerSettings _rpcSettings;
         private readonly ILifetimeScope _scope;
         private readonly ContainerProvider _containerProvider;
+        private readonly IDeltaByNumberRepository _deltaByNumber;
 
         public PoaTestNode(string name,
             IPrivateKey privateKey,
             IPeerSettings nodeSettings,
+            IDfsService dfsService,
             IEnumerable<PeerId> knownPeerIds,
             IFileSystem parentTestFileSystem,
             ITestOutputHelper output)
@@ -84,16 +85,12 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             Name = name;
             _nodeSettings = nodeSettings;
 
-            _nodeDirectory = parentTestFileSystem.GetCatalystDataDir().SubDirectoryInfo(Name);
-            var nodeFileSystem = Substitute.ForPartsOf<FileSystem>();
-            nodeFileSystem.GetCatalystDataDir().Returns(_nodeDirectory);
+            _nodeDirectory = parentTestFileSystem.GetCatalystDataDir();
+
+            _dfsService = dfsService;
 
             _rpcSettings = RpcSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
             _nodePeerId = nodeSettings.PeerId;
-
-            var baseDfsFolder = Path.Combine(parentTestFileSystem.GetCatalystDataDir().FullName, "dfs");
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-            _dfs = new DevDfs(parentTestFileSystem, hashProvider, baseDfsFolder);
 
             _memPool = new Mempool(new MempoolService(new InMemoryRepository<PublicEntryDao, string>()));
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
@@ -102,6 +99,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                 PeerId = p
             }).ToList();
             _peerRepository.Add(peersInRepo);
+
+            _deltaByNumber = new DeltaByNumberRepository(new InMemoryRepository<DeltaByNumber, string>());
 
             _containerProvider = new ContainerProvider(new[]
                 {
@@ -148,12 +147,20 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
         protected void OverrideContainerBuilderRegistrations()
         {
+            var builder = _containerProvider.ContainerBuilder;
+
+            builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
+            builder.RegisterInstance(new InMemoryRepository<TransactionReceipts, string>())
+               .AsImplementedInterfaces();
+            builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())
+               .AsImplementedInterfaces();
+
             _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
             _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
             _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
             _containerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<PeerId>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_dfs).As<IDfs>();
             _containerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_dfsService).As<IDfsService>();
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
@@ -162,7 +169,10 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) return;
+            if (!disposing)
+            {
+                return;
+            }
 
             _scope?.Dispose();
             _peerRepository?.Dispose();

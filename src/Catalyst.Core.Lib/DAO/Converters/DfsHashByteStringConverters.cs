@@ -24,7 +24,7 @@
 using AutoMapper;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
-using TheDotNetLeague.MultiFormats.MultiBase;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {

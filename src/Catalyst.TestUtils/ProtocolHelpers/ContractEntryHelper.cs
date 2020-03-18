@@ -46,7 +46,6 @@ namespace Catalyst.TestUtils.ProtocolHelpers
             {
                 Data = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                 Amount = amount.ToByteString(),
-                TransactionFees = fees.ToByteString(),
                 ReceiverAddress = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                 SenderAddress = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
             };
@@ -58,7 +57,7 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 
             Enumerable.Range(0, count).ToList().ForEach(i =>
             {
-                contractList.Add(ContractEntryHelper.GetContractEntry());
+                contractList.Add(GetContractEntry());
             });
             return contractList;
         }

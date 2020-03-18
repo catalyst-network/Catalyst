@@ -42,7 +42,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             //Arrange
             var getFileFromDfsResponse = new GetFileFromDfsResponse();
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var getFileFromDfsCommand = new GetFileCommand(null, commandContext, Substitute.For<ILogger>());
+            new GetFileCommand(null, commandContext, Substitute.For<ILogger>());
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, getFileFromDfsResponse);

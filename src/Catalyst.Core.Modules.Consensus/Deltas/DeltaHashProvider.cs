@@ -29,7 +29,7 @@ using System.Reactive.Subjects;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
+using Lib.P2P;
 using Nito.Comparers;
 using Serilog;
 
@@ -68,28 +68,48 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         /// <inheritdoc />
         public bool TryUpdateLatestHash(Cid previousHash, Cid newHash)
         {
-            var newAddress = newHash;
-            var previousAddress = previousHash;
             _logger.Debug("New hash {hash} received for previous hash {previousHash}",
-                newAddress, previousAddress);
-            var foundNewDelta = _deltaCache.TryGetOrAddConfirmedDelta(newAddress, out var newDelta);
-            var foundPreviousDelta = _deltaCache.TryGetOrAddConfirmedDelta(previousAddress, out var previousDelta);
+                newHash, previousHash);
+            var foundNewDelta = _deltaCache.TryGetOrAddConfirmedDelta(newHash, out var newDelta);
+            var foundPreviousDelta = _deltaCache.TryGetOrAddConfirmedDelta(previousHash, out var previousDelta);
 
-            if (!foundNewDelta
-             || !foundPreviousDelta
-             || newDelta.PreviousDeltaDfsHash != previousHash.ToArray().ToByteString()
-             || previousDelta.TimeStamp >= newDelta.TimeStamp)
+            if (!foundPreviousDelta)
             {
-                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash}",
-                    previousAddress, newAddress);
+                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash} due to previous delta not found",
+                    previousHash, newHash);
+                return false;
+            }
+
+            if (!foundNewDelta)
+            {
+                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash} due to new delta not found", previousHash, newHash);
+                return false;
+            }
+
+            if (newDelta.PreviousDeltaDfsHash != previousHash.ToArray().ToByteString())
+            {
+                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash} due to new delta not being a childe of the previous one",
+                    previousHash, newHash);
+                return false;
+            }
+
+            if (previousDelta.TimeStamp >= newDelta.TimeStamp)
+            {
+                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash} due to new delta being older {newTimestamp} than the previous one {oldTimestamp}",
+                    previousHash, newHash, newDelta.TimeStamp, previousDelta.TimeStamp);
                 return false;
             }
 
             _logger.Debug("Successfully to updated latest hash from {previousHash} to {newHash}",
-                previousAddress, newAddress);
+                previousHash, newHash);
 
             lock (_hashesByTimeDescending)
             {
+                if (_hashesByTimeDescending.ContainsValue(newHash))
+                {
+                    return false;
+                }
+
                 _hashesByTimeDescending.Add(newDelta.TimeStamp, newHash);
                 if (_hashesByTimeDescending.Count > _capacity)
                 {
@@ -97,7 +117,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 }
             }
 
-            _deltaHashUpdatesSubject.OnNext(newAddress);
+            _deltaHashUpdatesSubject.OnNext(newHash);
 
             return true;
         }

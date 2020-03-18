@@ -28,29 +28,34 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Core.Modules.Consensus.Deltas.Building;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using LibP2P;
+using Lib.P2P;
+using MultiFormats.Registry;
 using Nethereum.Hex.HexConvertors.Extensions;
-using Nethermind.Core.Extensions;
+using Nethermind.Core.Crypto;
+using Nethermind.Core.Specs;
 using Nethermind.Dirichlet.Numerics;
+using Nethermind.Logging;
+using Nethermind.Store;
 using NSubstitute;
-using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
+using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -65,6 +70,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private readonly CoinbaseEntry _zeroCoinbaseEntry;
         private readonly IDeltaCache _cache;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IStateProvider _stateProvider;
+        private readonly IDeltaExecutor _deltaExecutor;
+        private readonly ICryptoContext _cryptoContext;
         private readonly ILogger _logger;
         private readonly IPeerSettings _peerSettings;
 
@@ -72,7 +80,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
-            _random = new Random();
+            _random = new Random(1);
 
             _randomFactory = Substitute.For<IDeterministicRandomFactory>();
             _randomFactory.GetDeterministicRandomFromSeed(Arg.Any<byte[]>())
@@ -81,7 +89,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _producerId = PeerIdHelper.GetPeerId("producer");
             _peerSettings = _producerId.ToSubstitutedPeerSettings();
 
-            _previousDeltaHash = _hashProvider.ComputeUtf8MultiHash("previousDelta").CreateCid();
+            _previousDeltaHash = _hashProvider.ComputeUtf8MultiHash("previousDelta").ToCid();
             _zeroCoinbaseEntry = new CoinbaseEntry
             {
                 Amount = UInt256.Zero.ToUint256ByteString(),
@@ -92,7 +100,48 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _cache = Substitute.For<IDeltaCache>();
 
+            Delta previousDelta = new Delta();
+            previousDelta.StateRoot = ByteString.CopyFrom(Keccak.EmptyTreeHash.Bytes);
+            _cache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>()).Returns(x =>
+            {
+                x[1] = previousDelta;
+                return true;
+            });
+
             _dateTimeProvider = new DateTimeProvider();
+
+            IDb codeDb = new MemDb();
+            ISnapshotableDb stateDb = new StateDb();
+            ISpecProvider specProvider = new CatalystSpecProvider();
+            _cryptoContext = new FfiWrapper();
+            _stateProvider = new StateProvider(stateDb, codeDb, LimboLogs.Instance);
+            IStorageProvider storageProvider = new StorageProvider(stateDb, _stateProvider, LimboLogs.Instance);
+            KatVirtualMachine virtualMachine = new KatVirtualMachine(_stateProvider,
+                storageProvider,
+                new StateUpdateHashProvider(),
+                specProvider,
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new FfiWrapper(), 
+                LimboLogs.Instance);
+            _deltaExecutor = new DeltaExecutor(specProvider,
+                _stateProvider,
+                storageProvider,
+                virtualMachine,
+                _cryptoContext,
+                _logger);
+        }
+
+        private readonly Dictionary<int, IPublicKey> _publicKeys = new Dictionary<int, IPublicKey>();
+
+        private IPublicKey GetPublicKey(int index)
+        {
+            if (!_publicKeys.ContainsKey(index))
+            {
+                IPublicKey key = _cryptoContext.GeneratePrivateKey().GetPublicKey();
+                _publicKeys[index] = key;
+            }
+
+            return _publicKeys[index];
         }
 
         [Fact]
@@ -103,7 +152,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Returns(new List<PublicEntry>());
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-                _cache, _dateTimeProvider, _logger);
+                _cache, _dateTimeProvider, _stateProvider, _deltaExecutor, _logger);
 
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
@@ -128,7 +177,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(invalidTransactionList);
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-                _cache, _dateTimeProvider, _logger);
+                _cache, _dateTimeProvider, _stateProvider, _deltaExecutor, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, _zeroCoinbaseEntry.ToByteArray());
@@ -175,7 +224,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var expectedBytesToHash = BuildExpectedBytesToHash(selectedTransactions, shuffledEntriesBytes);
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-                _cache, _dateTimeProvider, _logger);
+                _cache, _dateTimeProvider, _stateProvider, _deltaExecutor, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, expectedBytesToHash);
@@ -199,9 +248,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     UInt256.Zero,
                     21000,
                     (20 + i).GFul(),
-                    Bytes.Empty,
-                    receiverPublicKey: i.ToString(),
-                    transactionFees: (ulong) _random.Next(),
+                    null,
+                    null,
                     timestamp: _random.Next(),
                     signature: i.ToString());
                 return transaction.PublicEntry;
@@ -232,7 +280,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var expectedBytesToHash = BuildExpectedBytesToHash(selectedTransactions, shuffledEntriesBytes);
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-                _cache, _dateTimeProvider, _logger);
+                _cache, _dateTimeProvider, _stateProvider, _deltaExecutor, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, expectedBytesToHash);
@@ -253,9 +301,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                         ? (uint) DeltaGasLimit / 8U - 10000U
                         : 70000U, // to test scenarios when both single transaction is ignored and all remaining
                     (20 + i).GFul(),
-                    Bytes.Empty,
-                    receiverPublicKey: i.ToString(),
-                    transactionFees: (ulong) _random.Next(),
+                    null,
+                    null,
                     timestamp: _random.Next(),
                     signature: i.ToString());
                 return transaction.PublicEntry;
@@ -287,7 +334,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var expectedBytesToHash = BuildExpectedBytesToHash(expectedSelectedTransactions, shuffledEntriesBytes);
 
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
-                _cache, _dateTimeProvider, _logger);
+                _cache, _dateTimeProvider, _stateProvider, _deltaExecutor, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, expectedBytesToHash);
@@ -311,7 +358,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var expectedCoinBase = new CoinbaseEntry
             {
-                Amount = selectedTransactions.Sum(t => t.TransactionFees.ToUInt256()).ToUint256ByteString(),
+                Amount = selectedTransactions.Sum(t => t.GasPrice.ToUInt256() * t.GasLimit).ToUint256ByteString(),
                 ReceiverPublicKey = _producerId.PublicKey.ToByteString()
             };
 
@@ -326,7 +373,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             candidate.ProducerId.Should().Be(_producerId);
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash.ToArray()).Should().BeTrue();
 
-            var expectedHash = _hashProvider.ComputeMultiHash(expectedBytesToHash).CreateCid();
+            var expectedHash = _hashProvider.ComputeMultiHash(expectedBytesToHash).ToCid();
             candidate.Hash.ToByteArray().Should().BeEquivalentTo(expectedHash.ToArray());
         }
     }

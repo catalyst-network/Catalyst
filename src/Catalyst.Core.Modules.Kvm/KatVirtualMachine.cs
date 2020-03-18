@@ -21,7 +21,10 @@
 
 #endregion
 
+using System;
 using System.Numerics;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Nethermind.Core;
 using Nethermind.Core.Extensions;
@@ -34,30 +37,50 @@ namespace Catalyst.Core.Modules.Kvm
 {
     public sealed class KatVirtualMachine : VirtualMachine, IKvm
     {
+        private readonly IHashProvider _hashProvider;
+        private readonly ICryptoContext _cryptoContext;
+        public const int CatalystPrecompilesAddressingSpace = 0xffff;
+
         public KatVirtualMachine(IStateProvider stateProvider,
             IStorageProvider storageProvider,
             IStateUpdateHashProvider blockhashProvider,
             ISpecProvider specProvider,
+            IHashProvider hashProvider,
+            ICryptoContext cryptoContext,
             ILogManager logManager)
-            : base(stateProvider, storageProvider, blockhashProvider, specProvider, logManager) { }
-
-        protected override void InitializePrecompiledContracts()
+            : base(stateProvider, storageProvider, blockhashProvider, specProvider, logManager)
         {
-            base.InitializePrecompiledContracts();
-            Precompiles[RangeProofPrecompile.AddressInKvm] = new RangeProofPrecompile();
+            _hashProvider = hashProvider ?? throw new ArgumentNullException(nameof(hashProvider));
+            _cryptoContext = cryptoContext ?? throw new ArgumentNullException(nameof(cryptoContext));
+
+            AddCatalystPrecompiledContracts();
         }
 
-        private static readonly BigInteger RangeProofAddressAsInt =
-            RangeProofPrecompile.AddressInKvm.Bytes.ToUnsignedBigInteger();
+        private void AddCatalystPrecompiledContracts()
+        {
+            Blake2bPrecompiledContract blake2BPrecompiledContract = new Blake2bPrecompiledContract(_hashProvider);
+            Precompiles[blake2BPrecompiledContract.Address] = blake2BPrecompiledContract;
 
-        /// <summary>
-        /// This will probably be removed
-        /// </summary>
+            Ed25519VerifyPrecompile ed25519VerifyPrecompile = new Ed25519VerifyPrecompile(_cryptoContext);
+            Precompiles[ed25519VerifyPrecompile.Address] = ed25519VerifyPrecompile;
+        }
+
         protected override bool IsPrecompiled(Address address, IReleaseSpec releaseSpec)
         {
-            // this will be optimized
-            var asInt = address.Bytes.ToUnsignedBigInteger();
-            return base.IsPrecompiled(address, releaseSpec) || asInt == RangeProofAddressAsInt;
+            return base.IsPrecompiled(address, releaseSpec) || IsCatalystPrecompiled(address);
+        }
+
+        private static bool IsCatalystPrecompiled(Address address)
+        {
+            if (address[0] != 0)
+            {
+                return false;
+            }
+
+            BigInteger asInt = address.Bytes.ToUnsignedBigInteger();
+            return
+                asInt > CatalystPrecompilesAddressingSpace
+             && asInt <= CatalystPrecompilesAddressingSpace + 2;
         }
     }
 }

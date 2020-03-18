@@ -26,7 +26,7 @@ using System.Text;
 using Catalyst.Abstractions.Attributes;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Repository.Attributes;
+using Catalyst.Core.Lib.Service.Attributes;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
 

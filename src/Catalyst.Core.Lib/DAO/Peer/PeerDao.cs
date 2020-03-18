@@ -24,7 +24,7 @@
 using System;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Core.Lib.Repository.Attributes;
+using Catalyst.Core.Lib.Service.Attributes;
 using Catalyst.Core.Lib.Util;
 
 namespace Catalyst.Core.Lib.DAO.Peer

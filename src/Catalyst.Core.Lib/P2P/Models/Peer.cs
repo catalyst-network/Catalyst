@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.P2P.Models;
-using Catalyst.Core.Lib.Repository.Attributes;
+using Catalyst.Core.Lib.Service.Attributes;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;

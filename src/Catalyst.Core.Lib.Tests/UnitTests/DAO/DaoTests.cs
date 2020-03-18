@@ -43,11 +43,11 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using FluentAssertions;
+using MultiFormats;
+using MultiFormats.Registry;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
-using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
@@ -178,9 +178,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new CandidateDeltaBroadcast
             {
-                Hash = MultiBase.Decode(hash.CreateCid()).ToByteString(),
+                Hash = MultiBase.Decode(hash.ToCid()).ToByteString(),
                 ProducerId = PeerIdHelper.GetPeerId("test"),
-                PreviousDeltaDfsHash = MultiBase.Decode(previousHash.CreateCid()).ToByteString()
+                PreviousDeltaDfsHash = MultiBase.Decode(previousHash.ToCid()).ToByteString()
             };
 
             var candidateDeltaBroadcast =
@@ -194,9 +194,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         [Fact]
         public void DeltaDfsHashBroadcastDao_DeltaDfsHashBroadcast_Should_Be_Convertible()
         {
-            var hash = MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("this hash").CreateCid());
+            var hash = MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("this hash").ToCid());
             var previousDfsHash =
-                MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("previousDfsHash").CreateCid());
+                MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("previousDfsHash").ToCid());
 
             var original = new DeltaDfsHashBroadcast
             {
@@ -253,7 +253,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             {
                 Amount = 8855274.ToUint256ByteString(),
                 SenderAddress = pubKeyBytes.ToByteString(),
-                TransactionFees = UInt256.Zero.ToUint256ByteString(),
                 Signature = new Signature
                 {
                     RawBytes = new byte[] {0x0}.ToByteString(),
@@ -269,7 +268,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             transactionEntryDao.Amount.Should().Be(8855274.ToString());
 
             var reconverted = transactionEntryDao.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
-            reconverted.TransactionFees.ToUInt256().Should().Be(UInt256.Zero);
             reconverted.Should().Be(original);
         }
 

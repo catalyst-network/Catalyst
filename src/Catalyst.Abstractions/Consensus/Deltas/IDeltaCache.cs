@@ -24,7 +24,7 @@
 using System.Threading;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
-using LibP2P;
+using Lib.P2P;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {
@@ -65,6 +65,8 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// <param name="localCandidate">The candidate produced locally (<see cref="IDeltaBuilder.BuildCandidateDelta(Cid)" />>)</param>
         /// <param name="delta">The full content of the produced delta.</param>
         void AddLocalDelta(CandidateDeltaBroadcast localCandidate, Delta delta);
+        
+        void AddLocalDelta(Cid cid, Delta delta);
 
         /// <summary>
         ///     Dfs address of the content for the very first delta.

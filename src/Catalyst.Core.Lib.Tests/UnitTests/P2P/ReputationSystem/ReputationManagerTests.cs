@@ -68,7 +68,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             results.Add(subbedPeer);
             SetRepoReturnValue(results);
 
-            var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger);
+            var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger, _testScheduler);
 
             reputationManager.OnNext(peerReputationChange);
 
@@ -96,7 +96,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             results.Add(subbedPeer);
             SetRepoReturnValue(results);
 
-            var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger);
+            var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger, _testScheduler);
 
             reputationManager.OnNext(peerReputationChange);
 
@@ -125,7 +125,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 
             SetRepoReturnValue(results);
 
-            var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger);
+            var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger, _testScheduler);
 
             reputationManager.OnNext(peerReputationChange);
 
@@ -166,7 +166,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 
             SetRepoReturnValue(results);
 
-            var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger);
+            var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger, _testScheduler);
 
             var secondStreamSubject = new ReplaySubject<IPeerReputationChange>(1, _testScheduler);
             var messageStream = secondStreamSubject.AsObservable();

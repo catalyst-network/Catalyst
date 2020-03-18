@@ -28,7 +28,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Network;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using MultiFormats.Registry;
 
 namespace Catalyst.TestUtils.Protocol
 {

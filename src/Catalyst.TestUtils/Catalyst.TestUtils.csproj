@@ -9,6 +9,9 @@
     <PropertyGroup>
         <RootNamespace>Catalyst.TestUtils</RootNamespace>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <NoWarn>1701;1702;VSTHRD200;CS8002</NoWarn>
+    </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
         <None Update="Config\**\*.json">
@@ -32,6 +35,7 @@
     <ItemGroup>
       <PackageReference Include="Serilog" Version="2.8.0" />
       <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.3" />
+      <PackageReference Include="SharpZipLib" Version="1.2.0" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="DefaultTests\" />

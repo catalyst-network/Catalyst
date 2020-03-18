@@ -95,37 +95,37 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         
         public Byte64 CTransactionEntry(IPublicKey publicKey, Byte32 value, Byte32 blinding, Byte32 totalFees, int noParticipants)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public ISignature CtSign(List<Byte64> cTransactionEntries, IPrivateKey privateKey, Byte32 blinding)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public bool CtVerify(List<Byte64> cTransactionEntries, ISignature cTSignature)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
         
         public Byte32 GeneratePedersenCommitment(Byte32 value, Byte32 blinding)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public byte[] GenerateRangeProof(Byte32 value, Byte32 blinding)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public bool VerifyRangeProof(byte[] rangeproof, Byte32 oldCommitment, Byte32 deltaCommitment)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public bool BatchVerifyRangeProof(List<byte[]> rangeproofs, List<Byte32> oldCommitments, List<Byte32> deltaCommitments)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

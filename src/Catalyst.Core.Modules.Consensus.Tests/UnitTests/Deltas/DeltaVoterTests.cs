@@ -38,11 +38,11 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
@@ -101,7 +101,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache = Substitute.For<IMemoryCache>();
 
             _previousDeltaHash =
-                _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
+                _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
 
             _producerIds = "1234"
                .Select((c, i) => PeerIdHelper.GetPeerId(c.ToString()))
@@ -326,7 +326,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 AddCandidatesToCacheAndVote(10, 500, realCache);
 
                 var found = _voter.TryGetFavouriteDelta(
-                    _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid(),
+                    _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid(),
                     out var favouriteCandidate);
 
                 found.Should().BeFalse();

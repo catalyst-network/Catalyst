@@ -29,6 +29,7 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Fakes;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
 using NSubstitute;

@@ -27,9 +27,9 @@ using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
 using Xunit;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
@@ -45,7 +45,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
         {
             //Arrange
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-            var deltaMultiHash = hashProvider.ComputeUtf8MultiHash("previous").CreateCid();
+            var deltaMultiHash = hashProvider.ComputeUtf8MultiHash("previous").ToCid();
             var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var connectedNode = commandContext.GetConnectedNode(null);
             var command = new GetDeltaCommand(commandContext, _logger);

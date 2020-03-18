@@ -42,7 +42,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             //Arrange
             var removePeerResponse = new RemovePeerResponse();
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var removePeerCommand = new PeerRemoveCommand(commandContext, Substitute.For<ILogger>());
+            new PeerRemoveCommand(commandContext, Substitute.For<ILogger>());
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, removePeerResponse);
