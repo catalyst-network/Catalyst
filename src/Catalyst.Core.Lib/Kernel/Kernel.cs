@@ -36,6 +36,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO.Ledger;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Network;
 using Microsoft.Extensions.Configuration;
@@ -265,6 +266,7 @@ namespace Catalyst.Core.Lib.Kernel
                     var deltaIndexes = buildCallback.Resolve<IRepository<DeltaIndexDao, string>>();
                     var transactionReceipts = buildCallback.Resolve<IRepository<TransactionReceipts, string>>();
                     var transactionToDeltas = buildCallback.Resolve<IRepository<TransactionToDelta, string>>();
+                    var mempool = buildCallback.Resolve<IRepository<PublicEntryDao, string>>();
 
                     Logger.Information("Deleting DeltaIndexes");
                     foreach (var deltaIndex in deltaIndexes.GetAll())
@@ -282,6 +284,12 @@ namespace Catalyst.Core.Lib.Kernel
                     foreach (var transactionToDelta in transactionToDeltas.GetAll())
                     {
                         transactionToDeltas.Delete(transactionToDelta);
+                    }
+
+                    Logger.Information("Deleting mempool");
+                    foreach (var mempoolItem in mempool.GetAll())
+                    {
+                        mempool.Delete(mempoolItem);
                     }
                 });
             }
