@@ -162,9 +162,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
         }
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int verify_batch(byte[] batchInfo);
+        private static extern unsafe int verify_batch(byte* batchInfo, int batchLength);
 
-        internal static bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context)
+        internal static unsafe bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context)
         {
             var sigBatch = new SignatureBatch();
             sigBatch.Signatures.AddRange(signatures.Select(x => x.SignatureBytes.ToByteString()));
@@ -172,21 +172,28 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             sigBatch.Messages.AddRange(messages.Select(x => x.ToByteString()));
             sigBatch.Context = context.ToArray().ToByteString();
             var sigBatchBytes = sigBatch.ToByteArray();
-            var error_code = verify_batch(sigBatchBytes);
 
-            ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
+            byte b = 0;
+            var empty = (byte*) Unsafe.AsPointer(ref b);
 
-            if (errorCode == ErrorCode.NoError)
+            fixed (byte* batchHandle = sigBatchBytes)
             {
-                return true;
-            }
+                var error_code = verify_batch(sigBatchBytes.Length > 0 ? batchHandle : empty, sigBatchBytes.Length);
+                ErrorCode.TryParse<ErrorCode>(error_code.ToString(), out var errorCode);
 
-            if (errorCode != ErrorCode.BatchVerificationFailure)
-            {
-                Error.ThrowErrorFromErrorCode(errorCode);
-            }
+                if (errorCode == ErrorCode.NoError)
+                {
+                    return true;
+                }
 
-            return false;
+                if (errorCode != ErrorCode.BatchVerificationFailure)
+                {
+                    Error.ThrowErrorFromErrorCode(errorCode);
+                }
+
+
+                return false;
+            }
         }
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
