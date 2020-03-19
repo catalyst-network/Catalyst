@@ -36,10 +36,6 @@ namespace Catalyst.Protocol.Tests.Account
 {
     public class AddressTests
     {
-        private readonly TestContext _output;
-
-        public AddressTests(TestContext output) { _output = output; }
-
         [Test]
         public void Address_should_produce_different_bytes_for_all_possible_network_and_account_types()
         {

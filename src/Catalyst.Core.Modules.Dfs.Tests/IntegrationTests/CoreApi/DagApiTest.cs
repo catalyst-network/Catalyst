@@ -65,14 +65,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             const string expectedId = "bafyreigdhej736dobd6z3jt2vxsxvbwrwgyts7e7wms6yrr46rp72uh5bu";
             var id = await _dfs.DagApi.PutAsync(expected);
             Assert.NotNull(id);
-            Assert.AreEqual(expectedId, id);
+            Assert.AreEqual(expectedId, id.ToString());
 
             var actual = await _dfs.DagApi.GetAsync(id);
             Assert.NotNull(actual);
             Assert.AreEqual(expected["a"], actual["a"]);
 
             var value = (string) await _dfs.DagApi.GetAsync(expectedId + "/a");
-            Assert.AreEqual(expected["a"], value);
+            Assert.AreEqual(expected["a"].ToString(), value);
         }
 
         [Test]

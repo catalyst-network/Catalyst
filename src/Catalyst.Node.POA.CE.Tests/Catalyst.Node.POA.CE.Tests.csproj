@@ -14,6 +14,7 @@
     </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
         <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
         <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">

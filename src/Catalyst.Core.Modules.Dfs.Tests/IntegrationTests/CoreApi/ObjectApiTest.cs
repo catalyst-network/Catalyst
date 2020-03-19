@@ -37,7 +37,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private IDfsService ipfs;
 
-        public ObjectApiTest(TestContext output)
+        public ObjectApiTest()
         {
             ipfs = TestDfs.GetTestDfs(null, "sha2-256");
         }
@@ -46,17 +46,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task New_Template_Null()
         {
             var node = await ipfs.ObjectApi.NewAsync();
-            Assert.AreEqual("QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n", node.Id);
+            Assert.AreEqual("QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n", node.Id.ToString());
         }
 
         [Test]
         public async Task New_Template_UnixfsDir()
         {
             var node = await ipfs.ObjectApi.NewAsync("unixfs-dir");
-            Assert.AreEqual("QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn", node.Id);
+            Assert.AreEqual("QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn", node.Id.ToString());
 
             node = await ipfs.ObjectApi.NewDirectoryAsync();
-            Assert.AreEqual("QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn", node.Id);
+            Assert.AreEqual("QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn", node.Id.ToString());
         }
 
         [Test]

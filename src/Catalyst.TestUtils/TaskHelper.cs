@@ -81,8 +81,7 @@ namespace Catalyst.TestUtils
 
     public class TaskHelperTests
     {
-        private readonly TestContext _output;
-        public TaskHelperTests(TestContext output) { _output = output; }
+        public TaskHelperTests() { }
 
         [Test]
         public async Task WaitFor_Should_Throw_Descriptive_Message_After_Timeout()

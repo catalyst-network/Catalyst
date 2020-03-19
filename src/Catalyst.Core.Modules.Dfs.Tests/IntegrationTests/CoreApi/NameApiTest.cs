@@ -34,7 +34,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private IDfsService ipfs;
 
-        public NameApiTest(TestContext output)
+        public NameApiTest()
         {
             ipfs = TestDfs.GetTestDfs(null, "sha2-256");
         }
