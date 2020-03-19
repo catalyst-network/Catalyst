@@ -49,7 +49,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 {
@@ -102,7 +102,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
                 _testScheduler);
         }
 
-        [Fact]
+        [Test]
         public void RpcServerChannelFactory_should_have_correct_handlers()
         {
             _factory.InheritedHandlers.Count(h => h != null).Should().Be(10);
@@ -119,7 +119,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             handlers[9].Should().BeOfType<ObservableServiceHandler>();
         }
 
-        [Fact]
+        [Test]
         public void RpcServerChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
@@ -148,7 +148,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             }
         }
 
-        [Fact]
+        [Test]
         public void RpcServerChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),

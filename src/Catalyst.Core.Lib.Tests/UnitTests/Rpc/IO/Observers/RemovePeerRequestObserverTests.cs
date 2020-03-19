@@ -40,7 +40,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -75,8 +75,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
         [Theory]
-        [InlineData("FakePeer1", "FakePeer2")]
-        [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
+        [TestCase("FakePeer1", "FakePeer2")]
+        [TestCase("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
         public void TestRemovePeer(params string[] fakePeers) { ExecuteTestCase(fakePeers, true); }
 
         /// <summary>
@@ -84,8 +84,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
         [Theory]
-        [InlineData("Fake1Peer1", "Fake2Peer2")]
-        [InlineData("Fake1Peer1002", "Fake2Peer6000", "FakePeer3Sataoshi")]
+        [TestCase("Fake1Peer1", "Fake2Peer2")]
+        [TestCase("Fake1Peer1002", "Fake2Peer6000", "FakePeer3Sataoshi")]
         public void TestRemovePeerWithoutPublicKey(params string[] fakePeers) { ExecuteTestCase(fakePeers, false); }
 
         /// <summary>Executes the test case.</summary>

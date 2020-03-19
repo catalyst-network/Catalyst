@@ -35,20 +35,20 @@ using Lib.P2P;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 {
     public class LedgerSynchroniserTests
     {
-        private readonly ITestOutputHelper _output;
+        private readonly TestContext _output;
         private readonly IDeltaCache _deltaCache;
         private readonly LedgerSynchroniser _synchroniser;
         private readonly CancellationToken _cancellationToken;
         private readonly HashProvider _hashProvider;
 
-        public LedgerSynchroniserTests(ITestOutputHelper output)
+        public LedgerSynchroniserTests(TestContext output)
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
@@ -72,8 +72,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
                     return delta;
                 });
 
-            _output.WriteLine("chain is:");
-            _output.WriteLine(string.Join(Environment.NewLine,
+            TestContext.WriteLine("chain is:");
+            TestContext.WriteLine(string.Join(Environment.NewLine,
                 chainedDeltas.Select((c, i) =>
                     $"{i}: current {c.Key} | previous {c.Value.PreviousDeltaDfsHash.ToByteArray().ToCid()}")));
             return chainedDeltas;
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void CacheDeltasBetween_Should_Stop_When_One_Of_Deltas_Is_Missing()
         {
             var chainSize = 5;
@@ -103,7 +103,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             var brokenChainIndex = 2;
             _deltaCache.TryGetOrAddConfirmedDelta(hashes[brokenChainIndex], out Arg.Any<Delta>())
                .Returns(false);
-            _output.WriteLine($"chain is broken for {hashes[brokenChainIndex]}, it cannot be found on Dfs.");
+            TestContext.WriteLine($"chain is broken for {hashes[brokenChainIndex]}, it cannot be found on Dfs.");
 
             var cachedHashes = _synchroniser.CacheDeltasBetween(hashes.First(),
                 hashes.Last(), _cancellationToken).ToList();
@@ -120,11 +120,11 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
         private void OutputCachedHashes(List<Cid> cachedHashes)
         {
-            _output.WriteLine("cached hashes between: ");
-            _output.WriteLine(string.Join(", ", cachedHashes));
+            TestContext.WriteLine("cached hashes between: ");
+            TestContext.WriteLine(string.Join(", ", cachedHashes));
         }
 
-        [Fact]
+        [Test]
         public void CacheDeltasBetween_Should_Complete_When_LatestKnownDelta_Is_Found()
         {
             var chainSize = 7;
@@ -134,7 +134,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             var hashes = chain.Keys.ToArray();
 
             var latestHashIndex = 3;
-            _output.WriteLine($"Caching deltas between {hashes[latestHashIndex]} and {hashes.Last()}");
+            TestContext.WriteLine($"Caching deltas between {hashes[latestHashIndex]} and {hashes.Last()}");
             var cachedHashes = _synchroniser.CacheDeltasBetween(hashes[latestHashIndex],
                 hashes.Last(), _cancellationToken).ToList();
 

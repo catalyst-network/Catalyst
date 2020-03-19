@@ -38,7 +38,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
 {
@@ -68,10 +68,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
 
         private readonly RpcMessageCorrelationManager _rpcMessageCorrelationManager;
 
-        [Fact]
+        [Test]
         public void Dispose_Should_Dispose_RpcMessageCorrelationManager() { _rpcMessageCorrelationManager.Dispose(); }
 
-        [Fact]
+        [Test]
         public async Task Message_Eviction_Should_Cause_Eviction_Event()
         {
             var peerIds = new[]

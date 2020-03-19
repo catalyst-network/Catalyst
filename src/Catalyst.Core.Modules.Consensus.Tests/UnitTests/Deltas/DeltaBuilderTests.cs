@@ -55,7 +55,7 @@ using Nethermind.Dirichlet.Numerics;
 using Nethermind.Logging;
 using Nethermind.State;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
@@ -145,7 +145,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             return _publicKeys[index];
         }
 
-        [Fact]
+        [Test]
         public void BuildDeltaEmptyPoolContent()
         {
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
@@ -162,7 +162,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
-        [Fact]
+        [Test]
         public void BuildDeltaInvalidTransactionsBasedOnLockTime()
         {
             var invalidTransactionList = Enumerable.Range(0, 20).Select(i =>
@@ -186,7 +186,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
-        [Fact]
+        [Test]
         public void BuildDeltaCheckForAccuracy()
         {
             var transactions = Enumerable.Range(0, 20).Select(i =>
@@ -240,7 +240,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             return transactionRetriever;
         }
 
-        [Fact]
+        [Test]
         public void BuildDeltaWithContractEntries()
         {
             var transactions = Enumerable.Range(0, 20).Select(i =>
@@ -289,7 +289,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
-        [Fact]
+        [Test]
         public void When_contract_entries_exceed_delta_gas_limit_some_entries_are_ignored()
         {
             // each entry at 1 million gas

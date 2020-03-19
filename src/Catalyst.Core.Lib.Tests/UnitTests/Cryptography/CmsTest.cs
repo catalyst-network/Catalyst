@@ -33,8 +33,8 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using Makaretu.Dns;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
@@ -42,7 +42,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
     {
         private readonly KeyStoreService _keyStoreService;
 
-        public CmsTest(ITestOutputHelper output) : base(output)
+        public CmsTest(TestContext output) : base(output)
         {
             var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _keyStoreService = new KeyStoreService(dfsOptions)
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             _keyStoreService.SetPassphraseAsync(securePassword).ConfigureAwait(false);
         }
         
-        [Fact]
+        [Test]
         public async Task ReadCms()
         {
             string aliceKid = "QmNzBqPwp42HZJccsLtc4ok6LjZAspckgs2du5tTmjPfFA";
@@ -82,7 +82,7 @@ cn4oisOvxCprs4aM9UVjtZTCjfyNpX8UWwT1W3rySV+KQNhxuMy3RzmL
             var key = await _keyStoreService.ImportAsync("alice", alice, "mypassword".ToArray());
             try
             {
-                Assert.Equal(aliceKid, key.Id);
+                Assert.AreEqual(aliceKid, key.Id);
 
                 var cipher = Convert.FromBase64String(@"
 MIIBcwYJKoZIhvcNAQcDoIIBZDCCAWACAQAxgfowgfcCAQAwYDBbMQ0wCwYDVQQK
@@ -96,7 +96,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
 ");
                 var plain = await _keyStoreService.ReadProtectedDataAsync(cipher);
                 var plainText = Encoding.UTF8.GetString(plain);
-                Assert.Equal("This is a message from Alice to Bob", plainText);
+                Assert.AreEqual("This is a message from Alice to Bob", plainText);
             }
             finally
             {
@@ -104,7 +104,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
             }
         }
 
-        [Fact]
+        [Test]
         public void ReadCms_FailsWithoutKey()
         {
             var cipher = Convert.FromBase64String(@"
@@ -123,7 +123,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
             });
         }
 
-        [Fact]
+        [Test]
         public async Task CreateCms_Rsa()
         {
             var _ = await _keyStoreService.CreateAsync("alice", "rsa", 512);
@@ -132,7 +132,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
                 var data = new byte[] {1, 2, 3, 4};
                 var cipher = await _keyStoreService.CreateProtectedDataAsync("alice", data);
                 var plain = await _keyStoreService.ReadProtectedDataAsync(cipher);
-                Assert.Equal(data, plain);
+                Assert.AreEqual(data, plain);
             }
             finally
             {
@@ -140,7 +140,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
             }
         }
 
-        [Fact]
+        [Test]
         public async Task CreateCms_Secp256k1()
         {
             var _ = await _keyStoreService.CreateAsync("alice", "secp256k1", 0);
@@ -149,7 +149,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
                 var data = new byte[] {1, 2, 3, 4};
                 var cipher = await _keyStoreService.CreateProtectedDataAsync("alice", data);
                 var plain = await _keyStoreService.ReadProtectedDataAsync(cipher);
-                Assert.Equal(data, plain);
+                Assert.AreEqual(data, plain);
             }
             finally
             {
@@ -157,7 +157,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
             }
         }
 
-        // [Fact]
+        // [Test]
         // [Skip("NYI")]
         // public async Task CreateCms_Ed25519()
         // {
@@ -169,7 +169,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
         //         var data = new byte[] {1, 2, 3, 4};
         //         var cipher = await keychain.CreateProtectedDataAsync("alice", data);
         //         var plain = await keychain.ReadProtectedDataAsync(cipher);
-        //         CollectionAssert.Equal(data, plain);
+        //         CollectionAssert.AreEqual(data, plain);
         //     }
         //     finally
         //     {

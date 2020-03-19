@@ -32,8 +32,8 @@ using MultiFormats.Registry;
 using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {
@@ -41,13 +41,13 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
     {
         private readonly IHashProvider _hashProvider;
 
-        public PoaDiscoveryTests(ITestOutputHelper output) : base(output)
+        public PoaDiscoveryTests(TestContext output) : base(output)
         {
             var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
             _hashProvider = new HashProvider(hashingAlgorithm);
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Populate_Peers_Correctly()
         {
             var peerRepository = Substitute.For<IPeerRepository>();

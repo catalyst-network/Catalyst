@@ -27,7 +27,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cryptography;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
 {
@@ -41,14 +41,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
             _keyRegistry = new KeyRegistry();
         }
 
-        [Fact]
+        [Test]
         public void Can_Add_Item_To_Registry()
         {
             _keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, _privateKey).Should().BeTrue();
             _keyRegistry.RegistryContainsKey(KeyRegistryTypes.DefaultKey).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void Cant_Add_Items_To_Registry_Twice_With_Same_Key()
         {
             _keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, _privateKey).Should().BeTrue();
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
             _keyRegistry.RegistryContainsKey(KeyRegistryTypes.DefaultKey).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void Can_Remove_Item_From_Registry()
         {
             _keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, _privateKey).Should().BeTrue();
@@ -66,20 +66,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
             _keyRegistry.RegistryContainsKey(KeyRegistryTypes.DefaultKey).Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void Can_Retrieve_Item_From_Registry()
         {
             _keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, _privateKey).Should().BeTrue();
             _keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).Should().BeEquivalentTo(_privateKey);
         }
 
-        [Fact]
+        [Test]
         public void Retrieving_Item_Not_Contained_In_Registry_Returns_Null()
         {
             _keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).Should().BeEquivalentTo((IPrivateKey) null);
         }
 
-        [Fact]
+        [Test]
         public void Cant_Add_Null_Item_To_Registry()
         {
             Action action = () =>

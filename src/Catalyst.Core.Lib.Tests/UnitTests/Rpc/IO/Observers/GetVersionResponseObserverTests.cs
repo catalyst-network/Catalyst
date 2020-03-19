@@ -29,13 +29,13 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class GetVersionResponseObserverTests
     {
-        [Fact]
+        [Test]
         public void Null_Version_Throws_Exception()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();

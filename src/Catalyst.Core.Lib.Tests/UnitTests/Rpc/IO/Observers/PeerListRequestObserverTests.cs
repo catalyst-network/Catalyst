@@ -38,7 +38,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -73,8 +73,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
         [Theory]
-        [InlineData("FakePeer1", "FakePeer2")]
-        [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
+        [TestCase("FakePeer1", "FakePeer2")]
+        [TestCase("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
         public void TestPeerListRequestResponse(params string[] fakePeers)
         {
             var testScheduler = new TestScheduler();

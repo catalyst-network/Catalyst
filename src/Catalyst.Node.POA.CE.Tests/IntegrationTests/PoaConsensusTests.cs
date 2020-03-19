@@ -36,8 +36,8 @@ using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
@@ -47,7 +47,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private readonly ILifetimeScope _scope;
         private readonly List<PoaTestNode> _nodes;
 
-        public PoaConsensusTests(ITestOutputHelper output) : base(output)
+        public PoaConsensusTests(TestContext output) : base(output)
         {
             ContainerProvider.ConfigureContainerBuilder(true, true, true);
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
@@ -91,7 +91,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Run_ConsensusAsync()
         {
             _nodes.AsParallel()

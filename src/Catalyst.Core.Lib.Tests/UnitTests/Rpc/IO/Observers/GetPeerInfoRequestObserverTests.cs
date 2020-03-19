@@ -41,7 +41,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -101,8 +101,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
         [Theory]
-        [InlineData("publickey-1", "172.0.0.1")]
-        [InlineData("publickey-2", "172.0.0.2")]
+        [TestCase("publickey-1", "172.0.0.1")]
+        [TestCase("publickey-2", "172.0.0.2")]
         public void TestGetPeerInfoRequestResponse(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
@@ -123,10 +123,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
         [Theory]
-        [InlineData("this-pk-should-not-exist", "172.0.0.1")]
-        [InlineData("this-pk-should-not-exist", "172.0.0.3")]
-        [InlineData("publickey-1", "0.0.0.0")]
-        [InlineData("publickey-3", "0.0.0.0")]
+        [TestCase("this-pk-should-not-exist", "172.0.0.1")]
+        [TestCase("this-pk-should-not-exist", "172.0.0.3")]
+        [TestCase("publickey-1", "0.0.0.0")]
+        [TestCase("publickey-3", "0.0.0.0")]
         public void TestGetPeerInfoRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);

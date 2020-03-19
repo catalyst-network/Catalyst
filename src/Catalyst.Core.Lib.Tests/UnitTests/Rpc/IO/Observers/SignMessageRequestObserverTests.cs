@@ -39,7 +39,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -65,9 +65,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [InlineData("Hello Catalyst")]
-        [InlineData("")]
-        [InlineData("Hello&?!1253Catalyst")]
+        [TestCase("Hello Catalyst")]
+        [TestCase("")]
+        [TestCase("Hello&?!1253Catalyst")]
         public void SignMessageRequestObserver_Can_Return_SignMessageResponse(string message)
         {
             var testScheduler = new TestScheduler();

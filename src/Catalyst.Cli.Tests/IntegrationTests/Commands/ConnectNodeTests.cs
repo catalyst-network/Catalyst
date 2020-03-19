@@ -22,16 +22,15 @@
 #endregion
 
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class ConnectNodeTests : CliCommandTestsBase
     {
-        public ConnectNodeTests(ITestOutputHelper output) : base(output) { }
+        public ConnectNodeTests(TestContext output) : base(output) { }
 
-        [Fact]
+        [Test]
         public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {
             for (var i = 0; i < 10; i++)

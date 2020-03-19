@@ -37,7 +37,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
@@ -68,7 +68,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                .ToSignedProtocolMessage(peerId, fakeSignature, _signingContext);
         }
 
-        [Fact]
+        [Test]
         public async Task Broadcast_Handler_Can_Notify_Manager_On_Incoming_Broadcast()
         {
             EmbeddedChannel channel = new EmbeddedChannel(
@@ -83,7 +83,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                .ReceiveAsync(Arg.Any<ProtocolMessage>());
         }
 
-        [Fact]
+        [Test]
         public void Broadcast_Can_Execute_Proto_Handler()
         {
             var testScheduler = new TestScheduler();

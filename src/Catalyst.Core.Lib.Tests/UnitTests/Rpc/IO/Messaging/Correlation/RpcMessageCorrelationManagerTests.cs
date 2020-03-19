@@ -30,7 +30,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
 {
@@ -50,13 +50,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
             PrepareCacheWithPendingRequests<GetInfoRequest>();
         }
 
-        [Fact]
+        [Test]
         public void TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id()
         {
             TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id<GetInfoResponse>();
         }
 
-        [Fact]
+        [Test]
         public void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id()
         {
             TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<GetInfoResponse>();

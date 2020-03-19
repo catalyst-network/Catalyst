@@ -29,17 +29,17 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Lib.Tests
 {
     public class LicenseHeaderTests : FileSystemBasedTest
     {
-        public LicenseHeaderTests(ITestOutputHelper output) : base(output) { }
+        public LicenseHeaderTests(TestContext output) : base(output) { }
         private const string LicenseHeaderFileName = "COPYING";
 
-        [Fact]
+        [Test]
         public static async Task All_Cs_Files_Should_Have_License_Header()
         {
             var declaringTypeAssembly = MethodBase.GetCurrentMethod().DeclaringType?.Assembly;

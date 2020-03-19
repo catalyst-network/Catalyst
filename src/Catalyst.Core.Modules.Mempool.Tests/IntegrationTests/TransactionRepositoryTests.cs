@@ -37,9 +37,8 @@ using Catalyst.TestUtils.ProtocolHelpers;
 using Catalyst.TestUtils.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 using SharpRepository.Repository;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
@@ -54,7 +53,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 new object[] {new MongoDbTestModule<PublicEntryDao>()}
             };
 
-        public TransactionRepositoryTests(ITestOutputHelper output) : base(output)
+        public TransactionRepositoryTests(TestContext output) : base(output)
         {
             _mapperProvider = new TestMapperProvider();
         }
@@ -120,9 +119,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             }
         }
 
-        [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2EMongoDb)]
-        [MemberData(nameof(ModulesList))]
+        [Ignore("Setup to run in pipeline only")]
+        [Property(Traits.TestType, Traits.E2EMongoDb)]
+        [TestCase(nameof(ModulesList))]
         public void TransactionRepository_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
@@ -130,9 +129,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             Transaction_Update_And_Retrieve();
         }
 
-        [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2EMongoDb)]
-        [MemberData(nameof(ModulesList))]
+        [Ignore("Setup to run in pipeline only")]
+        [Property(Traits.TestType, Traits.E2EMongoDb)]
+        [TestCase(nameof(ModulesList))]
         public void TransactionBroadcastRepository_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
@@ -140,8 +139,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             TransactionRepository_Can_Save_And_Retrieve();
         }
 
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.E2EMssql)]
+        [Ignore("Microsoft DBs yet to be completed")]
+        [Property(Traits.TestType, Traits.E2EMssql)]
         public void TransactionRepository_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
@@ -155,8 +154,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             Transaction_Update_And_Retrieve();
         }
 
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.E2EMssql)]
+        [Ignore("Microsoft DBs yet to be completed")]
+        [Property(Traits.TestType, Traits.E2EMssql)]
         public void TransactionBroadcastRepository_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot

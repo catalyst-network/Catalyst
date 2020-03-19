@@ -23,16 +23,15 @@
 
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class GetInfoCommandTests : CliCommandTestsBase
     {
-        public GetInfoCommandTests(ITestOutputHelper output) : base(output) { }
+        public GetInfoCommandTests(TestContext output) : base(output) { }
 
-        [Fact]
+        [Test]
         public void Cli_Can_Request_Node_Info()
         {
             var result = Shell.ParseCommand("getinfo", NodeArgumentPrefix, ServerNodeName);

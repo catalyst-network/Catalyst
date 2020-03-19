@@ -39,7 +39,7 @@ using MultiFormats.Registry;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _dfsReader = new DeltaDfsReader(_dfsService, _logger);
         }
 
-        [Fact]
+        [Test]
         public void TryReadDeltaFromDfs_Should_Return_False_And_Log_When_Hash_Not_Found_On_Dfs()
         {
             var exception = new FileNotFoundException("that hash is not good");
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 Arg.Is<Cid>(s => s == cid));
         }
 
-        [Fact]
+        [Test]
         public void TryReadDeltaFromDfs_Should_Return_True_When_Hash_Found_On_Dfs_And_Delta_Is_Valid()
         {
             var cid = _hashProvider.ComputeUtf8MultiHash("good hash").ToCid().ToString();
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             delta.Should().Be(matchingDelta);
         }
 
-        [Fact]
+        [Test]
         public void TryReadDeltaFromDfs_Should_Return_False_When_Hash_Found_On_Dfs_And_Delta_Is_Not_Valid()
         {
             var cid = _hashProvider.ComputeUtf8MultiHash("good hash").ToCid();
@@ -108,7 +108,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             delta.Should().BeNull();
         }
 
-        [Fact]
+        [Test]
         public void TryReadDeltaFromDfs_Should_Pass_Cancellation_Token()
         {
             var cid = _hashProvider.ComputeUtf8MultiHash("good hash").ToCid();

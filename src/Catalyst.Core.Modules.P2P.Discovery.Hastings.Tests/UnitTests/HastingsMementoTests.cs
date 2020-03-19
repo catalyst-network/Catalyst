@@ -25,7 +25,7 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {
@@ -35,7 +35,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
         public HastingsMementoTests() { _peer = PeerIdHelper.GetPeerId("current_peer"); }
 
-        [Fact]
+        [Test]
         public void Can_Init_Memento_With_Existing_Params()
         {
             var neighbours = DiscoveryHelper.MockNeighbours();

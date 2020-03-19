@@ -25,16 +25,16 @@ using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public class IsaacRandomTests
     {
         [Theory]
-        [InlineData(1000)]
-        [InlineData(10000)]
-        [InlineData(100000)]
+        [TestCase(1000)]
+        [TestCase(10000)]
+        [TestCase(100000)]
         public void Test_Deterministic_Algorithm(uint sequenceSize)
         {
             var seed = CorrelationId.GenerateCorrelationId().ToString();

@@ -34,8 +34,8 @@ using Catalyst.Protocol.Network;
 using Dawn;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace Catalyst.TestUtils
 {
@@ -44,18 +44,18 @@ namespace Catalyst.TestUtils
     ///     A base test class that can be used to offer inheriting tests a folder on which
     ///     to create files, logs, etc.
     /// </summary>
-    [Trait(Traits.TestType, Traits.IntegrationTest)]
+    [Property(Traits.TestType, Traits.IntegrationTest)]
     public class FileSystemBasedTest : IDisposable
     {
         protected readonly string CurrentTestName;
         public IFileSystem FileSystem;
-        protected readonly ITestOutputHelper Output;
+        protected readonly TestContext Output;
         public DirectoryInfo TestDirectory { set; get; }
         protected List<string> ConfigFilesUsed { get; }
         protected readonly ContainerProvider ContainerProvider;
         private DateTime _testStartTime;
 
-        protected FileSystemBasedTest(ITestOutputHelper output, 
+        protected FileSystemBasedTest(TestContext output, 
             IEnumerable<string> configFilesUsed = default,
             NetworkType network = default)
         {
@@ -70,7 +70,7 @@ namespace Catalyst.TestUtils
                     $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
             }
 
-            CurrentTestName = currentTest.TestCase.TestMethod.Method.Name;
+            CurrentTestName = output.Test.MethodName;
 
             CreateUniqueTestDirectory();
             
@@ -88,7 +88,7 @@ namespace Catalyst.TestUtils
             ContainerProvider = new ContainerProvider(ConfigFilesUsed, FileSystem, Output);
             ContainerProvider.ConfigureContainerBuilder(true, true);
 
-            Output.WriteLine("test running in folder {0}", TestDirectory.FullName);
+            TestContext.WriteLine("test running in folder {0}", TestDirectory.FullName);
         }
 
         protected void CreateUniqueTestDirectory()

@@ -35,7 +35,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -54,14 +54,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _logger = Substitute.For<ILogger>();
         }
 
-        [Fact]
+        [Test]
         public void Can_Expire_Download_File_Transfer_On_Error()
         {
             var correlationId = SendResponseToHandler(FileTransferResponseCodeTypes.Error);
             _fileDownloadFactory.GetFileTransferInformation(correlationId).Received(1).Expire();
         }
 
-        [Fact]
+        [Test]
         public void Can_Start_File_Download_On_Successful_Response()
         {
             var correlationId = SendResponseToHandler(FileTransferResponseCodeTypes.Successful);
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fileDownloadFactory.Received(1)?.FileTransferAsync(correlationId, CancellationToken.None);
         }
 
-        [Fact]
+        [Test]
         public void Does_Nothing_If_File_Transfer_Does_Not_Exist()
         {
             var responseCode = FileTransferResponseCodeTypes.Successful;

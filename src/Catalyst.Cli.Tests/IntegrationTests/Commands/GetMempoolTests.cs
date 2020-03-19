@@ -23,16 +23,15 @@
 
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class GetMempoolCommandTests : CliCommandTestsBase
     {
-        public GetMempoolCommandTests(ITestOutputHelper output) : base(output) { }
+        public GetMempoolCommandTests(TestContext output) : base(output) { }
 
-        [Fact]
+        [Test]
         public void Cli_Can_Request_Node_Mempool()
         {
             var result = Shell.ParseCommand("getmempool", NodeArgumentPrefix, ServerNodeName);

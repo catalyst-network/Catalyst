@@ -44,22 +44,22 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
 using NSubstitute;
+using NUnit.Framework;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using Xunit;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
-    public class BadFavouritesData : TheoryData<FavouriteDeltaBroadcast, Type>
+    public class BadFavouritesData : List<object[]>
     {
         public BadFavouritesData()
         {
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
-            Add(null, typeof(ArgumentNullException));
-            Add(new FavouriteDeltaBroadcast(), typeof(InvalidDataException));
-            Add(new FavouriteDeltaBroadcast
+            Add(new object[] { null, typeof(ArgumentNullException) });
+            Add(new object[] { new FavouriteDeltaBroadcast(), typeof(InvalidDataException) });
+            Add(new object[] { new FavouriteDeltaBroadcast
             {
                 Candidate = new CandidateDeltaBroadcast
                 {
@@ -67,11 +67,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
                 },
                 VoterId = PeerIdHelper.GetPeerId("candidate field is invalid")
-            }, typeof(InvalidDataException));
-            Add(new FavouriteDeltaBroadcast
+            }, typeof(InvalidDataException) });
+            Add(new object[] { new FavouriteDeltaBroadcast
             {
                 Candidate = DeltaHelper.GetCandidateDelta(hashProvider)
-            }, typeof(InvalidDataException));
+            }, typeof(InvalidDataException) });
         }
     }
 
@@ -96,7 +96,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         }
 
         [Theory]
-        [ClassData(typeof(BadFavouritesData))]
+        [TestCase(typeof(BadFavouritesData))]
         public void When_receiving_bad_favourite_should_log_and_not_hit_the_cache(FavouriteDeltaBroadcast badFavourite,
             Type exceptionType)
         {
@@ -108,7 +108,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
         }
 
-        [Fact]
+        [Test]
         public void When_receiving_new_valid_favourite_should_store_in_cache()
         {
             var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
@@ -132,7 +132,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             ((IDictionary<FavouriteDeltaBroadcast, bool>) addedValue).Should().ContainKey(favourite);
         }
 
-        [Fact]
+        [Test]
         public void When_receiving_known_favourite_should_not_store_in_cache()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -155,14 +155,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void When_voter_not_a_producer_should_not_save_vote()
         {
             var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
 
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
-               .Returns(new List<PeerId> {PeerIdHelper.GetPeerId("the only known producer")});
+               .Returns(new List<PeerId> { PeerIdHelper.GetPeerId("the only known producer") });
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -174,13 +174,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
         }
 
-        [Fact]
+        [Test]
         public void Should_DeRep_Peers_That_Vote_When_They_Are_Not_Delta_Producers()
         {
             var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
 
-            var peer = new Peer {Reputation = 100, PeerId = favourite.VoterId};
-            _reputationManager.PeerRepository.Add(new Peer {Reputation = 100, PeerId = favourite.VoterId});
+            var peer = new Peer { Reputation = 100, PeerId = favourite.VoterId };
+            _reputationManager.PeerRepository.Add(new Peer { Reputation = 100, PeerId = favourite.VoterId });
 
             var expectedReputation = peer.Reputation + ReputationEventType.VoterIsNotProducer.Amount;
 
@@ -200,7 +200,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
         }
 
-        [Fact]
+        [Test]
         public void When_favourite_has_different_producer_it_should_not_create_duplicate_entries()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -218,10 +218,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                    .Concat(Enumerable.Repeat(candidates[1], 2))
                    .Concat(Enumerable.Repeat(candidates[2], 8))
                    .Select((c, j) => new FavouriteDeltaBroadcast
-                    {
-                        Candidate = c,
-                        VoterId = PeerIdHelper.GetPeerId((j % votersCount).ToString())
-                    }).ToList();
+                   {
+                       Candidate = c,
+                       VoterId = PeerIdHelper.GetPeerId((j % votersCount).ToString())
+                   }).ToList();
 
                 AddVoterAsExpectedProducer(favourites.Select(f => f.VoterId).ToArray());
 
@@ -242,7 +242,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetMostPopularCandidateDelta_should_return_the_favourite_with_most_voter_ids()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -261,10 +261,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                    .Concat(Enumerable.Repeat(candidates[1], secondVoteCount))
                    .Shuffle()
                    .Select((c, j) => new FavouriteDeltaBroadcast
-                    {
-                        Candidate = c,
-                        VoterId = PeerIdHelper.GetPeerId(j.ToString())
-                    }).ToList();
+                   {
+                       Candidate = c,
+                       VoterId = PeerIdHelper.GetPeerId(j.ToString())
+                   }).ToList();
 
                 AddVoterAsExpectedProducer(favourites.Select(f => f.VoterId).ToArray());
 
@@ -284,7 +284,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetMostPopularCandidateDelta_should_return_null_on_unknown_previous_delta_hash()
         {
             _cache.TryGetValue(Arg.Any<object>(), out Arg.Any<object>()).Returns(false);

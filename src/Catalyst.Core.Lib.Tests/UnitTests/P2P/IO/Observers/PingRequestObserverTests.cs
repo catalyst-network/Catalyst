@@ -34,7 +34,7 @@ using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             );
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Process_PingRequest_Correctly()
         {
             var pingRequestMessage = new PingRequest();

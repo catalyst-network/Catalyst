@@ -23,8 +23,7 @@
 
 using System;
 using System.Linq;
-using Xunit;
-using Xunit.Sdk;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
@@ -49,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 
                 if (expectedMessage != null)
                 {
-                    Assert.Equal(expectedMessage, match.Message);
+                    Assert.AreEqual(expectedMessage, match.Message);
                 }
                     
                 return match;
@@ -58,13 +57,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             {
                 if (expectedMessage != null)
                 {
-                    Assert.Equal(expectedMessage, e.Message);
+                    Assert.AreEqual(expectedMessage, e.Message);
                 }
                 
                 return e;
             }
 
-            throw new XunitException($"Exception of type {typeof(T)}should be thrown.");
+            throw new Exception($"Exception of type {typeof(T)}should be thrown.");
         }
 
         public static Exception Throws(Action action, string expectedMessage = null)

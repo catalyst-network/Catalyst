@@ -25,8 +25,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
@@ -34,28 +33,28 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private IDfsService ipfs;
 
-        public BlockRepositoryApiTest(ITestOutputHelper output)
+        public BlockRepositoryApiTest(TestContext output)
         {
             ipfs = TestDfs.GetTestDfs(output);    
         }
         
-        [Fact]
+        [Test]
         public void Exists() { Assert.NotNull(ipfs.BlockRepositoryApi); }
 
-        [Fact]
+        [Test]
         public async Task Stats()
         {
             var stats = await ipfs.BlockRepositoryApi.StatisticsAsync();
             var version = await ipfs.BlockRepositoryApi.VersionAsync();
-            Assert.Equal(stats.Version, version);
+            Assert.AreEqual(stats.Version, version);
         }
 
-        [Fact]
+        [Test]
         public async Task GarbageCollection()
         {
             var pinned = await ipfs.BlockApi.PutAsync(new byte[256], pin: true);
             var unpinned = await ipfs.BlockApi.PutAsync(new byte[512]);
-            Assert.NotEqual(pinned, unpinned);
+            Assert.AreNotEqual(pinned, unpinned);
             Assert.NotNull(await ipfs.BlockApi.StatAsync(pinned));
             Assert.NotNull(await ipfs.BlockApi.StatAsync(unpinned));
 
@@ -64,7 +63,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.Null(await ipfs.BlockApi.StatAsync(unpinned));
         }
 
-        [Fact]
+        [Test]
         public async Task Version_Info()
         {
             var versions = await ipfs.BlockRepositoryApi.VersionAsync();
@@ -74,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             // Assert.True(versions.ContainsKey("Repo"));
         }
         
-        [Fact]
+        [Test]
         public async Task VersionFileMissing()
         {
             var versionPath = Path.Combine(ipfs.Options.Repository.ExistingFolder(), "version");
@@ -87,7 +86,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     File.Move(versionPath, versionBackupPath);
                 }
 
-                Assert.Equal("0", await ipfs.BlockRepositoryApi.VersionAsync());
+                Assert.AreEqual("0", await ipfs.BlockRepositoryApi.VersionAsync());
             }
             finally
             {

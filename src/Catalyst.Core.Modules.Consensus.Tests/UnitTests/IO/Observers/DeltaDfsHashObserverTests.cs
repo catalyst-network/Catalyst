@@ -36,7 +36,7 @@ using DotNetty.Transport.Channels;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _logger = Substitute.For<ILogger>();
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Try_Update()
         {
             var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaHashProvider.Received(1).TryUpdateLatestHash(prevHash, newHash);
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Update_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");

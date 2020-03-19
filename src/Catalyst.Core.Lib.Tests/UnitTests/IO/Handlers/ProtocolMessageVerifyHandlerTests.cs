@@ -33,7 +33,7 @@ using Catalyst.TestUtils.Fakes;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
                .ToSignedProtocolMessage(peerId, signatureBytes, _signingContext);
         }
 
-        [Fact]
+        [Test]
         private void CanFireNextPipelineOnValidSignature()
         {
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
@@ -72,7 +72,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _fakeContext.ReceivedWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(1);
         }
         
-        [Fact]
+        [Test]
         private void CanFireNextPipelineOnInvalidSignature()
         {
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)

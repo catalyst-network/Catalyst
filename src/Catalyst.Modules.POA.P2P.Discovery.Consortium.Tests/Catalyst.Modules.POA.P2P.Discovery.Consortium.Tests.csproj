@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
@@ -12,6 +12,13 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
       <NoWarn>1701;1702;VSTHRD200;CS8002</NoWarn>
     </PropertyGroup>
+    <Import Project="../Common.TestProjects.props" />
+    <ItemGroup>
+        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
@@ -22,5 +29,4 @@
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
         <ProjectReference Include="..\Catalyst.Modules.POA.Consensus\Catalyst.Modules.POA.Consensus.csproj" />
     </ItemGroup>
-    <Import Project="../Common.TestProjects.props" />
 </Project>

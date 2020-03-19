@@ -22,7 +22,7 @@
 #endregion
 
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
 {
@@ -31,7 +31,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
     /// </summary>
     public sealed class RangeProofPrecompileTests
     {
-        [Fact]
+        [Test]
         public void Base_Gas_Cost_Should_Return_200000()
         {
             var precompile = new RangeProofPrecompile();
@@ -39,7 +39,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
             baseCost.Should().Be(200000);
         }
 
-        [Fact]
+        [Test]
         public void Base_Data_Gas_Cost_Should_Return_0()
         {
             var precompile = new RangeProofPrecompile();

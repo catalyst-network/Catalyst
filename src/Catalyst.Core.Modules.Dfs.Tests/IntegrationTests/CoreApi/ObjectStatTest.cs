@@ -22,13 +22,13 @@
 #endregion
 
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class ObjectStatTest
     {
-        [Fact]
+        [Test]
         public void Properties()
         {
             var stat = new ObjectStat
@@ -39,11 +39,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 LinkCount = 4,
                 LinkSize = 5
             };
-            Assert.Equal(1, stat.BlockSize);
-            Assert.Equal(2, stat.CumulativeSize);
-            Assert.Equal(3, stat.DataSize);
-            Assert.Equal(4, stat.LinkCount);
-            Assert.Equal(5, stat.LinkSize);
+            Assert.AreEqual(1, stat.BlockSize);
+            Assert.AreEqual(2, stat.CumulativeSize);
+            Assert.AreEqual(3, stat.DataSize);
+            Assert.AreEqual(4, stat.LinkCount);
+            Assert.AreEqual(5, stat.LinkSize);
         }
     }
 }

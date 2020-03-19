@@ -38,7 +38,7 @@ using MultiFormats;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _prevHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("prevHash").ToCid());
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Send_To_Voter()
         {
             var receivedMessage = PrepareReceivedMessage(_newHash, _prevHash, _producerId, _voterId);
@@ -79,7 +79,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
              && c.Candidate.ProducerId.Equals(_producerId)));
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector.DidNotReceiveWithAnyArgs().OnNext(default);
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_PreviousHash()
         {
             var invalidPrevHash = Encoding.UTF8.GetBytes("invalid previous hash");

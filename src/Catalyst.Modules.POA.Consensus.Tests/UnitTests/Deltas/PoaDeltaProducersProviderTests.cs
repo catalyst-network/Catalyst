@@ -39,7 +39,7 @@ using Microsoft.Extensions.Caching.Memory;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
 namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
@@ -85,7 +85,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
                 logger);
         }
 
-        [Fact]
+        [Test]
         public void GetDeltaProducersFromPreviousDelta_when_not_cached_should_store_and_return_an_ordered_list()
         {
             _producersByPreviousDelta.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(false);
@@ -123,7 +123,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetDeltaProducersFromPreviousDelta_when_cached_should_not_recompute()
         {
             _producersByPreviousDelta.TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)),

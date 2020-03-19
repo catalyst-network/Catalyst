@@ -45,7 +45,7 @@ using NSubstitute;
 using Polly;
 using Polly.Retry;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId.ToSubstitutedPeerSettings(), _dfsService, _hashProvider, logger);
         }
 
-        [Fact]
+        [Test]
         public async Task BroadcastCandidate_should_not_broadcast_candidates_from_other_nodes()
         {
             var notMyCandidate = DeltaHelper.GetCandidateDelta(_hashProvider,
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             await _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public void BroadcastCandidate_should_allow_broadcasting_candidate_from_this_node()
         {
             var myCandidate = DeltaHelper.GetCandidateDelta(_hashProvider,
@@ -102,7 +102,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 m => IsExpectedCandidateMessage(m, myCandidate, _peerId)));
         }
 
-        [Fact]
+        [Test]
         public void BroadcastFavouriteCandidateDelta_Should_Broadcast()
         {
             var favourite = new FavouriteDeltaBroadcast
@@ -116,7 +116,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 c => IsExpectedCandidateMessage(c, favourite, _peerId)));
         }
 
-        [Fact]
+        [Test]
         public async Task PublishDeltaToIpfsAsync_should_return_ipfs_address()
         {
             var delta = DeltaHelper.GetDelta(_hashProvider);
@@ -132,7 +132,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             deltaCid.Should().Be(cid);
         }
 
-        [Fact]
+        [Test]
         public async Task PublishDeltaToIpfsAsync_should_retry_then_return_ipfs_address()
         {
             var delta = DeltaHelper.GetDelta(_hashProvider);
@@ -154,7 +154,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             await _dfsService.UnixFsApi.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>());
         }
 
-        [Fact]
+        [Test]
         public async Task PublishDeltaToIpfsAsync_should_retry_until_cancelled()
         {
             var delta = DeltaHelper.GetDelta(_hashProvider);
@@ -184,22 +184,22 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             await _dfsService.UnixFsApi.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), cancel: cancellationToken);
         }
 
-        public class BadDeltas : TheoryData<Delta>
-        {
-            public BadDeltas()
-            {
-                var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-                var noPreviousHash = new Delta
-                {
-                    PreviousDeltaDfsHash = new byte[0].ToByteString()
-                };
-                var noMerkleRoot = DeltaHelper.GetDelta(hashProvider, merkleRoot: new byte[0]);
+        //public class BadDeltas : TheoryData<Delta>
+        //{
+        //    public BadDeltas()
+        //    {
+        //        var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+        //        var noPreviousHash = new Delta
+        //        {
+        //            PreviousDeltaDfsHash = new byte[0].ToByteString()
+        //        };
+        //        var noMerkleRoot = DeltaHelper.GetDelta(hashProvider, merkleRoot: new byte[0]);
 
-                AddRow(noMerkleRoot, typeof(InvalidDataException));
-                AddRow(noPreviousHash, typeof(InvalidDataException));
-                AddRow(null as Delta, typeof(ArgumentNullException));
-            }
-        }
+        //        AddRow(noMerkleRoot, typeof(InvalidDataException));
+        //        AddRow(noPreviousHash, typeof(InvalidDataException));
+        //        AddRow(null as Delta, typeof(ArgumentNullException));
+        //    }
+        //}
 
         private static bool IsExpectedCandidateMessage<T>(ProtocolMessage protocolMessage,
             T expected,

@@ -31,8 +31,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
@@ -45,10 +44,9 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
                 new object[] {AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
             };
 
-        public AddFileCommandTests(ITestOutputHelper output) : base(output) { }
+        public AddFileCommandTests(TestContext output) : base(output) { }
 
-        [Theory]
-        [MemberData(nameof(AddFileData))]
+        [TestCase(nameof(AddFileData))]
         public async Task Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
         {
             var uploadFileTransferFactory = Scope.Resolve<IUploadFileTransferFactory>();

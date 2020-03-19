@@ -27,21 +27,22 @@ using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
+using System.Collections.Generic;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public class FavouriteByHashAndVoterComparerTests
     {
-        public class FavouritesComparisonData : TheoryData<FavouriteDeltaBroadcast, FavouriteDeltaBroadcast, bool>
+        public class FavouritesComparisonData : List<object[]>
         {
             public FavouritesComparisonData()
             {
-                Add(null, null, true);
-                Add(new FavouriteDeltaBroadcast(), new FavouriteDeltaBroadcast(), true);
-                Add(null, new FavouriteDeltaBroadcast(), false);
-                Add(new FavouriteDeltaBroadcast(), null, false);
+                Add(new object[] { null, null, true });
+                Add(new object[] { new FavouriteDeltaBroadcast(), new FavouriteDeltaBroadcast(), true });
+                Add(new object[] { null, new FavouriteDeltaBroadcast(), false });
+                Add(new object[] { new FavouriteDeltaBroadcast(), null, false });
 
                 var voter1 = PeerIdHelper.GetPeerId("voter1");
                 var voter2 = PeerIdHelper.GetPeerId("voter2");
@@ -55,7 +56,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 var previousHash1 = ByteUtil.GenerateRandomByteArray(32).ToByteString();
                 var previousHash2 = ByteUtil.GenerateRandomByteArray(32).ToByteString();
 
-                Add(new FavouriteDeltaBroadcast
+                Add(new object[] { new FavouriteDeltaBroadcast
                     {
                         Candidate = new CandidateDeltaBroadcast
                         {
@@ -70,9 +71,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                             Hash = hash2, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
                         },
                         VoterId = voter1
-                    }, false);
+                    }, false });
 
-                Add(new FavouriteDeltaBroadcast
+                Add(new object[] { new FavouriteDeltaBroadcast
                     {
                         Candidate = new CandidateDeltaBroadcast
                         {
@@ -87,16 +88,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                             Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
                         },
                         VoterId = voter2
-                    }, false);
+                    }, false });
 
-                Add(new FavouriteDeltaBroadcast
+                Add(new object[] { new FavouriteDeltaBroadcast
                     {
                         Candidate = new CandidateDeltaBroadcast
                         {
                             Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
                         },
                         VoterId = voter1
-                    }, 
+                    },
                     new FavouriteDeltaBroadcast
                     {
                         Candidate = new CandidateDeltaBroadcast
@@ -104,12 +105,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                             Hash = hash1, ProducerId = producer2, PreviousDeltaDfsHash = previousHash2
                         },
                         VoterId = voter1
-                    }, true);
+                    }, true});
             }
         }
-        
+
         [Theory]
-        [ClassData(typeof(FavouritesComparisonData))]
+        [TestCase(typeof(FavouritesComparisonData))]
         public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
         {
             var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(x);

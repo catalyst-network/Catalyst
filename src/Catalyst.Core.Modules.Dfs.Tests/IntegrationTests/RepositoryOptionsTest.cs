@@ -25,20 +25,20 @@ using System;
 using System.IO;
 using System.Linq;
 using Catalyst.Abstractions.Options;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     public class RepositoryOptionsTest
     {
-        [Fact]
+        [Test]
         public void Defaults()
         {
             var options = new RepositoryOptions();
             Assert.NotNull(options.Folder);
         }
 
-        [Fact]
+        [Test]
         public void Environment_Home()
         {
             var names = new[] {"IPFS_PATH", "HOME", "HOMEPATH"};
@@ -53,11 +53,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
                 Environment.SetEnvironmentVariable("HOME", $"{sep}home1");
                 var options = new RepositoryOptions();
-                Assert.Equal($"{sep}home1{sep}.catalyst", options.Folder);
+                Assert.AreEqual($"{sep}home1{sep}.catalyst", options.Folder);
 
                 Environment.SetEnvironmentVariable("HOME", $"{sep}home2{sep}");
                 options = new RepositoryOptions();
-                Assert.Equal($"{sep}home2{sep}.catalyst", options.Folder);
+                Assert.AreEqual($"{sep}home2{sep}.catalyst", options.Folder);
             }
             finally
             {
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Environment_HomePath()
         {
             var names = new[] {"IPFS_PATH", "HOME", "HOMEPATH"};
@@ -84,11 +84,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
                 Environment.SetEnvironmentVariable("HOMEPATH", $"{sep}home1");
                 var options = new RepositoryOptions();
-                Assert.Equal($"{sep}home1{sep}.catalyst", options.Folder);
+                Assert.AreEqual($"{sep}home1{sep}.catalyst", options.Folder);
 
                 Environment.SetEnvironmentVariable("HOMEPATH", $"{sep}home2{sep}");
                 options = new RepositoryOptions();
-                Assert.Equal($"{sep}home2{sep}.catalyst", options.Folder);
+                Assert.AreEqual($"{sep}home2{sep}.catalyst", options.Folder);
             }
             finally
             {
@@ -100,7 +100,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Environment_IpfsPath()
         {
             var names = new[] {"IPFS_PATH", "HOME", "HOMEPATH"};
@@ -115,11 +115,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
                 Environment.SetEnvironmentVariable("IPFS_PATH", $"{sep}x1");
                 var options = new RepositoryOptions();
-                Assert.Equal($"{sep}x1", options.Folder);
+                Assert.AreEqual($"{sep}x1", options.Folder);
 
                 Environment.SetEnvironmentVariable("IPFS_PATH", $"{sep}x2{sep}");
                 options = new RepositoryOptions();
-                Assert.Equal($"{sep}x2{sep}", options.Folder);
+                Assert.AreEqual($"{sep}x2{sep}", options.Folder);
             }
             finally
             {

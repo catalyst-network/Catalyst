@@ -28,7 +28,7 @@ using Catalyst.TestUtils;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
 {
@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
         private readonly ILogger _logger;
         private readonly TestSocketBase _testSocketBase;
 
-        [Fact]
+        [Test]
         public void SocketBase_Should_Dispose()
         {
             _testSocketBase.Dispose();
@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
             _logger.Received(1).Debug($"Disposing{typeof(TestSocketBase).Name}");
         }
 
-        [Fact]
+        [Test]
         public void SocketBase_Should_Log_On_Dispose_Exception()
         {
             var socketException = new SocketException();
@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
             _logger.Received(1).Error(socketException, "Dispose failed to complete.");
         }
 
-        [Fact]
+        [Test]
         public void SocketBase_Should_Not_Dispose()
         {
             _testSocketBase.DisposeProxy(false);

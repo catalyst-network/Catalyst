@@ -28,7 +28,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
 {
@@ -42,13 +42,13 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
             _serviceCollection = new ServiceCollection();
         }
 
-        [Fact]
+        [Test]
         public void Can_Add_Swagger() { AssertService(typeof(ISwaggerProvider)); }
 
-        [Fact]
+        [Test]
         public void Can_Not_Add_Swagger() { AssertService(typeof(ISwaggerProvider), false, false); }
 
-        [Fact]
+        [Test]
         public void Can_Add_Api()
         {
             Type[] serviceTypes =

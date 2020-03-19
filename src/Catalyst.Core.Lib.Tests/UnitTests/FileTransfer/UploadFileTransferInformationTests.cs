@@ -30,15 +30,15 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
 {
     public sealed class UploadFileTransferInformationTests
     {
         [Theory]
-        [InlineData(2)]
-        [InlineData(3)]
+        [TestCase(2)]
+        [TestCase(3)]
         public void Can_Get_Correct_Chunk_Transfer_File_Bytes_Request_Message(uint chunks)
         {
             int byteLengthForChunks = (int) (Constants.FileTransferChunkSize * chunks);
@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             }
         }
 
-        [Fact]
+        [Test]
         public void Should_Not_Be_Able_To_Retry_After_Max_Retry()
         {
             using (var memoryStream = new MemoryStream())

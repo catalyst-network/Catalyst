@@ -38,7 +38,7 @@ using Lib.P2P;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -63,7 +63,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, hashProvider, logger);
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Send_To_Voter()
         {
             var receivedMessage = PrepareReceivedMessage(_newHash.ToArray(), _prevHash.ToArray(), _producerId);
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
              && c.ProducerId.Equals(_producerId)));
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaVoter.DidNotReceiveWithAnyArgs().OnNext(default);
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_PreviousHash()
         {
             var invalidPreviousHash = Encoding.UTF8.GetBytes("invalid previous hash");

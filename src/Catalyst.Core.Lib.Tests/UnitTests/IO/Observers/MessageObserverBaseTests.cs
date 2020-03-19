@@ -37,7 +37,7 @@ using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 {
@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             }).ToArray();
         }
 
-        [Fact]
+        [Test]
         public void MessageHandler_should_subscribe_to_next_and_complete()
         {
             var completingStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _testScheduler, _responseMessages);
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _handler.SubstituteObserver.Received(1).OnCompleted();
         }
 
-        [Fact]
+        [Test]
         public void MessageHandler_should_subscribe_to_next_and_error()
         {
             var erroringStream = new ReplaySubject<IObserverDto<ProtocolMessage>>(10, _testScheduler);
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _handler.SubstituteObserver.Received(0).OnCompleted();
         }
 
-        [Fact]
+        [Test]
         public void MessageHandler_should_not_receive_messages_of_the_wrong_type()
         {
             _responseMessages[3] = new PingResponse().ToProtocolMessage(
@@ -127,7 +127,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _handler.SubstituteObserver.Received(1).OnCompleted();
         }
 
-        [Fact]
+        [Test]
         public void MessageHandler_should_not_receive_null_or_untyped_messages()
         {
             _responseMessages[2].TypeUrl = "";

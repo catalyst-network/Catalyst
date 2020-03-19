@@ -23,16 +23,15 @@
 
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class PeerReputationCommandTests : CliCommandTestsBase
     {
-        public PeerReputationCommandTests(ITestOutputHelper output) : base(output) { }
+        public PeerReputationCommandTests(TestContext output) : base(output) { }
 
-        [Fact]
+        [Test]
         public void Cli_Can_Send_Peer_Reputation_Request()
         {
             var result = Shell.ParseCommand(

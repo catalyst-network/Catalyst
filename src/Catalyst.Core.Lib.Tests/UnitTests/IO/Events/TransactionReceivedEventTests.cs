@@ -39,7 +39,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 {
@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                 Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public void Can_Send_Error_To_Invalid_Transaction()
         {
             _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
         }
 
-        [Fact]
+        [Test]
         public void Can_Send_Exists_If_Mempool_Contains_Transaction()
         {
             var transaction = TransactionHelper.GetPublicTransaction();
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _mempool.Service.DidNotReceiveWithAnyArgs().CreateItem(default);
         }
 
-        [Fact]
+        [Test]
         public void Can_Broadcast_And_Save_Valid_Transaction()
         {
             var transaction = TransactionHelper.GetPublicTransaction();

@@ -23,16 +23,15 @@
 
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class PeerRemoveCommandTests : CliCommandTestsBase
     {
-        public PeerRemoveCommandTests(ITestOutputHelper output) : base(output) { }
+        public PeerRemoveCommandTests(TestContext output) : base(output) { }
 
-        [Fact]
+        [Test]
         public void Cli_Can_Send_Remove_Peer_Request()
         {
             var result = Shell.ParseCommand(

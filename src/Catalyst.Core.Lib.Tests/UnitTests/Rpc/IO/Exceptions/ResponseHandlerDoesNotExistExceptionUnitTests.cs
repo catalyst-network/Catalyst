@@ -25,13 +25,13 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Catalyst.Core.Lib.Rpc.IO.Exceptions;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Exceptions
 {
     public sealed class ResponseHandlerDoesNotExistExceptionUnitTests
     {
-        [Fact]
+        [Test]
         public void ResponseHandlerDoesNotExistException_Should_Be_Serializable()
         {
             var exception =

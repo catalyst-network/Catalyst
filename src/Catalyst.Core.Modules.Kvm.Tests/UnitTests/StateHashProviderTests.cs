@@ -22,13 +22,13 @@
 #endregion
 
 using Nethermind.Evm;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
 {
     public sealed class StateHashProviderTests
     {
-        [Fact(Skip = "Not implemented yet")]
+        [Ignore("Not implemented yet")]
         public void Can_provide_a_latest_state_update_hash()
         {
             var stateUpdate = new StateUpdate();

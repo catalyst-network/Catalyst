@@ -28,7 +28,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
 {
@@ -36,7 +36,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
 
-        [Fact]
+        [Test]
         public void SignMessageResponse_Can_Get_Output()
         {
             //Arrange

@@ -43,7 +43,7 @@ using Microsoft.Extensions.Caching.Memory;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -116,7 +116,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         }
 
         [Theory]
-        [MemberData(nameof(DodgyCandidates))]
+        [TestCase(nameof(DodgyCandidates))]
         public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDeltaBroadcast dodgyCandidate)
         {
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
@@ -127,7 +127,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
         }
 
-        [Fact]
+        [Test]
         public void When_candidate_is_produced_by_unexpected_producer_should_log_and_return_without_hitting_the_cache()
         {
             var candidateFromUnknownProducer = DeltaHelper.GetCandidateDelta(_hashProvider,
@@ -143,7 +143,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
         }
 
-        [Fact]
+        [Test]
         public void When_candidate_not_in_cache_should_build_ScoredCandidate_with_ranking_and_store_it()
         {
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
@@ -172,7 +172,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             scoredCandidateDelta.Score.Should().Be(100 * _producerIds.Count + 1);
         }
 
-        [Fact]
+        [Test]
         public void When_candidate_in_cache_should_retrieve_ScoredCandidate()
         {
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
@@ -201,7 +201,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             cacheCandidate.Score.Should().Be(initialScore + 1);
         }
 
-        [Fact]
+        [Test]
         public void When_second_candidate_is_more_popular_it_should_score_higher()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -247,7 +247,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void When_candidates_not_in_cache_should_create_or_update_a_previous_hash_entry()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -290,7 +290,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetFavouriteDelta_should_retrieve_favourite_delta()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -316,7 +316,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetFavouriteDelta_should_return_null_on_unknown_previous_delta_hash()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -334,7 +334,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetFavouriteDelta_should_return_lowest_hash_when_candidate_scores_are_equal()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))

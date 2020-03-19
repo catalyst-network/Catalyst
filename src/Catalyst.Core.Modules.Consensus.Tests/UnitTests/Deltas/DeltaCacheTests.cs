@@ -40,7 +40,7 @@ using Nethermind.Db;
 using Nethermind.State;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -69,13 +69,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, storageProvider, stateProvider, new StateDb(), _logger);
         }
 
-        [Fact]
+        [Test]
         public void Genesis_Hash_Should_Be_Always_Present()
         {
             _memoryCache.Received().CreateEntry(_deltaCache.GenesisHash);
         }
 
-        [Fact]
+        [Test]
         public void TryGetDelta_Should_Not_Hit_The_Dfs_Or_Store_Delta_When_Delta_Is_In_Cache()
         {
             _memoryCache.ClearReceivedCalls(); // needed because of the CreateEntry call from the DeltaCache .ctor
@@ -98,7 +98,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _memoryCache.DidNotReceiveWithAnyArgs().CreateEntry(default);
         }
 
-        [Fact]
+        [Test]
         public void TryGetDelta_Should_Hit_The_Dfs_When_Delta_Is_Not_In_Cache()
         {
             var deltaFromDfs = DeltaHelper.GetDelta(_hashProvider);
@@ -119,7 +119,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _dfsReader.Received(1).TryReadDeltaFromDfs(cid, out Arg.Any<Delta>());
         }
 
-        [Fact]
+        [Test]
         public void TryGetDelta_Should_Cache_Delta_With_Expiry_Options_When_Delta_Is_Not_In_Cache()
         {
             var deltaFromDfs = DeltaHelper.GetDelta(_hashProvider);

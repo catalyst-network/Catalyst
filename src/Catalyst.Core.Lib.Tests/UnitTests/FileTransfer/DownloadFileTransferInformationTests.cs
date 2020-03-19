@@ -29,7 +29,7 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
 {
@@ -48,7 +48,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
                     10);
         }
 
-        [Fact]
+        [Test]
         public void Can_Write_To_File_When_Received_Chunk()
         {
             var bytes = Enumerable.Range(1, 10).Select(e => (byte) e).ToArray();
@@ -59,8 +59,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
         }
 
         [Theory]
-        [InlineData(2)]
-        [InlineData(3)]
+        [TestCase(2)]
+        [TestCase(3)]
         public void Can_Set_File_Length(uint chunkAmount)
         {
             var byteLenForChunkAmount = (ulong) (Constants.FileTransferChunkSize * chunkAmount);

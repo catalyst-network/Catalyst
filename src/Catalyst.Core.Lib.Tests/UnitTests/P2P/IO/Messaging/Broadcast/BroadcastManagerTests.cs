@@ -40,7 +40,7 @@ using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
@@ -64,14 +64,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             _peerSettings = _senderPeerId.ToSubstitutedPeerSettings();
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Increase_Broadcast_Count_When_Broadcast_Owner_Broadcasting()
         {
             await TestBroadcast(100, _senderPeerId,
                 BroadcastManager.BroadcastOwnerMaximumGossipPeersPerRound).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Increase_Broadcast_Count_When_Broadcasting()
         {
             await TestBroadcast(100,
@@ -79,7 +79,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                 BroadcastManager.MaxGossipPeersPerRound).ConfigureAwait(false);
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Broadcast_Message_When_Not_Enough_Peers_To_Gossip()
         {
             var peerCount = BroadcastManager.MaxGossipPeersPerRound - 1;
@@ -100,9 +100,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         }
 
         [Theory]
-        [InlineData(1)]
-        [InlineData(6)]
-        [InlineData(3)]
+        [TestCase(1)]
+        [TestCase(6)]
+        [TestCase(3)]
         public async Task Can_Increase_Received_Count_When_Broadcast_Message_Is_Received(int receivedCount)
         {
             PopulatePeers(100);

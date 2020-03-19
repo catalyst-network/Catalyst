@@ -43,8 +43,8 @@ using MultiFormats;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private readonly IDfsService _dfsService;
         private readonly IHashProvider _hashProvider;
 
-        public GetFileFromDfsObserverHandlerTests(ITestOutputHelper testOutput) : base(testOutput)
+        public GetFileFromDfsObserverHandlerTests(TestContext testOutput) : base(testOutput)
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _logger = Substitute.For<ILogger>();
@@ -67,11 +67,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [InlineData(1000L)]
-        [InlineData(82000L)]
-        [InlineData(100000L)]
-        [InlineData(800000L)]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [TestCase(1000L)]
+        [TestCase(82000L)]
+        [TestCase(100000L)]
+        [TestCase(800000L)]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task Get_File_Rpc(long byteSize)
         {
             var addedIpfsHash = AddFileToDfs(byteSize, out var crcValue, out var stream);
@@ -122,7 +122,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
                 await TaskHelper.WaitForAsync(() => fileDownloadInformation.IsCompleted, TimeSpan.FromSeconds(10));
 
-                Assert.Equal(crcValue, FileHelper.GetCrcValue(fileDownloadInformation.TempPath));
+                Assert.AreEqual(crcValue, FileHelper.GetCrcValue(fileDownloadInformation.TempPath));
             }
             finally
             {

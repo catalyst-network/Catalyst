@@ -33,7 +33,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
 
-        [Fact]
+        [Test]
         public void HandlerRemovesFileTransferOnError()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
@@ -68,7 +68,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _uploadFileTransferFactory.Received(1).Remove(Arg.Any<IUploadFileInformation>(), true);
         }
 
-        [Fact]
+        [Test]
         public void InitializesFileTransferOnSuccessResponse()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();

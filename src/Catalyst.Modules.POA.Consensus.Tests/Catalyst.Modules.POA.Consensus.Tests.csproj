@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <Title>Catalyst POA Consensus Module Tests</Title>
@@ -15,6 +15,12 @@
     </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
+        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
       <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
@@ -23,7 +29,6 @@
       <ProjectReference Include="..\Catalyst.Modules.POA.Consensus\Catalyst.Modules.POA.Consensus.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
       <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
     </ItemGroup>
 </Project>

@@ -37,7 +37,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -91,10 +91,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [InlineData("good-14", true)]
-        [InlineData("good-22", false)]
-        [InlineData("blacklisted-1", true)]
-        [InlineData("blacklisted-3", false)]
+        [TestCase("good-14", true)]
+        [TestCase("good-22", false)]
+        [TestCase("blacklisted-1", true)]
+        [TestCase("blacklisted-3", false)]
         public void PeerBlackListingRequestObserver_should_set_Blacklist_flag_on_known_peers(string publicKeySeed,
             bool blacklist)
         {
@@ -114,8 +114,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [InlineData("unknown-1", false)]
-        [InlineData("unknown-2", false)]
+        [TestCase("unknown-1", false)]
+        [TestCase("unknown-2", false)]
         public void PeerBlackListingRequestObserver_should_not_set_Blacklist_flag_on_unknown_peers(string publicKeySeed,
             bool blacklist)
         {

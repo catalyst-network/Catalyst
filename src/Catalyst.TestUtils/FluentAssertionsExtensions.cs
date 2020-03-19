@@ -28,7 +28,7 @@ using System.Linq.Expressions;
 using FluentAssertions;
 using FluentAssertions.Collections;
 using FluentAssertions.Execution;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.TestUtils
 {
@@ -104,7 +104,7 @@ namespace Catalyst.TestUtils
                .Select(x => new StringWrapper(x));
         }
 
-        [Fact]
+        [Test]
         public void NotBeInDescendingOrder_should_only_throw_when_in_descending_order()
         {
             _stringsInAscendingOrder.Should()
@@ -116,7 +116,7 @@ namespace Catalyst.TestUtils
                .Should().Throw<AssertionFailedException>();
         }
 
-        [Fact]
+        [Test]
         public void NotBeInDescendingOrder_should_use_the_passed_in_comparer()
         {
             new Action(() => _stringsInDescendingOrder.Should()
@@ -129,7 +129,7 @@ namespace Catalyst.TestUtils
                     StringComparer.InvariantCulture);
         }
 
-        [Fact]
+        [Test]
         public void NotBeInAscendingOrder_should_only_throw_when_in_ascending_order()
         {
             _stringsInDescendingOrder.Should()
@@ -141,7 +141,7 @@ namespace Catalyst.TestUtils
                .Should().Throw<AssertionFailedException>();
         }
 
-        [Fact]
+        [Test]
         public void NotBeInAscendingOrder_should_use_the_passed_in_comparer()
         {
             new Action(() => _stringsInAscendingOrder.Should()
@@ -154,7 +154,7 @@ namespace Catalyst.TestUtils
                     StringComparer.InvariantCulture);
         }
 
-        [Fact]
+        [Test]
         public void NotBeIn_ascending_or_descending_Order_should_be_true_on_empty()
         {
             new List<StringWrapper>().Should()

@@ -26,8 +26,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
@@ -35,22 +34,22 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private IDfsService ipfs;
 
-        public NameApiTest(ITestOutputHelper output)
+        public NameApiTest(TestContext output)
         {
             ipfs = TestDfs.GetTestDfs(output, null, "sha2-256");
         }
 
-        [Fact]
+        [Test]
         public async Task Resolve_Cid()
         {
             var actual = await ipfs.NameApi.ResolveAsync("QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao");
-            Assert.Equal("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", actual);
+            Assert.AreEqual("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", actual);
 
             actual = await ipfs.NameApi.ResolveAsync("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao");
-            Assert.Equal("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", actual);
+            Assert.AreEqual("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", actual);
         }
 
-        [Fact]
+        [Test]
         public async Task Resolve_Cid_Path()
         {
             var temp = FileSystemApiTest.MakeTemp();
@@ -58,7 +57,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var dir = await ipfs.UnixFsApi.AddDirectoryAsync(temp);
                 var name = "/ipfs/" + dir.Id.Encode() + "/x/y/y.txt";
-                Assert.Equal("/ipfs/QmTwEE2eSyzcvUctxP2negypGDtj7DQDKVy8s3Rvp6y6Pc",
+                Assert.AreEqual("/ipfs/QmTwEE2eSyzcvUctxP2negypGDtj7DQDKVy8s3Rvp6y6Pc",
                     await ipfs.NameApi.ResolveAsync(name));
             }
             finally
@@ -67,7 +66,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public void Resolve_Cid_Invalid()
         {
             ExceptionAssert.Throws<FormatException>(() =>
@@ -76,33 +75,33 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             });
         }
 
-        [Fact]
+        [Test]
         public async Task Resolve_DnsLink()
         {
             var iopath = await ipfs.NameApi.ResolveAsync("ipfs.io");
             Assert.NotNull(iopath);
 
             var path = await ipfs.NameApi.ResolveAsync("/ipns/ipfs.io");
-            Assert.Equal(iopath, path);
+            Assert.AreEqual(iopath, path);
         }
 
-        [Fact]
+        [Test]
         public async Task Resolve_DnsLink_Recursive()
         {
             var path = await ipfs.NameApi.ResolveAsync("/ipns/ipfs.io/media", true);
-            Assert.StartsWith("/ipfs/", path);
-            Assert.EndsWith("/media", path);
+            Assert.That(path, Does.StartWith("/ipfs/"));
+            Assert.That(path, Does.EndWith("/media"));
 
             path = await ipfs.NameApi.ResolveAsync("ipfs.io/media", true);
-            Assert.StartsWith("/ipfs/", path);
-            Assert.EndsWith("/media", path);
+            Assert.That(path, Does.StartWith("/ipfs/"));
+            Assert.That(path, Does.EndWith("/media"));
 
             path = await ipfs.NameApi.ResolveAsync("/ipfs.io/media", true);
-            Assert.StartsWith("/ipfs/", path);
-            Assert.EndsWith("/media", path);
+            Assert.That(path, Does.StartWith("/ipfs/"));
+            Assert.That(path, Does.EndWith("/media"));
         }
 
-        [Fact]
+        [Test]
         public void Resolve_NoDnsLink()
         {
             ExceptionAssert.Throws<Exception>(() =>
@@ -111,7 +110,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             });
         }
 
-        //[Fact]
+        //[Test]
         //[Ignore("Need a working IPNS")]
         //public async Task Resolve_DnsLink_Recursive()
         //{
@@ -119,7 +118,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 
         //    var media = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io/media");
         //    var actual = await ipfs.Generic.ResolveAsync("/ipns/ipfs.io/media", recursive: true);
-        //    Assert.NotEqual(media, actual);
+        //    Assert.AreNotEqual(media, actual);
         //}
     }
 }

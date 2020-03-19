@@ -55,8 +55,9 @@ using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using NSubstitute;
+using NUnit.Framework;
 using SharpRepository.InMemoryRepository;
-using Xunit.Abstractions;
+
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
@@ -80,7 +81,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             IDfsService dfsService,
             IEnumerable<PeerId> knownPeerIds,
             IFileSystem parentTestFileSystem,
-            ITestOutputHelper output)
+            TestContext output)
         {
             Name = name;
             _nodeSettings = nodeSettings;

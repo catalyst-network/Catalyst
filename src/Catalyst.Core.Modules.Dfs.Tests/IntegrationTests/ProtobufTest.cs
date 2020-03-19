@@ -44,7 +44,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
     // [Ignore("https://github.com/mgravell/protobuf-net/issues/368")]
     // public class ProtobufTest
     // {
-    //     [Fact]
+    //     [Test]
     //     public void NullData()
     //     {
     //         var m1 = new M1();
@@ -57,10 +57,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
     //         Serializer.Serialize<M2>(ms2, m2);
     //         var bytes2 = ms2.ToArray();
     //
-    //         Assert.Equal(bytes1, bytes2);
+    //         Assert.AreEqual(bytes1, bytes2);
     //     }
     //
-    //     [Fact]
+    //     [Test]
     //     public void SomeData()
     //     {
     //         var data = new byte[] {10, 11, 12};
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
     //         Serializer.Serialize<M2>(ms2, m2);
     //         var bytes2 = ms2.ToArray();
     //
-    //         Assert.Equal(bytes1, bytes2);
+    //         Assert.AreEqual(bytes1, bytes2);
     //     }
     // }
 }

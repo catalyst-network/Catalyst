@@ -37,8 +37,7 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Client;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Config
 {
@@ -48,11 +47,11 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Config
             new List<NetworkType> {NetworkType.Devnet, NetworkType.Mainnet, NetworkType.Testnet}
                .Select(n => new object[] {n}).ToList();
 
-        public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
+        public GlobalConfigTests(TestContext output) : base(output) { }
 
         [Theory]
-        [MemberData(nameof(Networks))]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [TestCase(nameof(Networks))]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(NetworkType network)
         {
             var configFilesUsed = new[]

@@ -31,7 +31,7 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 {
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _signingContext = new SigningContext();
         }
         
-        [Fact]
+        [Test]
         public void On_Init_KeySigner_Can_Retrieve_Key_From_KeyStore_If_Key_Doesnt_Initially_Exist_In_Registry()
         {
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
@@ -72,7 +72,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             keySigner.Should().NotBe(null);
         }
 
-        [Fact]
+        [Test]
         public void On_Init_KeySigner_Can_Generate_Default_Key_If_Key_No_KeyStore_File_Exists()
         {
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             keySigner.Should().NotBe(null);
         }
 
-        [Fact] 
+        [Test] 
         public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
         {
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(_privateKey);
@@ -108,10 +108,10 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _keystore.Received(0)?.KeyStoreGenerateAsync(Arg.Any<NetworkType>(), Arg.Any<KeyRegistryTypes>());
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             
-            Assert.Equal(_signature, actualSignature);
+            Assert.AreEqual(_signature, actualSignature);
         }
 
-        [Fact] 
+        [Test] 
         public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
         {            
             var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);            
@@ -126,7 +126,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
 
-            Assert.Equal(_signature, actualSignature);
+            Assert.AreEqual(_signature, actualSignature);
         }
 
         private sealed class CryptoContext : ICryptoContext

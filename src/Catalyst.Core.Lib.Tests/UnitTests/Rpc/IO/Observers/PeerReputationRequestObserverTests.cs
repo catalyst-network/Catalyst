@@ -37,7 +37,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -80,9 +80,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [InlineData("peer-1", 1)]
-        [InlineData("peer-4", 4)]
-        [InlineData("unknown", int.MinValue)]
+        [TestCase("peer-1", 1)]
+        [TestCase("peer-4", 4)]
+        [TestCase("unknown", int.MinValue)]
         public void TestPeerReputationRequestResponse(string publicKeySeed, int expectedReputations)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKeySeed);

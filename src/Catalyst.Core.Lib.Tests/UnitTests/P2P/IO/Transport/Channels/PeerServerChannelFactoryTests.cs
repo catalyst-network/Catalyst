@@ -48,7 +48,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 {
@@ -108,7 +108,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                .ReturnsForAnyArgs(true);
         }
 
-        [Fact]
+        [Test]
         public void PeerServerChannelFactory_should_have_correct_handlers()
         {
             _factory.InheritedHandlers.Count(h => h != null).Should().Be(7);
@@ -122,7 +122,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             handlers[6].Should().BeOfType<BroadcastCleanupHandler>();
         }
 
-        [Fact]
+        [Test]
         public async Task PeerServerChannelFactory_should_put_the_correct_handlers_on_the_inbound_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
@@ -151,7 +151,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             }
         }
 
-        [Fact]
+        [Test]
         public void Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
         {
             var testingChannel = new EmbeddedChannel("testWithExceptions".ToChannelId(),

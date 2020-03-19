@@ -23,13 +23,13 @@
 
 using Catalyst.Core.Modules.Consensus.Cycle;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 {
     public class CycleConfigurationTests
     {
-        [Fact]
+        [Test]
         public void Default_CycleConfiguration_should_not_have_overlapping_phases()
         {
             var config = CycleConfiguration.Default;

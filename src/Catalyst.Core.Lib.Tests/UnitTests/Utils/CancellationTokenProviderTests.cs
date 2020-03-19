@@ -24,7 +24,7 @@
 using System;
 using Catalyst.Core.Lib.Util;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             _cancellationTokenProvider = new CancellationTokenProvider(true);
         }
 
-        [Fact]
+        [Test]
         public void Has_Token_Cancelled_Should_Be_True_When_Cancelled()
         {
             _cancellationTokenProvider.HasTokenCancelled().Should().BeFalse();

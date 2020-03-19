@@ -34,8 +34,8 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using MultiFormats;
 using NSubstitute;
+using NUnit.Framework;
 using Serilog;
-using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -98,7 +98,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [MemberData(nameof(QueryContents))]
+        [TestCase(nameof(QueryContents))]
         public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
         {
             var testScheduler = new TestScheduler();

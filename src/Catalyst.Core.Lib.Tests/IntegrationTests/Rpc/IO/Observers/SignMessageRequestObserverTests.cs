@@ -47,8 +47,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -60,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
 
-        public SignMessageRequestObserverTests(ITestOutputHelper output) : base(output, new[]
+        public SignMessageRequestObserverTests(TestContext output) : base(output, new[]
         {
             Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile)
         })
@@ -82,10 +81,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [InlineData("Hello Catalyst")]
-        [InlineData("")]
-        [InlineData("Hello&?!1253Catalyst")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [TestCase("Hello Catalyst")]
+        [TestCase("")]
+        [TestCase("Hello&?!1253Catalyst")]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var sender = PeerIdHelper.GetPeerId("sender");

@@ -28,13 +28,13 @@ using Nethermind.Evm;
 using Nethermind.Logging;
 using Nethermind.State;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
 {
     public sealed class CatalystVirtualMachineTests
     {
-        [Fact]
+        [Test]
         public void Catalyst_virtual_machine_can_be_initialized()
         {
             var virtualMachine = new KatVirtualMachine(

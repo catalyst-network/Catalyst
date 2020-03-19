@@ -24,8 +24,7 @@
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
@@ -33,15 +32,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private readonly IDfsService _dfs;
 
-        public StatsApiTest(ITestOutputHelper output)
+        public StatsApiTest(TestContext output)
         {
             _dfs = TestDfs.GetTestDfs(output);
         }
         
-        [Fact]
+        [Test]
         public void Exists() { Assert.NotNull(_dfs.StatsApi); }
 
-        [Fact]
+        [Test]
         public async Task SmokeTest()
         {
             await _dfs.StatsApi.GetBandwidthStatsAsync();

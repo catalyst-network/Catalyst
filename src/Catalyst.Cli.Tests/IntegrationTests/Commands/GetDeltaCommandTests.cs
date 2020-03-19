@@ -27,16 +27,15 @@ using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using MultiFormats;
 using MultiFormats.Registry;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class GetDeltaCommandTests : CliCommandTestsBase
     {
-        public GetDeltaCommandTests(ITestOutputHelper output) : base(output) { }
+        public GetDeltaCommandTests(TestContext output) : base(output) { }
 
-        [Fact]
+        [Test]
         public void Cli_Can_Request_Node_Info()
         {
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));

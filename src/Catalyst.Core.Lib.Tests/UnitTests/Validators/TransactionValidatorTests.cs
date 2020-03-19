@@ -31,13 +31,13 @@ using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
 {
     public sealed class TransactionValidatorTests
     {
-        [Fact]
+        [Test]
         public void TransactionValidator_ValidateTransactionSignature_returns_false_when_signature_is_null()
         {
             var subbedLogger = Substitute.For<ILogger>();
@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             result.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void
             TransactionValidator_ValidateTransactionSignature_returns_true_for_valid_transaction_signature_verification()
         {
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             result.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void
             TransactionValidator_ValidateTransactionSignature_returns_false_for_invalid_transaction_signature_verification()
         {

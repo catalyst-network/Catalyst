@@ -21,9 +21,10 @@
 
 #endregion
 
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using System;
 using System.Reflection;
-using Xunit.Abstractions;
 
 namespace Catalyst.TestUtils
 {
@@ -34,9 +35,9 @@ namespace Catalyst.TestUtils
     {
         protected ITest CurrentTest;
         protected string CurrentTestName;
-        protected ITestOutputHelper Output;
+        protected TestContext Output;
 
-        protected SelfAwareTestBase(ITestOutputHelper output)
+        protected SelfAwareTestBase(TestContext output)
         {
             Output = output;
             CurrentTest = Output.GetType()
@@ -49,7 +50,7 @@ namespace Catalyst.TestUtils
                     $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
             }
 
-            CurrentTestName = CurrentTest.TestCase.TestMethod.Method.Name;
+            CurrentTestName = output.Test.MethodName;
         }
     }
 }

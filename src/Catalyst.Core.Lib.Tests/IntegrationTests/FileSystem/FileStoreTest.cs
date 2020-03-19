@@ -29,14 +29,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Core.Lib.FileSystem;
 using Catalyst.TestUtils;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
 {
     public sealed class FileStoreTest : FileSystemBasedTest
     {
-        public FileStoreTest(ITestOutputHelper output) : base(output) { }
+        public FileStoreTest(TestContext output) : base(output) { }
 
         private sealed class Entity
         {
@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             }
         }
 
-        [Fact]
+        [Test]
         public async Task PutAndGet()
         {
             var store = Store;
@@ -75,28 +75,28 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             await store.PutAsync(_b.Number, _b);
 
             var a1 = await store.GetAsync(_a.Number);
-            Assert.Equal(_a.Number, a1.Number);
-            Assert.Equal(_a.Value, a1.Value);
+            Assert.AreEqual(_a.Number, a1.Number);
+            Assert.AreEqual(_a.Value, a1.Value);
 
             var b1 = await store.GetAsync(_b.Number);
-            Assert.Equal(_b.Number, b1.Number);
-            Assert.Equal(_b.Value, b1.Value);
+            Assert.AreEqual(_b.Number, b1.Number);
+            Assert.AreEqual(_b.Value, b1.Value);
         }
 
-        [Fact]
+        [Test]
         public async Task TryGet()
         {
             var store = Store;
             await store.PutAsync(3, _a);
             var a1 = await store.GetAsync(3);
-            Assert.Equal(_a.Number, a1.Number);
-            Assert.Equal(_a.Value, a1.Value);
+            Assert.AreEqual(_a.Number, a1.Number);
+            Assert.AreEqual(_a.Value, a1.Value);
 
             var a3 = await store.TryGetAsync(42);
             Assert.Null(a3);
         }
 
-        [Fact]
+        [Test]
         public void Get_Unknown()
         {
             ExceptionAssert.Throws<KeyNotFoundException>(() =>
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             });
         }
 
-        [Fact]
+        [Test]
         public async Task Remove()
         {
             var store = Store;
@@ -116,24 +116,24 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             Assert.Null(await store.TryGetAsync(4));
         }
 
-        [Fact]
+        [Test]
         public async Task Remove_Unknown()
         {
             var store = Store;
             await store.RemoveAsync(5);
         }
 
-        [Fact]
+        [Test]
         public async Task Length()
         {
             var store = Store;
             await store.PutAsync(6, _a);
             var length = await store.LengthAsync(6);
             Assert.True(length.HasValue);
-            Assert.NotEqual(0, length.Value);
+            Assert.AreNotEqual(0, length.Value);
         }
 
-        [Fact]
+        [Test]
         public async Task Length_Unknown()
         {
             var store = Store;
@@ -141,7 +141,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             Assert.False(length.HasValue);
         }
 
-        [Fact]
+        [Test]
         public async Task Values()
         {
             var store = Store;
@@ -149,10 +149,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             await store.PutAsync(9, new Entity {Value = "v1"});
             await store.PutAsync(10, new Entity {Value = "v0"});
             var values = Store.Values.Where(e => e.Value == "v0").ToArray();
-            Assert.Equal(2, values.Length);
+            Assert.AreEqual(2, values.Length);
         }
 
-        [Fact]
+        [Test]
         public async Task Names()
         {
             var store = Store;
@@ -160,10 +160,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             await store.PutAsync(12, _a);
             await store.PutAsync(13, _a);
             var names = Store.Names.Where(n => n == 11 || n == 13).ToArray();
-            Assert.Equal(2, names.Length);
+            Assert.AreEqual(2, names.Length);
         }
 
-        [Fact]
+        [Test]
         public async Task Atomic()
         {
             var store = Store;
@@ -182,7 +182,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             await store.RemoveAsync(1);
         }
 
-        [Fact]
+        [Test]
         public void PutWithException()
         {
             Task BadSerialize(Stream stream, int name, Entity value, CancellationToken cancel) => throw new Exception("no serializer");

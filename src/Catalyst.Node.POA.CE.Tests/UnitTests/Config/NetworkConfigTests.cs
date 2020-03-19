@@ -33,7 +33,7 @@ using Catalyst.Protocol.Network;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using SharpRepository.Repository;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
 {
@@ -51,7 +51,7 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
         }
 
         [Theory]
-        [MemberData(nameof(NetworkFiles))]
+        [TestCase(nameof(NetworkFiles))]
         public void Network_Config_Should_Contain_a_valid_storage_module(string networkConfig)
         {
             var networkConfiguration = new ConfigurationBuilder().AddJsonFile(networkConfig).Build();
@@ -65,7 +65,7 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
         }
 
         [Theory]
-        [MemberData(nameof(NetworkFiles))]
+        [TestCase(nameof(NetworkFiles))]
         public void Network_config_should_allow_building_PeerSettings(string networkConfig)
         {
             var configRoot = new ConfigurationBuilder().AddJsonFile(networkConfig).Build();

@@ -23,16 +23,15 @@
 
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class MessageVerifyCommandTests : CliCommandTestsBase
     {
-        public MessageVerifyCommandTests(ITestOutputHelper output) : base(output) { }
+        public MessageVerifyCommandTests(TestContext output) : base(output) { }
 
-        [Fact]
+        [Test]
         public void Cli_Can_Verify_Message()
         {
             var result = Shell.ParseCommand(

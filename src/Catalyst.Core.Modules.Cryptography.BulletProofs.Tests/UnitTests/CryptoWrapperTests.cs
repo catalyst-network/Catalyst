@@ -31,7 +31,7 @@ using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Google.Protobuf;
 using Nethereum.Hex.HexConvertors.Extensions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
 {
@@ -42,14 +42,14 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
         private readonly ICryptoContext _wrapper;
         private static readonly Random Random = new Random();
 
-        [Fact]
+        [Test]
         public void TestGenerateKey()
         {
             var privateKey = _wrapper.GeneratePrivateKey();
             privateKey.Bytes.Length.Should().Be(_wrapper.PrivateKeyLength);
         }
 
-        [Fact]
+        [Test]
         public void TestGenerateDifferentKey()
         {
             var privateKey1 = _wrapper.GeneratePrivateKey();
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             privateKey1.Bytes.Should().NotEqual(privateKey2.Bytes);
         }
 
-        [Fact]
+        [Test]
         public void TestGetPublicKeyFromPrivate()
         {
             var privateKey = _wrapper.GeneratePrivateKey();
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             publicKey.Bytes.Length.Should().Be(_wrapper.PublicKeyLength);
         }
 
-        [Fact]
+        [Test]
         public void TestStdSignVerify()
         {
             var privateKey = _wrapper.GeneratePrivateKey();
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             isVerified.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void TestLogicalFailureStdSignVerify()
         {
             var privateKey = _wrapper.GeneratePrivateKey();
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             isVerified.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void TestSigningForMessagesMethodEquivalence()
         {
             var privateKey = _wrapper.GeneratePrivateKey();
@@ -105,19 +105,19 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
 
         //From https://tools.ietf.org/html/rfc8032#section-7.3
         [Theory]
-        [InlineData("616263",
+        [TestCase("616263",
             "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
             "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", true)]
-        [InlineData("616263",
+        [TestCase("616263",
             "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
             "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "a", false)]
-        [InlineData("616261",
+        [TestCase("616261",
             "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
             "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", false)]
-        [InlineData("616263",
+        [TestCase("616263",
             "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
             "0f1d1274943b91415889152e893d80e93275a1fc0b65fd71b4b0dda10ad7d772", "", false)]
-        [InlineData("616263",
+        [TestCase("616263",
             "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083405",
             "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", false)]
         public void Ed25519PhTestVectors(string message,
@@ -139,7 +139,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
         }
 
         [Theory]
-        [InlineData("mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIA==",
+        [TestCase("mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIA==",
             "fa la la la")]
         public void TestFailureInvalidSignatureFormat(string sig, string msg)
         {
@@ -153,7 +153,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             action.Should().Throw<SignatureException>();
         }
 
-        [Fact]
+        [Test]
         public void TestVerifyingForMessagesMethodEquivalence()
         {
             var privateKey = _wrapper.GeneratePrivateKey();
@@ -169,22 +169,22 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             actual.Should().Be(expected);
         }
 
-        [Fact]
+        [Test]
         public void Is_PrivateKey_Length_Positive() { _wrapper.PrivateKeyLength.Should().BePositive(); }
 
-        [Fact]
+        [Test]
         public void Is_PublicKey_Length_Positive() { _wrapper.PublicKeyLength.Should().BePositive(); }
 
-        [Fact]
+        [Test]
         public void Is_Signature_Length_Positive() { _wrapper.SignatureLength.Should().BePositive(); }
 
-        [Fact]
+        [Test]
         public void Is_Signature_Context_Max_Length_Positive()
         {
             _wrapper.SignatureContextMaxLength.Should().BePositive();
         }
 
-        [Fact]
+        [Test]
         public void PublicKey_Can_Be_Created_With_Valid_Input()
         {
             const string publicKeyHex = "fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025";
@@ -193,7 +193,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             publicKey.Should().NotBe(null);
         }
 
-        [Fact]
+        [Test]
         public void PublicKeyFromBytes_Throws_SignatureException_On_Invalid_Point()
         {
             const string publicKeyHex = "fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908024";
@@ -202,7 +202,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             action.Should().Throw<SignatureException>();
         }
 
-        [Fact]
+        [Test]
         public void PublicKeyFromBytes_Throws_ArgumentException_On_Invalid_Length_PublicKey()
         {
             var publicKeyBytes = GenerateRandomByteArray(_wrapper.PublicKeyLength - 1);
@@ -210,7 +210,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             action.Should().Throw<ArgumentException>();
         }
 
-        [Fact]
+        [Test]
         public void PrivateKey_Can_Be_Created_With_Valid_Input()
         {
             var privateKeyBytes = GenerateRandomByteArray(_wrapper.PrivateKeyLength);
@@ -218,7 +218,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             privateKey.Should().NotBe(null);
         }
 
-        [Fact]
+        [Test]
         public void PrivateKeyFromBytes_Throws_ArgumentException_On_Invalid_Length_PrivateKey()
         {
             var privateKeyBytes = GenerateRandomByteArray(_wrapper.PrivateKeyLength + 1);
@@ -226,7 +226,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             action.Should().Throw<ArgumentException>();
         }
 
-        [Fact]
+        [Test]
         public void SignatureFromBytes_Throws_ArgumentException_On_Invalid_PublicKey_Length()
         {
             var signatureBytes = GenerateRandomByteArray(_wrapper.SignatureLength);
@@ -237,7 +237,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             action.Should().Throw<ArgumentException>();
         }
 
-        [Fact]
+        [Test]
         public void SignatureFromBytes_Throws_ArgumentException_On_Invalid_Signature_Length()
         {
             var signatureBytes = GenerateRandomByteArray(_wrapper.SignatureLength - 1);
@@ -250,7 +250,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             action.Should().Throw<ArgumentException>();
         }
 
-        [Fact]
+        [Test]
         public void Can_Create_Signature_With_Valid_Input()
         {
             var signatureBytes = GenerateRandomByteArray(_wrapper.SignatureLength);
@@ -261,7 +261,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             _wrapper.GetSignatureFromBytes(signatureBytes, publicKey.Bytes).Should().NotBe(null);
         }
 
-        [Fact]
+        [Test]
         public void Signature_Should_Contain_Public_Key_Corresponding_To_Private_Key()
         {
             var privateKey = _wrapper.GeneratePrivateKey();

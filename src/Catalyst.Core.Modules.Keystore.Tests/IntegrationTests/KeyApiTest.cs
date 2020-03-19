@@ -35,8 +35,8 @@ using Lib.P2P;
 using Makaretu.Dns;
 using NSubstitute;
 using Org.BouncyCastle.Crypto.Parameters;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 {
@@ -44,14 +44,14 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
     {
         private readonly IKeyStoreService _keyStoreService;
 
-        public KeyApiTest(ITestOutputHelper output) : base(output)
+        public KeyApiTest(TestContext output) : base(output)
         {
             var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _keyStoreService = new KeyStoreService(dfsOptions);
             _keyStoreService.SetPassphraseAsync(new SecureString()).Wait();
         }
 
-        [Fact]
+        [Test]
         public async Task Self_Key_Exists()
         {
             const string name = "self";
@@ -61,29 +61,29 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             var self = keys.Single(k => k.Name == "self");
 
             var me = await _keyStoreService.FindKeyByNameAsync("self");
-            Assert.Equal("self", self.Name);
-            Assert.Equal(me.Id, self.Id);
+            Assert.AreEqual("self", self.Name);
+            Assert.AreEqual(me.Id, self.Id);
         }
 
-        [Fact]
+        [Test]
         public async Task Export_Import()
         {
             const string name = "self";
             var _ = await _keyStoreService.CreateAsync(name, "ed25519", 0);
             var password = "password".ToCharArray();
             var pem = await _keyStoreService.ExportAsync(name, password);
-            Assert.StartsWith("-----BEGIN ENCRYPTED PRIVATE KEY-----", pem);
+            Assert.That(pem, Does.StartWith("-----BEGIN ENCRYPTED PRIVATE KEY-----"));
 
             var keys = await _keyStoreService.ListAsync();
             var self = keys.Single(k => k.Name == name);
 
             await _keyStoreService.RemoveAsync("clone");
             var clone = await _keyStoreService.ImportAsync("clone", pem, password);
-            Assert.Equal("clone", clone.Name);
-            Assert.Equal(self.Id, clone.Id);
+            Assert.AreEqual("clone", clone.Name);
+            Assert.AreEqual(self.Id, clone.Id);
         }
 
-        [Fact]
+        [Test]
         public void Export_Unknown_Key()
         {
             var password = "password".ToCharArray();
@@ -93,7 +93,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             });
         }
 
-        [Fact]
+        [Test]
         public async Task Import_Wrong_Password()
         {
             const string name = "self";
@@ -109,7 +109,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             });
         }
 
-        [Fact]
+        [Test]
         public async Task Import_JSIPFS_Node()
         {
             const string pem = @"-----BEGIN ENCRYPTED PRIVATE KEY-----
@@ -148,14 +148,14 @@ Rw==
 
             await _keyStoreService.RemoveAsync("jsipfs");
             var key = await _keyStoreService.ImportAsync("jsipfs", pem, password);
-            Assert.Equal("jsipfs", key.Name);
-            Assert.Equal("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb", key.Id);
+            Assert.AreEqual("jsipfs", key.Name);
+            Assert.AreEqual("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb", key.Id);
 
             var pubKey = await _keyStoreService.GetPublicKeyAsync("jsipfs");
-            Assert.Equal(spki, pubKey);
+            Assert.AreEqual(spki, pubKey);
         }
 
-        [Fact]
+        [Test]
         public void Import_Bad_Format()
         {
             const string pem = @"this is not PEM";
@@ -166,7 +166,7 @@ Rw==
             });
         }
 
-        [Fact]
+        [Test]
         public void Import_Corrupted_Format()
         {
             const string pem = @"-----BEGIN ENCRYPTED PRIVATE KEY-----
@@ -180,7 +180,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             });
         }
 
-        [Fact]
+        [Test]
         public async Task Create_RSA_Key()
         {
             const string name = "net-engine-test-create";
@@ -189,12 +189,12 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             {
                 Assert.NotNull(key);
                 Assert.NotNull(key.Id);
-                Assert.Equal(name, key.Name);
+                Assert.AreEqual(name, key.Name);
 
                 var keys = await _keyStoreService.ListAsync();
                 var clone = keys.Single(k => k.Name == name);
-                Assert.Equal(key.Name, clone.Name);
-                Assert.Equal(key.Id, clone.Id);
+                Assert.AreEqual(key.Name, clone.Name);
+                Assert.AreEqual(key.Id, clone.Id);
             }
             finally
             {
@@ -202,7 +202,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             }
         }
         
-        [Fact]
+        [Test]
         public async Task Remove_Key()
         {
             const string name = "net-engine-test-remove";
@@ -213,14 +213,14 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
 
             var removed = await _keyStoreService.RemoveAsync(name);
             Assert.NotNull(removed);
-            Assert.Equal(key.Name, removed.Name);
-            Assert.Equal(key.Id, removed.Id);
+            Assert.AreEqual(key.Name, removed.Name);
+            Assert.AreEqual(key.Id, removed.Id);
 
             keys = await _keyStoreService.ListAsync();
             Assert.False(keys.Any(k => k.Name == name));
         }
 
-        [Fact]
+        [Test]
         public async Task Rename_Key()
         {
             const string name = "net-engine-test-rename0";
@@ -230,8 +230,8 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             await _keyStoreService.RemoveAsync(newName);
             var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
             var renamed = await _keyStoreService.RenameAsync(name, newName);
-            Assert.Equal(key.Id, renamed.Id);
-            Assert.Equal(newName, renamed.Name);
+            Assert.AreEqual(key.Id, renamed.Id);
+            Assert.AreEqual(newName, renamed.Name);
 
             var keys = await _keyStoreService.ListAsync();
             var enumerable = keys as IKey[] ?? keys.ToArray();
@@ -239,7 +239,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             Assert.False(enumerable.Any(k => k.Name == name));
         }
 
-        [Fact]
+        [Test]
         public async Task Remove_Unknown_Key()
         {
             const string name = "net-engine-test-remove-unknown";
@@ -248,7 +248,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             Assert.Null(removed);
         }
 
-        [Fact]
+        [Test]
         public async Task Rename_Unknown_Key()
         {
             const string name = "net-engine-test-rename-unknown";
@@ -257,7 +257,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             Assert.Null(renamed);
         }
 
-        [Fact]
+        [Test]
         public void Create_Unknown_KeyType()
         {
             ExceptionAssert.Throws<Exception>(() =>
@@ -266,7 +266,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             });
         }
 
-        [Fact]
+        [Test]
         public async Task UnsafeKeyName()
         {
             const string name = "../../../../../../../foo.key";
@@ -275,12 +275,12 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             {
                 Assert.NotNull(key);
                 Assert.NotNull(key.Id);
-                Assert.Equal(name, key.Name);
+                Assert.AreEqual(name, key.Name);
 
                 var keys = await _keyStoreService.ListAsync();
                 var clone = keys.Single(k => k.Name == name);
-                Assert.Equal(key.Name, clone.Name);
-                Assert.Equal(key.Id, clone.Id);
+                Assert.AreEqual(key.Name, clone.Name);
+                Assert.AreEqual(key.Id, clone.Id);
             }
             finally
             {
@@ -288,7 +288,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Create_Ed25519_Key()
         {
             const string name = "test-ed25519";
@@ -297,12 +297,12 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             {
                 Assert.NotNull(key);
                 Assert.NotNull(key.Id);
-                Assert.Equal(name, key.Name);
+                Assert.AreEqual(name, key.Name);
 
                 var keys = await _keyStoreService.ListAsync();
                 var clone = keys.Single(k => k.Name == name);
-                Assert.Equal(key.Name, clone.Name);
-                Assert.Equal(key.Id, clone.Id);
+                Assert.AreEqual(key.Name, clone.Name);
+                Assert.AreEqual(key.Id, clone.Id);
 
                 var priv = await _keyStoreService.GetPrivateKeyAsync(name);
                 Assert.NotNull(priv);
@@ -323,15 +323,15 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Ed25519_Id_IdentityHash_of_PublicKey()
         {
             const string name = "test-ed25519-id-hash";
             var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
-            Assert.Equal("identity", key.Id.Algorithm.Name);
+            Assert.AreEqual("identity", key.Id.Algorithm.Name);
         }
 
-        [Fact]
+        [Test]
         public async Task Import_OpenSSL_Ed25519()
         {
             // Created with:
@@ -344,11 +344,11 @@ MC4CAQAwBQYDK2VwBCIEIGJnyy3U4ksTQoRBz3mf1dxeFDPXZBrwh7gD7SqMg+/i
 
             await _keyStoreService.RemoveAsync("oed1");
             var key = await _keyStoreService.ImportAsync("oed1", pem);
-            Assert.Equal("oed1", key.Name);
-            Assert.Equal("18n3naE9kBZoVvgYMV6saMZe3jn87dZiNbQ22BhxKTwU5yUoGfvBL1R3eScjokDGBk7i", key.Id);
+            Assert.AreEqual("oed1", key.Name);
+            Assert.AreEqual("18n3naE9kBZoVvgYMV6saMZe3jn87dZiNbQ22BhxKTwU5yUoGfvBL1R3eScjokDGBk7i", key.Id);
 
             var privateKey = await _keyStoreService.GetPrivateKeyAsync("oed1");
-            Assert.IsType(typeof(Ed25519PrivateKeyParameters), privateKey);
+            Assert.IsInstanceOf(typeof(Ed25519PrivateKeyParameters), privateKey);
         }
     }
 }

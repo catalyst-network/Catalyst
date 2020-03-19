@@ -38,8 +38,8 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
+using NUnit.Framework;
 using Serilog;
-using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -79,7 +79,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [MemberData(nameof(MempoolTransactions))]
+        [TestCase(nameof(MempoolTransactions))]
         public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<PublicEntryDao> mempoolTransactions)
         {
             var testScheduler = new TestScheduler();

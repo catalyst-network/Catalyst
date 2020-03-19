@@ -38,7 +38,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -76,8 +76,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// </summary>
         /// <param name="fakePeers">The peer count.</param>
         [Theory]
-        [InlineData(40)]
-        [InlineData(20)]
+        [TestCase(40)]
+        [TestCase(20)]
         public void TestPeerListRequestResponse(int fakePeers)
         {
             var peerService = Substitute.For<IPeerRepository>();

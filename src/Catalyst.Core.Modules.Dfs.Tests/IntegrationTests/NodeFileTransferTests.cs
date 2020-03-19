@@ -65,8 +65,8 @@
 // using MultiFormats.Registry;
 // using NSubstitute;
 // using Serilog;
-// using Xunit;
-// using Xunit.Abstractions;
+// using NUnit.Framework;
+// 
 //
 // namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 // {
@@ -77,7 +77,7 @@
 //         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
 //         private readonly IDfsService _dfsService;
 //
-//         public NodeFileTransferTests(ITestOutputHelper testOutput) : base(testOutput)
+//         public NodeFileTransferTests(TestContext testOutput) : base(testOutput)
 //         {
 //             _logger = Substitute.For<ILogger>();
 //             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -93,8 +93,8 @@
 //             _dfsService = new DfsService(hashProvider, testPasswordManager);
 //         }
 //
-//         [Fact]
-//         [Trait(Traits.TestType, Traits.IntegrationTest)]
+//         [Test]
+//         [Property(Traits.TestType, Traits.IntegrationTest)]
 //         public async Task Cancel_File_Transfer()
 //         {
 //             var sender = PeerIdHelper.GetPeerId("sender");
@@ -125,10 +125,10 @@
 //         }
 //
 //         [Theory]
-//         [Trait(Traits.TestType, Traits.IntegrationTest)]
-//         [InlineData(1000L)]
-//         [InlineData(82000L)]
-//         [InlineData(100000L)]
+//         [Property(Traits.TestType, Traits.IntegrationTest)]
+//         [TestCase(1000L)]
+//         [TestCase(82000L)]
+//         [TestCase(100000L)]
 //         public async Task Verify_File_Integrity_On_Transfer(long byteSize)
 //         {
 //             await AddFileToDfs(byteSize).ConfigureAwait(false);
@@ -188,7 +188,7 @@
 //                 ipfsCrcValue = FileHelper.GetCrcValue(ipfsStream);
 //             }
 //
-//             Assert.Equal(crcValue, ipfsCrcValue);
+//             Assert.AreEqual(crcValue, ipfsCrcValue);
 //         }
 //     }
 // }

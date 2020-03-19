@@ -33,7 +33,7 @@ using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {
@@ -56,21 +56,21 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
             };
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Remove_Peer_On_Non_Responsive_Heartbeat()
         {
             await RunHeartbeatChecker().ConfigureAwait(false);
             _peerRepository.Received().Delete(_testPeer.DocumentId);
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Keep_Peer_On_Valid_Heartbeat_Response()
         {
             await RunHeartbeatChecker(true).ConfigureAwait(false);
             _peerRepository.DidNotReceive().Delete(_testPeer.DocumentId);
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Remove_Peer_On_Max_Counter()
         {
             await RunHeartbeatChecker(maxNonResponsiveCounter: 2).ConfigureAwait(false);

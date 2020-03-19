@@ -23,16 +23,15 @@
 
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class PeerCommandCommandTests : CliCommandTestsBase
     {
-        public PeerCommandCommandTests(ITestOutputHelper output) : base(output) { }
+        public PeerCommandCommandTests(TestContext output) : base(output) { }
 
-        [Fact]
+        [Test]
         public void Cli_Can_Send_Peers_Count_Request()
         {
             var result = Shell.ParseCommand("peercount", NodeArgumentPrefix, ServerNodeName);

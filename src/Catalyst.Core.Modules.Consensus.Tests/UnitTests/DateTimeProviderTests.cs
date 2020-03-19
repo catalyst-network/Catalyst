@@ -23,13 +23,13 @@
 
 using System;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {
     public class DateTimeProviderTests
     {
-        [Fact]
+        [Test]
         public void UtcNow_should_return_utc_DateTimeKind()
         {
             var provider = new DateTimeProvider();

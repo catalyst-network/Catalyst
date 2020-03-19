@@ -43,8 +43,8 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
 {
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         private readonly IPeerSettings _peerSettings;
         private IPeerService _peerService;
 
-        public PeerServiceTests(ITestOutputHelper output) : base(output)
+        public PeerServiceTests(TestContext output) : base(output)
         {
             _pid = PeerIdHelper.GetPeerId("im_a_key");
             _guid = CorrelationId.GenerateCorrelationId();
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             _p2PMessageHandlers = new List<IP2PMessageObserver>();
         }
 
-        [Fact]
+        [Test]
         public async Task Can_receive_incoming_ping_responses()
         {
             var messageObserver = new TestMessageObserver<PingResponse>(_logger);
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             messageObserver.SubstituteObserver.Received().OnNext(Arg.Any<PingResponse>());
         }
 
-        [Fact]
+        [Test]
         public async Task Can_receive_PingRequest()
         {
             var pingRequestHandler = new TestMessageObserver<PingRequest>(_logger);
@@ -102,7 +102,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             pingRequestHandler.SubstituteObserver.Received().OnNext(Arg.Any<PingRequest>());
         }
 
-        [Fact]
+        [Test]
         public async Task Can_receive_PeerNeighborsRequest()
         {
             var pingRequestHandler = new TestMessageObserver<PeerNeighborsRequest>(_logger);
@@ -113,7 +113,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             pingRequestHandler.SubstituteObserver.Received().OnNext(Arg.Any<PeerNeighborsRequest>());
         }
 
-        [Fact]
+        [Test]
         public async Task Can_receive_PeerNeighborsResponse()
         {
             var pingRequestHandler = new TestMessageObserver<PeerNeighborsResponse>(_logger);

@@ -31,8 +31,8 @@ using Catalyst.Core.Lib.IO.Transport;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
+using NUnit.Framework;
 using Serilog;
-using Xunit;
 
 namespace Catalyst.Cli.Tests.UnitTests
 {
@@ -60,41 +60,37 @@ namespace Catalyst.Cli.Tests.UnitTests
 
         private readonly ICommandContext _commandContext;
 
-        [Fact]
+        [Test]
         public void GetConnectedNode_Should_Throw_ArgumentException_On_Empty_NodeId()
         {
-            var exception = Record.Exception(() => _commandContext.GetConnectedNode(string.Empty));
-            exception.Should().BeOfType<ArgumentException>();
+            Assert.Throws<ArgumentException>(() => _commandContext.GetConnectedNode(string.Empty));
         }
 
-        [Fact]
+        [Test]
         public void GetConnectedNode_Should_Throw_ArgumentNullException_On_Null_NodeId()
         {
-            var exception = Record.Exception(() => _commandContext.GetConnectedNode(null));
-            exception.Should().BeOfType<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(() => _commandContext.GetConnectedNode(null));
         }
 
-        [Fact]
+        [Test]
         public void GetNodeConfig_Should_Return_Null_On_EmptyConfigs()
         {
             _commandContext.GetNodeConfig("No_node_config").Should().BeNull();
         }
 
-        [Fact]
+        [Test]
         public void GetNodeConfig_Should_Throw_ArgumentException_On_Empty_NodeId()
         {
-            var exception = Record.Exception(() => _commandContext.GetNodeConfig(string.Empty));
-            exception.Should().BeOfType<ArgumentException>();
+            Assert.Throws<ArgumentException>(() => _commandContext.GetNodeConfig(string.Empty));
         }
 
-        [Fact]
+        [Test]
         public void GetNodeConfig_Should_Throw_ArgumentNullException_On_Null_NodeId()
         {
-            var exception = Record.Exception(() => _commandContext.GetNodeConfig(null));
-            exception.Should().BeOfType<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(() => _commandContext.GetNodeConfig(null));
         }
 
-        [Fact]
+        [Test]
         public void IsSocketChannelActive_Should_Return_False_On_Inactive_Channel()
         {
             var rpcClient = Substitute.For<IRpcClient>();
@@ -103,7 +99,7 @@ namespace Catalyst.Cli.Tests.UnitTests
             _commandContext.IsSocketChannelActive(rpcClient).Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void IsSocketChannelActive_Should_Return_True_On_Active_Channel()
         {
             var rpcClient = Substitute.For<IRpcClient>();

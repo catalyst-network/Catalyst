@@ -55,7 +55,7 @@ using Nethermind.State;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 {
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             };
         }
 
-        [Fact]
+        [Test]
         public void Save_Account_State_To_Ledger_Repository()
         {
             _ledger = new Ledger(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
@@ -120,7 +120,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _fakeRepository.Received(10).Add(Arg.Any<Account>());
         }
 
-        [Fact]
+        [Test]
         public void Should_Reconcile_On_New_Delta_Hash()
         {
             var hash1 = _hashProvider.ComputeUtf8MultiHash("update").ToCid();
@@ -152,7 +152,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Should_Delete_MempoolItems_On_New_Delta_Hash()
         {
             var sampleSize = 5;

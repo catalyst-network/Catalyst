@@ -34,8 +34,7 @@ using Catalyst.Core.Modules.Hashing;
 using Lib.P2P;
 using MultiFormats;
 using MultiFormats.Registry;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
@@ -43,13 +42,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private readonly IDfsService _dfs;
 
-        public PinApiTest(ITestOutputHelper output)
+        public PinApiTest(TestContext output)
         {
             _dfs = TestDfs.GetTestDfs(output);
             new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
-        [Fact]
+        [Test]
         public async Task Add_Remove()
         {
             var result = await _dfs.UnixFsApi.AddTextAsync("I am pinned");
@@ -66,14 +65,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.False(all.Any(pin => pin == id));
         }
 
-        [Fact]
+        [Test]
         public async Task Remove_Unknown()
         {
             var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"));
             await _dfs.PinApi.RemoveAsync(dag.Id);
         }
 
-        [Fact]
+        [Test]
         public async Task Inline_Cid()
         {
             var cid = new Cid
@@ -92,10 +91,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var removals = await _dfs.PinApi.RemoveAsync(cid, false);
             Assert.Contains(cid, removals.ToArray());
             all = await _dfs.PinApi.ListAsync();
-            Assert.DoesNotContain(cid, all.ToArray());
+            Assert.That(all.ToArray(), Does.Not.Contain(cid));
         }
 
-        [Fact]
+        [Test]
         public void Add_Unknown()
         {
             var dag = new DagNode(Encoding.UTF8.GetBytes("some unknown info for net-ipfs-engine-pin-test"));
@@ -106,7 +105,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             });
         }
 
-        [Fact]
+        [Test]
         public async Task Add_Recursive()
         {
             var options = new AddFileOptions
@@ -118,10 +117,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await _dfs.UnixFsApi.AddTextAsync("hello world", options);
             var cids = await _dfs.PinApi.AddAsync(node.Id);
-            Assert.Equal(6, cids.Count());
+            Assert.AreEqual(6, cids.Count());
         }
 
-        [Fact]
+        [Test]
         public async Task Remove_Recursive()
         {
             var options = new AddFileOptions
@@ -133,10 +132,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await _dfs.UnixFsApi.AddTextAsync("hello world", options);
             var cids = await _dfs.PinApi.AddAsync(node.Id);
-            Assert.Equal(6, cids.Count());
+            Assert.AreEqual(6, cids.Count());
 
             var removedCids = await _dfs.PinApi.RemoveAsync(node.Id);
-            Assert.Equal(cids.ToArray(), removedCids.ToArray());
+            Assert.AreEqual(cids.ToArray(), removedCids.ToArray());
         }
     }
 }

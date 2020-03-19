@@ -26,18 +26,19 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using FluentAssertions;
 using Google.Protobuf;
-using Xunit;
+using NUnit.Framework;
+using System.Collections.Generic;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Protocol.Tests.UnitTests.Wire
 {
     public sealed class FavouriteDeltaBroadcastTests
     {
-        private sealed class InvalidFavouriteDeltaBroadcasts : TheoryData<FavouriteDeltaBroadcast>
+        private sealed class InvalidFavouriteDeltaBroadcasts : List<FavouriteDeltaBroadcast>
         {
             public InvalidFavouriteDeltaBroadcasts()
             {
-                AddRow(new FavouriteDeltaBroadcast
+                Add(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
@@ -47,7 +48,7 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
                     },
                     VoterId = new PeerId()
                 });
-                AddRow(new FavouriteDeltaBroadcast
+                Add(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
@@ -57,7 +58,7 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
                     },
                     VoterId = new PeerId()
                 });
-                AddRow(new FavouriteDeltaBroadcast
+                Add(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
@@ -67,7 +68,7 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
                     },
                     VoterId = new PeerId()
                 });
-                AddRow(new FavouriteDeltaBroadcast
+                Add(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
@@ -81,13 +82,13 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
         }
 
         [Theory]
-        [ClassData(typeof(InvalidFavouriteDeltaBroadcasts))]
+        [TestCase(typeof(InvalidFavouriteDeltaBroadcasts))]
         public void FavouriteDeltaBroadcast_IsValid_Should_Throw_On_Invalid_FavouriteDeltaBroadcast(FavouriteDeltaBroadcast favourite)
         {
             favourite.IsValid().Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void FavouriteDeltaBroadcast_IsValid_Should_Not_Throw_On_Valid_FavouriteDeltaBroadcast()
         {
             var candidate = new FavouriteDeltaBroadcast

@@ -45,9 +45,8 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
+using NUnit.Framework;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
@@ -57,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         private IPeerChallengeRequest _peerChallengeRequest;
         private readonly PeerSettings _peerSettings;
 
-        public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
+        public PeerValidationIntegrationTest(TestContext output) : base(output)
         {
             var logger = Substitute.For<ILogger>();
 
@@ -114,7 +113,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
 
         // [Fact(Skip = "this wont work as it tries to connect to a real node!! We need to instantiate two sockets here")]
-        // [Trait(Traits.TestType, Traits.IntegrationTest)]
+        // [Property(Traits.TestType, Traits.IntegrationTest)]
         // public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         // {
         //     // await Setup().ConfigureAwait(false);
@@ -125,9 +124,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         // }
 
         [Theory]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        [InlineData("ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa", "92.207.178.198", 1574)]
-        [InlineData("fzqm5kpzpo7bvl5e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusd", "198.51.100.3", 2524)]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
+        [TestCase("ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa", "92.207.178.198", 1574)]
+        [TestCase("fzqm5kpzpo7bvl5e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusd", "198.51.100.3", 2524)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey,
             string ip,
             int port)
@@ -140,9 +139,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         private async Task<bool> RunPeerChallengeTask(string publicKey, IPAddress ip, int port)
         {
-            Output.WriteLine(publicKey);
-            Output.WriteLine(ip.ToString());
-            Output.WriteLine(port.ToString());
+            TestContext.WriteLine(publicKey);
+            TestContext.WriteLine(ip.ToString());
+            TestContext.WriteLine(port.ToString());
 
             var recipient = publicKey.BuildPeerIdFromBase32Key(ip, port);
 

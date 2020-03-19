@@ -22,25 +22,25 @@
 #endregion
 
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class BitswapLedgerTest
     {
-        [Fact]
+        [Test]
         public void Defaults()
         {
             var ledger = new BitswapLedger();
             Assert.Null(ledger.Peer);
-            Assert.Equal(0ul, ledger.BlocksExchanged);
-            Assert.Equal(0ul, ledger.DataReceived);
-            Assert.Equal(0ul, ledger.DataSent);
-            Assert.Equal(0f, ledger.DebtRatio);
+            Assert.AreEqual(0ul, ledger.BlocksExchanged);
+            Assert.AreEqual(0ul, ledger.DataReceived);
+            Assert.AreEqual(0ul, ledger.DataSent);
+            Assert.AreEqual(0f, ledger.DebtRatio);
             Assert.True(ledger.IsInDebt);
         }
 
-        [Fact]
+        [Test]
         public void DebtRatio_Positive()
         {
             var ledger = new BitswapLedger
@@ -51,7 +51,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.False(ledger.IsInDebt);
         }
 
-        [Fact]
+        [Test]
         public void DebtRatio_Negative()
         {
             var ledger = new BitswapLedger

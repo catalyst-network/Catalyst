@@ -41,10 +41,8 @@ using Lib.P2P.Cryptography;
 using MultiFormats;
 using Newtonsoft.Json.Linq;
 using NSubstitute;
+using NUnit.Framework;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
@@ -52,9 +50,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
     {
         private readonly IDfsService _dfs1;
         private readonly IDfsService _dfs2;
-        private readonly ITestOutputHelper _output;
+        private readonly TestContext _output;
 
-        public DfsServiceTests(ITestOutputHelper output) : base(output)
+        public DfsServiceTests(TestContext output) : base(output)
         {
             ContainerProvider.Container.Resolve<IHashProvider>();
 
@@ -69,8 +67,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             _dfs2 = TestDfs.GetTestDfs(output);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_add_and_read_text()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
@@ -83,8 +81,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             content.Should().Be(text);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_add_and_read_binary()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
@@ -103,8 +101,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
         }
 
-        [Fact(Skip = "waiting for Dns seed fix: https://github.com/catalyst-network/Catalyst.Framework/issues/1075")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Ignore("waiting for Dns seed fix: https://github.com/catalyst-network/Catalyst.Framework/issues/1075")]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_connect_to_a_seednode()
         {
             var seeds = (await _dfs1.BootstrapApi.ListAsync().ConfigureAwait(false))
@@ -124,18 +122,18 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 await Task.Delay(100).ConfigureAwait(false);
             }
 
-            _output.WriteLine(
+            TestContext.WriteLine(
                 $"Found in {(DateTime.Now - start).TotalSeconds.ToString(CultureInfo.InvariantCulture)} seconds.");
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Dispose()
         {
             using var node = TestDfs.GetTestDfs(_output);
             await node.StartAsync();
         }
         
-        [Fact]
+        [Test]
         public async Task Can_Start_And_Stop()
         {
             var peer = _dfs1.LocalPeer;
@@ -143,24 +141,24 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             Assert.False(_dfs1.IsStarted);
             await _dfs1.StartAsync();
             Assert.True(_dfs1.IsStarted);
-            Assert.NotEqual(0, peer.Addresses.Count());
+            Assert.AreNotEqual(0, peer.Addresses.Count());
             await _dfs1.StopAsync();
             Assert.False(_dfs1.IsStarted);
-            Assert.Equal(0, peer.Addresses.Count());
+            Assert.AreEqual(0, peer.Addresses.Count());
 
             await _dfs1.StartAsync();
-            Assert.NotEqual(0, peer.Addresses.Count());
+            Assert.AreNotEqual(0, peer.Addresses.Count());
             await _dfs1.StopAsync();
-            Assert.Equal(0, peer.Addresses.Count());
+            Assert.AreEqual(0, peer.Addresses.Count());
 
             await _dfs1.StartAsync();
-            Assert.NotEqual(0, peer.Addresses.Count());
+            Assert.AreNotEqual(0, peer.Addresses.Count());
             ExceptionAssert.Throws<Exception>(() => _dfs1.StartAsync().Wait());
             await _dfs1.StopAsync();
-            Assert.Equal(0, peer.Addresses.Count());
+            Assert.AreEqual(0, peer.Addresses.Count());
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Start_And_Stop_MultipleEngines()
         {
             var peer1 = _dfs1.LocalPeer;
@@ -169,18 +167,18 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             for (int n = 0; n < 3; ++n)
             {
                 await _dfs1.StartAsync();
-                Assert.NotEqual(0, peer1.Addresses.Count());
+                Assert.AreNotEqual(0, peer1.Addresses.Count());
                 await _dfs2.StartAsync();
-                Assert.NotEqual(0, peer2.Addresses.Count());
+                Assert.AreNotEqual(0, peer2.Addresses.Count());
 
                 await _dfs2.StopAsync();
-                Assert.Equal(0, peer2.Addresses.Count());
+                Assert.AreEqual(0, peer2.Addresses.Count());
                 await _dfs1.StopAsync();
-                Assert.Equal(0, peer1.Addresses.Count());
+                Assert.AreEqual(0, peer1.Addresses.Count());
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Use_Private_Node()
         {
             using (var ipfs = TestDfs.GetTestDfs(_output))
@@ -191,7 +189,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
         }
 
-        [Fact]
+        [Test]
         public async Task LocalPeer()
         {
             Task<Peer>[] tasks =
@@ -200,10 +198,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 Task.Run(() => _dfs1.LocalPeer)
             };
             var r = await Task.WhenAll(tasks);
-            Assert.Equal(r[0], r[1]);
+            Assert.AreEqual(r[0], r[1]);
         }
 
-        [Fact]
+        [Test]
         public async Task KeyChain()
         {
             Task<IKeyApi>[] tasks =
@@ -212,11 +210,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 Task.Run(() => _dfs1.KeyApi)
             };
             var r = await Task.WhenAll(tasks);
-            Assert.Equal(r[0], r[1]);
+            Assert.AreEqual(r[0], r[1]);
         }
 
         //todo
-        //[Fact]
+        //[Test]
         //public async Task KeyChain_GetKey()
         //{
         //    var keyChain = await _dfs1.KeyChainAsync();
@@ -225,7 +223,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         //    Assert.True(key.IsPrivate);
         //}
 
-        [Fact]
+        [Test]
         public async Task Swarm_Gets_Bootstrap_Peers()
         {
             var bootPeers = (await _dfs1.BootstrapApi.ListAsync()).ToArray();
@@ -239,7 +237,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 {
                     if (DateTime.Now > endTime)
                     {
-                        throw new XunitException("Bootstrap peers are not known.");
+                        throw new Exception("Bootstrap peers are not known.");
                     }
 
                     if (bootPeers.All(a => knownPeers.Contains(a)))
@@ -257,7 +255,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Start_NoListeners()
         {
             var swarm = await _dfs1.ConfigApi.GetAsync("Addresses.Swarm");
@@ -273,7 +271,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Start_InvalidListener()
         {
             var swarm = await _dfs1.ConfigApi.GetAsync("Addresses.Swarm");

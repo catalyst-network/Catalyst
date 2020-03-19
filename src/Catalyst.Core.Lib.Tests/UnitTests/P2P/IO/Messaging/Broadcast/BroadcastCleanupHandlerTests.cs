@@ -29,7 +29,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             _fakeChannel = new EmbeddedChannel(broadcastCleanupHandler);
         }
 
-        [Fact]
+        [Test]
         public void Can_Clean_Up_Broadcast()
         {
             var correlationId = CorrelationId.GenerateCorrelationId();

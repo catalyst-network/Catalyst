@@ -29,23 +29,23 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {
     public class TransactionComparerByPriceTimestampAndHashTests
     {
-        private readonly ITestOutputHelper _output;
+        private readonly TestContext _output;
         private readonly Random _random;
 
-        public TransactionComparerByPriceTimestampAndHashTests(ITestOutputHelper output)
+        public TransactionComparerByPriceTimestampAndHashTests(TestContext output)
         {
             _output = output;
             _random = new Random();
         }
 
-        [Fact]
+        [Test]
         public void Comparer_should_Order_By_GasPrice_First()
         {
             var transactions = Enumerable.Range(0, 100)
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             ordered.Should().NotBeInDescendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
 
-        [Fact]
+        [Test]
         public void Comparer_should_Order_By_GasPrice_First_Then_By_TimeStamp()
         {
             var transactions = Enumerable.Range(0, 100)
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             ordered.Should().NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
 
-        [Fact]
+        [Test]
         public void Comparer_should_Order_By_GasPrice_First_Then_By_TimeStamp_Then_By_Signature()
         {
             var transactions = Enumerable.Range(0, 100)
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             ordered.Select(s =>
                     s.GasPrice + "|" + s.Timestamp + "|" +
                     s.Signature.RawBytes.ToBase64())
-               .ToList().ForEach(x => _output.WriteLine(x));
+               .ToList().ForEach(x => TestContext.WriteLine(x));
 
             ordered.Select(o => o.GasPrice.ToUInt256()).Should().BeInDescendingOrder(t => t);
 
@@ -128,7 +128,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             ordered.Select(s =>
                     s.GasPrice.ToUInt256() + "|" + s.Timestamp + "|" +
                     s.Signature.RawBytes.ToBase64())
-               .ToList().ForEach(x => _output.WriteLine(x));
+               .ToList().ForEach(x => TestContext.WriteLine(x));
 
             ordered.Should()
                .NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);

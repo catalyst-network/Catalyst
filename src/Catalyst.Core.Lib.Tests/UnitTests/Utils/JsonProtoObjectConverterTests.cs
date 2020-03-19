@@ -27,7 +27,7 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
 using Newtonsoft.Json;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
@@ -46,26 +46,26 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             _transactionJson = "{ \"publicEntry\": { \"receiverAddress\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"senderAddress\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"amount\": \"Cg==\", \"data\": \"dGVzdA==\", \"timestamp\": \"1970-01-01T03:25:45Z\", \"gasPrice\": \"Cg==\", \"gasLimit\": \"10\", \"signature\": { \"signingContext\": { \"networkType\": \"DEVNET\", \"signatureType\": \"TRANSACTION_PUBLIC\" }, \"rawBytes\": \"c2lnbmF0dXJl\" } } }";
         }
 
-        [Fact]
+        [Test]
         public void Check_Convertibility_Must_Succeed()
         {
             _jsonProtoObjectConverter.CanConvert(_transaction.GetType()).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void Check_Convertibility_Should_Fail()
         {
             _jsonProtoObjectConverter.CanConvert(_transaction.ToByteArray().GetType()).Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void Write_To_Json_Should_Succeed()
         {
             var serialized = JsonConvert.SerializeObject(_transaction, _jsonProtoObjectConverter);
             serialized.Should().Contain(_transactionJson);
         }
 
-        [Fact]
+        [Test]
         public void Read_Json_Should_Succeed()
         {
             JsonConvert.DeserializeObject<TransactionBroadcast>(_transactionJson, _jsonProtoObjectConverter).Should()

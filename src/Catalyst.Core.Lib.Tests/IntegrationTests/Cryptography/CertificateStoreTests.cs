@@ -29,14 +29,13 @@ using Catalyst.Core.Lib.Cryptography;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
 {
     public sealed class CertificateStoreTests : FileSystemBasedTest
     {
-        public CertificateStoreTests(ITestOutputHelper output) : base(output)
+        public CertificateStoreTests(TestContext output) : base(output)
         {
             _passwordManager = Substitute.For<IPasswordManager>();
         }
@@ -90,8 +89,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
             _retrievedCertificate?.Dispose();
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void CertificateStore_CanReadAndWriteCertFiles_WithPassword()
         {
             if (Environment.OSVersion.Platform == PlatformID.Unix)

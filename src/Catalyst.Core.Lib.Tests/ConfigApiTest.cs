@@ -30,8 +30,8 @@ using Catalyst.TestUtils;
 using Makaretu.Dns;
 using Newtonsoft.Json.Linq;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Lib.Tests
 {
@@ -42,40 +42,40 @@ namespace Catalyst.Core.Lib.Tests
         private const string ApiAddress = "/ip4/127.0.0.1/tcp/";
         private const string GatewayAddress = "/ip4/127.0.0.1/tcp/";
 
-        public ConfigApiTest(ITestOutputHelper output) : base(output)
+        public ConfigApiTest(TestContext output) : base(output)
         {
             var dfsOptions = new DfsOptions(Substitute.For<BlockOptions>(), Substitute.For<DiscoveryOptions>(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _configApi = new ConfigApi(dfsOptions);
         }
         
-        [Fact]
+        [Test]
         public async Task Get_Entire_Config()
         {
             var config = await _configApi.GetAsync();
             
-            Assert.StartsWith(ApiAddress, config["Addresses"]["API"].Value<string>());
+            Assert.That(config["Addresses"]["API"].Value<string>(), Does.StartWith(ApiAddress));
         }
 
-        [Fact]
+        [Test]
         public async Task Get_Scalar_Key_Value()
         {
             var api = await _configApi.GetAsync("Addresses.API");
-            Assert.StartsWith(ApiAddress, api.Value<string>());
+            Assert.That(api.Value<string>().StartsWith(ApiAddress));
         }
 
-        [Fact]
+        [Test]
         public async Task Get_Object_Key_Value()
         {
             var addresses = await _configApi.GetAsync("Addresses");
-            Assert.StartsWith(ApiAddress, addresses["API"].Value<string>());
-            Assert.StartsWith(GatewayAddress, addresses["Gateway"].Value<string>());
+            Assert.That(addresses["API"].Value<string>().StartsWith(ApiAddress));
+            Assert.That(addresses["Gateway"].Value<string>().StartsWith(GatewayAddress));
         }
 
-        [Fact]
+        [Test]
         public void Keys_are_Case_Sensitive()
         {
             var api = _configApi.GetAsync("Addresses.API").Result;
-            Assert.StartsWith(ApiAddress, api.Value<string>());
+            Assert.That(api.Value<string>().StartsWith(ApiAddress));
 
             ExceptionAssert.Throws<Exception>(() =>
             {
@@ -83,22 +83,22 @@ namespace Catalyst.Core.Lib.Tests
             });
         }
 
-        [Fact]
+        [Test]
         public async Task Set_String_Value()
         {
             const string key = "foo";
             const string value = "foobar";
             await _configApi.SetAsync(key, value);
-            Assert.Equal(value, await _configApi.GetAsync(key));
+            Assert.AreEqual(value, await _configApi.GetAsync(key));
         }
 
-        [Fact]
+        [Test]
         public async Task Set_JSON_Value()
         {
             const string key = "API.HTTPHeaders.Access-Control-Allow-Origin";
             var value = JToken.Parse("['http://example.io']");
             await _configApi.SetAsync(key, value);
-            Assert.Equal("http://example.io", _configApi.GetAsync(key).Result[0]);
+            Assert.AreEqual("http://example.io", _configApi.GetAsync(key).Result[0]);
         }
     }
 }

@@ -38,7 +38,7 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 {
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
                 Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public void CanHandlerDownloadChunk()
         {
             var guid = CorrelationId.GenerateCorrelationId();
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<TransferFileBytesRequest>());
         }
 
-        [Fact]
+        [Test]
         public void HandlerCanSendErrorOnException()
         {
             var testScheduler = new TestScheduler();

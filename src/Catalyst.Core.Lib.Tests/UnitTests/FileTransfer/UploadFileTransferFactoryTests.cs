@@ -28,7 +28,7 @@ using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
 {
@@ -42,8 +42,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
         }
 
         [Theory]
-        [InlineData(2)]
-        [InlineData(3)]
+        [TestCase(2)]
+        [TestCase(3)]
         public async Task Can_Upload_File(uint numberOfChunks)
         {
             var uploadFileInformation = Substitute.For<IUploadFileInformation>();

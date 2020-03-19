@@ -32,7 +32,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
 {
@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
                .ToSignedProtocolMessage(senderId, new byte[new FfiWrapper().SignatureLength]);
         }
 
-        [Fact]
+        [Test]
         public void Can_Block_Pipeline_Non_Authorized_Node_Operator()
         {
             _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(false);
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
             _testObservableServiceHandler.DidNotReceiveWithAnyArgs().ChannelRead(null, null);
         }
 
-        [Fact]
+        [Test]
         public void Can_Continue_Pipeline_On_Authorized_Node_Operator()
         {
             _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);

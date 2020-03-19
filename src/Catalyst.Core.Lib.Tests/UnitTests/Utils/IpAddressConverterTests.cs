@@ -27,7 +27,7 @@ using System.Text;
 using Catalyst.Core.Lib.Util;
 using FluentAssertions;
 using Newtonsoft.Json;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
@@ -45,13 +45,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             _ipAddressConverter = new IpAddressConverter();
         }
 
-        [Fact]
+        [Test]
         public void Check_Convertibility_Must_Succeed()
         {
             _ipAddressConverter.CanConvert(IPAddress.Loopback.GetType()).Should().BeTrue();
         }
         
-        [Fact]
+        [Test]
         public void Check_Convertibility_Should_Fail()
         {
             var ipAddressBytes = Encoding.ASCII.GetBytes("FalseData_Fake_Ip_Address_198.0.yplor");
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             _ipAddressConverter.CanConvert(ipAddressBytes.GetType()).Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void Write_To_Json_Should_Succeed()
         {
             var ipTestObject = new JsonIpTester {Ip = IPAddress.Parse("127.0.0.1")};
@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             serialized.Should().Contain("\"Ip\":\"127.0.0.1\"");
         }
 
-        [Fact]
+        [Test]
         public void Read_Json_Should_Succeed()
         {
             var testJson = "{ \"Ip\": \"127.0.0.1\" }";
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
                .Ip.Should().Be(IPAddress.Parse("127.0.0.1"));
         }
 
-        [Fact]
+        [Test]
         public void Read_Json_Via_DeserializeObject_Should_Failed()
         {
             var testJson = "{ \"Ip\": \"127.0.0.1/\" }";

@@ -43,7 +43,7 @@ using DotNetty.Transport.Channels;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -64,7 +64,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public void GetFileRequestHandlerInitializesFileUpload()
         {
             using (GetFakeDfsStream(FileTransferResponseCodeTypes.Successful))
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             }
         }
 
-        [Fact]
+        [Test]
         public void FileTransferStreamIsDisposedOnError()
         {
             using var fakeStream = GetFakeDfsStream(FileTransferResponseCodeTypes.Error);

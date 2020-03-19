@@ -38,8 +38,8 @@ using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 {
@@ -56,12 +56,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
         private readonly IObserver<IPhase> _spy;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ICycleSchedulerProvider _schedulerProvider;
-        private readonly ITestOutputHelper _output;
+        private readonly TestContext _output;
         private readonly IStopwatch _stopWatch;
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly ILogger _logger;
 
-        public CycleEventsProviderTests(ITestOutputHelper output)
+        public CycleEventsProviderTests(TestContext output)
         {
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
@@ -88,16 +88,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             _subscription = _cycleProvider.PhaseChanges.Take(50)
                .Subscribe(p =>
                 {
-                    _output.WriteLine($"{_stopWatch.Elapsed.TotalSeconds} -- {p}");
+                    TestContext.WriteLine($"{_stopWatch.Elapsed.TotalSeconds} -- {p}");
                     _spy.OnNext(p);
                 }, () =>
                 {
-                    _output.WriteLine($"completed after {_stopWatch.Elapsed.TotalSeconds:g}");
+                    TestContext.WriteLine($"completed after {_stopWatch.Elapsed.TotalSeconds:g}");
                     _spy.OnCompleted();
                 });
         }
 
-        [Fact]
+        [Test]
         public void PhaseChanges_Should_Complete_When_Stop_Is_Called()
         {
             var cancellationTime = CycleConfiguration.Default.CycleDuration
@@ -114,7 +114,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
                     "OnNext, and the start of the second loop is 1.");
         }
 
-        [Fact]
+        [Test]
         public void Changes_Should_Happen_In_Time()
         {
             _testScheduler.Start();
@@ -170,7 +170,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             }
         }
 
-        [Fact]
+        [Test]
         public void PhaseChanges_Should_Be_Synchronised_Across_Instances()
         {
             var secondProviderStartOffset = CycleConfiguration.Default.CycleDuration.Divide(3);
@@ -183,12 +183,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             using (cycleProvider2.PhaseChanges.Take(50 - PhaseCountPerCycle)
                .Subscribe(p =>
                 {
-                    _output.WriteLine(
+                    TestContext.WriteLine(
                         $"{_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture)} % 2 -- {p}");
                     spy2.OnNext(p);
                 }, () =>
                 {
-                    _output.WriteLine(
+                    TestContext.WriteLine(
 
                         // ReSharper disable once InterpolatedStringExpressionIsNotIFormattable
                         $"% 2 -- completed after {_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture):g}");

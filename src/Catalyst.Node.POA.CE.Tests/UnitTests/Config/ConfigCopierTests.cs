@@ -30,29 +30,29 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
 {
     public sealed class ConfigCopierTests : FileSystemBasedTest
     {
-        public ConfigCopierTests(ITestOutputHelper output) : base(output) { }
+        public ConfigCopierTests(TestContext output) : base(output) { }
 
-        private sealed class ConfigFilesOverwriteTestData : TheoryData<string, NetworkType>
+        private sealed class ConfigFilesOverwriteTestData : List<object[]>
         {
             public ConfigFilesOverwriteTestData()
             {
-                Add(Constants.NetworkConfigFile(NetworkType.Mainnet), NetworkType.Mainnet);
-                Add(Constants.NetworkConfigFile(NetworkType.Testnet), NetworkType.Testnet);
-                Add(Constants.NetworkConfigFile(NetworkType.Devnet), NetworkType.Devnet);
-                Add(Constants.SerilogJsonConfigFile, NetworkType.Devnet);
+                Add(new object[] { Constants.NetworkConfigFile(NetworkType.Mainnet), NetworkType.Mainnet });
+                Add(new object[] { Constants.NetworkConfigFile(NetworkType.Testnet), NetworkType.Testnet });
+                Add(new object[] { Constants.NetworkConfigFile(NetworkType.Devnet), NetworkType.Devnet });
+                Add(new object[] { Constants.SerilogJsonConfigFile, NetworkType.Devnet });
             }
         }
 
         [Theory]
-        [ClassData(typeof(ConfigFilesOverwriteTestData))]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [TestCase(typeof(ConfigFilesOverwriteTestData))]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(string moduleFileName,
             NetworkType network)
         {
@@ -104,8 +104,8 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
             return requiredConfigFiles;
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void RunConfigStartUp_Should_Create_Folder_If_Needed()
         {
             var currentDirectory = FileSystem.GetCatalystDataDir();
@@ -119,7 +119,7 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
             configFiles.Should().BeEquivalentTo(expectedFileList);
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Copy_Overridden_Network_File()
         {
             var overrideFile = "TestOverride.json";

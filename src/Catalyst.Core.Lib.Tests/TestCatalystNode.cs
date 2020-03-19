@@ -32,7 +32,7 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests
 {
@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.Tests
 
         private readonly ContainerProvider _configProvider;
 
-        public TestCatalystNode(string name, ITestOutputHelper output) 
+        public TestCatalystNode(string name, TestContext output) 
             : base(output, new[]
             {
                 Constants.NetworkConfigFile(NetworkType.Devnet),
