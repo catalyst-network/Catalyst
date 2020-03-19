@@ -36,7 +36,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         {
             var link = new DagLink("abc", "QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", 5);
             Assert.AreEqual("abc", link.Name);
-            Assert.AreEqual("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", link.Id);
+            Assert.AreEqual("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", link.Id.ToString());
             Assert.AreEqual(5, link.Size);
         }
 
@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var clone = new DagLink(link);
 
             Assert.AreEqual("abc", clone.Name);
-            Assert.AreEqual("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", clone.Id);
+            Assert.AreEqual("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", clone.Id.ToString());
             Assert.AreEqual(5, clone.Size);
         }
 

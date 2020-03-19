@@ -46,7 +46,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task Get_Raw()
         {
             var cid = await _dfs.BlockApi.PutAsync(_blob, contentType: "raw");
-            Assert.AreEqual("bafkreiaxnnnb7qz2focittuqq3ya25q7rcv3bqynnczfzako47346wosmu", cid);
+            Assert.AreEqual("bafkreiaxnnnb7qz2focittuqq3ya25q7rcv3bqynnczfzako47346wosmu", cid.ToString());
 
             var dag = await _dfs.DagApi.GetAsync(cid);
             Assert.AreEqual(Blob64, (string) dag["data"]);

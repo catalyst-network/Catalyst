@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             Assert.AreEqual(0, node.DataBytes.Length);
             Assert.AreEqual(0, node.Links.Count());
             Assert.AreEqual(0, node.Size);
-            Assert.AreEqual("QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n", node.Id);
+            Assert.AreEqual("QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n", node.Id.ToString());
 
             RoundtripTest(node);
         }
@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             
             Assert.AreEqual(abc, node.DataBytes);
             Assert.AreEqual(0, node.Links.Count());
-            Assert.AreEqual("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", node.Id);
+            Assert.AreEqual("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", node.Id.ToString());
             Assert.AreEqual(5, node.Size);
 
             RoundtripTest(node);
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             });
             Assert.AreEqual(0, node.DataBytes.Length);
             Assert.AreEqual(1, node.Links.Count());
-            Assert.AreEqual("QmVdMJFGTqF2ghySAmivGiQvsr9ZH7ujnNGBkLNNCe4HUE", node.Id);
+            Assert.AreEqual("QmVdMJFGTqF2ghySAmivGiQvsr9ZH7ujnNGBkLNNCe4HUE", node.Id.ToString());
             Assert.AreEqual(43, node.Size);
 
             RoundtripTest(node);
@@ -103,7 +103,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             });
             Assert.AreEqual(0, node.DataBytes.Length);
             Assert.AreEqual(2, node.Links.Count());
-            Assert.AreEqual("QmbNgNPPykP4YTuAeSa3DsnBJWLVxccrqLUZDPNQfizGKs", node.Id);
+            Assert.AreEqual("QmbNgNPPykP4YTuAeSa3DsnBJWLVxccrqLUZDPNQfizGKs", node.Id.ToString());
 
             RoundtripTest(node);
         }
@@ -127,7 +127,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             
             Assert.AreEqual(ab, node.DataBytes);
             Assert.AreEqual(2, node.Links.Count());
-            Assert.AreEqual("Qma5sYpEc9hSYdkuXpMDJYem95Mj7hbEd9C412dEQ4ZkfP", node.Id);
+            Assert.AreEqual("Qma5sYpEc9hSYdkuXpMDJYem95Mj7hbEd9C412dEQ4ZkfP", node.Id.ToString());
 
             RoundtripTest(node);
         }
@@ -150,7 +150,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             });
             Assert.AreEqual(ab, node.DataBytes);
             Assert.AreEqual(2, node.Links.Count());
-            Assert.AreEqual("Qma5sYpEc9hSYdkuXpMDJYem95Mj7hbEd9C412dEQ4ZkfP", node.Id);
+            Assert.AreEqual("Qma5sYpEc9hSYdkuXpMDJYem95Mj7hbEd9C412dEQ4ZkfP", node.Id.ToString());
         }
 
         [Test]
@@ -160,7 +160,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var node = new DagNode(abc);
             Assert.AreEqual(abc, node.DataBytes);
             Assert.AreEqual(0, node.Links.Count());
-            Assert.AreEqual("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", node.Id);
+            Assert.AreEqual("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", node.Id.ToString());
             Assert.AreEqual(5, node.Size);
 
             RoundtripTest(node);
@@ -184,7 +184,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var node = new DagNode(abc);
             var link = node.ToLink("abc");
             Assert.AreEqual("abc", link.Name);
-            Assert.AreEqual(node.Id, link.Id);
+            Assert.AreEqual(node.Id.ToString(), link.Id.ToString());
             Assert.AreEqual(node.Size, link.Size);
         }
 
@@ -201,7 +201,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             Assert.False(ReferenceEquals(bnode, cnode));
             Assert.AreEqual(1, cnode.DataBytes.Length);
             Assert.AreEqual(1, cnode.Links.Count());
-            Assert.AreEqual(anode.Id, (string) cnode.Links.First().Id);
+            Assert.AreEqual(anode.Id.ToString(), cnode.Links.First().Id.ToString());
             Assert.AreEqual(anode.Size, cnode.Links.First().Size);
 
             RoundtripTest(cnode);
@@ -226,7 +226,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             Assert.False(ReferenceEquals(dnode, cnode));
             Assert.AreEqual(1, dnode.DataBytes.Length);
             Assert.AreEqual(1, dnode.Links.Count());
-            Assert.AreEqual(bnode.Id, (string) dnode.Links.First().Id);
+            Assert.AreEqual(bnode.Id.ToString(), dnode.Links.First().Id.ToString());
             Assert.AreEqual(bnode.Size, dnode.Links.First().Size);
 
             RoundtripTest(cnode);
