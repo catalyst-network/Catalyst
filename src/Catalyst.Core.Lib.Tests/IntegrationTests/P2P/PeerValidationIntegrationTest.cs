@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         private IPeerChallengeRequest _peerChallengeRequest;
         private readonly PeerSettings _peerSettings;
 
-        public PeerValidationIntegrationTest(TestContext output) : base(output)
+        public PeerValidationIntegrationTest() : base(TestContext.CurrentContext)
         {
             var logger = Substitute.For<ILogger>();
 

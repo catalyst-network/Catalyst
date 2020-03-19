@@ -29,7 +29,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class PeerListCommandTests : CliCommandTestsBase
     {
-        public PeerListCommandTests(TestContext output) : base(output) { }
+        public PeerListCommandTests() : base(TestContext.CurrentContext) { }
 
         [Test]
         public void Cli_Can_Send_List_Peers_Request()

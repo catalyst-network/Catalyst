@@ -50,21 +50,19 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
     {
         private readonly IDfsService _dfs1;
         private readonly IDfsService _dfs2;
-        private readonly TestContext _output;
 
-        public DfsServiceTests(TestContext output) : base(output)
+        public DfsServiceTests() : base(TestContext.CurrentContext)
         {
             ContainerProvider.Container.Resolve<IHashProvider>();
 
-            _output = output;
             var passwordReader = Substitute.For<IPasswordManager>();
             passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>())
                .Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 
             Substitute.For<ILogger>();
 
-            _dfs1 = TestDfs.GetTestDfs(output);
-            _dfs2 = TestDfs.GetTestDfs(output);
+            _dfs1 = TestDfs.GetTestDfs();
+            _dfs2 = TestDfs.GetTestDfs();
         }
 
         [Test]
@@ -129,7 +127,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Test]
         public async Task Can_Dispose()
         {
-            using var node = TestDfs.GetTestDfs(_output);
+            using var node = TestDfs.GetTestDfs();
             await node.StartAsync();
         }
         
@@ -181,7 +179,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Test]
         public async Task Can_Use_Private_Node()
         {
-            using (var ipfs = TestDfs.GetTestDfs(_output))
+            using (var ipfs = TestDfs.GetTestDfs())
             {
                 ipfs.Options.Discovery.BootstrapPeers = new MultiAddress[0];
                 ipfs.Options.Swarm.PrivateNetworkKey = new PreSharedKey().Generate();

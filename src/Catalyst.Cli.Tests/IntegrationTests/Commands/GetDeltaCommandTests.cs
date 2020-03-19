@@ -33,7 +33,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class GetDeltaCommandTests : CliCommandTestsBase
     {
-        public GetDeltaCommandTests(TestContext output) : base(output) { }
+        public GetDeltaCommandTests() : base(TestContext.CurrentContext) { }
 
         [Test]
         public void Cli_Can_Request_Node_Info()

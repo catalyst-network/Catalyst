@@ -39,9 +39,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private IDfsService ipfs;
 
-        public PubSubApiTest(TestContext output)
+        public PubSubApiTest()
         {
-            ipfs = TestDfs.GetTestDfs(output);
+            ipfs = TestDfs.GetTestDfs();
         }
         
         [Test]

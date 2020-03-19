@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.Tests
 {
     public class LicenseHeaderTests : FileSystemBasedTest
     {
-        public LicenseHeaderTests(TestContext output) : base(output) { }
+        public LicenseHeaderTests() : base(TestContext.CurrentContext) { }
         private const string LicenseHeaderFileName = "COPYING";
 
         [Test]

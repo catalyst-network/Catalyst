@@ -39,7 +39,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 
         public ObjectApiTest(TestContext output)
         {
-            ipfs = TestDfs.GetTestDfs(output, null, "sha2-256");
+            ipfs = TestDfs.GetTestDfs(null, "sha2-256");
         }
 
         [Test]

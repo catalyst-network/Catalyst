@@ -47,7 +47,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private readonly ILifetimeScope _scope;
         private readonly List<PoaTestNode> _nodes;
 
-        public PoaConsensusTests(TestContext output) : base(output)
+        public PoaConsensusTests() : base(TestContext.CurrentContext)
         {
             ContainerProvider.ConfigureContainerBuilder(true, true, true);
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
@@ -67,7 +67,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
                     var peerIdentifier = nodeSettings.PeerId;
                     var name = $"producer{i.ToString()}";
-                    var dfs = TestDfs.GetTestDfs(output, fileSystem);
+                    var dfs = TestDfs.GetTestDfs(fileSystem);
                     return new {index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem};
                 }
             ).ToList();
@@ -84,8 +84,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     nodeDetails.nodeSettings,
                     nodeDetails.dfs,
                     peerIdentifiers.Except(new[] {nodeDetails.peerIdentifier}),
-                    nodeDetails.fileSystem,
-                    output);
+                    nodeDetails.fileSystem);
 
                 _nodes.Add(node);
             }

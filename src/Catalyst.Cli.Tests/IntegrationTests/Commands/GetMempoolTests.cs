@@ -29,7 +29,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class GetMempoolCommandTests : CliCommandTestsBase
     {
-        public GetMempoolCommandTests(TestContext output) : base(output) { }
+        public GetMempoolCommandTests() : base(TestContext.CurrentContext) { }
 
         [Test]
         public void Cli_Can_Request_Node_Mempool()

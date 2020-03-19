@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public FileSystemApiTest(TestContext output)
         {
             _testOutputHelper = output;
-            ipfs = TestDfs.GetTestDfs(output, null, "sha2-256");
+            ipfs = TestDfs.GetTestDfs(null, "sha2-256");
         }
         
         [Test]
@@ -814,11 +814,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Test]
         public async Task Read_From_OtherNode()
         {
-            using (var a = TestDfs.GetTestDfs(_testOutputHelper))
+            using (var a = TestDfs.GetTestDfs())
             {
-                using (var b = TestDfs.GetTestDfs(_testOutputHelper))
+                using (var b = TestDfs.GetTestDfs())
                 {
-                    using (var c = TestDfs.GetTestDfs(_testOutputHelper))
+                    using (var c = TestDfs.GetTestDfs())
                     {
                         var psk = new PreSharedKey().Generate();
 

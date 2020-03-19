@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
 {
     public sealed class FileStoreTest : FileSystemBasedTest
     {
-        public FileStoreTest(TestContext output) : base(output) { }
+        public FileStoreTest() : base(TestContext.CurrentContext) { }
 
         private sealed class Entity
         {

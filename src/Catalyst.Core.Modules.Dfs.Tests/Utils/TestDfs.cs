@@ -44,17 +44,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
     {
         private sealed class TestDfsFileSystem : FileSystemBasedTest
         {
-            internal TestDfsFileSystem(TestContext output) : base(output) { }
+            internal TestDfsFileSystem() : base(TestContext.CurrentContext) { }
         }
 
-        public static IDfsService GetTestDfs(TestContext output, IFileSystem fileSystem = default, string hashName = "blake2b-256")
+        public static IDfsService GetTestDfs(IFileSystem fileSystem = default, string hashName = "blake2b-256")
         {
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();
 
             if (fileSystem == null)
             {
-                fileSystem = new TestDfsFileSystem(output).FileSystem;
+                fileSystem = new TestDfsFileSystem().FileSystem;
             }
 
             containerBuilder.RegisterInstance(new PasswordManager(new TestPasswordReader(), new PasswordRegistry())).As<IPasswordManager>().SingleInstance();

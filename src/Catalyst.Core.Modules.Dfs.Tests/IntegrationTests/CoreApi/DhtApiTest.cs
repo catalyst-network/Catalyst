@@ -35,9 +35,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         private IDfsService ipfs;
         private MultiHash _locaId;
 
-        public DhtApiTest(TestContext output)
+        public DhtApiTest()
         {
-            ipfs = TestDfs.GetTestDfs(output);
+            ipfs = TestDfs.GetTestDfs();
             
             _locaId = ipfs.LocalPeer.Id;
         }

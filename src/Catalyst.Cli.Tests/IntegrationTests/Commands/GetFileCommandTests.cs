@@ -44,10 +44,10 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
                     {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
             };
 
-        public GetFileCommandTests(TestContext output) : base(output) { }
+        public GetFileCommandTests() : base(TestContext.CurrentContext) { }
 
         [Theory]
-        [TestCase(nameof(GetFileData))]
+        [TestCaseSource(nameof(GetFileData))]
         public async Task Cli_Can_Send_Get_File_Request(string fileHash, string outputPath, bool expectedResult)
         {
             var downloadFileFactory = Scope.Resolve<IDownloadFileTransferFactory>();

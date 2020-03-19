@@ -37,7 +37,7 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
 {
     public sealed class ConfigCopierTests : FileSystemBasedTest
     {
-        public ConfigCopierTests(TestContext output) : base(output) { }
+        public ConfigCopierTests() : base(TestContext.CurrentContext) { }
 
         private sealed class ConfigFilesOverwriteTestData : List<object[]>
         {

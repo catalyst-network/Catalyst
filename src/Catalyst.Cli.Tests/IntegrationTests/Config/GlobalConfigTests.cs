@@ -47,10 +47,9 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Config
             new List<NetworkType> {NetworkType.Devnet, NetworkType.Mainnet, NetworkType.Testnet}
                .Select(n => new object[] {n}).ToList();
 
-        public GlobalConfigTests(TestContext output) : base(output) { }
+        public GlobalConfigTests() : base(TestContext.CurrentContext) { }
 
-        [Theory]
-        [TestCase(nameof(Networks))]
+        [TestCaseSource(nameof(Networks))]
         [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(NetworkType network)
         {

@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 {
     public sealed class HastingsDiscoveryTests : FileSystemBasedTest
     {
-        public HastingsDiscoveryTests(TestContext output) : base(output)
+        public HastingsDiscoveryTests() : base(TestContext.CurrentContext)
         {
             _testScheduler = new TestScheduler();
             _settings = PeerSettingsHelper.TestPeerSettings();

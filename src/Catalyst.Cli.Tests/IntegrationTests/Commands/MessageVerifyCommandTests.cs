@@ -29,7 +29,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class MessageVerifyCommandTests : CliCommandTestsBase
     {
-        public MessageVerifyCommandTests(TestContext output) : base(output) { }
+        public MessageVerifyCommandTests() : base(TestContext.CurrentContext) { }
 
         [Test]
         public void Cli_Can_Verify_Message()

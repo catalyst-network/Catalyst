@@ -80,8 +80,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             IPeerSettings nodeSettings,
             IDfsService dfsService,
             IEnumerable<PeerId> knownPeerIds,
-            IFileSystem parentTestFileSystem,
-            TestContext output)
+            IFileSystem parentTestFileSystem)
         {
             Name = name;
             _nodeSettings = nodeSettings;
@@ -108,7 +107,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     Constants.NetworkConfigFile(NetworkType.Devnet),
                     Constants.SerilogJsonConfigFile
                 }
-               .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, output);
+               .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem);
 
             Program.RegisterNodeDependencies(_containerProvider.ContainerBuilder,
                 excludedModules: new List<Type>

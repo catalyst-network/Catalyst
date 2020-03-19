@@ -45,7 +45,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 {
     public sealed class KeySignerIntegrationTests : FileSystemBasedTest
     {
-        public KeySignerIntegrationTests(TestContext output) : base(output)
+        public KeySignerIntegrationTests() : base(TestContext.CurrentContext)
         {
             var logger = Substitute.For<ILogger>();
 

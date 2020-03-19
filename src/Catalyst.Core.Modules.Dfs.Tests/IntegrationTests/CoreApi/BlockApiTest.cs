@@ -38,14 +38,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     public sealed class BlockApiTest
     {
         private IDfsService _dfs;
-        private readonly TestContext _output;
         private const string Id = "QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
         private readonly byte[] _blob = Encoding.UTF8.GetBytes("blorb");
 
-        public BlockApiTest(TestContext output)
+        public BlockApiTest()
         {
-            _output = output;
-            _dfs = TestDfs.GetTestDfs(output, null, "sha2-256");
+            _dfs = TestDfs.GetTestDfs(null, "sha2-256");
         }
         
         [Test]
@@ -267,7 +265,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [Test]
         public async Task Put_Informs_Bitswap()
         {
-            _dfs = TestDfs.GetTestDfs(_output, null, "sha2-256");
+            _dfs = TestDfs.GetTestDfs(null, "sha2-256");
             await _dfs.StartAsync();
 
             try

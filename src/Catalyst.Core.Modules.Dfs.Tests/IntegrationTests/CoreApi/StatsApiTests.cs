@@ -32,9 +32,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private readonly IDfsService _dfs;
 
-        public StatsApiTest(TestContext output)
+        public StatsApiTest()
         {
-            _dfs = TestDfs.GetTestDfs(output);
+            _dfs = TestDfs.GetTestDfs();
         }
         
         [Test]

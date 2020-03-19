@@ -42,7 +42,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
         private readonly FileSystem _fileSystem;
         private readonly string _sourceFolder;
 
-        public FileSystemTest(TestContext output) : base(output)
+        public FileSystemTest() : base(TestContext.CurrentContext)
         {
             _fileSystem = new FileSystem();
 

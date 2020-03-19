@@ -35,7 +35,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
 {
     public sealed class CertificateStoreTests : FileSystemBasedTest
     {
-        public CertificateStoreTests(TestContext output) : base(output)
+        public CertificateStoreTests() : base(TestContext.CurrentContext)
         {
             _passwordManager = Substitute.For<IPasswordManager>();
         }

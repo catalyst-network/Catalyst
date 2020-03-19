@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private readonly ILogger _logger;
         private readonly IHashProvider _hashProvider;
 
-        public DeltaHashProviderTests(TestContext output) : base(output)
+        public DeltaHashProviderTests() : base(TestContext.CurrentContext)
         {
             _deltaCache = Substitute.For<IDeltaCache>();
             _logger = new LoggerConfiguration()

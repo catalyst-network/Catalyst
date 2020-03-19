@@ -41,7 +41,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
     {
         private readonly KeyStoreService _keyStoreService;
         
-        public Rfc8410Test(TestContext output) : base(output)
+        public Rfc8410Test() : base(TestContext.CurrentContext)
         {
             var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _keyStoreService = new KeyStoreService(dfsOptions)

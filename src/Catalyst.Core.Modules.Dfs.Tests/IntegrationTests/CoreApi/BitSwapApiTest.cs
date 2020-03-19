@@ -46,9 +46,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private readonly IDfsService _dfsService;
         private readonly IDfsService _dfsServiceOther;
-        private readonly TestContext _testOutputHelper;
         
-        public BitSwapApiTest(TestContext output)
+        public BitSwapApiTest()
         {
             var fileSystem1 = Substitute.For<IFileSystem>();
             fileSystem1.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
@@ -58,9 +57,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             fileSystem2.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
                 $"dfs2-_{DateTime.Now:yyMMddHHmmssffff}")));
 
-            _testOutputHelper = output;
-            _dfsService = TestDfs.GetTestDfs(output, fileSystem1);
-            _dfsServiceOther = TestDfs.GetTestDfs(output, fileSystem2);
+            _dfsService = TestDfs.GetTestDfs(fileSystem1);
+            _dfsServiceOther = TestDfs.GetTestDfs(fileSystem2);
         }
 
         /// <summary>
@@ -75,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
                 $"dfs1-_{DateTime.Now:yyMMddHHmmssffff}")));
 
-            var dfsService = TestDfs.GetTestDfs(_testOutputHelper, fileSystem);
+            var dfsService = TestDfs.GetTestDfs(fileSystem);
             await dfsService.StartAsync();
             
             try
@@ -121,7 +119,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
                 $"dfs1-_{DateTime.Now:yyMMddHHmmssffff}")));
             
-            var dfsService = TestDfs.GetTestDfs(_testOutputHelper, fileSystem);
+            var dfsService = TestDfs.GetTestDfs(fileSystem);
             await dfsService.StartAsync();
             
             try

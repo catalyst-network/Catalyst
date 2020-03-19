@@ -29,7 +29,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class MessageSignCommandTests : CliCommandTestsBase
     {
-        public MessageSignCommandTests(TestContext output) : base(output) { }
+        public MessageSignCommandTests() : base(TestContext.CurrentContext) { }
 
         [Test]
         public void Cli_Can_Request_Node_To_Sign_A_Message()

@@ -29,7 +29,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class PeerRemoveCommandTests : CliCommandTestsBase
     {
-        public PeerRemoveCommandTests(TestContext output) : base(output) { }
+        public PeerRemoveCommandTests() : base(TestContext.CurrentContext) { }
 
         [Test]
         public void Cli_Can_Send_Remove_Peer_Request()

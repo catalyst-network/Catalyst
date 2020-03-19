@@ -42,9 +42,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private readonly IDfsService _dfs;
 
-        public PinApiTest(TestContext output)
+        public PinApiTest()
         {
-            _dfs = TestDfs.GetTestDfs(output);
+            _dfs = TestDfs.GetTestDfs();
             new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 

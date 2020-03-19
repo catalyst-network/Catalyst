@@ -35,9 +35,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         private IDfsService ipfs;
         private readonly MultiAddress somewhere = "/ip4/127.0.0.1/tcp/4009/ipfs/QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
 
-        public BootstapApiTest(TestContext output)
+        public BootstapApiTest()
         {
-            ipfs = TestDfs.GetTestDfs(output);    
+            ipfs = TestDfs.GetTestDfs();    
         }
         
         [Test]

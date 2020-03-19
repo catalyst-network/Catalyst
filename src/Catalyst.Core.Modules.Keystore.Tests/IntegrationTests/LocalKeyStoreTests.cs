@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         private readonly ICryptoContext _context;
         private readonly IPasswordManager _passwordManager;
 
-        public LocalKeyStoreTests(TestContext output) : base(output)
+        public LocalKeyStoreTests() : base(TestContext.CurrentContext)
         {
             _fileSystem = Substitute.For<IFileSystem>();
             _context = new FfiWrapper();

@@ -61,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private readonly PeerId _peerId;
         private readonly ByteString _testMessageToSign;
         
-        public VerifyMessageRequestObserverIntegrationTests(TestContext output) : base(output)
+        public VerifyMessageRequestObserverIntegrationTests() : base(TestContext.CurrentContext)
         {
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
 

@@ -30,7 +30,7 @@
 //        private readonly Dfs _dfs;
 //        private readonly DfsGateway _dfsGateway;
 
-//        public DfsHttpTests(TestContext output) : base(output)
+//        public DfsHttpTests() : base(TestContext.CurrentContext)
 //        {
 //            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 //            var passwordReader = Substitute.For<IPasswordManager>();

@@ -60,7 +60,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
         private IEnumerable<string> _configFilesUsed;
         private ContainerProvider _containerProvider;
 
-        public GlobalConfigTests(TestContext output) : base(output) { }
+        public GlobalConfigTests() : base(TestContext.CurrentContext) { }
 
         [Theory]
         [TestCase(nameof(Networks))]

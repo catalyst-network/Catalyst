@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         private readonly IPeerSettings _peerSettings;
         private IPeerService _peerService;
 
-        public PeerServiceTests(TestContext output) : base(output)
+        public PeerServiceTests() : base(TestContext.CurrentContext)
         {
             _pid = PeerIdHelper.GetPeerId("im_a_key");
             _guid = CorrelationId.GenerateCorrelationId();

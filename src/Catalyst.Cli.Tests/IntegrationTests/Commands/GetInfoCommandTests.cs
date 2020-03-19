@@ -29,7 +29,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class GetInfoCommandTests : CliCommandTestsBase
     {
-        public GetInfoCommandTests(TestContext output) : base(output) { }
+        public GetInfoCommandTests() : base(TestContext.CurrentContext) { }
 
         [Test]
         public void Cli_Can_Request_Node_Info()

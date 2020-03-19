@@ -61,16 +61,16 @@ namespace Catalyst.TestUtils
         {
             Guard.Argument(output, nameof(output)).NotNull();
             Output = output;
-            var currentTest = Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
-               .GetValue(Output) as ITest;
+            //var currentTest = Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
+            //   .GetValue(Output) as ITest;
 
-            if (currentTest == null)
-            {
-                throw new ArgumentNullException(
-                    $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
-            }
+            //if (currentTest == null)
+            //{
+            //    throw new ArgumentNullException(
+            //        $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
+            //}
 
-            CurrentTestName = output.Test.MethodName;
+            CurrentTestName = output.Test.Name;
 
             CreateUniqueTestDirectory();
             

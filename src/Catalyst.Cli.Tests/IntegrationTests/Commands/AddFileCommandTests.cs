@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -37,16 +36,15 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class AddFileCommandTests : CliCommandTestsBase
     {
-        public static IEnumerable<object[]> AddFileData =>
-            new List<object[]>
-            {
-                new object[] {"/fake_file_path", false},
-                new object[] {AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
-            };
+        static object[] AddFileData =
+        {
+            new object[] {"/fake_file_path", false},
+            new object[] {AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true},
+        };
 
-        public AddFileCommandTests(TestContext output) : base(output) { }
+        public AddFileCommandTests() : base(TestContext.CurrentContext) { }
 
-        [TestCase(nameof(AddFileData))]
+        [TestCaseSource("AddFileData")]
         public async Task Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
         {
             var uploadFileTransferFactory = Scope.Resolve<IUploadFileTransferFactory>();

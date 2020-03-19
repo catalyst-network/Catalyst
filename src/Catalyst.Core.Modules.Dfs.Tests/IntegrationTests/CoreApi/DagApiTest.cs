@@ -37,9 +37,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         private const string Blob64 = "YmxvcmI"; // base 64 encoded with no padding
         private readonly IDfsService _dfs;
 
-        public DagApiTest(TestContext output)
+        public DagApiTest()
         {
-            _dfs = TestDfs.GetTestDfs(output, null, "sha2-256");
+            _dfs = TestDfs.GetTestDfs(null, "sha2-256");
         }
 
         [Test]

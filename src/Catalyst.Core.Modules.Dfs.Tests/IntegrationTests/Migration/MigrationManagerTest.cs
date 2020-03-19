@@ -34,9 +34,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
     {
         private readonly IDfsService _dfs;
 
-        public MigrationManagerTest(TestContext output)
+        public MigrationManagerTest()
         {
-            _dfs = TestDfs.GetTestDfs(output);      
+            _dfs = TestDfs.GetTestDfs();      
         }
         
         [Test]
