@@ -129,12 +129,12 @@ If you do not, then follow the [Git install instructions](https://git-scm.com/bo
 
 To clone the Catalyst repository use the command:
 
-'git clone https://github.com/catalyst-network/Catalyst.git'
+`git clone https://github.com/catalyst-network/Catalyst.git`
 
 
 Then navigate into the repository:
 
-'cd Catalyst'
+`cd Catalyst`
 
 Install the dependencies using the command: 
 
@@ -144,9 +144,10 @@ Install the dependencies using the command:
 
 #### 7. Build the solution
 
-Navigate to the 'src' folder:
+Navigate to the `src` folder:
 
-'cd src'
+`cd src`
+
 
 
 In the `src` folder build the solution:
@@ -157,11 +158,11 @@ In the `src` folder build the solution:
 
 To run the node change to: 
 
-'cd Catalyst.Node.POA.CE'
+`cd Catalyst.Node.POA.CE`
 
 Then use the command 
 
-'dotnet run'
+`dotnet run`
 
 
 
