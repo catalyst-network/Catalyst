@@ -149,7 +149,7 @@ Rw==
             await _keyStoreService.RemoveAsync("jsipfs");
             var key = await _keyStoreService.ImportAsync("jsipfs", pem, password);
             Assert.AreEqual("jsipfs", key.Name);
-            Assert.AreEqual("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb", key.Id);
+            Assert.AreEqual("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb", key.Id.ToString());
 
             var pubKey = await _keyStoreService.GetPublicKeyAsync("jsipfs");
             Assert.AreEqual(spki, pubKey);
@@ -345,7 +345,7 @@ MC4CAQAwBQYDK2VwBCIEIGJnyy3U4ksTQoRBz3mf1dxeFDPXZBrwh7gD7SqMg+/i
             await _keyStoreService.RemoveAsync("oed1");
             var key = await _keyStoreService.ImportAsync("oed1", pem);
             Assert.AreEqual("oed1", key.Name);
-            Assert.AreEqual("18n3naE9kBZoVvgYMV6saMZe3jn87dZiNbQ22BhxKTwU5yUoGfvBL1R3eScjokDGBk7i", key.Id);
+            Assert.AreEqual("18n3naE9kBZoVvgYMV6saMZe3jn87dZiNbQ22BhxKTwU5yUoGfvBL1R3eScjokDGBk7i", key.Id.ToString());
 
             var privateKey = await _keyStoreService.GetPrivateKeyAsync("oed1");
             Assert.IsInstanceOf(typeof(Ed25519PrivateKeyParameters), privateKey);

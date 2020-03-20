@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private readonly IDfsService _dfsService;
         private readonly IHashProvider _hashProvider;
 
-        public GetFileFromDfsObserverHandlerTests(TestContext testOutput) : base(testOutput)
+        public GetFileFromDfsObserverHandlerTests() : base(TestContext.CurrentContext)
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _logger = Substitute.For<ILogger>();

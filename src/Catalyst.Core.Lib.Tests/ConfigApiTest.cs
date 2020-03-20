@@ -89,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests
             const string key = "foo";
             const string value = "foobar";
             await _configApi.SetAsync(key, value);
-            Assert.AreEqual(value, await _configApi.GetAsync(key));
+            Assert.AreEqual(value, (await _configApi.GetAsync(key)).ToString());
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace Catalyst.Core.Lib.Tests
             const string key = "API.HTTPHeaders.Access-Control-Allow-Origin";
             var value = JToken.Parse("['http://example.io']");
             await _configApi.SetAsync(key, value);
-            Assert.AreEqual("http://example.io", _configApi.GetAsync(key).Result[0]);
+            Assert.AreEqual("http://example.io", _configApi.GetAsync(key).Result[0].ToString());
         }
     }
 }

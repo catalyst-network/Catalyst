@@ -31,6 +31,7 @@ using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
+using FluentAssertions;
 using Makaretu.Dns;
 using NSubstitute;
 using NUnit.Framework;
@@ -82,7 +83,7 @@ cn4oisOvxCprs4aM9UVjtZTCjfyNpX8UWwT1W3rySV+KQNhxuMy3RzmL
             var key = await _keyStoreService.ImportAsync("alice", alice, "mypassword".ToArray());
             try
             {
-                Assert.AreEqual(aliceKid, key.Id);
+                Assert.AreEqual(aliceKid, key.Id.ToString());
 
                 var cipher = Convert.FromBase64String(@"
 MIIBcwYJKoZIhvcNAQcDoIIBZDCCAWACAQAxgfowgfcCAQAwYDBbMQ0wCwYDVQQK
