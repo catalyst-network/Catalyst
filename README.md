@@ -4,7 +4,6 @@
   ### Catalyst - Full Stack Distributed Protocol Framework
  
 [![Discord](https://img.shields.io/discord/629667101774446593?color=blueviolet&label=discord)](https://discord.gg/anTP7xm)
-[![Twitter Follow](https://img.shields.io/twitter/follow/catalystnetorg?style=social)](https://twitter.com/catalystnetorg)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/catalystnet?style=social)](https://reddit.com/r/catalystnet)
 </div>
 
@@ -55,9 +54,11 @@ Catalyst was designed by an experienced team of engineers and researchers who we
 
 Our api docs can be found on our documentation site [https://catalyst-network.github.io/Catalyst/api](https://catalyst-network.github.io/Catalyst/api)
 
+Furtermore, our Technical White Paper is availiable [here](https://github.com/catalyst-network/whitepaper). This document explains the implementation of the Catalyst network. 
+
 ## Quick Start Guide for Node
 
-This is a quick start guide for running a node on the Catalyst test network 
+This is a quick start guide for running a node on the Catalyst test network. 
 
 #### 1. Install .Net
 
@@ -79,9 +80,9 @@ Download and install `msbuild prebuild tasks` from [Rust](https://www.rust-lang.
 
 Then, make sure you install Rust using the rustup tool:
 
-```curl https://sh.rustup.rs -sSf | sh```
+`curl https://sh.rustup.rs -sSf | sh`
 
-If ```rustc --version``` fails, restart your console to ensure changes to ```PATH``` have taken effect.
+If `rustc --version` fails, restart your console to ensure changes to `PATH` have taken effect.
 
 Refer to the Rust cryptography library [repository](https://github.com/catalyst-network/Catalyst-rs) for docs. If you have issues with this part of the installation, please raise them there.
 
@@ -103,12 +104,6 @@ Then:
 
 'brew install snappy'
 
-Followed by: 
-
-' cd /usr/local/lib/
- ln -s /usr/local/Cellar/snappy/1.1.1/lib/libsnappy.1.dylib
- ln -s /usr/local/Cellar/snappy/1.1.1/lib/libsnappy.a
- ln -s /usr/local/Cellar/snappy/1.1.1/lib/libsnappy.dylib'
 
 #### 4. Create a self signed certificate (Linux only)
 
