@@ -195,7 +195,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 var correlationId = innerMessage.CorrelationId.ToCorrelationId();
 
                 //CLEAN UP
-                foreach (var peerIdentifier in peersToGossip.Where(x => x != _peerId))
+                foreach (var peerIdentifier in peersToGossip)
                 {
                     _logger.Verbose("Broadcasting message {message}", message);
                     var protocolMessage = message.Clone();

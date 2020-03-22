@@ -58,18 +58,14 @@ namespace Catalyst.Modules.POA.P2P.Discovery
 
         public void Run()
         {
-            var currentSeconds = DateTime.UtcNow.Second;
-            var delay = TimeSpan.FromSeconds(currentSeconds % _checkHeartbeatInterval.TotalSeconds);
             _subscription = Observable
                .Interval(_checkHeartbeatInterval)
-               ///.Delay(delay)
                .StartWith(-1L)
                .Subscribe(interval => CheckHeartbeat());
         }
 
         private void CheckHeartbeat()
         {
-            //var d = DateTime.UtcNow.Second;
             foreach (var peer in _peerRepository.GetAll())
             {
                 Task.Run(async () =>

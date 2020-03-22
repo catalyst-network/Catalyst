@@ -86,8 +86,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             _logger.Information("Calculating favourite delta producers for the successor of {0}.",
                 previousDeltaHash);
 
-            var allPeers = PeerRepository.GetActivePoaPeers();
-            //.Concat(new[] { _selfAsPeer });
+            var allPeers = PeerRepository.GetActivePoaPeers().Concat(new[] { _selfAsPeer });
 
             var previous = previousDeltaHash.ToArray();
 

@@ -33,18 +33,21 @@ using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Newtonsoft.Json;
 using Serilog;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Modules.POA.P2P.Discovery
 {
     public sealed class PoaDiscovery : IPeerDiscovery
     {
         public static string PoaPeerFile => "poa.nodes.json";
+        private readonly IPeerSettings _peerSettings;
         private readonly IPeerRepository _peerRepository;
         private readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
 
-        public PoaDiscovery(IPeerRepository peerRepository, IFileSystem fileSystem, ILogger logger)
+        public PoaDiscovery(IPeerSettings peerSettings, IPeerRepository peerRepository, IFileSystem fileSystem, ILogger logger)
         {
+            _peerSettings = peerSettings;
             _peerRepository = peerRepository;
             _fileSystem = fileSystem;
             _logger = logger;
@@ -78,6 +81,12 @@ namespace Catalyst.Modules.POA.P2P.Discovery
                 PeerId = poaPeer.ToPeerId()
             }))
             {
+                //Don't add your own peer id even if you are a POA node.
+                if (_peerSettings.PeerId == peer.PeerId)
+                {
+                    continue;
+                }
+
                 _logger.Information(
                     $"Adding POA Peer: {peer.PeerId.IpAddress} Public Key: {peer.PeerId.PublicKey.KeyToString()}");
 

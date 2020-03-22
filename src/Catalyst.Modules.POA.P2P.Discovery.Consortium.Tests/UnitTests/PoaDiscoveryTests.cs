@@ -34,6 +34,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {
@@ -61,7 +62,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 
             await FileSystem.WriteTextFileToCddAsync(PoaDiscovery.PoaPeerFile, JsonConvert.SerializeObject(peers));
 
-            var peerDiscovery = new PoaDiscovery(peerRepository, FileSystem, Substitute.For<ILogger>());
+            var peerDiscovery = new PoaDiscovery(Substitute.For<IPeerSettings>(), peerRepository, FileSystem, Substitute.For<ILogger>());
             await peerDiscovery.DiscoveryAsync().ConfigureAwait(false);
             peerRepository.Received(peers.Length).Add(Arg.Any<Peer>());
         }
