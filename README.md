@@ -4,7 +4,6 @@
   ### Catalyst - Full Stack Distributed Protocol Framework
  
 [![Discord](https://img.shields.io/discord/629667101774446593?color=blueviolet&label=discord)](https://discord.gg/anTP7xm)
-[![Twitter Follow](https://img.shields.io/twitter/follow/catalystnetorg?style=social)](https://twitter.com/catalystnetorg)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/catalystnet?style=social)](https://reddit.com/r/catalystnet)
 </div>
 
@@ -19,6 +18,10 @@
 <hr/>
 
 Join us on our [Discord](https://discord.gg/anTP7xm) for any questions and discussions.
+
+**Important Release Note**
+
+For the initial release of the Catalyst Network UDP is used as the peer to peer messaging protocol. This causes fragmentation of packages and thereby transactions over 1280Bytes are prone to packet loss as discussed in [Issue #909](https://github.com/catalyst-network/Catalyst/issues/909). Due to the DFS utilising a seperate TCP messaging system this does not affect files stored in the DFS including ledger state updates. However it will affect both simple and smart contract transactions. 
 
 **Table of Contents**
 
@@ -55,9 +58,11 @@ Catalyst was designed by an experienced team of engineers and researchers who we
 
 Our api docs can be found on our documentation site [https://catalyst-network.github.io/Catalyst/api](https://catalyst-network.github.io/Catalyst/api)
 
+Furtermore, our Technical White Paper is availiable [here](https://github.com/catalyst-network/whitepaper). This document explains the implementation of the Catalyst network. 
+
 ## Quick Start Guide for Node
 
-This is a quick start guide for running a node on the Catalyst test network 
+This is a quick start guide for running a node on the Catalyst test network. 
 
 #### 1. Install .Net
 
@@ -79,9 +84,9 @@ Download and install `msbuild prebuild tasks` from [Rust](https://www.rust-lang.
 
 Then, make sure you install Rust using the rustup tool:
 
-```curl https://sh.rustup.rs -sSf | sh```
+`curl https://sh.rustup.rs -sSf | sh`
 
-If ```rustc --version``` fails, restart your console to ensure changes to ```PATH``` have taken effect.
+If `rustc --version` fails, restart your console to ensure changes to `PATH` have taken effect.
 
 Refer to the Rust cryptography library [repository](https://github.com/catalyst-network/Catalyst-rs) for docs. If you have issues with this part of the installation, please raise them there.
 
@@ -103,12 +108,6 @@ Then:
 
 'brew install snappy'
 
-Followed by: 
-
-' cd /usr/local/lib/
- ln -s /usr/local/Cellar/snappy/1.1.1/lib/libsnappy.1.dylib
- ln -s /usr/local/Cellar/snappy/1.1.1/lib/libsnappy.a
- ln -s /usr/local/Cellar/snappy/1.1.1/lib/libsnappy.dylib'
 
 #### 4. Create a self signed certificate (Linux only)
 
@@ -134,12 +133,12 @@ If you do not, then follow the [Git install instructions](https://git-scm.com/bo
 
 To clone the Catalyst repository use the command:
 
-'git clone https://github.com/catalyst-network/Catalyst.git'
+`git clone https://github.com/catalyst-network/Catalyst.git`
 
 
 Then navigate into the repository:
 
-'cd Catalyst'
+`cd Catalyst`
 
 Install the dependencies using the command: 
 
@@ -149,9 +148,10 @@ Install the dependencies using the command:
 
 #### 7. Build the solution
 
-Navigate to the 'src' folder:
+Navigate to the `src` folder:
 
-'cd src'
+`cd src`
+
 
 
 In the `src` folder build the solution:
@@ -162,11 +162,11 @@ In the `src` folder build the solution:
 
 To run the node change to: 
 
-'cd Catalyst.Node.POA.CE'
+`cd Catalyst.Node.POA.CE`
 
 Then use the command 
 
-'dotnet run'
+`dotnet run`
 
 
 
