@@ -32,7 +32,6 @@ using AutofacSerilogIntegration;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Config;
@@ -232,10 +231,66 @@ namespace Catalyst.Core.Lib.Kernel
         {
             if (reset)
             {
+                Logger.Information("Resetting State");
+
+                var stateFolder = Path.Join(_targetConfigFolder, "state");
+                if (Directory.Exists(stateFolder))
+                {
+                    Logger.Information("Deleting EVM State");
+                    Directory.Delete(stateFolder, true);
+                }
+
+                var codeFolder = Path.Join(_targetConfigFolder, "code");
+                if (Directory.Exists(codeFolder))
+                {
+                    Logger.Information("Deleting EVM Code");
+                    Directory.Delete(codeFolder, true);
+                }
+
+                var blockFolder = Path.Join(_targetConfigFolder, "dfs", "blocks");
+                if (Directory.Exists(blockFolder))
+                {
+                    Logger.Information("Deleting DFS Blocks");
+                    Directory.Delete(blockFolder, true);
+                }
+
+                var pinFolder = Path.Join(_targetConfigFolder, "dfs", "pins");
+                if (Directory.Exists(pinFolder))
+                {
+                    Logger.Information("Deleting DFS Pins");
+                    Directory.Delete(pinFolder, true);
+                }
+
                 ContainerBuilder.RegisterBuildCallback(buildCallback =>
                 {
-                    var stateResetter = buildCallback.Resolve<IStateResetter>();
-                    stateResetter.Reset();
+                    var deltaIndexes = buildCallback.Resolve<IRepository<DeltaIndexDao, string>>();
+                    var transactionReceipts = buildCallback.Resolve<IRepository<TransactionReceipts, string>>();
+                    var transactionToDeltas = buildCallback.Resolve<IRepository<TransactionToDelta, string>>();
+                    var mempool = buildCallback.Resolve<IRepository<PublicEntryDao, string>>();
+
+                    Logger.Information("Deleting DeltaIndexes");
+                    foreach (var deltaIndex in deltaIndexes.GetAll())
+                    {
+                        deltaIndexes.Delete(deltaIndex);
+                    }
+
+                    Logger.Information("Deleting transactionReceipts");
+                    foreach (var transactionReceipt in transactionReceipts.GetAll())
+                    {
+                        transactionReceipts.Delete(transactionReceipt);
+                    }
+
+                    Logger.Information("Deleting transactionToDeltas");
+                    foreach (var transactionToDelta in transactionToDeltas.GetAll())
+                    {
+                        transactionToDeltas.Delete(transactionToDelta);
+                    }
+
+                    Logger.Information("Deleting mempool");
+                    foreach (var mempoolItem in mempool.GetAll())
+                    {
+                        mempool.Delete(mempoolItem);
+                    }
                 });
             }
 
