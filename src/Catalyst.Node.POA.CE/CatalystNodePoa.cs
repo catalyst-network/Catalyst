@@ -108,11 +108,14 @@ namespace Catalyst.Node.POA.CE
             _dfsService.StartAsync().ConfigureAwait(false);
             _synchronizer.StartAsync().ConfigureAwait(false);
 
-            var currentPoaNode = _peerRepository.GetPeersByIpAndPublicKey(_peerSettings.PeerId.Ip, _peerSettings.PeerId.PublicKey).FirstOrDefault();
-            if (currentPoaNode == null)
-                _logger.Information($"Current node with IP address '{_peerSettings.PeerId.Ip}' is not found in poa node list. So this node will not take part in consensus.");
-            else
-                Consensus.StartProducing();
+            _synchronizer.SyncCompleted.Subscribe((x) =>
+            {
+                var currentPoaNode = _peerRepository.GetPeersByIpAndPublicKey(_peerSettings.PeerId.Ip, _peerSettings.PeerId.PublicKey).FirstOrDefault();
+                if (currentPoaNode == null)
+                    _logger.Information($"Current node with IP address '{_peerSettings.PeerId.Ip}' is not found in poa node list. So this node will not take part in consensus.");
+                else
+                    Consensus.StartProducing();
+            });
 
             bool exit;
 

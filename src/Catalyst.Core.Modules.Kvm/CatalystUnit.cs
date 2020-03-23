@@ -42,8 +42,7 @@ namespace Catalyst.Core.Modules.Kvm
     {
         public static readonly UInt256 Mol = 1;
         public static readonly UInt256 Gmol = 1_000_000_000;
-        //todo add 6 zeros
-        public static readonly UInt256 Katal = 1_000_000_000_000;
+        public static readonly UInt256 Katal = 1_000_000_000_000_000_000;
         public static readonly string KatalSymbol = "KAT";
     }
 }
