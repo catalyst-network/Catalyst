@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -37,7 +36,6 @@ using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
@@ -99,42 +97,6 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
                 _nodes.Add(node);
             }
         }
-
-        //[Fact]
-        //public async Task Can_Sync_From_Another_Node2()
-        //{
-        //    var poaTestNode1 = _nodes[0];
-        //    var ledger = poaTestNode1._containerProvider.Container.Resolve<ILedger>();
-        //    var deltaHashProvider = poaTestNode1._containerProvider.Container.Resolve<IDeltaHashProvider>();
-        //    var hashProvider = poaTestNode1._containerProvider.Container.Resolve<IHashProvider>();
-        //    var dfsService = poaTestNode1._containerProvider.Container.Resolve<IDfsService>();
-
-        //    var l = new List<DeltaIndex>();
-        //    var map = new TestMapperProvider();
-
-        //    for (var i = 0; i < 5; i++)
-        //    {
-        //        var delta = new Delta
-        //        {
-        //            PreviousDeltaDfsHash = ledger.LatestKnownDelta.ToArray().ToByteString(),
-        //            MerkleRoot = hashProvider.ComputeMultiHash(ledger.LatestKnownDelta.ToArray()).ToCid().ToArray()
-        //               .ToByteString(),
-        //            TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow)
-        //        };
-
-        //        var node = await dfsService.UnixFsApi.AddAsync(delta.ToByteArray().ToMemoryStream(), string.Empty,
-        //                new AddFileOptions {Hash = hashProvider.HashingAlgorithm.Name}, CancellationToken.None)
-        //           .ConfigureAwait(false);
-
-        //        l.Add(new DeltaIndex {Cid = node.Id.ToArray().ToByteString(), Height = 0});
-        //    }
-
-        //    var b = l.Select(x => x.ToDao<DeltaIndex, DeltaIndexDao>(map));
-        //    var c = b.Select(x => x.ToProtoBuff<DeltaIndexDao, DeltaIndex>(map));
-        //    var a1 = b.First();
-        //    var a2 = c.First();
-        //    var d = 0;
-        //}
 
         [Fact]
         public async Task Can_Sync_From_Another_Nodes()
@@ -203,7 +165,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
             Task.Run(() => _nodes[1].RunAsync(_endOfTestCancellationSource.Token));
             Task.Run(() => _nodes[2].RunAsync(_endOfTestCancellationSource.Token));
 
-            manualResetEvent.WaitOne(TimeSpan.FromMinutes(60));
+            manualResetEvent.WaitOne(TimeSpan.FromMinutes(5));
         }
     }
 }
