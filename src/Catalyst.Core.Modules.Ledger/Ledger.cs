@@ -189,6 +189,7 @@ namespace Catalyst.Core.Modules.Ledger
             {
                 _logger.Error(exception, "Failed to update the ledger using the delta with hash {deltaHash}",
                     deltaHash);
+                Environment.Exit(2);
             }
         }
 

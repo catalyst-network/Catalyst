@@ -90,8 +90,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         {
             _producersByPreviousDelta.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(false);
 
-            var peers = _peers;
-            //.Concat(new[] { _selfAsPeer });
+            var peers = _peers.Concat(new[] { _selfAsPeer });
 
             var expectedProducers = peers.Select(p =>
                 {

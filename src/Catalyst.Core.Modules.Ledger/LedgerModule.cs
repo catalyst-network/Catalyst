@@ -39,12 +39,6 @@ namespace Catalyst.Core.Modules.Ledger
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //builder.Register(c => new InMemoryRepository<DeltaIndexDao, string>())
-            //   .As<IRepository<DeltaIndexDao, string>>()
-            //   .SingleInstance();
-
-            //builder.RegisterType<DeltaIndexService>().As<IDeltaIndexService>().SingleInstance();
-
             builder.Register(c => new MongoDbRepository<Account, string>())
                .As<IRepository<Account, string>>()
                .SingleInstance();
@@ -59,7 +53,6 @@ namespace Catalyst.Core.Modules.Ledger
 
             builder.RegisterType<LedgerSynchroniser>().As<ILedgerSynchroniser>();
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
-            //builder.RegisterType<DeltaByNumberRepository>().As<IDeltaByNumberRepository>().SingleInstance();
             builder.RegisterType<TransactionRepository>().As<ITransactionRepository>().SingleInstance();
             builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();
 

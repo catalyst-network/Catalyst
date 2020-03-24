@@ -39,12 +39,11 @@ namespace Catalyst.Core.Modules.Sync
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<Synchroniser>().As<ISynchroniser>().SingleInstance();
-            builder.RegisterType<StateResetter>().As<IStateResetter>().SingleInstance();
             builder.RegisterType<SyncState>().SingleInstance();
             builder.RegisterType<PeerSyncManager>().As<IPeerSyncManager>().SingleInstance();
             builder.RegisterType<DeltaHeightWatcher>().As<IDeltaHeightWatcher>().SingleInstance();
-            //builder.RegisterType<InMemoryRepository<DeltaIndexDao>>().As<IRepository<DeltaIndexDao>>().SingleInstance();
-            builder.RegisterInstance(new MongoDbRepository<DeltaIndexDao, string>()).As<IRepository<DeltaIndexDao, string>>().SingleInstance();
+            builder.RegisterType<InMemoryRepository<DeltaIndexDao>>().As<IRepository<DeltaIndexDao>>().SingleInstance();
+            //builder.RegisterInstance(new MongoDbRepository<DeltaIndexDao, string>()).As<IRepository<DeltaIndexDao, string>>().SingleInstance();
             builder.RegisterType<DeltaIndexService>().As<IDeltaIndexService>().SingleInstance();
         }
     }
