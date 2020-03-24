@@ -32,14 +32,7 @@ trigger:
       - release/*
 
 pr:
-  autoCancel: true
-  branches:
-    include:
-      - develop
-      - feature/*
-    exclude:
-      - master/*
-      - release/*
+  - develop
 
 schedules:
   - cron: "0 0 * * *"
