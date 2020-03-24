@@ -49,6 +49,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
 using Xunit;
+using System.Numerics;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
@@ -255,9 +256,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 SenderAddress = pubKeyBytes.ToByteString(),
                 Signature = new Signature
                 {
-                    RawBytes = new byte[] {0x0}.ToByteString(),
+                    RawBytes = new byte[] { 0x0 }.ToByteString(),
                     SigningContext = new SigningContext
-                        {NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic}
+                    { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
                 },
                 Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
             };
@@ -311,6 +312,35 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var reconverted =
                 transactionEntryDao.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
             reconverted.Should().Be(original);
+        }
+
+        [Fact]
+        public void PublicEntryDao_Should_Be_The_Same_When_Converted()
+        {
+            var pubKeyBytes = new byte[30];
+            new Random().NextBytes(pubKeyBytes);
+            var original = new PublicEntry
+            {
+                Amount = new byte[] { 222, 11, 107, 58, 118, 64, 0, 0 }.ToByteString(),
+                SenderAddress = pubKeyBytes.ToByteString(),
+                Signature = new Signature
+                {
+                    RawBytes = new byte[] { 0x0 }.ToByteString(),
+                    SigningContext = new SigningContext
+                    { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
+                },
+                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+            };
+
+            var transactionEntryDao1 = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            var hashId1 = transactionEntryDao1.Id;
+
+            var reconverted = transactionEntryDao1.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
+
+            var transactionEntryDao2 = reconverted.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            var hashId2 = transactionEntryDao2.Id;
+
+            hashId1.Should().Be(hashId2);
         }
     }
 }

@@ -32,7 +32,6 @@ using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
-using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Serilog;
@@ -64,7 +63,6 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         {
             if (!_syncState.IsSynchronized)
             {
-                //_deltaHeightWatcher.LatestDeltaHash = deserialised.DeltaDfsHash;
                 return;
             }
 
