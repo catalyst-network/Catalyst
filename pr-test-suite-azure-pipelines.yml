@@ -22,27 +22,8 @@ variables:
 pool:
   vmImage: $(imageName)
 
-trigger:
-  batch: true
-  branches:
-    include:
-      - develop
-    exclude:
-      - master/*
-      - release/*
-
 pr:
   - develop
-
-schedules:
-  - cron: "0 0 * * *"
-    displayName: Daily midnight build
-    branches:
-      include:
-        - master
-        - develop
-        - releases/*
-    always: true
 
 steps:
   - task: DotNetCoreInstaller@0
