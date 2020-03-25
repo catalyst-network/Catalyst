@@ -38,7 +38,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public sealed class PeerBlackListingRequestObserver
-        : RequestObserverBase<SetPeerBlacklistRequest, SetPeerBlacklistResponse>,
+        : RequestObserverBase<SetPeerBlackListResponse, SetPeerBlackListResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override SetPeerBlacklistResponse HandleRequest(SetPeerBlacklistRequest setPeerBlackListRequest,
+        protected override SetPeerBlackListResponse HandleRequest(SetPeerBlackListResponse setPeerBlackListRequest,
             IChannelHandlerContext channelHandlerContext,
             PeerId senderPeerId,
             ICorrelationId correlationId)
@@ -87,9 +87,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="blacklist">if set to <c>true</c> [blacklist].</param>
         /// <param name="publicKey">The public key.</param>
         /// <param name="ip">The ip.</param>
-        private SetPeerBlacklistResponse ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip)
+        private SetPeerBlackListResponse ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip)
         {
-            return new SetPeerBlacklistResponse
+            return new SetPeerBlackListResponse
             {
                 Blacklist = blacklist,
                 Ip = ip,

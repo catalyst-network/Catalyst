@@ -99,7 +99,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             bool blacklist)
         {
             var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
-            var request = new SetPeerBlacklistRequest
+            var request = new SetPeerBlackListRequest
             {
                 PublicKey = targetedId.PublicKey,
                 Ip = targetedId.Ip,
@@ -120,7 +120,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             bool blacklist)
         {
             var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
-            var request = new SetPeerBlacklistRequest
+            var request = new SetPeerBlackListRequest
             {
                 PublicKey = targetedId.PublicKey,
                 Ip = targetedId.Ip,
@@ -133,7 +133,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             responseContent.PublicKey.Should().BeNullOrEmpty();
         }
 
-        private SetPeerBlacklistResponse GetSetPeerBlacklistRequest(SetPeerBlacklistRequest request)
+        private SetPeerBlackListResponse GetSetPeerBlacklistRequest(SetPeerBlackListRequest request)
         {
             var protocolMessage = request.ToProtocolMessage(_senderId);
             var messageStream =
@@ -150,7 +150,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
 
-            return sentResponseDto.Content.FromProtocolMessage<SetPeerBlacklistResponse>();
+            return sentResponseDto.Content.FromProtocolMessage<SetPeerBlackListResponse>();
         }
     }
 }
