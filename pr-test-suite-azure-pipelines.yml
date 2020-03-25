@@ -22,6 +22,15 @@ variables:
 pool:
   vmImage: $(imageName)
 
+trigger:
+  batch: true
+  branches:
+    include:
+      - develop
+    exclude:
+      - master/*
+      - release/*
+
 pr:
   - develop
 
