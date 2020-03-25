@@ -148,9 +148,6 @@ namespace Catalyst.Core.Modules.Sync
 
             _deltaHeightWatcher.Start();
 
-            //await Completed().ConfigureAwait(false);
-            //return;
-
             await _peerSyncManager.WaitForPeersAsync(cancellationToken).ConfigureAwait(false);
 
             var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();

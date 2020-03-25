@@ -130,7 +130,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
                     deltaCache.TryGetOrAddConfirmedDelta(deltaCache.GenesisHash, out previousDelta);
                 }
 
-                for (var i = 1; i < 125; i++)
+                for (var i = 1; i < 25; i++)
                 {
                     if (j == 2)
                     {
