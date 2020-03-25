@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 CumulativeGasUsed = receipt.GasUsedTotal,
                 GasUsed = receipt.GasUsed,
                 From = new Address(receipt.Sender),
-                To = new Address(receipt.Recipient),
+                To = receipt.Recipient == null ? null : new Address(receipt.Recipient),
                 ContractAddress = receipt.ContractAddress == null ? null : new Address(receipt.ContractAddress),
                 Logs = receipt.Logs.Select((l, idx) => new LogEntryForRpc(receipt, l, idx)).ToArray(),
                 LogsBloom = new Bloom(receipt.Logs),
