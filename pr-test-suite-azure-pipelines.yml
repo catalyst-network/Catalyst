@@ -29,7 +29,9 @@ trigger:
       - develop
     exclude:
       - master/*
-      - release/*
+
+pr:
+  - develop
 
 steps:
   - task: DotNetCoreInstaller@0
