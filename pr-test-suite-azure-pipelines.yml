@@ -31,9 +31,6 @@ trigger:
       - master/*
       - release/*
 
-pr:
-  - develop
-
 steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Install .NetCore SDK'
