@@ -30,6 +30,7 @@ using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Serilog;
 using Catalyst.Core.Lib.Service;
+using System.Threading.Tasks;
 
 namespace Catalyst.Core.Modules.Consensus
 {
@@ -72,6 +73,8 @@ namespace Catalyst.Core.Modules.Consensus
 
         public void StartProducing()
         {
+            Task.Delay(_cycleEventsProvider.GetTimeSpanUntilNextCycleStart()).Wait();
+
             _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name.Equals(PhaseName.Construction) && p.Status.Equals(PhaseStatus.Producing))
                .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
