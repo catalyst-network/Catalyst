@@ -23,7 +23,7 @@ pool:
   vmImage: $(imageName)
 
 pr:
-  -develop
+  - develop
 
 schedules:
   - cron: "0 0 * * *"
