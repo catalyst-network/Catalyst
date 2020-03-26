@@ -49,6 +49,11 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             return NativeBinding.StdVerify(signature.SignatureBytes, signature.PublicKeyBytes, message, context);
         }
 
+        public bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context)
+        {    
+            return NativeBinding.BatchVerify(signatures, messages, context);
+        }
+
         public IPrivateKey GeneratePrivateKey()
         {           
             return NativeBinding.GeneratePrivateKey();

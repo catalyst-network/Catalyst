@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
@@ -148,6 +149,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 
             public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) => _signature;
             public bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) { throw new NotImplementedException(); }
+            public bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context) { throw new NotImplementedException(); }
         }
     }
 }
