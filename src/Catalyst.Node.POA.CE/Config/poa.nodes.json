@@ -18,6 +18,11 @@
         "Ip": "77.68.110.197",
         "Port": 42076,
         "PublicKey": "3s3vlmivyoox7hyuk6zbpiti5lfvnvp2btwoubgp6i3ui5x4nydq"
+    },
+    {
+        "Ip": "86.13.185.24",
+        "Port": 42076,
+        "PublicKey": "y7rzjkz4yleehaep4g3yihlllnf53dd6yr77eyl57suzcrbrf7na"
     }
 ]
 
