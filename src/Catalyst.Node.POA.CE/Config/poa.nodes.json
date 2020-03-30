@@ -25,36 +25,3 @@
         "PublicKey": "y7rzjkz4yleehaep4g3yihlllnf53dd6yr77eyl57suzcrbrf7na"
     }
 ]
-
-//[
-//    {
-//        "Ip": "192.168.1.45",
-//        "Port": 42076,
-//        "PublicKey": "gk42ocz447ybr62miwnnlyeb7m4ufzddsgykhuwjgwojlrb7pezq"
-//    },
-//    {
-//        "Ip": "192.168.1.46",
-//        "Port": 42076,
-//        "PublicKey": "a3jcezxg5r2jiwna4kftzw7dknn3bxxa7vxu675uo2n5st2uuvva"
-//    },
-//    {
-//        "Ip": "192.168.1.47",
-//        "Port": 42076,
-//        "PublicKey": "yfbwgsnde3uqwoiv5mxxxvez7tkc2vjfijjkokz4qxqagppmcbhq"
-//    },
-//    {
-//        "Ip": "192.168.1.40",
-//        "Port": 42076,
-//        "PublicKey": "oshnkiamoh7ond6zy4aqirhjfe22skapt7h2rbb4surgyhh2br6q"
-//    },
-//    {
-//        "Ip": "192.168.1.233",
-//        "Port": 42076,
-//        "PublicKey": "45u2xtv5ripmx4etpsjg6pyq3pr6wtumobhfhlleljpi56f34hra"
-//    },
-//    {
-//        "Ip": "192.168.1.232",
-//        "Port": 42076,
-//        "PublicKey": "3edzejbuvme3ed4wqr5pp23if7rguoy7yddlcy3whijywzvo7lfq"
-//    }
-//]
