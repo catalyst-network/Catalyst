@@ -33,6 +33,7 @@ using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Consensus;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -47,6 +48,8 @@ using Catalyst.Core.Modules.Sync;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using NSubstitute;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -97,6 +100,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             containerBuilder.RegisterModule(new BulletProofsModule());
             containerBuilder.RegisterModule(new AuthenticationModule());
             containerBuilder.RegisterModule(new SynchroniserModule());
+            containerBuilder.RegisterType<InMemoryRepository<DeltaIndexDao, string>>().As<IRepository<DeltaIndexDao, string>>().SingleInstance();
 
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                .AssignableTo<IMapperInitializer>().As<IMapperInitializer>();

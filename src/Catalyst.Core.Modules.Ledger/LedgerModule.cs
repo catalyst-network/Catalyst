@@ -51,7 +51,6 @@ namespace Catalyst.Core.Modules.Ledger
             .As<IRepository<TransactionToDelta, string>>()
             .SingleInstance();
 
-            builder.RegisterType<LedgerSynchroniser>().As<ILedgerSynchroniser>();
             builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
             builder.RegisterType<TransactionRepository>().As<ITransactionRepository>().SingleInstance();
             builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();

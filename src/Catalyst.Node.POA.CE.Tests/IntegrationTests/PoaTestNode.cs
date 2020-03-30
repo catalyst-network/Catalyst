@@ -101,8 +101,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             var peersInRepo = knownPeerIds.Select(p => new Peer
             {
                 PeerId = p,
-                IsSynchronised = true,
-                Height = 0,
                 IsPoaNode = true,
                 LastSeen = DateTime.UtcNow
             }).ToList();
@@ -160,7 +158,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
             builder.RegisterType<MemDb>().As<IDb>().SingleInstance();
             builder.RegisterType<StateDb>().As<ISnapshotableDb>().SingleInstance();
-            builder.RegisterInstance(new InMemoryRepository<DeltaIndexDao, string>()).As<IRepository<DeltaIndexDao, string>>().SingleInstance();
+            builder.RegisterInstance(new InMemoryRepository<Account, string>()).As<IRepository<Account, string>>().SingleInstance();
+            builder.RegisterType<InMemoryRepository<DeltaIndexDao, string>>().As<IRepository<DeltaIndexDao, string>>().SingleInstance();
             builder.RegisterInstance(new InMemoryRepository<TransactionReceipts, string>())
                .AsImplementedInterfaces();
             builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())
