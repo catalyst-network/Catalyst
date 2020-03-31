@@ -97,7 +97,7 @@ steps:
       projects: 'src/*[Tt]ests/*.csproj'
       arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
-    timeoutInMinutes: 10
+    timeoutInMinutes: 20
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
 
   - task: DotNetCoreCLI@2
@@ -107,7 +107,7 @@ steps:
       projects: 'src/*[Tt]ests/*.csproj'
       arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Include="\"[Catalyst.Core.Lib*]Catalyst.Core.Lib*\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
       failOnStandardError: 'true'
-    timeoutInMinutes: 10
+    timeoutInMinutes: 20
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
 
   - task: DotNetCoreCLI@2
@@ -117,7 +117,7 @@ steps:
       projects: 'src/*[Tt]ests/*.csproj'
       arguments: '--filter TestType=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
-    timeoutInMinutes: 10
+    timeoutInMinutes: 20
 
   - script: |
       reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:$(Build.ArtifactStagingDirectory)" -reporttypes:HtmlInline_AzurePipelines;Cobertura;SonarQube;Badges "-assemblyfilters:+Catalyst.Core.Lib*;+Catalyst.Core.Modules.Kvm*;"
