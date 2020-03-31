@@ -11,7 +11,7 @@
   
 [![Build Status](https://dev.azure.com/catalyst-network/Catalyst/_apis/build/status/pr-tests-master?branchName=master)](https://dev.azure.com/catalyst-network/Catalyst/_build/latest?definitionId=22&branchName=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/08cb016d7489471eadd0192ce4d7b26e)](https://www.codacy.com/manual/catalyst-network/Catalyst?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=catalyst-network/Catalyst&amp;utm_campaign=Badge_Grade)
-[![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors)
 
 </div>
 
