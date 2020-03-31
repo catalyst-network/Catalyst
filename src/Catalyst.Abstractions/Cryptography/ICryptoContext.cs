@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Catalyst.Abstractions.Cryptography
 {
@@ -106,5 +107,7 @@ namespace Catalyst.Abstractions.Cryptography
         ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context);
 
         bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context);
+
+        bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context);
     }
 }

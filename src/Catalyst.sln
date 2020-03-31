@@ -121,37 +121,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Crypt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cryptography.FFI.Rust", "Cryptography.FFI.Rust", "{3339A04C-D933-4712-A556-F8F1B74B9753}"
-	ProjectSection(SolutionItems) = preProject
-		..\submodules\Cryptography.FFI.Rust\azure-pipelines.yml = ..\submodules\Cryptography.FFI.Rust\azure-pipelines.yml
-		..\submodules\Cryptography.FFI.Rust\Cargo.lock = ..\submodules\Cryptography.FFI.Rust\Cargo.lock
-		..\submodules\Cryptography.FFI.Rust\Cargo.toml = ..\submodules\Cryptography.FFI.Rust\Cargo.toml
-		..\submodules\Cryptography.FFI.Rust\LICENSE = ..\submodules\Cryptography.FFI.Rust\LICENSE
-		..\submodules\Cryptography.FFI.Rust\README.md = ..\submodules\Cryptography.FFI.Rust\README.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA88D78E-377B-4452-864A-C1D5DFB06854}"
-	ProjectSection(SolutionItems) = preProject
-		..\submodules\Cryptography.FFI.Rust\src\constants.rs = ..\submodules\Cryptography.FFI.Rust\src\constants.rs
-		..\submodules\Cryptography.FFI.Rust\src\errors.rs = ..\submodules\Cryptography.FFI.Rust\src\errors.rs
-		..\submodules\Cryptography.FFI.Rust\src\ffi.rs = ..\submodules\Cryptography.FFI.Rust\src\ffi.rs
-		..\submodules\Cryptography.FFI.Rust\src\helpers.rs = ..\submodules\Cryptography.FFI.Rust\src\helpers.rs
-		..\submodules\Cryptography.FFI.Rust\src\keys.rs = ..\submodules\Cryptography.FFI.Rust\src\keys.rs
-		..\submodules\Cryptography.FFI.Rust\src\lib.rs = ..\submodules\Cryptography.FFI.Rust\src\lib.rs
-		..\submodules\Cryptography.FFI.Rust\src\std_signature.rs = ..\submodules\Cryptography.FFI.Rust\src\std_signature.rs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{46B22170-3D54-43F4-9474-C9F02DEF3A14}"
-	ProjectSection(SolutionItems) = preProject
-		..\submodules\Cryptography.FFI.Rust\tests\integration_test.rs = ..\submodules\Cryptography.FFI.Rust\tests\integration_test.rs
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Dirichlet.Numerics", "..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj", "{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{BAB02934-9818-4691-91AF-8B56980C82C7}"
-	ProjectSection(SolutionItems) = preProject
-		..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml = ..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.Consensus", "Catalyst.Modules.POA.Consensus\Catalyst.Modules.POA.Consensus.csproj", "{BCF86A5A-8BF0-43B1-9D0C-E36108BD0F8A}"
 EndProject
@@ -458,10 +428,7 @@ Global
 		{9EED8D3C-F0EC-4D07-9021-5B1D8D7F11C2} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{A3386257-A47B-407B-AB5A-A2CBAF2CEDF9} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{F5BA5ECB-3C48-4379-9204-5BA30705D801} = {6074E807-FBBC-41D0-9205-C7B79513D683}
-		{AA88D78E-377B-4452-864A-C1D5DFB06854} = {3339A04C-D933-4712-A556-F8F1B74B9753}
-		{46B22170-3D54-43F4-9474-C9F02DEF3A14} = {3339A04C-D933-4712-A556-F8F1B74B9753}
 		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2} = {6074E807-FBBC-41D0-9205-C7B79513D683}
-		{BAB02934-9818-4691-91AF-8B56980C82C7} = {3339A04C-D933-4712-A556-F8F1B74B9753}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}
