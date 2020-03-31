@@ -156,8 +156,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             var builder = ContainerProvider.ContainerBuilder;
 
             builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
-            builder.RegisterType<MemDb>().As<IDb>().SingleInstance();
-            builder.RegisterType<StateDb>().As<ISnapshotableDb>().SingleInstance();
+            builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();
+            builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance();
             builder.RegisterInstance(new InMemoryRepository<Account, string>()).As<IRepository<Account, string>>().SingleInstance();
             builder.RegisterType<InMemoryRepository<DeltaIndexDao, string>>().As<IRepository<DeltaIndexDao, string>>().SingleInstance();
             builder.RegisterInstance(new InMemoryRepository<TransactionReceipts, string>())
