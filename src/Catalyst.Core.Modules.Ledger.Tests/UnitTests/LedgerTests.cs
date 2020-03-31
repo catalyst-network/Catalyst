@@ -108,23 +108,6 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
         }
 
-        //Not needed.
-        //[Fact]
-        //public void Save_Account_State_To_Ledger_Repository()
-        //{
-        //    _ledger = new Ledger(_executor, _stateProvider, _storageProvider, new StateDb(), new StateDb(),
-        //        _fakeRepository, _deltaIndexService, _receipts, _deltaHashProvider, _synchroniser, _mempool, _mapperProvider, _hashProvider, _logger);
-
-        //    const int numAccounts = 10;
-        //    for (var i = 0; i < numAccounts; i++)
-        //    {
-        //        var account = AccountHelper.GetAccount((UInt256) i * 5);
-        //        _ledger.SaveAccountState(account);
-        //    }
-
-        //    _fakeRepository.Received(10).Add(Arg.Any<Account>());
-        //}
-
         [Fact]
         public void Should_Reconcile_On_New_Delta_Hash()
         {
