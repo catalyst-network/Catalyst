@@ -41,8 +41,6 @@ namespace Catalyst.Core.Lib.P2P.Models
         public PeerId PeerId { get; set; }
 
         public bool IsPoaNode { set; get; }
-        public bool IsSynchronised { set; get; }
-        public ulong Height { set; get; }
 
         /// <inheritdoc />
         public int Reputation { get; set; }

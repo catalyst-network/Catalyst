@@ -144,9 +144,8 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             var latestDeltaHash = protocolMessage.FromProtocolMessage<LatestDeltaHashResponse>();
 
             var peer = _peerRepository.Get(peerId);
-            peer.Height = latestDeltaHash.DeltaIndex.Height;
-            peer.IsSynchronised = latestDeltaHash.IsSync;
             peer.Touch();
+            _peerRepository.Update(peer);
 
             DeltaHeightRanker.Add(peerId, latestDeltaHash);
         }
