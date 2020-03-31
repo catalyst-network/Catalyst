@@ -28,7 +28,7 @@ using System.Reactive.Subjects;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.TestUtils;
 using Microsoft.Reactive.Testing;

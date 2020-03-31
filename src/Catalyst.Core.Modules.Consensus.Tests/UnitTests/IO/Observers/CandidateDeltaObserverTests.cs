@@ -25,8 +25,10 @@ using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
@@ -53,14 +55,17 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 
         public CandidateDeltaObserverTests()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaVoter = Substitute.For<IDeltaVoter>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
             _newHash = hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
             _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
-            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, hashProvider, logger);
+
+            var deltaIndexService = Substitute.For<IDeltaIndexService>();
+            deltaIndexService.LatestDeltaIndex().Returns(new Lib.DAO.Ledger.DeltaIndexDao() { Cid = _prevHash, Height = 0 });
+            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, deltaIndexService, new SyncState() { IsSynchronized = true }, hashProvider, logger);
         }
 
         [Fact]

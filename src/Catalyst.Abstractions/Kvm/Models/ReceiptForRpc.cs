@@ -44,9 +44,9 @@ namespace Catalyst.Abstractions.Kvm.Models
             BlockNumber = receipt.DeltaNumber;
             CumulativeGasUsed = receipt.GasUsedTotal;
             GasUsed = receipt.GasUsed;
-            From = receipt.Sender;
-            To = receipt.Recipient;
-            ContractAddress = receipt.ContractAddress;
+            From = new Address(receipt.Sender);
+            To = new Address(receipt.Recipient);
+            ContractAddress = new Address(receipt.ContractAddress);
             Logs = receipt.Logs.Select((l, idx) => new LogEntryForRpc(receipt, l, idx)).ToArray();
             Status = receipt.StatusCode;
         }

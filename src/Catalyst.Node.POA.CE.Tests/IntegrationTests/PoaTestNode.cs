@@ -43,7 +43,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Ledger.Repository;
@@ -57,6 +57,10 @@ using Catalyst.TestUtils;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
 using Xunit.Abstractions;
+using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.DAO.Ledger;
+using SharpRepository.Repository;
+using Nethermind.Store;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
@@ -71,7 +75,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private readonly IPeerRepository _peerRepository;
         private readonly IRpcServerSettings _rpcSettings;
         private readonly ILifetimeScope _scope;
-        private readonly ContainerProvider _containerProvider;
+        public readonly ContainerProvider ContainerProvider;
         private readonly IDeltaByNumberRepository _deltaByNumber;
 
         public PoaTestNode(string name,
@@ -96,30 +100,32 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             var peersInRepo = knownPeerIds.Select(p => new Peer
             {
-                PeerId = p
+                PeerId = p,
+                IsPoaNode = true,
+                LastSeen = DateTime.UtcNow
             }).ToList();
             _peerRepository.Add(peersInRepo);
 
             _deltaByNumber = new DeltaByNumberRepository(new InMemoryRepository<DeltaByNumber, string>());
 
-            _containerProvider = new ContainerProvider(new[]
+            ContainerProvider = new ContainerProvider(new[]
                 {
                     Constants.NetworkConfigFile(NetworkType.Devnet),
                     Constants.SerilogJsonConfigFile
                 }
                .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, output);
 
-            Program.RegisterNodeDependencies(_containerProvider.ContainerBuilder,
+            Program.RegisterNodeDependencies(ContainerProvider.ContainerBuilder,
                 excludedModules: new List<Type>
                 {
                     typeof(ApiModule),
                     typeof(RpcServerModule)
                 }
             );
-            _containerProvider.ConfigureContainerBuilder(true, true);
+            ContainerProvider.ConfigureContainerBuilder(true, true);
             OverrideContainerBuilderRegistrations();
 
-            _scope = _containerProvider.Container.BeginLifetimeScope(Name);
+            _scope = ContainerProvider.Container.BeginLifetimeScope(Name);
             _node = _scope.Resolve<ICatalystNode>();
 
             var keyStore = _scope.Resolve<IKeyStore>();
@@ -147,24 +153,28 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
         protected void OverrideContainerBuilderRegistrations()
         {
-            var builder = _containerProvider.ContainerBuilder;
+            var builder = ContainerProvider.ContainerBuilder;
 
             builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
+            builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();
+            builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance();
+            builder.RegisterInstance(new InMemoryRepository<Account, string>()).As<IRepository<Account, string>>().SingleInstance();
+            builder.RegisterType<InMemoryRepository<DeltaIndexDao, string>>().As<IRepository<DeltaIndexDao, string>>().SingleInstance();
             builder.RegisterInstance(new InMemoryRepository<TransactionReceipts, string>())
                .AsImplementedInterfaces();
             builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())
                .AsImplementedInterfaces();
 
-            _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<PeerId>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_dfsService).As<IDfsService>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
-            _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
+            ContainerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<PeerId>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(_dfsService).As<IDfsService>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
+            ContainerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
-            _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -176,7 +186,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             _scope?.Dispose();
             _peerRepository?.Dispose();
-            _containerProvider?.Dispose();
+            ContainerProvider?.Dispose();
         }
     }
 }

@@ -31,6 +31,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -54,7 +55,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             IPeerClient peerClient,
             IPeerSettings peerSettings,
             int ttl,
-            IScheduler scheduler = null) 
+            IScheduler scheduler = null)
             : base(logger,
                 peerSettings.PeerId,
                 new CancellationTokenProvider(ttl),
@@ -85,8 +86,8 @@ namespace Catalyst.Core.Lib.P2P.Protocols
                     new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
                 {
                     await ChallengeResponseMessageStreamer
-                       .FirstAsync(a => a != null 
-                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
+                       .FirstAsync(a => a != null
+                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey)
                          && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
                        .ToTask(cancellationTokenSource.Token)
                        .ConfigureAwait(false);

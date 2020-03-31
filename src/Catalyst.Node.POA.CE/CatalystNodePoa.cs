@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions;
@@ -33,9 +34,12 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Abstractions.Types;
-using MultiFormats;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Dawn;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Node.POA.CE
@@ -53,6 +57,8 @@ namespace Catalyst.Node.POA.CE
         private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
         private readonly IPublicKey _publicKey;
+        private readonly ISynchroniser _synchronizer;
+        private readonly IPeerRepository _peerRepository;
 
         public CatalystNodePoa(IKeySigner keySigner,
             IPeerService peer,
@@ -63,8 +69,12 @@ namespace Catalyst.Node.POA.CE
             IPeerClient peerClient,
             IPeerSettings peerSettings,
             IMempool<PublicEntryDao> memPool,
+            ISynchroniser synchronizer,
+            IPeerRepository peerRepository,
             IContract contract = null)
         {
+            Guard.Argument(peerRepository, nameof(peerRepository)).NotNull();
+
             _peer = peer;
             _peerClient = peerClient;
             _peerSettings = peerSettings;
@@ -75,6 +85,8 @@ namespace Catalyst.Node.POA.CE
             _logger = logger;
             _memPool = memPool;
             _contract = contract;
+            _synchronizer = synchronizer;
+            _peerRepository = peerRepository;
 
             var privateKey = keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
             _publicKey = keySigner.CryptoContext.GetPublicKeyFromPrivateKey(privateKey);
@@ -92,8 +104,18 @@ namespace Catalyst.Node.POA.CE
             _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase32()} *****");
 
             await StartSocketsAsync().ConfigureAwait(false);
-            _dfsService.StartAsync();
-            Consensus.StartProducing();
+
+            _dfsService.StartAsync().ConfigureAwait(false);
+            _synchronizer.StartAsync().ConfigureAwait(false);
+
+            _synchronizer.SyncCompleted.Subscribe((x) =>
+            {
+                var currentPoaNode = _peerRepository.GetPeersByIpAndPublicKey(_peerSettings.PeerId.Ip, _peerSettings.PeerId.PublicKey).FirstOrDefault();
+                if (currentPoaNode == null)
+                    _logger.Information($"Current node with IP address '{_peerSettings.PeerId.Ip}' is not found in poa node list. So this node will not take part in consensus.");
+                else
+                    Consensus.StartProducing();
+            });
 
             bool exit;
 

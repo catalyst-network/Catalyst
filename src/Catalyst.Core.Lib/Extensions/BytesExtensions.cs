@@ -55,8 +55,8 @@ namespace Catalyst.Core.Lib.Extensions
             {
                 Version = 1,
                 Encoding = "base32",
-                ContentType = "raw",
-                Hash = new MultiHash("blake2b-256", keccak.Bytes)
+                ContentType = "dag-pb",
+                Hash = new MultiHash("keccak-256", keccak.Bytes)
             };
 
             return cid;

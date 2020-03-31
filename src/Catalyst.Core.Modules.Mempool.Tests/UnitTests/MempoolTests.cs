@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
         public MempoolTests()
         {
-            new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _memPool = new Mempool(Substitute.For<IMempoolService<PublicEntryDao>>());
             _mapperProvider = new TestMapperProvider();
             _mempoolItem = TransactionHelper

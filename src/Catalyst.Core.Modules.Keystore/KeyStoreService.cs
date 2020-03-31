@@ -156,7 +156,6 @@ namespace Catalyst.Core.Modules.Keystore
                     edGen.AddKeyTransRecipient(kp.Public, Base58.Decode(ekey.Id));
                     break;
                 case ECPrivateKeyParameters _:
-
                 {
                     var cert = await CreateBcCertificateAsync(keyName, cancel).ConfigureAwait(false);
                     edGen.AddKeyAgreementRecipient(

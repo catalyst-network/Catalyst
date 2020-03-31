@@ -21,13 +21,18 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Transport;
+using Catalyst.Protocol.Peer;
+using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P
@@ -57,6 +62,17 @@ namespace Catalyst.Core.Lib.P2P
                     bindingEndpoint.Port)
                .ConfigureAwait(false);
             Channel = observableChannel.Channel;
+        }
+
+        public void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers)
+        {
+            var protocolMessage = message.ToProtocolMessage(_peerSettings.PeerId);
+            foreach (var peer in peers)
+            {
+                SendMessage(new MessageDto(
+                    protocolMessage,
+                    peer));
+            }
         }
     }
 }

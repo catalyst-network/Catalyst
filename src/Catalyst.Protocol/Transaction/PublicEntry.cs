@@ -25,12 +25,35 @@ using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using System.Reflection;
 using Nethermind.Dirichlet.Numerics;
+using System;
+using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Protocol.Transaction
 {
     public partial class PublicEntry
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+        //Props like Amount and Gas price can contain null bytes appended to the end that can cause a different 
+        //Id when converted back and forth. I assume this is comming from the web provider.
+        private byte[] TrimEnd(byte[] array)
+        {
+            int lastIndex = Array.FindLastIndex(array, b => b != 0);
+
+            Array.Resize(ref array, lastIndex + 1);
+
+            return array;
+        }
+
+        //Give the same TransactionId everytime.
+        public MultiHash GetId(string algorithmName)
+        {
+            var publicEntryClone = new PublicEntry(this);
+            publicEntryClone.Amount = ByteString.CopyFrom(TrimEnd(publicEntryClone.Amount.ToByteArray()));
+            publicEntryClone.GasPrice = ByteString.CopyFrom(TrimEnd(publicEntryClone.GasPrice.ToByteArray()));
+            return MultiHash.ComputeHash(publicEntryClone.ToByteArray(), algorithmName);
+        }
 
         public bool IsValid()
         {

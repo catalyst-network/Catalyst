@@ -59,7 +59,7 @@ namespace Catalyst.Abstractions.Ledger.Models
 
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
-        public string DocumentId =>
+        public string Id =>
             ByteString.CopyFrom(Encoding.UTF8.GetBytes($"{PublicAddress}-{AccountType?.Name}"))?.ToBase64();
     }
 }
