@@ -19,9 +19,14 @@
 
 Join us on our [Discord](https://discord.gg/anTP7xm) for any questions and discussions.
 
-**Important Release Note**
+**Important Release Notes 31/03/2020**
 
+***Known UDP messaging issue***
 For the initial release of the Catalyst Network UDP is used as the peer to peer messaging protocol. This causes fragmentation of packages and thereby transactions over 1280Bytes are prone to packet loss as discussed in [Issue #909](https://github.com/catalyst-network/Catalyst/issues/909). Due to the DFS utilising a seperate TCP messaging system this does not affect files stored in the DFS including ledger state updates. However it will affect both simple and smart contract transactions. 
+
+***MacOS node running issue***
+Currently there is an issue with running RocksDB on MacOS meaning that a node can not unfortunatly be run on MacOS. A fix is currently in progress and will be availiable iminently. 
+
 
 **Table of Contents**
 
@@ -99,14 +104,14 @@ Go to https://www.rust-lang.org/tools/install, then download and execute `rustup
 Snappy must be installed for Linux and MacOS opperating sytems 
 
 For linux using:
-'sudo apt-get install libsnappy-dev'
+`sudo apt-get install libsnappy-dev`
 
 For MacOS install brew following: 
-'https://brew.sh/'
+`https://brew.sh/`
 
 Then: 
 
-'brew install snappy'
+`brew install snappy`
 
 
 #### 4. Create a self signed certificate (Linux only)
@@ -142,7 +147,7 @@ Then navigate into the repository:
 
 Install the dependencies using the command: 
 
-'git submodule update --init --recursive --force'
+`git submodule update --init --recursive --force`
 
 
 
