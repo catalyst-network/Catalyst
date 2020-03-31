@@ -3,7 +3,7 @@
 
   ### Catalyst - Full Stack Distributed Protocol Framework
  
-[![Discord](https://img.shields.io/discord/629667101774446593?color=blueviolet&label=discord)](https://discord.gg/anTP7xm)
+[![Website](https://discord.gg/anTP7xm)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/catalystnet?style=social)](https://reddit.com/r/catalystnet)
 </div>
 
@@ -17,7 +17,7 @@
 
 <hr/>
 
-Join us on our [Discord](https://discord.gg/anTP7xm) for any questions and discussions.
+
 
 **Important Release Notes 31/03/2020**
 
@@ -35,7 +35,7 @@ Currently there is an issue with running RocksDB on MacOS meaning that a node ca
   - [What is Catalyst.Node?](#what-is-catalystnode)
   - [Features](#features)
   - [Documentation](#documentation)
-- [Install](#install)
+- [Set Up a Node](#install)
   - [Install the Rust Toolchain](#install-the-rust-toolchain)
     - [Install Rust via the Rustup tool:](#install-rust-via-the-rustup-tool)
 - [Contributors](#contributors)
