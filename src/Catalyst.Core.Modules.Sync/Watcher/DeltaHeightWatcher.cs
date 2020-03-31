@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             RequestDeltaHeightFromPeers();
         }
 
-        private int GetPages()
+        private int GetPageCount()
         {
             var peerCount = _peerRepository.Count();
             if (peerCount == 0)
@@ -126,7 +126,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
 
         private void RequestDeltaHeightFromPeers()
         {
-            var totalPages = GetPages();
+            var totalPages = GetPageCount();
             _page %= totalPages;
             _page++;
             var peers = DeltaHeightRanker.GetPeers().Union(_peerRepository.TakeHighestReputationPeers(_page, _peersPerCycle).Select(x => x.PeerId));
