@@ -42,8 +42,8 @@ using Dawn;
 using Google.Protobuf;
 using Lib.P2P;
 using Nethermind.Core.Crypto;
-using Nethermind.Store;
-using Newtonsoft.Json;
+using Nethermind.Db;
+using Nethermind.State;
 using Serilog;
 using Serilog.Events;
 

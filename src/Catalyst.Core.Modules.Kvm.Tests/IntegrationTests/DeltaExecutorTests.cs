@@ -34,9 +34,11 @@ using Google.Protobuf;
 using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Extensions;
+using Nethermind.Db;
+using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
 using Nethermind.Logging;
-using Nethermind.Store;
+using Nethermind.State;
 using NSubstitute;
 using Serilog.Events;
 using Xunit;
@@ -202,7 +204,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.Execute(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsSuccess(contractAddress, 53370, Arg.Any<byte[]>(), Arg.Any<LogEntry[]>());
         }
 
@@ -221,7 +223,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.Execute(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsSuccess(contractAddress, 34343, Arg.Any<byte[]>(), Arg.Any<LogEntry[]>());
         }
 
@@ -240,14 +242,14 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.Execute(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsFailed(contractAddress, 53369, Arg.Any<byte[]>(), null);
         }
 
         [Fact]
         public void Throws_on_theoretical_contract_crash()
         {
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             _stateProvider.CreateAccount(contractAddress, 1000.Kat());
             var codeHash = _stateProvider.UpdateCode(Bytes.FromHexString("0x01"));
             _stateProvider.UpdateCodeHash(contractAddress, codeHash, _specProvider.GenesisSpec);
@@ -271,7 +273,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Fact]
         public void Update_storage_root_on_contract_clash()
         {
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             _stateProvider.CreateAccount(contractAddress, 1000.Kat());
             _stateProvider.Commit(_specProvider.GenesisSpec);
 
@@ -305,7 +307,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.CallAndReset(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsSuccess(contractAddress, 53370, Arg.Any<byte[]>(), Arg.Any<LogEntry[]>());
         }
 
@@ -324,7 +326,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.Execute(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), "Error");
         }
 
@@ -344,7 +346,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.Execute(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), "Error");
         }
 

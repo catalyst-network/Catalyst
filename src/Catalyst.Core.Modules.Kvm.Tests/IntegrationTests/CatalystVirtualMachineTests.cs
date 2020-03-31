@@ -33,12 +33,15 @@ using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
-using Nethermind.Core.Json;
+
 using Nethermind.Core.Specs;
+using Nethermind.Db;
 using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
+using Nethermind.Evm.Tracing.GethStyle;
 using Nethermind.Logging;
-using Nethermind.Store;
+using Nethermind.Serialization.Json;
+using Nethermind.State;
 using Xunit;
 using Xunit.Abstractions;
 using IPrivateKey = Catalyst.Abstractions.Cryptography.IPrivateKey;

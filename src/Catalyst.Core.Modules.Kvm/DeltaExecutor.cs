@@ -31,6 +31,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Nethermind.Core;
+using Nethermind.Core.Attributes;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
@@ -38,7 +39,7 @@ using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm;
 using Nethermind.Evm.Precompiles;
 using Nethermind.Evm.Tracing;
-using Nethermind.Store;
+using Nethermind.State;
 using Serilog;
 using Serilog.Events;
 
@@ -411,7 +412,7 @@ namespace Catalyst.Core.Modules.Kvm
             var recipient = entry.ReceiverAddress.ToAddress();
             if (entry.IsValidDeploymentEntry)
             {
-                recipient = Address.OfContract(sender, _stateProvider.GetNonce(sender));
+                recipient = ContractAddress.From(sender, _stateProvider.GetNonce(sender));
             }
 
             return (sender, recipient);

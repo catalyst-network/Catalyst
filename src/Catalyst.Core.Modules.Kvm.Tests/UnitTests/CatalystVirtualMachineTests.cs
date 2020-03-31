@@ -26,7 +26,7 @@ using Catalyst.Core.Modules.Hashing;
 using MultiFormats.Registry;
 using Nethermind.Evm;
 using Nethermind.Logging;
-using Nethermind.Store;
+using Nethermind.State;
 using NSubstitute;
 using Xunit;
 

@@ -39,8 +39,8 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 
         public static PublicEntry GetContractEntry()
         {
-            var amount = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
-            var fees = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
+            var amount = new Random().Next(78588446).ToByteArray();
+            var fees = new Random().Next(78588446).ToByteArray();
 
             return new PublicEntry
             {

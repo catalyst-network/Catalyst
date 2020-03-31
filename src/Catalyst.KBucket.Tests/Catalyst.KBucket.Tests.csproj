@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
 
         <IsPackable>false</IsPackable>
         <DebugType>full</DebugType>
@@ -9,9 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0" />
-        <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
-        <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+        <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     </ItemGroup>
 
     <ItemGroup>

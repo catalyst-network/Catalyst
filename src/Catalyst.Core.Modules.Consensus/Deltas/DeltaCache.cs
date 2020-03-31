@@ -35,9 +35,9 @@ using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Nethermind.Core;
-using Nethermind.Dirichlet.Numerics;
-using Nethermind.Store;
 using MultiFormats;
+using Nethermind.Db;
+using Nethermind.State;
 using Serilog;
 using Catalyst.Core.Lib.DAO.Ledger;
 

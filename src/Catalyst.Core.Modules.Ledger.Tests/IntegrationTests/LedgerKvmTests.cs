@@ -57,10 +57,12 @@ using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
+using Nethermind.Db;
 using Nethermind.Dirichlet.Numerics;
+using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
 using Nethermind.Logging;
-using Nethermind.Store;
+using Nethermind.State;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
 using Xunit;
@@ -246,7 +248,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _stateProvider.Commit(CatalystGenesisSpec.Instance);
             _stateProvider.CommitTree();
 
-            var contractAddress = Address.OfContract(_senderAddress, _stateProvider.GetNonce(_senderAddress));
+            var contractAddress = ContractAddress.From(_senderAddress, _stateProvider.GetNonce(_senderAddress));
 
             // PUSH1 1 PUSH1 0 MSTORE PUSH1 1 PUSH1 31 RETURN STOP
             const string initCodeHex = "0x60016000526001601FF300";
@@ -284,9 +286,9 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _stateProvider.Commit(CatalystGenesisSpec.Instance);
             _stateProvider.CommitTree();
             
-            var contractAddress1 = Address.OfContract(_senderAddress,
+            var contractAddress1 = ContractAddress.From(_senderAddress,
                 _stateProvider.GetNonce(_senderAddress) + 0);
-            var contractAddress2 = Address.OfContract(_senderAddress,
+            var contractAddress2 = ContractAddress.From(_senderAddress,
                 _stateProvider.GetNonce(_senderAddress) + 2);
 
             const string migrationInitHex =
@@ -350,9 +352,9 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _stateProvider.Commit(CatalystGenesisSpec.Instance);
             _stateProvider.CommitTree();
             
-            var contractAddress1 = Address.OfContract(_senderAddress,
+            var contractAddress1 = ContractAddress.From(_senderAddress,
                 _stateProvider.GetNonce(_senderAddress));
-            var contractAddress2 = Address.OfContract(_senderAddress,
+            var contractAddress2 = ContractAddress.From(_senderAddress,
                 _stateProvider.GetNonce(_senderAddress) + 2);
 
             // migration contract
