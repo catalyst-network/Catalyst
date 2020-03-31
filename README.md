@@ -3,7 +3,7 @@
 
   ### Catalyst - Full Stack Distributed Protocol Framework
  
-[![Website](https://discord.gg/anTP7xm)
+[![Website](https://catalystnet.org/)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/catalystnet?style=social)](https://reddit.com/r/catalystnet)
 </div>
 
