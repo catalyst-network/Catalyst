@@ -46,8 +46,8 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
                 "-p", "public key");
 
             //Assert
-            var requestSent = TestCommandHelpers.GetRequest<SetPeerBlacklistRequest>(connectedNode);
-            requestSent.Should().BeOfType(typeof(SetPeerBlacklistRequest));
+            var requestSent = TestCommandHelpers.GetRequest<SetPeerBlackListRequest>(connectedNode);
+            requestSent.Should().BeOfType(typeof(SetPeerBlackListRequest));
         }
     }
 }

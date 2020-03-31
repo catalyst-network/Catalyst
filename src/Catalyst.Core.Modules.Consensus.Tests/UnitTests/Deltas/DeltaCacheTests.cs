@@ -40,6 +40,7 @@ using Nethermind.Core.Crypto;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using Catalyst.Core.Lib.Service;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaCacheTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _memoryCache = Substitute.For<IMemoryCache>();
             _dfsReader = Substitute.For<IDeltaDfsReader>();
             _logger = Substitute.For<ILogger>();
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var stateProvider = Substitute.For<IStateProvider>();
             stateProvider.StateRoot.Returns(Keccak.Zero);
 
-            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, storageProvider, stateProvider, new StateDb(), _logger);
+            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, storageProvider, stateProvider, new StateDb(), Substitute.For<IDeltaIndexService>(), _logger);
         }
 
         [Fact]

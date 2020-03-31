@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
         public BroadcastObserverBaseTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
         }
 
         [Fact]

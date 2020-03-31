@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Ledger.Repository
             {
                 _repository.Add(new TransactionReceipts
                 {
-                    DocumentId = GetDocumentId(deltaHash),
+                    Id = GetDocumentId(deltaHash),
                     Receipts = receipts
                 });
 
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Ledger.Repository
                         _transactionToDeltaRepository.Delete(transactionHash);
                     }
                     
-                    _transactionToDeltaRepository.Add(new TransactionToDelta {DeltaHash = deltaHash, DocumentId = transactionHash});
+                    _transactionToDeltaRepository.Add(new TransactionToDelta {DeltaHash = deltaHash, Id = transactionHash});
                 }
             }
         }

@@ -31,7 +31,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Fakes;
@@ -41,6 +41,7 @@ using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
 using Xunit;
+using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {

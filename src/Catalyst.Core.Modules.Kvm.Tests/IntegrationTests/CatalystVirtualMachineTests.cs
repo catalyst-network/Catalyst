@@ -195,6 +195,22 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesOne32.ToHexString());
         }
 
+        //todo using keccak for testnet and blake2b precompile for mainnet.
+        //[Fact]
+        //[Trait(Traits.TestType, Traits.IntegrationTest)]
+        //public void Blake_precompile()
+        //{
+        //    Address blakeAddress = Address.FromNumber(1 + KatVirtualMachine.CatalystPrecompilesAddressingSpace);
+        //    string addressCode = blakeAddress.Bytes.ToHexString(false);
+        //    var code = Bytes.FromHexString("0x602060006080600073" + addressCode + "45fa00");
+        //    var txTracer = RunVirtualMachine(code);
+        //    var serializer = new EthereumJsonSerializer();
+        //    var trace = txTracer.BuildResult();
+        //    _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+        //    trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000001");
+        //    trace.Entries.Last().Memory.First().Should().Be("378d0caaaa3855f1b38693c1d6ef004fd118691c95c959d4efa950d6d6fcf7c1");
+        //}
+
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Blake_precompile()
@@ -234,7 +250,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_verify_incorrect_sig()
         {
-            HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             FfiWrapper cryptoContext = new FfiWrapper();
             IPrivateKey signingPrivateKey = cryptoContext.GeneratePrivateKey();
@@ -420,7 +436,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
                 storageProvider,
                 stateUpdateHashProvider,
                 specProvider,
-                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
                 new FfiWrapper(),
                 LimboLogs.Instance);
             virtualMachine.Run(vmState, txTracer);

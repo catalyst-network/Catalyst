@@ -50,12 +50,14 @@ namespace Catalyst.Abstractions.Options
         ///   Disables the multicast DNS discovery of other peers
         ///   and advertising of this peer.
         /// </summary>
-        public bool DisableMdns;
+        public bool DisableMdns { set; get; }
 
         /// <summary>
         ///   Disables discovery of other peers by walking the
         ///   DHT.
         /// </summary>
-        public bool DisableRandomWalk;
+        public bool DisableRandomWalk { set; get; }
+
+        public DiscoveryOptions(){}
     }
 }

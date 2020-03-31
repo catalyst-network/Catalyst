@@ -58,14 +58,16 @@ namespace Catalyst.Core.Lib.DAO.Transaction
     {
         private readonly IHashProvider _hashProvider;
 
-        public PublicEntryMapperInitialiser(IHashProvider hashProvider) { _hashProvider = hashProvider; }
+        public PublicEntryMapperInitialiser(IHashProvider hashProvider) { 
+            _hashProvider = hashProvider; 
+        }
 
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.AllowNullDestinationValues = true;
 
             cfg.CreateMap<PublicEntry, PublicEntryDao>()
-               .ForMember(d => d.Id, opt => opt.MapFrom(src => _hashProvider.ComputeMultiHash(src)))
+               .ForMember(d => d.Id, opt => opt.MapFrom(src => src.GetId(_hashProvider.HashingAlgorithm.Name)))
                .ForMember(d => d.Amount,
                     opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
                .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToBase32Converter, ByteString>())

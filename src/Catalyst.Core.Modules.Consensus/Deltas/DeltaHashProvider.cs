@@ -61,8 +61,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Capacity = _capacity
             };
 
-            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
-                _deltaCache.GenesisHash);
+            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.UnixEpoch), _deltaCache.GenesisHash);
         }
 
         /// <inheritdoc />

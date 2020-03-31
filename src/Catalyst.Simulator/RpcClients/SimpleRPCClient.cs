@@ -85,7 +85,7 @@ namespace Catalyst.Simulator.RpcClients
 
             var cryptoContext = new FfiWrapper();
 
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(signingContextProvider.NetworkType);

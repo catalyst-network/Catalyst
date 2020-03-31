@@ -72,11 +72,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             Logger.Debug("PeerId: {0} requests: {1} deltas from height: {2}", senderPeerId, deltaHeightRequest.Range,
                 deltaHeightRequest.Height);
 
-            var count = deltaHeightRequest.Height + deltaHeightRequest.Range;
-            var range = _deltaIndexService.GetRange((int) deltaHeightRequest.Height, (int) count);
-            var rangeDao = range.Select(x => x.ToProtoBuff<DeltaIndexDao, DeltaIndex>(_mapperProvider));
+            var rangeDao = _deltaIndexService.GetRange(deltaHeightRequest.Height, deltaHeightRequest.Range)
+               .ToList();
+            var range = rangeDao.Select(x => DeltaIndexDao.ToProtoBuff<DeltaIndex>(x, _mapperProvider)).ToList();
+
             var response = new DeltaHistoryResponse();
-            response.Result.Add(rangeDao);
+            response.DeltaIndex.Add(range);
             return response;
         }
     }

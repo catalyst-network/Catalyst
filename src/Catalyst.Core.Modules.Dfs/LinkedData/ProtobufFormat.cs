@@ -41,7 +41,7 @@ namespace Catalyst.Core.Modules.Dfs.LinkedData
     {
         public ProtobufFormat()
         {
-            new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
         }
 
         /// <inheritdoc />

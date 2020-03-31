@@ -72,13 +72,13 @@ namespace Catalyst.Core.Modules.Ledger
                 Logs = logEntries,
                 GasUsedTotal = _delta.GasUsed,
                 StatusCode = statusCode,
-                Recipient = entry.IsContractDeployment ? null : recipient,
+                Recipient = entry.IsContractDeployment ? null :  recipient.ToString(),
                 DeltaHash = _deltaHash,
                 DeltaNumber = _deltaNumber,
                 Index = _currentIndex,
                 GasUsed = spentGas,
-                Sender = GetAccountAddress(entry.SenderAddress),
-                ContractAddress = entry.IsContractDeployment ? recipient : null,
+                Sender = GetAccountAddress(entry.SenderAddress).ToString(),
+                ContractAddress = entry.IsContractDeployment ? recipient.ToString() : null,
             };
 
             _currentIndex += 1;

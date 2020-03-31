@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
         public GetFileFromDfsObserverHandlerTests(ITestOutputHelper testOutput) : base(testOutput)
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _fileDownloadFactory = new DownloadFileTransferFactory(_logger);

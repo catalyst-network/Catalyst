@@ -45,14 +45,18 @@ using Catalyst.Core.Modules.Ledger;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings;
 using Catalyst.Core.Modules.Rpc.Server;
+using Catalyst.Core.Modules.Sync;
 using Catalyst.Core.Modules.Web3;
 using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Network;
 using CommandLine;
+using MultiFormats;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -75,6 +79,9 @@ namespace Catalyst.Node.POA.CE
 
         [Option("network-file", HelpText = "The name of the network file")]
         public string OverrideNetworkFile { get; set; }
+
+        [Option('r', "reset", HelpText = "Reset the state")]
+        public bool Reset { get; set; }
     }
 
     public static class Program
@@ -107,6 +114,7 @@ namespace Catalyst.Node.POA.CE
                 {typeof(CoreLibProvider), () => new CoreLibProvider()},
                 {typeof(MempoolModule), () => new MempoolModule()},
                 {typeof(ConsensusModule), () => new ConsensusModule()},
+                {typeof(SynchroniserModule), () => new SynchroniserModule()},
                 {typeof(KvmModule), () => new KvmModule()},
                 {typeof(LedgerModule), () => new LedgerModule()},
                 {typeof(HashingModule), () => new HashingModule()},
@@ -192,6 +200,7 @@ namespace Catalyst.Node.POA.CE
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
                    .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
+                   .Reset(options.Reset)
                    .StartCustomAsync(CustomBootLogicAsync);
 
                 return 0;

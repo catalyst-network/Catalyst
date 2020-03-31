@@ -40,7 +40,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
         public void GetPeerBlackListingResponse_Can_Get_Output()
         {
             //Arrange
-            var setPeerBlackListRequest = new SetPeerBlacklistResponse();
+            var setPeerBlackListRequest = new SetPeerBlackListResponse();
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
             new PeerBlackListingCommand(commandContext, Substitute.For<ILogger>());
 

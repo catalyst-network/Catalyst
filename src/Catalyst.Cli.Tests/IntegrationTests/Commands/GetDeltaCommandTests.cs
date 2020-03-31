@@ -39,7 +39,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
         [Fact]
         public void Cli_Can_Request_Node_Info()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             var hash = hashProvider.ComputeUtf8MultiHash("hello").ToCid();
 
             var result = Shell.ParseCommand("getdelta", "-h", hash, NodeArgumentPrefix, ServerNodeName);

@@ -43,7 +43,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Ledger.Repository;
@@ -57,6 +57,10 @@ using Catalyst.TestUtils;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
 using Xunit.Abstractions;
+using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.DAO.Ledger;
+using SharpRepository.Repository;
+using Nethermind.Store;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
@@ -71,7 +75,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private readonly IPeerRepository _peerRepository;
         private readonly IRpcServerSettings _rpcSettings;
         private readonly ILifetimeScope _scope;
-        private readonly ContainerProvider _containerProvider;
+        public readonly ContainerProvider _containerProvider;
         private readonly IDeltaByNumberRepository _deltaByNumber;
 
         public PoaTestNode(string name,
@@ -96,7 +100,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             var peersInRepo = knownPeerIds.Select(p => new Peer
             {
-                PeerId = p
+                PeerId = p,
+                IsPoaNode = true,
+                LastSeen = DateTime.UtcNow
             }).ToList();
             _peerRepository.Add(peersInRepo);
 
@@ -150,6 +156,10 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             var builder = _containerProvider.ContainerBuilder;
 
             builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
+            builder.RegisterType<MemDb>().As<IDb>().SingleInstance();
+            builder.RegisterType<StateDb>().As<ISnapshotableDb>().SingleInstance();
+            builder.RegisterInstance(new InMemoryRepository<Account, string>()).As<IRepository<Account, string>>().SingleInstance();
+            builder.RegisterType<InMemoryRepository<DeltaIndexDao, string>>().As<IRepository<DeltaIndexDao, string>>().SingleInstance();
             builder.RegisterInstance(new InMemoryRepository<TransactionReceipts, string>())
                .AsImplementedInterfaces();
             builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())

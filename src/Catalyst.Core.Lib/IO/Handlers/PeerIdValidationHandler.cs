@@ -39,6 +39,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
             Logger.Verbose("Received {msg}", msg);
+            var ip = msg.PeerId.IpAddress.ToString();
             if (_peerIdValidator.ValidatePeerIdFormat(msg.PeerId))
             {
                 ctx.FireChannelRead(msg);
