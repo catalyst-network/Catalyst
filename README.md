@@ -100,6 +100,16 @@ If you have not done so before, download and install the Microsoft Visual C++ Bu
 
 Go to https://www.rust-lang.org/tools/install, then download and execute `rustup-init.exe`
 
+#### Then
+
+Nightly mode must now be installed and enabled by: 
+
+`rustup toolchain install nightly`
+
+and then:
+
+`rustup default nightly`
+
 #### 3. Install Snappy for rocksdb (Unix systems only)
 Snappy must be installed for Linux and MacOS opperating sytems 
 
