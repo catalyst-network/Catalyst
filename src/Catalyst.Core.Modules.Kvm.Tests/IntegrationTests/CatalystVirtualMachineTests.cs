@@ -251,7 +251,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         public void Ed25519_precompile_can_verify_incorrect_sig()
         {
             HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-
             FfiWrapper cryptoContext = new FfiWrapper();
             IPrivateKey signingPrivateKey = cryptoContext.GeneratePrivateKey();
             IPrivateKey otherPrivateKey = cryptoContext.GeneratePrivateKey();
