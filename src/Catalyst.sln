@@ -172,6 +172,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Db", "..\submodu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocksDbNative", "..\submodules\nethermind\src\rocksdb-sharp\RocksDbNative\RocksDbNative.csproj", "{BF5C4AE0-E426-43C2-91A1-C04E99EAC532}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Config", "..\submodules\nethermind\src\Nethermind\Nethermind.Config\Nethermind.Config.csproj", "{3D42E8D7-D631-444D-81CD-1A3A750A9992}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -446,6 +448,10 @@ Global
 		{BF5C4AE0-E426-43C2-91A1-C04E99EAC532}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF5C4AE0-E426-43C2-91A1-C04E99EAC532}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF5C4AE0-E426-43C2-91A1-C04E99EAC532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D42E8D7-D631-444D-81CD-1A3A750A9992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D42E8D7-D631-444D-81CD-1A3A750A9992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D42E8D7-D631-444D-81CD-1A3A750A9992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D42E8D7-D631-444D-81CD-1A3A750A9992}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -461,6 +467,7 @@ Global
 		{EFF149E3-13B9-4228-82CF-79BAF3C419B3} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{26A5A42B-6735-48DE-A1D1-7A21E019961E} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{BF5C4AE0-E426-43C2-91A1-C04E99EAC532} = {6074E807-FBBC-41D0-9205-C7B79513D683}
+		{3D42E8D7-D631-444D-81CD-1A3A750A9992} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}
