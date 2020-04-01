@@ -60,7 +60,8 @@ using Xunit.Abstractions;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.DAO.Ledger;
 using SharpRepository.Repository;
-using Nethermind.Store;
+using Nethermind.State;
+using Nethermind.Db;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
