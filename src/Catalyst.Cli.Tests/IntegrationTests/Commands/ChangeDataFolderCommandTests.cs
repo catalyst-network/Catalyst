@@ -34,6 +34,12 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
     {
         public ChangeDataFolderCommandTests() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         [Test]
         public void Cli_Can_Send_Change_Data_Folder_Request()
         {

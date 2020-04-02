@@ -48,20 +48,21 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 {
     public sealed class DeltaExecutorTests
     {
-        private readonly ICryptoContext _cryptoContext = new FfiWrapper();
-        private readonly CatalystSpecProvider _specProvider;
-        private readonly StateProvider _stateProvider;
-        private readonly IPrivateKey _senderPrivateKey;
-        private readonly IPublicKey _senderPublicKey;
-        private readonly SigningContext _signingContext;
-        private readonly IPublicKey _recipient;
-        private readonly IPublicKey _poorSender;
-        private readonly DeltaExecutor _executor;
+        private ICryptoContext _cryptoContext = new FfiWrapper();
+        private CatalystSpecProvider _specProvider;
+        private StateProvider _stateProvider;
+        private IPrivateKey _senderPrivateKey;
+        private IPublicKey _senderPublicKey;
+        private SigningContext _signingContext;
+        private IPublicKey _recipient;
+        private IPublicKey _poorSender;
+        private DeltaExecutor _executor;
 
         /**
          * @TODO this should extend file system based tests and resolve tests via autofac container
          */
-        public DeltaExecutorTests()
+        [SetUp]
+        public void Init()
         {
             _specProvider = new CatalystSpecProvider();
             _stateProvider = new StateProvider(new StateDb(), new StateDb(), LimboLogs.Instance);

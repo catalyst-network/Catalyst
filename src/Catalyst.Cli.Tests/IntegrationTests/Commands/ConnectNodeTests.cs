@@ -30,6 +30,12 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
     {
         public ConnectNodeTests() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         [Test]
         public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {

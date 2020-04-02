@@ -37,6 +37,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
         private ApiModule _apiModule;
         private readonly IServiceCollection _serviceCollection;
 
+
         public ApiModuleTests()
         {
             _serviceCollection = new ServiceCollection();

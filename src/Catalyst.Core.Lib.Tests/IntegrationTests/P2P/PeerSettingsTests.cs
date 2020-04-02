@@ -34,6 +34,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
     {
         public PeerSettingsTests() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         [Test]
         [Property(Traits.TestType, Traits.IntegrationTest)]
         public void CanResolveIPeerSettings()

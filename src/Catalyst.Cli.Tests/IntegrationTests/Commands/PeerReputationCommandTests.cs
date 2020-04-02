@@ -31,6 +31,12 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
     {
         public PeerReputationCommandTests() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         [Test]
         public void Cli_Can_Send_Peer_Reputation_Request()
         {

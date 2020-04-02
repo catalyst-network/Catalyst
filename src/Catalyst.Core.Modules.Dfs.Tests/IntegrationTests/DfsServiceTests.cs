@@ -48,11 +48,19 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     public sealed class DfsServiceTests : FileSystemBasedTest
     {
-        private readonly IDfsService _dfs1;
-        private readonly IDfsService _dfs2;
+        private IDfsService _dfs1;
+        private IDfsService _dfs2;
 
         public DfsServiceTests() : base(TestContext.CurrentContext)
         {
+
+        }
+
+
+        [SetUp]
+        public void Init()
+        {
+            this.Setup(TestContext.CurrentContext);
             ContainerProvider.Container.Resolve<IHashProvider>();
 
             var passwordReader = Substitute.For<IPasswordManager>();

@@ -47,6 +47,14 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
     {
         public KeySignerIntegrationTests() : base(TestContext.CurrentContext)
         {
+
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            this.Setup(TestContext.CurrentContext);
+
             var logger = Substitute.For<ILogger>();
 
             var passwordManager = Substitute.For<IPasswordManager>();
@@ -66,7 +74,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
             _keySigner = new KeySigner(keystore, cryptoContext, keyRegistry);
         }
 
-        private readonly IKeySigner _keySigner;
+        private IKeySigner _keySigner;
 
         private void Ensure_A_KeyStore_File_Exists()
         {

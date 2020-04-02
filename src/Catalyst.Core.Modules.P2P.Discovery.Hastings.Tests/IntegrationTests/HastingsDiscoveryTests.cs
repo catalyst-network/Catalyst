@@ -56,6 +56,13 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
     {
         public HastingsDiscoveryTests() : base(TestContext.CurrentContext)
         {
+
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            this.Setup(TestContext.CurrentContext);
             _testScheduler = new TestScheduler();
             _settings = PeerSettingsHelper.TestPeerSettings();
             _ownNode = PeerIdHelper.GetPeerId("ownNode");
@@ -64,10 +71,10 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
             _logger = ContainerProvider.Container.Resolve<ILogger>();
         }
 
-        private readonly TestScheduler _testScheduler;
-        private readonly IPeerSettings _settings;
-        private readonly PeerId _ownNode;
-        private readonly ILogger _logger;
+        private TestScheduler _testScheduler;
+        private IPeerSettings _settings;
+        private PeerId _ownNode;
+        private ILogger _logger;
 
         [Test]
         [Property(Traits.TestType, Traits.IntegrationTest)]

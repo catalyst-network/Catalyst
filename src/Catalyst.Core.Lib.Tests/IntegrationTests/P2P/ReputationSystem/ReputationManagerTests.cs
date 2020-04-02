@@ -36,13 +36,20 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 {
     public sealed class ReputationManagerTests : FileSystemBasedTest
     {
-        private readonly IReputationManager _reputationManager;
-        private readonly ILifetimeScope _scope;
+        private IReputationManager _reputationManager;
+        private ILifetimeScope _scope;
 
         public ReputationManagerTests() : base(TestContext.CurrentContext)
         {
-            ContainerProvider.ConfigureContainerBuilder();
 
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+
+            ContainerProvider.ConfigureContainerBuilder();
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _reputationManager = _scope.Resolve<IReputationManager>();
         }

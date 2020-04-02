@@ -37,6 +37,13 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
     {
         public CertificateStoreTests() : base(TestContext.CurrentContext)
         {
+
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
             _passwordManager = Substitute.For<IPasswordManager>();
         }
 
@@ -45,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
         private X509Certificate2 _createdCertificate;
         private X509Certificate2 _retrievedCertificate;
 
-        private readonly IPasswordManager _passwordManager;
+        private IPasswordManager _passwordManager;
 
         private void Create_certificate_store()
         {

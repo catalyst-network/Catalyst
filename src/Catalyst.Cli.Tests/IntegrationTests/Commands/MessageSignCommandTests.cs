@@ -31,6 +31,12 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
     {
         public MessageSignCommandTests() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         [Test]
         public void Cli_Can_Request_Node_To_Sign_A_Message()
         {

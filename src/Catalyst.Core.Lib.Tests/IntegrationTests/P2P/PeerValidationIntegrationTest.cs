@@ -54,10 +54,18 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
     {
         private IPeerService _peerService;
         private IPeerChallengeRequest _peerChallengeRequest;
-        private readonly PeerSettings _peerSettings;
+        private PeerSettings _peerSettings;
 
         public PeerValidationIntegrationTest() : base(TestContext.CurrentContext)
         {
+
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+
             var logger = Substitute.For<ILogger>();
 
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
@@ -80,10 +88,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
                 return new PeerChallengeRequest(logger, peerClient, peerSettings, 10);
             }).As<IPeerChallengeRequest>().SingleInstance();
-        }
 
-        private async Task Setup()
-        {
             _peerChallengeRequest = ContainerProvider.Container.Resolve<IPeerChallengeRequest>();
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
@@ -109,7 +114,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 ContainerProvider.Container.Resolve<ILogger>(),
                 ContainerProvider.Container.Resolve<IHealthChecker>());
 
-            await _peerService.StartAsync();
+            _peerService.StartAsync().Wait();
         }
 
         // [Fact(Skip = "this wont work as it tries to connect to a real node!! We need to instantiate two sockets here")]
@@ -131,7 +136,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             string ip,
             int port)
         {
-            await Setup().ConfigureAwait(false);
             var valid = await RunPeerChallengeTask(publicKey, IPAddress.Parse(ip), port).ConfigureAwait(false);
 
             valid.Should().BeFalse();

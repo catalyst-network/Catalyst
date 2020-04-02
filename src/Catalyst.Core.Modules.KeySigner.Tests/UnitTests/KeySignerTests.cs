@@ -37,14 +37,15 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 {
     public sealed class KeySignerTests
     {
-        private readonly IKeyStore _keystore;
-        private readonly IKeyRegistry _keyRegistry;
-        private readonly ISignature _signature;
-        private readonly IPrivateKey _privateKey;
-        private readonly SigningContext _signingContext;
-        private readonly ICryptoContext _cryptoContext;
+        private IKeyStore _keystore;
+        private IKeyRegistry _keyRegistry;
+        private ISignature _signature;
+        private IPrivateKey _privateKey;
+        private SigningContext _signingContext;
+        private ICryptoContext _cryptoContext;
 
-        public KeySignerTests()
+        [SetUp]
+        public void Init()
         {
             _keystore = Substitute.For<IKeyStore>();
             _keyRegistry = Substitute.For<IKeyRegistry>();
@@ -55,10 +56,10 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _privateKey.Bytes.Returns(ByteUtil.GenerateRandomByteArray(32));
 
             _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs(_privateKey);
-            
+
             _signingContext = new SigningContext();
         }
-        
+
         [Test]
         public void On_Init_KeySigner_Can_Retrieve_Key_From_KeyStore_If_Key_Doesnt_Initially_Exist_In_Registry()
         {

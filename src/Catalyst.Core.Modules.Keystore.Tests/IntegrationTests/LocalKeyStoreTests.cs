@@ -42,13 +42,21 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 {
     public sealed class LocalKeyStoreTests : FileSystemBasedTest
     {
-        private readonly IFileSystem _fileSystem;
-        private readonly IKeyStore _keystore;
-        private readonly ICryptoContext _context;
-        private readonly IPasswordManager _passwordManager;
+        private IFileSystem _fileSystem;
+        private IKeyStore _keystore;
+        private ICryptoContext _context;
+        private IPasswordManager _passwordManager;
 
         public LocalKeyStoreTests() : base(TestContext.CurrentContext)
         {
+
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            this.Setup(TestContext.CurrentContext);
+
             _fileSystem = Substitute.For<IFileSystem>();
             _context = new FfiWrapper();
 

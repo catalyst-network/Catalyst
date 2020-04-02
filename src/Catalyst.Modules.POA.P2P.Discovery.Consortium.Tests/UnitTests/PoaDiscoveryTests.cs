@@ -39,12 +39,17 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {
     public sealed class PoaDiscoveryTests : FileSystemBasedTest
     {
-        private readonly IHashProvider _hashProvider;
+        private IHashProvider _hashProvider;
 
         public PoaDiscoveryTests() : base(TestContext.CurrentContext)
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            this.Setup(TestContext.CurrentContext);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
         [Test]

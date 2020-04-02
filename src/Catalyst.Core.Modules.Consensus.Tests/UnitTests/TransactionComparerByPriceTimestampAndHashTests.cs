@@ -36,12 +36,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {
     public class TransactionComparerByPriceTimestampAndHashTests
     {
-        private readonly TestContext _output;
-        private readonly Random _random;
+        private TestContext _output;
+        private Random _random;
 
-        public TransactionComparerByPriceTimestampAndHashTests(TestContext output)
+        [SetUp]
+        public void Init()
         {
-            _output = output;
+            _output = TestContext.CurrentContext;
             _random = new Random();
         }
 

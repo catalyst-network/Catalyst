@@ -48,22 +48,31 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
     public sealed class SignMessageRequestObserverTests : FileSystemBasedTest
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly ILifetimeScope _scope;
-        private readonly ILogger _logger;
-        private readonly IKeySigner _keySigner;
-        private readonly IChannelHandlerContext _fakeContext;
+        private TestScheduler _testScheduler;
+        private ILifetimeScope _scope;
+        private ILogger _logger;
+        private IKeySigner _keySigner;
+        private IChannelHandlerContext _fakeContext;
 
         public SignMessageRequestObserverTests() : base(TestContext.CurrentContext, new[]
         {
             Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile)
         })
         {
+  
+        }
+
+
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
             _testScheduler = new TestScheduler();
             ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
@@ -80,7 +89,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _fakeContext.Channel.Returns(fakeChannel);
         }
 
-        [Theory]
         [TestCase("Hello Catalyst")]
         [TestCase("")]
         [TestCase("Hello&?!1253Catalyst")]
@@ -118,7 +126,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
 
-            signResponseMessage.OriginalMessage.Should().Equal(message);
+            signResponseMessage.OriginalMessage.Should().Equal(ByteString.CopyFromUtf8(message));
             signResponseMessage.Signature.Should().NotBeEmpty();
             signResponseMessage.PublicKey.Should().NotBeEmpty();
         }

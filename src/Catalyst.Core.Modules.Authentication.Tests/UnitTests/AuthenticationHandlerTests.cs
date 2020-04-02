@@ -38,12 +38,13 @@ namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
 {
     public sealed class AuthenticationHandlerTests
     {
-        private readonly IAuthenticationStrategy _authenticationStrategy;
-        private readonly EmbeddedChannel _serverChannel;
-        private readonly IObservableServiceHandler _testObservableServiceHandler;
-        private readonly ProtocolMessage _signedMessage;
+        private IAuthenticationStrategy _authenticationStrategy;
+        private EmbeddedChannel _serverChannel;
+        private IObservableServiceHandler _testObservableServiceHandler;
+        private ProtocolMessage _signedMessage;
 
-        public AuthenticationHandlerTests()
+        [SetUp]
+        public void Init()
         {
             _testObservableServiceHandler = Substitute.For<IObservableServiceHandler>();
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();

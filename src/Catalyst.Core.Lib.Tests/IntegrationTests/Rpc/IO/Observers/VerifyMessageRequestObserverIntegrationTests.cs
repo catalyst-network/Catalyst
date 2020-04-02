@@ -54,15 +54,22 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
     public class VerifyMessageRequestObserverIntegrationTests : FileSystemBasedTest
     {
-        private readonly IKeySigner _keySigner;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IRpcRequestObserver _verifyMessageRequestObserver;
-        private readonly ILifetimeScope _scope;
-        private readonly PeerId _peerId;
-        private readonly ByteString _testMessageToSign;
+        private IKeySigner _keySigner;
+        private IChannelHandlerContext _fakeContext;
+        private IRpcRequestObserver _verifyMessageRequestObserver;
+        private ILifetimeScope _scope;
+        private PeerId _peerId;
+        private ByteString _testMessageToSign;
         
         public VerifyMessageRequestObserverIntegrationTests() : base(TestContext.CurrentContext)
         {
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
 
             ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
@@ -86,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
             _peerId = ContainerProvider.Container.Resolve<PeerId>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            
+
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
             _verifyMessageRequestObserver = _scope.Resolve<IRpcRequestObserver>();

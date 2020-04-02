@@ -43,11 +43,12 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 {
     public sealed class MempoolTests
     {
-        private readonly Mempool _memPool;
-        private readonly PublicEntryDao _mempoolItem;
-        private readonly TestMapperProvider _mapperProvider;
+        private Mempool _memPool;
+        private PublicEntryDao _mempoolItem;
+        private TestMapperProvider _mapperProvider;
 
-        public MempoolTests()
+        [SetUp]
+        public void Init()
         {
             new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _memPool = new Mempool(Substitute.For<IMempoolService<PublicEntryDao>>());
