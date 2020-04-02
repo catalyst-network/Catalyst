@@ -50,8 +50,13 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
             }
         }
 
-        [Theory]
-        [TestCase(typeof(ConfigFilesOverwriteTestData))]
+        [SetUp]
+        public void Init()
+        {
+            this.Setup(TestContext.CurrentContext);
+        }
+
+        [TestCaseSource(typeof(ConfigFilesOverwriteTestData))]
         [Property(Traits.TestType, Traits.IntegrationTest)]
         public void RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(string moduleFileName,
             NetworkType network)

@@ -45,8 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
             }
         }
 
-        [Theory]
-        [TestCase(typeof(UInt256ConversionTestData))]
+        [TestCaseSource(typeof(UInt256ConversionTestData))]
         public void UInt256_ToByteString_And_Back_Should_Keep_Value_Intact(UInt256 bigInt)
         {
             var x = (UInt256) 234;

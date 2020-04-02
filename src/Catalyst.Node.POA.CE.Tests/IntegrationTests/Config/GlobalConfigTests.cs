@@ -62,8 +62,13 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
 
         public GlobalConfigTests() : base(TestContext.CurrentContext) { }
 
-        [Theory]
-        [TestCase(nameof(Networks))]
+        [SetUp]
+        public void Init()
+        {
+            this.Setup(TestContext.CurrentContext);
+        }
+
+        [TestCaseSource(nameof(Networks))]
         public void Registering_All_Configs_Should_Allow_Resolving_CatalystNode(NetworkType network)
         {
             _configFilesUsed = new[]

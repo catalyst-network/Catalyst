@@ -35,17 +35,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
 {
     public sealed class DownloadFileTransferInformationTests : IDisposable
     {
-        private readonly IDownloadFileInformation _downloadFileInformation;
+        private IDownloadFileInformation _downloadFileInformation;
 
-        public DownloadFileTransferInformationTests()
+        [SetUp]
+        public void Init()
         {
             _downloadFileInformation =
-                new DownloadFileTransferInformation(null,
-                    null,
-                    null,
-                    CorrelationId.GenerateCorrelationId(),
-                    "",
-                    10);
+            new DownloadFileTransferInformation(null,
+                null,
+                null,
+                CorrelationId.GenerateCorrelationId(),
+                "",
+                10);
         }
 
         [Test]
@@ -58,9 +59,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             writtenBytes.SequenceEqual(bytes).Should().BeTrue();
         }
 
-        [Theory]
-        [TestCase(2)]
-        [TestCase(3)]
+        [TestCase(2u)]
+        [TestCase(3u)]
         public void Can_Set_File_Length(uint chunkAmount)
         {
             var byteLenForChunkAmount = (ulong) (Constants.FileTransferChunkSize * chunkAmount);

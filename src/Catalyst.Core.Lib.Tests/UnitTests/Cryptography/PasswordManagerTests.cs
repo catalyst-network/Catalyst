@@ -34,12 +34,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public sealed class PasswordManagerTests : IDisposable
     {
-        private readonly IPasswordRegistry _passwordRegistry;
-        private readonly IPasswordReader _passwordReader;
-        private readonly PasswordManager _passwordManager;
-        private readonly SecureString _secureString;
+        private IPasswordRegistry _passwordRegistry;
+        private IPasswordReader _passwordReader;
+        private PasswordManager _passwordManager;
+        private SecureString _secureString;
 
-        public PasswordManagerTests()
+        [SetUp]
+        public void Init()
         {
             _passwordRegistry = Substitute.For<IPasswordRegistry>();
             _passwordReader = Substitute.For<IPasswordReader>();

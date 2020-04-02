@@ -36,9 +36,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
 {
     public sealed class UploadFileTransferInformationTests
     {
-        [Theory]
-        [TestCase(2)]
-        [TestCase(3)]
+        [TestCase(2u)]
+        [TestCase(3u)]
         public void Can_Get_Correct_Chunk_Transfer_File_Bytes_Request_Message(uint chunks)
         {
             int byteLengthForChunks = (int) (Constants.FileTransferChunkSize * chunks);

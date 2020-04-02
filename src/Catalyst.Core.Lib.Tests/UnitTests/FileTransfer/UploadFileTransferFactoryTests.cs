@@ -34,16 +34,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
 {
     public class UploadFileTransferFactoryTests
     {
-        private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
+        private IUploadFileTransferFactory _uploadFileTransferFactory;
 
-        public UploadFileTransferFactoryTests()
+        [SetUp]
+        public void Init()
         {
             _uploadFileTransferFactory = new UploadFileTransferFactory(Substitute.For<ILogger>());
         }
 
-        [Theory]
-        [TestCase(2)]
-        [TestCase(3)]
+        [TestCase(2u)]
+        [TestCase(3u)]
         public async Task Can_Upload_File(uint numberOfChunks)
         {
             var uploadFileInformation = Substitute.For<IUploadFileInformation>();

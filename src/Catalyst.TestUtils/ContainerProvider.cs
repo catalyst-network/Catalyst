@@ -61,7 +61,7 @@ namespace Catalyst.TestUtils
 
         public ContainerProvider(IEnumerable<string> configFilesUsed,
             IFileSystem fileSystem,
-            TestContext output = null)
+            TestContext output)
         {
             _configFilesUsed = configFilesUsed;
             _fileSystem = fileSystem;
