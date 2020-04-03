@@ -67,123 +67,20 @@ Furtermore, our Technical White Paper is availiable [here](https://github.com/ca
 
 ## Quick Start Guide for Node
 
-This is a quick start guide for running a node on the Catalyst test network. 
+In order to run a node on Catalyst some baisic knowledge is neeeded on how to access / use Command prompt or the terminal for your opperating system. This guide can be found here: 
 
-#### 1. Install .Net
+[Getting Access to Command Prompt / Terminal](https://github.com/catalyst-network/Catalyst/wiki/Getting-Access-to-Command-Prompt-or-Terminal)
 
-Catalyst.Node works with .Net Core v3.0. You'll need to have the .Net SDK installed. 
+The node set up process for each opperating system, so ease of use we have seperated the guides according to the opperating system. 
 
-If you don't have .Net Core installed you can follow the instructions for your platform bellow.
+#### Guide for Windows
+[Run a TestNet node on Windows](https://github.com/catalyst-network/Catalyst/wiki/Run-a-POA-node-on-Windows)
 
-- [Windows](https://dotnet.microsoft.com/download?initial-os=windows)
-- [Linux](https://dotnet.microsoft.com/download?initial-os=linux)
-- [macOS](https://dotnet.microsoft.com/download?initial-os=macos)
+#### Guide for MacOS
+[Run a TestNet node on MacOS](https://github.com/catalyst-network/Catalyst/wiki/Run-POA-Node-on-MacOS)
 
-#### 2. Install the Rust Toolchain
-
-Catalyst.Core uses our native [Rust BulletProof library](https://github.com/catalyst-network/Cryptography.FFI.Rust). In order to be able to build the solution, you will need to ensure that the [Rust](https://www.rust-lang.org/) toolchain is correctly installed on you machine.
-
-##### Unix environments
-
-Download and install `msbuild prebuild tasks` from [Rust](https://www.rust-lang.org/). MsBuild will then compile the Bulletproof library when you try to build the project.
-
-Then, make sure you install Rust using the rustup tool:
-
-`curl https://sh.rustup.rs -sSf | sh`
-
-If `rustc --version` fails, restart your console to ensure changes to `PATH` have taken effect.
-
-Refer to the Rust cryptography library [repository](https://github.com/catalyst-network/Catalyst-rs) for docs. If you have issues with this part of the installation, please raise them there.
-
-##### Windows environments
-If you have not done so before, download and install the Microsoft Visual C++ Build Tools 2019 from https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019. Alternatively, if you are using Visual Studio, you should be able to modify your existing installation to add this feature.
-
-Go to https://www.rust-lang.org/tools/install, then download and execute `rustup-init.exe`
-
-#### Then
-
-Nightly mode must now be installed and enabled by: 
-
-`rustup toolchain install nightly`
-
-and then:
-
-`rustup default nightly`
-
-#### 3. Install Snappy for rocksdb (Unix systems only)
-Snappy must be installed for Linux and MacOS opperating sytems 
-
-For linux using:
-`sudo apt-get install libsnappy-dev`
-
-For MacOS install brew following: 
-`https://brew.sh/`
-
-Then: 
-
-`brew install snappy`
-
-
-#### 4. Create a self signed certificate (Linux only)
-
-If you're on Linux, you need to create a Self Signed Certificate the instructions for which are found here:
-
-[Create a Self Signed Certificate](https://github.com/catalyst-network/Catalyst.Node/wiki/Create-a-Self-Signed-Certificate)
-
-#### 5. Install MongoDB
-Instructions to install MongoDB can be found [here](https://docs.mongodb.com/manual/administration/install-community/) for each operating system. 
-
-#### 6. Clone the repository
-
-To clone the repository it is assumed you have Git installed.
-If you do not, then follow the [Git install instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for Linux/Windows/macOS.
-
-> ##### Windows environment prerquisite -  Enable long paths
-> make sure that long paths are allowed in both windows and git
-> - for windows 
->     follow the instructions at https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file#enable-long-paths-in-windows-10-version-1607-and-later
-> - for git : 
->     start a git terminal as administrator
->     run the following command : `git config --system core.longpaths true`
-
-To clone the Catalyst repository use the command:
-
-`git clone https://github.com/catalyst-network/Catalyst.git`
-
-
-Then navigate into the repository:
-
-`cd Catalyst`
-
-Install the dependencies using the command: 
-
-`git submodule update --init --recursive --force`
-
-
-
-#### 7. Build the solution
-
-Navigate to the `src` folder:
-
-`cd src`
-
-
-
-In the `src` folder build the solution:
-
-`dotnet build Catalyst.sln`
-
-#### 8. Run the node 
-
-To run the node change to: 
-
-`cd Catalyst.Node.POA.CE`
-
-Then use the command 
-
-`dotnet run`
-
-
+#### Guide for Linux
+[Run a TestNet node on Linux ](https://github.com/catalyst-network/Catalyst/wiki/Run-a-POA-node-on-Linux)
 
 ### Configuring the node
 
