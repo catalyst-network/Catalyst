@@ -43,13 +43,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
     public sealed class BroadcastHandlerTests
     {
-        private readonly IBroadcastManager _fakeBroadcastManager;
-        private readonly BroadcastHandler _broadcastHandler;
-        private readonly FakeKeySigner _keySigner;
-        private readonly ProtocolMessage _broadcastMessageSigned;
-        private readonly SigningContext _signingContext;
+        private IBroadcastManager _fakeBroadcastManager;
+        private BroadcastHandler _broadcastHandler;
+        private FakeKeySigner _keySigner;
+        private ProtocolMessage _broadcastMessageSigned;
+        private SigningContext _signingContext;
 
-        public BroadcastHandlerTests()
+        [SetUp]
+        public void Init()
         {
             _keySigner = Substitute.For<FakeKeySigner>();
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);

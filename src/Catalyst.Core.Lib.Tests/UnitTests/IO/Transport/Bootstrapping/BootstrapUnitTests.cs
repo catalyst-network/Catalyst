@@ -33,7 +33,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Bootstrapping
     public sealed class BootstrapUnitTests
     {
         [Test]
-        public async Task BindAsync_Should_Bind_To_NettyBootstrap_BindAsync()
+        public void BindAsync_Should_Bind_To_NettyBootstrap_BindAsync()
         {
             var ipAddress = IPAddress.Loopback;
             var port = 9000;

@@ -45,11 +45,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class GetMempoolRequestObserverTests
     {
-        private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly TestMapperProvider _mapperProvider;
+        private ILogger _logger;
+        private IChannelHandlerContext _fakeContext;
+        private TestMapperProvider _mapperProvider;
 
-        public GetMempoolRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -78,8 +79,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             return txLst;
         }
 
-        [Theory]
-        [TestCase(nameof(MempoolTransactions))]
+        [TestCaseSource(nameof(MempoolTransactions))]
         public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<PublicEntryDao> mempoolTransactions)
         {
             var testScheduler = new TestScheduler();

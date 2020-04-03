@@ -63,7 +63,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             TestContext.WriteLine(string.Join(" ", fieldsInBytes.SelectMany(b => b)));
         }
 
-        [Theory]
         [TestCase(0)]
         [TestCase(10)]
         [TestCase(19)]
@@ -91,8 +90,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             }
         }
 
-        [Theory]
-        [TestCase(typeof(IpTestData))]
+        [TestCaseSource(typeof(IpTestData))]
 
         //Todo: discuss if this is relevant: why do we enforce a given size for IPs (or anything) if proto handles it
         public void Can_Throw_Argument_Exception_On_Invalid_Ip(byte[] ipBytes)
@@ -106,7 +104,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
                .Should().Throw<ArgumentException>().WithMessage("*Ip*");
         }
 
-        [Theory]
         [TestCase(0)]
         [TestCase(1)]
         [TestCase(1024)]

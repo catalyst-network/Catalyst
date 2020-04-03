@@ -33,10 +33,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
 {
     public class KeyRegistryTests
     {
-        private readonly IPrivateKey _privateKey = Substitute.For<IPrivateKey>();
-        private readonly KeyRegistry _keyRegistry;
+        private IPrivateKey _privateKey = Substitute.For<IPrivateKey>();
+        private KeyRegistry _keyRegistry;
 
-        public KeyRegistryTests()
+        [SetUp]
+        public void Init()
         {
             _keyRegistry = new KeyRegistry();
         }

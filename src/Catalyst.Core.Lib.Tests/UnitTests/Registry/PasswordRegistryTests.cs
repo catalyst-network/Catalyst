@@ -32,10 +32,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
 {
     public sealed class PasswordRegistryTests : IDisposable
     {
-        private readonly SecureString _secureString = new SecureString();
-        private readonly PasswordRegistry _passwordRegistry;
+        private SecureString _secureString = new SecureString();
+        private PasswordRegistry _passwordRegistry;
 
-        public PasswordRegistryTests()
+        [SetUp]
+        public void Init()
         {
             _passwordRegistry = new PasswordRegistry();
         }

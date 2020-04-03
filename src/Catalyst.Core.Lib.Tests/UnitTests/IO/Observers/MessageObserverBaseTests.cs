@@ -48,19 +48,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
     public class ObservableBaseTests
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly VanillaMessageObserver _handler;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly ProtocolMessage[] _responseMessages;
+        private TestScheduler _testScheduler;
+        private VanillaMessageObserver _handler;
+        private IChannelHandlerContext _fakeContext;
+        private ProtocolMessage[] _responseMessages;
 
-        public ObservableBaseTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _handler = new VanillaMessageObserver(Substitute.For<ILogger>());
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _responseMessages = Enumerable.Range(0, 10).Select(i =>
             {
-                var message = new GetInfoResponse {Query = i.ToString()};
+                var message = new GetInfoResponse { Query = i.ToString() };
                 return message.ToProtocolMessage(
                     PeerIdHelper.GetPeerId(i.ToString()),
                     CorrelationId.GenerateCorrelationId());
@@ -85,7 +86,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
         public void MessageHandler_should_subscribe_to_next_and_error()
         {
             var erroringStream = new ReplaySubject<IObserverDto<ProtocolMessage>>(10, _testScheduler);
-            
+
             _handler.StartObserving(erroringStream);
 
             foreach (var payload in _responseMessages)
@@ -109,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
         public void MessageHandler_should_not_receive_messages_of_the_wrong_type()
         {
             _responseMessages[3] = new PingResponse().ToProtocolMessage(
-                _responseMessages[3].PeerId, 
+                _responseMessages[3].PeerId,
                 _responseMessages[3].CorrelationId.ToCorrelationId());
 
             _responseMessages[7] = new PingRequest().ToProtocolMessage(

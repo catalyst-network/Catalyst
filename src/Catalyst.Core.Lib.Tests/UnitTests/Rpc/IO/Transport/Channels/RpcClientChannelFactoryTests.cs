@@ -71,12 +71,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
-        private readonly TestScheduler _testScheduler;
-        private readonly IRpcMessageCorrelationManager _correlationManager;
-        private readonly TestRpcClientChannelFactory _factory;
-        private readonly FakeKeySigner _keySigner;
+        private TestScheduler _testScheduler;
+        private IRpcMessageCorrelationManager _correlationManager;
+        private TestRpcClientChannelFactory _factory;
+        private FakeKeySigner _keySigner;
 
-        public RpcClientChannelFactoryTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();

@@ -45,12 +45,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 {
     public sealed class TransactionReceivedEventTests
     {
-        private readonly IMempool<PublicEntryDao> _mempool;
-        private readonly ITransactionValidator _transactionValidator;
-        private readonly IBroadcastManager _broadcastManager;
-        private readonly TransactionReceivedEvent _transactionReceivedEvent;
+        private IMempool<PublicEntryDao> _mempool;
+        private ITransactionValidator _transactionValidator;
+        private IBroadcastManager _broadcastManager;
+        private TransactionReceivedEvent _transactionReceivedEvent;
 
-        public TransactionReceivedEventTests()
+        [SetUp]
+        public void Init()
         {
             var mapperProvider = new TestMapperProvider();
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();

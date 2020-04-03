@@ -44,11 +44,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 {
     public sealed class TransferFileBytesRequestObserverTests
     {
-        private readonly TransferFileBytesRequestObserver _observer;
-        private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
-        private readonly IChannelHandlerContext _context;
+        private TransferFileBytesRequestObserver _observer;
+        private IDownloadFileTransferFactory _downloadFileTransferFactory;
+        private IChannelHandlerContext _context;
 
-        public TransferFileBytesRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _context = Substitute.For<IChannelHandlerContext>();
             _context.Channel.Returns(Substitute.For<IChannel>());

@@ -40,16 +40,22 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 {
     public class PeerChallengeRequestTests : SelfAwareTestBase
     {
-        private readonly IPeerChallengeRequest _peerChallengeRequest;
-        private readonly IPeerSettings _testSettings;
-        private readonly CancellationTokenProvider _cancellationProvider;
+        private IPeerChallengeRequest _peerChallengeRequest;
+        private IPeerSettings _testSettings;
+        private CancellationTokenProvider _cancellationProvider;
 
         public PeerChallengeRequestTests() : base(TestContext.CurrentContext)
+        {
+
+        }
+
+        [SetUp]
+        public void Init()
         {
             var subbedPeerClient = Substitute.For<IPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));
-            
+
             _peerChallengeRequest = new PeerChallengeRequest(
                 Substitute.For<ILogger>(),
                 subbedPeerClient,
@@ -57,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
                 10
             );
         }
-        
+
         [Test]
         public async Task Can_Challenge_Peer()
         {

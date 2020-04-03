@@ -41,11 +41,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class SignMessageResponseHandlerTests : IDisposable
     {
-        private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
+        private ILogger _logger;
+        private IChannelHandlerContext _fakeContext;
         public static readonly List<object[]> QueryContents = InitialiseQueryData();
 
-        private readonly IUserOutput _output;
+        private IUserOutput _output;
 
         private SignMessageResponseObserver _handler;
 
@@ -78,7 +78,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             };
         }
 
-        public SignMessageResponseHandlerTests()
+        [SetUp]
+        public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -97,8 +98,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             return signedResponse;
         }
 
-        [Theory]
-        [TestCase(nameof(QueryContents))]
+        [TestCaseSource(nameof(QueryContents))]
         public void RpcClient_Can_Handle_SignMessageResponse(SignedResponse signedResponse)
         {
             var testScheduler = new TestScheduler();

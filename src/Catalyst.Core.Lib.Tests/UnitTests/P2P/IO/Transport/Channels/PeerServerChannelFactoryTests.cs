@@ -73,16 +73,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
-        private readonly TestScheduler _testScheduler;
-        private readonly IPeerMessageCorrelationManager _correlationManager;
-        private readonly IBroadcastManager _gossipManager;
-        private readonly FakeKeySigner _keySigner;
-        private readonly TestPeerServerChannelFactory _factory;
-        private readonly PeerId _senderId;
-        private readonly ICorrelationId _correlationId;
-        private readonly byte[] _signature;
+        private TestScheduler _testScheduler;
+        private IPeerMessageCorrelationManager _correlationManager;
+        private IBroadcastManager _gossipManager;
+        private FakeKeySigner _keySigner;
+        private TestPeerServerChannelFactory _factory;
+        private PeerId _senderId;
+        private ICorrelationId _correlationId;
+        private byte[] _signature;
 
-        public PeerServerChannelFactoryTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IPeerMessageCorrelationManager>();

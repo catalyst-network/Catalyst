@@ -44,7 +44,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
 {
     public sealed class RpcMessageCorrelationManagerCacheTests : IDisposable
     {
-        public RpcMessageCorrelationManagerCacheTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
 
@@ -62,11 +63,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
                 new RpcMessageCorrelationManager(memoryCache, logger, changeTokenProvider, _testScheduler);
         }
 
-        private readonly CancellationTokenSource _cancellationTokenSource;
+        private CancellationTokenSource _cancellationTokenSource;
 
-        private readonly TestScheduler _testScheduler;
+        private TestScheduler _testScheduler;
 
-        private readonly RpcMessageCorrelationManager _rpcMessageCorrelationManager;
+        private RpcMessageCorrelationManager _rpcMessageCorrelationManager;
 
         [Test]
         public void Dispose_Should_Dispose_RpcMessageCorrelationManager() { _rpcMessageCorrelationManager.Dispose(); }

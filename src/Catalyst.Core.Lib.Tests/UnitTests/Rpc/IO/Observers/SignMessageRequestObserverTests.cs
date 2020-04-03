@@ -45,12 +45,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class SignMessageRequestObserverTests
     {
-        private readonly ILogger _logger;
-        private readonly IKeySigner _keySigner;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly ISignature _signature;
+        private ILogger _logger;
+        private IKeySigner _keySigner;
+        private IChannelHandlerContext _fakeContext;
+        private ISignature _signature;
 
-        public SignMessageRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _keySigner = Substitute.For<FakeKeySigner>();
             _signature = Substitute.For<ISignature>();
@@ -64,7 +65,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _keySigner.Sign(default, default).ReturnsForAnyArgs(_signature);
         }
 
-        [Theory]
         [TestCase("Hello Catalyst")]
         [TestCase("")]
         [TestCase("Hello&?!1253Catalyst")]
