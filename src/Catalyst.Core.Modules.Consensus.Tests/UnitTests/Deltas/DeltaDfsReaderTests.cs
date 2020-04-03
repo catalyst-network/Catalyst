@@ -45,12 +45,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaDfsReaderTests
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IDfsService _dfsService;
-        private readonly ILogger _logger;
-        private readonly IDeltaDfsReader _dfsReader;
+        private IHashProvider _hashProvider;
+        private IDfsService _dfsService;
+        private ILogger _logger;
+        private IDeltaDfsReader _dfsReader;
 
-        public DeltaDfsReaderTests()
+        [SetUp]
+        public void Init()
         {
             var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
             _hashProvider = new HashProvider(hashingAlgorithm);

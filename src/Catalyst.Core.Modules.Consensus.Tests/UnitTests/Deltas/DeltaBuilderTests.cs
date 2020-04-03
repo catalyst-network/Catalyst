@@ -63,21 +63,22 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     public sealed class DeltaBuilderTests
     {
         private const ulong DeltaGasLimit = 8_000_000;
-        private readonly IHashProvider _hashProvider;
-        private readonly IDeterministicRandomFactory _randomFactory;
-        private readonly Random _random;
-        private readonly PeerId _producerId;
-        private readonly Cid _previousDeltaHash;
-        private readonly CoinbaseEntry _zeroCoinbaseEntry;
-        private readonly IDeltaCache _cache;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IStateProvider _stateProvider;
-        private readonly IDeltaExecutor _deltaExecutor;
-        private readonly ICryptoContext _cryptoContext;
-        private readonly ILogger _logger;
-        private readonly IPeerSettings _peerSettings;
+        private IHashProvider _hashProvider;
+        private IDeterministicRandomFactory _randomFactory;
+        private Random _random;
+        private PeerId _producerId;
+        private Cid _previousDeltaHash;
+        private CoinbaseEntry _zeroCoinbaseEntry;
+        private IDeltaCache _cache;
+        private IDateTimeProvider _dateTimeProvider;
+        private IStateProvider _stateProvider;
+        private IDeltaExecutor _deltaExecutor;
+        private ICryptoContext _cryptoContext;
+        private ILogger _logger;
+        private IPeerSettings _peerSettings;
 
-        public DeltaBuilderTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 

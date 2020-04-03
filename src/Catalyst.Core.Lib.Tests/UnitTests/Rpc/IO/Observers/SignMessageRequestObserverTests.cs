@@ -40,6 +40,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -97,7 +98,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
 
-            signResponseMessage.OriginalMessage.Should().Equal(message);
+            signResponseMessage.OriginalMessage.Should().Equal(ByteString.CopyFromUtf8(message));
             signResponseMessage.Signature.ToByteArray().Should().Equal(_signature.SignatureBytes);
             signResponseMessage.PublicKey.ToByteArray().Should().Equal(_signature.PublicKeyBytes);
         }

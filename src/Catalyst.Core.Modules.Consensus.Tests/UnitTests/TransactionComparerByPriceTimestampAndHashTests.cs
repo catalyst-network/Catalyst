@@ -62,7 +62,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                .ToArray();
 
             ordered.Select(o => o.GasPrice.ToUInt256()).Should().BeInDescendingOrder(t => t);
-            ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeAscendingInOrder();
+            ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeInAscendingOrder();
             ordered.Should().NotBeInDescendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
 

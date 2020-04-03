@@ -44,15 +44,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
     public sealed class FavouriteDeltaObserverTests
     {
-        private readonly IDeltaElector _deltaElector;
-        private readonly IChannelHandlerContext _fakeChannelContext;
-        private readonly PeerId _voterId;
-        private readonly PeerId _producerId;
-        private readonly FavouriteDeltaObserver _favouriteDeltaObserver;
-        private readonly byte[] _newHash;
-        private readonly byte[] _prevHash;
+        private IDeltaElector _deltaElector;
+        private IChannelHandlerContext _fakeChannelContext;
+        private PeerId _voterId;
+        private PeerId _producerId;
+        private FavouriteDeltaObserver _favouriteDeltaObserver;
+        private byte[] _newHash;
+        private byte[] _prevHash;
 
-        public FavouriteDeltaObserverTests()
+        [SetUp]
+        public void Init()
         {
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _deltaElector = Substitute.For<IDeltaElector>();
