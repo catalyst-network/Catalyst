@@ -37,18 +37,14 @@ namespace Catalyst.TestUtils
         protected string CurrentTestName;
         protected TestContext Output;
 
-        protected SelfAwareTestBase(TestContext output)
+        protected SelfAwareTestBase()
+        {
+
+        }
+
+        public virtual void Setup(TestContext output)
         {
             Output = output;
-            CurrentTest = Output.GetType()
-               .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
-               .GetValue(Output) as ITest;
-
-            if (CurrentTest == null)
-            {
-                throw new ArgumentNullException(
-                    $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
-            }
 
             CurrentTestName = output.Test.MethodName;
         }

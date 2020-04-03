@@ -48,20 +48,23 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
 {
-    public sealed class PeerServiceTests : SelfAwareTestBase, IDisposable
+    public class PeerServiceTests : SelfAwareTestBase, IDisposable
     {
-        private readonly ICorrelationId _guid;
-        private readonly ILogger _logger;
-        private readonly PeerId _pid;
-        private readonly IUdpServerChannelFactory _udpServerServerChannelFactory;
-        private readonly IPeerDiscovery _peerDiscovery;
-        private readonly List<IP2PMessageObserver> _p2PMessageHandlers;
-        private readonly EmbeddedObservableChannel _serverChannel;
-        private readonly IPeerSettings _peerSettings;
+        private ICorrelationId _guid;
+        private ILogger _logger;
+        private PeerId _pid;
+        private IUdpServerChannelFactory _udpServerServerChannelFactory;
+        private IPeerDiscovery _peerDiscovery;
+        private List<IP2PMessageObserver> _p2PMessageHandlers;
+        private EmbeddedObservableChannel _serverChannel;
+        private IPeerSettings _peerSettings;
         private IPeerService _peerService;
 
-        public PeerServiceTests() : base(TestContext.CurrentContext)
+        [SetUp]
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
+
             _pid = PeerIdHelper.GetPeerId("im_a_key");
             _guid = CorrelationId.GenerateCorrelationId();
             _logger = Substitute.For<ILogger>();

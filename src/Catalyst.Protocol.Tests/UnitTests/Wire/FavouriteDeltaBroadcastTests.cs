@@ -81,8 +81,7 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
             }
         }
 
-        [Theory]
-        [TestCase(typeof(InvalidFavouriteDeltaBroadcasts))]
+        [TestCaseSource(typeof(InvalidFavouriteDeltaBroadcasts))]
         public void FavouriteDeltaBroadcast_IsValid_Should_Throw_On_Invalid_FavouriteDeltaBroadcast(FavouriteDeltaBroadcast favourite)
         {
             favourite.IsValid().Should().BeFalse();

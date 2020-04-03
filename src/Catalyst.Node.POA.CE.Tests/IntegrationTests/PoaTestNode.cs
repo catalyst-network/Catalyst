@@ -107,7 +107,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     Constants.NetworkConfigFile(NetworkType.Devnet),
                     Constants.SerilogJsonConfigFile
                 }
-               .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem);
+               .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, TestContext.CurrentContext);
 
             Program.RegisterNodeDependencies(_containerProvider.ContainerBuilder,
                 excludedModules: new List<Type>

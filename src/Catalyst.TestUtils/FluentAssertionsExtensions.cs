@@ -63,7 +63,7 @@ namespace Catalyst.TestUtils
                 return new AndConstraint<GenericCollectionAssertions<T>>(constraint);
             }
 
-            throw new AssertionFailedException(string.Format(errorMessage, string.Join(",", enumerable)));
+            throw new AssertionException(string.Format(errorMessage, string.Join(",", enumerable)));
         }
 
         public static AndConstraint<GenericCollectionAssertions<T>> NotBeInDescendingOrder<T, TSelector>(this GenericCollectionAssertions<T> constraint,
@@ -91,16 +91,17 @@ namespace Catalyst.TestUtils
             internal string StringValue { get; }
         }
 
-        private readonly StringWrapper[] _stringsInAscendingOrder;
-        private readonly IEnumerable<StringWrapper> _stringsInDescendingOrder;
-        private readonly IEnumerable<StringWrapper> _stringsInRandomOrder;
+        private StringWrapper[] _stringsInAscendingOrder;
+        private IEnumerable<StringWrapper> _stringsInDescendingOrder;
+        private IEnumerable<StringWrapper> _stringsInRandomOrder;
 
-        public FluentAssertionsExtensionsTests()
+        [SetUp]
+        public void Init()
         {
-            _stringsInAscendingOrder = new[] {"A", "a", "b", "d", "r", "Z"}
-               .Select(x => new StringWrapper(x)).ToArray();
+            _stringsInAscendingOrder = new[] { "A", "a", "b", "d", "r", "Z" }
+              .Select(x => new StringWrapper(x)).ToArray();
             _stringsInDescendingOrder = _stringsInAscendingOrder.Reverse();
-            _stringsInRandomOrder = new[] {"A", "a", "Z", "b", "r", "d"}
+            _stringsInRandomOrder = new[] { "A", "a", "Z", "b", "r", "d" }
                .Select(x => new StringWrapper(x));
         }
 
@@ -113,7 +114,7 @@ namespace Catalyst.TestUtils
                .NotBeInDescendingOrder(x => x.StringValue, StringComparer.InvariantCultureIgnoreCase);
             new Action(() => _stringsInDescendingOrder.Should()
                    .NotBeInDescendingOrder(x => x.StringValue, StringComparer.InvariantCultureIgnoreCase))
-               .Should().Throw<AssertionFailedException>();
+               .Should().Throw<AssertionException>();
         }
 
         [Test]
@@ -122,7 +123,7 @@ namespace Catalyst.TestUtils
             new Action(() => _stringsInDescendingOrder.Should()
                    .NotBeInDescendingOrder(x => x.StringValue, 
                         StringComparer.InvariantCultureIgnoreCase))
-               .Should().Throw<AssertionFailedException>();
+               .Should().Throw<AssertionException>();
 
             _stringsInDescendingOrder.Should()
                .NotBeInDescendingOrder(x => x.StringValue, 
@@ -138,7 +139,7 @@ namespace Catalyst.TestUtils
                .NotBeInAscendingOrder(x => x.StringValue, StringComparer.InvariantCultureIgnoreCase);
             new Action(() => _stringsInAscendingOrder.Should()
                    .NotBeInAscendingOrder(x => x.StringValue, StringComparer.InvariantCultureIgnoreCase))
-               .Should().Throw<AssertionFailedException>();
+               .Should().Throw<AssertionException>();
         }
 
         [Test]
@@ -147,7 +148,7 @@ namespace Catalyst.TestUtils
             new Action(() => _stringsInAscendingOrder.Should()
                    .NotBeInAscendingOrder(x => x.StringValue, 
                         StringComparer.InvariantCultureIgnoreCase))
-               .Should().Throw<AssertionFailedException>();
+               .Should().Throw<AssertionException>();
 
             _stringsInAscendingOrder.Should()
                .NotBeInAscendingOrder(x => x.StringValue, 

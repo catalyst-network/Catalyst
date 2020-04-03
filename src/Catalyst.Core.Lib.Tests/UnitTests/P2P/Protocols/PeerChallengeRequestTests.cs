@@ -44,11 +44,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         private IPeerSettings _testSettings;
         private CancellationTokenProvider _cancellationProvider;
 
-        public PeerChallengeRequestTests() : base(TestContext.CurrentContext)
-        {
-
-        }
-
         [SetUp]
         public void Init()
         {
