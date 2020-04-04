@@ -63,7 +63,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 
             ordered.Select(o => o.GasPrice.ToUInt256()).Should().BeInDescendingOrder(t => t);
             ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeInAscendingOrder();
-            ordered.Should().NotBeInDescendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
+            ordered.Select(t => t.Signature.ToByteArray()).Should().NotBeInDescendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default);
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                 ordered.Where(t => t.GasPrice.ToUInt256() == (ulong) i)
                    .Select(t => t.Timestamp.ToDateTime()).Should().BeInAscendingOrder());
 
-            ordered.Should().NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
+            ordered.Select(t => t.Signature.ToByteArray()).Should().NotBeInDescendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default);
         }
 
         [Test]
@@ -131,8 +131,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                     s.Signature.RawBytes.ToBase64())
                .ToList().ForEach(x => TestContext.WriteLine(x));
 
-            ordered.Should()
-               .NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
+            ordered.Select(t => t.Signature.ToByteArray()).Should().NotBeInDescendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default);
         }
     }
 
