@@ -29,6 +29,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
     /// <summary>
     /// This is just a placeholder for the actual tests later.
     /// </summary>
+    [TestFixture]
     public sealed class RangeProofPrecompileTests
     {
         [Test]

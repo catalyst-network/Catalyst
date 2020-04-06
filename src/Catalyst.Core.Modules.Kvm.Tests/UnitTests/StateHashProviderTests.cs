@@ -26,6 +26,7 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
 {
+    [TestFixture]
     public sealed class StateHashProviderTests
     {
         [Ignore("Not implemented yet")]

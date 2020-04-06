@@ -66,6 +66,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 {
+    [TestFixture]
     public sealed class LedgerKvmTests
     {
         private readonly ILogger _logger;

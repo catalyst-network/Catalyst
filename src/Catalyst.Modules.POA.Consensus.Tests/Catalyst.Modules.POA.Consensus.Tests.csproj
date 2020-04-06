@@ -15,13 +15,6 @@
     </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
       <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />

@@ -47,6 +47,7 @@ using IPrivateKey = Catalyst.Abstractions.Cryptography.IPrivateKey;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 {
+    [TestFixture]
     public sealed class CatalystVirtualMachineTests
     {
         private readonly TestContext TestContext;

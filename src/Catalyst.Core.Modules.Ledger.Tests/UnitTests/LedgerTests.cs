@@ -59,6 +59,7 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 {
+    [TestFixture]
     public sealed class LedgerTests : IDisposable
     {
         private readonly TestScheduler _testScheduler;

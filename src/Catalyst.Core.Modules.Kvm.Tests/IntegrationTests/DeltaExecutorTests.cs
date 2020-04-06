@@ -46,6 +46,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 {
+    [TestFixture]
     public sealed class DeltaExecutorTests
     {
         private readonly ICryptoContext _cryptoContext = new FfiWrapper();

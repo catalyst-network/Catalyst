@@ -40,6 +40,7 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 {
+    [TestFixture]
     public class LedgerSynchroniserTests
     {
         private readonly TestContext _output;
