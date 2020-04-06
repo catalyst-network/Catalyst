@@ -169,11 +169,9 @@ namespace Catalyst.Core.Modules.Kvm
             _storageProvider.Commit(txTracer.IsTracingState ? txTracer : null);
             _stateProvider.Commit(spec, txTracer.IsTracingState ? txTracer : null);
             
+            _stateProvider.RecalculateStateRoot();
             if (!readOnly)
             {
-                // IMPORTANT: if this line is removed then the trie state root will not be recalculated before saving in the DB
-                // bad design - to change
-                Keccak newStateRoot = _stateProvider.StateRoot;
                 if (new Keccak(delta.StateRoot.ToByteArray()) != _stateProvider.StateRoot)
                 {
                     if (_logger.IsEnabled(LogEventLevel.Error)) _logger.Error("Invalid delta state root - found {found} and should be {shouldBe}", _stateProvider.StateRoot, new Keccak(delta.StateRoot.ToByteArray()));

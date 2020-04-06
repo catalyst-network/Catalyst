@@ -69,30 +69,31 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
     [TestFixture]
     public sealed class LedgerKvmTests
     {
-        private readonly ILogger _logger;
-        private readonly MultiHash _genesisHash;
-        private readonly IHashProvider _hashProvider;
-        private readonly IMapperProvider _mapperProvider;
-        private readonly ISpecProvider _specProvider;
-        private readonly TestScheduler _testScheduler;
-        private readonly StateProvider _stateProvider;
-        private readonly ICryptoContext _cryptoContext;
-        private readonly IAccountRepository _fakeRepository;
-        private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly ILedgerSynchroniser _ledgerSynchroniser;
-        private readonly IMempool<PublicEntryDao> _mempool;
-        private readonly IDeltaExecutor _deltaExecutor;
-        private readonly IStorageProvider _storageProvider;
-        private readonly ISnapshotableDb _stateDb;
-        private readonly ISnapshotableDb _codeDb;
-        private readonly IDeltaByNumberRepository _deltaByNumber;
-        private readonly IPrivateKey _senderPrivateKey;
-        private readonly IPublicKey _senderPublicKey;
-        private readonly SigningContext _signingContext;
-        private readonly ITransactionRepository _receipts;
+        private ILogger _logger;
+        private MultiHash _genesisHash;
+        private IHashProvider _hashProvider;
+        private IMapperProvider _mapperProvider;
+        private ISpecProvider _specProvider;
+        private TestScheduler _testScheduler;
+        private StateProvider _stateProvider;
+        private ICryptoContext _cryptoContext;
+        private IAccountRepository _fakeRepository;
+        private IDeltaHashProvider _deltaHashProvider;
+        private ILedgerSynchroniser _ledgerSynchroniser;
+        private IMempool<PublicEntryDao> _mempool;
+        private IDeltaExecutor _deltaExecutor;
+        private IStorageProvider _storageProvider;
+        private ISnapshotableDb _stateDb;
+        private ISnapshotableDb _codeDb;
+        private IDeltaByNumberRepository _deltaByNumber;
+        private IPrivateKey _senderPrivateKey;
+        private IPublicKey _senderPublicKey;
+        private SigningContext _signingContext;
+        private ITransactionRepository _receipts;
         private Address _senderAddress;
 
-        public LedgerKvmTests()
+        [SetUp]
+        public void Setup()
         {
             _testScheduler = new TestScheduler();
             _cryptoContext = new FfiWrapper();
@@ -185,6 +186,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             var recipient = _cryptoContext.GeneratePrivateKey().GetPublicKey();
             _stateProvider.CreateAccount(_senderAddress, 1000);
             _stateProvider.CreateAccount(recipient.ToKvmAddress(), UInt256.Zero);
+            _stateProvider.RecalculateStateRoot();
             _stateProvider.Commit(CatalystGenesisSpec.Instance);
             _stateProvider.CommitTree();
 
@@ -423,6 +425,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             // need to commit changes as the next two calls are reverting changes on the same state provider
             _storageProvider.Commit();
+            _stateProvider.RecalculateStateRoot();
             _stateProvider.Commit(_specProvider.GetSpec(1));
             _storageProvider.CommitTrees();
             _stateProvider.CommitTree();

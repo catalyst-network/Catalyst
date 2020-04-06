@@ -329,7 +329,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             _executor.Execute(delta, tracer);
 
             var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
-            tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), "Error");
+            tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), "BadInstruction");
         }
 
         [Test]
@@ -349,7 +349,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             _executor.Execute(delta, tracer);
 
             var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
-            tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), "Error");
+            tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), "StackUnderflow");
         }
 
         [Test]
