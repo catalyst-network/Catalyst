@@ -39,11 +39,19 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
     [Property(Traits.TestType, Traits.IntegrationTest)]
     public sealed class FileSystemTest : FileSystemBasedTest
     {
-        private readonly FileSystem _fileSystem;
-        private readonly string _sourceFolder;
+        private FileSystem _fileSystem;
+        private string _sourceFolder;
 
         public FileSystemTest() : base(TestContext.CurrentContext)
         {
+
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            this.Setup(TestContext.CurrentContext);
+
             _fileSystem = new FileSystem();
 
             _sourceFolder = Setup();

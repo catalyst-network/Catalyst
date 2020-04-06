@@ -42,12 +42,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
     public sealed class DeltaDfsHashObserverTests
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly IChannelHandlerContext _fakeChannelContext;
-        private readonly ILogger _logger;
+        private IHashProvider _hashProvider;
+        private IDeltaHashProvider _deltaHashProvider;
+        private IChannelHandlerContext _fakeChannelContext;
+        private ILogger _logger;
 
-        public DeltaDfsHashObserverTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();

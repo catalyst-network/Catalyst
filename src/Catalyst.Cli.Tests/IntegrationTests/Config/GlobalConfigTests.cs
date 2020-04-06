@@ -49,6 +49,12 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Config
 
         public GlobalConfigTests() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         [TestCaseSource(nameof(Networks))]
         [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(NetworkType network)

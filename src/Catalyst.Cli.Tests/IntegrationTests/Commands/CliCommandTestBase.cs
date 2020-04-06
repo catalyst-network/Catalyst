@@ -59,6 +59,13 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
             Path.Combine(Constants.ConfigSubFolder, CliConstants.ShellConfigFile),
         })
         {
+
+        }
+
+        public override void Setup(TestContext output)
+        {
+            base.Setup(output);
+
             ConfigureModules();
 
             ConfigureNodeClient();

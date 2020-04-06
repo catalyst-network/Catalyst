@@ -65,8 +65,7 @@ namespace Catalyst.Protocol.Tests.UnitTests.Deltas
             }
         }
 
-        [Theory]
-        [TestCase(typeof(InvalidDeltas))]
+        [TestCaseSource(typeof(InvalidDeltas))]
         public void Delta_IsValid_Should_Throw_On_Invalid_Delta(Delta delta)
         {
             new Action(() => delta.IsValid()).Should().Throw<InvalidDataException>();

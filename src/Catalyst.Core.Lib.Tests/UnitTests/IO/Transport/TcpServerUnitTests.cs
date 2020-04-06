@@ -32,16 +32,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
 {
     public sealed class TcpServerUnitTests
     {
-        public TcpServerUnitTests()
+        [SetUp]
+        public void Init()
         {
             _tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
             _logger = Substitute.For<ILogger>();
             _eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
         }
 
-        private readonly ITcpServerChannelFactory _tcpServerChannelFactory;
-        private readonly ILogger _logger;
-        private readonly IEventLoopGroupFactory _eventLoopGroupFactory;
+        private ITcpServerChannelFactory _tcpServerChannelFactory;
+        private ILogger _logger;
+        private IEventLoopGroupFactory _eventLoopGroupFactory;
 
         [Test]
         public void TcpServer_Should_Dispose()

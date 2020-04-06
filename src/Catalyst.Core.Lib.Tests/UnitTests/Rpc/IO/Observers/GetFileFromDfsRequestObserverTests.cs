@@ -49,12 +49,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class GetFileFromDfsRequestObserverTests : IDisposable
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IUploadFileTransferFactory _fileTransferFactory;
-        private readonly IDfsService _dfsService;
-        private readonly GetFileFromDfsRequestObserver _observer;
+        private IHashProvider _hashProvider;
+        private IUploadFileTransferFactory _fileTransferFactory;
+        private IDfsService _dfsService;
+        private GetFileFromDfsRequestObserver _observer;
 
-        public GetFileFromDfsRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();

@@ -40,11 +40,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 {
     public sealed class ReputationManagerTests
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly ILogger _subbedLogger;
-        private readonly IPeerRepository _subbedPeerRepository;
+        private TestScheduler _testScheduler;
+        private ILogger _subbedLogger;
+        private IPeerRepository _subbedPeerRepository;
 
-        public ReputationManagerTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();

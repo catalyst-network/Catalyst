@@ -109,8 +109,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Theory]
-        [TestCase(typeof(FavouritesComparisonData))]
+        [TestCaseSource(typeof(FavouritesComparisonData))]
         public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
         {
             var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(x);

@@ -38,6 +38,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
     {
         public FileStoreTest() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         private sealed class Entity
         {
             public int Number;

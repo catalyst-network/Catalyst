@@ -44,6 +44,12 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 
         public AddFileCommandTests() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         [TestCaseSource("AddFileData")]
         public async Task Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
         {

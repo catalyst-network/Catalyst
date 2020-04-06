@@ -43,17 +43,18 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
     [TestFixture]
     public class LedgerSynchroniserTests
     {
-        private readonly TestContext _output;
-        private readonly IDeltaCache _deltaCache;
-        private readonly LedgerSynchroniser _synchroniser;
-        private readonly CancellationToken _cancellationToken;
-        private readonly HashProvider _hashProvider;
+        private TestContext _output;
+        private IDeltaCache _deltaCache;
+        private LedgerSynchroniser _synchroniser;
+        private CancellationToken _cancellationToken;
+        private HashProvider _hashProvider;
 
-        public LedgerSynchroniserTests(TestContext output)
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
-            _output = output;
+            _output = TestContext.CurrentContext;
             _deltaCache = Substitute.For<IDeltaCache>();
             var logger = Substitute.For<ILogger>();
 

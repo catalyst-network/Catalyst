@@ -31,6 +31,12 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
     {
         public GetInfoCommandTests() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         [Test]
         public void Cli_Can_Request_Node_Info()
         {

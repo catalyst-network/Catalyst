@@ -50,11 +50,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     /// </summary>
     public sealed class GetPeerInfoRequestObserverTests
     {
-        private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IPeerRepository _peerRepository;
+        private ILogger _logger;
+        private IChannelHandlerContext _fakeContext;
+        private IPeerRepository _peerRepository;
 
-        public GetPeerInfoRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -100,7 +101,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// </summary>
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
-        [Theory]
         [TestCase("publickey-1", "172.0.0.1")]
         [TestCase("publickey-2", "172.0.0.2")]
         public void TestGetPeerInfoRequestResponse(string publicKey, string ipAddress)
@@ -122,7 +122,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// </summary>
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
-        [Theory]
         [TestCase("this-pk-should-not-exist", "172.0.0.1")]
         [TestCase("this-pk-should-not-exist", "172.0.0.3")]
         [TestCase("publickey-1", "0.0.0.0")]

@@ -41,16 +41,17 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {
     public class ConsensusTests : IDisposable
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IDeltaBuilder _deltaBuilder;
-        private readonly IDeltaVoter _deltaVoter;
-        private readonly IDeltaElector _deltaElector;
-        private readonly IDeltaCache _deltaCache;
-        private readonly IDeltaHub _deltaHub;
-        private readonly TestCycleEventProvider _cycleEventProvider;
-        private readonly Consensus _consensus;
+        private IHashProvider _hashProvider;
+        private IDeltaBuilder _deltaBuilder;
+        private IDeltaVoter _deltaVoter;
+        private IDeltaElector _deltaElector;
+        private IDeltaCache _deltaCache;
+        private IDeltaHub _deltaHub;
+        private TestCycleEventProvider _cycleEventProvider;
+        private Consensus _consensus;
 
-        public ConsensusTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _cycleEventProvider = new TestCycleEventProvider();

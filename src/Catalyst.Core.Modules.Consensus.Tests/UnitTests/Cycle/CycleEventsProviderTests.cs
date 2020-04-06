@@ -50,22 +50,23 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
         private static readonly PhaseStatus[] StatusesInOrder =
             {PhaseStatus.Producing, PhaseStatus.Collecting, PhaseStatus.Idle};
 
-        private readonly TestScheduler _testScheduler;
-        private readonly CycleEventsProvider _cycleProvider;
-        private readonly IDisposable _subscription;
-        private readonly IObserver<IPhase> _spy;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly ICycleSchedulerProvider _schedulerProvider;
-        private readonly TestContext _output;
-        private readonly IStopwatch _stopWatch;
-        private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly ILogger _logger;
+        private TestScheduler _testScheduler;
+        private CycleEventsProvider _cycleProvider;
+        private IDisposable _subscription;
+        private IObserver<IPhase> _spy;
+        private IDateTimeProvider _dateTimeProvider;
+        private ICycleSchedulerProvider _schedulerProvider;
+        private TestContext _output;
+        private IStopwatch _stopWatch;
+        private IDeltaHashProvider _deltaHashProvider;
+        private ILogger _logger;
 
-        public CycleEventsProviderTests(TestContext output)
+        [SetUp]
+        public void Init()
         {
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
-            _output = output;
+            _output = TestContext.CurrentContext;
             _testScheduler = new TestScheduler();
 
             _schedulerProvider = Substitute.For<ICycleSchedulerProvider>();

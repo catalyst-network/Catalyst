@@ -39,12 +39,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
 {
     public sealed class DatagramPacketEncoderTests
     {
-        private readonly EmbeddedChannel _channel;
-        private readonly PeerId _recipientPid;
-        private readonly DatagramPacket _datagramPacket;
-        private readonly ProtocolMessage _protocolMessageSigned;
-        
-        public DatagramPacketEncoderTests()
+        private EmbeddedChannel _channel;
+        private PeerId _recipientPid;
+        private DatagramPacket _datagramPacket;
+        private ProtocolMessage _protocolMessageSigned;
+
+        [SetUp]
+        public void Init()
         {
             _channel = new EmbeddedChannel(
                 new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
@@ -54,14 +55,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
                 IPAddress.Loopback,
                 10000
             );
-            
+
             _recipientPid = PeerIdHelper.GetPeerId("sender",
                 IPAddress.Loopback,
                 20000
             );
 
             _protocolMessageSigned = new PingRequest().ToSignedProtocolMessage(senderPid, (byte[]) default);
-            
+
             _datagramPacket = new DatagramPacket(
                 Unpooled.WrappedBuffer(_protocolMessageSigned.ToByteArray()),
                 senderPid.IpEndPoint,
@@ -88,19 +89,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
         public void DatagramPacketEncoder_Will_Not_Encode_UnmatchedMessageType()
         {
             Assert.True(_channel.WriteOutbound(_protocolMessageSigned));
-        
+
             var protocolMessageSigned = _channel.ReadOutbound<ProtocolMessage>();
             Assert.NotNull(protocolMessageSigned);
             Assert.AreSame(_protocolMessageSigned, protocolMessageSigned);
             Assert.False(_channel.Finish());
         }
-        
+
         [Test]
         public void DatagramPacketEncoder_Will_Not_Encode_UnmatchedType()
         {
             const string expected = "junk";
             Assert.True(_channel.WriteOutbound(expected));
-        
+
             var content = _channel.ReadOutbound<string>();
             Assert.AreSame(expected, content);
             Assert.False(_channel.Finish());

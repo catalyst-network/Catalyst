@@ -46,12 +46,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 {
     public sealed class PeerDeltaHistoryRequestTest : SelfAwareTestBase
     {
-        private readonly IPeerDeltaHistoryRequest _peerDeltaHistoryRequest;
-        private readonly IPeerSettings _testSettings;
-        private readonly CancellationTokenProvider _cancellationProvider;
+        private IPeerDeltaHistoryRequest _peerDeltaHistoryRequest;
+        private IPeerSettings _testSettings;
+        private CancellationTokenProvider _cancellationProvider;
 
-        public PeerDeltaHistoryRequestTest() : base(TestContext.CurrentContext)
+        [SetUp]
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
+
             var subbedPeerClient = Substitute.For<IPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));

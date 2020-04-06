@@ -43,10 +43,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 {
     public sealed class PeerMessageCorrelationManagerTests : MessageCorrelationManagerTests<IPeerMessageCorrelationManager>
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly Dictionary<PeerId, int> _reputationByPeerIdentifier;
+        private TestScheduler _testScheduler;
+        private Dictionary<PeerId, int> _reputationByPeerIdentifier;
 
-        public PeerMessageCorrelationManagerTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
 

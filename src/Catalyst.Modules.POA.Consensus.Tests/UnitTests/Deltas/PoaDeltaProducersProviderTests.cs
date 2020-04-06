@@ -46,27 +46,28 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
     public class PoaDeltaProducersProviderTests
     {
-        private readonly Peer _selfAsPeer;
-        private readonly List<Peer> _peers;
-        private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
-        private readonly Cid _previousDeltaHash;
-        private readonly IMemoryCache _producersByPreviousDelta;
-        private readonly IHashProvider _hashProvider;
+        private Peer _selfAsPeer;
+        private List<Peer> _peers;
+        private PoaDeltaProducersProvider _poaDeltaProducerProvider;
+        private Cid _previousDeltaHash;
+        private IMemoryCache _producersByPreviousDelta;
+        private IHashProvider _hashProvider;
 
-        public PoaDeltaProducersProviderTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
             var peerSettings = PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings();
-            _selfAsPeer = new Peer {PeerId = peerSettings.PeerId};
+            _selfAsPeer = new Peer { PeerId = peerSettings.PeerId };
             var rand = new Random();
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>
-                {
-                    var peerIdentifier = PeerIdHelper.GetPeerId(rand.Next().ToString());
-                    var peer = new Peer {PeerId = peerIdentifier};
-                    return peer;
-                }).ToList();
+               {
+                   var peerIdentifier = PeerIdHelper.GetPeerId(rand.Next().ToString());
+                   var peer = new Peer { PeerId = peerIdentifier };
+                   return peer;
+               }).ToList();
 
             var logger = Substitute.For<ILogger>();
 

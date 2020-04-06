@@ -46,13 +46,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
     public sealed class GetDeltaRequestObserverTests
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly IDeltaCache _deltaCache;
-        private readonly GetDeltaRequestObserver _observer;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IHashProvider _hashProvider;
+        private TestScheduler _testScheduler;
+        private IDeltaCache _deltaCache;
+        private GetDeltaRequestObserver _observer;
+        private IChannelHandlerContext _fakeContext;
+        private IHashProvider _hashProvider;
 
-        public GetDeltaRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule<HashingModule>();

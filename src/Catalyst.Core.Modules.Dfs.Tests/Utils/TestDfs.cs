@@ -54,7 +54,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
 
             if (fileSystem == null)
             {
-                fileSystem = new TestDfsFileSystem().FileSystem;
+                var testFileSystem = new TestDfsFileSystem();
+                testFileSystem.Setup(TestContext.CurrentContext);
+                fileSystem = testFileSystem.FileSystem;
             }
 
             containerBuilder.RegisterInstance(new PasswordManager(new TestPasswordReader(), new PasswordRegistry())).As<IPasswordManager>().SingleInstance();

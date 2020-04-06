@@ -41,12 +41,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 {
     public sealed class PeerQueryTipTests : SelfAwareTestBase
     {
-        private readonly IPeerQueryTipRequest _peerQueryTipRequest;
-        private readonly IPeerSettings _testSettings;
-        private readonly CancellationTokenProvider _cancellationProvider;
+        private IPeerQueryTipRequest _peerQueryTipRequest;
+        private IPeerSettings _testSettings;
+        private CancellationTokenProvider _cancellationProvider;
 
-        public PeerQueryTipTests() : base(TestContext.CurrentContext)
+        [SetUp]
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
+
             var subbedPeerClient = Substitute.For<IPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));

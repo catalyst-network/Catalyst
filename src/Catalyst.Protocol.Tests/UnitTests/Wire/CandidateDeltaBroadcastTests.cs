@@ -57,8 +57,7 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
             }
         }
 
-        [Theory]
-        [TestCase(typeof(InvalidCandidateDeltaBroadCasts))]
+        [TestCaseSource(typeof(InvalidCandidateDeltaBroadCasts))]
         public void CandidateDeltaBroadcast_IsValid_Should_Return_False_On_Invalid_CandidateDeltaBroadcast(CandidateDeltaBroadcast candidate)
         {
             candidate.IsValid().Should().BeFalse();

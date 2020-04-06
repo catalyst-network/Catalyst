@@ -54,15 +54,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 {
     public sealed class AddFileToDfsRequestObserverTests
     {
-        private readonly ManualResetEvent _manualResetEvent;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
-        private readonly AddFileToDfsRequestObserver _addFileToDfsRequestObserver;
-        private readonly PeerId _senderIdentifier;
-        private readonly IDfsService _fakeDfsService;
-        private readonly IHashProvider _hashProvider;
+        private ManualResetEvent _manualResetEvent;
+        private IChannelHandlerContext _fakeContext;
+        private IDownloadFileTransferFactory _nodeFileTransferFactory;
+        private AddFileToDfsRequestObserver _addFileToDfsRequestObserver;
+        private PeerId _senderIdentifier;
+        private IDfsService _fakeDfsService;
+        private IHashProvider _hashProvider;
 
-        public AddFileToDfsRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _manualResetEvent = new ManualResetEvent(false);

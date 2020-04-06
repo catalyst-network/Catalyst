@@ -33,7 +33,6 @@ using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
-
 using Nethermind.Core.Specs;
 using Nethermind.Db;
 using Nethermind.Evm;
@@ -50,9 +49,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
     [TestFixture]
     public sealed class CatalystVirtualMachineTests
     {
-        private readonly TestContext TestContext;
-        public CatalystVirtualMachineTests(TestContext testOutputHelper) { TestContext = testOutputHelper; }
-
         [Test]
         [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Run_Smoke_test()

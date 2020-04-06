@@ -46,13 +46,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public class DeltaCacheTests
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IMemoryCache _memoryCache;
-        private readonly IDeltaDfsReader _dfsReader;
-        private readonly DeltaCache _deltaCache;
-        private readonly ILogger _logger;
+        private IHashProvider _hashProvider;
+        private IMemoryCache _memoryCache;
+        private IDeltaDfsReader _dfsReader;
+        private DeltaCache _deltaCache;
+        private ILogger _logger;
 
-        public DeltaCacheTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _memoryCache = Substitute.For<IMemoryCache>();

@@ -36,15 +36,14 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
 {
-    public sealed class PeerIdValidatorTests
+    public class PeerIdValidatorTests
     {
-        private readonly TestContext _output;
-        private readonly IPeerIdValidator _peerIdValidator;
-        private readonly PeerId _validPeerId;
+        private IPeerIdValidator _peerIdValidator;
+        private PeerId _validPeerId;
 
-        public PeerIdValidatorTests(TestContext output)
+        [SetUp]
+        public void Init()
         {
-            _output = output;
             _validPeerId = PeerIdHelper.GetPeerId();
             _peerIdValidator = new PeerIdValidator(new FfiWrapper());
         }
@@ -63,7 +62,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             TestContext.WriteLine(string.Join(" ", fieldsInBytes.SelectMany(b => b)));
         }
 
-        [Theory]
         [TestCase(0)]
         [TestCase(10)]
         [TestCase(19)]
@@ -91,8 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             }
         }
 
-        [Theory]
-        [TestCase(typeof(IpTestData))]
+        [TestCaseSource(typeof(IpTestData))]
 
         //Todo: discuss if this is relevant: why do we enforce a given size for IPs (or anything) if proto handles it
         public void Can_Throw_Argument_Exception_On_Invalid_Ip(byte[] ipBytes)
@@ -106,11 +103,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
                .Should().Throw<ArgumentException>().WithMessage("*Ip*");
         }
 
-        [Theory]
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(1024)]
-        public void Can_Throw_Argument_Exception_On_Wrong_Port(ushort port)
+        [TestCase(0u)]
+        [TestCase(1u)]
+        [TestCase(1024u)]
+        public void Can_Throw_Argument_Exception_On_Wrong_Port(uint port)
         {
             var invalidPeer = new PeerId(_validPeerId)
             {

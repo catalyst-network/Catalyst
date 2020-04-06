@@ -41,7 +41,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Bootstrapping
             var serverBootstrap = new ServerBootstrap();
 
             //We have not set the group for bootstrap so we know that code will trigger an exception, if BindAsync calls Base BindAsync
-            Assert.Throws<InvalidOperationException>(async () => { await serverBootstrap.BindAsync(ipAddress, port); });
+            Assert.ThrowsAsync<InvalidOperationException>(async () => { await serverBootstrap.BindAsync(ipAddress, port); });
         }
     }
 }

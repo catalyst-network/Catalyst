@@ -77,14 +77,15 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
     public class DeltaElectorTests
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly ILogger _logger;
-        private readonly IReputationManager _reputationManager;
-        private readonly IHashProvider _hashProvider;
-        private readonly IMemoryCache _cache;
-        private readonly IDeltaProducersProvider _deltaProducersProvider;
+        private TestScheduler _testScheduler;
+        private ILogger _logger;
+        private IReputationManager _reputationManager;
+        private IHashProvider _hashProvider;
+        private IMemoryCache _cache;
+        private IDeltaProducersProvider _deltaProducersProvider;
 
-        public DeltaElectorTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
@@ -95,8 +96,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _deltaProducersProvider = Substitute.For<IDeltaProducersProvider>();
         }
 
-        [Theory]
-        [TestCase(typeof(BadFavouritesData))]
+        [TestCaseSource(typeof(BadFavouritesData))]
         public void When_receiving_bad_favourite_should_log_and_not_hit_the_cache(FavouriteDeltaBroadcast badFavourite,
             Type exceptionType)
         {

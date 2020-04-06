@@ -51,15 +51,15 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     {
         public static readonly List<object[]> DodgyCandidates;
 
-        private readonly IHashProvider _hashProvider;
-        private readonly IMemoryCache _cache;
-        private readonly IDeltaProducersProvider _producersProvider;
+        private IHashProvider _hashProvider;
+        private IMemoryCache _cache;
+        private IDeltaProducersProvider _producersProvider;
         private DeltaVoter _voter;
-        private readonly Cid _previousDeltaHash;
-        private readonly IList<PeerId> _producerIds;
-        private readonly PeerId _localIdentifier;
-        private readonly ILogger _logger;
-        private readonly IPeerSettings _peerSettings;
+        private Cid _previousDeltaHash;
+        private IList<PeerId> _producerIds;
+        private PeerId _localIdentifier;
+        private ILogger _logger;
+        private IPeerSettings _peerSettings;
 
         static DeltaVoterTests()
         {
@@ -94,7 +94,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             };
         }
 
-        public DeltaVoterTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
 
@@ -115,8 +116,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _logger = Substitute.For<ILogger>();
         }
 
-        [Theory]
-        [TestCase(nameof(DodgyCandidates))]
+        [TestCaseSource(nameof(DodgyCandidates))]
         public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDeltaBroadcast dodgyCandidate)
         {
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);

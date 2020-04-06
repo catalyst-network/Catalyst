@@ -36,12 +36,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {
     public class TransactionComparerByPriceTimestampAndHashTests
     {
-        private readonly TestContext _output;
-        private readonly Random _random;
+        private TestContext _output;
+        private Random _random;
 
-        public TransactionComparerByPriceTimestampAndHashTests(TestContext output)
+        [SetUp]
+        public void Init()
         {
-            _output = output;
+            _output = TestContext.CurrentContext;
             _random = new Random();
         }
 
@@ -61,8 +62,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                .ToArray();
 
             ordered.Select(o => o.GasPrice.ToUInt256()).Should().BeInDescendingOrder(t => t);
-            ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeAscendingInOrder();
-            ordered.Should().NotBeInDescendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
+            ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeInAscendingOrder();
+            ordered.Select(t => t.Signature.ToByteArray()).Should().NotBeInDescendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default);
         }
 
         [Test]
@@ -86,7 +87,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                 ordered.Where(t => t.GasPrice.ToUInt256() == (ulong) i)
                    .Select(t => t.Timestamp.ToDateTime()).Should().BeInAscendingOrder());
 
-            ordered.Should().NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
+            ordered.Select(t => t.Signature.ToByteArray()).Should().NotBeInDescendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default);
         }
 
         [Test]
@@ -130,8 +131,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                     s.Signature.RawBytes.ToBase64())
                .ToList().ForEach(x => TestContext.WriteLine(x));
 
-            ordered.Should()
-               .NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
+            ordered.Select(t => t.Signature.ToByteArray()).Should().NotBeInDescendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default);
         }
     }
 

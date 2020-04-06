@@ -43,13 +43,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class PeerReputationRequestObserverTests
     {
-        private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly TestScheduler _testScheduler;
-        private readonly IPeerRepository _peerRepository;
-        private readonly PeerId _senderId;
+        private ILogger _logger;
+        private IChannelHandlerContext _fakeContext;
+        private TestScheduler _testScheduler;
+        private IPeerRepository _peerRepository;
+        private PeerId _senderId;
 
-        public PeerReputationRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -79,7 +80,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             return fakePeers;
         }
 
-        [Theory]
         [TestCase("peer-1", 1)]
         [TestCase("peer-4", 4)]
         [TestCase("unknown", int.MinValue)]

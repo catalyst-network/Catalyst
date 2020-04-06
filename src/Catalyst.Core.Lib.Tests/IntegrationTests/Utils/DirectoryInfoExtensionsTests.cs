@@ -36,6 +36,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Utils
 
         public DirectoryInfoExtensionsTests() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         [Test]
         public void SubDirectoryInfo_Returns_Directory_Info_If_SubDirectory_Exists()
         {

@@ -39,12 +39,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {
     public sealed class ProtocolMessageVerifyHandlerTests
     {
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly ProtocolMessage _protocolMessageSigned;
-        private readonly FakeKeySigner _keySigner;
-        private readonly SigningContext _signingContext;
+        private IChannelHandlerContext _fakeContext;
+        private ProtocolMessage _protocolMessageSigned;
+        private FakeKeySigner _keySigner;
+        private SigningContext _signingContext;
 
-        public ProtocolMessageVerifyHandlerTests()
+        [SetUp]
+        public void Init()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<FakeKeySigner>();
@@ -60,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         }
 
         [Test]
-        private void CanFireNextPipelineOnValidSignature()
+        public void CanFireNextPipelineOnValidSignature()
         {
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(true);
@@ -73,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         }
         
         [Test]
-        private void CanFireNextPipelineOnInvalidSignature()
+        public void CanFireNextPipelineOnInvalidSignature()
         {
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(false);

@@ -31,10 +31,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public class IsaacRandomTests
     {
-        [Theory]
-        [TestCase(1000)]
-        [TestCase(10000)]
-        [TestCase(100000)]
+        [TestCase(1000u)]
+        [TestCase(10000u)]
+        [TestCase(100000u)]
         public void Test_Deterministic_Algorithm(uint sequenceSize)
         {
             var seed = CorrelationId.GenerateCorrelationId().ToString();

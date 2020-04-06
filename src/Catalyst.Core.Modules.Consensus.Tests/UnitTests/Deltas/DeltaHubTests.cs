@@ -51,11 +51,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaHubTests
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IBroadcastManager _broadcastManager;
-        private readonly PeerId _peerId;
-        private readonly DeltaHub _hub;
-        private readonly IDfsService _dfsService;
+        private IHashProvider _hashProvider;
+        private IBroadcastManager _broadcastManager;
+        private PeerId _peerId;
+        private DeltaHub _hub;
+        private IDfsService _dfsService;
 
         private sealed class DeltaHubWithFastRetryPolicy : DeltaHub
         {
@@ -71,7 +71,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                         TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt)));
         }
 
-        public DeltaHubTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _broadcastManager = Substitute.For<IBroadcastManager>();

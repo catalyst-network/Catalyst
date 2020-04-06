@@ -47,42 +47,43 @@ namespace Catalyst.TestUtils
     [Property(Traits.TestType, Traits.IntegrationTest)]
     public class FileSystemBasedTest : IDisposable
     {
-        protected readonly string CurrentTestName;
+        protected string CurrentTestName;
         public IFileSystem FileSystem;
-        protected readonly TestContext Output;
+        protected TestContext Output;
         public DirectoryInfo TestDirectory { set; get; }
-        protected List<string> ConfigFilesUsed { get; }
-        protected readonly ContainerProvider ContainerProvider;
+        protected List<string> ConfigFilesUsed { private set; get; }
+        protected ContainerProvider ContainerProvider;
         private DateTime _testStartTime;
+
+        private NetworkType _network;
+        private IEnumerable<string> _configFilesUsed;
 
         protected FileSystemBasedTest(TestContext output, 
             IEnumerable<string> configFilesUsed = default,
             NetworkType network = default)
         {
             Guard.Argument(output, nameof(output)).NotNull();
+
+            _network = network;
+            _configFilesUsed = configFilesUsed;
+        }
+
+        public virtual void Setup(TestContext output)
+        {
             Output = output;
-            //var currentTest = Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
-            //   .GetValue(Output) as ITest;
-
-            //if (currentTest == null)
-            //{
-            //    throw new ArgumentNullException(
-            //        $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
-            //}
-
-            CurrentTestName = output.Test.Name;
+            CurrentTestName = Output.Test.MethodName;
 
             CreateUniqueTestDirectory();
-            
+
             ConfigFilesUsed = new List<string>
             {
                 Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(network == default ? NetworkType.Devnet : network))
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(_network == default ? NetworkType.Devnet : _network))
             };
 
-            configFilesUsed?.ToList().ForEach(config =>
+            _configFilesUsed?.ToList().ForEach(config =>
             {
-                ConfigFilesUsed.Add(config);                    
+                ConfigFilesUsed.Add(config);
             });
 
             ContainerProvider = new ContainerProvider(ConfigFilesUsed, FileSystem, Output);

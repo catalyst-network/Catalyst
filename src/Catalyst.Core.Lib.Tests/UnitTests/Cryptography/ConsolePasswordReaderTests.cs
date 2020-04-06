@@ -33,11 +33,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public class ConsolePasswordReaderTests
     {
-        private readonly IUserInput _userInput;
-        private readonly IUserOutput _userOutput;
-        private readonly ConsolePasswordReader _consolePasswordReader;
+        private IUserInput _userInput;
+        private IUserOutput _userOutput;
+        private ConsolePasswordReader _consolePasswordReader;
 
-        public ConsolePasswordReaderTests()
+        [SetUp]
+        public void Init()
         {
             _userInput = Substitute.For<IUserInput>();
             _userOutput = Substitute.For<IUserOutput>();

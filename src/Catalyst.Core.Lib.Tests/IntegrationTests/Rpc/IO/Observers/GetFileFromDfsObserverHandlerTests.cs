@@ -50,14 +50,22 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
     public sealed class GetFileFromDfsObserverHandlerTests : FileSystemBasedTest
     {
-        private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IDownloadFileTransferFactory _fileDownloadFactory;
-        private readonly IDfsService _dfsService;
-        private readonly IHashProvider _hashProvider;
+        private ILogger _logger;
+        private IChannelHandlerContext _fakeContext;
+        private IDownloadFileTransferFactory _fileDownloadFactory;
+        private IDfsService _dfsService;
+        private IHashProvider _hashProvider;
 
         public GetFileFromDfsObserverHandlerTests() : base(TestContext.CurrentContext)
         {
+
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();

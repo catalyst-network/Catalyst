@@ -44,10 +44,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public sealed class BitSwapApiTest
     {
-        private readonly IDfsService _dfsService;
-        private readonly IDfsService _dfsServiceOther;
-        
-        public BitSwapApiTest()
+        private IDfsService _dfsService;
+        private IDfsService _dfsServiceOther;
+
+        [SetUp]
+        public void Init()
         {
             var fileSystem1 = Substitute.For<IFileSystem>();
             fileSystem1.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,

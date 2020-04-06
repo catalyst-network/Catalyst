@@ -46,6 +46,12 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 
         public GetFileCommandTests() : base(TestContext.CurrentContext) { }
 
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
+
         [Theory]
         [TestCaseSource(nameof(GetFileData))]
         public async Task Cli_Can_Send_Get_File_Request(string fileHash, string outputPath, bool expectedResult)

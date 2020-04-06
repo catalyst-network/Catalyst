@@ -46,12 +46,15 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     {
         //we just need an offset to not have TimeStamp = 0 when building deltas (cf DeltaHelper)
         private const int Offset = 100;
-        private readonly IDeltaCache _deltaCache;
-        private readonly ILogger _logger;
-        private readonly IHashProvider _hashProvider;
+        private IDeltaCache _deltaCache;
+        private ILogger _logger;
+        private IHashProvider _hashProvider;
 
-        public DeltaHashProviderTests() : base(TestContext.CurrentContext)
+        [SetUp]
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
+
             _deltaCache = Substitute.For<IDeltaCache>();
             _logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()

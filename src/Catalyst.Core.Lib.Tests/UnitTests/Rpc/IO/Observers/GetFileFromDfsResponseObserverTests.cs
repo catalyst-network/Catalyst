@@ -41,12 +41,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class GetFileFromDfsResponseObserverTests
     {
-        private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IDownloadFileTransferFactory _fileDownloadFactory;
-        private readonly ulong ExpectedFileSize = 10;
+        private ILogger _logger;
+        private IChannelHandlerContext _fakeContext;
+        private IDownloadFileTransferFactory _fileDownloadFactory;
+        private ulong ExpectedFileSize = 10;
 
-        public GetFileFromDfsResponseObserverTests()
+        [SetUp]
+        public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();

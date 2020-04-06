@@ -44,14 +44,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class VerifyMessageRequestObserverTests
     {
-        private readonly IKeySigner _keySigner;
-        private readonly VerifyMessageRequestObserver _verifyMessageRequestObserver;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly PeerId _testPeerId;
-        private readonly VerifyMessageRequest _verifyMessageRequest;
-        private readonly SigningContext _signingContext;
+        private IKeySigner _keySigner;
+        private VerifyMessageRequestObserver _verifyMessageRequestObserver;
+        private IChannelHandlerContext _fakeContext;
+        private PeerId _testPeerId;
+        private VerifyMessageRequest _verifyMessageRequest;
+        private SigningContext _signingContext;
 
-        public VerifyMessageRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _signingContext = new SigningContext
             {

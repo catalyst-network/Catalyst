@@ -34,7 +34,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
 {
     public sealed class SocketBaseUnitTests
     {
-        public SocketBaseUnitTests()
+        [SetUp]
+        public void Init()
         {
             _logger = Substitute.For<ILogger>();
             var channelFactory = Substitute.For<ITcpClientChannelFactory>();
@@ -42,8 +43,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
             _testSocketBase = new TestSocketBase(channelFactory, _logger, eventLoopGroupFactory);
         }
 
-        private readonly ILogger _logger;
-        private readonly TestSocketBase _testSocketBase;
+        private ILogger _logger;
+        private TestSocketBase _testSocketBase;
 
         [Test]
         public void SocketBase_Should_Dispose()

@@ -13,6 +13,9 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
+      <PackageReference Include="Microsoft.Reactive.Testing" Version="4.1.6" />
+    </ItemGroup>
+    <ItemGroup>
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
