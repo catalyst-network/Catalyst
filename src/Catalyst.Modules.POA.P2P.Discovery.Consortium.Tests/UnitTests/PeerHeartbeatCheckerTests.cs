@@ -28,12 +28,13 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Protocols;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using FluentAssertions;
 
 namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {
@@ -56,25 +57,39 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
             };
         }
 
+        //[Fact]
+        //public async Task Can_Remove_Peer_On_Non_Responsive_Heartbeat()
+        //{
+        //    await RunHeartbeatChecker().ConfigureAwait(false);
+        //    _peerRepository.Received().Delete(_testPeer.DocumentId);
+        //}
+
+        //[Fact]
+        //public async Task Can_Keep_Peer_On_Valid_Heartbeat_Response()
+        //{
+        //    await RunHeartbeatChecker(true).ConfigureAwait(false);
+        //    _peerRepository.DidNotReceive().Delete(_testPeer.DocumentId);
+        //}
+
         [Test]
-        public async Task Can_Remove_Peer_On_Non_Responsive_Heartbeat()
+        public async Task Can_Set_Peer_Awol_To_False_On_Non_Responsive_Heartbeat()
         {
             await RunHeartbeatChecker().ConfigureAwait(false);
-            _peerRepository.Received().Delete(_testPeer.DocumentId);
+            _testPeer.IsAwolPeer.Should().BeTrue();
         }
 
         [Test]
         public async Task Can_Keep_Peer_On_Valid_Heartbeat_Response()
         {
             await RunHeartbeatChecker(true).ConfigureAwait(false);
-            _peerRepository.DidNotReceive().Delete(_testPeer.DocumentId);
+            _testPeer.IsAwolPeer.Should().BeFalse();
         }
 
         [Test]
         public async Task Can_Remove_Peer_On_Max_Counter()
         {
             await RunHeartbeatChecker(maxNonResponsiveCounter: 2).ConfigureAwait(false);
-            _peerRepository.Received().Delete(_testPeer.DocumentId);
+            _testPeer.IsAwolPeer.Should().BeTrue();
         }
 
         private async Task RunHeartbeatChecker(bool sendResponse = false, int maxNonResponsiveCounter = 1)

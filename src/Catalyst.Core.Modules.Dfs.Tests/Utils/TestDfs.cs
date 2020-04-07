@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             internal TestDfsFileSystem() : base(TestContext.CurrentContext) { }
         }
 
-        public static IDfsService GetTestDfs(IFileSystem fileSystem = default, string hashName = "blake2b-256")
+        public static IDfsService GetTestDfs(IFileSystem fileSystem = default, string hashName = "keccak-256")
         {
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();

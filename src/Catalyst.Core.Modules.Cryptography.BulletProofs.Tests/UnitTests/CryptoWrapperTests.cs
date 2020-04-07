@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Exceptions;
@@ -32,6 +33,7 @@ using FluentAssertions;
 using Google.Protobuf;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NUnit.Framework;
+
 
 namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
 {
@@ -270,6 +272,109 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.UnitTests
             var context = Encoding.UTF8.GetBytes("context");
             var signature = _wrapper.Sign(privateKey, message, context);
             signature.PublicKeyBytes.Should().Equal(publicKey.Bytes);
+        }
+
+        [Test]
+        public void Batch_Verification_Passes_For_Valid_Batch()
+        {
+            var sigs = new List<ISignature>();
+            var context = Encoding.UTF8.GetBytes("context");
+            var messages = new List<byte[]> 
+            {
+                Encoding.UTF8.GetBytes("rat"), 
+                Encoding.UTF8.GetBytes("hat"), 
+                Encoding.UTF8.GetBytes("hut"),
+                Encoding.UTF8.GetBytes("but"),
+                Encoding.UTF8.GetBytes("bun"),
+                Encoding.UTF8.GetBytes("run"),
+                Encoding.UTF8.GetBytes("ran"),
+                Encoding.UTF8.GetBytes("can"),
+                Encoding.UTF8.GetBytes("cat"),
+                Encoding.UTF8.GetBytes("rat")
+            };
+            messages.ForEach(x =>
+            {
+                sigs.Add(_wrapper.Sign(_wrapper.GeneratePrivateKey(), x, context));
+            });
+
+            var isVerified = _wrapper.BatchVerify(sigs, messages, context);
+            isVerified.Should().BeTrue();
+        }
+
+        [Test]
+        public void Batch_Verification_Fails_If_Wrong_Message_In_Batch()
+        {
+            var sigs = new List<ISignature>();
+            var context = Encoding.UTF8.GetBytes("context");
+            var messages = new List<byte[]> 
+            {
+                Encoding.UTF8.GetBytes("abc"), 
+                Encoding.UTF8.GetBytes("123"), 
+                Encoding.UTF8.GetBytes("xyz"),
+            };
+            messages.ForEach(x => sigs.Add(_wrapper.Sign(_wrapper.GeneratePrivateKey(), Encoding.UTF8.GetBytes("change of message"), context)));
+
+            var isVerified = _wrapper.BatchVerify(sigs, messages, context);
+            isVerified.Should().BeFalse();
+        }
+
+        [Test]
+        public void Batch_Verification_Fails_If_Wrong_Context_In_Batch()
+        {
+            var sigs = new List<ISignature>();
+            var context = Encoding.UTF8.GetBytes("context");
+            var context2 = Encoding.UTF8.GetBytes("this context is different");
+            var messages = new List<byte[]> 
+            {
+                Encoding.UTF8.GetBytes("abc"), 
+                Encoding.UTF8.GetBytes("123"), 
+                Encoding.UTF8.GetBytes("xyz"),
+            };
+            messages.ForEach(x => sigs.Add(_wrapper.Sign(_wrapper.GeneratePrivateKey(), x, context)));
+
+            var isVerified = _wrapper.BatchVerify(sigs, messages, context2);
+            isVerified.Should().BeFalse();
+        }
+
+        [Test]
+        public void Batch_Verification_Fails_For_One_Incorrect_Signature_PublicKey_Pair_In_Batch()
+        {
+            var sigs = new List<ISignature>();
+            var context = Encoding.UTF8.GetBytes("context");
+            var messages = new List<byte[]> 
+            {
+                Encoding.UTF8.GetBytes("abc"), 
+                Encoding.UTF8.GetBytes("123"), 
+                Encoding.UTF8.GetBytes("xyz"),
+            };
+            messages.ForEach(x => sigs.Add(_wrapper.Sign(_wrapper.GeneratePrivateKey(), x, context)));
+            sigs[1] = _wrapper.GetSignatureFromBytes(sigs[1].SignatureBytes, sigs[2].PublicKeyBytes);
+
+            var isVerified = _wrapper.BatchVerify(sigs, messages, context);
+            isVerified.Should().BeFalse();
+        }
+
+        [Test]
+        public void Batch_Verification_Passes_For_Batch_Size_N()
+        {
+            const int N = 100;
+            var messages = new List<byte[]>();
+            var signatures = new List<ISignature>();
+            var context = Encoding.UTF8.GetBytes("context");
+            for (var i = 0; i < N; i++)
+            {
+                var bytes = new byte[255];
+                Random.NextBytes(bytes);
+                messages.Add(bytes);
+            }
+
+            messages.ForEach(x =>
+            {
+                signatures.Add(_wrapper.Sign(_wrapper.GeneratePrivateKey(), x, context));
+            });
+            
+            var isVerified = _wrapper.BatchVerify(signatures, messages, context);
+            isVerified.Should().BeTrue();
         }
 
         private static byte[] GenerateRandomByteArray(int length)

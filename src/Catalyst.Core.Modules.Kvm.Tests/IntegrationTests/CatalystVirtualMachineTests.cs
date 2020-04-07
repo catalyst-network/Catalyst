@@ -233,8 +233,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_verify_incorrect_sig()
         {
-            HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-
+            HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             FfiWrapper cryptoContext = new FfiWrapper();
             IPrivateKey signingPrivateKey = cryptoContext.GeneratePrivateKey();
             IPrivateKey otherPrivateKey = cryptoContext.GeneratePrivateKey();
@@ -419,7 +418,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
                 storageProvider,
                 stateUpdateHashProvider,
                 specProvider,
-                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
                 new FfiWrapper(),
                 LimboLogs.Instance);
             virtualMachine.Run(vmState, txTracer);

@@ -95,9 +95,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-
 		..\docfx-azure-pipeline.yml = ..\docfx-azure-pipeline.yml
 		..\mssql-e2e-azure-pipelines.yml = ..\mssql-e2e-azure-pipelines.yml
 		..\nuget-pre-release-azure-pipelines.yml = ..\nuget-pre-release-azure-pipelines.yml
-		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
-		..\docfx-azure-pipeline.yml = ..\docfx-azure-pipeline.yml
 		..\poa-azure-pipeline.yml = ..\poa-azure-pipeline.yml
+		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"
@@ -119,37 +118,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Crypt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cryptography.FFI.Rust", "Cryptography.FFI.Rust", "{3339A04C-D933-4712-A556-F8F1B74B9753}"
-	ProjectSection(SolutionItems) = preProject
-		..\submodules\Cryptography.FFI.Rust\azure-pipelines.yml = ..\submodules\Cryptography.FFI.Rust\azure-pipelines.yml
-		..\submodules\Cryptography.FFI.Rust\Cargo.lock = ..\submodules\Cryptography.FFI.Rust\Cargo.lock
-		..\submodules\Cryptography.FFI.Rust\Cargo.toml = ..\submodules\Cryptography.FFI.Rust\Cargo.toml
-		..\submodules\Cryptography.FFI.Rust\LICENSE = ..\submodules\Cryptography.FFI.Rust\LICENSE
-		..\submodules\Cryptography.FFI.Rust\README.md = ..\submodules\Cryptography.FFI.Rust\README.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA88D78E-377B-4452-864A-C1D5DFB06854}"
-	ProjectSection(SolutionItems) = preProject
-		..\submodules\Cryptography.FFI.Rust\src\constants.rs = ..\submodules\Cryptography.FFI.Rust\src\constants.rs
-		..\submodules\Cryptography.FFI.Rust\src\errors.rs = ..\submodules\Cryptography.FFI.Rust\src\errors.rs
-		..\submodules\Cryptography.FFI.Rust\src\ffi.rs = ..\submodules\Cryptography.FFI.Rust\src\ffi.rs
-		..\submodules\Cryptography.FFI.Rust\src\helpers.rs = ..\submodules\Cryptography.FFI.Rust\src\helpers.rs
-		..\submodules\Cryptography.FFI.Rust\src\keys.rs = ..\submodules\Cryptography.FFI.Rust\src\keys.rs
-		..\submodules\Cryptography.FFI.Rust\src\lib.rs = ..\submodules\Cryptography.FFI.Rust\src\lib.rs
-		..\submodules\Cryptography.FFI.Rust\src\std_signature.rs = ..\submodules\Cryptography.FFI.Rust\src\std_signature.rs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{46B22170-3D54-43F4-9474-C9F02DEF3A14}"
-	ProjectSection(SolutionItems) = preProject
-		..\submodules\Cryptography.FFI.Rust\tests\integration_test.rs = ..\submodules\Cryptography.FFI.Rust\tests\integration_test.rs
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Dirichlet.Numerics", "..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj", "{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{BAB02934-9818-4691-91AF-8B56980C82C7}"
-	ProjectSection(SolutionItems) = preProject
-		..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml = ..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.Consensus", "Catalyst.Modules.POA.Consensus\Catalyst.Modules.POA.Consensus.csproj", "{BCF86A5A-8BF0-43B1-9D0C-E36108BD0F8A}"
 EndProject
@@ -167,47 +136,51 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Documentation", ".
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Tools.KeyGenerator", "Catalyst.Tools.KeyGenerator\Catalyst.Tools.KeyGenerator.csproj", "{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Benchmark", "Catalyst.Benchmark\Catalyst.Benchmark.csproj", "{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Benchmark", "Catalyst.Benchmark\Catalyst.Benchmark.csproj", "{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{8B9E2D74-AD77-4B43-B7A5-5557428CC8C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{8B9E2D74-AD77-4B43-B7A5-5557428CC8C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.Tests", "Catalyst.Cli.Tests\Catalyst.Cli.Tests.csproj", "{5EEA2638-769D-4094-A417-0FE1396C1700}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.Tests", "Catalyst.Cli.Tests\Catalyst.Cli.Tests.csproj", "{5EEA2638-769D-4094-A417-0FE1396C1700}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.POA.CE", "Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj", "{3750275D-F73D-4078-80C4-734BBD830A4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE", "Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj", "{3750275D-F73D-4078-80C4-734BBD830A4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.POA.CE.Tests", "Catalyst.Node.POA.CE.Tests\Catalyst.Node.POA.CE.Tests.csproj", "{36F415B5-4101-476A-9BD2-F18A5879F388}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE.Tests", "Catalyst.Node.POA.CE.Tests\Catalyst.Node.POA.CE.Tests.csproj", "{36F415B5-4101-476A-9BD2-F18A5879F388}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.Server.Blazor", "Catalyst.Modules.Server.Blazor\Catalyst.Modules.Server.Blazor.csproj", "{A2B05AD3-06DA-46E6-8662-DD9757F547B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Server.Blazor", "Catalyst.Modules.Server.Blazor\Catalyst.Modules.Server.Blazor.csproj", "{A2B05AD3-06DA-46E6-8662-DD9757F547B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.P2P", "Lib.P2P\Lib.P2P.csproj", "{767E3E1E-43AF-4A7D-8638-84E81EB13F6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.P2P", "Lib.P2P\Lib.P2P.csproj", "{767E3E1E-43AF-4A7D-8638-84E81EB13F6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.KBucket", "Catalyst.KBucket\Catalyst.KBucket.csproj", "{F81AF4DE-30BC-48F3-B396-27087997B700}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.KBucket", "Catalyst.KBucket\Catalyst.KBucket.csproj", "{F81AF4DE-30BC-48F3-B396-27087997B700}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.KBucket.Tests", "Catalyst.KBucket.Tests\Catalyst.KBucket.Tests.csproj", "{D6C18FBF-8D79-4817-940C-BF066E4E363A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.KBucket.Tests", "Catalyst.KBucket.Tests\Catalyst.KBucket.Tests.csproj", "{D6C18FBF-8D79-4817-940C-BF066E4E363A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.P2P.Tests", "Lib.P2P.Tests\Lib.P2P.Tests.csproj", "{5BABC322-0C56-4477-978A-8EF49D7901B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.P2P.Tests", "Lib.P2P.Tests\Lib.P2P.Tests.csproj", "{5BABC322-0C56-4477-978A-8EF49D7901B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiFormats", "MultiFormats\MultiFormats.csproj", "{76AF1E5A-94AC-44C5-B968-F816CB3A9B2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiFormats", "MultiFormats\MultiFormats.csproj", "{76AF1E5A-94AC-44C5-B968-F816CB3A9B2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiFormats.Tests", "MultiFormats.Tests\MultiFormats.Tests.csproj", "{F6142130-599A-452E-92E9-348D0560E3E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiFormats.Tests", "MultiFormats.Tests\MultiFormats.Tests.csproj", "{F6142130-599A-452E-92E9-348D0560E3E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Serialization.Rlp", "..\submodules\nethermind\src\Nethermind\Nethermind.Serialization.Rlp\Nethermind.Serialization.Rlp.csproj", "{43B92BEC-BE53-45D7-A442-77EB14122ED5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Serialization.Rlp", "..\submodules\nethermind\src\Nethermind\Nethermind.Serialization.Rlp\Nethermind.Serialization.Rlp.csproj", "{43B92BEC-BE53-45D7-A442-77EB14122ED5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.State", "..\submodules\nethermind\src\Nethermind\Nethermind.State\Nethermind.State.csproj", "{7DC55A67-EB89-4F6A-99D2-3E2F40D70738}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.State", "..\submodules\nethermind\src\Nethermind\Nethermind.State\Nethermind.State.csproj", "{7DC55A67-EB89-4F6A-99D2-3E2F40D70738}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Trie", "..\submodules\nethermind\src\Nethermind\Nethermind.Trie\Nethermind.Trie.csproj", "{6646C9CA-1E73-4738-A298-7672677B5209}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Trie", "..\submodules\nethermind\src\Nethermind\Nethermind.Trie\Nethermind.Trie.csproj", "{6646C9CA-1E73-4738-A298-7672677B5209}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Db", "..\submodules\nethermind\src\Nethermind\Nethermind.Db\Nethermind.Db.csproj", "{4DB10FC6-57AD-44AF-9623-4B1521EF5607}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Db", "..\submodules\nethermind\src\Nethermind\Nethermind.Db\Nethermind.Db.csproj", "{4DB10FC6-57AD-44AF-9623-4B1521EF5607}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Specs", "..\submodules\nethermind\src\Nethermind\Nethermind.Specs\Nethermind.Specs.csproj", "{6BEAE603-2C31-4D0D-8A69-434392BE6A1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Specs", "..\submodules\nethermind\src\Nethermind\Nethermind.Specs\Nethermind.Specs.csproj", "{6BEAE603-2C31-4D0D-8A69-434392BE6A1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Config", "..\submodules\nethermind\src\Nethermind\Nethermind.Config\Nethermind.Config.csproj", "{1B71B1A0-F7BC-44C5-970E-3205AA615853}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Config", "..\submodules\nethermind\src\Nethermind\Nethermind.Config\Nethermind.Config.csproj", "{1B71B1A0-F7BC-44C5-970E-3205AA615853}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Serialization.Json", "..\submodules\nethermind\src\Nethermind\Nethermind.Serialization.Json\Nethermind.Serialization.Json.csproj", "{65C36E26-6674-4457-A8FB-0F33EDA76759}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Serialization.Json", "..\submodules\nethermind\src\Nethermind\Nethermind.Serialization.Json\Nethermind.Serialization.Json.csproj", "{65C36E26-6674-4457-A8FB-0F33EDA76759}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Crypto", "..\submodules\nethermind\src\Nethermind\Nethermind.Crypto\Nethermind.Crypto.csproj", "{DE28EED6-7281-4827-92C9-16B511BC617D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Crypto", "..\submodules\nethermind\src\Nethermind\Nethermind.Crypto\Nethermind.Crypto.csproj", "{DE28EED6-7281-4827-92C9-16B511BC617D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocksDbSharp", "..\submodules\nethermind\src\rocksdb-sharp\RocksDbSharp\RocksDbSharp.csproj", "{36528129-62DF-4A4E-9337-85D51DA94EA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocksDbSharp", "..\submodules\nethermind\src\rocksdb-sharp\RocksDbSharp\RocksDbSharp.csproj", "{36528129-62DF-4A4E-9337-85D51DA94EA4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Sync", "Catalyst.Core.Modules.Sync\Catalyst.Core.Modules.Sync.csproj", "{794B3026-4FEE-4AFC-AE05-7827BEA66E56}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Sync.Tests", "Catalyst.Core.Modules.Sync.Tests\Catalyst.Core.Modules.Sync.Tests.csproj", "{D7D302E4-EF47-4212-BD50-13BEE85A6FB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -495,6 +468,14 @@ Global
 		{36528129-62DF-4A4E-9337-85D51DA94EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36528129-62DF-4A4E-9337-85D51DA94EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36528129-62DF-4A4E-9337-85D51DA94EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{794B3026-4FEE-4AFC-AE05-7827BEA66E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{794B3026-4FEE-4AFC-AE05-7827BEA66E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{794B3026-4FEE-4AFC-AE05-7827BEA66E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{794B3026-4FEE-4AFC-AE05-7827BEA66E56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7D302E4-EF47-4212-BD50-13BEE85A6FB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7D302E4-EF47-4212-BD50-13BEE85A6FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7D302E4-EF47-4212-BD50-13BEE85A6FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7D302E4-EF47-4212-BD50-13BEE85A6FB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -505,10 +486,7 @@ Global
 		{CEC977D9-D46F-4523-9941-99BCF6B93EFE} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{9EED8D3C-F0EC-4D07-9021-5B1D8D7F11C2} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{A3386257-A47B-407B-AB5A-A2CBAF2CEDF9} = {6074E807-FBBC-41D0-9205-C7B79513D683}
-		{AA88D78E-377B-4452-864A-C1D5DFB06854} = {3339A04C-D933-4712-A556-F8F1B74B9753}
-		{46B22170-3D54-43F4-9474-C9F02DEF3A14} = {3339A04C-D933-4712-A556-F8F1B74B9753}
 		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2} = {6074E807-FBBC-41D0-9205-C7B79513D683}
-		{BAB02934-9818-4691-91AF-8B56980C82C7} = {3339A04C-D933-4712-A556-F8F1B74B9753}
 		{43B92BEC-BE53-45D7-A442-77EB14122ED5} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{7DC55A67-EB89-4F6A-99D2-3E2F40D70738} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{6646C9CA-1E73-4738-A298-7672677B5209} = {6074E807-FBBC-41D0-9205-C7B79513D683}

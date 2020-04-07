@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Abstractions.Lib.Util;
 using FluentAssertions;
 using NUnit.Framework;
 

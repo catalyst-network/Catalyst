@@ -29,7 +29,7 @@ using System.Reactive.Linq;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
@@ -48,6 +48,7 @@ using NUnit.Framework;
 using Serilog;
 using SharpRepository.InMemoryRepository;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
+using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -55,7 +56,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     {
         public BadFavouritesData()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             Add(new object[] { null, typeof(ArgumentNullException) });
             Add(new object[] { new FavouriteDeltaBroadcast(), typeof(InvalidDataException) });
@@ -88,7 +89,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void Init()
         {
             _testScheduler = new TestScheduler();
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _logger = Substitute.For<ILogger>();
             _reputationManager =
                 new ReputationManager(new PeerRepository(new InMemoryRepository<Peer, string>()), _logger, _testScheduler);

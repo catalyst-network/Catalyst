@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             _stateProvider = new StateProvider(new StateDb(), new StateDb(), LimboLogs.Instance);
             var storageProvider = new StorageProvider(new StateDb(), _stateProvider, LimboLogs.Instance);
             IKvm virtualMachine = new KatVirtualMachine(_stateProvider, storageProvider, new StateUpdateHashProvider(),
-                _specProvider, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")), new FfiWrapper(), LimboLogs.Instance);
+                _specProvider, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")), new FfiWrapper(), LimboLogs.Instance);
             var logger = Substitute.For<ILogger>();
             logger.IsEnabled(Arg.Any<LogEventLevel>()).Returns(true);
 

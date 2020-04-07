@@ -24,6 +24,8 @@
 using System;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -49,11 +51,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
         private IDeltaHub _deltaHub;
         private TestCycleEventProvider _cycleEventProvider;
         private Consensus _consensus;
+        private SyncState _syncState;
+        private ILedger _ledger;
 
         [SetUp]
         public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _cycleEventProvider = new TestCycleEventProvider();
             _deltaBuilder = Substitute.For<IDeltaBuilder>();
             _deltaVoter = Substitute.For<IDeltaVoter>();
@@ -62,6 +66,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _deltaHub = Substitute.For<IDeltaHub>();
             var deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             var logger = Substitute.For<ILogger>();
+            _syncState = new SyncState {IsSynchronized = true, IsRunning = true};
+            _ledger = Substitute.For<ILedger>();
             _consensus = new Consensus(
                 _deltaBuilder,
                 _deltaVoter,

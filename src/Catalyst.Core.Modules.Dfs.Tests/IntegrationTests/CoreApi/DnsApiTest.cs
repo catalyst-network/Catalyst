@@ -21,6 +21,11 @@
 
 #endregion
 
+using System;
+using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Modules.Dfs.Tests.Utils;
+
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     //public class DnsApiTest

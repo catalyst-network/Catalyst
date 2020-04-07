@@ -107,37 +107,39 @@ namespace Lib.P2P.Tests
             });
         }
 
-        [TestMethod]
-        public void NewPeerAddress_BlackList()
-        {
-            var swarm = new SwarmService {LocalPeer = _self};
-            swarm.BlackList.Add(_mars);
+        //turn off blacklisting
+        //[TestMethod]
+        //public void NewPeerAddress_BlackList()
+        //{
+        //    var swarm = new SwarmService {LocalPeer = _self};
+        //    swarm.BlackList.Add(_mars);
 
-            ExceptionAssert.Throws<Exception>(() =>
-            {
-                var _ = swarm.RegisterPeerAddress(_mars);
-            });
-            Assert.IsFalse(swarm.KnownPeerAddresses.Contains(_mars));
+        //    ExceptionAssert.Throws<Exception>(() =>
+        //    {
+        //        var _ = swarm.RegisterPeerAddress(_mars);
+        //    });
+        //    Assert.IsFalse(swarm.KnownPeerAddresses.Contains(_mars));
 
-            Assert.IsNotNull(swarm.RegisterPeerAddress(_venus));
-            Assert.IsTrue(swarm.KnownPeerAddresses.Contains(_venus));
-        }
+        //    Assert.IsNotNull(swarm.RegisterPeerAddress(_venus));
+        //    Assert.IsTrue(swarm.KnownPeerAddresses.Contains(_venus));
+        //}
 
-        [TestMethod]
-        public void NewPeerAddress_WhiteList()
-        {
-            var swarm = new SwarmService {LocalPeer = _self};
-            swarm.WhiteList.Add(_venus);
+        //turn off blacklisting
+        //[TestMethod]
+        //public void NewPeerAddress_WhiteList()
+        //{
+        //    var swarm = new SwarmService {LocalPeer = _self};
+        //    swarm.WhiteList.Add(_venus);
 
-            ExceptionAssert.Throws<Exception>(() =>
-            {
-                var _ = swarm.RegisterPeerAddress(_mars);
-            });
-            Assert.IsFalse(swarm.KnownPeerAddresses.Contains(_mars));
+        //    ExceptionAssert.Throws<Exception>(() =>
+        //    {
+        //        var _ = swarm.RegisterPeerAddress(_mars);
+        //    });
+        //    Assert.IsFalse(swarm.KnownPeerAddresses.Contains(_mars));
 
-            Assert.IsNotNull(swarm.RegisterPeerAddress(_venus));
-            Assert.IsTrue(swarm.KnownPeerAddresses.Contains(_venus));
-        }
+        //    Assert.IsNotNull(swarm.RegisterPeerAddress(_venus));
+        //    Assert.IsTrue(swarm.KnownPeerAddresses.Contains(_venus));
+        //}
 
         [TestMethod]
         public void NewPeerAddress_InvalidAddress_MissingPeerId()
@@ -1242,22 +1244,23 @@ namespace Lib.P2P.Tests
             Assert.IsFalse(swarm.IsAllowed(peer));
         }
 
-        [TestMethod]
-        public void RegisterPeer_BlackListed()
-        {
-            var swarm = new SwarmService {LocalPeer = _self};
-            var peer = new Peer
-            {
-                Id = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h",
-                Addresses = new MultiAddress[]
-                {
-                    "/ip4/127.0.0.1/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h"
-                }
-            };
+        //turn off blacklisting
+        //[TestMethod]
+        //public void RegisterPeer_BlackListed()
+        //{
+        //    var swarm = new SwarmService {LocalPeer = _self};
+        //    var peer = new Peer
+        //    {
+        //        Id = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h",
+        //        Addresses = new MultiAddress[]
+        //        {
+        //            "/ip4/127.0.0.1/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h"
+        //        }
+        //    };
 
-            swarm.BlackList.Add(peer.Addresses.First());
-            ExceptionAssert.Throws<Exception>(() => swarm.RegisterPeer(peer));
-        }
+        //    swarm.BlackList.Add(peer.Addresses.First());
+        //    ExceptionAssert.Throws<Exception>(() => swarm.RegisterPeer(peer));
+        //}
     }
 
     /// <summary>

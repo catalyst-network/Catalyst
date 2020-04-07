@@ -26,6 +26,7 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Core.Lib.FileSystem;
 using Nethermind.Core.Specs;
 using Nethermind.Db;
 using Nethermind.Evm;
@@ -46,6 +47,9 @@ namespace Catalyst.Core.Modules.Kvm
             // builder.RegisterInstance(new OneLoggerLogManager(new SimpleConsoleLogger())).As<ILogManager>();
             builder.RegisterInstance(LimboLogs.Instance).As<ILogManager>();
 
+            var catDir = new FileSystem().GetCatalystDataDir().FullName;
+            //builder.RegisterInstance(new StateDb(new CodeRocksDb(catDir, DbConfig.Default))).As<IDb>().SingleInstance();
+            //builder.RegisterInstance(new StateDb(new StateRocksDb(catDir, DbConfig.Default))).As<ISnapshotableDb>().SingleInstance();
             builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();               // code db
             builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance(); // state db
 

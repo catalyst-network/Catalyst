@@ -23,13 +23,18 @@
 
 using System;
 using System.Buffers.Binary;
+using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Hashing;
 using Google.Protobuf;
 using Lib.P2P;
+using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
@@ -43,20 +48,30 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         protected override BlockForRpc Handle(Keccak deltaHash, IWeb3EthApi api)
         {
             DeltaWithCid deltaWithCid = api.GetDeltaWithCid(deltaHash.ToCid());
-            return BuildBlock(deltaWithCid, deltaWithCid.Delta.DeltaNumber);
+            return BuildBlock(deltaWithCid, deltaWithCid.Delta.DeltaNumber, api.HashProvider);
         }
 
-        private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber)
+        private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber, IHashProvider hashProvider)
         {
             var (delta, deltaHash) = deltaWithCid;
 
+            Address author;
+            var firstCoinBaseEntry = delta.CoinbaseEntries.FirstOrDefault();
+            if (firstCoinBaseEntry != null)
+            {
+                author = new Address(Keccak.Compute(firstCoinBaseEntry.ReceiverPublicKey.ToByteArray()));
+            }
+            else
+            {
+                author = Address.Zero;
+            }
+
             var nonce = new byte[8];
             BinaryPrimitives.WriteUInt64BigEndian(nonce, 42);
-
             BlockForRpc blockForRpc = new BlockForRpc
             {
                 ExtraData = new byte[0],
-                Miner = Address.Zero,
+                Miner = author,
                 Difficulty = 1,
                 Hash = deltaHash,
                 Number = blockNumber,
@@ -71,7 +86,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 MixHash = Keccak.Zero,
                 Nonce = nonce,
                 Uncles = new Keccak[0],
-                Transactions = new object[0]
+                Transactions = delta.PublicEntries.Select(x => x.GetHash(hashProvider))
             };
             blockForRpc.TotalDifficulty = (UInt256) ((long) blockForRpc.Difficulty * (blockNumber + 1));
             blockForRpc.Sha3Uncles = Keccak.OfAnEmptySequenceRlp;

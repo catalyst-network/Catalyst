@@ -26,6 +26,8 @@ using System.Numerics;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Core.Modules.Hashing;
+using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
@@ -58,7 +60,7 @@ namespace Catalyst.Core.Modules.Kvm
 
         private void AddCatalystPrecompiledContracts()
         {
-            Blake2bPrecompiledContract blake2BPrecompiledContract = new Blake2bPrecompiledContract(_hashProvider);
+            Blake2bPrecompiledContract blake2BPrecompiledContract = new Blake2bPrecompiledContract(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")));
             Precompiles[blake2BPrecompiledContract.Address] = blake2BPrecompiledContract;
 
             Ed25519VerifyPrecompile ed25519VerifyPrecompile = new Ed25519VerifyPrecompile(_cryptoContext);

@@ -64,7 +64,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
         [SetUp]
         public void Init()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _output = TestContext.CurrentContext;
             _testScheduler = new TestScheduler();
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 
             _dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
             _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider,
-                _deltaHashProvider, _logger);
+                _deltaHashProvider, new Abstractions.Sync.SyncState() { IsSynchronized = true }, _logger);
 
             _spy = Substitute.For<IObserver<IPhase>>();
 
@@ -180,7 +180,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 
             var spy2 = Substitute.For<IObserver<IPhase>>();
             using (var cycleProvider2 = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider,
-                _schedulerProvider, _deltaHashProvider, _logger))
+                _schedulerProvider, _deltaHashProvider, new Abstractions.Sync.SyncState() { IsSynchronized = true }, _logger))
             using (cycleProvider2.PhaseChanges.Take(50 - PhaseCountPerCycle)
                .Subscribe(p =>
                 {

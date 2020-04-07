@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Validators;
@@ -166,6 +167,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             {
                 return _verifyResult;
             }
+
+            public bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context) { throw new NotImplementedException(); }
         }
     }
 }

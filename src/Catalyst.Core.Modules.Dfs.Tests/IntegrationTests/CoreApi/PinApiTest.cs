@@ -45,7 +45,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public PinApiTest()
         {
             _dfs = TestDfs.GetTestDfs();
-            new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
         }
 
         [Test]

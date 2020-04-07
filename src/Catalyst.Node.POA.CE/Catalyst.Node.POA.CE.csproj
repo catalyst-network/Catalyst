@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <Title>Catalyst CLI</Title>
@@ -23,8 +23,7 @@
         <PackageReference Include="CommandLineParser" Version="2.5.0" />
         <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
         <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />
-        <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.3" />
-        <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
+        <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.1.0-prerelease" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Core.Modules.Authentication\Catalyst.Core.Modules.Authentication.csproj" />

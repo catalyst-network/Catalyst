@@ -26,6 +26,7 @@ using System.Linq;
 using System.Reflection;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
@@ -62,7 +63,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _deltaCache.GenesisHash.Returns(
                 _hashProvider.ComputeMultiHash(new Delta().ToByteArray()).ToCid());
@@ -157,7 +158,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             });
         }
 
-        private DateTime GetDateTimeForIndex(int i) { return DateTime.FromOADate(Offset + i).ToUniversalTime(); }
+        private DateTime GetDateTimeForIndex(int i) { return DateTime.UnixEpoch.AddSeconds(i); }
 
         private Cid GetHash(int i)
         {

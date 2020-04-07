@@ -64,7 +64,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, hashProvider,
                 logger);

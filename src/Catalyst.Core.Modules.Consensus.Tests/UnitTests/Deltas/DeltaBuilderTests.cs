@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [SetUp]
         public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _random = new Random(1);
 
@@ -122,7 +122,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 storageProvider,
                 new StateUpdateHashProvider(),
                 specProvider,
-                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
                 new FfiWrapper(), 
                 LimboLogs.Instance);
             _deltaExecutor = new DeltaExecutor(specProvider,

@@ -32,7 +32,7 @@
 
 //        public DfsHttpTests() : base(TestContext.CurrentContext)
 //        {
-//            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+//            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 //            var passwordReader = Substitute.For<IPasswordManager>();
 //            passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
 //            var logger = Substitute.For<ILogger>();

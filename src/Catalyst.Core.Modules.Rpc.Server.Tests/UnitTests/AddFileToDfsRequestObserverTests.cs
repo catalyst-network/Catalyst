@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
         [SetUp]
         public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _manualResetEvent = new ManualResetEvent(false);
             _senderIdentifier = PeerIdHelper.GetPeerId("sender");
             var peerSettings = _senderIdentifier.ToSubstitutedPeerSettings();

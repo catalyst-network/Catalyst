@@ -24,6 +24,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using MultiFormats;
 using NUnit.Framework;
@@ -32,8 +33,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class BootstapApiTest
     {
-        private IDfsService ipfs;
-        private readonly MultiAddress somewhere = "/ip4/127.0.0.1/tcp/4009/ipfs/QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
+        private readonly IDfsService ipfs;
+
+        private readonly MultiAddress somewhere =
+            "/ip4/127.0.0.1/tcp/4009/ipfs/QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
 
         public BootstapApiTest()
         {

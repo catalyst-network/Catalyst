@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [SetUp]
         public void Init()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("keccak-256");
             _hashProvider = new HashProvider(hashingAlgorithm);
             _dfsService = Substitute.For<IDfsService>();
             _logger = Substitute.For<ILogger>();

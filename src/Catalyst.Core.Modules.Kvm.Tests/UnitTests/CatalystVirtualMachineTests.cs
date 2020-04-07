@@ -43,7 +43,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
                 Substitute.For<IStorageProvider>(),
                 Substitute.For<IStateUpdateHashProvider>(),
                 new CatalystSpecProvider(),
-                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
                 new FfiWrapper(), 
                 LimboLogs.Instance);
             Assert.NotNull(virtualMachine);

@@ -27,17 +27,17 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <None Include="./Runtimes/osx-x64/*/libcatalystffi.dylib" Link="libcatalystffi.dylib">
+        <None Include="./Runtimes/osx-x64/*/libcatalyst_ffi.dylib" Link="libcatalystffi.dylib">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
     <ItemGroup>
-        <None Include="./Runtimes/win-x64/*/catalystffi.dll" Link="catalystffi.dll">
+        <None Include="./Runtimes/win-x64/*/catalyst_ffi.dll" Link="catalystffi.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
     <ItemGroup>
-        <None Include="./Runtimes/linux-x64/*/libcatalystffi.so" Link="libcatalystffi.so">
+        <None Include="./Runtimes/linux-x64/*/libcatalyst_ffi.so" Link="libcatalystffi.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
@@ -45,23 +45,23 @@
     <!-- @TODO at moment this only assumes debug target for rust build, we should pass $(configuration) rust build command-->
     <Target Name="CompileNativeRuntimes" BeforeTargets="BeforeBuild">
         <!-- build for osx -->
-        <Exec Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'" Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml --target-dir ./Runtimes/osx-x64" ConsoleToMSBuild="true" />
+        <Exec Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'" Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/packages/catalyst-ffi/Cargo.toml --target-dir ./Runtimes/osx-x64" ConsoleToMSBuild="true" />
         <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">
-            <None Include=".\Runtimes\osx-x64\*\libcatalystffi.dylib" Link="libcatalystffi.dylib">
+            <None Include=".\Runtimes\osx-x64\*\libcatalyst_ffi.dylib" Link="libcatalyst_ffi.dylib">
                 <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             </None>
         </ItemGroup>
         <!-- build for windows -->
-        <Exec Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'" Command="cargo build --manifest-path ..\..\submodules\Cryptography.FFI.Rust\Cargo.toml --target-dir .\Runtimes\win-x64" ConsoleToMSBuild="true" />
+        <Exec Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'" Command="cargo build --manifest-path ..\..\submodules\Cryptography.FFI.Rust\packages\catalyst-ffi\Cargo.toml --target-dir .\Runtimes\win-x64" ConsoleToMSBuild="true" />
         <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">
-            <None Include=".\Runtimes\win-x64\*\catalystffi.dll" Link="catalystffi.dll">
+            <None Include=".\Runtimes\win-x64\*\catalyst_ffi.dll" Link="catalyst_ffi.dll">
                 <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             </None>
         </ItemGroup>
         <!-- build for *nix -->
-        <Exec Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'" Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml --target-dir ./Runtimes/linux-x64" ConsoleToMSBuild="true" />
+        <Exec Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'" Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/packages/catalyst-ffi/Cargo.toml --target-dir ./Runtimes/linux-x64" ConsoleToMSBuild="true" />
         <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">
-            <None Include=".\Runtimes\linux-x64/*\libcatalystffi.so" Link="libcatalystffi.so">
+            <None Include=".\Runtimes\linux-x64/*\libcatalyst_ffi.so" Link="libcatalyst_ffi.so">
                 <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             </None>
         </ItemGroup>
@@ -85,5 +85,32 @@
         <EmbeddedResource Remove="Runtimes\*\*\incremental\**" />
         <EmbeddedResource Remove="Runtimes\*\*\deps\**" />
         <EmbeddedResource Remove="Runtimes\*\*\build\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <_UnmanagedRegistrationCache Remove="obj\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj.UnmanagedRegistration.cache" />
+    </ItemGroup>
+    <ItemGroup>
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj.ResolveComReference.cache" />
+    </ItemGroup>
+    <ItemGroup>
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Modules.Cryptography.BulletProofs.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Modules.Cryptography.BulletProofs.pdb" />
+    </ItemGroup>
+    <ItemGroup>
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Modules.Cryptography.BulletProofs.dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <ApplicationManifest Remove="obj\Debug\netcoreapp3.0\Native.Catalyst.Core.Modules.Cryptography.BulletProofs.manifest" />
+    </ItemGroup>
+    <ItemGroup>
+      <DeployManifest Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Modules.Cryptography.BulletProofs.application" />
+    </ItemGroup>
+    <ItemGroup>
+      <ClsidMap Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Modules.Cryptography.BulletProofs.clsidmap" />
+    </ItemGroup>
+    <ItemGroup>
+      <RegFreeComManifest Remove="obj\Debug\netcoreapp3.0\Catalyst.Core.Modules.Cryptography.BulletProofs.X.manifest" />
     </ItemGroup>
 </Project>

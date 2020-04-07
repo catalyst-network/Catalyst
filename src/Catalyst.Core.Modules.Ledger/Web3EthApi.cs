@@ -22,14 +22,22 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Repository;
+using Catalyst.Core.Abstractions.Sync;
+using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
@@ -47,9 +55,13 @@ namespace Catalyst.Core.Modules.Ledger
 {
     public sealed class Web3EthApi : IWeb3EthApi
     {
+        private IMempool<PublicEntryDao> _mempoolRepository;
         private readonly ITransactionRepository _receipts;
         private readonly ITransactionReceivedEvent _transactionReceived;
+        private readonly IMapperProvider _mapperProvider;
         public IHashProvider HashProvider { get; }
+        public IDfsService DfsService { get; }
+        public SyncState SyncState { get; }
         private readonly PeerId _peerId;
 
         public Web3EthApi(IStateReader stateReader,
@@ -60,13 +72,21 @@ namespace Catalyst.Core.Modules.Ledger
             IStateProvider stateProvider,
             ITransactionRepository receipts,
             ITransactionReceivedEvent transactionReceived,
+            IPeerRepository peerRepository,
+            IMempool<PublicEntryDao> mempoolRepository,
+            IDfsService dfsService,
             IHashProvider hashProvider,
+            SyncState syncState,
+            IMapperProvider mapperProvider,
             IPeerSettings peerSettings)
         {
             _receipts = receipts;
             _transactionReceived = transactionReceived ?? throw new ArgumentNullException(nameof(transactionReceived));
             HashProvider = hashProvider;
             _peerId = peerSettings.PeerId;
+            _mempoolRepository = mempoolRepository;
+            PeerRepository = peerRepository;
+            _mapperProvider = mapperProvider;
 
             StateReader = stateReader ?? throw new ArgumentNullException(nameof(stateReader));
             DeltaResolver = deltaResolver ?? throw new ArgumentNullException(nameof(deltaResolver));
@@ -74,6 +94,8 @@ namespace Catalyst.Core.Modules.Ledger
             Executor = executor ?? throw new ArgumentNullException(nameof(executor));
             StorageProvider = storageProvider ?? throw new ArgumentNullException(nameof(storageProvider));
             StateProvider = stateProvider ?? throw new ArgumentNullException(nameof(stateProvider));
+            DfsService = dfsService;
+            SyncState = syncState;
         }
 
         public IStateReader StateReader { get; }
@@ -83,6 +105,8 @@ namespace Catalyst.Core.Modules.Ledger
         public IDeltaExecutor Executor { get; }
         public IStorageProvider StorageProvider { get; }
         public IStateProvider StateProvider { get; }
+        public IPeerRepository PeerRepository { get; }
+
 
         public Keccak SendTransaction(PublicEntry publicEntry)
         {
@@ -93,17 +117,22 @@ namespace Catalyst.Core.Modules.Ledger
 
             publicEntry.Timestamp = Timestamp.FromDateTime(DateTime.UtcNow);
             _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId));
-            
+
             byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();
             string hex = kvmAddressBytes.ToHexString() ?? throw new ArgumentNullException("kvmAddressBytes.ToHexString()");
             publicEntry.SenderAddress = kvmAddressBytes.ToByteString();
-                
+
             if (publicEntry.ReceiverAddress.Length == 1)
             {
                 publicEntry.ReceiverAddress = ByteString.Empty;
             }
 
             return publicEntry.GetHash(HashProvider);
+        }
+
+        public IEnumerable<PublicEntry> GetPendingTransactions()
+        {
+            return _mempoolRepository.Service.GetAll().Select(x=>x.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider));
         }
 
         public TransactionReceipt FindReceipt(Keccak transactionHash)

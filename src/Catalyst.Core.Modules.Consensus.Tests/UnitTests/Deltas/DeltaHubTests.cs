@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [SetUp]
         public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _broadcastManager = Substitute.For<IBroadcastManager>();
             var logger = Substitute.For<ILogger>();
             _peerId = PeerIdHelper.GetPeerId("me");
@@ -184,23 +184,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         
             await _dfsService.UnixFsApi.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), cancel: cancellationToken);
         }
-
-        //public class BadDeltas : TheoryData<Delta>
-        //{
-        //    public BadDeltas()
-        //    {
-        //        var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-        //        var noPreviousHash = new Delta
-        //        {
-        //            PreviousDeltaDfsHash = new byte[0].ToByteString()
-        //        };
-        //        var noMerkleRoot = DeltaHelper.GetDelta(hashProvider, merkleRoot: new byte[0]);
-
-        //        AddRow(noMerkleRoot, typeof(InvalidDataException));
-        //        AddRow(noPreviousHash, typeof(InvalidDataException));
-        //        AddRow(null as Delta, typeof(ArgumentNullException));
-        //    }
-        //}
 
         private static bool IsExpectedCandidateMessage<T>(ProtocolMessage protocolMessage,
             T expected,

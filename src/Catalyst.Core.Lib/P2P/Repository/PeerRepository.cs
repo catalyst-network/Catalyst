@@ -23,11 +23,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Queries;
 using SharpRepository.Repository.Specifications;
 
 namespace Catalyst.Core.Lib.P2P.Repository
@@ -39,13 +41,20 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public Peer Get(string id) { return _repository.Get(id); }
 
-        public Peer Get(PeerId id) { return _repository.Find(x => x.PeerId.Equals(id)); }
+        public Peer Get(PeerId id) {
+            return _repository.Find(x => x.PeerId.Equals(id)); 
+        }
 
         public IEnumerable<Peer> GetAll() { return _repository.GetAll(); }
 
-        public IEnumerable<Peer> GetActivePeers(int count)
+        public IEnumerable<Peer> GetActivePeers(int count = -1)
         {
             return _repository.FindAll(new Specification<Peer>(p => !p.IsAwolPeer)).Take(count);
+        }
+
+        public IEnumerable<Peer> GetActivePoaPeers()
+        {
+            return _repository.FindAll(new Specification<Peer>(p => p.IsPoaNode));
         }
 
         public IEnumerable<Peer> GetRandomPeers(int count)
@@ -58,6 +67,11 @@ namespace Catalyst.Core.Lib.P2P.Repository
         {
             return _repository.FindAll(m =>
                 m.PeerId.Ip == ip && (publicKey.IsEmpty || m.PeerId.PublicKey == publicKey));
+        }
+
+        public IEnumerable<Peer> TakeHighestReputationPeers(int page, int count)
+        {
+            return _repository.GetAll(new PagingOptions<Peer, int>(page, count, x => x.Reputation, isDescending: true));
         }
 
         public void Add(Peer peer) { _repository.Add(peer); }
@@ -87,6 +101,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
         public void Delete(string id) { _repository.Delete(id); }
 
         public int Count() { return _repository.Count(); }
+        public int CountActivePeers() { return _repository.FindAll(x=>!x.IsAwolPeer).Count(); }
 
         public void Dispose() { _repository.Dispose(); }
     }

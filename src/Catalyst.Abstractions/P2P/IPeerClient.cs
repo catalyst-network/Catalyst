@@ -22,8 +22,14 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Transport;
+using Catalyst.Protocol.Peer;
+using Google.Protobuf;
+using System.Collections.Generic;
 
 namespace Catalyst.Abstractions.P2P
 {
-    public interface IPeerClient : ISocketClient { }
+    public interface IPeerClient : ISocketClient
+    {
+        void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers);
+    }
 }

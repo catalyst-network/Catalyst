@@ -21,26 +21,25 @@
 
 #endregion
 
-using System;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
-using Catalyst.Core.Modules.Ledger.Repository;
+using Catalyst.Core.Lib.Service;
 using Lib.P2P;
 
 namespace Catalyst.Core.Modules.Ledger
 {
     public sealed class DeltaResolver : IDeltaResolver
     {
-        readonly IDeltaByNumberRepository _deltaByNumber;
+        readonly IDeltaIndexService _deltaIndexService;
         readonly ILedger _ledger;
 
-        public DeltaResolver(IDeltaByNumberRepository deltaByNumber, ILedger ledger)
+        public DeltaResolver(IDeltaIndexService deltaIndexService, ILedger ledger)
         {
-            _deltaByNumber = deltaByNumber;
+            _deltaIndexService = deltaIndexService;
             _ledger = ledger;
         }
 
-        public bool TryResolve(long deltaNumber, out Cid deltaHash) => _deltaByNumber.TryFind(deltaNumber, out deltaHash);
+        public bool TryResolve(long deltaNumber, out Cid deltaHash) => _deltaIndexService.TryFind(deltaNumber, out deltaHash);
 
         public long LatestDeltaNumber => _ledger.LatestKnownDeltaNumber;
 

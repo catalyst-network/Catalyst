@@ -31,10 +31,11 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
@@ -102,7 +103,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             _peers = peers;
             _signingContext = new SigningContext
             {
-                NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer
+                NetworkType = peerSettings.NetworkType,
+                SignatureType = SignatureType.ProtocolPeer
             };
             _peerClient = peerClient;
             _signer = signer;
@@ -186,7 +188,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 // The fan out is how many peers to broadcast to
                 var fanOut = isOwnerOfBroadcast
                     ? BroadcastOwnerMaximumGossipPeersPerRound
-                    : (int) Math.Max(GetMaxGossipCycles(broadcastMessage), MaxGossipPeersPerRound);
+                    : (int)Math.Max(GetMaxGossipCycles(broadcastMessage), MaxGossipPeersPerRound);
 
                 var peersToGossip = GetRandomPeers(fanOut);
 
@@ -204,7 +206,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                     );
                 }
 
-                var updateCount = (uint) peersToGossip.Count;
+                var updateCount = (uint)peersToGossip.Count;
                 if (updateCount <= 0)
                 {
                     return;
@@ -249,7 +251,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private static uint GetMaxGossipCycles(BroadcastMessage broadcastMessage)
         {
             var peerNetworkSize = broadcastMessage.PeerNetworkSize;
-            return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) MaxGossipPeersPerRound) /
+            return (uint)(Math.Log(Math.Max(10, peerNetworkSize) / (double)MaxGossipPeersPerRound) /
                 Math.Max(1, broadcastMessage.BroadcastCount / MaxGossipPeersPerRound));
         }
 

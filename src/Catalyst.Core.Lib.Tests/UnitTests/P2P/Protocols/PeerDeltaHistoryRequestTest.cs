@@ -83,7 +83,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
             
-            var hp = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hp = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             var lastDeltaHash = hp.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
             
             var collection = new List<DeltaIndex>();

@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [SetUp]
         public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _cache = Substitute.For<IMemoryCache>();
 
