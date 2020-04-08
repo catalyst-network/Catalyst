@@ -43,8 +43,9 @@ namespace Catalyst.Core.Lib.Tests
         private const string GatewayAddress = "/ip4/127.0.0.1/tcp/";
 
         [SetUp]
-        public void Setup()
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
             var dfsOptions = new DfsOptions(Substitute.For<BlockOptions>(), Substitute.For<DiscoveryOptions>(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _configApi = new ConfigApi(dfsOptions);
         }
