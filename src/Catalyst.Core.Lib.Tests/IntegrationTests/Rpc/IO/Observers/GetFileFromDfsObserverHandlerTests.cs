@@ -56,11 +56,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private IDfsService _dfsService;
         private IHashProvider _hashProvider;
 
-        public GetFileFromDfsObserverHandlerTests() : base(TestContext.CurrentContext)
-        {
-
-        }
-
         [SetUp]
         public void Init()
         {

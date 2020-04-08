@@ -36,8 +36,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
 {
     public sealed class FileStoreTest : FileSystemBasedTest
     {
-        public FileStoreTest() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

@@ -53,7 +53,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
         protected ILifetimeScope Scope;
         protected ICatalystCli Shell;
 
-        protected CliCommandTestsBase(TestContext output) : base(output, new[]
+        protected CliCommandTestsBase() : base(new[]
         {
             Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile),
             Path.Combine(Constants.ConfigSubFolder, CliConstants.ShellConfigFile),

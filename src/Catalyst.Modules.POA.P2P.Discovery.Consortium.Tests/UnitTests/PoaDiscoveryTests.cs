@@ -41,10 +41,6 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
     {
         private IHashProvider _hashProvider;
 
-        public PoaDiscoveryTests() : base(TestContext.CurrentContext)
-        {
-        }
-
         [SetUp]
         public void Init()
         {

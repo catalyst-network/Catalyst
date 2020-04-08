@@ -35,11 +35,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
 {
     public sealed class CertificateStoreTests : FileSystemBasedTest
     {
-        public CertificateStoreTests() : base(TestContext.CurrentContext)
-        {
-
-        }
-
         [SetUp]
         public void Init()
         {

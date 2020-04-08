@@ -47,11 +47,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         private ILifetimeScope _scope;
         private List<PoaTestNode> _nodes;
 
-        public PoaConsensusTests() : base(TestContext.CurrentContext)
-        {
-        
-        }
-
         [SetUp]
         public void Init()
         {

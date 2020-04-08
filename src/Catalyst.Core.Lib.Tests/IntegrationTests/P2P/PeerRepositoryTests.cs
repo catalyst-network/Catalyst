@@ -48,7 +48,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 new object[] {new MongoDbTestModule<PeerDao>()}
             };
 
-        public PeerRepositoryTests() : base(TestContext.CurrentContext)
+        public PeerRepositoryTests() : base()
         {
             _mapperProvider = new TestMapperProvider();
         }

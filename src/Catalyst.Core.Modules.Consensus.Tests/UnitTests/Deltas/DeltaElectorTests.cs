@@ -91,7 +91,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _deltaProducersProvider = Substitute.For<IDeltaProducersProvider>();
         }
 
-        [TestCaseSource(nameof(BadFavouritesData))]
+        [Test, TestCaseSource(nameof(BadFavouritesData))]
         public void When_receiving_bad_favourite_should_log_and_not_hit_the_cache(FavouriteDeltaBroadcast badFavourite,
             Type exceptionType)
         {

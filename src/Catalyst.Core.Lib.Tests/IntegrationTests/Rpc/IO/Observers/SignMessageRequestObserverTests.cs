@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private IKeySigner _keySigner;
         private IChannelHandlerContext _fakeContext;
 
-        public SignMessageRequestObserverTests() : base(TestContext.CurrentContext, new[]
+        public SignMessageRequestObserverTests() : base(new[]
         {
             Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile)
         })

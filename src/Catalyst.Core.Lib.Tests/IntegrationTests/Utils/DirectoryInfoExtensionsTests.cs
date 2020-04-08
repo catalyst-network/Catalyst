@@ -34,8 +34,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Utils
     {
         private readonly string _subDirectory = "subdir";
 
-        public DirectoryInfoExtensionsTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

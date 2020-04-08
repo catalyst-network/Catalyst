@@ -42,11 +42,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
         private FileSystem _fileSystem;
         private string _sourceFolder;
 
-        public FileSystemTest() : base(TestContext.CurrentContext)
-        {
-
-        }
-
         [SetUp]
         public void Init()
         {

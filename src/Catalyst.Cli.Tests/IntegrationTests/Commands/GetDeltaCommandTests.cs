@@ -33,8 +33,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class GetDeltaCommandTests : CliCommandTestsBase
     {
-        public GetDeltaCommandTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

@@ -47,8 +47,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Config
             new List<NetworkType> {NetworkType.Devnet, NetworkType.Mainnet, NetworkType.Testnet}
                .Select(n => new object[] {n}).ToList();
 
-        public GlobalConfigTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

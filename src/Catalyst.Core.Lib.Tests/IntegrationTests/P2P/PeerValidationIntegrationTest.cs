@@ -56,11 +56,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         private IPeerChallengeRequest _peerChallengeRequest;
         private PeerSettings _peerSettings;
 
-        public PeerValidationIntegrationTest() : base(TestContext.CurrentContext)
-        {
-
-        }
-
         [SetUp]
         public void Init()
         {

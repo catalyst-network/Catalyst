@@ -58,18 +58,18 @@ namespace Catalyst.TestUtils
         private NetworkType _network;
         private IEnumerable<string> _configFilesUsed;
 
-        protected FileSystemBasedTest(TestContext output, 
+        protected FileSystemBasedTest( 
             IEnumerable<string> configFilesUsed = default,
             NetworkType network = default)
         {
-            Guard.Argument(output, nameof(output)).NotNull();
-
             _network = network;
             _configFilesUsed = configFilesUsed;
         }
 
         public virtual void Setup(TestContext output)
         {
+            Guard.Argument(output, nameof(output)).NotNull();
+
             Output = output;
             CurrentTestName = Output.Test.MethodName;
 

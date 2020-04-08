@@ -29,8 +29,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class PeerCommandCommandTests : CliCommandTestsBase
     {
-        public PeerCommandCommandTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

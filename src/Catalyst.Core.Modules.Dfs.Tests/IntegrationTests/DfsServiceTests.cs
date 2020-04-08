@@ -51,12 +51,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         private IDfsService _dfs1;
         private IDfsService _dfs2;
 
-        public DfsServiceTests() : base(TestContext.CurrentContext)
-        {
-
-        }
-
-
         [SetUp]
         public void Init()
         {

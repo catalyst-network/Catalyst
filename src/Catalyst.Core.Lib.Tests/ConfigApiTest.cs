@@ -42,7 +42,7 @@ namespace Catalyst.Core.Lib.Tests
         private const string ApiAddress = "/ip4/127.0.0.1/tcp/";
         private const string GatewayAddress = "/ip4/127.0.0.1/tcp/";
 
-        public ConfigApiTest() : base(TestContext.CurrentContext)
+        public ConfigApiTest() : base()
         {
             var dfsOptions = new DfsOptions(Substitute.For<BlockOptions>(), Substitute.For<DiscoveryOptions>(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _configApi = new ConfigApi(dfsOptions);

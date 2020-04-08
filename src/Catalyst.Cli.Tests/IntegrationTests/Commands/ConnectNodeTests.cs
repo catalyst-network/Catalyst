@@ -28,8 +28,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class ConnectNodeTests : CliCommandTestsBase
     {
-        public ConnectNodeTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

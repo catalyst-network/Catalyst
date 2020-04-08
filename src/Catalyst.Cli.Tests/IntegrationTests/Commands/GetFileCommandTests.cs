@@ -44,8 +44,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
                     {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
             };
 
-        public GetFileCommandTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

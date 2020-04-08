@@ -44,7 +44,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
     {
         private readonly IKeyStoreService _keyStoreService;
 
-        public KeyApiTest() : base(TestContext.CurrentContext)
+        public KeyApiTest() : base()
         {
             var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _keyStoreService = new KeyStoreService(dfsOptions);

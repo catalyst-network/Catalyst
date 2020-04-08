@@ -29,8 +29,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class MessageVerifyCommandTests : CliCommandTestsBase
     {
-        public MessageVerifyCommandTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

@@ -42,8 +42,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
             new object[] {AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true},
         };
 
-        public AddFileCommandTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

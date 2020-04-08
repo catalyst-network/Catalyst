@@ -42,7 +42,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
     {
         private readonly KeyStoreService _keyStoreService;
 
-        public CertTest() : base(TestContext.CurrentContext)
+        public CertTest() : base()
         {
             var dfsOptions = new DfsOptions(Substitute.For<BlockOptions>(), Substitute.For<DiscoveryOptions>(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _keyStoreService = new KeyStoreService(dfsOptions)

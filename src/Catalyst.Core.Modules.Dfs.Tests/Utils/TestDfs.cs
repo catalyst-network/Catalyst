@@ -44,7 +44,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
     {
         private sealed class TestDfsFileSystem : FileSystemBasedTest
         {
-            internal TestDfsFileSystem() : base(TestContext.CurrentContext) { }
         }
 
         public static IDfsService GetTestDfs(IFileSystem fileSystem = default, string hashName = "keccak-256")

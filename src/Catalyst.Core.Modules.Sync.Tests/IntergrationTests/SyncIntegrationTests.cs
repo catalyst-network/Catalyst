@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
         private readonly ILifetimeScope _scope;
         private readonly List<PoaTestNode> _nodes;
 
-        public SyncIntegrationTests() : base(TestContext.CurrentContext)
+        public SyncIntegrationTests() : base()
         {
             _endOfTestCancellationSource = new CancellationTokenSource();
 

@@ -29,8 +29,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class MessageSignCommandTests : CliCommandTestsBase
     {
-        public MessageSignCommandTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

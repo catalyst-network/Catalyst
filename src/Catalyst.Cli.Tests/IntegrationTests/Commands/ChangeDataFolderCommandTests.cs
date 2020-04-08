@@ -32,8 +32,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class ChangeDataFolderCommandTests : CliCommandTestsBase
     {
-        public ChangeDataFolderCommandTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

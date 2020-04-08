@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 new object[] {new MongoDbTestModule<PublicEntryDao>()}
             };
 
-        public TransactionRepositoryTests() : base(TestContext.CurrentContext)
+        public TransactionRepositoryTests() : base()
         {
             _mapperProvider = new TestMapperProvider();
         }

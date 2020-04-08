@@ -39,11 +39,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         private IReputationManager _reputationManager;
         private ILifetimeScope _scope;
 
-        public ReputationManagerTests() : base(TestContext.CurrentContext)
-        {
-
-        }
-
         [SetUp]
         public void Init()
         {

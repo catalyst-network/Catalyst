@@ -54,11 +54,6 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 {
     public sealed class HastingsDiscoveryTests : FileSystemBasedTest
     {
-        public HastingsDiscoveryTests() : base(TestContext.CurrentContext)
-        {
-
-        }
-
         [SetUp]
         public void Init()
         {

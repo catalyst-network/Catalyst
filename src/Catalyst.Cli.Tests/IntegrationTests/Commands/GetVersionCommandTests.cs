@@ -29,8 +29,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     public sealed class GetVersionCommandTests : CliCommandTestsBase
     {
-        public GetVersionCommandTests() : base(TestContext.CurrentContext) { }
-
         [SetUp]
         public void Init()
         {

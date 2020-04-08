@@ -45,11 +45,6 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 {
     public sealed class KeySignerIntegrationTests : FileSystemBasedTest
     {
-        public KeySignerIntegrationTests() : base(TestContext.CurrentContext)
-        {
-
-        }
-
         [SetUp]
         public void Init()
         {

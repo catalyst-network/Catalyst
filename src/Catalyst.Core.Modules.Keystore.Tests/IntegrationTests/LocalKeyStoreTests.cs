@@ -47,11 +47,6 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         private ICryptoContext _context;
         private IPasswordManager _passwordManager;
 
-        public LocalKeyStoreTests() : base(TestContext.CurrentContext)
-        {
-
-        }
-
         [SetUp]
         public void Init()
         {

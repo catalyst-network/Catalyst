@@ -61,10 +61,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private PeerId _peerId;
         private ByteString _testMessageToSign;
         
-        public VerifyMessageRequestObserverIntegrationTests() : base(TestContext.CurrentContext)
-        {
-        }
-
         [SetUp]
         public void Init()
         {
