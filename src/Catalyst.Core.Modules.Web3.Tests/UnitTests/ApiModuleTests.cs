@@ -34,20 +34,21 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
 {
     public sealed class ApiModuleTests
     {
-        private ApiModule _apiModule;
-        private IServiceCollection _serviceCollection;
-
-        [SetUp]
-        public void Init()
-        {
-            _serviceCollection = new ServiceCollection();
+        [Test]
+        public void Can_Add_Swagger() {
+            var serviceCollection = new ServiceCollection();
+            var apiModule = new ApiModule(null, new List<string>(), true);
+            apiModule.ConfigureServices(serviceCollection);
+            serviceCollection.Any(service => service.ServiceType == typeof(ISwaggerProvider)).Should().Be(true);
         }
 
         [Test]
-        public void Can_Add_Swagger() { AssertService(typeof(ISwaggerProvider)); }
-
-        [Test]
-        public void Can_Not_Add_Swagger() { AssertService(typeof(ISwaggerProvider), false, false); }
+        public void Can_Not_Add_Swagger() {
+            var serviceCollection = new ServiceCollection();
+            var apiModule = new ApiModule(null, new List<string>(), false);
+            apiModule.ConfigureServices(serviceCollection);
+            serviceCollection.Any(service => service.ServiceType == typeof(ISwaggerProvider)).Should().Be(false);
+        }
 
         [Test]
         public void Can_Add_Api()
@@ -55,29 +56,16 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
             Type[] serviceTypes =
             {
                 typeof(ICorsService),
-                
-                // typeof(IViewCompilerProvider),
-                // typeof(RouteHandler)
             };
 
-            Can_Add_Swagger();
+            var serviceCollection = new ServiceCollection();
+            var apiModule = new ApiModule(null, new List<string>(), true);
+            apiModule.ConfigureServices(serviceCollection);
 
             foreach (var serviceType in serviceTypes)
             {
-                AssertService(serviceType);
+                serviceCollection.Any(service => service.ServiceType == serviceType).Should().Be(true);
             }
-        }
-
-        private void AssertService(Type type, bool addSwagger = true, bool shouldContain = true)
-        {
-            if (_apiModule == null)
-            {
-                _apiModule = new ApiModule(null,
-                    new List<string>(), addSwagger);
-                _apiModule.ConfigureServices(_serviceCollection);
-            }
-
-            _serviceCollection.Any(service => service.ServiceType == type).Should().Be(shouldContain);
         }
     }
 }

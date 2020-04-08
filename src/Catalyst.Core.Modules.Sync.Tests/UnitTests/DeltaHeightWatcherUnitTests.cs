@@ -48,7 +48,6 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using Xunit;
 using Catalyst.Core.Lib.P2P.Repository;
 using NUnit.Framework;
 
@@ -62,7 +61,8 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         private IPeerRepository _peerRepository;
         private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
 
-        public DeltaHeightWatcherUnitTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _peerService = Substitute.For<IPeerService>();
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
         private void GeneratePeers(int count)
         {
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < count; i++)
             {
                 var peer = new Peer
                 {

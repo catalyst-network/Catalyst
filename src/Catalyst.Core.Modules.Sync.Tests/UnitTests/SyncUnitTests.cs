@@ -63,7 +63,6 @@ using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
-using Xunit;
 using Serilog;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 using Catalyst.Core.Lib.P2P.Repository;
@@ -73,40 +72,41 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
     public class SyncUnitTests
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly IHashProvider _hashProvider;
-        private readonly IPeerSettings _peerSettings;
-        private readonly IDeltaDfsReader _deltaDfsReader;
-        private readonly ILedger _ledger;
-        private readonly IPeerClient _peerClient;
+        private TestScheduler _testScheduler;
+        private IHashProvider _hashProvider;
+        private IPeerSettings _peerSettings;
+        private IDeltaDfsReader _deltaDfsReader;
+        private ILedger _ledger;
+        private IPeerClient _peerClient;
         private IDeltaIndexService _deltaIndexService;
-        private readonly IPeerRepository _peerRepository;
+        private IPeerRepository _peerRepository;
 
-        private readonly IPeerService _peerService;
+        private IPeerService _peerService;
 
-        private readonly IP2PMessageObserver _deltaHeightResponseObserver;
-        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
+        private IP2PMessageObserver _deltaHeightResponseObserver;
+        private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
 
-        private readonly IP2PMessageObserver _deltaHistoryResponseObserver;
-        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHistoryReplaySubject;
+        private IP2PMessageObserver _deltaHistoryResponseObserver;
+        private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHistoryReplaySubject;
 
-        private readonly IMapperProvider _mapperProvider;
-        private readonly IUserOutput _userOutput;
+        private IMapperProvider _mapperProvider;
+        private IUserOutput _userOutput;
 
-        private readonly IDeltaCache _deltaCache;
+        private IDeltaCache _deltaCache;
 
-        private readonly IPeerSyncManager _peerSyncManager;
+        private IPeerSyncManager _peerSyncManager;
         private IDeltaHeightWatcher _deltaHeightWatcher;
 
-        private readonly IDeltaHashProvider _deltaHashProvider;
+        private IDeltaHashProvider _deltaHashProvider;
 
         private int _syncTestHeight = 1005;
 
-        private readonly ManualResetEventSlim _manualResetEventSlim;
+        private ManualResetEventSlim _manualResetEventSlim;
 
-        private readonly CancellationToken _cancellationToken;
+        private CancellationToken _cancellationToken;
 
-        public SyncUnitTests()
+        [SetUp]
+        public void Init()
         {
             _cancellationToken = new CancellationToken();
 

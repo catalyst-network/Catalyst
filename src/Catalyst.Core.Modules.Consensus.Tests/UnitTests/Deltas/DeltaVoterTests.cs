@@ -49,7 +49,28 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaVoterTests : IDisposable
     {
-        public static readonly List<object[]> DodgyCandidates;
+        public static readonly object[] DodgyCandidates = new object[]
+            {
+                null,
+                new CandidateDeltaBroadcast(),
+                    new CandidateDeltaBroadcast
+                    {
+                        Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                        PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString()
+                    }
+                ,
+                    new CandidateDeltaBroadcast
+                    {
+                        Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                        ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
+                    }
+                ,
+                    new CandidateDeltaBroadcast
+                    {
+                        PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                        ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
+                    }
+            };
 
         private IHashProvider _hashProvider;
         private IMemoryCache _cache;
@@ -60,39 +81,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private PeerId _localIdentifier;
         private ILogger _logger;
         private IPeerSettings _peerSettings;
-
-        static DeltaVoterTests()
-        {
-            DodgyCandidates = new List<object[]>
-            {
-                new object[] {null},
-                new object[] {new CandidateDeltaBroadcast()},
-                new object[]
-                {
-                    new CandidateDeltaBroadcast
-                    {
-                        Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                        PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString()
-                    }
-                },
-                new object[]
-                {
-                    new CandidateDeltaBroadcast
-                    {
-                        Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                        ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
-                    }
-                },
-                new object[]
-                {
-                    new CandidateDeltaBroadcast
-                    {
-                        PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                        ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
-                    }
-                }
-            };
-        }
 
         [SetUp]
         public void Init()

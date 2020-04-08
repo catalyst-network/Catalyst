@@ -154,17 +154,5 @@ namespace Catalyst.TestUtils
                .NotBeInAscendingOrder(x => x.StringValue, 
                     StringComparer.InvariantCulture);
         }
-
-        [Test]
-        public void NotBeIn_ascending_or_descending_Order_should_be_true_on_empty()
-        {
-            new List<StringWrapper>().Should()
-               .NotBeInAscendingOrder(x => x.StringValue,
-                    StringComparer.InvariantCulture);
-
-            new List<StringWrapper>().Should()
-               .NotBeInDescendingOrder(x => x.StringValue,
-                    StringComparer.InvariantCulture);
-        }
     }
 }

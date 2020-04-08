@@ -52,32 +52,26 @@ using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
-    public class BadFavouritesData : List<object[]>
+    public class DeltaElectorTests
     {
-        public BadFavouritesData()
+        private static IHashProvider HashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
+        private static object[] BadFavouritesData = new object[]
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-
-            Add(new object[] { null, typeof(ArgumentNullException) });
-            Add(new object[] { new FavouriteDeltaBroadcast(), typeof(InvalidDataException) });
-            Add(new object[] { new FavouriteDeltaBroadcast
-            {
+            new object[] { null, typeof(ArgumentNullException) },
+            new object[] { new FavouriteDeltaBroadcast(), typeof(InvalidDataException)},
+            new object[] { new FavouriteDeltaBroadcast{
                 Candidate = new CandidateDeltaBroadcast
                 {
                     Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                     ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
                 },
                 VoterId = PeerIdHelper.GetPeerId("candidate field is invalid")
-            }, typeof(InvalidDataException) });
-            Add(new object[] { new FavouriteDeltaBroadcast
-            {
-                Candidate = DeltaHelper.GetCandidateDelta(hashProvider)
-            }, typeof(InvalidDataException) });
-        }
-    }
+            }, typeof(InvalidDataException) },
+            new object[] { new FavouriteDeltaBroadcast{
+                Candidate = DeltaHelper.GetCandidateDelta(HashProvider)
+            }, typeof(InvalidDataException) }
+        };
 
-    public class DeltaElectorTests
-    {
         private TestScheduler _testScheduler;
         private ILogger _logger;
         private IReputationManager _reputationManager;
@@ -97,7 +91,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _deltaProducersProvider = Substitute.For<IDeltaProducersProvider>();
         }
 
-        [TestCaseSource(typeof(BadFavouritesData))]
+        [TestCaseSource(nameof(BadFavouritesData))]
         public void When_receiving_bad_favourite_should_log_and_not_hit_the_cache(FavouriteDeltaBroadcast badFavourite,
             Type exceptionType)
         {

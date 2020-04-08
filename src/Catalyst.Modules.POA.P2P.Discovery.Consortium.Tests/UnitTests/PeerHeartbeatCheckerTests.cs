@@ -43,11 +43,12 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         private const int PeerHeartbeatCheckSeconds = 3;
         private const int PeerChallengeTimeoutSeconds = 1;
         private IHealthChecker _peerHeartbeatChecker;
-        private readonly IPeerClient _peerClient;
-        private readonly IPeerRepository _peerRepository;
-        private readonly Peer _testPeer;
+        private IPeerClient _peerClient;
+        private IPeerRepository _peerRepository;
+        private Peer _testPeer;
 
-        public PeerHeartbeatCheckerTests()
+        [SetUp]
+        public void Init()
         {
             _peerRepository = Substitute.For<IPeerRepository>();
             _peerClient = Substitute.For<IPeerClient>();
