@@ -216,7 +216,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
                    .Zip(receivedPhases2, (a, b) => new Tuple<IPhase, IPhase>(a, b)))
                 {
                     (phases.Item1.UtcStartTime - phases.Item2.UtcStartTime).TotalMilliseconds
-                       .Should().BeApproximately(0, 0.0001d, "phases should be in sync");
+                       .Should().BeApproximately(0, 0.00009d, "phases should be in sync");
                     phases.Item1.Name.Should().Be(phases.Item2.Name);
                     phases.Item1.Status.Should().Be(phases.Item1.Status);
                 }
