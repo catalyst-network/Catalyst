@@ -37,12 +37,13 @@ namespace Catalyst.Core.Lib.Tests
 {
     public sealed class ConfigApiTest : FileSystemBasedTest
     {
-        private readonly IConfigApi _configApi;
+        private IConfigApi _configApi;
 
         private const string ApiAddress = "/ip4/127.0.0.1/tcp/";
         private const string GatewayAddress = "/ip4/127.0.0.1/tcp/";
 
-        public ConfigApiTest() : base()
+        [SetUp]
+        public void Setup()
         {
             var dfsOptions = new DfsOptions(Substitute.For<BlockOptions>(), Substitute.For<DiscoveryOptions>(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _configApi = new ConfigApi(dfsOptions);
