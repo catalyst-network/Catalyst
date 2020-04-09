@@ -41,10 +41,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public class CmsTest : FileSystemBasedTest
     {
-        private readonly KeyStoreService _keyStoreService;
+        private KeyStoreService _keyStoreService;
 
-        public CmsTest() : base()
+        [SetUp]
+        public void Init()
         {
+            Setup(TestContext.CurrentContext);
             var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _keyStoreService = new KeyStoreService(dfsOptions)
             {

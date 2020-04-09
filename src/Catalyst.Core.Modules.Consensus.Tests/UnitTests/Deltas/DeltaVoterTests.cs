@@ -49,29 +49,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaVoterTests : IDisposable
     {
-        public static readonly object[] DodgyCandidates = new object[]
-            {
-                null,
-                new CandidateDeltaBroadcast(),
-                    new CandidateDeltaBroadcast
-                    {
-                        Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                        PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString()
-                    }
-                ,
-                    new CandidateDeltaBroadcast
-                    {
-                        Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                        ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
-                    }
-                ,
-                    new CandidateDeltaBroadcast
-                    {
-                        PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                        ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
-                    }
-            };
-
         private IHashProvider _hashProvider;
         private IMemoryCache _cache;
         private IDeltaProducersProvider _producersProvider;
@@ -104,12 +81,68 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _logger = Substitute.For<ILogger>();
         }
 
-        [TestCaseSource(nameof(DodgyCandidates))]
-        public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDeltaBroadcast dodgyCandidate)
+        [Test]
+        public void When_candidate_is_null_should_log_and_return_without_hitting_the_cache()
         {
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
 
-            _voter.OnNext(dodgyCandidate);
+            _voter.OnNext(null);
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }
+
+        [Test]
+        public void When_candidate_is_empty_should_log_and_return_without_hitting_the_cache()
+        {
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
+
+            _voter.OnNext(new CandidateDeltaBroadcast());
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }
+
+        [Test]
+        public void When_candidate_producer_id_is_empty_should_log_and_return_without_hitting_the_cache()
+        {
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
+
+            _voter.OnNext(new CandidateDeltaBroadcast
+            {
+                Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString()
+            });
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }
+
+        [Test]
+        public void When_candidate_previous_delta_hash_is_empty_should_log_and_return_without_hitting_the_cache()
+        {
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
+
+            _voter.OnNext(new CandidateDeltaBroadcast
+            {
+                Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
+            });
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }     
+        
+        [Test]
+        public void When_candidate_hash_is_empty_should_log_and_return_without_hitting_the_cache()
+        {
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
+
+            _voter.OnNext(new CandidateDeltaBroadcast
+            {
+                PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
+            });
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());

@@ -55,22 +55,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     public class DeltaElectorTests
     {
         private static IHashProvider HashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-        private static object[] BadFavouritesData = new object[]
-        {
-            new object[] { null, typeof(ArgumentNullException) },
-            new object[] { new FavouriteDeltaBroadcast(), typeof(InvalidDataException)},
-            new object[] { new FavouriteDeltaBroadcast{
-                Candidate = new CandidateDeltaBroadcast
-                {
-                    Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                    ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
-                },
-                VoterId = PeerIdHelper.GetPeerId("candidate field is invalid")
-            }, typeof(InvalidDataException) },
-            new object[] { new FavouriteDeltaBroadcast{
-                Candidate = DeltaHelper.GetCandidateDelta(HashProvider)
-            }, typeof(InvalidDataException) }
-        };
 
         private TestScheduler _testScheduler;
         private ILogger _logger;
@@ -91,13 +75,55 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _deltaProducersProvider = Substitute.For<IDeltaProducersProvider>();
         }
 
-        [Test, TestCaseSource(nameof(BadFavouritesData))]
-        public void When_receiving_bad_favourite_should_log_and_not_hit_the_cache(FavouriteDeltaBroadcast badFavourite,
-            Type exceptionType)
+        [Test]
+        public void When_receiving_null_favourite_should_log_and_not_hit_the_cache()
         {
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
-            elector.OnNext(badFavourite);
+            elector.OnNext(null);
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }
+
+        [Test]
+        public void When_receiving_empty_favourite_should_log_and_not_hit_the_cache()
+        {
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+
+            elector.OnNext(new FavouriteDeltaBroadcast());
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }   
+        
+        [Test]
+        public void When_receiving_invalid_candidate_should_log_and_not_hit_the_cache()
+        {
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+
+            elector.OnNext(new FavouriteDeltaBroadcast{
+                Candidate = new CandidateDeltaBroadcast
+                {
+                    Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                    ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
+                },
+                VoterId = PeerIdHelper.GetPeerId("candidate field is invalid")
+            });
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }   
+        
+        [Test]
+        public void When_receiving_no_voterid_should_log_and_not_hit_the_cache()
+        {
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+
+            elector.OnNext(new FavouriteDeltaBroadcast
+            {
+                Candidate = DeltaHelper.GetCandidateDelta(HashProvider)
+            });
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());

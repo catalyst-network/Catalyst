@@ -42,10 +42,13 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 {
     public sealed class KeyApiTest : FileSystemBasedTest
     {
-        private readonly IKeyStoreService _keyStoreService;
+        private IKeyStoreService _keyStoreService;
 
-        public KeyApiTest() : base()
+        [SetUp]
+        public void Init()
         {
+            Setup(TestContext.CurrentContext);
+
             var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _keyStoreService = new KeyStoreService(dfsOptions);
             _keyStoreService.SetPassphraseAsync(new SecureString()).Wait();

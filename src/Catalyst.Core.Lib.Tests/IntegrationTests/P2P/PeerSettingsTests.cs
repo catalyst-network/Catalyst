@@ -32,8 +32,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     public sealed class PeerSettingsTests : FileSystemBasedTest
     {
-        public PeerSettingsTests() : base() { }
-
         [SetUp]
         public void Init()
         {

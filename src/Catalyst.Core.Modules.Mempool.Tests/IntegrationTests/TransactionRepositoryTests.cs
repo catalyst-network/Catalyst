@@ -44,7 +44,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
     public sealed class TransactionRepositoryTests : FileSystemBasedTest
     {
-        private readonly IMapperProvider _mapperProvider;
+        private IMapperProvider _mapperProvider;
 
         public static IEnumerable<object[]> ModulesList =>
             new List<object[]>
@@ -53,7 +53,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 new object[] {new MongoDbTestModule<PublicEntryDao>()}
             };
 
-        public TransactionRepositoryTests() : base()
+        [SetUp]
+        public void Init()
         {
             _mapperProvider = new TestMapperProvider();
         }
