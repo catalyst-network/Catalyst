@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;CS8002</NoWarn>
+    </PropertyGroup>
+    <PropertyGroup>
+        <RootNamespace>Catalyst.Modules.UPnP</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Mono.Nat" Version="2.0.0" />
+    </ItemGroup>
+</Project>
