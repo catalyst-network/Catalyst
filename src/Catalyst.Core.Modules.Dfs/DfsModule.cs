@@ -180,7 +180,7 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<RepositoryOptions>().SingleInstance()
                .WithParameter("dfsDirectory", Constants.DfsDataSubDir);
             //Disable Mdns in dfs as it causes a memoryleak/outofmemory exception
-            builder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", true);
+            builder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", false);
             builder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", "rsa");
             builder.RegisterType<SwarmOptions>().SingleInstance();
         }

@@ -68,7 +68,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
                .Equals(path.ToLower(CultureInfo.InvariantCulture));
         }
 
-        [Theory]
         [Property(Traits.TestType, Traits.IntegrationTest)]
         [TestCase("'\0'")]
         [TestCase("'xxx://gan\0'dolf\\treasu\re*&+'")]

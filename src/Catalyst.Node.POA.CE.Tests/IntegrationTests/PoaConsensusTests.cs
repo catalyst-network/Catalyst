@@ -93,7 +93,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             }
         }
 
-        [Test]
+        //[Test]
         public async Task Run_ConsensusAsync()
         {
             _nodes.AsParallel()
