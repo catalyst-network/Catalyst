@@ -48,7 +48,7 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             _ownNode = PeerIdHelper.GetPeerId("ownNode");
         }
 
-        [Fact]
+        [Test]
         public void Can_Store_Peer_After_Burn_In()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Cant_Store_Peer_During_Burn_In()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -136,7 +136,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Can_WalkForward_With_Valid_Candidate()
         {
             var knownStepPid =
@@ -175,7 +175,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Can_Not_WalkForward_With_InValid_Candidate()
         {
             var proposalCandidateId = PeerIdHelper.GetPeerId("these_eyes....");
@@ -219,7 +219,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void HasValidCandidate_Can_Validate_Correct_State()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -245,7 +245,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void HasValidCandidate_Can_Detect_Invalid_State()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -271,7 +271,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Throw_Exception_In_WalkBack_When_Last_State_Has_No_Neighbours_To_Continue_Walk_Forward()
         {
             var ctp = new CancellationTokenProvider(true);
@@ -291,7 +291,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
             using (var walker = discoveryTestBuilder.Build())
             {
-                await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+                Assert.ThrowsAsync<InvalidOperationException>(async () =>
                 {
                     await walker.DiscoveryAsync();
                     Thread.Sleep(2);
@@ -300,7 +300,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Can_Get_State_From_CareTaker()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -323,7 +323,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Discovery_Can_Build_Initial_State_From_SeedNodes()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -349,8 +349,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         }
 
         [Theory]
-        [InlineData(typeof(PingResponse), typeof(PingResponseObserver), "OnPingResponse")]
-        [InlineData(typeof(PeerNeighborsResponse), typeof(GetNeighbourResponseObserver), "OnPeerNeighbourResponse")]
+        [TestCase(typeof(PingResponse), typeof(PingResponseObserver), "OnPingResponse")]
+        [TestCase(typeof(PeerNeighborsResponse), typeof(GetNeighbourResponseObserver), "OnPeerNeighbourResponse")]
         public void Can_Merge_PeerClientObservable_Stream_And_Read_Items_Pushed_On_Separate_Streams(Type discoveryMessage,
             Type observer,
             string logMsg)
@@ -384,7 +384,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Can_Discard_UnKnown_PingResponse()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -424,7 +424,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Unknown_Pnr_Message_Does_Not_Walk_Back()
         {
             var candidatePid = PeerIdHelper.GetPeerId("candidate");
@@ -459,7 +459,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Evicted_Known_Pnr_Message_Does_Walk_Back()
         {
             var currentPid = PeerIdHelper.GetPeerId("current");
@@ -502,7 +502,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Can_Discard_UnKnown_PeerNeighbourResponse_Message()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -538,7 +538,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Can_Process_Valid_PeerNeighbourResponse_Message_And_Ping_Provided_Neighbours()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
@@ -602,7 +602,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             return subbedDto;
         }
 
-        [Fact]
+        [Test]
         public void Can_Correlate_Known_Ping_And_Update_Neighbour_State()
         {
             var neighbours = DiscoveryHelper.MockNeighbours(Constants.NumberOfRandomPeers,
@@ -651,7 +651,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Known_Evicted_Correlation_Cache_PingRequest_Message_Increments_UnResponsivePeer()
         {
             var pnr = CorrelationId.GenerateCorrelationId();

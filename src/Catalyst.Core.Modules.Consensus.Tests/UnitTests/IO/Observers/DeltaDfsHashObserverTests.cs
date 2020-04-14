@@ -40,20 +40,21 @@ using DotNetty.Transport.Channels;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
     public sealed class DeltaDfsHashObserverTests
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly IChannelHandlerContext _fakeChannelContext;
-        private readonly SyncState _syncState;
-        private readonly ILogger _logger;
-        private readonly IPeerRepository _peerRepository;
+        private IHashProvider _hashProvider;
+        private IDeltaHashProvider _deltaHashProvider;
+        private IChannelHandlerContext _fakeChannelContext;
+        private SyncState _syncState;
+        private ILogger _logger;
+        private IPeerRepository _peerRepository;
 
-        public DeltaDfsHashObserverTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
@@ -63,7 +64,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _peerRepository = Substitute.For<IPeerRepository>();
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Try_Update()
         {
             var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
@@ -78,7 +79,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaHashProvider.Received(1).TryUpdateLatestHash(prevHash, newHash);
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Update_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
@@ -92,7 +93,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaHashProvider.DidNotReceiveWithAnyArgs().TryUpdateLatestHash(default, default);
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Update_Invalid_Peer()
         {
             var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").ToCid();

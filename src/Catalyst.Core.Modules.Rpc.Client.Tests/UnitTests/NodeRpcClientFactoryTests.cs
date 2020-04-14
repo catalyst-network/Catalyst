@@ -30,7 +30,7 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 {
@@ -46,7 +46,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 
         private readonly RpcClientFactory _rpcClientFactory;
 
-        [Fact]
+        [Test]
         public async Task GetClient_Should_Return_RpcClient()
         {
             var nodeRpcConfig = Substitute.For<IRpcClientConfig>();

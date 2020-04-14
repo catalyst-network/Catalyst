@@ -30,7 +30,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
 {
@@ -55,7 +55,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
         private readonly IPAddress _ipAddress;
         private readonly int _port;
 
-        [Fact]
+        [Test]
         public async Task Bootstrap_Should_Return_Channel()
         {
             var certificate = Substitute.For<X509Certificate2>();
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
             channel.Should().BeAssignableTo<IChannel>();
         }
 
-        [Fact]
+        [Test]
         public async Task BuildChannel_Should_Return_IObservableChannel()
         {
             var observableChannel =

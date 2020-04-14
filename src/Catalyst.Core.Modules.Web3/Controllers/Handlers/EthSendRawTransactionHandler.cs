@@ -32,10 +32,11 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Encoding;
-using Nethermind.Core.Specs;
+using Nethermind.Crypto;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Logging;
+using Nethermind.Serialization.Rlp;
+using Nethermind.Specs;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {

@@ -30,20 +30,21 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 {
     public sealed class ReputationManagerTests : FileSystemBasedTest
     {
-        private readonly IReputationManager _reputationManager;
-        private readonly ILifetimeScope _scope;
+        private IReputationManager _reputationManager;
+        private ILifetimeScope _scope;
 
-        public ReputationManagerTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
-            ContainerProvider.ConfigureContainerBuilder();
+            Setup(TestContext.CurrentContext);
 
+            ContainerProvider.ConfigureContainerBuilder();
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _reputationManager = _scope.Resolve<IReputationManager>();
         }
@@ -59,8 +60,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
             return subbedPeer;
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Save_Increased_Peer()
         {
             var pid = PeerIdHelper.GetPeerId("some_peer");
@@ -75,8 +76,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
             updatedSubbedPeer.Reputation.Should().Be(200);
         }
         
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Save_Decreased_Peer()
         {
             var pid = PeerIdHelper.GetPeerId("some_peer");
@@ -91,8 +92,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
             updatedSubbedPeer.Reputation.Should().Be(0);
         }
         
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Save_Decreased_Peer_To_Negative_Number()
         {
             var pid = PeerIdHelper.GetPeerId("some_peer");
@@ -107,8 +108,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
             updatedSubbedPeer.Reputation.Should().Be(-100);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Save_Increased_Peer_From_Negative_Number_To_Positive_Number()
         {
             var pid = PeerIdHelper.GetPeerId("some_peer");

@@ -46,19 +46,20 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethermind.Core.Crypto;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
 {
     public class SyncIntegrationTests : FileSystemBasedTest
     {
-        private readonly CancellationTokenSource _endOfTestCancellationSource;
-        private readonly ILifetimeScope _scope;
-        private readonly List<PoaTestNode> _nodes;
+        private CancellationTokenSource _endOfTestCancellationSource;
+        private ILifetimeScope _scope;
+        private List<PoaTestNode> _nodes;
 
-        public SyncIntegrationTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
+            Setup(TestContext.CurrentContext);
             _endOfTestCancellationSource = new CancellationTokenSource();
 
             var context = new FfiWrapper();
@@ -66,6 +67,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
             var poaNodeDetails = Enumerable.Range(0, 3).Select(i =>
                 {
                     var fileSystem = Substitute.For<IFileSystem>();
+
                     var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
                     fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(path));
 
@@ -74,7 +76,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
                     var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
                     var peerIdentifier = nodeSettings.PeerId;
                     var name = $"producer{i.ToString()}";
-                    var dfs = TestDfs.GetTestDfs(output, fileSystem);
+                    var dfs = TestDfs.GetTestDfs(fileSystem);
                     return new { index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem };
                 }
             ).ToList();
@@ -91,8 +93,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
                     nodeDetails.nodeSettings,
                     nodeDetails.dfs,
                     peerIdentifiers.Except(new[] { nodeDetails.peerIdentifier }),
-                    nodeDetails.fileSystem,
-                    output);
+                    nodeDetails.fileSystem);
 
                 _nodes.Add(node);
             }

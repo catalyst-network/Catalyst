@@ -38,20 +38,21 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils.Fakes;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class VerifyMessageRequestObserverTests
     {
-        private readonly IKeySigner _keySigner;
-        private readonly VerifyMessageRequestObserver _verifyMessageRequestObserver;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly PeerId _testPeerId;
-        private readonly VerifyMessageRequest _verifyMessageRequest;
-        private readonly SigningContext _signingContext;
+        private IKeySigner _keySigner;
+        private VerifyMessageRequestObserver _verifyMessageRequestObserver;
+        private IChannelHandlerContext _fakeContext;
+        private PeerId _testPeerId;
+        private VerifyMessageRequest _verifyMessageRequest;
+        private SigningContext _signingContext;
 
-        public VerifyMessageRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _signingContext = new SigningContext
             {
@@ -76,7 +77,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _verifyMessageRequest = GetValidVerifyMessageRequest();
         }
 
-        [Fact]
+        [Test]
         public void VerifyMessageRequestObserver_Can_Reject_Invalid_Public_Key_Length()
         {
             _verifyMessageRequest.PublicKey = ByteString.CopyFrom(new byte[new FfiWrapper().PublicKeyLength + 1]);
@@ -84,21 +85,21 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             AssertVerifyResponse(false);
         }
 
-        [Fact]
+        [Test]
         public void VerifyMessageRequestObserver_Can_Reject_Invalid_Signature_Length()
         {
             _verifyMessageRequest.Signature = ByteString.CopyFrom(new byte[new FfiWrapper().SignatureLength + 1]);
             AssertVerifyResponse(false);
         }
 
-        [Fact]
+        [Test]
         public void VerifyMessageRequestObserver_Can_Send_True_If_Valid_Signature()
         {
             _keySigner.Verify(default, default, default).ReturnsForAnyArgs(true);
             AssertVerifyResponse(true);
         }
 
-        [Fact]
+        [Test]
         public void VerifyMessageRequestObserver_Can_Send_False_Response_If_Verify_Fails()
         {
             _keySigner.Verify(default, default, default).ReturnsForAnyArgs(false);

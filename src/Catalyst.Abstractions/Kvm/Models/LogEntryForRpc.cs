@@ -25,7 +25,7 @@ using Catalyst.Abstractions.Ledger.Models;
 using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Json;
+using Nethermind.Serialization.Json;
 using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models

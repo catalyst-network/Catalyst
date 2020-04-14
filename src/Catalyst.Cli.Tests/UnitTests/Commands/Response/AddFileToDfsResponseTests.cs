@@ -29,7 +29,7 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
 {
@@ -40,7 +40,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
 
         public AddFileToDfsResponseTests() { _logger = Substitute.For<ILogger>(); }
 
-        [Fact]
+        [Test]
         public void AddFileToDfsResponse_Failed_Can_Get_Output()
         {
             //Arrange
@@ -63,7 +63,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
                 addFileToDfsResponse.DfsHash);
         }
 
-        [Fact]
+        [Test]
         public void AddFileToDfsResponse_Finished_Can_Get_Output()
         {
             //Arrange
@@ -86,7 +86,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
                 " Dfs Hash: " + addFileToDfsResponse.DfsHash);
         }
 
-        [Fact]
+        [Test]
         public void AddFileToDfsResponse_No_Response_Codes()
         {
             //Arrange

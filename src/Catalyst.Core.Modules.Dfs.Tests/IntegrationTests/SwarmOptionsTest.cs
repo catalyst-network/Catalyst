@@ -22,18 +22,18 @@
 #endregion
 
 using Catalyst.Abstractions.Options;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     public class SwarmOptionsTest
     {
-        [Fact]
+        [Test]
         public void Defaults()
         {
             var options = new SwarmOptions();
             Assert.Null(options.PrivateNetworkKey);
-            Assert.Equal(8, options.MinConnections);
+            Assert.AreEqual(8, options.MinConnections);
         }
     }
 }

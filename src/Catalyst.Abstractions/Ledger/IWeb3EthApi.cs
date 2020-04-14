@@ -32,7 +32,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Lib.P2P;
 using Nethermind.Core.Crypto;
-using Nethermind.Store;
+using Nethermind.State;
 using System.Collections.Generic;
 
 namespace Catalyst.Abstractions.Ledger

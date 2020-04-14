@@ -37,17 +37,18 @@ using MultiFormats.Registry;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 {
     public sealed class MempoolTests
     {
-        private readonly Mempool _memPool;
-        private readonly PublicEntryDao _mempoolItem;
-        private readonly TestMapperProvider _mapperProvider;
+        private Mempool _memPool;
+        private PublicEntryDao _mempoolItem;
+        private TestMapperProvider _mapperProvider;
 
-        public MempoolTests()
+        [SetUp]
+        public void Init()
         {
             new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _memPool = new Mempool(Substitute.For<IMempoolService<PublicEntryDao>>());
@@ -66,7 +67,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
                .Returns(true);
         }
 
-        [Fact]
+        [Test]
         public void Get_should_retrieve_a_saved_transaction()
         {
             _memPool.Service.CreateItem(_mempoolItem);
@@ -81,7 +82,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             mempoolDocument.GasPrice.ToUInt256().Should().Be(expectedTransaction.GasPrice.ToUInt256());
         }
 
-        [Fact]
+        [Test]
         public void Get_should_retrieve_saved_transaction_matching_their_keys()
         {
             const int numTx = 10;
@@ -95,7 +96,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Delete_should_delete_all_transactions()
         {
             var keys = Enumerable.Range(0, 10).Select(i => i.ToString()).ToArray();
@@ -103,7 +104,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             _memPool.Service.Received(1).DeleteItem(Arg.Is<string[]>(s => s.SequenceEqual(keys)));
         }
 
-        [Fact(Skip = "don't like testing we hit a logger")]
+        [Ignore("don't like testing we hit a logger")]
         public void Delete_should_log_deletion_errors()
         {
             var keys = Enumerable.Range(0, 3).Select(i => i.ToString()).ToArray();
@@ -116,7 +117,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             result.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void Get_When_Key_Not_In_Store_Should_Throw()
         {
             _memPool.Service.ReadItem(Arg.Any<string>()).ThrowsForAnyArgs(new KeyNotFoundException());
@@ -124,7 +125,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
                .Should().Throw<KeyNotFoundException>();
         }
 
-        [Fact]
+        [Test]
         public void SaveMempoolDocument_Should_Not_Override_Existing_Record()
         {
             // this test seems pointless like this
@@ -154,7 +155,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             retrievedTransaction.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void SaveMempoolDocument_Should_Return_False_And_Log_On_Store_Exception()
         {
             var exception = new TimeoutException("underlying store is not connected");
@@ -166,7 +167,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             saved.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void SaveMempoolDocument_Should_Throw_On_Document_With_Null_Transaction()
         {
             _mempoolItem.Signature.RawBytes = null;
@@ -178,7 +179,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
                .And.Message.Should().Contain("cannot be null");
         }
 
-        [Fact]
+        [Test]
         public void SaveMempoolDocument_Should_Throw_On_Null_Document()
         {
             _memPool.Service.CreateItem(null).Throws<ArgumentNullException>();
@@ -188,7 +189,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
                .And.Message.Should().Contain("cannot be null"); // transaction is null so do not insert
         }
 
-        [Fact]
+        [Test]
         public void GetMempoolContent_should_return_all_documents_from_mempool()
         {
             var documentCount = 13;
@@ -210,7 +211,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
                 TransactionHelper.GetPublicTransaction((uint) i, signature: $"key{i}").ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider)).Select(x => x.PublicEntry).ToList();
         }
 
-        [Fact]
+        [Test]
         public void GetMempoolContentEncoded_should_return_an_array_of_bytes_of_strings_of_all_transactions()
         {
             var documentCount = 7;
@@ -226,14 +227,14 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             content.Should().BeEquivalentTo(mempoolDocs);
         }
 
-        [Fact]
+        [Test]
         public void ContainsDocument_Should_Return_True_On_Known_DocumentId()
         {
             AddKeyValueStoreEntryExpectation(_mempoolItem);
             _memPool.Service.TryReadItem(_mempoolItem.Id).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void ContainsDocument_Should_Return_False_On_Unknown_DocumentId()
         {
             var unknownTransaction = "key not in the mempool";

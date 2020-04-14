@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using Catalyst.Core.Lib.Config;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Config
@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Config
         private readonly IPEndPoint _ipEndpoint1;
         private readonly IPEndPoint _ipEndpoint2;
 
-        [Fact]
+        [Test]
         public void ConfigValueParser_Can_Parse_Multiple_IpEndpoints()
         {
             var endPoints = ConfigValueParser.GetIpEndpointArrValues(_configurationRoot, _sectionName);
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Config
             endPoints.Should().Contain(_ipEndpoint2);
         }
 
-        [Fact]
+        [Test]
         public void ConfigValueParser_Can_Parse_Multiple_IpEndpoints_As_Strings()
         {
             var endPoints = ConfigValueParser.GetStringArrValues(_configurationRoot, _sectionName);
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Config
             endPoints.Should().Contain(_ipEndpoint2.ToString());
         }
 
-        [Fact]
+        [Test]
         public void ConfigValueParser_Can_Parse_Empty_Config()
         {
             var peerConfig = new List<KeyValuePair<string, string>>();

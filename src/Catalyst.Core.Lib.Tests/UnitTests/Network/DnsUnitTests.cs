@@ -32,7 +32,7 @@ using DnsClient.Protocol;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Network
 {
@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Network
         private readonly IDns _dns;
         private readonly ILookupClient _lookupClient;
 
-        [Fact]
+        [Test]
         public async Task Dns_GetTxtRecords_from_list_should_return_IDnsQueryResponse_for_valid_list_of_strings_param()
         {
             var urlList = new List<string>();
@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Network
             responses.Should().Contain(r => r.Answers[0].DomainName.Value.StartsWith(domain2));
         }
 
-        [Fact]
+        [Test]
         public async Task
             Dns_GetTxtRecords_from_list_should_return_IDnsQueryResponse_for_valid_list_of_strings_param_even_when_one_lookup_is_null()
         {
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Network
             responses.Should().NotContainNulls();
         }
 
-        [Fact]
+        [Test]
         public async Task Dns_GetTxtRecords_should_return_IDnsQueryResponse_from_lookup_client()
         {
             var value = "hey";
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Network
             ((TxtRecord) txtRecords.Answers.First()).Text.Should().BeEquivalentTo(value);
         }
 
-        [Fact]
+        [Test]
         public async Task Dns_GetTxtRecords_When_Lookup_Throws_should_return_null()
         {
             _lookupClient.QueryAsync(Arg.Any<string>(), Arg.Any<QueryType>())

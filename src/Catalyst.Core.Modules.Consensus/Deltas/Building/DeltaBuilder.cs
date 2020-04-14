@@ -21,7 +21,6 @@
 
 #endregion
 
-using Autofac.Features.AttributeFilters;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
@@ -31,7 +30,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Lib.P2P;
-using Nethermind.Store;
+using Nethermind.State;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building

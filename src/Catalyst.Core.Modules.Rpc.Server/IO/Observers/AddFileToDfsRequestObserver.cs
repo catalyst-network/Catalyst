@@ -43,6 +43,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Microsoft.Reactive.Testing;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -130,7 +131,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                     }
 
                     fileTransferInformation.Dispose();
-                }, ctx.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext())
+                }, ctx.Token)
                .ConfigureAwait(false);
 
             return message;

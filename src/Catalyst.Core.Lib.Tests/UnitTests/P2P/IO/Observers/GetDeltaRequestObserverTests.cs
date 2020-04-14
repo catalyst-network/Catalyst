@@ -40,19 +40,20 @@ using Lib.P2P;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
     public sealed class GetDeltaRequestObserverTests
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly IDeltaCache _deltaCache;
-        private readonly GetDeltaRequestObserver _observer;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IHashProvider _hashProvider;
+        private TestScheduler _testScheduler;
+        private IDeltaCache _deltaCache;
+        private GetDeltaRequestObserver _observer;
+        private IChannelHandlerContext _fakeContext;
+        private IHashProvider _hashProvider;
 
-        public GetDeltaRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule<HashingModule>();
@@ -70,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 
-        [Fact]
+        [Test]
         public async Task GetDeltaRequestObserver_Should_Send_Response_When_Delta_Found_In_Cache()
         {
             var cid = _hashProvider.ComputeUtf8MultiHash("abcd").ToCid();
@@ -90,7 +91,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
                     delta.PreviousDeltaDfsHash));
         }
 
-        [Fact]
+        [Test]
         public async Task GetDeltaRequestObserver_Should_Send_Response_With_Null_Content_If_Not_Retrieved_In_Cache()
         {
             var cid = _hashProvider.ComputeUtf8MultiHash("defg").ToCid();

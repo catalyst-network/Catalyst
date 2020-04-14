@@ -26,13 +26,13 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Core.Lib.IO.Transport.Bootstrapping;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Bootstrapping
 {
     public sealed class ServerBootstrapUnitTests
     {
-        [Fact]
+        [Test]
         public async Task BindAsync_Should_Bind_To_NettyServerBootstrap_BindAsync()
         {
             var ipAddress = IPAddress.Loopback;
@@ -41,8 +41,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Bootstrapping
             var serverBootstrap = new ServerBootstrap();
 
             //We have not set the group for bootstrap so we know that code will trigger an exception, if BindAsync calls Base BindAsync
-            var exception = await Record.ExceptionAsync(async () => { await serverBootstrap.BindAsync(ipAddress, port); });
-            exception.Should().BeOfType<InvalidOperationException>("group not set");
+            Assert.ThrowsAsync<InvalidOperationException>(async () => { await serverBootstrap.BindAsync(ipAddress, port); });
         }
     }
 }

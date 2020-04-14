@@ -32,16 +32,17 @@ using Makaretu.Dns;
 using MultiFormats;
 using NSubstitute;
 using Org.BouncyCastle.Crypto.Parameters;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public class Rfc8410Test : FileSystemBasedTest
     {
-        private readonly KeyStoreService _keyStoreService;
+        private KeyStoreService _keyStoreService;
         
-        public Rfc8410Test(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
             var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
             _keyStoreService = new KeyStoreService(dfsOptions)
@@ -56,7 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             _keyStoreService.SetPassphraseAsync(securePassword).ConfigureAwait(false);
         }
         
-        [Fact]
+        [Test]
         public async Task ReadPrivateKey()
         {
             const string alice1 = @"-----BEGIN PRIVATE KEY-----
@@ -68,12 +69,12 @@ MC4CAQAwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC
             {
                 var priv = (Ed25519PrivateKeyParameters) await _keyStoreService.GetPrivateKeyAsync("alice1");
                 Assert.True(priv.IsPrivate);
-                Assert.Equal("d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
+                Assert.AreEqual("d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
                     priv.GetEncoded().ToHexString());
 
                 var pub = priv.GeneratePublicKey();
                 Assert.False(pub.IsPrivate);
-                Assert.Equal("19bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
+                Assert.AreEqual("19bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
                     pub.GetEncoded().ToHexString());
             }
             finally
@@ -82,7 +83,7 @@ MC4CAQAwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC
             }
         }
 
-        [Fact]
+        [Test]
         public async Task ReadPrivateAndPublicKey()
         {
             const string alice1 = @"-----BEGIN PRIVATE KEY-----
@@ -96,12 +97,12 @@ Z9w7lshQhqowtrbLDFw4rXAxZuE=
             {
                 var priv = (Ed25519PrivateKeyParameters) await _keyStoreService.GetPrivateKeyAsync("alice1");
                 Assert.True(priv.IsPrivate);
-                Assert.Equal("d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
+                Assert.AreEqual("d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
                     priv.GetEncoded().ToHexString());
 
                 var pub = priv.GeneratePublicKey();
                 Assert.False(pub.IsPrivate);
-                Assert.Equal("19bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
+                Assert.AreEqual("19bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
                     pub.GetEncoded().ToHexString());
             }
             finally

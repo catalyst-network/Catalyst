@@ -29,7 +29,7 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Core.Lib.IO.EventLoop;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO
 {
@@ -55,7 +55,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO
             };
         }
 
-        [Fact]
+        [Test]
         public void Can_Spawn_Correct_Amount_Of_Udp_Server_Event_Loops()
         {
             _eventFactory = new UdpServerEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO
             AssertEventLoopSize(_eventFactory.GetOrCreateSocketIoEventLoopGroup(), ExpectedDefaultEventLoopThreadCount);
         }
 
-        [Fact]
+        [Test]
         public void Can_Spawn_Correct_Amount_Of_Udp_Client_Event_Loops()
         {
             _eventFactory = new UdpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO
             AssertEventLoopSize(_eventFactory.GetOrCreateSocketIoEventLoopGroup(), ExpectedDefaultEventLoopThreadCount);
         }
 
-        [Fact]
+        [Test]
         public void Can_Spawn_Correct_Amount_Of_Tcp_Server_Event_Loops()
         {
             _eventFactory = new TcpServerEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
@@ -79,7 +79,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO
             AssertEventLoopSize(_eventFactory.GetOrCreateSocketIoEventLoopGroup(), ExpectedDefaultEventLoopThreadCount);
         }
 
-        [Fact]
+        [Test]
         public void Can_Spawn_Correct_Amount_Of_Tcp_Client_Event_Loops()
         {
             _eventFactory = new TcpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO
             AssertEventLoopSize(_eventFactory.GetOrCreateSocketIoEventLoopGroup(), ExpectedDefaultEventLoopThreadCount);
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Dispose_All_Event_Loops()
         {
             _eventFactory = new TcpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);

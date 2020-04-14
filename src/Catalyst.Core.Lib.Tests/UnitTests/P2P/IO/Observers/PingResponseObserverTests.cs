@@ -34,7 +34,7 @@ using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _observer = new PingResponseObserver(Substitute.For<IPeerChallengeRequest>(), Substitute.For<IPeerRepository>(), Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public void Observer_Can_Process_PingResponse_Correctly()
         {
             var testScheduler = new TestScheduler();

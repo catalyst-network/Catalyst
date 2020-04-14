@@ -38,19 +38,17 @@ using FluentAssertions;
 using Lib.P2P;
 using MultiFormats;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
-using Xunit.Sdk;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public sealed class BitSwapApiTest
     {
-        private readonly IDfsService _dfsService;
-        private readonly IDfsService _dfsServiceOther;
-        private readonly ITestOutputHelper _testOutputHelper;
+        private IDfsService _dfsService;
+        private IDfsService _dfsServiceOther;
 
-        public BitSwapApiTest(ITestOutputHelper output)
+        [SetUp]
+        public void Init()
         {
             var fileSystem1 = Substitute.For<IFileSystem>();
             fileSystem1.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
@@ -60,21 +58,20 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             fileSystem2.GetCatalystDataDir().Returns(new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
                 $"dfs2-_{DateTime.Now:yyMMddHHmmssffff}")));
 
-            _testOutputHelper = output;
-            _dfsService = TestDfs.GetTestDfs(output, fileSystem1);
-            _dfsServiceOther = TestDfs.GetTestDfs(output, fileSystem2);
+            _dfsService = TestDfs.GetTestDfs(fileSystem1);
+            _dfsServiceOther = TestDfs.GetTestDfs(fileSystem2);
         }
 
         /// <summary>
         ///     @TODO this assert is commented out
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="XunitException"></exception>
-        [Fact]
+        /// <exception cref="Exception"></exception>
+        [Test]
         public async Task UnWant()
         {
             await _dfsService.StartAsync();
-
+            
             try
             {
                 var cts = new CancellationTokenSource();
@@ -86,7 +83,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 {
                     if (DateTime.Now > endTime)
                     {
-                        throw new XunitException("wanted block is missing");
+                        throw new Exception("wanted block is missing");
                     }
 
                     await Task.Delay(100, cts.Token);
@@ -112,11 +109,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Wants()
         {
             await _dfsService.StartAsync();
-
+            
             try
             {
                 var cts = new CancellationTokenSource();
@@ -128,7 +125,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 {
                     if (DateTime.Now > endTime)
                     {
-                        throw new XunitException("wanted block is missing");
+                        throw new Exception("wanted block is missing");
                     }
 
                     await Task.Delay(100, cts.Token);
@@ -153,7 +150,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task OnConnect_Sends_WantList()
         {
             _dfsService.Options.Discovery.DisableMdns = true;
@@ -168,8 +165,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var local = _dfsService.LocalPeer;
                 var remote = _dfsServiceOther.LocalPeer;
-                _testOutputHelper.WriteLine($"this at {local.Addresses.First()}");
-                _testOutputHelper.WriteLine($"other at {remote.Addresses.First()}");
+                TestContext.WriteLine($"this at {local.Addresses.First()}");
+                TestContext.WriteLine($"other at {remote.Addresses.First()}");
 
                 var data = Guid.NewGuid().ToByteArray();
                 var cid = new Cid
@@ -192,7 +189,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     await Task.Delay(200);
                 }
 
-                throw new XunitException("want list not sent");
+                throw new Exception("want list not sent");
             }
             finally
             {
@@ -204,7 +201,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task GetsBlock_OnConnect()
         {
             _dfsService.Options.Discovery.DisableMdns = true;
@@ -230,17 +227,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Assert.False(getTask.IsCanceled, "task cancelled");
                 Assert.False(getTask.IsFaulted, "task faulted");
                 Assert.True(getTask.IsCompleted, "task not completed");
-                Assert.Equal(cid, block.Id);
-
+                Assert.AreEqual(cid, block.Id);
+                
                 data.Should().BeEquivalentTo(block.DataBytes);
 
                 var otherPeer = _dfsServiceOther.LocalPeer;
                 var ledger = _dfsService.BitSwapApi.GetBitSwapLedger(otherPeer, cts.Token);
-
-                Assert.Equal(otherPeer, ledger.Peer);
-                Assert.NotEqual(0UL, ledger.BlocksExchanged);
-                Assert.NotEqual(0UL, ledger.DataReceived);
-                Assert.Equal(0UL, ledger.DataSent);
+                
+                Assert.AreEqual(otherPeer, ledger.Peer);
+                Assert.AreNotEqual(0UL, ledger.BlocksExchanged);
+                Assert.AreNotEqual(0UL, ledger.DataReceived);
+                Assert.AreEqual(0UL, ledger.DataSent);
                 Assert.True(ledger.IsInDebt);
 
                 // TODO: Timing issue here.  ipfsOther could have sent the block
@@ -248,10 +245,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 #if false
                 var localPeer = await ipfs.LocalPeer;
                 ledger = await ipfsOther.Bitswap.LedgerAsync(localPeer);
-                Assert.Equal(localPeer, ledger.Peer);
-                Assert.NotEqual(0UL, ledger.BlocksExchanged);
-                Assert.Equal(0UL, ledger.DataReceived);
-                Assert.NotEqual(0UL, ledger.DataSent);
+                Assert.AreEqual(localPeer, ledger.Peer);
+                Assert.AreNotEqual(0UL, ledger.BlocksExchanged);
+                Assert.AreEqual(0UL, ledger.DataReceived);
+                Assert.AreNotEqual(0UL, ledger.DataSent);
                 Assert.False(ledger.IsInDebt);
 #endif
             }
@@ -265,7 +262,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        //         [Fact]
+        //         [Test]
         //         public async Task GetsBlock_OnConnect_BitSwap1()
         //         {
         //             var originalProtocols = (_dfsService.BitSwapService).Protocols;
@@ -310,15 +307,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         //                 Assert.False(getTask.IsCanceled, "task cancelled");
         //                 Assert.False(getTask.IsFaulted, "task faulted");
         //                 Assert.True(getTask.IsCompleted, "task not completed");
-        //                 Assert.Equal(cid, block.Id);
-        //                 Assert.Equal(data, block.DataBytes);
+        //                 Assert.AreEqual(cid, block.Id);
+        //                 Assert.AreEqual(data, block.DataBytes);
         //
         //                 var otherPeer = _dfsServiceOther.LocalPeer;
         //                 var ledger = await _dfsService.BitSwapApi.LedgerAsync(otherPeer, cts.Token);
-        //                 Assert.Equal(otherPeer, ledger.Peer);
-        //                 Assert.NotEqual(0UL, ledger.BlocksExchanged);
-        //                 Assert.NotEqual(0UL, ledger.DataReceived);
-        //                 Assert.Equal(0UL, ledger.DataSent);
+        //                 Assert.AreEqual(otherPeer, ledger.Peer);
+        //                 Assert.AreNotEqual(0UL, ledger.BlocksExchanged);
+        //                 Assert.AreNotEqual(0UL, ledger.DataReceived);
+        //                 Assert.AreEqual(0UL, ledger.DataSent);
         //                 Assert.True(ledger.IsInDebt);
         //
         //                 // TODO: Timing issue here.  ipfsOther could have sent the block
@@ -326,10 +323,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         // #if false
         //                 var localPeer = await ipfs.LocalPeer;
         //                 ledger = await ipfsOther.Bitswap.LedgerAsync(localPeer);
-        //                 Assert.Equal(localPeer, ledger.Peer);
-        //                 Assert.NotEqual(0UL, ledger.BlocksExchanged);
-        //                 Assert.Equal(0UL, ledger.DataReceived);
-        //                 Assert.NotEqual(0UL, ledger.DataSent);
+        //                 Assert.AreEqual(localPeer, ledger.Peer);
+        //                 Assert.AreNotEqual(0UL, ledger.BlocksExchanged);
+        //                 Assert.AreEqual(0UL, ledger.DataReceived);
+        //                 Assert.AreNotEqual(0UL, ledger.DataSent);
         //                 Assert.False(ledger.IsInDebt);
         // #endif
         //             }
@@ -346,7 +343,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         //             }
         //         }
 
-        [Fact]
+        [Test]
         public async Task GetsBlock_OnConnect_BitSwap11()
         {
             var originalProtocols = _dfsService.BitSwapService.Protocols;
@@ -389,15 +386,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Assert.False(getTask.IsCanceled, "task cancelled");
                 Assert.False(getTask.IsFaulted, "task faulted");
                 Assert.True(getTask.IsCompleted, "task not completed");
-                Assert.Equal(cid, block.Id);
-                Assert.Equal(data, block.DataBytes);
+                Assert.AreEqual(cid, block.Id);
+                Assert.AreEqual(data, block.DataBytes);
 
                 var otherPeer = _dfsServiceOther.LocalPeer;
                 var ledger = _dfsService.BitSwapApi.GetBitSwapLedger(otherPeer, cts.Token);
-                Assert.Equal(otherPeer, ledger.Peer);
-                Assert.NotEqual(0UL, ledger.BlocksExchanged);
-                Assert.NotEqual(0UL, ledger.DataReceived);
-                Assert.Equal(0UL, ledger.DataSent);
+                Assert.AreEqual(otherPeer, ledger.Peer);
+                Assert.AreNotEqual(0UL, ledger.BlocksExchanged);
+                Assert.AreNotEqual(0UL, ledger.DataReceived);
+                Assert.AreEqual(0UL, ledger.DataSent);
                 Assert.True(ledger.IsInDebt);
 
                 // TODO: Timing issue here.  ipfsOther could have sent the block
@@ -405,10 +402,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 #if false
                 var localPeer = await ipfs.LocalPeer;
                 ledger = await ipfsOther.Bitswap.LedgerAsync(localPeer);
-                Assert.Equal(localPeer, ledger.Peer);
-                Assert.NotEqual(0UL, ledger.BlocksExchanged);
-                Assert.Equal(0UL, ledger.DataReceived);
-                Assert.NotEqual(0UL, ledger.DataSent);
+                Assert.AreEqual(localPeer, ledger.Peer);
+                Assert.AreNotEqual(0UL, ledger.BlocksExchanged);
+                Assert.AreEqual(0UL, ledger.DataReceived);
+                Assert.AreNotEqual(0UL, ledger.DataSent);
                 Assert.False(ledger.IsInDebt);
 #endif
             }
@@ -425,7 +422,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task GetsBlock_OnRequest()
         {
             _dfsService.Options.Discovery.DisableMdns = true;
@@ -447,8 +444,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 
                 var block = await _dfsService.BlockApi.GetAsync(cid, cts.Token);
 
-                Assert.Equal(cid, block.Id);
-                Assert.Equal(data, block.DataBytes);
+                Assert.AreEqual(cid, block.Id);
+                Assert.AreEqual(data, block.DataBytes);
             }
             finally
             {
@@ -459,7 +456,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task GetsBlock_CidV1()
         {
             await _dfsService.StartAsync();
@@ -475,9 +472,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 
                 var cts = new CancellationTokenSource(3000);
                 var block = await _dfsService.BlockApi.GetAsync(cid, cts.Token);
-
-                Assert.Equal(cid, block.Id);
-                Assert.Equal(data, block.DataBytes);
+ 
+                Assert.AreEqual(cid, block.Id);
+                Assert.AreEqual(data, block.DataBytes);
             }
             finally
             {
@@ -486,7 +483,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task GetBlock_Timeout()
         {
             var block = new DagNode(Encoding.UTF8.GetBytes("BitSwapApiTest unknown block"));
@@ -500,7 +497,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     var _ = _dfsService.BitSwapApi.GetAsync(block.Id, cts.Token).Result;
                 });
 
-                Assert.Equal(0, (await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token)).Count());
+                Assert.AreEqual(0, (await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token)).Count());
             }
             finally
             {
@@ -508,7 +505,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task PeerLedger()
         {
             await _dfsService.StartAsync();

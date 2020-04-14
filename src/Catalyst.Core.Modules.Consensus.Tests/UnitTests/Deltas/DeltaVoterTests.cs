@@ -43,58 +43,24 @@ using Microsoft.Extensions.Caching.Memory;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaVoterTests : IDisposable
     {
-        public static readonly List<object[]> DodgyCandidates;
-
-        private readonly IHashProvider _hashProvider;
-        private readonly IMemoryCache _cache;
-        private readonly IDeltaProducersProvider _producersProvider;
+        private IHashProvider _hashProvider;
+        private IMemoryCache _cache;
+        private IDeltaProducersProvider _producersProvider;
         private DeltaVoter _voter;
-        private readonly Cid _previousDeltaHash;
-        private readonly IList<PeerId> _producerIds;
-        private readonly PeerId _localIdentifier;
-        private readonly ILogger _logger;
-        private readonly IPeerSettings _peerSettings;
+        private Cid _previousDeltaHash;
+        private IList<PeerId> _producerIds;
+        private PeerId _localIdentifier;
+        private ILogger _logger;
+        private IPeerSettings _peerSettings;
 
-        static DeltaVoterTests()
-        {
-            DodgyCandidates = new List<object[]>
-            {
-                new object[] {null},
-                new object[] {new CandidateDeltaBroadcast()},
-                new object[]
-                {
-                    new CandidateDeltaBroadcast
-                    {
-                        Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                        PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString()
-                    }
-                },
-                new object[]
-                {
-                    new CandidateDeltaBroadcast
-                    {
-                        Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                        ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
-                    }
-                },
-                new object[]
-                {
-                    new CandidateDeltaBroadcast
-                    {
-                        PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                        ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
-                    }
-                }
-            };
-        }
-
-        public DeltaVoterTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
@@ -115,19 +81,74 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _logger = Substitute.For<ILogger>();
         }
 
-        [Theory]
-        [MemberData(nameof(DodgyCandidates))]
-        public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDeltaBroadcast dodgyCandidate)
+        [Test]
+        public void When_candidate_is_null_should_log_and_return_without_hitting_the_cache()
         {
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
 
-            _voter.OnNext(dodgyCandidate);
+            _voter.OnNext(null);
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
         }
 
-        [Fact]
+        [Test]
+        public void When_candidate_is_empty_should_log_and_return_without_hitting_the_cache()
+        {
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
+
+            _voter.OnNext(new CandidateDeltaBroadcast());
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }
+
+        [Test]
+        public void When_candidate_producer_id_is_empty_should_log_and_return_without_hitting_the_cache()
+        {
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
+
+            _voter.OnNext(new CandidateDeltaBroadcast
+            {
+                Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString()
+            });
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }
+
+        [Test]
+        public void When_candidate_previous_delta_hash_is_empty_should_log_and_return_without_hitting_the_cache()
+        {
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
+
+            _voter.OnNext(new CandidateDeltaBroadcast
+            {
+                Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
+            });
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }     
+        
+        [Test]
+        public void When_candidate_hash_is_empty_should_log_and_return_without_hitting_the_cache()
+        {
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
+
+            _voter.OnNext(new CandidateDeltaBroadcast
+            {
+                PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
+            });
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }
+
+        [Test]
         public void When_candidate_is_produced_by_unexpected_producer_should_log_and_return_without_hitting_the_cache()
         {
             var candidateFromUnknownProducer = DeltaHelper.GetCandidateDelta(_hashProvider,
@@ -143,7 +164,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
         }
 
-        [Fact]
+        [Test]
         public void When_candidate_not_in_cache_should_build_ScoredCandidate_with_ranking_and_store_it()
         {
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
@@ -172,7 +193,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             scoredCandidateDelta.Score.Should().Be(100 * _producerIds.Count + 1);
         }
 
-        [Fact]
+        [Test]
         public void When_candidate_in_cache_should_retrieve_ScoredCandidate()
         {
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
@@ -201,7 +222,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             cacheCandidate.Score.Should().Be(initialScore + 1);
         }
 
-        [Fact]
+        [Test]
         public void When_second_candidate_is_more_popular_it_should_score_higher()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -247,7 +268,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void When_candidates_not_in_cache_should_create_or_update_a_previous_hash_entry()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -290,7 +311,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetFavouriteDelta_should_retrieve_favourite_delta()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -316,7 +337,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetFavouriteDelta_should_return_null_on_unknown_previous_delta_hash()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -334,7 +355,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetFavouriteDelta_should_return_lowest_hash_when_candidate_scores_are_equal()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))

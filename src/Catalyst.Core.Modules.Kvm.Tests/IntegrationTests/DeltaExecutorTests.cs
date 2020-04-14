@@ -34,32 +34,36 @@ using Google.Protobuf;
 using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Extensions;
+using Nethermind.Db;
+using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
 using Nethermind.Logging;
-using Nethermind.Store;
+using Nethermind.State;
 using NSubstitute;
 using Serilog.Events;
-using Xunit;
+using NUnit.Framework;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 {
+    [TestFixture]
     public sealed class DeltaExecutorTests
     {
-        private readonly ICryptoContext _cryptoContext = new FfiWrapper();
-        private readonly CatalystSpecProvider _specProvider;
-        private readonly StateProvider _stateProvider;
-        private readonly IPrivateKey _senderPrivateKey;
-        private readonly IPublicKey _senderPublicKey;
-        private readonly SigningContext _signingContext;
-        private readonly IPublicKey _recipient;
-        private readonly IPublicKey _poorSender;
-        private readonly DeltaExecutor _executor;
+        private ICryptoContext _cryptoContext = new FfiWrapper();
+        private CatalystSpecProvider _specProvider;
+        private StateProvider _stateProvider;
+        private IPrivateKey _senderPrivateKey;
+        private IPublicKey _senderPublicKey;
+        private SigningContext _signingContext;
+        private IPublicKey _recipient;
+        private IPublicKey _poorSender;
+        private DeltaExecutor _executor;
 
         /**
          * @TODO this should extend file system based tests and resolve tests via autofac container
          */
-        public DeltaExecutorTests()
+        [SetUp]
+        public void Init()
         {
             _specProvider = new CatalystSpecProvider();
             _stateProvider = new StateProvider(new StateDb(), new StateDb(), LimboLogs.Instance);
@@ -90,7 +94,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             };
         }
 
-        [Fact]
+        [Test]
         public void Fails_when_sender_not_specified()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _senderPublicKey, 3);
@@ -106,7 +110,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             tracer.Received().MarkAsFailed(_recipient.ToKvmAddress(), 21000L, Bytes.Empty, "invalid");
         }
 
-        [Fact]
+        [Test]
         public void Fails_when_gas_limit_below_data_intrinsic_cost()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _senderPublicKey, 0, "0x0102");
@@ -122,7 +126,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             tracer.Received().MarkAsFailed(_recipient.ToKvmAddress(), 21001, Bytes.Empty, "invalid");
         }
 
-        [Fact]
+        [Test]
         public void Fails_when_gas_limit_below_entry_intrinsic_cost()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _senderPublicKey, 0);
@@ -138,7 +142,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             tracer.Received().MarkAsFailed(_recipient.ToKvmAddress(), 20999, Bytes.Empty, "invalid");
         }
 
-        [Fact]
+        [Test]
         public void Fails_on_wrong_nonce()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _senderPublicKey, 0, "0x", 1);
@@ -153,7 +157,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             tracer.Received().MarkAsFailed(_recipient.ToKvmAddress(), 21000, Bytes.Empty, "invalid");
         }
 
-        [Fact]
+        [Test]
         public void Fails_on_insufficient_balance()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _poorSender, 0);
@@ -171,7 +175,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             tracer.Received().MarkAsFailed(_recipient.ToKvmAddress(), 21000, Bytes.Empty, "invalid");
         }
 
-        [Fact]
+        [Test]
         public void Fails_when_tx_beyond_delta_gas_limit()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _senderPublicKey, 0);
@@ -187,7 +191,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             tracer.Received().MarkAsFailed(_recipient.ToKvmAddress(), 10_000_000, Bytes.Empty, "invalid");
         }
 
-        [Fact]
+        [Test]
         public void Can_deploy_code()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,
@@ -202,11 +206,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.Execute(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsSuccess(contractAddress, 53370, Arg.Any<byte[]>(), Arg.Any<LogEntry[]>());
         }
 
-        [Fact]
+        [Test]
         public void Can_self_destruct()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,
@@ -221,11 +225,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.Execute(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsSuccess(contractAddress, 34343, Arg.Any<byte[]>(), Arg.Any<LogEntry[]>());
         }
 
-        [Fact]
+        [Test]
         public void Fails_when_not_enough_gas_for_code_deposit()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,
@@ -240,14 +244,14 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.Execute(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsFailed(contractAddress, 53369, Arg.Any<byte[]>(), null);
         }
 
-        [Fact]
+        [Test]
         public void Throws_on_theoretical_contract_crash()
         {
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             _stateProvider.CreateAccount(contractAddress, 1000.Kat());
             var codeHash = _stateProvider.UpdateCode(Bytes.FromHexString("0x01"));
             _stateProvider.UpdateCodeHash(contractAddress, codeHash, _specProvider.GenesisSpec);
@@ -268,10 +272,10 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), null);
         }
 
-        [Fact]
+        [Test]
         public void Update_storage_root_on_contract_clash()
         {
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             _stateProvider.CreateAccount(contractAddress, 1000.Kat());
             _stateProvider.Commit(_specProvider.GenesisSpec);
 
@@ -290,7 +294,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             tracer.Received().MarkAsSuccess(contractAddress, 53370, Arg.Any<byte[]>(), Arg.Any<LogEntry[]>());
         }
 
-        [Fact]
+        [Test]
         public void Can_deploy_code_read_only()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,
@@ -305,11 +309,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.CallAndReset(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             tracer.Received().MarkAsSuccess(contractAddress, 53370, Arg.Any<byte[]>(), Arg.Any<LogEntry[]>());
         }
 
-        [Fact]
+        [Test]
         public void Does_not_crash_on_kvm_error()
         {
             // here we test a case when we deploy a contract where constructor throws invalid opcode EVM error
@@ -324,11 +328,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.Execute(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
-            tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), "Error");
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
+            tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), "BadInstruction");
         }
 
-        [Fact]
+        [Test]
         public void Does_not_crash_on_kvm_exception()
         {
             // here we test a case when we deploy a contract where constructor throws StackUnderflowException
@@ -344,11 +348,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 
             _executor.Execute(delta, tracer);
 
-            var contractAddress = Address.OfContract(_senderPublicKey.ToKvmAddress(), 0);
-            tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), "Error");
+            var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
+            tracer.Received().MarkAsFailed(contractAddress, 1_000_000L, Arg.Any<byte[]>(), "StackUnderflow");
         }
 
-        [Fact]
+        [Test]
         public void Can_execute_transfers_from_public_entries()
         {
             var delta = EntryUtils.PrepareSinglePublicEntryDelta(_recipient, _senderPublicKey, 0);
@@ -363,7 +367,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             tracer.Received().MarkAsSuccess(_recipient.ToKvmAddress(), 21000, Bytes.Empty, Arg.Any<LogEntry[]>());
         }
 
-        [Fact]
+        [Test]
         public void Can_add_gas_to_existing_balance()
         {
             var delta = EntryUtils.PrepareSingleContractEntryDelta(_recipient, _senderPublicKey, 0);

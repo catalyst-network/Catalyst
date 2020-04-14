@@ -31,13 +31,13 @@ using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
 {
     public sealed class TransactionValidatorTests
     {
-        [Fact]
+        [Test]
         public void ValidateTransactionSignature_will_pass_with_valid_transaction_signature()
         {
             var subbedLogger = Substitute.For<ILogger>();

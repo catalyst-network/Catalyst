@@ -13,7 +13,7 @@ contract("EIP20", function(accounts) {
       token = instance;
       return token.balanceOf.call(accounts[0]);
     }).then(function(result){
-      assert.equal(result.toNumber(), 1000000, 'balance is wrong');
+      Assert.AreEqual(result.toNumber(), 1000000, 'balance is wrong');
     })
   });
 
@@ -25,10 +25,10 @@ contract("EIP20", function(accounts) {
     }).then(function(){
       return token.balanceOf.call(accounts[0]);
     }).then(function(result){
-      assert.equal(result.toNumber(), 500000, 'accounts[0] balance is wrong');
+      Assert.AreEqual(result.toNumber(), 500000, 'accounts[0] balance is wrong');
       return token.balanceOf.call("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     }).then(function(result){
-      assert.equal(result.toNumber(), 500000, 'accounts[1] balance is wrong');
+      Assert.AreEqual(result.toNumber(), 500000, 'accounts[1] balance is wrong');
     })
   });
 });

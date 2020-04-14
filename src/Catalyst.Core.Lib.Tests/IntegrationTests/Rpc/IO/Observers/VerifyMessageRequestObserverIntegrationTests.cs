@@ -42,8 +42,7 @@ using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
@@ -55,15 +54,18 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
     public class VerifyMessageRequestObserverIntegrationTests : FileSystemBasedTest
     {
-        private readonly IKeySigner _keySigner;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IRpcRequestObserver _verifyMessageRequestObserver;
-        private readonly ILifetimeScope _scope;
-        private readonly PeerId _peerId;
-        private readonly ByteString _testMessageToSign;
+        private IKeySigner _keySigner;
+        private IChannelHandlerContext _fakeContext;
+        private IRpcRequestObserver _verifyMessageRequestObserver;
+        private ILifetimeScope _scope;
+        private PeerId _peerId;
+        private ByteString _testMessageToSign;
         
-        public VerifyMessageRequestObserverIntegrationTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
+            Setup(TestContext.CurrentContext);
+
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
 
             ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
@@ -87,14 +89,14 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
             _peerId = ContainerProvider.Container.Resolve<PeerId>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            
+
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
             _verifyMessageRequestObserver = _scope.Resolve<IRpcRequestObserver>();
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Valid_Message_Signature_Can_Return_True_Response()
         {
             var privateKey = _keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
@@ -119,8 +121,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             AssertVerifyResponse(true);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Invalid_Message_Signature_Can_Return_False_Response()
         {
             var requestMessage = new VerifyMessageRequest

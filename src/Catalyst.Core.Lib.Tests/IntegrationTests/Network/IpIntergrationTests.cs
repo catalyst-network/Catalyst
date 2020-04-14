@@ -30,14 +30,14 @@ using System.Threading.Tasks;
 using Catalyst.Core.Lib.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
 {
     public sealed class IpIntegrationTests
     {
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetPublicIp_should_not_wait_for_longest_response()
         {
             var delayedObservable = Ip.DefaultIpEchoUrls
@@ -58,8 +58,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
             stopWatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(3));
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetPublicIp_should_tolerate_echo_failure()
         {
             var echoUrlWithFailure = new[] {"https://this.will.fail.for.sure"}
@@ -68,8 +68,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
             myIp.Should().NotBe(default(IPAddress));
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetPublicIp_should_usually_return_a_valid_ip()
         {
             var myIp = await Ip.GetPublicIpAsync();

@@ -31,7 +31,7 @@ using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
 {
@@ -49,23 +49,22 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
         private readonly IObservable<IObserverDto<ProtocolMessage>> _messageStream;
         private readonly ObservableChannel _observableChannel;
 
-        [Fact]
+        [Test]
         public void MessageStream_Should_Not_Be_Null()
         {
-            var exception = Record.Exception(() => new ObservableChannel(null, _channel));
-            exception.Should().BeOfType<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(() => new ObservableChannel(null, _channel));
         }
 
-        [Fact]
+        [Test]
         public void Get_Channel_Should_Return_Correct_Channel() { _observableChannel.Channel.Should().Be(_channel); }
 
-        [Fact]
+        [Test]
         public void Get_MessageStream_Should_Return_Correct_MessageStream()
         {
             _observableChannel.MessageStream.Should().Be(_messageStream);
         }
 
-        [Fact]
+        [Test]
         public void StartAsync_Should_Return_Completed_Task()
         {
             var completedTask = _observableChannel.StartAsync();

@@ -26,8 +26,8 @@ using Catalyst.Core.Lib.FileSystem;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
 {
@@ -36,14 +36,17 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
     ///     A base test class that can be used to offer inheriting tests a folder on which
     ///     to create files, logs, etc.
     /// </summary>
-    [Trait(Traits.TestType, Traits.IntegrationTest)]
+    [Property(Traits.TestType, Traits.IntegrationTest)]
     public sealed class FileSystemTest : FileSystemBasedTest
     {
-        private readonly FileSystem _fileSystem;
-        private readonly string _sourceFolder;
+        private FileSystem _fileSystem;
+        private string _sourceFolder;
 
-        public FileSystemTest(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
+
             _fileSystem = new FileSystem();
 
             _sourceFolder = Setup();
@@ -65,11 +68,10 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
                .Equals(path.ToLower(CultureInfo.InvariantCulture));
         }
 
-        [Theory]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        [InlineData("'\0'")]
-        [InlineData("'xxx://gan\0'dolf\\treasu\re*&+'")]
-        [InlineData("'q*Pen\0'cilL:\\123\\fak/e'")]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
+        [TestCase("'\0'")]
+        [TestCase("'xxx://gan\0'dolf\\treasu\re*&+'")]
+        [TestCase("'q*Pen\0'cilL:\\123\\fak/e'")]
         public void Save_Invalid_Data_Directory_Must_Fail(string path)
         {
             _fileSystem.SetCurrentPath(path).Should().BeFalse();
@@ -77,8 +79,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
             CheckSavedPath(path).Should().BeFalse();
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Existent_Data_Directory_Must_Succeed()
         {
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
@@ -86,8 +88,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
             CheckSavedPath(_sourceFolder).Should().BeTrue();
         }
 
-        [Fact(Skip = "TODO: Data directory logic has been removed")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Ignore("TODO: Data directory logic has been removed")]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Data_Directory_Several_Times_New_Instance_Must_Load_With_New_Data_Directory()
         {
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();

@@ -33,7 +33,7 @@ using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 using FluentAssertions;
 
 namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
@@ -43,11 +43,12 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         private const int PeerHeartbeatCheckSeconds = 3;
         private const int PeerChallengeTimeoutSeconds = 1;
         private IHealthChecker _peerHeartbeatChecker;
-        private readonly IPeerClient _peerClient;
-        private readonly IPeerRepository _peerRepository;
-        private readonly Peer _testPeer;
+        private IPeerClient _peerClient;
+        private IPeerRepository _peerRepository;
+        private Peer _testPeer;
 
-        public PeerHeartbeatCheckerTests()
+        [SetUp]
+        public void Init()
         {
             _peerRepository = Substitute.For<IPeerRepository>();
             _peerClient = Substitute.For<IPeerClient>();
@@ -71,21 +72,21 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         //    _peerRepository.DidNotReceive().Delete(_testPeer.DocumentId);
         //}
 
-        [Fact]
+        [Test]
         public async Task Can_Set_Peer_Awol_To_False_On_Non_Responsive_Heartbeat()
         {
             await RunHeartbeatChecker().ConfigureAwait(false);
             _testPeer.IsAwolPeer.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Keep_Peer_On_Valid_Heartbeat_Response()
         {
             await RunHeartbeatChecker(true).ConfigureAwait(false);
             _testPeer.IsAwolPeer.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Remove_Peer_On_Max_Counter()
         {
             await RunHeartbeatChecker(maxNonResponsiveCounter: 2).ConfigureAwait(false);

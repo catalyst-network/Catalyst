@@ -30,7 +30,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands
 {
@@ -38,7 +38,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
 
-        [Fact]
+        [Test]
         public void Disconnect_Should_Disconnect_From_Node()
         {
             var commandContext = TestCommandHelpers.GenerateCliCommandContext();

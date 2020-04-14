@@ -36,7 +36,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Nethermind.Core;
-using Nethermind.Core.Json;
+using Nethermind.Serialization.Json;
 using Serilog;
 using Module = Autofac.Module;
 

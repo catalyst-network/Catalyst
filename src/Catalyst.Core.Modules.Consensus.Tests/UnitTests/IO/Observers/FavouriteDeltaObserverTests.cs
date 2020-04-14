@@ -40,21 +40,22 @@ using MultiFormats;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
     public sealed class FavouriteDeltaObserverTests
     {
-        private readonly IDeltaElector _deltaElector;
-        private readonly IChannelHandlerContext _fakeChannelContext;
-        private readonly PeerId _voterId;
-        private readonly PeerId _producerId;
-        private readonly FavouriteDeltaObserver _favouriteDeltaObserver;
-        private readonly byte[] _newHash;
-        private readonly byte[] _prevHash;
+        private IDeltaElector _deltaElector;
+        private IChannelHandlerContext _fakeChannelContext;
+        private PeerId _voterId;
+        private PeerId _producerId;
+        private FavouriteDeltaObserver _favouriteDeltaObserver;
+        private byte[] _newHash;
+        private byte[] _prevHash;
 
-        public FavouriteDeltaObserverTests()
+        [SetUp]
+        public void Init()
         {
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaElector = Substitute.For<IDeltaElector>();
@@ -68,7 +69,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _prevHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("prevHash").ToCid());
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Send_To_Voter()
         {
             var receivedMessage = PrepareReceivedMessage(_newHash, _prevHash, _producerId, _voterId);
@@ -81,7 +82,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
              && c.Candidate.ProducerId.Equals(_producerId)));
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
@@ -93,7 +94,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector.DidNotReceiveWithAnyArgs().OnNext(default);
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_PreviousHash()
         {
             var invalidPrevHash = Encoding.UTF8.GetBytes("invalid previous hash");

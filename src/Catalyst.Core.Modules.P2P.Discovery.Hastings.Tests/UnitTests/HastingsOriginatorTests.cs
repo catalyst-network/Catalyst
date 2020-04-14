@@ -24,7 +24,7 @@
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {
@@ -34,7 +34,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
         public HastingsOriginatorTests() { _peer = PeerIdHelper.GetPeerId("current_peer"); }
 
-        [Fact]
+        [Test]
         public void Can_Create_Memento_From_Current_State()
         {
             var memento = DiscoveryHelper.SubMemento(_peer);
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                .BeEquivalentTo(memento.Neighbours);
         }
 
-        [Fact]
+        [Test]
         public void Can_Restore_State_From_Memento_And_Assign_New_CorrelationId()
         {
             var memento = DiscoveryHelper.MockMemento();
@@ -63,7 +63,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             originator.PnrCorrelationId.Should().NotBe(default);
         }
 
-        [Fact]
+        [Test]
         public void Can_Clean_Up_When_Calling_RestoreMemento()
         {
             var originator = HastingsOriginator.Default;

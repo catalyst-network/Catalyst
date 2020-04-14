@@ -27,6 +27,7 @@ using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Nethermind.Core;
+using Nethermind.Serialization.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using Serilog.Events;

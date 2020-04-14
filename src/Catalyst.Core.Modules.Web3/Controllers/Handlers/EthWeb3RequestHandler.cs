@@ -22,11 +22,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
-using Nethermind.Core;
-using IJsonSerializer = Nethermind.Core.IJsonSerializer;
+using Nethermind.Core.Attributes;
+using Nethermind.Serialization.Json;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
