@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -62,7 +63,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _voterId = PeerIdHelper.GetPeerId("favourite delta voter");
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
 
-            _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, new SyncState() { IsSynchronized = true }, hashProvider, logger);
+            _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, new SyncState() { IsSynchronized = true }, Substitute.For<IPeerRepository>(), hashProvider, logger);
             _newHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("newHash").ToCid());
             _prevHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("prevHash").ToCid());
         }
