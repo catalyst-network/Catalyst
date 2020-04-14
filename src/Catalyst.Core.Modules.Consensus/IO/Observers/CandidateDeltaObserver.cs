@@ -26,6 +26,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
@@ -46,13 +47,15 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         private readonly IDeltaIndexService _deltaIndexService;
         private readonly IHashProvider _hashProvider;
         private readonly SyncState _syncState;
+        private readonly IPeerRepository _peerRepository;
 
-        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IDeltaIndexService deltaIndexService, SyncState syncState, IHashProvider provider, ILogger logger)
+        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IDeltaIndexService deltaIndexService, SyncState syncState, IPeerRepository peerRepository IHashProvider provider, ILogger logger)
             : base(logger)
         {
             _deltaVoter = deltaVoter;
             _deltaIndexService = deltaIndexService;
             _syncState = syncState;
+            _peerRepository = peerRepository;
             _hashProvider = provider;
         }
 
@@ -87,6 +90,14 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                 if (!_hashProvider.IsValidHash(hashCid.Hash.ToArray()))
                 {
                     Logger.Error("Hash is not a valid hash");
+                    return;
+                }
+
+
+                var messagePoaNode = _peerRepository.GetPeersByIpAndPublicKey(messageDto.Payload.PeerId.Ip, messageDto.Payload.PeerId.PublicKey).FirstOrDefault();
+                if (messagePoaNode == null)
+                {
+                    Logger.Error($"Message from IP address '{messageDto.Payload.PeerId.Ip}' with public key '{messageDto.Payload.PeerId.PublicKey}' is not found in producer node list.");
                     return;
                 }
 
