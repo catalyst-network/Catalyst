@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
@@ -49,7 +50,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         private readonly SyncState _syncState;
         private readonly IPeerRepository _peerRepository;
 
-        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IDeltaIndexService deltaIndexService, SyncState syncState, IPeerRepository peerRepository IHashProvider provider, ILogger logger)
+        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IDeltaIndexService deltaIndexService, SyncState syncState, IPeerRepository peerRepository, IHashProvider provider, ILogger logger)
             : base(logger)
         {
             _deltaVoter = deltaVoter;

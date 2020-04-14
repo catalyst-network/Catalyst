@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 
             var deltaIndexService = Substitute.For<IDeltaIndexService>();
             deltaIndexService.LatestDeltaIndex().Returns(new Lib.DAO.Ledger.DeltaIndexDao() { Cid = _prevHash, Height = 0 });
-            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, deltaIndexService, new SyncState() { IsSynchronized = true }, hashProvider, logger);
+            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, deltaIndexService, new SyncState() { IsSynchronized = true }, Substitute.For<IPeerRepository>(), hashProvider, logger);
         }
 
         [Fact]
