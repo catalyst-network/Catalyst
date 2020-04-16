@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<DeltaCache>().As<IDeltaCache>().SingleInstance()
                .WithExecutionParameters(builder);
             builder.RegisterType<DeltaVoter>().As<IDeltaVoter>().SingleInstance();
-            builder.RegisterType<TransactionComparerByPriceTimestampAndHash>().As<ITransactionComparer>();
+            builder.RegisterType<TransactionComparerByPriceAndHash>().As<ITransactionComparer>();
             builder.RegisterType<DeltaHub>().As<IDeltaHub>().SingleInstance();
             builder.RegisterType<DeltaTransactionRetriever>().As<IDeltaTransactionRetriever>().SingleInstance();
             builder.RegisterType<CycleSchedulerProvider>().As<ICycleSchedulerProvider>();

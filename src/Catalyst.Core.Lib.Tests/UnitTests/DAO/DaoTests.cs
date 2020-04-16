@@ -258,8 +258,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                     RawBytes = new byte[] { 0x0 }.ToByteString(),
                     SigningContext = new SigningContext
                     { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
-                },
-                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                }
             };
 
             var transactionEntryDao = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
@@ -327,8 +326,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                     RawBytes = new byte[] { 0x0 }.ToByteString(),
                     SigningContext = new SigningContext
                     { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
-                },
-                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                }
             };
 
             var transactionEntryDao1 = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);

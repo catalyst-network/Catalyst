@@ -101,8 +101,7 @@ namespace Catalyst.Core.Modules.Web3
                 GasLimit = (ulong) transactionCall.Gas.GetValueOrDefault(),
                 GasPrice = transactionCall.GasPrice.GetValueOrDefault().ToUint256ByteString(),
                 Amount = transactionCall.Value.GetValueOrDefault().ToUint256ByteString(), 
-                Data = transactionCall.Data?.ToByteString() ?? ByteString.Empty,
-                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow) //TODO: this should be set by user and signed
+                Data = transactionCall.Data?.ToByteString() ?? ByteString.Empty
             };
         }
         
