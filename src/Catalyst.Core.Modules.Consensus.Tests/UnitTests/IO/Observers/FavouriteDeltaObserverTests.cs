@@ -41,6 +41,9 @@ using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Google.Protobuf;
+using System.Collections.Generic;
+using Catalyst.Core.Lib.P2P.Models;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -64,7 +67,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _voterId = PeerIdHelper.GetPeerId("favourite delta voter");
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
 
-            _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, new SyncState() { IsSynchronized = true }, Substitute.For<IPeerRepository>(), hashProvider, logger);
+            var peerRepository = Substitute.For<IPeerRepository>();
+            peerRepository.GetPeersByIpAndPublicKey(Arg.Any<ByteString>(), Arg.Any<ByteString>()).Returns(new List<Peer> { new Peer() });
+
+            _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, new SyncState() { IsSynchronized = true }, peerRepository, hashProvider, logger);
             _newHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("newHash").ToCid());
             _prevHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("prevHash").ToCid());
         }
