@@ -37,11 +37,14 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using Lib.P2P;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Google.Protobuf;
+using System.Collections.Generic;
+using Catalyst.Core.Lib.P2P.Models;
+using Lib.P2P;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -65,9 +68,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
 
+            var peerRepository = Substitute.For<IPeerRepository>();
+            peerRepository.GetPeersByIpAndPublicKey(Arg.Any<ByteString>(), Arg.Any<ByteString>()).Returns(new List<Lib.P2P.Models.Peer> { new Lib.P2P.Models.Peer() });
+
             var deltaIndexService = Substitute.For<IDeltaIndexService>();
             deltaIndexService.LatestDeltaIndex().Returns(new Lib.DAO.Ledger.DeltaIndexDao() { Cid = _prevHash, Height = 0 });
-            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, deltaIndexService, new SyncState() { IsSynchronized = true }, Substitute.For<IPeerRepository>(), hashProvider, logger);
+            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, deltaIndexService, new SyncState() { IsSynchronized = true }, peerRepository, hashProvider, logger);
         }
 
         [Test]
