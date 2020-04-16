@@ -63,13 +63,15 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Capacity = _capacity
             };
 
-            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.UnixEpoch), _deltaCache.GenesisHash);
             var latestDeltaIndex = deltaIndexService.LatestDeltaIndex();
             if (deltaIndexService.LatestDeltaIndex() != null)
             {
                 var foundDelta = _deltaCache.TryGetOrAddConfirmedDelta(latestDeltaIndex.Cid, out var delta);
                 _hashesByTimeDescending.Add(delta.TimeStamp, latestDeltaIndex.Cid);
+                return;
             }
+
+            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.UnixEpoch), _deltaCache.GenesisHash);
         }
 
         /// <inheritdoc />
