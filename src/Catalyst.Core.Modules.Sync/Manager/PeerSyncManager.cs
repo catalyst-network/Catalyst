@@ -61,7 +61,6 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         public DeltaHistoryRanker _deltaHistoryRanker;
 
-
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
 
         public PeerSyncManager(IPeerClient peerClient,
@@ -70,7 +69,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             IUserOutput userOutput,
             IDeltaHeightWatcher deltaHeightWatcher,
             IDfsService dfsService,
-            double threshold = 0.7d,
+            double threshold = 0.5d,
             int minimumPeers = 2,
             IScheduler scheduler = null)
         {

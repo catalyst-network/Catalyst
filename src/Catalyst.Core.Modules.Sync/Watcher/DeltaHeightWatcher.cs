@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public DeltaHeightWatcher(IPeerClient peerClient,
             IPeerRepository peerRepository,
             IPeerService peerService,
-            double threshold = 0.7d,
+            double threshold = 0.5d,
             int minimumPeers = 2)
         {
             _peerClient = peerClient;
