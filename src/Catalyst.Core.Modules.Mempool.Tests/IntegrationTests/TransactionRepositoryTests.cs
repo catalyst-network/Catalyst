@@ -107,16 +107,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 var transactionRepository = PopulateTransactionRepository(scope, out var criteriaId, out _);
 
                 var retrievedTransactionDao = transactionRepository.Get(criteriaId);
-                retrievedTransactionDao.TimeStamp = new DateTime(1999, 2, 2);
                 transactionRepository.Update(retrievedTransactionDao);
 
                 var retrievedTransactionDaoModified = transactionRepository.Get(criteriaId);
-
-                var dateComparer = retrievedTransactionDaoModified.TimeStamp.Date.ToString("MM/dd/yyyy");
-
-                // ReSharper disable once SuspiciousTypeConversion.Global
-                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                dateComparer.Should()?.Equals("02/02/1999");
             }
         }
 

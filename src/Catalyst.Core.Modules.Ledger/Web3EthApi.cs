@@ -115,7 +115,6 @@ namespace Catalyst.Core.Modules.Ledger
                 PublicEntry = publicEntry
             };
 
-            publicEntry.Timestamp = Timestamp.FromDateTime(DateTime.UtcNow);
             _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId));
 
             byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();

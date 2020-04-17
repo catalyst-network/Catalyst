@@ -53,7 +53,6 @@ namespace Catalyst.TestUtils
                     ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
                     SenderAddress = senderPublicKey.ToUtf8ByteString(),
                     GasPrice = ((UInt256) gasPrice).ToUint256ByteString(),
-                    Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {
                         SigningContext = new SigningContext
@@ -85,7 +84,6 @@ namespace Catalyst.TestUtils
                     Nonce = nonce,
                     ReceiverAddress = receiverPublicKey?.ToUtf8ByteString() ?? ByteString.CopyFrom(new byte[20]),
                     SenderAddress = senderPublicKey?.ToUtf8ByteString() ?? ByteString.CopyFrom(new byte[20]),
-                    Timestamp = new Timestamp {Seconds = timestamp},
                     Signature = new Signature
                     {
                         SigningContext = new SigningContext

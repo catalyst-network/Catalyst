@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         {
             _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
                .Returns(false);
-            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast {PublicEntry = new PublicEntry{SenderAddress = new byte[32].ToByteString(), Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)}}
+            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast {PublicEntry = new PublicEntry{SenderAddress = new byte[32].ToByteString()}}
                    .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
                .Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);

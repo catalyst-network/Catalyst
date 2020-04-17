@@ -61,7 +61,6 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                     SenderAddress = tx.SenderAddress.Bytes.ToByteString(),
                     ReceiverAddress = tx.To?.Bytes.ToByteString() ?? ByteString.Empty,
                     Amount = tx.Value.ToUint256ByteString(),
-                    Timestamp = new Timestamp {Seconds = (long) tx.Timestamp},
                     Signature = new Protocol.Cryptography.Signature
                     {
                         RawBytes = ByteString.CopyFrom((byte) 1)

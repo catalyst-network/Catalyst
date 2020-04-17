@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Returns(_transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(mapperProvider)));
 
             _transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider,
-                TransactionComparerByPriceTimestampAndHash.Default);
+                TransactionComparerByPriceAndHash.Default);
         }
 
         [Test]

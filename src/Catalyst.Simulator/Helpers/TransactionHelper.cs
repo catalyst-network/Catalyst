@@ -57,8 +57,7 @@ namespace Catalyst.Simulator.Helpers
                     Amount = ((UInt256) amount).ToUint256ByteString(),
                     Nonce = (ulong) nonce,
                     SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString(),
-                    ReceiverAddress = publicKey,
-                    Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                    ReceiverAddress = publicKey
                 }.Sign(cryptoWrapper, privateKey, DevNetPublicTransactionContext)
             };
 

@@ -93,7 +93,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         }
 
         [Test]
-        [Ignore("Sometimes passes sometimes fails, need to debug the timings of DFS and concensus")]
         public async Task Run_ConsensusAsync()
         {
             _nodes.AsParallel()

@@ -78,7 +78,6 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
             mempoolDocument.Amount.ToUInt256().Should().Be(expectedTransaction.Amount.ToUInt256());
             mempoolDocument.Signature.RawBytes.SequenceEqual(expectedTransaction.Signature.RawBytes).Should().BeTrue();
-            mempoolDocument.Timestamp.Should().Be(expectedTransaction.Timestamp);
             mempoolDocument.GasPrice.ToUInt256().Should().Be(expectedTransaction.GasPrice.ToUInt256());
         }
 
