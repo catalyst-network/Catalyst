@@ -35,6 +35,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
         public void Run()
         {
+            // check if peer.cs IsAwol
             _subscription = Observable
                .Interval(TimeSpan.FromSeconds(10))
                .StartWith(-1L)

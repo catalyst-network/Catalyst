@@ -48,7 +48,7 @@ using MultiFormats.Registry;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
         public DaoTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var initialisers = new IMapperInitializer[]
             {
@@ -83,7 +83,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             _mapperProvider = new MapperProvider(initialisers);
         }
 
-        [Fact]
+        [Test]
         public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
         {
             var newGuid = Guid.NewGuid();
@@ -107,7 +107,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        [Fact]
+        [Test]
         public void ProtocolErrorMessageSignedDao_ProtocolErrorMessageSigned_Should_Be_Convertible()
         {
             var byteRn = new byte[30];
@@ -131,7 +131,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        [Fact]
+        [Test]
         public void PeerIdDao_PeerId_Should_Be_Convertible()
         {
             var original = PeerIdHelper.GetPeerId("MyPeerId_Testing");
@@ -141,7 +141,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        [Fact]
+        [Test]
         public void SigningContextDao_SigningContext_Should_Be_Convertible()
         {
             var byteRn = new byte[30];
@@ -158,7 +158,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        [Fact]
+        [Test]
         public void DeltasDao_Deltas_Should_Be_Convertible()
         {
             var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
@@ -170,7 +170,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             original.Should().Be(reconverted);
         }
 
-        [Fact]
+        [Test]
         public void CandidateDeltaBroadcastDao_CandidateDeltaBroadcast_Should_Be_Convertible()
         {
             var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
@@ -191,7 +191,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        [Fact]
+        [Test]
         public void DeltaDfsHashBroadcastDao_DeltaDfsHashBroadcast_Should_Be_Convertible()
         {
             var hash = MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("this hash").ToCid());
@@ -209,7 +209,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        [Fact]
+        [Test]
         public void FavouriteDeltaBroadcastDao_FavouriteDeltaBroadcast_Should_Be_Convertible()
         {
             var original = new FavouriteDeltaBroadcast
@@ -224,7 +224,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        [Fact]
+        [Test]
         public void CoinbaseEntryDao_CoinbaseEntry_Should_Be_Convertible()
         {
             var pubKeyBytes = new byte[30];
@@ -243,7 +243,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        [Fact]
+        [Test]
         public void STTransactionEntryDao_STTransactionEntry_Should_Be_Convertible()
         {
             var pubKeyBytes = new byte[30];
@@ -255,11 +255,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 SenderAddress = pubKeyBytes.ToByteString(),
                 Signature = new Signature
                 {
-                    RawBytes = new byte[] {0x0}.ToByteString(),
+                    RawBytes = new byte[] { 0x0 }.ToByteString(),
                     SigningContext = new SigningContext
-                        {NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic}
-                },
-                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                    { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
+                }
             };
 
             var transactionEntryDao = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
@@ -271,7 +270,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        [Fact]
+        [Test]
         public void ConfidentialEntry_And_ConfidentialEntryDao_Should_Be_Convertible()
         {
             var pubKeyBytes = new byte[30];
@@ -302,7 +301,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        [Fact]
+        [Test]
         public void TransactionBroadcastDao_TransactionBroadcast_Should_Be_Convertible()
         {
             var original = TransactionHelper.GetPublicTransaction();
@@ -311,6 +310,34 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var reconverted =
                 transactionEntryDao.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
             reconverted.Should().Be(original);
+        }
+
+        [Test]
+        public void PublicEntryDao_Should_Be_The_Same_When_Converted()
+        {
+            var pubKeyBytes = new byte[30];
+            new Random().NextBytes(pubKeyBytes);
+            var original = new PublicEntry
+            {
+                Amount = new byte[] { 222, 11, 107, 58, 118, 64, 0, 0 }.ToByteString(),
+                SenderAddress = pubKeyBytes.ToByteString(),
+                Signature = new Signature
+                {
+                    RawBytes = new byte[] { 0x0 }.ToByteString(),
+                    SigningContext = new SigningContext
+                    { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
+                }
+            };
+
+            var transactionEntryDao1 = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            var hashId1 = transactionEntryDao1.Id;
+
+            var reconverted = transactionEntryDao1.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
+
+            var transactionEntryDao2 = reconverted.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            var hashId2 = transactionEntryDao2.Id;
+
+            hashId1.Should().Be(hashId2);
         }
     }
 }

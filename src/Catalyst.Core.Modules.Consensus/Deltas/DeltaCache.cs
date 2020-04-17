@@ -25,6 +25,7 @@ using System;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
@@ -34,10 +35,11 @@ using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Nethermind.Core;
-using Nethermind.Dirichlet.Numerics;
-using Nethermind.Store;
 using MultiFormats;
+using Nethermind.Db;
+using Nethermind.State;
 using Serilog;
+using Catalyst.Core.Lib.DAO.Ledger;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -47,6 +49,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private readonly IMemoryCache _memoryCache;
         private readonly IDeltaDfsReader _dfsReader;
+        private readonly IDeltaIndexService _deltaIndexService;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
         public Cid GenesisHash { get; set; }
@@ -64,8 +67,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IStorageProvider storageProvider,
             IStateProvider stateProvider,
             ISnapshotableDb stateDb,
+            IDeltaIndexService deltaIndexService,
             ILogger logger)
         {
+            _deltaIndexService = deltaIndexService;
+
             stateProvider.CreateAccount(TruffleTestAccount, 1_000_000_000.Kat());
             stateProvider.CreateAccount(CatalystTruffleTestAccount, 1_000_000_000.Kat());
             
@@ -83,6 +89,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 StateRoot = ByteString.CopyFrom(stateProvider.StateRoot.Bytes),
             };
 
+            
             GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).ToCid();
 
             _dfsReader = dfsReader;

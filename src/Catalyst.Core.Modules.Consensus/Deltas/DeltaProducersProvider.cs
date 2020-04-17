@@ -23,7 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Lib.P2P;
 

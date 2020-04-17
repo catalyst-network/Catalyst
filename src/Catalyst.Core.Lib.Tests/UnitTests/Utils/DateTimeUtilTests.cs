@@ -22,15 +22,15 @@
 #endregion
 
 using System;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Abstractions.Lib.Util;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
     public sealed class DateTimeUtilTests
     {
-        [Fact]
+        [Test]
         public void ExponentialTimeSpan_Should_Return_Exponential_TimeSpan()
         {
             var maxTimeSpan = TimeSpan.MaxValue;

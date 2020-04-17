@@ -29,7 +29,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
 {
@@ -42,7 +42,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
             _testChannel = new EmbeddedChannel(new AddressedEnvelopeToIMessageEncoder());
         }
 
-        [Fact]
+        [Test]
         public void Can_Encode_Signed_Message_Dto_To_Protocol_Message_Signed()
         {
             var messageDto = new SignedMessageDto(

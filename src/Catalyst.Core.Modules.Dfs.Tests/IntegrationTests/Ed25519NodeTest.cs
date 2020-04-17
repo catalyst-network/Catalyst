@@ -31,8 +31,8 @@
 // using Catalyst.TestUtils;
 // using MultiFormats.Registry;
 // using Newtonsoft.Json.Linq;
-// using Xunit;
-// using Xunit.Abstractions;
+// using NUnit.Framework;
+// 
 //
 // namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 // {
@@ -40,12 +40,12 @@
 //     {
 //         private IDfsService ipfs;
 //
-//         public Ed25519NodeTest(ITestOutputHelper output)
+//         public Ed25519NodeTest(TestContext output)
 //         {
 //             ipfs = new TestFixture(output).Ipfs;      
 //         }
 //         
-//         [Fact]
+//         [Test]
 //         public async Task Can_Create()
 //         {
 //             var ed = await CreateNode();
@@ -61,7 +61,7 @@
 //             }
 //         }
 //
-//         [Fact]
+//         [Test]
 //         public async Task CanConnect()
 //         {
 //             var ed = await CreateNode();
@@ -69,7 +69,7 @@
 //             {
 //                 await ed.StartAsync();
 //                 var node = await ed.LocalPeer;
-//                 Assert.NotEqual(0, node.Addresses.Count());
+//                 Assert.AreNotEqual(0, node.Addresses.Count());
 //                 var addr = node.Addresses.First();
 //                 await ipfs.StartAsync();
 //                 try
@@ -93,7 +93,7 @@
 //
 //         async Task<DfsService> CreateNode()
 //         {
-//             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+//             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 //             var testPasswordManager = new PasswordManager(new TestPasswordReader(), new PasswordRegistry());
 //             var ipfs = new DfsService(hashProvider, testPasswordManager);
 //             ipfs.Options.Repository.Folder = Path.Combine(Path.GetTempPath(), "ipfs-ed255129-test");

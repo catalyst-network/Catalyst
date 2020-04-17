@@ -23,33 +23,20 @@
 
 using System;
 using System.Collections.Generic;
-using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Protocol.Peer;
-using Google.Protobuf;
+using System.Threading;
+using System.Threading.Tasks;
+using Catalyst.Protocol.Deltas;
 
-namespace Catalyst.Core.Lib.P2P.Repository
+namespace Catalyst.Abstractions.Sync.Interfaces
 {
-    public interface IPeerRepository : IDisposable
+    public interface IPeerSyncManager : IDisposable
     {
-        Peer Get(string id);
-        Peer Get(PeerId id);
-        IEnumerable<Peer> GetAll();
-        IEnumerable<Peer> GetActivePeers(int count);
-        IEnumerable<Peer> GetRandomPeers(int count);
-        IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey);
-
-        void Add(Peer peer);
-        void Add(IEnumerable<Peer> peer);
-
-        void Update(Peer peer);
-
-        void Delete(Peer peer);
-        void Delete(string id);
-
-        uint DeletePeersByIpAndPublicKey(ByteString ip, ByteString publicKey);
-
-        bool Exists(string id);
-
-        int Count();
+        IObservable<IEnumerable<DeltaIndex>> ScoredDeltaIndexRange { get; }
+        bool PeersAvailable();
+        bool ContainsPeerHistory();
+        void GetDeltaIndexRangeFromPeers(ulong index, int range);
+        Task WaitForPeersAsync(CancellationToken cancellationToken = default);
+        void Start();
+        void Stop();
     }
 }

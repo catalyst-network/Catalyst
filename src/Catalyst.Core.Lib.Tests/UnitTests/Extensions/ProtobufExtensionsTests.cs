@@ -32,13 +32,13 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
 {
     public class ProtobufExtensionsTests
     {
-        [Fact]
+        [Test]
         public static void ToAnySigned_should_happen_new_guid_to_request_if_not_specified()
         {
             //this ensures we won't get Guid.Empty and then a risk of mismatch;
@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
             wrapped.CorrelationId.Should().NotBeEquivalentTo(Guid.Empty.ToByteString());
         }
 
-        [Fact]
+        [Test]
         public static void ToAnySigned_should_set_the_wrapper_fields()
         {
             var guid = CorrelationId.GenerateCorrelationId();
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
             wrapped.TypeUrl.Should().Be(PeerId.Descriptor.ShortenedFullName());
         }
 
-        [Fact]
+        [Test]
         public static void ToProtocolMessage_When_Processing_Request_Should_Generate_New_CorrelationId_If_Not_Specified()
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
             request.CorrelationId.ToCorrelationId().Should().NotBe(default);
         }
 
-        [Fact]
+        [Test]
         public static void ToProtocolMessage_When_Processing_Response_Should_Fail_If_No_CorrelationId_Specified()
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
                .Should().Throw<ArgumentException>();
         }
 
-        [Fact]
+        [Test]
         public void ToCorrelationId_Should_Take_Care_Of_All_ByteStrings()
         {
             var tooLong = ByteUtil.GenerateRandomByteArray(43).ToByteString();

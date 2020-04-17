@@ -28,7 +28,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
@@ -38,7 +38,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -47,13 +47,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     /// </summary>
     public sealed class PeerCountRequestObserverTests
     {
-        private readonly TestScheduler _testScheduler;
+        private TestScheduler _testScheduler;
 
         /// <summary>The logger</summary>
-        private readonly ILogger _logger;
+        private ILogger _logger;
 
         /// <summary>The fake channel context</summary>
-        private readonly IChannelHandlerContext _fakeContext;
+        private IChannelHandlerContext _fakeContext;
 
         /// <summary>
         ///     Initializes a new instance of the
@@ -62,7 +62,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         ///     </see>
         ///     class.
         /// </summary>
-        public PeerCountRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _logger = Substitute.For<ILogger>();
@@ -75,9 +76,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         ///     Tests the peer count request and response.
         /// </summary>
         /// <param name="fakePeers">The peer count.</param>
-        [Theory]
-        [InlineData(40)]
-        [InlineData(20)]
+        [TestCase(40)]
+        [TestCase(20)]
         public void TestPeerListRequestResponse(int fakePeers)
         {
             var peerService = Substitute.For<IPeerRepository>();

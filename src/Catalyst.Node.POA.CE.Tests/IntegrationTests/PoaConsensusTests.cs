@@ -36,19 +36,22 @@ using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
     public sealed class PoaConsensusTests : FileSystemBasedTest
     {
-        private readonly CancellationTokenSource _endOfTestCancellationSource;
-        private readonly ILifetimeScope _scope;
-        private readonly List<PoaTestNode> _nodes;
+        private CancellationTokenSource _endOfTestCancellationSource;
+        private ILifetimeScope _scope;
+        private List<PoaTestNode> _nodes;
 
-        public PoaConsensusTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
+
             ContainerProvider.ConfigureContainerBuilder(true, true, true);
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
 
@@ -57,19 +60,19 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _endOfTestCancellationSource = new CancellationTokenSource();
 
             var poaNodeDetails = Enumerable.Range(0, 3).Select(i =>
-                {
-                    var fileSystem = Substitute.For<IFileSystem>();
-                    var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
-                    fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(path));
+            {
+                var fileSystem = Substitute.For<IFileSystem>();
+                var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
+                fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(path));
 
-                    var privateKey = context.GeneratePrivateKey();
-                    var publicKey = privateKey.GetPublicKey();
-                    var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
-                    var peerIdentifier = nodeSettings.PeerId;
-                    var name = $"producer{i.ToString()}";
-                    var dfs = TestDfs.GetTestDfs(output, fileSystem);
-                    return new {index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem};
-                }
+                var privateKey = context.GeneratePrivateKey();
+                var publicKey = privateKey.GetPublicKey();
+                var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
+                var peerIdentifier = nodeSettings.PeerId;
+                var name = $"producer{i.ToString()}";
+                var dfs = TestDfs.GetTestDfs(fileSystem);
+                return new { index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem };
+            }
             ).ToList();
 
             var peerIdentifiers = poaNodeDetails.Select(n => n.peerIdentifier).ToList();
@@ -77,21 +80,19 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _nodes = new List<PoaTestNode>();
             foreach (var nodeDetails in poaNodeDetails)
             {
-                nodeDetails.dfs.Options.Discovery.BootstrapPeers = poaNodeDetails.Except(new[] {nodeDetails})
-                   .Select(x => x.dfs.LocalPeer.Addresses.First());
+                nodeDetails.dfs.Options.Discovery.BootstrapPeers = poaNodeDetails.Select(x => x.dfs.LocalPeer.Addresses.First());
                 var node = new PoaTestNode(nodeDetails.name,
                     nodeDetails.privateKey,
                     nodeDetails.nodeSettings,
                     nodeDetails.dfs,
-                    peerIdentifiers.Except(new[] {nodeDetails.peerIdentifier}),
-                    nodeDetails.fileSystem,
-                    output);
+                    peerIdentifiers.Except(new[] { nodeDetails.peerIdentifier }),
+                    nodeDetails.fileSystem);
 
                 _nodes.Add(node);
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Run_ConsensusAsync()
         {
             _nodes.AsParallel()

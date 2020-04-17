@@ -249,8 +249,9 @@ namespace Lib.P2P.Routing
 
             foreach (var provider in providers)
                 if (provider.TryToPeer(out var p))
-                {
-                    if (p == Dht.SwarmService.LocalPeer || !Dht.SwarmService.IsAllowed(p))
+                { 
+                    //|| !Dht.SwarmService.IsAllowed(p)
+                    if (p == Dht.SwarmService.LocalPeer)
                     {
                         continue;
                     }
@@ -279,8 +280,9 @@ namespace Lib.P2P.Routing
             
             foreach (var closer in closerPeers)
                 if (closer.TryToPeer(out var p))
-                {
-                    if (p == Dht.SwarmService.LocalPeer || !Dht.SwarmService.IsAllowed(p))
+                { 
+                    //|| !Dht.SwarmService.IsAllowed(p)
+                    if (p == Dht.SwarmService.LocalPeer)
                     {
                         continue;
                     }

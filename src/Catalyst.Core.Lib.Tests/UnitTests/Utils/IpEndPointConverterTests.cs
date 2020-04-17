@@ -25,7 +25,7 @@ using System.Net;
 using Catalyst.Core.Lib.Util;
 using FluentAssertions;
 using Newtonsoft.Json;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
@@ -44,26 +44,26 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             _ipEndPointJson = "{\"Address\":\"127.0.0.1\",\"Port\":1000}";
         }
 
-        [Fact]
+        [Test]
         public void Check_Convertibility_Must_Succeed()
         {
             _ipEndPointConverter.CanConvert(_ipEndpoint.GetType()).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void Check_Convertibility_Should_Fail()
         {
             _ipEndPointConverter.CanConvert("bad type".GetType()).Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void Write_To_Json_Should_Succeed()
         {
             var serialized = JsonConvert.SerializeObject(_ipEndpoint, _ipEndPointConverter, _ipAddressConverter);
             serialized.Should().Contain(_ipEndPointJson);
         }
 
-        [Fact]
+        [Test]
         public void Read_Json_Should_Succeed()
         {
             JsonConvert.DeserializeObject<IPEndPoint>(_ipEndPointJson, _ipEndPointConverter, _ipAddressConverter).Should().Be(_ipEndpoint);

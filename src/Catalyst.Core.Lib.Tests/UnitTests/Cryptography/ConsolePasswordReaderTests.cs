@@ -27,17 +27,18 @@ using Catalyst.Abstractions.Cli;
 using Catalyst.Core.Lib.Cryptography;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public class ConsolePasswordReaderTests
     {
-        private readonly IUserInput _userInput;
-        private readonly IUserOutput _userOutput;
-        private readonly ConsolePasswordReader _consolePasswordReader;
+        private IUserInput _userInput;
+        private IUserOutput _userOutput;
+        private ConsolePasswordReader _consolePasswordReader;
 
-        public ConsolePasswordReaderTests()
+        [SetUp]
+        public void Init()
         {
             _userInput = Substitute.For<IUserInput>();
             _userOutput = Substitute.For<IUserOutput>();
@@ -45,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             _consolePasswordReader = new ConsolePasswordReader(_userOutput, _userInput);
         }
 
-        [Fact]
+        [Test]
         public void ReadSecurePassword_Should_Prompt_Context_And_Get_Password_From_Console()
         {
             var prompt = "hello give me a password";
@@ -70,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             }
         }
 
-        [Fact]
+        [Test]
         public void ReadSecurePassword_Should_Not_Accept_Password_Above_MaxLength_Chars()
         {
             var prompt = "hello give me a password";

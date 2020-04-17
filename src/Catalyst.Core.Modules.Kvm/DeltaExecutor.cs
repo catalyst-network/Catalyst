@@ -31,6 +31,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Nethermind.Core;
+using Nethermind.Core.Attributes;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
@@ -38,7 +39,7 @@ using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm;
 using Nethermind.Evm.Precompiles;
 using Nethermind.Evm.Tracing;
-using Nethermind.Store;
+using Nethermind.State;
 using Serilog;
 using Serilog.Events;
 
@@ -168,11 +169,9 @@ namespace Catalyst.Core.Modules.Kvm
             _storageProvider.Commit(txTracer.IsTracingState ? txTracer : null);
             _stateProvider.Commit(spec, txTracer.IsTracingState ? txTracer : null);
             
+            _stateProvider.RecalculateStateRoot();
             if (!readOnly)
             {
-                // IMPORTANT: if this line is removed then the trie state root will not be recalculated before saving in the DB
-                // bad design - to change
-                Keccak newStateRoot = _stateProvider.StateRoot;
                 if (new Keccak(delta.StateRoot.ToByteArray()) != _stateProvider.StateRoot)
                 {
                     if (_logger.IsEnabled(LogEventLevel.Error)) _logger.Error("Invalid delta state root - found {found} and should be {shouldBe}", _stateProvider.StateRoot, new Keccak(delta.StateRoot.ToByteArray()));
@@ -184,6 +183,7 @@ namespace Catalyst.Core.Modules.Kvm
             }
             else
             {
+
                 delta.StateRoot = _stateProvider.StateRoot.ToByteString(); 
                 if (_logger.IsEnabled(LogEventLevel.Debug)) _logger.Debug($"Setting candidate delta {delta.DeltaNumber} root to {delta.StateRoot.ToKeccak()}");
                 _stateProvider.Reset();
@@ -410,7 +410,7 @@ namespace Catalyst.Core.Modules.Kvm
             var recipient = entry.ReceiverAddress.ToAddress();
             if (entry.IsValidDeploymentEntry)
             {
-                recipient = Address.OfContract(sender, _stateProvider.GetNonce(sender));
+                recipient = ContractAddress.From(sender, _stateProvider.GetNonce(sender));
             }
 
             return (sender, recipient);

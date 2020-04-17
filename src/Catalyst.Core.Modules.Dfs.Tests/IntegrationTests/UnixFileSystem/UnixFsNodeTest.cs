@@ -22,13 +22,13 @@
 #endregion
 
 using Catalyst.Core.Modules.Dfs.UnixFs;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.UnixFileSystem
 {
     public class UnixFsNodeTest
     {
-        [Fact]
+        [Test]
         public void ToLink()
         {
             var node = new UnixFsNode
@@ -40,14 +40,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.UnixFileSystem
                 DagSize = 16
             };
             var link = node.ToLink("foo");
-            Assert.Equal(node.Id, link.Id);
-            Assert.Equal(node.DagSize, link.Size);
-            Assert.Equal("foo", link.Name);
+            Assert.AreEqual(node.Id, link.Id);
+            Assert.AreEqual(node.DagSize, link.Size);
+            Assert.AreEqual("foo", link.Name);
 
             link = node.ToLink();
-            Assert.Equal(node.Id, link.Id);
-            Assert.Equal(node.DagSize, link.Size);
-            Assert.Equal("bar", link.Name);
+            Assert.AreEqual(node.Id, link.Id);
+            Assert.AreEqual(node.DagSize, link.Size);
+            Assert.AreEqual("bar", link.Name);
         }
     }
 }

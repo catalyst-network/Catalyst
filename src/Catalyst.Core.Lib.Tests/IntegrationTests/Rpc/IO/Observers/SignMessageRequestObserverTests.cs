@@ -47,24 +47,32 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
     public sealed class SignMessageRequestObserverTests : FileSystemBasedTest
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly ILifetimeScope _scope;
-        private readonly ILogger _logger;
-        private readonly IKeySigner _keySigner;
-        private readonly IChannelHandlerContext _fakeContext;
+        private TestScheduler _testScheduler;
+        private ILifetimeScope _scope;
+        private ILogger _logger;
+        private IKeySigner _keySigner;
+        private IChannelHandlerContext _fakeContext;
 
-        public SignMessageRequestObserverTests(ITestOutputHelper output) : base(output, new[]
+        public SignMessageRequestObserverTests() : base(new[]
         {
             Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile)
         })
         {
+  
+        }
+
+
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
             _testScheduler = new TestScheduler();
             ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
@@ -81,11 +89,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _fakeContext.Channel.Returns(fakeChannel);
         }
 
-        [Theory]
-        [InlineData("Hello Catalyst")]
-        [InlineData("")]
-        [InlineData("Hello&?!1253Catalyst")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [TestCase("Hello Catalyst")]
+        [TestCase("")]
+        [TestCase("Hello&?!1253Catalyst")]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var sender = PeerIdHelper.GetPeerId("sender");
@@ -119,7 +126,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
 
-            signResponseMessage.OriginalMessage.Should().Equal(message);
+            signResponseMessage.OriginalMessage.Should().Equal(ByteString.CopyFromUtf8(message));
             signResponseMessage.Signature.Should().NotBeEmpty();
             signResponseMessage.PublicKey.Should().NotBeEmpty();
         }

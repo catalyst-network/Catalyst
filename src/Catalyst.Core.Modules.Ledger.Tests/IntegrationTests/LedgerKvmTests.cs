@@ -29,10 +29,13 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Types;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -54,58 +57,64 @@ using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
+using Nethermind.Db;
 using Nethermind.Dirichlet.Numerics;
+using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
 using Nethermind.Logging;
-using Nethermind.Store;
+using Nethermind.State;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
+using SharpRepository.InMemoryRepository;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 {
+    [TestFixture]
     public sealed class LedgerKvmTests
     {
-        private readonly ILogger _logger;
-        private readonly MultiHash _genesisHash;
-        private readonly IHashProvider _hashProvider;
-        private readonly IMapperProvider _mapperProvider;
-        private readonly ISpecProvider _specProvider;
-        private readonly TestScheduler _testScheduler;
-        private readonly StateProvider _stateProvider;
-        private readonly ICryptoContext _cryptoContext;
-        private readonly IAccountRepository _fakeRepository;
-        private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly ILedgerSynchroniser _ledgerSynchroniser;
-        private readonly IMempool<PublicEntryDao> _mempool;
-        private readonly IDeltaExecutor _deltaExecutor;
-        private readonly IStorageProvider _storageProvider;
-        private readonly ISnapshotableDb _stateDb;
-        private readonly ISnapshotableDb _codeDb;
-        private readonly IDeltaByNumberRepository _deltaByNumber;
-        private readonly IPrivateKey _senderPrivateKey;
-        private readonly IPublicKey _senderPublicKey;
-        private readonly SigningContext _signingContext;
-        private readonly ITransactionRepository _receipts;
+        private ILogger _logger;
+        private MultiHash _genesisHash;
+        private IHashProvider _hashProvider;
+        private IMapperProvider _mapperProvider;
+        private ISpecProvider _specProvider;
+        private TestScheduler _testScheduler;
+        private StateProvider _stateProvider;
+        private ICryptoContext _cryptoContext;
+        private IAccountRepository _fakeRepository;
+        private IDeltaHashProvider _deltaHashProvider;
+        private ISynchroniser _synchroniser;
+        private IMempool<PublicEntryDao> _mempool;
+        private IDeltaExecutor _deltaExecutor;
+        private IStorageProvider _storageProvider;
+        private ISnapshotableDb _stateDb;
+        private ISnapshotableDb _codeDb;
+        private IDeltaByNumberRepository _deltaByNumber;
+        private IPrivateKey _senderPrivateKey;
+        private IPublicKey _senderPublicKey;
+        private SigningContext _signingContext;
+        private IDeltaIndexService _deltaIndexService;
+        private ITransactionRepository _receipts;
         private Address _senderAddress;
 
-        public LedgerKvmTests()
+        [SetUp]
+        public void Setup()
         {
             _testScheduler = new TestScheduler();
             _cryptoContext = new FfiWrapper();
             _fakeRepository = Substitute.For<IAccountRepository>();
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _mapperProvider = new TestMapperProvider();
             _genesisHash = _hashProvider.ComputeUtf8MultiHash("genesis");
 
             _logger = Substitute.For<ILogger>();
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
-            _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
+            _synchroniser = Substitute.For<ISynchroniser>();
             _deltaByNumber = Substitute.For<IDeltaByNumberRepository>();
             _receipts = Substitute.For<ITransactionRepository>();
 
-            _ledgerSynchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
+            _synchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
 
             var stateDbDevice = new MemDb();
             var codeDbDevice = new MemDb();
@@ -124,6 +133,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _deltaExecutor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, kvm, new FfiWrapper(),
                 _logger);
 
+            _deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
             _senderPrivateKey = _cryptoContext.GetPrivateKeyFromBytes(new byte[32]);
             
             _senderPublicKey = _senderPrivateKey.GetPublicKey();
@@ -149,13 +159,13 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             {
                 hash1
             };
-            _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
+            _synchroniser.CacheDeltasBetween(default, default, default)
                .ReturnsForAnyArgs(new Cid[]
                 {
                     hash1, _genesisHash
                 });
 
-            _ledgerSynchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
+            _synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
                .Returns(c =>
                 {
                     delta.PreviousDeltaDfsHash = hash1.ToCid().ToArray().ToByteString(); // lol
@@ -171,17 +181,18 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
             var _ = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
-                _fakeRepository, _deltaByNumber, _receipts, _deltaHashProvider, _ledgerSynchroniser, _mempool, _mapperProvider, _hashProvider, _logger);
+                _fakeRepository, _deltaIndexService, _receipts, _deltaHashProvider, _synchroniser, _mempool, _mapperProvider, _hashProvider, _logger);
 
             _testScheduler.Start();
         }
 
-        [Fact]
+        [Test]
         public void Should_Update_State_On_Contract_Entry()
         {
             var recipient = _cryptoContext.GeneratePrivateKey().GetPublicKey();
             _stateProvider.CreateAccount(_senderAddress, 1000);
             _stateProvider.CreateAccount(recipient.ToKvmAddress(), UInt256.Zero);
+            _stateProvider.RecalculateStateRoot();
             _stateProvider.Commit(CatalystGenesisSpec.Instance);
             _stateProvider.CommitTree();
 
@@ -204,7 +215,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             account.Balance.Should().Be(7);
         }
 
-        [Fact]
+        [Test]
         public void Should_Update_State_On_Public_Entry()
         {
             var recipient = _cryptoContext.GeneratePrivateKey().GetPublicKey();
@@ -233,14 +244,14 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             account.Balance.Should().Be(3);
         }
 
-        [Fact]
+        [Test]
         public void Should_Deploy_Code_On_Code_Entry()
         {
             _stateProvider.CreateAccount(_senderAddress, 1000);
             _stateProvider.Commit(CatalystGenesisSpec.Instance);
             _stateProvider.CommitTree();
 
-            var contractAddress = Address.OfContract(_senderAddress, _stateProvider.GetNonce(_senderAddress));
+            var contractAddress = ContractAddress.From(_senderAddress, _stateProvider.GetNonce(_senderAddress));
 
             // PUSH1 1 PUSH1 0 MSTORE PUSH1 1 PUSH1 31 RETURN STOP
             const string initCodeHex = "0x60016000526001601FF300";
@@ -271,16 +282,16 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _stateProvider.GetCode(account.CodeHash).Should().Equal(Bytes.FromHexString("0x01"));
         }
 
-        [Fact]
+        [Test]
         public void Should_Deploy_ERC20()
         {
             _stateProvider.CreateAccount(_senderAddress, 1000);
             _stateProvider.Commit(CatalystGenesisSpec.Instance);
             _stateProvider.CommitTree();
             
-            var contractAddress1 = Address.OfContract(_senderAddress,
+            var contractAddress1 = ContractAddress.From(_senderAddress,
                 _stateProvider.GetNonce(_senderAddress) + 0);
-            var contractAddress2 = Address.OfContract(_senderAddress,
+            var contractAddress2 = ContractAddress.From(_senderAddress,
                 _stateProvider.GetNonce(_senderAddress) + 2);
 
             const string migrationInitHex =
@@ -337,16 +348,16 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
                 "6080604052600436106100af576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806306fdde03146100b4578063095ea7b31461014457806318160ddd146101a957806323b872dd146101d457806327e235e314610259578063313ce567146102b05780635c658165146102e157806370a082311461035857806395d89b41146103af578063a9059cbb1461043f578063dd62ed3e146104a4575b600080fd5b3480156100c057600080fd5b506100c961051b565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156101095780820151818401526020810190506100ee565b50505050905090810190601f1680156101365780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561015057600080fd5b5061018f600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506105b9565b604051808215151515815260200191505060405180910390f35b3480156101b557600080fd5b506101be6106ab565b6040518082815260200191505060405180910390f35b3480156101e057600080fd5b5061023f600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506106b1565b604051808215151515815260200191505060405180910390f35b34801561026557600080fd5b5061029a600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061094b565b6040518082815260200191505060405180910390f35b3480156102bc57600080fd5b506102c5610963565b604051808260ff1660ff16815260200191505060405180910390f35b3480156102ed57600080fd5b50610342600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610976565b6040518082815260200191505060405180910390f35b34801561036457600080fd5b50610399600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061099b565b6040518082815260200191505060405180910390f35b3480156103bb57600080fd5b506103c46109e4565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156104045780820151818401526020810190506103e9565b50505050905090810190601f1680156104315780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b34801561044b57600080fd5b5061048a600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190505050610a82565b604051808215151515815260200191505060405180910390f35b3480156104b057600080fd5b50610505600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610bdb565b6040518082815260200191505060405180910390f35b60038054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156105b15780601f10610586576101008083540402835291602001916105b1565b820191906000526020600020905b81548152906001019060200180831161059457829003601f168201915b505050505081565b600081600260003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020819055508273ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925846040518082815260200191505060405180910390a36001905092915050565b60005481565b600080600260008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054905082600160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054101580156107825750828110155b151561078d57600080fd5b82600160008673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828254019250508190555082600160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825403925050819055507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff8110156108da5782600260008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825403925050819055505b8373ffffffffffffffffffffffffffffffffffffffff168573ffffffffffffffffffffffffffffffffffffffff167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef856040518082815260200191505060405180910390a360019150509392505050565b60016020528060005260406000206000915090505481565b600460009054906101000a900460ff1681565b6002602052816000526040600020602052806000526040600020600091509150505481565b6000600160008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050919050565b60058054600181600116156101000203166002900480601f016020809104026020016040519081016040528092919081815260200182805460018160011615610100020316600290048015610a7a5780601f10610a4f57610100808354040283529160200191610a7a565b820191906000526020600020905b815481529060010190602001808311610a5d57829003601f168201915b505050505081565b600081600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205410151515610ad257600080fd5b81600160003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000828254039250508190555081600160008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825401925050819055508273ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef846040518082815260200191505060405180910390a36001905092915050565b6000600260008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050929150505600a165627a7a72305820b01e799233fd04eb73bd6896cd148b8926873dc1418dd3e1a44f25a5e59903d20029"));
         }
 
-        [Fact]
+        [Test]
         public void Should_Deploy_ERC20_and_ask_about_balance()
         {
             _stateProvider.CreateAccount(_senderAddress, 1000);
             _stateProvider.Commit(CatalystGenesisSpec.Instance);
             _stateProvider.CommitTree();
             
-            var contractAddress1 = Address.OfContract(_senderAddress,
+            var contractAddress1 = ContractAddress.From(_senderAddress,
                 _stateProvider.GetNonce(_senderAddress));
-            var contractAddress2 = Address.OfContract(_senderAddress,
+            var contractAddress2 = ContractAddress.From(_senderAddress,
                 _stateProvider.GetNonce(_senderAddress) + 2);
 
             // migration contract
@@ -420,6 +431,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             // need to commit changes as the next two calls are reverting changes on the same state provider
             _storageProvider.Commit();
+            _stateProvider.RecalculateStateRoot();
             _stateProvider.Commit(_specProvider.GetSpec(1));
             _storageProvider.CommitTrees();
             _stateProvider.CommitTree();

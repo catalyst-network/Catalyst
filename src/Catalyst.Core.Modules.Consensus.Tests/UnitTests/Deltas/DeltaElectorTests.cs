@@ -29,7 +29,7 @@ using System.Reactive.Linq;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
@@ -44,50 +44,30 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
 using NSubstitute;
+using NUnit.Framework;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using Xunit;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
+using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
-    public class BadFavouritesData : TheoryData<FavouriteDeltaBroadcast, Type>
-    {
-        public BadFavouritesData()
-        {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-
-            Add(null, typeof(ArgumentNullException));
-            Add(new FavouriteDeltaBroadcast(), typeof(InvalidDataException));
-            Add(new FavouriteDeltaBroadcast
-            {
-                Candidate = new CandidateDeltaBroadcast
-                {
-                    Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                    ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
-                },
-                VoterId = PeerIdHelper.GetPeerId("candidate field is invalid")
-            }, typeof(InvalidDataException));
-            Add(new FavouriteDeltaBroadcast
-            {
-                Candidate = DeltaHelper.GetCandidateDelta(hashProvider)
-            }, typeof(InvalidDataException));
-        }
-    }
-
     public class DeltaElectorTests
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly ILogger _logger;
-        private readonly IReputationManager _reputationManager;
-        private readonly IHashProvider _hashProvider;
-        private readonly IMemoryCache _cache;
-        private readonly IDeltaProducersProvider _deltaProducersProvider;
+        private static IHashProvider HashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
-        public DeltaElectorTests()
+        private TestScheduler _testScheduler;
+        private ILogger _logger;
+        private IReputationManager _reputationManager;
+        private IHashProvider _hashProvider;
+        private IMemoryCache _cache;
+        private IDeltaProducersProvider _deltaProducersProvider;
+
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _logger = Substitute.For<ILogger>();
             _reputationManager =
                 new ReputationManager(new PeerRepository(new InMemoryRepository<Peer, string>()), _logger, _testScheduler);
@@ -95,20 +75,61 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _deltaProducersProvider = Substitute.For<IDeltaProducersProvider>();
         }
 
-        [Theory]
-        [ClassData(typeof(BadFavouritesData))]
-        public void When_receiving_bad_favourite_should_log_and_not_hit_the_cache(FavouriteDeltaBroadcast badFavourite,
-            Type exceptionType)
+        [Test]
+        public void When_receiving_null_favourite_should_log_and_not_hit_the_cache()
         {
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
-            elector.OnNext(badFavourite);
+            elector.OnNext(null);
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
         }
 
-        [Fact]
+        [Test]
+        public void When_receiving_empty_favourite_should_log_and_not_hit_the_cache()
+        {
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+
+            elector.OnNext(new FavouriteDeltaBroadcast());
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }   
+        
+        [Test]
+        public void When_receiving_invalid_candidate_should_log_and_not_hit_the_cache()
+        {
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+
+            elector.OnNext(new FavouriteDeltaBroadcast{
+                Candidate = new CandidateDeltaBroadcast
+                {
+                    Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
+                    ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
+                },
+                VoterId = PeerIdHelper.GetPeerId("candidate field is invalid")
+            });
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }   
+        
+        [Test]
+        public void When_receiving_no_voterid_should_log_and_not_hit_the_cache()
+        {
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+
+            elector.OnNext(new FavouriteDeltaBroadcast
+            {
+                Candidate = DeltaHelper.GetCandidateDelta(HashProvider)
+            });
+
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
+            _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
+        }
+
+        [Test]
         public void When_receiving_new_valid_favourite_should_store_in_cache()
         {
             var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
@@ -132,7 +153,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             ((IDictionary<FavouriteDeltaBroadcast, bool>) addedValue).Should().ContainKey(favourite);
         }
 
-        [Fact]
+        [Test]
         public void When_receiving_known_favourite_should_not_store_in_cache()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -155,14 +176,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void When_voter_not_a_producer_should_not_save_vote()
         {
             var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
 
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
-               .Returns(new List<PeerId> {PeerIdHelper.GetPeerId("the only known producer")});
+               .Returns(new List<PeerId> { PeerIdHelper.GetPeerId("the only known producer") });
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -174,13 +195,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
         }
 
-        [Fact]
+        [Test]
         public void Should_DeRep_Peers_That_Vote_When_They_Are_Not_Delta_Producers()
         {
             var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
 
-            var peer = new Peer {Reputation = 100, PeerId = favourite.VoterId};
-            _reputationManager.PeerRepository.Add(new Peer {Reputation = 100, PeerId = favourite.VoterId});
+            var peer = new Peer { Reputation = 100, PeerId = favourite.VoterId };
+            _reputationManager.PeerRepository.Add(new Peer { Reputation = 100, PeerId = favourite.VoterId });
 
             var expectedReputation = peer.Reputation + ReputationEventType.VoterIsNotProducer.Amount;
 
@@ -200,7 +221,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
         }
 
-        [Fact]
+        [Test]
         public void When_favourite_has_different_producer_it_should_not_create_duplicate_entries()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -218,10 +239,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                    .Concat(Enumerable.Repeat(candidates[1], 2))
                    .Concat(Enumerable.Repeat(candidates[2], 8))
                    .Select((c, j) => new FavouriteDeltaBroadcast
-                    {
-                        Candidate = c,
-                        VoterId = PeerIdHelper.GetPeerId((j % votersCount).ToString())
-                    }).ToList();
+                   {
+                       Candidate = c,
+                       VoterId = PeerIdHelper.GetPeerId((j % votersCount).ToString())
+                   }).ToList();
 
                 AddVoterAsExpectedProducer(favourites.Select(f => f.VoterId).ToArray());
 
@@ -242,7 +263,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetMostPopularCandidateDelta_should_return_the_favourite_with_most_voter_ids()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
@@ -261,10 +282,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                    .Concat(Enumerable.Repeat(candidates[1], secondVoteCount))
                    .Shuffle()
                    .Select((c, j) => new FavouriteDeltaBroadcast
-                    {
-                        Candidate = c,
-                        VoterId = PeerIdHelper.GetPeerId(j.ToString())
-                    }).ToList();
+                   {
+                       Candidate = c,
+                       VoterId = PeerIdHelper.GetPeerId(j.ToString())
+                   }).ToList();
 
                 AddVoterAsExpectedProducer(favourites.Select(f => f.VoterId).ToArray());
 
@@ -284,7 +305,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetMostPopularCandidateDelta_should_return_null_on_unknown_previous_delta_hash()
         {
             _cache.TryGetValue(Arg.Any<object>(), out Arg.Any<object>()).Returns(false);

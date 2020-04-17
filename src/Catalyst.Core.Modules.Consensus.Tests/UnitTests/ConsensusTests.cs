@@ -24,6 +24,8 @@
 using System;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -35,24 +37,27 @@ using Lib.P2P;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {
     public class ConsensusTests : IDisposable
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IDeltaBuilder _deltaBuilder;
-        private readonly IDeltaVoter _deltaVoter;
-        private readonly IDeltaElector _deltaElector;
-        private readonly IDeltaCache _deltaCache;
-        private readonly IDeltaHub _deltaHub;
-        private readonly TestCycleEventProvider _cycleEventProvider;
-        private readonly Consensus _consensus;
+        private IHashProvider _hashProvider;
+        private IDeltaBuilder _deltaBuilder;
+        private IDeltaVoter _deltaVoter;
+        private IDeltaElector _deltaElector;
+        private IDeltaCache _deltaCache;
+        private IDeltaHub _deltaHub;
+        private TestCycleEventProvider _cycleEventProvider;
+        private Consensus _consensus;
+        private SyncState _syncState;
+        private ILedger _ledger;
 
-        public ConsensusTests()
+        [SetUp]
+        public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _cycleEventProvider = new TestCycleEventProvider();
             _deltaBuilder = Substitute.For<IDeltaBuilder>();
             _deltaVoter = Substitute.For<IDeltaVoter>();
@@ -61,6 +66,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _deltaHub = Substitute.For<IDeltaHub>();
             var deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             var logger = Substitute.For<ILogger>();
+            _syncState = new SyncState {IsSynchronized = true, IsRunning = true};
+            _ledger = Substitute.For<ILedger>();
             _consensus = new Consensus(
                 _deltaBuilder,
                 _deltaVoter,
@@ -76,7 +83,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 
         private Cid PreviousDeltaBytes => _cycleEventProvider.CurrentPhase.PreviousDeltaDfsHash;
 
-        [Fact]
+        [Test]
         public void
             ConstructionProducingSubscription_Should_Trigger_BuildDeltaCandidate_On_Construction_Producing_Phase()
         {
@@ -90,7 +97,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _deltaHub.Received(1).BroadcastCandidate(Arg.Is(builtCandidate));
         }
 
-        [Fact]
+        [Test]
         public void
             CampaigningProductionSubscription_Should_Trigger_TryGetFavouriteDelta_On_Campaigning_Producing_Phase()
         {
@@ -110,7 +117,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _deltaHub.Received(1).BroadcastFavouriteCandidateDelta(Arg.Is(favourite));
         }
 
-        [Fact]
+        [Test]
         public void CampaigningProductionSubscription_Should_Not_Broadcast_On_TryGetFavouriteDelta_Null()
         {
             _deltaVoter.TryGetFavouriteDelta(Arg.Any<Cid>(), out Arg.Any<FavouriteDeltaBroadcast>())
@@ -129,7 +136,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _deltaHub.DidNotReceiveWithAnyArgs().BroadcastFavouriteCandidateDelta(default);
         }
 
-        [Fact]
+        [Test]
         public void VotingProductionSubscription_Should_Hit_Cache_And_Publish_To_Dfs()
         {
             var popularCandidate = DeltaHelper.GetCandidateDelta(_hashProvider);
@@ -158,7 +165,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _deltaHub.Received(1)?.PublishDeltaToDfsAndBroadcastAddressAsync(localDelta);
         }
 
-        [Fact]
+        [Test]
         public void
             VotingProductionSubscription_Should_Not_Hit_Cache_Or_Publish_To_Dfs_On_GetMostPopularCandidateDelta_Null()
         {
@@ -175,7 +182,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _deltaHub.DidNotReceiveWithAnyArgs()?.PublishDeltaToDfsAndBroadcastAddressAsync(default);
         }
 
-        [Fact]
+        [Test]
         public void VotingProductionSubscription_Should_Not_Publish_To_Dfs_On_GetMostPopularCandidateDelta_Null()
         {
             var popularCandidate = DeltaHelper.GetCandidateDelta(_hashProvider);

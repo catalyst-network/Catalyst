@@ -28,14 +28,14 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
 {
     /* We need to create a protobuf test stub response */
     public sealed class RpcResponseObserverTests
     {
-        [Fact]
+        [Test]
         public void Null_Message_Throws_Exception()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
                     senderPeerId, correlationId));
         }
 
-        [Fact]
+        [Test]
         public void Null_ChannelHandlerContext_Throws_Exception()
         {
             var senderPeerIdentifier = PeerIdHelper.GetPeerId();
@@ -64,7 +64,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
                     senderPeerIdentifier, correlationId));
         }
 
-        [Fact]
+        [Test]
         public void Null_SenderPeerIdentifierContext_Throws_Exception()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();

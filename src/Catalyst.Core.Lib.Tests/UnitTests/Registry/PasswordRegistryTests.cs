@@ -26,28 +26,29 @@ using System.Security;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cryptography;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
 {
     public sealed class PasswordRegistryTests : IDisposable
     {
-        private readonly SecureString _secureString = new SecureString();
-        private readonly PasswordRegistry _passwordRegistry;
+        private SecureString _secureString = new SecureString();
+        private PasswordRegistry _passwordRegistry;
 
-        public PasswordRegistryTests()
+        [SetUp]
+        public void Init()
         {
             _passwordRegistry = new PasswordRegistry();
         }
 
-        [Fact]
+        [Test]
         public void Can_Add_Item_To_Registry()
         {
             _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeTrue();
             _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.IpfsPassword).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void Can_Add_Multiple_Items_To_Registry()
         {
             _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeTrue();
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
             _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.CertificatePassword).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void Cant_Add_Items_To_Registry_Twice_With_Same_Key()
         {
             _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeTrue();
@@ -66,7 +67,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
             _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.IpfsPassword).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void Can_Remove_Item_From_Registry()
         {
             _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeTrue();
@@ -75,20 +76,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
             _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.IpfsPassword).Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void Can_Retrieve_Item_From_Registry()
         {
             _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeTrue();
             _passwordRegistry.GetItemFromRegistry(PasswordRegistryTypes.IpfsPassword).Should().BeEquivalentTo(_secureString);
         }
 
-        [Fact]
+        [Test]
         public void Retrieving_Item_Not_Contained_In_Registry_Returns_Null()
         {
             _passwordRegistry.GetItemFromRegistry(PasswordRegistryTypes.IpfsPassword).Should().BeEquivalentTo((SecureString) null);
         }
 
-        [Fact]
+        [Test]
         public void Cant_Add_Null_Item_To_Registry()
         {
             Action action = () =>

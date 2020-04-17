@@ -21,12 +21,16 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
@@ -36,51 +40,73 @@ using DotNetty.Transport.Channels;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
     public sealed class DeltaDfsHashObserverTests
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly IChannelHandlerContext _fakeChannelContext;
-        private readonly ILogger _logger;
+        private IHashProvider _hashProvider;
+        private IDeltaHashProvider _deltaHashProvider;
+        private IChannelHandlerContext _fakeChannelContext;
+        private SyncState _syncState;
+        private ILogger _logger;
+        private IPeerRepository _peerRepository;
 
-        public DeltaDfsHashObserverTests()
+        [SetUp]
+        public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
+            _syncState = new SyncState {IsSynchronized = true, IsRunning = true};
             _logger = Substitute.For<ILogger>();
+            _peerRepository = Substitute.For<IPeerRepository>();
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Try_Update()
         {
             var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
+            _peerRepository.GetPeersByIpAndPublicKey(receivedMessage.Payload.PeerId.Ip, receivedMessage.Payload.PeerId.PublicKey).Returns(new List<Peer>() { new Peer() });
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _peerRepository, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
             _deltaHashProvider.Received(1).TryUpdateLatestHash(prevHash, newHash);
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Update_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash.ToArray());
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _peerRepository, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
             _deltaHashProvider.DidNotReceiveWithAnyArgs().TryUpdateLatestHash(default, default);
+        }
+
+        [Test]
+        public void HandleBroadcast_Should_Not_Try_Update_Invalid_Peer()
+        {
+            var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
+            var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
+            var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
+
+            _peerRepository.GetPeersByIpAndPublicKey(receivedMessage.Payload.PeerId.Ip, receivedMessage.Payload.PeerId.PublicKey).Returns(new List<Peer>());
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _peerRepository, _logger);
+
+            deltaDfsHashObserver.HandleBroadcast(receivedMessage);
+
+            _deltaHashProvider.Received(0).TryUpdateLatestHash(prevHash, newHash);
+            _logger.Received(1).Error(Arg.Any<string>());
         }
 
         private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash, byte[] prevHash)

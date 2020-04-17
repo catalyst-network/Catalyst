@@ -30,7 +30,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
@@ -38,7 +38,7 @@ using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -64,7 +64,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             repository.GetActivePeers(Arg.Any<int>()).Returns(peer);
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Process_GetNeighbourRequest_Correctly()
         {
             // mock a random set of peers

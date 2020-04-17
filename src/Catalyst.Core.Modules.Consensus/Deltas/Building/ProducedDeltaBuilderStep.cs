@@ -23,7 +23,6 @@
 
 using System;
 using Catalyst.Abstractions.Consensus;
-using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
@@ -44,7 +43,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-        
+
         public void Execute(DeltaBuilderContext context)
         {
             context.ProducedDelta = new Delta
@@ -56,15 +55,17 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                 {
                     context.CoinbaseEntry
                 },
-                
+
                 PublicEntries =
                 {
                     context.Transactions
                 },
-                
+
+                GasUsed = (long)context.Transactions.Sum(x => x.GasLimit),
+
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
-            
+
             if (_logger.IsEnabled(LogEventLevel.Information)) _logger.Information("Built a delta {number} {hash} based on {previousHash} with {txCount} transactions", context.ProducedDelta.DeltaNumber, context.Candidate.Hash, context.ProducedDelta.PreviousDeltaDfsHash, context.ProducedDelta.PublicEntries.Count);
             foreach (PublicEntry publicEntry in context.ProducedDelta.PublicEntries)
             {

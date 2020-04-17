@@ -43,20 +43,21 @@ using DotNetty.Transport.Channels;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class GetFileFromDfsRequestObserverTests : IDisposable
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IUploadFileTransferFactory _fileTransferFactory;
-        private readonly IDfsService _dfsService;
-        private readonly GetFileFromDfsRequestObserver _observer;
+        private IHashProvider _hashProvider;
+        private IUploadFileTransferFactory _fileTransferFactory;
+        private IDfsService _dfsService;
+        private GetFileFromDfsRequestObserver _observer;
 
-        public GetFileFromDfsRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfsService = Substitute.For<IDfsService>();
             var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
@@ -64,7 +65,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public void GetFileRequestHandlerInitializesFileUpload()
         {
             using (GetFakeDfsStream(FileTransferResponseCodeTypes.Successful))
@@ -76,7 +77,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             }
         }
 
-        [Fact]
+        [Test]
         public void FileTransferStreamIsDisposedOnError()
         {
             using var fakeStream = GetFakeDfsStream(FileTransferResponseCodeTypes.Error);

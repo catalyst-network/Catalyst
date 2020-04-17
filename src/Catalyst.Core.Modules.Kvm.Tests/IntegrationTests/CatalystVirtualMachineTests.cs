@@ -33,170 +33,169 @@ using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
-using Nethermind.Core.Json;
 using Nethermind.Core.Specs;
+using Nethermind.Db;
 using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
+using Nethermind.Evm.Tracing.GethStyle;
 using Nethermind.Logging;
-using Nethermind.Store;
-using Xunit;
-using Xunit.Abstractions;
+using Nethermind.Serialization.Json;
+using Nethermind.State;
+using NUnit.Framework;
 using IPrivateKey = Catalyst.Abstractions.Cryptography.IPrivateKey;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 {
+    [TestFixture]
     public sealed class CatalystVirtualMachineTests
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-        public CatalystVirtualMachineTests(ITestOutputHelper testOutputHelper) { _testOutputHelper = testOutputHelper; }
-
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Run_Smoke_test()
         {
             var code = Bytes.FromHexString("0x600060000100");
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Range_Proof_Precompile()
         {
             var code = Bytes.FromHexString("0x60008080806201000062050000F400");
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Failed.Should().Be(false);
             trace.Entries.Last().Stack.Count.Should().Be(1);
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesOne32.ToHexString());
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Origin()
         {
             var code = Bytes.FromHexString("0x3200");
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Failed.Should().Be(false);
             trace.Entries.Last().Stack.Count.Should().Be(1);
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesZero32.ToHexString());
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Address()
         {
             var code = Bytes.FromHexString("0x3000");
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Failed.Should().Be(false);
             trace.Entries.Last().Stack.Count.Should().Be(1);
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesZero32.ToHexString());
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Blockhash()
         {
             var code = Bytes.FromHexString("0x60014000");
             Assert.Throws<NotImplementedException>(() => RunVirtualMachine(code));
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Coinbase()
         {
             var code = Bytes.FromHexString("0x4100");
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Failed.Should().Be(false);
             trace.Entries.Last().Stack.Count.Should().Be(1);
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesZero32.ToHexString());
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Timestamp()
         {
             var code = Bytes.FromHexString("0x4200");
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Failed.Should().Be(false);
             trace.Entries.Last().Stack.Count.Should().Be(1);
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesOne32.ToHexString());
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Number()
         {
             var code = Bytes.FromHexString("0x4300");
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Failed.Should().Be(false);
             trace.Entries.Last().Stack.Count.Should().Be(1);
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesOne32.ToHexString());
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Difficulty()
         {
             var code = Bytes.FromHexString("0x4400");
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Failed.Should().Be(false);
             trace.Entries.Last().Stack.Count.Should().Be(1);
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesOne32.ToHexString());
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Gas_Limit()
         {
             var code = Bytes.FromHexString("0x4500");
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Failed.Should().Be(false);
             trace.Entries.Last().Stack.Count.Should().Be(1);
             trace.Entries.Last().Stack.Last().Should().Be("f4240".PadLeft(64, '0'));
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Chain_Id()
         {
             var code = Bytes.FromHexString("0x4600");
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Failed.Should().Be(false);
             trace.Entries.Last().Stack.Count.Should().Be(1);
             trace.Entries.Last().Stack.Last().Should().Be(VirtualMachine.BytesOne32.ToHexString());
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Blake_precompile()
         {
             Address blakeAddress = Address.FromNumber(1 + KatVirtualMachine.CatalystPrecompilesAddressingSpace);
@@ -205,13 +204,13 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             GethLikeTxTracer txTracer = RunVirtualMachine(code);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000001");
             trace.Entries.Last().Memory.First().Should().Be("378d0caaaa3855f1b38693c1d6ef004fd118691c95c959d4efa950d6d6fcf7c1");
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_verify_correct_sig()
         {
             HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
@@ -225,34 +224,33 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             GethLikeTxTracer txTracer = RunVirtualMachine(byteCode);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000001");
             trace.Entries.Last().Memory.First().Should().StartWith("01");
         }
         
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_verify_incorrect_sig()
         {
-            HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-
+            HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             FfiWrapper cryptoContext = new FfiWrapper();
             IPrivateKey signingPrivateKey = cryptoContext.GeneratePrivateKey();
             IPrivateKey otherPrivateKey = cryptoContext.GeneratePrivateKey();
-            Assert.NotEqual(signingPrivateKey, otherPrivateKey);
+            Assert.AreNotEqual(signingPrivateKey, otherPrivateKey);
 
             var byteCode = PrepareEd25519PrecompileCall(hashProvider, cryptoContext, signingPrivateKey, otherPrivateKey);
 
             GethLikeTxTracer txTracer = RunVirtualMachine(byteCode);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000001");
             trace.Entries.Last().Memory.First().Should().StartWith("00");
         }
         
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_report_too_short_input()
         {
             var byteCode = Bytes.FromHexString(
@@ -268,12 +266,12 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             GethLikeTxTracer txTracer = RunVirtualMachine(byteCode);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000000");
         }
         
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_report_too_long_input()
         {
             var byteCode = Bytes.FromHexString(
@@ -289,7 +287,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             GethLikeTxTracer txTracer = RunVirtualMachine(byteCode);
             EthereumJsonSerializer serializer = new EthereumJsonSerializer();
             GethLikeTxTrace trace = txTracer.BuildResult();
-            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
+            TestContext.WriteLine(serializer.Serialize(trace, true));
             trace.Entries.Last().Stack.First().Should().Be("0000000000000000000000000000000000000000000000000000000000000000");
         }
 
@@ -346,7 +344,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
                 addressCode +
                 "45fa00");
 
-            _testOutputHelper.WriteLine(byteCode.ToHexString());
+            TestContext.WriteLine(byteCode.ToHexString());
             return byteCode;
         }
 
@@ -420,7 +418,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
                 storageProvider,
                 stateUpdateHashProvider,
                 specProvider,
-                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
                 new FfiWrapper(),
                 LimboLogs.Instance);
             virtualMachine.Run(vmState, txTracer);

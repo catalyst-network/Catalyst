@@ -24,12 +24,16 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
+using System;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
@@ -37,9 +41,13 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : RequestObserverBase<PingRequest, PingResponse>,
             IP2PMessageObserver
     {
-        public PingRequestObserver(IPeerSettings peerSettings,
+        private readonly IPeerRepository _peerRepository;
+        public PingRequestObserver(IPeerSettings peerSettings, 
+            IPeerRepository peerRepository,
             ILogger logger)
-            : base(logger, peerSettings) { }
+            : base(logger, peerSettings) {
+            _peerRepository = peerRepository;
+        }
         
         /// <summary>
         ///     Basic method to handle ping messages. 
@@ -59,6 +67,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             
             Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
+
+            var peer = _peerRepository.Get(senderPeerId);
+            if (peer == null)
+            {
+                _peerRepository.Add(new Peer
+                {
+                    PeerId = senderPeerId,
+                    LastSeen = DateTime.UtcNow
+                });
+            }
 
             return new PingResponse();
         }

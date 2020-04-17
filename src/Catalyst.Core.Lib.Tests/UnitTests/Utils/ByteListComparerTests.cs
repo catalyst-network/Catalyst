@@ -25,13 +25,13 @@ using System.Linq;
 using System.Text;
 using Catalyst.Core.Lib.Util;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
     public class ByteListComparerTests
     {
-        [Fact]
+        [Test]
         public void ByteListComparer_should_return_0_on_same_list()
         {
             var list1 = Encoding.UTF8.GetBytes("hello");
@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().Be(0);
         }
 
-        [Fact]
+        [Test]
         public void ByteListComparer_should_return_0_on_same_beginning_of_list()
         {
             var list1 = Encoding.UTF8.GetBytes("hello");
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().Be(0);
         }
 
-        [Fact]
+        [Test]
         public void ByteListComparer_should_not_return_0_on_different_beginning_of_list()
         {
             var list1 = Encoding.UTF8.GetBytes("hello");
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().NotBe(0);
         }
 
-        [Fact]
+        [Test]
         public void ByteListComparer_should_return_one_on_different_on_higher_beginning_of_list()
         {
             var list1 = new byte[] {0, 1, 2, 3, 4, 5, 7, 8};
@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().Be(1);
         }
 
-        [Fact]
+        [Test]
         public void ByteListComparer_should_return_minus_one_on_different_on_higher_beginning_of_list()
         {
             var list1 = new byte[] {0, 1, 2, 3, 4, 4, 7, 8};
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, list2).Should().Be(-1);
         }
 
-        [Fact]
+        [Test]
         public void ByteListComparer_should_return_one_if_only_second_arg_is_null()
         {
             var list1 = new byte[] { };
@@ -84,7 +84,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             ByteUtil.ByteListMinSizeComparer.Default.Compare(list1, null).Should().Be(1);
         }
 
-        [Fact]
+        [Test]
         public void ByteListComparer_should_return_minus_one_if_only_first_arg_is_null()
         {
             var list2 = new byte[] {3};
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             ByteUtil.ByteListMinSizeComparer.Default.Compare(null, list2).Should().Be(-1);
         }
 
-        [Fact]
+        [Test]
         public void ByteListComparer_should_return_0_when_both_args_are_null()
         {
             ByteUtil.ByteListMinSizeComparer.Default.Compare(null, null).Should().Be(0);

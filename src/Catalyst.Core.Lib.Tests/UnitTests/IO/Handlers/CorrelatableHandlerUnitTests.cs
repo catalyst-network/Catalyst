@@ -34,7 +34,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 
-        [Fact]
+        [Test]
         public async Task Does_Process_IMessageDto_Types()
         {
             var protocolMessage =
@@ -68,7 +68,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             await _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
         }
 
-        [Fact]
+        [Test]
         public void Does_Not_Process_OtherTypes_Types()
         {
             var fakeRequestMessageDto = Substitute.For<IObserverDto<IMessage>>();

@@ -28,6 +28,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Service;
 using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using Nito.Comparers;
@@ -48,6 +49,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public IObservable<Cid> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
 
         public DeltaHashProvider(IDeltaCache deltaCache,
+            IDeltaIndexService deltaIndexService,
             ILogger logger,
             int capacity = 10_000)
         {
@@ -61,8 +63,15 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Capacity = _capacity
             };
 
-            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
-                _deltaCache.GenesisHash);
+            var latestDeltaIndex = deltaIndexService.LatestDeltaIndex();
+            if (deltaIndexService.LatestDeltaIndex() != null)
+            {
+                var foundDelta = _deltaCache.TryGetOrAddConfirmedDelta(latestDeltaIndex.Cid, out var delta);
+                _hashesByTimeDescending.Add(delta.TimeStamp, latestDeltaIndex.Cid);
+                return;
+            }
+
+            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.UnixEpoch), _deltaCache.GenesisHash);
         }
 
         /// <inheritdoc />

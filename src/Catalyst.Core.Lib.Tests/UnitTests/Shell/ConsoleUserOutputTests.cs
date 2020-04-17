@@ -25,13 +25,13 @@ using System;
 using System.IO;
 using Catalyst.Core.Lib.Cli;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Shell
 {
     public sealed class ConsoleUserOutputTests
     {
-        [Fact]
+        [Test]
         public void WriteLine_Should_WriteLine_To_Console()
         {
             using (var sw = new StringWriter())
@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Shell
             }
         }
 
-        [Fact]
+        [Test]
         public void Write_Should_Write_To_Console()
         {
             using (var sw = new StringWriter())

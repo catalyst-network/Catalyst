@@ -43,7 +43,6 @@ namespace Catalyst.Core.Lib.DAO.Transaction
         public string SenderAddress { get; set; }
         public string Data { get; set; }
         public string Amount { get; set; }
-        public DateTime TimeStamp { get; set; }
         public SignatureDao Signature { set; get; }
         public string GasPrice { get; set; }
         public ulong GasLimit { get; set; }
@@ -58,14 +57,16 @@ namespace Catalyst.Core.Lib.DAO.Transaction
     {
         private readonly IHashProvider _hashProvider;
 
-        public PublicEntryMapperInitialiser(IHashProvider hashProvider) { _hashProvider = hashProvider; }
+        public PublicEntryMapperInitialiser(IHashProvider hashProvider) { 
+            _hashProvider = hashProvider; 
+        }
 
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.AllowNullDestinationValues = true;
 
             cfg.CreateMap<PublicEntry, PublicEntryDao>()
-               .ForMember(d => d.Id, opt => opt.MapFrom(src => _hashProvider.ComputeMultiHash(src)))
+               .ForMember(d => d.Id, opt => opt.MapFrom(src => src.GetId(_hashProvider.HashingAlgorithm.Name)))
                .ForMember(d => d.Amount,
                     opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
                .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToBase32Converter, ByteString>())
@@ -75,8 +76,7 @@ namespace Catalyst.Core.Lib.DAO.Transaction
                     opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.SenderAddress))
                .ForMember(d => d.Nonce, opt => opt.MapFrom(s => s.Nonce))
                .ForMember(d => d.GasPrice, opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.GasPrice))
-               .ForMember(d => d.GasLimit, opt => opt.MapFrom(s => s.GasLimit))
-               .ForMember(d => d.TimeStamp, opt => opt.MapFrom(s => s.Timestamp));
+               .ForMember(d => d.GasLimit, opt => opt.MapFrom(s => s.GasLimit));
 
             cfg.CreateMap<PublicEntryDao, PublicEntry>()
                .ForMember(d => d.Amount,
@@ -88,8 +88,7 @@ namespace Catalyst.Core.Lib.DAO.Transaction
                     opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.SenderAddress))
                .ForMember(d => d.Nonce, opt => opt.MapFrom(s => s.Nonce))
                .ForMember(d => d.GasPrice, opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.GasPrice))
-               .ForMember(d => d.GasLimit, opt => opt.MapFrom(s => s.GasLimit))
-               .ForMember(d => d.Timestamp, opt => opt.MapFrom(s => s.TimeStamp));
+               .ForMember(d => d.GasLimit, opt => opt.MapFrom(s => s.GasLimit));
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());

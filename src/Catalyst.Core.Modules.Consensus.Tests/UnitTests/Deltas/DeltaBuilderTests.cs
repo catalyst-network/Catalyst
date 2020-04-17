@@ -50,11 +50,12 @@ using MultiFormats.Registry;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Specs;
+using Nethermind.Db;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Logging;
-using Nethermind.Store;
+using Nethermind.State;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
@@ -62,23 +63,24 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     public sealed class DeltaBuilderTests
     {
         private const ulong DeltaGasLimit = 8_000_000;
-        private readonly IHashProvider _hashProvider;
-        private readonly IDeterministicRandomFactory _randomFactory;
-        private readonly Random _random;
-        private readonly PeerId _producerId;
-        private readonly Cid _previousDeltaHash;
-        private readonly CoinbaseEntry _zeroCoinbaseEntry;
-        private readonly IDeltaCache _cache;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IStateProvider _stateProvider;
-        private readonly IDeltaExecutor _deltaExecutor;
-        private readonly ICryptoContext _cryptoContext;
-        private readonly ILogger _logger;
-        private readonly IPeerSettings _peerSettings;
+        private IHashProvider _hashProvider;
+        private IDeterministicRandomFactory _randomFactory;
+        private Random _random;
+        private PeerId _producerId;
+        private Cid _previousDeltaHash;
+        private CoinbaseEntry _zeroCoinbaseEntry;
+        private IDeltaCache _cache;
+        private IDateTimeProvider _dateTimeProvider;
+        private IStateProvider _stateProvider;
+        private IDeltaExecutor _deltaExecutor;
+        private ICryptoContext _cryptoContext;
+        private ILogger _logger;
+        private IPeerSettings _peerSettings;
 
-        public DeltaBuilderTests()
+        [SetUp]
+        public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _random = new Random(1);
 
@@ -120,7 +122,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 storageProvider,
                 new StateUpdateHashProvider(),
                 specProvider,
-                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")),
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
                 new FfiWrapper(), 
                 LimboLogs.Instance);
             _deltaExecutor = new DeltaExecutor(specProvider,
@@ -144,7 +146,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             return _publicKeys[index];
         }
 
-        [Fact]
+        [Test]
         public void BuildDeltaEmptyPoolContent()
         {
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
@@ -161,7 +163,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
-        [Fact]
+        [Test]
         public void BuildDeltaInvalidTransactionsBasedOnLockTime()
         {
             var invalidTransactionList = Enumerable.Range(0, 20).Select(i =>
@@ -185,7 +187,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
-        [Fact]
+        [Test]
         public void BuildDeltaCheckForAccuracy()
         {
             var transactions = Enumerable.Range(0, 20).Select(i =>
@@ -239,7 +241,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             return transactionRetriever;
         }
 
-        [Fact]
+        [Test]
         public void BuildDeltaWithContractEntries()
         {
             var transactions = Enumerable.Range(0, 20).Select(i =>
@@ -288,7 +290,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
-        [Fact]
+        [Test]
         public void When_contract_entries_exceed_delta_gas_limit_some_entries_are_ignored()
         {
             // each entry at 1 million gas

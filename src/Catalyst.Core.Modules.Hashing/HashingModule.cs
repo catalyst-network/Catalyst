@@ -31,7 +31,7 @@ namespace Catalyst.Core.Modules.Hashing
     {
         protected override void Load(ContainerBuilder builder)
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
+            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("keccak-256");
             builder.RegisterInstance(hashingAlgorithm).SingleInstance();
             builder.RegisterType<HashProvider>().As<IHashProvider>().SingleInstance();
         }

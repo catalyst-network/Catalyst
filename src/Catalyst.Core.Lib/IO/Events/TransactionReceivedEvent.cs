@@ -36,6 +36,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using MultiFormats;
 using Nethermind.Core.Crypto;
+using Newtonsoft.Json;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Events

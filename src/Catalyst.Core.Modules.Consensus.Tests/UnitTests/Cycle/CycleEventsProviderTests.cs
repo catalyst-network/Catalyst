@@ -38,8 +38,8 @@ using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 {
@@ -50,22 +50,23 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
         private static readonly PhaseStatus[] StatusesInOrder =
             {PhaseStatus.Producing, PhaseStatus.Collecting, PhaseStatus.Idle};
 
-        private readonly TestScheduler _testScheduler;
-        private readonly CycleEventsProvider _cycleProvider;
-        private readonly IDisposable _subscription;
-        private readonly IObserver<IPhase> _spy;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly ICycleSchedulerProvider _schedulerProvider;
-        private readonly ITestOutputHelper _output;
-        private readonly IStopwatch _stopWatch;
-        private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly ILogger _logger;
+        private TestScheduler _testScheduler;
+        private CycleEventsProvider _cycleProvider;
+        private IDisposable _subscription;
+        private IObserver<IPhase> _spy;
+        private IDateTimeProvider _dateTimeProvider;
+        private ICycleSchedulerProvider _schedulerProvider;
+        private TestContext _output;
+        private IStopwatch _stopWatch;
+        private IDeltaHashProvider _deltaHashProvider;
+        private ILogger _logger;
 
-        public CycleEventsProviderTests(ITestOutputHelper output)
+        [SetUp]
+        public void Init()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
-            _output = output;
+            _output = TestContext.CurrentContext;
             _testScheduler = new TestScheduler();
 
             _schedulerProvider = Substitute.For<ICycleSchedulerProvider>();
@@ -79,7 +80,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 
             _dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
             _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider,
-                _deltaHashProvider, _logger);
+                _deltaHashProvider, new Abstractions.Sync.SyncState() { IsSynchronized = true }, _logger);
 
             _spy = Substitute.For<IObserver<IPhase>>();
 
@@ -88,16 +89,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             _subscription = _cycleProvider.PhaseChanges.Take(50)
                .Subscribe(p =>
                 {
-                    _output.WriteLine($"{_stopWatch.Elapsed.TotalSeconds} -- {p}");
+                    TestContext.WriteLine($"{_stopWatch.Elapsed.TotalSeconds} -- {p}");
                     _spy.OnNext(p);
                 }, () =>
                 {
-                    _output.WriteLine($"completed after {_stopWatch.Elapsed.TotalSeconds:g}");
+                    TestContext.WriteLine($"completed after {_stopWatch.Elapsed.TotalSeconds:g}");
                     _spy.OnCompleted();
                 });
         }
 
-        [Fact]
+        [Test]
         public void PhaseChanges_Should_Complete_When_Stop_Is_Called()
         {
             var cancellationTime = CycleConfiguration.Default.CycleDuration
@@ -114,7 +115,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
                     "OnNext, and the start of the second loop is 1.");
         }
 
-        [Fact]
+        [Test]
         public void Changes_Should_Happen_In_Time()
         {
             _testScheduler.Start();
@@ -170,7 +171,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             }
         }
 
-        [Fact]
+        [Test]
         public void PhaseChanges_Should_Be_Synchronised_Across_Instances()
         {
             var secondProviderStartOffset = CycleConfiguration.Default.CycleDuration.Divide(3);
@@ -179,16 +180,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 
             var spy2 = Substitute.For<IObserver<IPhase>>();
             using (var cycleProvider2 = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider,
-                _schedulerProvider, _deltaHashProvider, _logger))
+                _schedulerProvider, _deltaHashProvider, new Abstractions.Sync.SyncState() { IsSynchronized = true }, _logger))
             using (cycleProvider2.PhaseChanges.Take(50 - PhaseCountPerCycle)
                .Subscribe(p =>
                 {
-                    _output.WriteLine(
+                    TestContext.WriteLine(
                         $"{_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture)} % 2 -- {p}");
                     spy2.OnNext(p);
                 }, () =>
                 {
-                    _output.WriteLine(
+                    TestContext.WriteLine(
 
                         // ReSharper disable once InterpolatedStringExpressionIsNotIFormattable
                         $"% 2 -- completed after {_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture):g}");
@@ -208,7 +209,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 
                 (receivedPhases2.First().UtcStartTime - receivedPhases.First().UtcStartTime)
                    .TotalMilliseconds.Should().BeApproximately(
-                        CycleConfiguration.Default.CycleDuration.TotalMilliseconds, 0.0001d,
+                        CycleConfiguration.Default.CycleDuration.TotalMilliseconds, 0.0002d,
                         "the provider should start on the second cycle");
 
                 foreach (var phases in receivedPhases.Skip(PhaseCountPerCycle)

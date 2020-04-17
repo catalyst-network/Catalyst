@@ -36,12 +36,12 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerBlackListingResponseObserver
-        : RpcResponseObserver<SetPeerBlacklistResponse>
+        : RpcResponseObserver<SetPeerBlackListResponse>
     {
         public PeerBlackListingResponseObserver(ILogger logger)
             : base(logger) { }
 
-        protected override void HandleResponse(SetPeerBlacklistResponse setPeerBlackListResponse,
+        protected override void HandleResponse(SetPeerBlackListResponse setPeerBlackListResponse,
             IChannelHandlerContext channelHandlerContext,
             PeerId senderPeerIdentifier,
             ICorrelationId correlationId) { }

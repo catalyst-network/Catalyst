@@ -22,13 +22,13 @@
 #endregion
 
 using Catalyst.Abstractions.Dfs;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     public class NamedContentTest
     {
-        [Fact]
+        [Test]
         public void Properties()
         {
             var nc = new NamedContent
@@ -36,8 +36,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 ContentPath = "/ipfs/...",
                 NamePath = "/ipns/..."
             };
-            Assert.Equal("/ipfs/...", nc.ContentPath);
-            Assert.Equal("/ipns/...", nc.NamePath);
+            Assert.AreEqual("/ipfs/...", nc.ContentPath);
+            Assert.AreEqual("/ipns/...", nc.NamePath);
         }
     }
 }

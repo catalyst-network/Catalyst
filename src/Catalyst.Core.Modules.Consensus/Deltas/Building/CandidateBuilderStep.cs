@@ -37,7 +37,6 @@ using Lib.P2P;
 using MultiFormats;
 using Nethermind.Dirichlet.Numerics;
 using Serilog;
-using Serilog.Events;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {

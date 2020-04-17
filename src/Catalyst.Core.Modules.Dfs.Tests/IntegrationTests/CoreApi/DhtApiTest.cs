@@ -26,8 +26,7 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Lib.P2P;
 using MultiFormats;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
@@ -36,28 +35,28 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         private IDfsService ipfs;
         private MultiHash _locaId;
 
-        public DhtApiTest(ITestOutputHelper output)
+        public DhtApiTest()
         {
-            ipfs = TestDfs.GetTestDfs(output);
+            ipfs = TestDfs.GetTestDfs();
             
             _locaId = ipfs.LocalPeer.Id;
         }
 
-        [Fact]
+        [Test]
         public void Local_Info()
         {
             var peer = ipfs.DhtApi.FindPeerAsync(_locaId).GetAwaiter().GetResult();
-            Assert.IsType(typeof(Peer), peer);
+            Assert.IsInstanceOf(typeof(Peer), peer);
             Assert.NotNull(peer.Addresses);
-            Assert.StartsWith("net-ipfs/", peer.AgentVersion);
+            Assert.That(peer.AgentVersion, Does.StartWith("net-ipfs/"));
             Assert.NotNull(peer.Id);
-            Assert.StartsWith("ipfs/", peer.ProtocolVersion);
+            Assert.That(peer.ProtocolVersion, Does.StartWith("ipfs/"));
             Assert.NotNull(peer.PublicKey);
-            Assert.Equal(_locaId, peer.Id);
+            Assert.AreEqual(_locaId, peer.Id);
             Assert.True(peer.IsValid());
         }
 
-        [Fact]
+        [Test]
         public void Mars_Info()
         {
             const string marsId = "QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3";
@@ -66,11 +65,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var mars = swarm.RegisterPeerAddress(marsAddr);
 
             var peer = ipfs.DhtApi.FindPeerAsync(marsId).GetAwaiter().GetResult();
-            Assert.Equal(mars.Id, peer.Id);
-            Assert.Equal(mars.Addresses.First(), peer.Addresses.First());
+            Assert.AreEqual(mars.Id, peer.Id);
+            Assert.AreEqual(mars.Addresses.First(), peer.Addresses.First());
         }
 
-        // [Fact]
+        // [Test]
         // [Ignore("https://github.com/richardschneider/net-ipfs-engine/issues/74#issuecomment-500668261")]
         // public async Task Mars_Info()
         // {
@@ -81,7 +80,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         //     {
         //         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
         //         var mars = await ipfs.Dht.FindPeerAsync(marsId, cts.Token);
-        //         Assert.Equal(marsId, mars.Id);
+        //         Assert.AreEqual(marsId, mars.Id);
         //         Assert.NotNull(mars.Addresses);
         //         Assert.True(mars.IsValid());
         //     }
@@ -91,7 +90,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         //     }
         // }
 
-        // [Fact]
+        // [Test]
         // [Ignore("https://github.com/richardschneider/net-ipfs-engine/issues/74")]
         // public async Task FindProvider()
         // {
@@ -102,7 +101,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         //     {
         //         var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
         //         var providers = await ipfs.Dht.FindProvidersAsync(folder, 1, null, cts.Token);
-        //         Assert.Equal(1, providers.Count());
+        //         Assert.AreEqual(1, providers.Count());
         //     }
         //     finally
         //     {

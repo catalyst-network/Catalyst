@@ -35,7 +35,7 @@ using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 {
@@ -62,10 +62,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
         public BroadcastObserverBaseTests()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
         }
 
-        [Fact]
+        [Test]
         public void OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
             var testScheduler = new TestScheduler();

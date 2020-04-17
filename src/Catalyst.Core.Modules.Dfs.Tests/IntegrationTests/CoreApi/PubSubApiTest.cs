@@ -31,8 +31,7 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using FluentAssertions;
 using Lib.P2P.PubSub;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
@@ -40,26 +39,26 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private IDfsService ipfs;
 
-        public PubSubApiTest(ITestOutputHelper output)
+        public PubSubApiTest()
         {
-            ipfs = TestDfs.GetTestDfs(output);
+            ipfs = TestDfs.GetTestDfs();
         }
         
-        [Fact]
+        [Test]
         public void Api_Exists()
         {
             Assert.NotNull(ipfs.PubSubApi);
         }
 
-        [Fact]
+        [Test]
         public void Peers_Unknown_Topic()
         {
             var topic = "net-ipfs-http-client-test-unknown" + Guid.NewGuid();
             var peers = ipfs.PubSubApi.PeersAsync(topic).Result.ToArray();
-            Assert.Equal(0, peers.Length);
+            Assert.AreEqual(0, peers.Length);
         }
 
-        [Fact]
+        [Test]
         public async Task Subscribed_Topics()
         {
             var topic = Guid.NewGuid().ToString();
@@ -81,7 +80,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 
         private volatile int _messageCount;
 
-        [Fact]
+        [Test]
         public async Task Subscribe()
         {
             _messageCount = 0;
@@ -94,7 +93,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await ipfs.PubSubApi.PublishAsync(topic, "hello world!", cs.Token);
 
                 await Task.Delay(100, cs.Token);
-                Assert.Equal(1, _messageCount);
+                Assert.AreEqual(1, _messageCount);
             }
             finally
             {
@@ -103,7 +102,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Subscribe_Mutiple_Messages()
         {
             _messageCount = 0;
@@ -120,7 +119,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 }
 
                 await Task.Delay(100, cs.Token);
-                Assert.Equal(messages.Length, _messageCount);
+                Assert.AreEqual(messages.Length, _messageCount);
             }
             finally
             {
@@ -129,7 +128,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Multiple_Subscribe_Mutiple_Messages()
         {
             _messageCount = 0;
@@ -149,7 +148,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 }
 
                 await Task.Delay(100, cs.Token);
-                Assert.Equal(messages.Length * 2, _messageCount);
+                Assert.AreEqual(messages.Length * 2, _messageCount);
             }
             finally
             {
@@ -160,7 +159,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 
         private volatile int _messageCount1;
 
-        [Fact]
+        [Test]
         public async Task Unsubscribe()
         {
             _messageCount1 = 0;
@@ -172,12 +171,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await ipfs.PubSubApi.SubscribeAsync(topic, msg => { Interlocked.Increment(ref _messageCount1); }, cs.Token);
                 await ipfs.PubSubApi.PublishAsync(topic, "hello world!", default);
                 await Task.Delay(100, default);
-                Assert.Equal(1, _messageCount1);
+                Assert.AreEqual(1, _messageCount1);
 
                 cs.Cancel();
                 await ipfs.PubSubApi.PublishAsync(topic, "hello world!!!", default);
                 await Task.Delay(100, default);
-                Assert.Equal(1, _messageCount1);
+                Assert.AreEqual(1, _messageCount1);
             }
             finally
             {
@@ -185,7 +184,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Subscribe_BinaryMessage()
         {
             var messages = new List<IPublishedMessage>();
@@ -199,8 +198,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await ipfs.PubSubApi.PublishAsync(topic, expected, cs.Token);
 
                 await Task.Delay(100, cs.Token);
-                Assert.Equal(1, messages.Count);
-                Assert.Equal(expected, messages[0].DataBytes);
+                Assert.AreEqual(1, messages.Count);
+                Assert.AreEqual(expected, messages[0].DataBytes);
             }
             finally
             {
@@ -209,7 +208,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Subscribe_StreamMessage()
         {
             var messages = new List<IPublishedMessage>();
@@ -224,8 +223,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await ipfs.PubSubApi.PublishAsync(topic, ms, cs.Token);
 
                 await Task.Delay(100, cs.Token);
-                Assert.Equal(1, messages.Count);
-                Assert.Equal(expected, messages[0].DataBytes);
+                Assert.AreEqual(1, messages.Count);
+                Assert.AreEqual(expected, messages[0].DataBytes);
             }
             finally
             {

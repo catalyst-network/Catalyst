@@ -24,61 +24,63 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using MultiFormats;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class BootstapApiTest
     {
-        private IDfsService ipfs;
-        private readonly MultiAddress somewhere = "/ip4/127.0.0.1/tcp/4009/ipfs/QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
+        private readonly IDfsService ipfs;
 
-        public BootstapApiTest(ITestOutputHelper output)
+        private readonly MultiAddress somewhere =
+            "/ip4/127.0.0.1/tcp/4009/ipfs/QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
+
+        public BootstapApiTest()
         {
-            ipfs = TestDfs.GetTestDfs(output);    
+            ipfs = TestDfs.GetTestDfs();    
         }
         
-        [Fact]
+        [Test]
         public async Task Add_Remove()
         {
             var addr = await ipfs.BootstrapApi.AddAsync(somewhere);
             Assert.NotNull(addr);
-            Assert.Equal(somewhere, addr);
+            Assert.AreEqual(somewhere, addr);
             var addrs = await ipfs.BootstrapApi.ListAsync();
             Assert.True(addrs.Any(a => a == somewhere));
 
             addr = await ipfs.BootstrapApi.RemoveAsync(somewhere);
             Assert.NotNull(addr);
-            Assert.Equal(somewhere, addr);
+            Assert.AreEqual(somewhere, addr);
             addrs = await ipfs.BootstrapApi.ListAsync();
             Assert.False(addrs.Any(a => a == somewhere));
         }
 
-        [Fact]
+        [Test]
         public async Task List()
         {
             var addrs = await ipfs.BootstrapApi.ListAsync();
             Assert.NotNull(addrs);
-            Assert.NotEqual(0, addrs.Count());
+            Assert.AreNotEqual(0, addrs.Count());
         }
 
-        [Fact]
+        [Test]
         public async Task Remove_All()
         {
             var original = await ipfs.BootstrapApi.ListAsync();
             await ipfs.BootstrapApi.RemoveAllAsync();
             var addrs = await ipfs.BootstrapApi.ListAsync();
-            Assert.Equal(0, addrs.Count());
+            Assert.AreEqual(0, addrs.Count());
             foreach (var addr in original)
             {
                 await ipfs.BootstrapApi.AddAsync(addr);
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Add_Defaults()
         {
             var original = await ipfs.BootstrapApi.ListAsync();
@@ -87,7 +89,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 await ipfs.BootstrapApi.AddDefaultsAsync();
                 var addrs = await ipfs.BootstrapApi.ListAsync();
-                Assert.NotEqual(0, addrs.Count());
+                Assert.AreNotEqual(0, addrs.Count());
             }
             finally
             {
@@ -99,7 +101,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Override_FactoryDefaults()
         {
             var original = ipfs.Options.Discovery.BootstrapPeers;
@@ -107,13 +109,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 ipfs.Options.Discovery.BootstrapPeers = new MultiAddress[0];
                 var addrs = await ipfs.BootstrapApi.ListAsync();
-                Assert.Equal(0, addrs.Count());
+                Assert.AreEqual(0, addrs.Count());
 
                 ipfs.Options.Discovery.BootstrapPeers = new[]
                     {somewhere};
                 addrs = await ipfs.BootstrapApi.ListAsync();
-                Assert.Equal(1, addrs.Count());
-                Assert.Equal(somewhere, addrs.First());
+                Assert.AreEqual(1, addrs.Count());
+                Assert.AreEqual(somewhere, addrs.First());
             }
             finally
             {

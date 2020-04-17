@@ -23,13 +23,13 @@
 
 using System.Security;
 using Catalyst.Core.Lib.Cryptography;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public class SecureStringExtensionsTest
     {
-        [Fact]
+        [Test]
         public void UseBytes()
         {
             var secret = new SecureString();
@@ -45,10 +45,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             
             secret.UseSecretBytes(bytes =>
             {
-                Assert.Equal(expected.Length, bytes.Length);
+                Assert.AreEqual(expected.Length, bytes.Length);
                 for (var i = 0; i < expected.Length; ++i)
                 {
-                    Assert.Equal(expected[i], (int) bytes[i]);
+                    Assert.AreEqual(expected[i], (int) bytes[i]);
                 }
             });
         }

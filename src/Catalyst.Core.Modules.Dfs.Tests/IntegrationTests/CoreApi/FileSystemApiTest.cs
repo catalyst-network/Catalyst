@@ -38,71 +38,68 @@ using ICSharpCode.SharpZipLib.Tar;
 using Lib.P2P;
 using Lib.P2P.Cryptography;
 using MultiFormats;
-using Xunit;
-using Xunit.Abstractions;
-using Xunit.Sdk;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class FileSystemApiTest
     {
-        private readonly ITestOutputHelper _testOutputHelper;
         private IDfsService ipfs;
 
-        public FileSystemApiTest(ITestOutputHelper output)
+        [SetUp]
+        public void Init()
         {
-            _testOutputHelper = output;
-            ipfs = TestDfs.GetTestDfs(output, null, "sha2-256");
+            ipfs = TestDfs.GetTestDfs(null, "sha2-256");
         }
         
-        [Fact]
+        [Test]
         public async Task AddText()
         {
             var node = (UnixFsNode) await ipfs.UnixFsApi.AddTextAsync("hello world");
-            Assert.Equal("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id);
-            Assert.Equal("", node.Name);
-            Assert.Equal(0, node.Links.Count());
+            Assert.AreEqual("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id.ToString());
+            Assert.AreEqual("", node.Name);
+            Assert.AreEqual(0, node.Links.Count());
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equal("hello world", text);
+            Assert.AreEqual("hello world", text);
 
             var actual = await ipfs.UnixFsApi.ListFileAsync(node.Id);
-            Assert.Equal(node.Id, actual.Id);
-            Assert.Equal(node.IsDirectory, actual.IsDirectory);
-            Assert.Equal(node.Links.Count(), actual.Links.Count());
-            Assert.Equal(node.Size, actual.Size);
+            Assert.AreEqual(node.Id, actual.Id);
+            Assert.AreEqual(node.IsDirectory, actual.IsDirectory);
+            Assert.AreEqual(node.Links.Count(), actual.Links.Count());
+            Assert.AreEqual(node.Size, actual.Size);
         }
 
-        [Fact]
+        [Test]
         public async Task AddEmptyText()
         {
             var node = (UnixFsNode) await ipfs.UnixFsApi.AddTextAsync("");
-            Assert.Equal("QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH", node.Id);
-            Assert.Equal("", node.Name);
-            Assert.Equal(0, node.Links.Count());
+            Assert.AreEqual("QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH", node.Id.ToString());
+            Assert.AreEqual("", node.Name);
+            Assert.AreEqual(0, node.Links.Count());
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equal("", text);
+            Assert.AreEqual("", text);
 
             var actual = await ipfs.UnixFsApi.ListFileAsync(node.Id);
-            Assert.Equal(node.Id, actual.Id);
-            Assert.Equal(node.IsDirectory, actual.IsDirectory);
-            Assert.Equal(node.Links.Count(), actual.Links.Count());
-            Assert.Equal(node.Size, actual.Size);
+            Assert.AreEqual(node.Id, actual.Id);
+            Assert.AreEqual(node.IsDirectory, actual.IsDirectory);
+            Assert.AreEqual(node.Links.Count(), actual.Links.Count());
+            Assert.AreEqual(node.Size, actual.Size);
         }
 
-        [Fact]
+        [Test]
         public async Task AddEmpty_Check_Object()
         {
             // see https://github.com/ipfs/js-ipfs-unixfs/pull/25
             var node = await ipfs.UnixFsApi.AddTextAsync("");
             var block = await ipfs.ObjectApi.GetAsync(node.Id);
             var expected = new byte[] {0x08, 0x02, 0x18, 0x00};
-            Assert.Equal(node.Id, block.Id);
-            Assert.Equal(expected, block.DataBytes);
+            Assert.AreEqual(node.Id, block.Id);
+            Assert.AreEqual(expected, block.DataBytes);
         }
 
-        [Fact]
+        [Test]
         public async Task AddDuplicateWithPin()
         {
             var options = new AddFileOptions
@@ -110,37 +107,37 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Pin = true
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equal("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id);
+            Assert.AreEqual("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id.ToString());
             var pins = await ipfs.PinApi.ListAsync();
             pins.ToArray().Should().Contain(node.Id);
 
             options.Pin = false;
             node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equal("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id);
-            Assert.Equal(0, node.Links.Count());
+            Assert.AreEqual("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id.ToString());
+            Assert.AreEqual(0, node.Links.Count());
             pins = await ipfs.PinApi.ListAsync();
             pins.ToArray().Should().NotContain(node.Id);
         }
 
-        [Fact]
+        [Test]
         public async Task Add_SizeChunking()
         {
             var options = new AddFileOptions {ChunkSize = 3, Pin = true};
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
             var links = node.Links.ToArray();
-            Assert.Equal("QmVVZXWrYzATQdsKWM4knbuH5dgHFmrRqW3nJfDgdWrBjn", node.Id);
-            Assert.Equal(false, node.IsDirectory);
-            Assert.Equal(4, links.Length);
-            Assert.Equal("QmevnC4UDUWzJYAQtUSQw4ekUdqDqwcKothjcobE7byeb6", links[0].Id);
-            Assert.Equal("QmTdBogNFkzUTSnEBQkWzJfQoiWbckLrTFVDHFRKFf6dcN", links[1].Id);
-            Assert.Equal("QmPdmF1n4di6UwsLgW96qtTXUsPkCLN4LycjEUdH9977d6", links[2].Id);
-            Assert.Equal("QmXh5UucsqF8XXM8UYQK9fHXsthSEfi78kewr8ttpPaLRE", links[3].Id);
+            Assert.AreEqual("QmVVZXWrYzATQdsKWM4knbuH5dgHFmrRqW3nJfDgdWrBjn", node.Id.ToString());
+            Assert.AreEqual(false, node.IsDirectory);
+            Assert.AreEqual(4, links.Length);
+            Assert.AreEqual("QmevnC4UDUWzJYAQtUSQw4ekUdqDqwcKothjcobE7byeb6", links[0].Id.ToString());
+            Assert.AreEqual("QmTdBogNFkzUTSnEBQkWzJfQoiWbckLrTFVDHFRKFf6dcN", links[1].Id.ToString());
+            Assert.AreEqual("QmPdmF1n4di6UwsLgW96qtTXUsPkCLN4LycjEUdH9977d6", links[2].Id.ToString());
+            Assert.AreEqual("QmXh5UucsqF8XXM8UYQK9fHXsthSEfi78kewr8ttpPaLRE", links[3].Id.ToString());
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equal("hello world", text);
+            Assert.AreEqual("hello world", text);
         }
 
-        [Fact]
+        [Test]
         public async Task StreamBehaviour()
         {
             var options = new AddFileOptions
@@ -150,13 +147,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
             var stream = await ipfs.UnixFsApi.ReadFileAsync(node.Id);
-            Assert.Equal(11, stream.Length);
+            Assert.AreEqual(11, stream.Length);
             Assert.True(stream.CanRead);
             Assert.False(stream.CanWrite);
             Assert.True(stream.CanSeek);
         }
 
-        [Fact]
+        [Test]
         public async Task Add_HashAlgorithm()
         {
             var options = new AddFileOptions
@@ -165,13 +162,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 RawLeaves = true
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equal("bafk2bzaceaswza5ss4iu2ia3galz6pyo6dfm5f4dmiw2lf2de22dmf4k533ba", node.Id);
+            Assert.AreEqual("bafk2bzaceaswza5ss4iu2ia3galz6pyo6dfm5f4dmiw2lf2de22dmf4k533ba", node.Id.ToString());
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equal("hello world", text);
+            Assert.AreEqual("hello world", text);
         }
 
-        [Fact]
+        [Test]
         public void AddFile()
         {
             var path = Path.GetTempFileName();
@@ -179,9 +176,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             try
             {
                 var node = (UnixFsNode) ipfs.UnixFsApi.AddFileAsync(path).Result;
-                Assert.Equal("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id);
-                Assert.Equal(0, node.Links.Count());
-                Assert.Equal(Path.GetFileName(path), node.Name);
+                Assert.AreEqual("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id.ToString());
+                Assert.AreEqual(0, node.Links.Count());
+                Assert.AreEqual(Path.GetFileName(path), node.Name);
             }
             finally
             {
@@ -189,7 +186,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public void AddFile_CidEncoding()
         {
             var path = Path.GetTempFileName();
@@ -201,12 +198,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     Encoding = "base32"
                 };
                 var node = ipfs.UnixFsApi.AddFileAsync(path, options).Result;
-                Assert.Equal("base32", node.Id.Encoding);
-                Assert.Equal(1, node.Id.Version);
-                Assert.Equal(0, node.Links.Count());
+                Assert.AreEqual("base32", node.Id.Encoding);
+                Assert.AreEqual(1, node.Id.Version);
+                Assert.AreEqual(0, node.Links.Count());
 
                 var text = ipfs.UnixFsApi.ReadAllTextAsync(node.Id).Result;
-                Assert.Equal("hello world", text);
+                Assert.AreEqual("hello world", text);
             }
             finally
             {
@@ -214,7 +211,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public void AddFile_Large()
         {
             AddFile(); // warm up
@@ -227,7 +224,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             
             // _testOutputHelper.WriteLine("Add file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
 
-            Assert.Equal("QmeZkAUfUFPq5YWGBan2ZYNd9k59DD1xW62pGJrU3C6JRo", node.Id);
+            Assert.AreEqual("QmeZkAUfUFPq5YWGBan2ZYNd9k59DD1xW62pGJrU3C6JRo", node.Id.ToString());
 
             var k = 8 * 1024;
             var buffer1 = new byte[k];
@@ -240,7 +237,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 {
                     var n1 = localStream.Read(buffer1, 0, k);
                     var n2 = ipfsStream.Read(buffer2, 0, k);
-                    Assert.Equal(n1, n2);
+                    Assert.AreEqual(n1, n2);
                     if (n1 == 0)
                     {
                         break;
@@ -250,7 +247,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     {
                         if (buffer1[i] != buffer2[i])
                         {
-                            throw new XunitException("data not the same");
+                            throw new Exception("data not the same");
                         }
                     }
                 }
@@ -262,7 +259,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         }
 
         /// <seealso href="https://github.com/richardschneider/net-ipfs-engine/issues/125"/>
-        [Fact]
+        [Test]
         public void AddFile_Larger()
         {
             AddFile(); // warm up
@@ -272,9 +269,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             stopWatch.Start();
             var node = ipfs.UnixFsApi.AddFileAsync(path).Result;
             stopWatch.Stop();
-            _testOutputHelper.WriteLine("Add file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
+            TestContext.WriteLine("Add file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
 
-            Assert.Equal("QmeFhfB4g2GFbxYb7usApWzq8uC1vmuxJajFpiJiT5zLoy", node.Id);
+            Assert.AreEqual("QmeFhfB4g2GFbxYb7usApWzq8uC1vmuxJajFpiJiT5zLoy", node.Id.ToString());
 
             const int k = 8 * 1024;
             var buffer1 = new byte[k];
@@ -287,7 +284,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 {
                     var n1 = localStream.Read(buffer1, 0, k);
                     var n2 = ipfsStream.Read(buffer2, 0, k);
-                    Assert.Equal(n1, n2);
+                    Assert.AreEqual(n1, n2);
                     if (n1 == 0)
                     {
                         break;
@@ -297,17 +294,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     {
                         if (buffer1[i] != buffer2[i])
                         {
-                            throw new XunitException("data not the same");
+                            throw new Exception("data not the same");
                         }
                     }
                 }
             }
 
             stopWatch.Stop();
-            _testOutputHelper.WriteLine("Readfile file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
+            TestContext.WriteLine("Readfile file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
         }
 
-        [Fact]
+        [Test]
         public async Task AddFile_Wrap()
         {
             const string path = "hello.txt";
@@ -319,12 +316,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     Wrap = true
                 };
                 var node = await ipfs.UnixFsApi.AddFileAsync(path, options);
-                Assert.Equal("QmNxvA5bwvPGgMXbmtyhxA1cKFdvQXnsGnZLCGor3AzYxJ", node.Id);
-                Assert.Equal(true, node.IsDirectory);
-                Assert.Equal(1, node.Links.Count());
-                Assert.Equal("hello.txt", node.Links.First().Name);
-                Assert.Equal("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Links.First().Id);
-                Assert.Equal(19, node.Links.First().Size);
+                Assert.AreEqual("QmNxvA5bwvPGgMXbmtyhxA1cKFdvQXnsGnZLCGor3AzYxJ", node.Id.ToString());
+                Assert.AreEqual(true, node.IsDirectory);
+                Assert.AreEqual(1, node.Links.Count());
+                Assert.AreEqual("hello.txt", node.Links.First().Name);
+                Assert.AreEqual("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Links.First().Id.ToString());
+                Assert.AreEqual(19, node.Links.First().Size);
             }
             finally
             {
@@ -332,7 +329,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Add_Raw()
         {
             var options = new AddFileOptions
@@ -340,16 +337,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 RawLeaves = true
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equal("bafkreifzjut3te2nhyekklss27nh3k72ysco7y32koao5eei66wof36n5e", node.Id);
-            Assert.Equal(11, node.Size);
-            Assert.Equal(0, node.Links.Count());
-            Assert.Equal(false, node.IsDirectory);
+            Assert.AreEqual("bafkreifzjut3te2nhyekklss27nh3k72ysco7y32koao5eei66wof36n5e", node.Id.ToString());
+            Assert.AreEqual(11, node.Size);
+            Assert.AreEqual(0, node.Links.Count());
+            Assert.AreEqual(false, node.IsDirectory);
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equal("hello world", text);
+            Assert.AreEqual("hello world", text);
         }
 
-        [Fact]
+        [Test]
         public async Task Add_Inline()
         {
             var original = ipfs.Options.Block.AllowInlineCid;
@@ -358,14 +355,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 ipfs.Options.Block.AllowInlineCid = true;
 
                 var node = await ipfs.UnixFsApi.AddTextAsync("hiya");
-                Assert.Equal(1, node.Id.Version);
+                Assert.AreEqual(1, node.Id.Version);
                 Assert.True(node.Id.Hash.IsIdentityHash);
-                Assert.Equal(4, node.Size);
-                Assert.Equal(0, node.Links.Count());
-                Assert.Equal(false, node.IsDirectory);
-                Assert.Equal("bafyaadakbieaeeqenbuxsyiyaq", node.Id.Encode());
+                Assert.AreEqual(4, node.Size);
+                Assert.AreEqual(0, node.Links.Count());
+                Assert.AreEqual(false, node.IsDirectory);
+                Assert.AreEqual("bafyaadakbieaeeqenbuxsyiyaq", node.Id.Encode());
                 var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-                Assert.Equal("hiya", text);
+                Assert.AreEqual("hiya", text);
             }
             finally
             {
@@ -373,7 +370,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Add_RawAndChunked()
         {
             var options = new AddFileOptions
@@ -383,19 +380,19 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
             var links = node.Links.ToArray();
-            Assert.Equal("QmUuooB6zEhMmMaBvMhsMaUzar5gs5KwtVSFqG4C1Qhyhs", node.Id);
-            Assert.Equal(false, node.IsDirectory);
-            Assert.Equal(4, links.Length);
-            Assert.Equal("bafkreigwvapses57f56cfow5xvoua4yowigpwcz5otqqzk3bpcbbjswowe", links[0].Id);
-            Assert.Equal("bafkreiew3cvfrp2ijn4qokcp5fqtoknnmr6azhzxovn6b3ruguhoubkm54", links[1].Id);
-            Assert.Equal("bafkreibsybcn72tquh2l5zpim2bba4d2kfwcbpzuspdyv2breaq5efo7tq", links[2].Id);
-            Assert.Equal("bafkreihfuch72plvbhdg46lef3n5zwhnrcjgtjywjryyv7ffieyedccchu", links[3].Id);
+            Assert.AreEqual("QmUuooB6zEhMmMaBvMhsMaUzar5gs5KwtVSFqG4C1Qhyhs", node.Id.ToString());
+            Assert.AreEqual(false, node.IsDirectory);
+            Assert.AreEqual(4, links.Length);
+            Assert.AreEqual("bafkreigwvapses57f56cfow5xvoua4yowigpwcz5otqqzk3bpcbbjswowe", links[0].Id.ToString());
+            Assert.AreEqual("bafkreiew3cvfrp2ijn4qokcp5fqtoknnmr6azhzxovn6b3ruguhoubkm54", links[1].Id.ToString());
+            Assert.AreEqual("bafkreibsybcn72tquh2l5zpim2bba4d2kfwcbpzuspdyv2breaq5efo7tq", links[2].Id.ToString());
+            Assert.AreEqual("bafkreihfuch72plvbhdg46lef3n5zwhnrcjgtjywjryyv7ffieyedccchu", links[3].Id.ToString());
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equal("hello world", text);
+            Assert.AreEqual("hello world", text);
         }
 
-        [Fact]
+        [Test]
         public async Task Add_Protected()
         {
             var options = new AddFileOptions
@@ -403,15 +400,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 ProtectionKey = "self"
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equal("cms", node.Id.ContentType);
-            Assert.Equal(0, node.Links.Count());
-            Assert.Equal(false, node.IsDirectory);
+            Assert.AreEqual("cms", node.Id.ContentType);
+            Assert.AreEqual(0, node.Links.Count());
+            Assert.AreEqual(false, node.IsDirectory);
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equal("hello world", text);
+            Assert.AreEqual("hello world", text);
         }
 
-        [Fact]
+        [Test]
         public async Task Add_Protected_Chunked()
         {
             var options = new AddFileOptions
@@ -420,14 +417,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 ChunkSize = 3
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equal(4, node.Links.Count());
-            Assert.Equal(false, node.IsDirectory);
+            Assert.AreEqual(4, node.Links.Count());
+            Assert.AreEqual(false, node.IsDirectory);
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equal("hello world", text);
+            Assert.AreEqual("hello world", text);
         }
 
-        [Fact]
+        [Test]
         public async Task Add_OnlyHash()
         {
             var nodes = new[]
@@ -450,11 +447,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
             var links = node.Links.ToArray();
-            Assert.Equal(nodes[0], node.Id);
-            Assert.Equal(nodes.Length - 1, links.Length);
+            Assert.AreEqual(nodes[0], node.Id.ToString());
+            Assert.AreEqual(nodes.Length - 1, links.Length);
             for (var i = 0; i < links.Length; ++i)
             {
-                Assert.Equal(nodes[i + 1], links[i].Id);
+                Assert.AreEqual(nodes[i + 1], links[i].Id.ToString());
             }
 
             // TODO: Need a method to test that the CId is not held locally.
@@ -464,7 +461,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             //}
         }
 
-        [Fact]
+        [Test]
         public async Task ReadWithOffset()
         {
             const string text = "hello world";
@@ -481,13 +478,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     using var reader = new StreamReader(data);
                     {
                         var readData = reader.ReadToEnd();
-                        Assert.Equal(text.Substring(offset), readData);
+                        Assert.AreEqual(text.Substring(offset), readData);
                     }
                 }
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Read_RawWithLength()
         {
             const string text = "hello world";
@@ -506,14 +503,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                         using var reader = new StreamReader(data);
                         {
                             var readData = reader.ReadToEnd();
-                            Assert.Equal(text.Substring(offset, Math.Min(11 - offset, length)), readData);
+                            Assert.AreEqual(text.Substring(offset, Math.Min(11 - offset, length)), readData);
                         }
                     }
                 }
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Read_ChunkedWithLength()
         {
             const string text = "hello world";
@@ -530,13 +527,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     using var reader = new StreamReader(data);
                     {
                         var readData = reader.ReadToEnd();
-                        Assert.Equal(text.Substring(0, Math.Min(11, length)), readData);
+                        Assert.AreEqual(text.Substring(0, Math.Min(11, length)), readData);
                     }
                 }
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Read_ProtectedWithLength()
         {
             const string text = "hello world";
@@ -555,14 +552,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                         using (var reader = new StreamReader(data))
                         {
                             var readData = reader.ReadToEnd();
-                            Assert.Equal(text.Substring(offset, Math.Min(11 - offset, length)), readData);
+                            Assert.AreEqual(text.Substring(offset, Math.Min(11 - offset, length)), readData);
                         }
                     }
                 }
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Read_ProtectedChunkedWithLength()
         {
             const string text = "hello world";
@@ -582,14 +579,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                         using (var reader = new StreamReader(data))
                         {
                             var readData = reader.ReadToEnd();
-                            Assert.Equal(text.Substring(offset, Math.Min(11 - offset, length)), readData);
+                            Assert.AreEqual(text.Substring(offset, Math.Min(11 - offset, length)), readData);
                         }
                     }
                 }
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Read_ProtectedMissingKey()
         {
             const string text = "hello world";
@@ -598,7 +595,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var options = new AddFileOptions {ProtectionKey = key.Name};
                 var node = await ipfs.UnixFsApi.AddTextAsync(text, options);
-                Assert.Equal(text, await ipfs.UnixFsApi.ReadAllTextAsync(node.Id));
+                Assert.AreEqual(text, await ipfs.UnixFsApi.ReadAllTextAsync(node.Id));
 
                 await ipfs.KeyApi.RemoveAsync(key.Name);
                 ExceptionAssert.Throws<KeyNotFoundException>(() =>
@@ -612,7 +609,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task AddFile_WithProgress()
         {
             var path = Path.GetTempFileName();
@@ -636,8 +633,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     await Task.Delay(10);
                 }
 
-                Assert.Equal(11UL, lastProgress.Bytes);
-                Assert.Equal(Path.GetFileName(path), lastProgress.Name);
+                Assert.AreEqual(11UL, lastProgress.Bytes);
+                Assert.AreEqual(Path.GetFileName(path), lastProgress.Name);
             }
             finally
             {
@@ -645,7 +642,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public void AddDirectory()
         {
             var temp = MakeTemp();
@@ -655,15 +652,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Assert.True(dir.IsDirectory);
 
                 var files = dir.Links.ToArray();
-                Assert.Equal(2, files.Length);
-                Assert.Equal("alpha.txt", files[0].Name);
-                Assert.Equal("beta.txt", files[1].Name);
+                Assert.AreEqual(2, files.Length);
+                Assert.AreEqual("alpha.txt", files[0].Name);
+                Assert.AreEqual("beta.txt", files[1].Name);
 
-                Assert.Equal("alpha", ipfs.UnixFsApi.ReadAllTextAsync(files[0].Id).Result);
-                Assert.Equal("beta", ipfs.UnixFsApi.ReadAllTextAsync(files[1].Id).Result);
+                Assert.AreEqual("alpha", ipfs.UnixFsApi.ReadAllTextAsync(files[0].Id).Result);
+                Assert.AreEqual("beta", ipfs.UnixFsApi.ReadAllTextAsync(files[1].Id).Result);
 
-                Assert.Equal("alpha", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/alpha.txt").Result);
-                Assert.Equal("beta", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/beta.txt").Result);
+                Assert.AreEqual("alpha", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/alpha.txt").Result);
+                Assert.AreEqual("beta", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/beta.txt").Result);
             }
             finally
             {
@@ -671,7 +668,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public void AddDirectoryRecursive()
         {
             var temp = MakeTemp();
@@ -681,30 +678,30 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Assert.True(dir.IsDirectory);
 
                 var files = dir.Links.ToArray();
-                Assert.Equal(3, files.Length);
-                Assert.Equal("alpha.txt", files[0].Name);
-                Assert.Equal("beta.txt", files[1].Name);
-                Assert.Equal("x", files[2].Name);
-                Assert.NotEqual(0, files[0].Size);
-                Assert.NotEqual(0, files[1].Size);
+                Assert.AreEqual(3, files.Length);
+                Assert.AreEqual("alpha.txt", files[0].Name);
+                Assert.AreEqual("beta.txt", files[1].Name);
+                Assert.AreEqual("x", files[2].Name);
+                Assert.AreNotEqual(0, files[0].Size);
+                Assert.AreNotEqual(0, files[1].Size);
 
                 var rootFiles = ipfs.UnixFsApi.ListFileAsync(dir.Id).Result.Links.ToArray();
-                Assert.Equal(3, rootFiles.Length);
-                Assert.Equal("alpha.txt", rootFiles[0].Name);
-                Assert.Equal("beta.txt", rootFiles[1].Name);
-                Assert.Equal("x", rootFiles[2].Name);
+                Assert.AreEqual(3, rootFiles.Length);
+                Assert.AreEqual("alpha.txt", rootFiles[0].Name);
+                Assert.AreEqual("beta.txt", rootFiles[1].Name);
+                Assert.AreEqual("x", rootFiles[2].Name);
 
                 var xfiles = ipfs.UnixFsApi.ListFileAsync(rootFiles[2].Id).Result.Links.ToArray();
-                Assert.Equal(2, xfiles.Length);
-                Assert.Equal("x.txt", xfiles[0].Name);
-                Assert.Equal("y", xfiles[1].Name);
+                Assert.AreEqual(2, xfiles.Length);
+                Assert.AreEqual("x.txt", xfiles[0].Name);
+                Assert.AreEqual("y", xfiles[1].Name);
 
                 var yfiles = ipfs.UnixFsApi.ListFileAsync(xfiles[1].Id).Result.Links.ToArray();
-                Assert.Equal(1, yfiles.Length);
-                Assert.Equal("y.txt", yfiles[0].Name);
+                Assert.AreEqual(1, yfiles.Length);
+                Assert.AreEqual("y.txt", yfiles[0].Name);
 
-                Assert.Equal("x", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/x/x.txt").Result);
-                Assert.Equal("y", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/x/y/y.txt").Result);
+                Assert.AreEqual("x", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/x/x.txt").Result);
+                Assert.AreEqual("y", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/x/y/y.txt").Result);
             }
             finally
             {
@@ -712,7 +709,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public void AddDirectory_WithHashAlgorithm()
         {
             const string alg = "keccak-512";
@@ -722,11 +719,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var dir = ipfs.UnixFsApi.AddDirectoryAsync(temp, false, options).Result;
                 Assert.True(dir.IsDirectory);
-                Assert.Equal(alg, dir.Id.Hash.Algorithm.Name);
+                Assert.AreEqual(alg, dir.Id.Hash.Algorithm.Name);
 
                 foreach (var link in dir.Links)
                 {
-                    Assert.Equal(alg, link.Id.Hash.Algorithm.Name);
+                    Assert.AreEqual(alg, link.Id.Hash.Algorithm.Name);
                 }
             }
             finally
@@ -735,7 +732,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public void AddDirectory_WithCidEncoding()
         {
             var encoding = "base32z";
@@ -745,11 +742,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var dir = ipfs.UnixFsApi.AddDirectoryAsync(temp, false, options).Result;
                 Assert.True(dir.IsDirectory);
-                Assert.Equal(encoding, dir.Id.Encoding);
+                Assert.AreEqual(encoding, dir.Id.Encoding);
 
                 foreach (var link in dir.Links)
                 {
-                    Assert.Equal(encoding, link.Id.Encoding);
+                    Assert.AreEqual(encoding, link.Id.Encoding);
                 }
             }
             finally
@@ -758,7 +755,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task AddDirectoryRecursive_ObjectLinks()
         {
             var temp = MakeTemp();
@@ -777,13 +774,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     cid = i < allLinks.Count ? allLinks[i++].Id : null;
                 }
 
-                Assert.Equal(6, allLinks.Count);
-                Assert.Equal("alpha.txt", allLinks[0].Name);
-                Assert.Equal("beta.txt", allLinks[1].Name);
-                Assert.Equal("x", allLinks[2].Name);
-                Assert.Equal("x.txt", allLinks[3].Name);
-                Assert.Equal("y", allLinks[4].Name);
-                Assert.Equal("y.txt", allLinks[5].Name);
+                Assert.AreEqual(6, allLinks.Count);
+                Assert.AreEqual("alpha.txt", allLinks[0].Name);
+                Assert.AreEqual("beta.txt", allLinks[1].Name);
+                Assert.AreEqual("x", allLinks[2].Name);
+                Assert.AreEqual("x.txt", allLinks[3].Name);
+                Assert.AreEqual("y", allLinks[4].Name);
+                Assert.AreEqual("y.txt", allLinks[5].Name);
             }
             finally
             {
@@ -791,7 +788,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        // [Fact]
+        // [Test]
         // [Ignore("https://github.com/richardschneider/net-ipfs-engine/issues/74")]
         // public async Task ReadTextFromNetwork()
         // {
@@ -813,14 +810,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         //     }
         // }
 
-        [Fact]
+        [Test]
         public async Task Read_From_OtherNode()
         {
-            using (var a = TestDfs.GetTestDfs(_testOutputHelper))
+            using (var a = TestDfs.GetTestDfs())
             {
-                using (var b = TestDfs.GetTestDfs(_testOutputHelper))
+                using (var b = TestDfs.GetTestDfs())
                 {
-                    using (var c = TestDfs.GetTestDfs(_testOutputHelper))
+                    using (var c = TestDfs.GetTestDfs())
                     {
                         var psk = new PreSharedKey().Generate();
 
@@ -834,7 +831,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                         {
                             b.LocalPeer.Addresses.First()
                         };
-                        _testOutputHelper.WriteLine($"B is {b.LocalPeer}");
+                        TestContext.WriteLine($"B is {b.LocalPeer}");
 
                         // Node that has the content.
                         c.Options.Discovery.DisableMdns = true;
@@ -843,7 +840,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                         c.Options.Discovery.BootstrapPeers = bootstrapPeers;
                         await c.StartAsync();
                         await c.SwarmApi.ConnectAsync(bootstrapPeers[0]);
-                        _testOutputHelper.WriteLine($"C is {c.LocalPeer}");
+                        TestContext.WriteLine($"C is {c.LocalPeer}");
 
                         var fsn = await c.UnixFsApi.AddTextAsync("some content");
                         var cid = fsn.Id;
@@ -854,16 +851,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                         a.Options.Swarm.PrivateNetworkKey = psk;
                         a.Options.Discovery.BootstrapPeers = bootstrapPeers;
                         await a.StartAsync();
-                        _testOutputHelper.WriteLine($"A is {a.LocalPeer}");
+                        TestContext.WriteLine($"A is {a.LocalPeer}");
                         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
                         var content = await a.UnixFsApi.ReadAllTextAsync(cid, cts.Token);
-                        Assert.Equal("some content", content);
+                        Assert.AreEqual("some content", content);
                     }
                 }
             }
         }
 
-        [Fact]
+        [Test]
         public async Task GetTar()
         {
             var temp = MakeTemp();
@@ -878,13 +875,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 archive.ProgressMessageEvent += (a, e, m) => { files.Add(e.Name); };
                 archive.ListContents();
 
-                Assert.Equal($"{dirid}", files[0]);
-                Assert.Equal($"{dirid}/alpha.txt", files[1]);
-                Assert.Equal($"{dirid}/beta.txt", files[2]);
-                Assert.Equal($"{dirid}/x", files[3]);
-                Assert.Equal($"{dirid}/x/x.txt", files[4]);
-                Assert.Equal($"{dirid}/x/y", files[5]);
-                Assert.Equal($"{dirid}/x/y/y.txt", files[6]);
+                Assert.AreEqual($"{dirid}", files[0]);
+                Assert.AreEqual($"{dirid}/alpha.txt", files[1]);
+                Assert.AreEqual($"{dirid}/beta.txt", files[2]);
+                Assert.AreEqual($"{dirid}/x", files[3]);
+                Assert.AreEqual($"{dirid}/x/x.txt", files[4]);
+                Assert.AreEqual($"{dirid}/x/y", files[5]);
+                Assert.AreEqual($"{dirid}/x/y/y.txt", files[6]);
             }
             finally
             {
@@ -892,7 +889,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task GetTar_RawLeaves()
         {
             var temp = MakeTemp();
@@ -911,13 +908,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 archive.ProgressMessageEvent += (a, e, m) => { files.Add(e.Name); };
                 archive.ListContents();
 
-                Assert.Equal($"{dirid}", files[0]);
-                Assert.Equal($"{dirid}/alpha.txt", files[1]);
-                Assert.Equal($"{dirid}/beta.txt", files[2]);
-                Assert.Equal($"{dirid}/x", files[3]);
-                Assert.Equal($"{dirid}/x/x.txt", files[4]);
-                Assert.Equal($"{dirid}/x/y", files[5]);
-                Assert.Equal($"{dirid}/x/y/y.txt", files[6]);
+                Assert.AreEqual($"{dirid}", files[0]);
+                Assert.AreEqual($"{dirid}/alpha.txt", files[1]);
+                Assert.AreEqual($"{dirid}/beta.txt", files[2]);
+                Assert.AreEqual($"{dirid}/x", files[3]);
+                Assert.AreEqual($"{dirid}/x/x.txt", files[4]);
+                Assert.AreEqual($"{dirid}/x/y", files[5]);
+                Assert.AreEqual($"{dirid}/x/y/y.txt", files[6]);
             }
             finally
             {
@@ -925,7 +922,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task GetTar_EmptyDirectory()
         {
             var temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -936,7 +933,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 var _ = dir.Id.Encode();
 
                 var tar = await ipfs.UnixFsApi.GetAsync(dir.Id);
-                Assert.Equal(3 * 512, tar.Length);
+                Assert.AreEqual(3 * 512, tar.Length);
             }
             finally
             {
@@ -944,22 +941,22 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             }
         }
 
-        [Fact]
+        [Test]
         public async Task Isssue108()
         {
             var options = new AddFileOptions
             {
-                Hash = "blake2b-256",
+                Hash = "keccak-256",
                 RawLeaves = true
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
             var other = await ipfs.UnixFsApi.ListFileAsync(node.Id);
-            Assert.Equal(node.Id, other.Id);
-            Assert.Equal(node.IsDirectory, other.IsDirectory);
-            Assert.Equal(node.Size, other.Size);
+            Assert.AreEqual(node.Id, other.Id);
+            Assert.AreEqual(node.IsDirectory, other.IsDirectory);
+            Assert.AreEqual(node.Size, other.Size);
         }
 
-        [Fact]
+        [Test]
         public async Task Read_SameFile_DifferentCids()
         {
             const string text = "\"hello world\" \r\n";
@@ -987,7 +984,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 using (var cts = new CancellationTokenSource(3000))
                 {
                     var got = await ipfs.UnixFsApi.ReadAllTextAsync(cid, cts.Token);
-                    Assert.Equal(text, got);
+                    Assert.AreEqual(text, got);
                 }
             }
         }

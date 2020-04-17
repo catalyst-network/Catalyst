@@ -28,7 +28,7 @@ using System.Linq.Expressions;
 using FluentAssertions;
 using FluentAssertions.Collections;
 using FluentAssertions.Execution;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.TestUtils
 {
@@ -63,7 +63,7 @@ namespace Catalyst.TestUtils
                 return new AndConstraint<GenericCollectionAssertions<T>>(constraint);
             }
 
-            throw new AssertionFailedException(string.Format(errorMessage, string.Join(",", enumerable)));
+            throw new AssertionException(string.Format(errorMessage, string.Join(",", enumerable)));
         }
 
         public static AndConstraint<GenericCollectionAssertions<T>> NotBeInDescendingOrder<T, TSelector>(this GenericCollectionAssertions<T> constraint,
@@ -91,20 +91,21 @@ namespace Catalyst.TestUtils
             internal string StringValue { get; }
         }
 
-        private readonly StringWrapper[] _stringsInAscendingOrder;
-        private readonly IEnumerable<StringWrapper> _stringsInDescendingOrder;
-        private readonly IEnumerable<StringWrapper> _stringsInRandomOrder;
+        private StringWrapper[] _stringsInAscendingOrder;
+        private IEnumerable<StringWrapper> _stringsInDescendingOrder;
+        private IEnumerable<StringWrapper> _stringsInRandomOrder;
 
-        public FluentAssertionsExtensionsTests()
+        [SetUp]
+        public void Init()
         {
-            _stringsInAscendingOrder = new[] {"A", "a", "b", "d", "r", "Z"}
-               .Select(x => new StringWrapper(x)).ToArray();
+            _stringsInAscendingOrder = new[] { "A", "a", "b", "d", "r", "Z" }
+              .Select(x => new StringWrapper(x)).ToArray();
             _stringsInDescendingOrder = _stringsInAscendingOrder.Reverse();
-            _stringsInRandomOrder = new[] {"A", "a", "Z", "b", "r", "d"}
+            _stringsInRandomOrder = new[] { "A", "a", "Z", "b", "r", "d" }
                .Select(x => new StringWrapper(x));
         }
 
-        [Fact]
+        [Test]
         public void NotBeInDescendingOrder_should_only_throw_when_in_descending_order()
         {
             _stringsInAscendingOrder.Should()
@@ -113,23 +114,23 @@ namespace Catalyst.TestUtils
                .NotBeInDescendingOrder(x => x.StringValue, StringComparer.InvariantCultureIgnoreCase);
             new Action(() => _stringsInDescendingOrder.Should()
                    .NotBeInDescendingOrder(x => x.StringValue, StringComparer.InvariantCultureIgnoreCase))
-               .Should().Throw<AssertionFailedException>();
+               .Should().Throw<AssertionException>();
         }
 
-        [Fact]
+        [Test]
         public void NotBeInDescendingOrder_should_use_the_passed_in_comparer()
         {
             new Action(() => _stringsInDescendingOrder.Should()
                    .NotBeInDescendingOrder(x => x.StringValue, 
                         StringComparer.InvariantCultureIgnoreCase))
-               .Should().Throw<AssertionFailedException>();
+               .Should().Throw<AssertionException>();
 
             _stringsInDescendingOrder.Should()
                .NotBeInDescendingOrder(x => x.StringValue, 
                     StringComparer.InvariantCulture);
         }
 
-        [Fact]
+        [Test]
         public void NotBeInAscendingOrder_should_only_throw_when_in_ascending_order()
         {
             _stringsInDescendingOrder.Should()
@@ -138,31 +139,19 @@ namespace Catalyst.TestUtils
                .NotBeInAscendingOrder(x => x.StringValue, StringComparer.InvariantCultureIgnoreCase);
             new Action(() => _stringsInAscendingOrder.Should()
                    .NotBeInAscendingOrder(x => x.StringValue, StringComparer.InvariantCultureIgnoreCase))
-               .Should().Throw<AssertionFailedException>();
+               .Should().Throw<AssertionException>();
         }
 
-        [Fact]
+        [Test]
         public void NotBeInAscendingOrder_should_use_the_passed_in_comparer()
         {
             new Action(() => _stringsInAscendingOrder.Should()
                    .NotBeInAscendingOrder(x => x.StringValue, 
                         StringComparer.InvariantCultureIgnoreCase))
-               .Should().Throw<AssertionFailedException>();
+               .Should().Throw<AssertionException>();
 
             _stringsInAscendingOrder.Should()
                .NotBeInAscendingOrder(x => x.StringValue, 
-                    StringComparer.InvariantCulture);
-        }
-
-        [Fact]
-        public void NotBeIn_ascending_or_descending_Order_should_be_true_on_empty()
-        {
-            new List<StringWrapper>().Should()
-               .NotBeInAscendingOrder(x => x.StringValue,
-                    StringComparer.InvariantCulture);
-
-            new List<StringWrapper>().Should()
-               .NotBeInDescendingOrder(x => x.StringValue,
                     StringComparer.InvariantCulture);
         }
     }

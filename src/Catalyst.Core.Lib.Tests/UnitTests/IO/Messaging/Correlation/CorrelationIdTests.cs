@@ -24,13 +24,13 @@
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
 {
     public class CorrelationIdTests
     {
-        [Fact]
+        [Test]
         public void CorrelationId_Be_Equal_When_Ids_Are_Equal()
         {
             var baseBytes = ByteUtil.GenerateRandomByteArray(CorrelationId.GuidByteLength);
@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             (id1 == id2).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void CorrelationId_Not_Be_Equal_When_Ids_Are_Not_Equal()
         {
             var baseBytes = ByteUtil.GenerateRandomByteArray(CorrelationId.GuidByteLength);
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             (id1 == id3).Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void ToString_Should_Be_The_Same_As_Guid_ToString()
         {
             var baseBytes = ByteUtil.GenerateRandomByteArray(CorrelationId.GuidByteLength);

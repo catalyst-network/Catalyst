@@ -23,7 +23,7 @@
 
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 /// <summary>
 ///     This class is only here to fix this issue
@@ -36,23 +36,23 @@ using Xunit;
 /// </summary>
 public class XunitTraitsRegister
 {
-    [Fact]
-    [Trait(Traits.TestType, Traits.IntegrationTest)]
+    [Test]
+    [Property(Traits.TestType, Traits.IntegrationTest)]
     public void IntegrationTest() { true.Should().BeTrue(); }
 
-    [Fact]
-    [Trait(Traits.TestType, Traits.EmbeddedChannelTest)]
+    [Test]
+    [Property(Traits.TestType, Traits.EmbeddedChannelTest)]
     public void EmbeddedChannelTest() { true.Should().BeTrue(); }
 
-    [Fact]
-    [Trait(Traits.TestType, Traits.E2ECosmosDb)]
+    [Test]
+    [Property(Traits.TestType, Traits.E2ECosmosDb)]
     public void E2E_CosmosDB() { true.Should().BeTrue(); }
 
-    [Fact]
-    [Trait(Traits.TestType, Traits.E2EMongoDb)]
+    [Test]
+    [Property(Traits.TestType, Traits.E2EMongoDb)]
     public void E2E_MongoDB() { true.Should().BeTrue(); }
 
-    [Fact]
-    [Trait(Traits.TestType, Traits.E2EMssql)]
+    [Test]
+    [Property(Traits.TestType, Traits.E2EMssql)]
     public void E2E_MSSQL() { true.Should().BeTrue(); }
 }

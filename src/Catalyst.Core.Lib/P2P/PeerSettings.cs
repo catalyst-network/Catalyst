@@ -69,7 +69,9 @@ namespace Catalyst.Core.Lib.P2P
             DnsServers = section.GetSection("DnsServers")
                .GetChildren()
                .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray();
-            PeerId = PublicKey.BuildPeerIdFromBase32Key(BindAddress, Port);
+
+            var publicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
+            PeerId = PublicKey.BuildPeerIdFromBase32Key(publicIpAddress, Port);
         }
     }
 }

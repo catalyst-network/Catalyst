@@ -29,7 +29,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
@@ -41,7 +41,8 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using Xunit;
+using NUnit.Framework;
+using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -50,11 +51,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     /// </summary>
     public sealed class GetPeerInfoRequestObserverTests
     {
-        private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IPeerRepository _peerRepository;
+        private ILogger _logger;
+        private IChannelHandlerContext _fakeContext;
+        private IPeerRepository _peerRepository;
 
-        public GetPeerInfoRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -100,9 +102,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// </summary>
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
-        [Theory]
-        [InlineData("publickey-1", "172.0.0.1")]
-        [InlineData("publickey-2", "172.0.0.2")]
+        [TestCase("publickey-1", "172.0.0.1")]
+        [TestCase("publickey-2", "172.0.0.2")]
         public void TestGetPeerInfoRequestResponse(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
@@ -122,11 +123,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// </summary>
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
-        [Theory]
-        [InlineData("this-pk-should-not-exist", "172.0.0.1")]
-        [InlineData("this-pk-should-not-exist", "172.0.0.3")]
-        [InlineData("publickey-1", "0.0.0.0")]
-        [InlineData("publickey-3", "0.0.0.0")]
+        [TestCase("this-pk-should-not-exist", "172.0.0.1")]
+        [TestCase("this-pk-should-not-exist", "172.0.0.3")]
+        [TestCase("publickey-1", "0.0.0.0")]
+        [TestCase("publickey-3", "0.0.0.0")]
         public void TestGetPeerInfoRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);

@@ -36,7 +36,7 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.Utils
 {
@@ -44,17 +44,18 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
     {
         private sealed class TestDfsFileSystem : FileSystemBasedTest
         {
-            internal TestDfsFileSystem(ITestOutputHelper output) : base(output) { }
         }
 
-        public static IDfsService GetTestDfs(ITestOutputHelper output, IFileSystem fileSystem = default, string hashName = "blake2b-256")
+        public static IDfsService GetTestDfs(IFileSystem fileSystem = default, string hashName = "keccak-256")
         {
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();
 
             if (fileSystem == null)
             {
-                fileSystem = new TestDfsFileSystem(output).FileSystem;
+                var testFileSystem = new TestDfsFileSystem();
+                testFileSystem.Setup(TestContext.CurrentContext);
+                fileSystem = testFileSystem.FileSystem;
             }
 
             containerBuilder.RegisterInstance(new PasswordManager(new TestPasswordReader(), new PasswordRegistry())).As<IPasswordManager>().SingleInstance();

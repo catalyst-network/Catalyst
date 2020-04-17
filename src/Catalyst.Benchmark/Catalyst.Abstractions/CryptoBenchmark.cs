@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using Catalyst.Abstractions.Cryptography;
@@ -57,8 +58,7 @@ namespace Catalyst.Benchmark.Catalyst.Abstractions
                     Nonce = 1,
                     SenderAddress = key,
                     ReceiverAddress = key,
-                    GasPrice = amount,
-                    Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                    GasPrice = amount
                 }
             };
 
@@ -94,6 +94,8 @@ namespace Catalyst.Benchmark.Catalyst.Abstractions
             {
                 return true;
             }
+
+            public bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context) { throw new NotImplementedException(); }
 
             public int PrivateKeyLength => throw new NotImplementedException();
             public int PublicKeyLength => throw new NotImplementedException();

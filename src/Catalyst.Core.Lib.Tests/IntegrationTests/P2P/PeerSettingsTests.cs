@@ -26,17 +26,20 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     public sealed class PeerSettingsTests : FileSystemBasedTest
     {
-        public PeerSettingsTests(ITestOutputHelper output) : base(output) { }
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void CanResolveIPeerSettings()
         {
             ContainerProvider.ConfigureContainerBuilder();

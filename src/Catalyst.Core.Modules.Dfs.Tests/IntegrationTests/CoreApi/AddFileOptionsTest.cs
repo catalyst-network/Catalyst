@@ -25,29 +25,29 @@ using System;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Options;
 using MultiFormats;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class AddFileOptionsTests
     {
-        [Fact]
+        [Test]
         public void Defaults()
         {
             var options = new AddFileOptions();
 
-            Assert.Equal(true, options.Pin);
-            Assert.Equal(256 * 1024, options.ChunkSize);
-            Assert.Equal(MultiHash.DefaultAlgorithmName, options.Hash);
-            Assert.Equal(false, options.OnlyHash);
-            Assert.Equal(false, options.RawLeaves);
-            Assert.Equal(false, options.Trickle);
-            Assert.Equal(false, options.Wrap);
+            Assert.AreEqual(true, options.Pin);
+            Assert.AreEqual(256 * 1024, options.ChunkSize);
+            Assert.AreEqual(MultiHash.DefaultAlgorithmName, options.Hash);
+            Assert.AreEqual(false, options.OnlyHash);
+            Assert.AreEqual(false, options.RawLeaves);
+            Assert.AreEqual(false, options.Trickle);
+            Assert.AreEqual(false, options.Wrap);
             Assert.Null(options.Progress);
             Assert.Null(options.ProtectionKey);
         }
 
-        [Fact]
+        [Test]
         public void Setting()
         {
             var options = new AddFileOptions
@@ -63,15 +63,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 ProtectionKey = "secret"
             };
 
-            Assert.Equal(false, options.Pin);
-            Assert.Equal(2 * 1024, options.ChunkSize);
-            Assert.Equal("sha2-512", options.Hash);
-            Assert.Equal(true, options.OnlyHash);
-            Assert.Equal(true, options.RawLeaves);
-            Assert.Equal(true, options.Trickle);
-            Assert.Equal(true, options.Wrap);
+            Assert.AreEqual(false, options.Pin);
+            Assert.AreEqual(2 * 1024, options.ChunkSize);
+            Assert.AreEqual("sha2-512", options.Hash);
+            Assert.AreEqual(true, options.OnlyHash);
+            Assert.AreEqual(true, options.RawLeaves);
+            Assert.AreEqual(true, options.Trickle);
+            Assert.AreEqual(true, options.Wrap);
             Assert.NotNull(options.Progress);
-            Assert.Equal("secret", options.ProtectionKey);
+            Assert.AreEqual("secret", options.ProtectionKey);
         }
     }
 }

@@ -27,7 +27,7 @@ using Catalyst.Abstractions.Ledger.Models;
 using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Json;
+using Nethermind.Serialization.Json;
 using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
@@ -44,9 +44,9 @@ namespace Catalyst.Abstractions.Kvm.Models
             BlockNumber = receipt.DeltaNumber;
             CumulativeGasUsed = receipt.GasUsedTotal;
             GasUsed = receipt.GasUsed;
-            From = receipt.Sender;
-            To = receipt.Recipient;
-            ContractAddress = receipt.ContractAddress;
+            From = new Address(receipt.Sender);
+            To = new Address(receipt.Recipient);
+            ContractAddress = new Address(receipt.ContractAddress);
             Logs = receipt.Logs.Select((l, idx) => new LogEntryForRpc(receipt, l, idx)).ToArray();
             Status = receipt.StatusCode;
         }

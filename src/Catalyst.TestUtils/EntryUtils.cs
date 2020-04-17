@@ -52,8 +52,7 @@ namespace Catalyst.TestUtils
                 Amount = amount.ToUint256ByteString(),
                 Data = ByteString.CopyFrom(Bytes.FromHexString(dataHex)),
                 GasLimit = 21000,
-                GasPrice = 0.ToUint256ByteString(),
-                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                GasPrice = 0.ToUint256ByteString()
             };
         }
 
@@ -95,8 +94,7 @@ namespace Catalyst.TestUtils
                 SenderAddress = sender.ToKvmAddressByteString(),
                 Nonce = 0,
                 Amount = amount.ToUint256ByteString(),
-                GasLimit = 21000,
-                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                GasLimit = 21000
             };
         }
     }

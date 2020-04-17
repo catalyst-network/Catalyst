@@ -25,18 +25,18 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using FluentAssertions;
 using Google.Protobuf;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Protocol.Tests.UnitTests.Extensions
 {
     public sealed class ByteStringExtensionsTests
     {
         [Theory]
-        [InlineData(2)]
-        [InlineData(10)]
-        [InlineData(100)]
-        [InlineData(10000)]
-        [InlineData(5000000)]
+        [TestCase(2)]
+        [TestCase(10)]
+        [TestCase(100)]
+        [TestCase(10000)]
+        [TestCase(5000000)]
         public void Convert_ByteArray_To_ByteString_Should_Succeed(int arraySize)
         {
             var testBytes = ByteUtil.GenerateRandomByteArray(arraySize);
@@ -44,7 +44,7 @@ namespace Catalyst.Protocol.Tests.UnitTests.Extensions
             testBytes.ToByteString().Should().Equal(ByteString.CopyFrom(testBytes));
         }
 
-        [Fact]
+        [Test]
         public void Convert_ByteArray_To_ByteString_Should_Fail()
         {
             var testBytes = new byte[500];
