@@ -14,6 +14,7 @@
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
       <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Core\Nethermind.Core.csproj" />
+      <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Db.Rocks\Nethermind.Db.Rocks.csproj" />
       <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Db\Nethermind.Db.csproj" />
       <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
