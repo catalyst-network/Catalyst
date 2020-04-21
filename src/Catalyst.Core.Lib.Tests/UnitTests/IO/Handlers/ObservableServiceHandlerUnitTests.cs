@@ -27,7 +27,7 @@ using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {
@@ -45,10 +45,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 
         private readonly ObservableServiceHandler _observableServiceHandler;
 
-        [Fact]
+        [Test]
         public void Dispose_Should_Dispose_ObservableServiceHandler() { _observableServiceHandler.Dispose(); }
 
-        [Fact]
+        [Test]
         public void MessageStream_Should_Call_OnError_On_ExceptionCaught()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();

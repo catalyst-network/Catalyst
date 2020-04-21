@@ -33,7 +33,7 @@
 //using Google.Protobuf.WellKnownTypes;
 //using NSubstitute;
 //using Serilog;
-//using Xunit;
+//using NUnit.Framework;
 
 //namespace Catalyst.Protocol.Tests.Validators
 //{
@@ -51,7 +51,7 @@
 //            _transactionValidator = new TransactionValidator(logger, _cryptoWrapper);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Allow_Zero_Amount_Transaction_When_Calling_Smart_Contract_Method()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -62,7 +62,7 @@
 //            AssertTransaction(true);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Contract_Transaction_If_Deployment_Data_And_Call_Data_Exist()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -73,7 +73,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_ST_Entries_Inside_Conf_Transaction()
 //        {
 //            GenerateTransaction(TransactionType.Confidential);
@@ -82,7 +82,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_CF_Entries_Inside_Public_Transaction()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -91,7 +91,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_No_Signature()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -99,7 +99,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Invalid_From_Public_Key()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -108,7 +108,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Invalid_Signature()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -116,7 +116,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Any_ST_Entries_In_Smart_Contract_Deployment()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -125,7 +125,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Any_CF_Entries_In_Smart_Contract_Deployment()
 //        {
 //            GenerateTransaction(TransactionType.Confidential);
@@ -134,7 +134,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Normal_Transactions_With_No_Entries()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -143,7 +143,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Conf_Transactions_With_No_Entries()
 //        {
 //            GenerateTransaction(TransactionType.Confidential);
@@ -152,7 +152,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Null_Timestamp()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -161,7 +161,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Invalid_Public_Key_On_ST_Entries()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -170,7 +170,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Invalid_Amount_On_ST_Entries()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
@@ -179,7 +179,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Invalid_Pedersen_Commit_On_CF_Entries()
 //        {
 //            GenerateTransaction(TransactionType.Confidential);
@@ -189,7 +189,7 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Reject_Invalid_Public_Key_On_CF_Entries()
 //        {
 //            GenerateTransaction(TransactionType.Confidential);
@@ -199,14 +199,14 @@
 //            AssertTransaction(false);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Pass_Successful_Normal_Transaction()
 //        {
 //            GenerateTransaction(TransactionType.Normal);
 //            AssertTransaction(true);
 //        }
 
-//        [Fact]
+//        [Test]
 //        public void Can_Pass_Successful_Conf_Transaction()
 //        {
 //            GenerateTransaction(TransactionType.Confidential);

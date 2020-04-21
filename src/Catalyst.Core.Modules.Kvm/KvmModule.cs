@@ -28,11 +28,12 @@ using Autofac.Core;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Lib.FileSystem;
 using Nethermind.Core.Specs;
-using Nethermind.Db.Config;
-using Nethermind.Db.Databases;
+using Nethermind.Db;
+using Nethermind.Db.Rocks;
+using Nethermind.Db.Rocks.Config;
 using Nethermind.Evm;
 using Nethermind.Logging;
-using Nethermind.Store;
+using Nethermind.State;
 using Module = Autofac.Module;
 
 namespace Catalyst.Core.Modules.Kvm

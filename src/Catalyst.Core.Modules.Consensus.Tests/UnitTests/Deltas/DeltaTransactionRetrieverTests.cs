@@ -33,7 +33,7 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -60,10 +60,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Returns(_transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(mapperProvider)));
 
             _transactionRetriever = new DeltaTransactionRetriever(mempool, mapperProvider,
-                TransactionComparerByPriceTimestampAndHash.Default);
+                TransactionComparerByPriceAndHash.Default);
         }
 
-        [Fact]
+        [Test]
         public void GetMempoolTransactionsByPriority_should_at_most_return_MaxCount()
         {
             var maxCountBelowTotal = _transactions.Count - 1;
@@ -79,7 +79,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             retrieved.Count.Should().Be(_transactions.Count);
         }
 
-        [Fact]
+        [Test]
         public void GetMempoolTransactionsByPriority_should_not_accept_zero_or_negative_maxCount()
         {
             new Action(() => _transactionRetriever.GetMempoolTransactionsByPriority(-1))
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Should().Throw<ArgumentException>();
         }
 
-        [Fact]
+        [Test]
         public void GetMempoolTransactionsByPriority_should_return_transactions_in_decreasing_priority_order()
         {
             var maxCount = _transactions.Count / 2;

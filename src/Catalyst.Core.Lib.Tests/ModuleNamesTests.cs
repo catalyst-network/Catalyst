@@ -26,13 +26,13 @@ using System.Linq;
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.Types;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests
 {
     public static class ModuleNamesTests
     {
-        [Fact]
+        [Test]
         public static void All_should_return_all_declared_names()
         {
             var allModuleNames = Enumeration.GetAll<ModuleTypes>().Select(m => m.Name);

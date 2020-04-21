@@ -21,9 +21,9 @@
 
 #endregion
 
+using NUnit.Framework;
 using System;
 using System.Linq;
-using Xunit;
 
 namespace Catalyst.TestUtils
 {
@@ -44,7 +44,7 @@ namespace Catalyst.TestUtils
                 if (match != null)
                 {
                     if (expectedMessage != null)
-                        Assert.Equal(expectedMessage, match.Message);
+                        Assert.AreEqual(expectedMessage, match.Message);
                     return match;
                 }
 
@@ -53,7 +53,7 @@ namespace Catalyst.TestUtils
             catch (T e)
             {
                 if (expectedMessage != null)
-                    Assert.Equal(expectedMessage, e.Message);
+                    Assert.AreEqual(expectedMessage, e.Message);
                 return e;
             }
 

@@ -40,7 +40,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using Xunit;
+using NUnit.Framework;
 using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -51,10 +51,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     public sealed class RemovePeerRequestObserverTests
     {
         /// <summary>The logger</summary>
-        private readonly ILogger _logger;
+        private ILogger _logger;
 
         /// <summary>The fake channel context</summary>
-        private readonly IChannelHandlerContext _fakeContext;
+        private IChannelHandlerContext _fakeContext;
 
         /// <summary>
         ///     Initializes a new instance of the
@@ -63,7 +63,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         ///     </see>
         ///     class.
         /// </summary>
-        public RemovePeerRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -75,18 +76,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         ///     Tests the peer list request and response.
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
-        [Theory]
-        [InlineData("FakePeer1", "FakePeer2")]
-        [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
+        [TestCase("FakePeer1", "FakePeer2")]
+        [TestCase("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
         public void TestRemovePeer(params string[] fakePeers) { ExecuteTestCase(fakePeers, true); }
 
         /// <summary>
         ///     Tests peer removal via IP only.
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
-        [Theory]
-        [InlineData("Fake1Peer1", "Fake2Peer2")]
-        [InlineData("Fake1Peer1002", "Fake2Peer6000", "FakePeer3Sataoshi")]
+        [TestCase("Fake1Peer1", "Fake2Peer2")]
+        [TestCase("Fake1Peer1002", "Fake2Peer6000", "FakePeer3Sataoshi")]
         public void TestRemovePeerWithoutPublicKey(params string[] fakePeers) { ExecuteTestCase(fakePeers, false); }
 
         /// <summary>Executes the test case.</summary>

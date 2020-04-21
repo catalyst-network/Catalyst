@@ -27,13 +27,13 @@ using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {
     public sealed class HastingsCareTakerTests
     {
-        [Fact]
+        [Test]
         public void Can_Get_From_HastingMementoList()
         {
             var careTaker = new HastingsCareTaker();
@@ -44,14 +44,14 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             careTaker.HastingMementoList.Should().Contain(subbedMemento);
         }
 
-        [Fact]
+        [Test]
         public void Can_Get_Nothing_From_Empty_HastingMementoList()
         {
             var careTaker = new HastingsCareTaker();
             careTaker.HastingMementoList.Should().BeEmpty();
         }
 
-        [Fact]
+        [Test]
         public void Care_Taker_Can_Add_State_To_CareTaker()
         {
             var careTaker = new HastingsCareTaker();
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             careTaker.HastingMementoList.Should().HaveCount(1);
         }
 
-        [Fact]
+        [Test]
         public void Care_Taker_Can_Get_Last_State()
         {
             var careTaker = new HastingsCareTaker();
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             careTaker.HastingMementoList.Should().HaveCount(1);
         }
 
-        [Fact]
+        [Test]
         public void Care_Taker_Should_Throw_Exception_Trying_To_Take_Last_State_From_Empty_CareTaker()
         {
             var careTaker = new HastingsCareTaker();
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             Assert.Throws<InvalidOperationException>(() => { careTaker.Get(); });
         }
 
-        [Fact]
+        [Test]
         public void Can_Never_Take_Last_State_From_CareTaker()
         {
             var careTaker = new HastingsCareTaker();
@@ -102,7 +102,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             careTaker.HastingMementoList.Count.Should().Be(1);
         }
 
-        [Fact]
+        [Test]
         public void Can_LIFO_When_History_N_Plus2()
         {
             var careTaker = new HastingsCareTaker();

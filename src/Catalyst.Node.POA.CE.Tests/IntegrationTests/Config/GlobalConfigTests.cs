@@ -48,10 +48,9 @@ using Catalyst.Core.Modules.Sync;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using NSubstitute;
+using NUnit.Framework;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
 {
@@ -64,10 +63,13 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
         private IEnumerable<string> _configFilesUsed;
         private ContainerProvider _containerProvider;
 
-        public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
+        [SetUp]
+        public void Init()
+        {
+            this.Setup(TestContext.CurrentContext);
+        }
 
-        [Theory]
-        [MemberData(nameof(Networks))]
+        [TestCaseSource(nameof(Networks))]
         public void Registering_All_Configs_Should_Allow_Resolving_CatalystNode(NetworkType network)
         {
             _configFilesUsed = new[]

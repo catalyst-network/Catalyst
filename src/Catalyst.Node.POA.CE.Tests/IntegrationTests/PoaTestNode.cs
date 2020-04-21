@@ -55,12 +55,12 @@ using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using NSubstitute;
+using NUnit.Framework;
 using SharpRepository.InMemoryRepository;
-using Xunit.Abstractions;
 using Catalyst.Core.Lib.P2P.Repository;
+using Nethermind.Db;
 using Catalyst.Core.Lib.DAO.Ledger;
 using SharpRepository.Repository;
-using Nethermind.Store;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
@@ -83,8 +83,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             IPeerSettings nodeSettings,
             IDfsService dfsService,
             IEnumerable<PeerId> knownPeerIds,
-            IFileSystem parentTestFileSystem,
-            ITestOutputHelper output)
+            IFileSystem parentTestFileSystem)
         {
             Name = name;
             _nodeSettings = nodeSettings;
@@ -113,7 +112,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                     Constants.NetworkConfigFile(NetworkType.Devnet),
                     Constants.SerilogJsonConfigFile
                 }
-               .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, output);
+               .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, TestContext.CurrentContext);
 
             Program.RegisterNodeDependencies(ContainerProvider.ContainerBuilder,
                 excludedModules: new List<Type>

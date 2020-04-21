@@ -48,7 +48,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 {
@@ -71,12 +71,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
-        private readonly TestScheduler _testScheduler;
-        private readonly IRpcMessageCorrelationManager _correlationManager;
-        private readonly TestRpcClientChannelFactory _factory;
-        private readonly FakeKeySigner _keySigner;
+        private TestScheduler _testScheduler;
+        private IRpcMessageCorrelationManager _correlationManager;
+        private TestRpcClientChannelFactory _factory;
+        private FakeKeySigner _keySigner;
 
-        public RpcClientChannelFactoryTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
@@ -92,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
                 peerSettings, _testScheduler);
         }
 
-        [Fact]
+        [Test]
         public void RpcClientChannelFactory_should_have_correct_handlers()
         {
             _factory.InheritedHandlers.Count(h => h != null).Should().Be(10);
@@ -109,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             handlers[9].Should().BeOfType<ObservableServiceHandler>();
         }
 
-        [Fact]
+        [Test]
         public void RpcClientChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
@@ -146,7 +147,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             }
         }
 
-        [Fact]
+        [Test]
         public void RpcClientChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),

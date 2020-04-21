@@ -23,13 +23,13 @@
 
 using System;
 using Lib.P2P.Protocols;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
     public class PingResultTest
     {
-        [Fact]
+        [Test]
         public void Properties()
         {
             var time = TimeSpan.FromSeconds(3);
@@ -39,9 +39,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Text = "ping",
                 Time = time
             };
-            Assert.Equal(true, r.Success);
-            Assert.Equal("ping", r.Text);
-            Assert.Equal(time, r.Time);
+            Assert.AreEqual(true, r.Success);
+            Assert.AreEqual("ping", r.Text);
+            Assert.AreEqual(time, r.Time);
         }
     }
 }

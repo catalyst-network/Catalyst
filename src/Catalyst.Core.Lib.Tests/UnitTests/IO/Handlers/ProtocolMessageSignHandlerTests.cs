@@ -35,7 +35,7 @@ using Catalyst.TestUtils.Fakes;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             );
         }
 
-        [Fact]
+        [Test]
         public void CantSignMessage()
         {
             var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, DevNetPeerSigningContext.Instance);
@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _fakeContext.ReceivedWithAnyArgs()?.WriteAsync(new object());
         }
 
-        [Fact]
+        [Test]
         public void CanWriteAsyncOnSigningMessage()
         {
             _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);

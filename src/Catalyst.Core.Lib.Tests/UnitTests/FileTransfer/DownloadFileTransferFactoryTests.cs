@@ -35,7 +35,7 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
 {
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             _downloadFileTransferFactory = new DownloadFileTransferFactory(Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Cancel_Download()
         {
             using (var cancellationTokenSource = new CancellationTokenSource())
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             }
         }
 
-        [Fact]
+        [Test]
         public void Can_Download_Chunk()
         {
             SetupDownload(CancellationToken.None);
@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             _downloadFileInformation.Received(1).UpdateChunkIndicator(0, true);
         }
 
-        [Fact]
+        [Test]
         public void Can_Send_Error_On_Chunk_Bytes_Overflow()
         {
             SetupDownload(CancellationToken.None);
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             }).Should().Be(FileTransferResponseCodeTypes.Error);
         }
 
-        [Fact]
+        [Test]
         public void Can_Send_Error_Response_When_Downloading_Bad_Chunk()
         {
             _downloadFileTransferFactory.DownloadChunk(new TransferFileBytesRequest()).Should()

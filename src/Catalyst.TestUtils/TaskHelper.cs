@@ -27,9 +27,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
-using Xunit.Sdk;
+using NUnit.Framework;
 
 namespace Catalyst.TestUtils
 {
@@ -83,10 +81,9 @@ namespace Catalyst.TestUtils
 
     public class TaskHelperTests
     {
-        private readonly ITestOutputHelper _output;
-        public TaskHelperTests(ITestOutputHelper output) { _output = output; }
+        public TaskHelperTests() { }
 
-        [Fact]
+        [Test]
         public async Task WaitFor_Should_Throw_Descriptive_Message_After_Timeout()
         {
             var attempts = 0;
@@ -109,11 +106,11 @@ namespace Catalyst.TestUtils
 
         private bool IncreaseAndCheckIfAboveLimit(ref int count, int limit)
         {
-            _output.WriteLine($"attempt: {++count}");
+            TestContext.Out.WriteLine($"attempt: {++count}");
             return limit < count;
         }
 
-        [Fact]
+        [Test]
         public async Task WaitFor_Should_Return_As_Soon_As_Possible()
         {
             var attempts = 0;
@@ -132,7 +129,7 @@ namespace Catalyst.TestUtils
             watch.Elapsed.Should().BeLessOrEqualTo(timeout.Multiply(2));
         }
 
-        [Fact]
+        [Test]
         public void WaitForAsyncOrThrow_Should_Throw_Descriptive_Message_After_Timeout()
         {
             var attempts = 0;
@@ -145,7 +142,7 @@ namespace Catalyst.TestUtils
             new Func<Task>(async () => await TaskHelper.WaitForAsyncOrThrowAsync(
                         () => IncreaseAndCheckIfAboveLimit(ref attempts,
                             (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
-                   .ConfigureAwait(false)).Should().Throw<XunitException>()
+                   .ConfigureAwait(false)).Should().Throw<Exception>()
                .And.Message.Should().Contain(nameof(IncreaseAndCheckIfAboveLimit));
             watch.Stop();
 
@@ -153,7 +150,7 @@ namespace Catalyst.TestUtils
             watch.Elapsed.Should().BeGreaterOrEqualTo(timeout);
         }
 
-        [Fact]
+        [Test]
         public async Task WaitForAsyncOrThrow_Should_Return_As_Soon_As_Possible()
         {
             var attempts = 0;

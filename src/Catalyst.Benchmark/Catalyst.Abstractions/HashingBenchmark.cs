@@ -47,7 +47,7 @@ namespace Catalyst.Benchmark.Catalyst.Abstractions
             HashingAlgorithm.Register(name, 1234123421, NoopHash.DigestSize, () => new NoopHash());
 
             var bytes = ByteString.CopyFrom(Enumerable.Range(1, 32).Select(i => (byte) i).ToArray());
-            var amount = ByteString.CopyFrom(343434.ToByteArray(Bytes.Endianness.Big));
+            var amount = ByteString.CopyFrom(343434.ToByteArray());
 
             _entry = new PublicEntry
             {

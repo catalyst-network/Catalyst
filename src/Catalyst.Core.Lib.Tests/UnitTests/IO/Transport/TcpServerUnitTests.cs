@@ -26,24 +26,25 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
 {
     public sealed class TcpServerUnitTests
     {
-        public TcpServerUnitTests()
+        [SetUp]
+        public void Init()
         {
             _tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
             _logger = Substitute.For<ILogger>();
             _eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
         }
 
-        private readonly ITcpServerChannelFactory _tcpServerChannelFactory;
-        private readonly ILogger _logger;
-        private readonly IEventLoopGroupFactory _eventLoopGroupFactory;
+        private ITcpServerChannelFactory _tcpServerChannelFactory;
+        private ILogger _logger;
+        private IEventLoopGroupFactory _eventLoopGroupFactory;
 
-        [Fact]
+        [Test]
         public void TcpServer_Should_Dispose()
         {
             var tcpServer = new TestTcpServer(_tcpServerChannelFactory, _logger, _eventLoopGroupFactory);
@@ -52,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
             _logger.Received(1).Debug($"Disposing{typeof(TestTcpServer).Name}");
         }
 
-        [Fact]
+        [Test]
         public void TcpServer_Should_Not_Dispose()
         {
             var tcpServer = new TestTcpServer(_tcpServerChannelFactory, _logger, _eventLoopGroupFactory);

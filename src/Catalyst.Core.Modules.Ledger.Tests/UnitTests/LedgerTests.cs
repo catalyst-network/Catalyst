@@ -52,15 +52,17 @@ using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
+using Nethermind.Db;
 using Nethermind.Dirichlet.Numerics;
-using Nethermind.Store;
+using Nethermind.State;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 {
+    [TestFixture]
     public sealed class LedgerTests : IDisposable
     {
         private readonly TestScheduler _testScheduler;
@@ -105,10 +107,11 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
                 NetworkType = NetworkType.Devnet,
                 SignatureType = SignatureType.TransactionPublic
             };
+
             _deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
         }
 
-        [Fact]
+        [Test]
         public void Should_Reconcile_On_New_Delta_Hash()
         {
             var hash1 = _hashProvider.ComputeUtf8MultiHash("update").ToCid();
@@ -140,7 +143,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [Test]
         public void Should_Delete_MempoolItems_On_New_Delta_Hash()
         {
             var sampleSize = 5;

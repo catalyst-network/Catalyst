@@ -33,18 +33,19 @@ using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
 {
     public sealed class DatagramPacketEncoderTests
     {
-        private readonly EmbeddedChannel _channel;
-        private readonly PeerId _recipientPid;
-        private readonly DatagramPacket _datagramPacket;
-        private readonly ProtocolMessage _protocolMessageSigned;
-        
-        public DatagramPacketEncoderTests()
+        private EmbeddedChannel _channel;
+        private PeerId _recipientPid;
+        private DatagramPacket _datagramPacket;
+        private ProtocolMessage _protocolMessageSigned;
+
+        [SetUp]
+        public void Init()
         {
             _channel = new EmbeddedChannel(
                 new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
@@ -54,14 +55,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
                 IPAddress.Loopback,
                 10000
             );
-            
+
             _recipientPid = PeerIdHelper.GetPeerId("sender",
                 IPAddress.Loopback,
                 20000
             );
 
             _protocolMessageSigned = new PingRequest().ToSignedProtocolMessage(senderPid, (byte[]) default);
-            
+
             _datagramPacket = new DatagramPacket(
                 Unpooled.WrappedBuffer(_protocolMessageSigned.ToByteArray()),
                 senderPid.IpEndPoint,
@@ -69,7 +70,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
             );
         }
 
-        [Fact]
+        [Test]
         public void DatagramPacketEncoder_Can_Encode_IMessage_With_ProtobufEncoder()
         {
             Assert.True(_channel.WriteOutbound(new SignedMessageDto(_protocolMessageSigned, _recipientPid)));
@@ -77,32 +78,32 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
             var datagramPacket = _channel.ReadOutbound<DatagramPacket>();
             Assert.NotNull(datagramPacket);
 
-            Assert.Equal(_datagramPacket.Content, datagramPacket.Content);
-            Assert.Equal(_datagramPacket.Sender, datagramPacket.Sender);
-            Assert.Equal(_datagramPacket.Recipient, datagramPacket.Recipient);
+            Assert.AreEqual(_datagramPacket.Content, datagramPacket.Content);
+            Assert.AreEqual(_datagramPacket.Sender, datagramPacket.Sender);
+            Assert.AreEqual(_datagramPacket.Recipient, datagramPacket.Recipient);
             datagramPacket.Release();
             Assert.False(_channel.Finish());
         }
 
-        [Fact]
+        [Test]
         public void DatagramPacketEncoder_Will_Not_Encode_UnmatchedMessageType()
         {
             Assert.True(_channel.WriteOutbound(_protocolMessageSigned));
-        
+
             var protocolMessageSigned = _channel.ReadOutbound<ProtocolMessage>();
             Assert.NotNull(protocolMessageSigned);
-            Assert.Same(_protocolMessageSigned, protocolMessageSigned);
+            Assert.AreSame(_protocolMessageSigned, protocolMessageSigned);
             Assert.False(_channel.Finish());
         }
-        
-        [Fact]
+
+        [Test]
         public void DatagramPacketEncoder_Will_Not_Encode_UnmatchedType()
         {
             const string expected = "junk";
             Assert.True(_channel.WriteOutbound(expected));
-        
+
             var content = _channel.ReadOutbound<string>();
-            Assert.Same(expected, content);
+            Assert.AreSame(expected, content);
             Assert.False(_channel.Finish());
         }
     }

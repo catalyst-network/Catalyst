@@ -37,7 +37,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -46,15 +46,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     /// </summary>
     public sealed class PeerBlackListingRequestObserverTests
     {
-        private readonly ILogger _logger;
+        private ILogger _logger;
 
-        private readonly IChannelHandlerContext _fakeContext;
+        private IChannelHandlerContext _fakeContext;
 
-        private readonly TestScheduler _testScheduler;
-        private readonly PeerId _senderId;
-        private readonly IPeerRepository _peerRepository;
+        private TestScheduler _testScheduler;
+        private PeerId _senderId;
+        private IPeerRepository _peerRepository;
 
-        public PeerBlackListingRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -90,11 +91,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             return fakePeers;
         }
 
-        [Theory]
-        [InlineData("good-14", true)]
-        [InlineData("good-22", false)]
-        [InlineData("blacklisted-1", true)]
-        [InlineData("blacklisted-3", false)]
+        [TestCase("good-14", true)]
+        [TestCase("good-22", false)]
+        [TestCase("blacklisted-1", true)]
+        [TestCase("blacklisted-3", false)]
         public void PeerBlackListingRequestObserver_should_set_Blacklist_flag_on_known_peers(string publicKeySeed,
             bool blacklist)
         {
@@ -113,9 +113,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             responseContent.PublicKey.Should().BeEquivalentTo(targetedId.PublicKey);
         }
 
-        [Theory]
-        [InlineData("unknown-1", false)]
-        [InlineData("unknown-2", false)]
+        [TestCase("unknown-1", false)]
+        [TestCase("unknown-2", false)]
         public void PeerBlackListingRequestObserver_should_not_set_Blacklist_flag_on_unknown_peers(string publicKeySeed,
             bool blacklist)
         {

@@ -33,8 +33,8 @@
 // using MultiFormats;
 // using MultiFormats.Registry;
 // using Newtonsoft.Json.Linq;
-// using Xunit;
-// using Xunit.Abstractions;
+// using NUnit.Framework;
+// 
 //
 // namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 // {
@@ -42,30 +42,30 @@
 //     {
 //         private IDfsService ipfs;
 //
-//         public SwarmApiTest(ITestOutputHelper output)
+//         public SwarmApiTest(TestContext output)
 //         {
 //             ipfs = new TestFixture(output).Ipfs;      
 //         }
 //         
 //         readonly MultiAddress somewhere = "/ip4/127.0.0.1";
 //
-//         [Fact]
+//         [Test]
 //         public async Task Filter_Add_Remove()
 //         {
 //             var addr = await ipfs.Swarm.AddAddressFilterAsync(somewhere);
 //             Assert.NotNull(addr);
-//             Assert.Equal(somewhere, addr);
+//             Assert.AreEqual(somewhere, addr);
 //             var addrs = await ipfs.Swarm.ListAddressFiltersAsync();
 //             Assert.True(addrs.Any(a => a == somewhere));
 //
 //             addr = await ipfs.Swarm.RemoveAddressFilterAsync(somewhere);
 //             Assert.NotNull(addr);
-//             Assert.Equal(somewhere, addr);
+//             Assert.AreEqual(somewhere, addr);
 //             addrs = await ipfs.Swarm.ListAddressFiltersAsync();
 //             Assert.False(addrs.Any(a => a == somewhere));
 //         }
 //
-//         // [Fact]
+//         // [Test]
 //         // [Ignore("https://github.com/richardschneider/net-ipfs-engine/issues/74")]
 //         // public async Task Connect_Disconnect_Mars()
 //         // {
@@ -84,7 +84,7 @@
 //         //     }
 //         // }
 //
-//         // [Fact]
+//         // [Test]
 //         // [Ignore("TODO: Move to interop tests")]
 //         // public async Task JsIPFS_Connect()
 //         // {
@@ -92,15 +92,15 @@
 //         //     var remoteId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
 //         //     var remoteAddress = $"/ip4/127.0.0.1/tcp/4002/ipfs/{remoteId}";
 //         //
-//         //     Assert.Equal(0, (await ipfs.Swarm.PeersAsync()).Count());
+//         //     Assert.AreEqual(0, (await ipfs.Swarm.PeersAsync()).Count());
 //         //     await ipfs.Swarm.ConnectAsync(remoteAddress, cts.Token);
-//         //     Assert.Equal(1, (await ipfs.Swarm.PeersAsync()).Count());
+//         //     Assert.AreEqual(1, (await ipfs.Swarm.PeersAsync()).Count());
 //         //
 //         //     await ipfs.Swarm.DisconnectAsync(remoteAddress);
-//         //     Assert.Equal(0, (await ipfs.Swarm.PeersAsync()).Count());
+//         //     Assert.AreEqual(0, (await ipfs.Swarm.PeersAsync()).Count());
 //         // }
 //         //
-//         // [Fact]
+//         // [Test]
 //         // [Ignore("TODO: Move to interop tests")]
 //         // public async Task GoIPFS_Connect()
 //         // {
@@ -108,15 +108,15 @@
 //         //     var remoteId = "QmdoxrwszT6b9srLXHYBPFVRXmZSFAosWLXoQS9TEEAaix";
 //         //     var remoteAddress = $"/ip4/127.0.0.1/tcp/4001/ipfs/{remoteId}";
 //         //
-//         //     Assert.Equal(0, (await ipfs.Swarm.PeersAsync()).Count());
+//         //     Assert.AreEqual(0, (await ipfs.Swarm.PeersAsync()).Count());
 //         //     await ipfs.Swarm.ConnectAsync(remoteAddress, cts.Token);
-//         //     Assert.Equal(1, (await ipfs.Swarm.PeersAsync()).Count());
+//         //     Assert.AreEqual(1, (await ipfs.Swarm.PeersAsync()).Count());
 //         //
 //         //     await ipfs.Swarm.DisconnectAsync(remoteAddress);
-//         //     Assert.Equal(0, (await ipfs.Swarm.PeersAsync()).Count());
+//         //     Assert.AreEqual(0, (await ipfs.Swarm.PeersAsync()).Count());
 //         // }
 //         //
-//         // [Fact]
+//         // [Test]
 //         // [Ignore("TODO: Move to interop tests")]
 //         // public async Task GoIPFS_Connect_v0_4_17()
 //         // {
@@ -124,15 +124,15 @@
 //         //     var remoteId = "QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd";
 //         //     var remoteAddress = $"/ip4/178.62.158.247/tcp/4001/ipfs/{remoteId}";
 //         //
-//         //     Assert.Equal(0, (await ipfs.Swarm.PeersAsync()).Count());
+//         //     Assert.AreEqual(0, (await ipfs.Swarm.PeersAsync()).Count());
 //         //     await ipfs.Swarm.ConnectAsync(remoteAddress, cts.Token);
-//         //     Assert.Equal(1, (await ipfs.Swarm.PeersAsync()).Count());
+//         //     Assert.AreEqual(1, (await ipfs.Swarm.PeersAsync()).Count());
 //         //
 //         //     await ipfs.Swarm.DisconnectAsync(remoteAddress);
-//         //     Assert.Equal(0, (await ipfs.Swarm.PeersAsync()).Count());
+//         //     Assert.AreEqual(0, (await ipfs.Swarm.PeersAsync()).Count());
 //         // }
 //
-//         [Fact]
+//         [Test]
 //         public async Task PrivateNetwork_WithOptionsKey()
 //         {
 //             using (var ipfs = CreateNode())
@@ -153,7 +153,7 @@
 //             }
 //         }
 //
-//         [Fact]
+//         [Test]
 //         public async Task PrivateNetwork_WithSwarmKeyFile()
 //         {
 //             using (var ipfs = CreateNode())

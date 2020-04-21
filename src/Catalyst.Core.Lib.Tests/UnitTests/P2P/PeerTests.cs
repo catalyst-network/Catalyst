@@ -26,13 +26,13 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using SharpRepository.InMemoryRepository;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
 {
     public sealed class PeerTests
     {
-        [Fact]
+        [Test]
         public void EntityStoreAuditsCreateTime()
         {
             var repo = new InMemoryRepository<Peer, string>();
@@ -48,7 +48,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             retrievedPeer.Modified.Should().BeNull();
         }
         
-        [Fact]
+        [Test]
         public void EntityStoreAuditsModifiedTime()
         {
             var repo = new InMemoryRepository<Peer, string>();

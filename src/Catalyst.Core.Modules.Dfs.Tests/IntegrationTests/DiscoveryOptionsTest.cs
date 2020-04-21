@@ -22,13 +22,13 @@
 #endregion
 
 using Catalyst.Abstractions.Options;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     public class DiscoveryOptionsTest
     {
-        [Fact]
+        [Test]
         public void Defaults()
         {
             var options = new DiscoveryOptions();

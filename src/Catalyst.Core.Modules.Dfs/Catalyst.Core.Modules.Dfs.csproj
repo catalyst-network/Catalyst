@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
 
         <RootNamespace>Catalyst.Core.Modules.Dfs</RootNamespace>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
@@ -53,7 +53,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" />
-        <PackageReference Include="PeterO.Cbor" Version="3.1.0" />
+        <PackageReference Include="PeterO.Cbor" Version="4.0.0" />
         <PackageReference Include="SharpZipLib" Version="1.2.0" />
     </ItemGroup>
 

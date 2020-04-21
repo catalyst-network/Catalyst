@@ -31,13 +31,13 @@ using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
 {
     public sealed class DatagramPacketDecoderTests
     {
-        [Fact]
+        [Test]
         public void DatagramPacketDecoder_Can_Decode_IMessage_With_ProtobufDecoder_And_ProtocolMessageSignedParser()
         {
             var channel = new EmbeddedChannel(
@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
 
             Assert.True(channel.WriteInbound(datagramPacket));
             var content = channel.ReadInbound<ProtocolMessage>();
-            Assert.Equal(protocolMessageSigned, content);
+            Assert.AreEqual(protocolMessageSigned, content);
             Assert.False(channel.Finish());
         }
     }

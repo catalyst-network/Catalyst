@@ -42,7 +42,7 @@ using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             );
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Process_DeltaHeightRequest_Correctly()
         {
             var fakeContext = Substitute.For<IChannelHandlerContext>();

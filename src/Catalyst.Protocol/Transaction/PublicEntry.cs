@@ -63,13 +63,6 @@ namespace Catalyst.Protocol.Transaction
                 return false;
             }
 
-            var isTimestampValid = Timestamp != default && Timestamp != new Timestamp();
-            if (!isTimestampValid)
-            {
-                Logger.Debug("{timestamp} cannot be null or 0.");
-                return false;
-            }
-
             return true;
 
             // TODO: reconsider signature

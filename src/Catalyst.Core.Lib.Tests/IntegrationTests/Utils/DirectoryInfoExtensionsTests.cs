@@ -25,8 +25,8 @@ using System.IO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Utils
 {
@@ -34,9 +34,13 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Utils
     {
         private readonly string _subDirectory = "subdir";
 
-        public DirectoryInfoExtensionsTests(ITestOutputHelper output) : base(output) { }
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
 
-        [Fact]
+        [Test]
         public void SubDirectoryInfo_Returns_Directory_Info_If_SubDirectory_Exists()
         {
             var dirInfo = FileSystem.GetCatalystDataDir();
@@ -48,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Utils
             subDirInfo.Exists.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void SubDirectoryInfo_Returns_Directory_Info_If_SubDirectory_Doesnt_Exist()
         {
             var subDirInfo = FileSystem.GetCatalystDataDir().SubDirectoryInfo(_subDirectory);
@@ -57,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Utils
             subDirInfo.Exists.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void SubDirectoryInfo_Has_Correct_Parent_Directory()
         {
             var parentDirInfo = FileSystem.GetCatalystDataDir();

@@ -34,8 +34,8 @@ using Catalyst.Protocol.Network;
 using Dawn;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace Catalyst.TestUtils
 {
@@ -44,51 +44,52 @@ namespace Catalyst.TestUtils
     ///     A base test class that can be used to offer inheriting tests a folder on which
     ///     to create files, logs, etc.
     /// </summary>
-    [Trait(Traits.TestType, Traits.IntegrationTest)]
+    [Property(Traits.TestType, Traits.IntegrationTest)]
     public class FileSystemBasedTest : IDisposable
     {
-        protected readonly string CurrentTestName;
+        protected string CurrentTestName;
         public IFileSystem FileSystem;
-        protected readonly ITestOutputHelper Output;
+        protected TestContext Output;
         public DirectoryInfo TestDirectory { set; get; }
-        protected List<string> ConfigFilesUsed { get; }
-        protected readonly ContainerProvider ContainerProvider;
+        protected List<string> ConfigFilesUsed { private set; get; }
+        protected ContainerProvider ContainerProvider;
         private DateTime _testStartTime;
 
-        protected FileSystemBasedTest(ITestOutputHelper output, 
+        private NetworkType _network;
+        private IEnumerable<string> _configFilesUsed;
+
+        protected FileSystemBasedTest( 
             IEnumerable<string> configFilesUsed = default,
             NetworkType network = default)
         {
+            _network = network;
+            _configFilesUsed = configFilesUsed;
+        }
+
+        public virtual void Setup(TestContext output)
+        {
             Guard.Argument(output, nameof(output)).NotNull();
+
             Output = output;
-            var currentTest = Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
-               .GetValue(Output) as ITest;
-
-            if (currentTest == null)
-            {
-                throw new ArgumentNullException(
-                    $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
-            }
-
-            CurrentTestName = currentTest.TestCase.TestMethod.Method.Name;
+            CurrentTestName = Output.Test.MethodName;
 
             CreateUniqueTestDirectory();
-            
+
             ConfigFilesUsed = new List<string>
             {
                 Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(network == default ? NetworkType.Devnet : network))
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(_network == default ? NetworkType.Devnet : _network))
             };
 
-            configFilesUsed?.ToList().ForEach(config =>
+            _configFilesUsed?.ToList().ForEach(config =>
             {
-                ConfigFilesUsed.Add(config);                    
+                ConfigFilesUsed.Add(config);
             });
 
             ContainerProvider = new ContainerProvider(ConfigFilesUsed, FileSystem, Output);
             ContainerProvider.ConfigureContainerBuilder(true, true);
 
-            Output.WriteLine("test running in folder {0}", TestDirectory.FullName);
+            TestContext.WriteLine("test running in folder {0}", TestDirectory.FullName);
         }
 
         protected void CreateUniqueTestDirectory()

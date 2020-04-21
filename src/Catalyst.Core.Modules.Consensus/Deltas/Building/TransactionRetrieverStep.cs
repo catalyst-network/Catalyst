@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Protocol.Transaction;
 using Dawn;
-using Nethermind.Core;
+using Nethermind.Core.Attributes;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building

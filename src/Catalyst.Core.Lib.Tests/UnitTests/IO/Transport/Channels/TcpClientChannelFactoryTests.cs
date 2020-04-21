@@ -27,13 +27,13 @@ using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
 {
     public sealed class TcpClientChannelFactoryTests
     {
-        [Fact]
+        [Test]
         public async Task TcpClientChannelFactory_BuildChannel_Should_Return_IObservableChannel()
         {
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration

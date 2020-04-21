@@ -2,15 +2,15 @@ strategy:
   matrix:
     Windows-VS2019:
       imageName: 'vs2017-win2016'
-      netcore_sdk: 3.0.100
+      netcore_sdk: 3.1.201
       rustup_toolchain: nightly
     Osx-Mojave:
       imageName: 'macos-10.14'
-      netcore_sdk: 3.0.100
+      netcore_sdk: 3.1.201
       rustup_toolchain: nightly
     Ubuntu-1804:
       imageName: 'ubuntu-18.04'
-      netcore_sdk: 3.0.100
+      netcore_sdk: 3.1.201
       rustup_toolchain: nightly
   maxParallel: 3
 
@@ -40,7 +40,7 @@ steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Install .NetCore SDK'
     inputs:
-      version: 3.0.100
+      version: 3.1.201
       failOnStandardError: 'true'
 
   - script: |

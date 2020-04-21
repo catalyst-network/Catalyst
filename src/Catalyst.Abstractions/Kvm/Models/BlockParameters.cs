@@ -22,9 +22,9 @@
 #endregion
 
 using System;
-using Nethermind.Core;
+using Nethermind.Core.Attributes;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Json;
+using Nethermind.Serialization.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {

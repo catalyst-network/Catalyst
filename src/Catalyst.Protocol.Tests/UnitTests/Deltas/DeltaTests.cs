@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -22,22 +22,23 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Catalyst.Protocol.Deltas;
 using FluentAssertions;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Protocol.Tests.UnitTests.Deltas
 {
     public sealed class DeltaTests
     {
-        private sealed class InvalidDeltas : TheoryData<Delta>
+        private sealed class InvalidDeltas : List<Delta>
         {
             public InvalidDeltas()
             {
-                AddRow(new Delta
+                Add(new Delta
                 {
                     PreviousDeltaDfsHash = ByteString.Empty,
                     MerkleRoot = ByteString.CopyFromUtf8("abc"),
@@ -46,7 +47,7 @@ namespace Catalyst.Protocol.Tests.UnitTests.Deltas
                         Nanos = 21, Seconds = 30
                     }
                 });
-                AddRow(new Delta
+                Add(new Delta
                 {
                     PreviousDeltaDfsHash = ByteString.CopyFromUtf8("abc"),
                     MerkleRoot = ByteString.Empty,
@@ -55,7 +56,7 @@ namespace Catalyst.Protocol.Tests.UnitTests.Deltas
                         Nanos = 21, Seconds = 30
                     }
                 });
-                AddRow(new Delta
+                Add(new Delta
                 {
                     PreviousDeltaDfsHash = ByteString.CopyFromUtf8("abc"),
                     MerkleRoot = ByteString.CopyFromUtf8("def"),
@@ -64,14 +65,13 @@ namespace Catalyst.Protocol.Tests.UnitTests.Deltas
             }
         }
 
-        [Theory]
-        [ClassData(typeof(InvalidDeltas))]
+        [TestCaseSource(typeof(InvalidDeltas))]
         public void Delta_IsValid_Should_Throw_On_Invalid_Delta(Delta delta)
         {
             new Action(() => delta.IsValid()).Should().Throw<InvalidDataException>();
         }
 
-        [Fact]
+        [Test]
         public void Delta_IsValid_Should_Not_Throw_On_Valid_Delta()
         {
             var delta = new Delta

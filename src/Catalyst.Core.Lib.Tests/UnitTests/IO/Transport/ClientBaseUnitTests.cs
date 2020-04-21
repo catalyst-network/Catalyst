@@ -28,13 +28,13 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
 {
     public sealed class ClientBaseUnitTests
     {
-        [Fact]
+        [Test]
         public void SendMessage_Should_Write_Message_To_Channel()
         {
             var messageDto = Substitute.For<IMessageDto<ProtocolMessage>>();

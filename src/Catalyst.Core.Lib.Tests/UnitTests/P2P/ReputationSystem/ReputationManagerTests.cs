@@ -34,24 +34,25 @@ using Catalyst.TestUtils;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 {
     public sealed class ReputationManagerTests
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly ILogger _subbedLogger;
-        private readonly IPeerRepository _subbedPeerRepository;
+        private TestScheduler _testScheduler;
+        private ILogger _subbedLogger;
+        private IPeerRepository _subbedPeerRepository;
 
-        public ReputationManagerTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             _subbedPeerRepository = Substitute.For<IPeerRepository>();
         }
 
-        [Fact]
+        [Test]
         public void Receiving_IPeerReputationChange_Can_Find_And_Update_Peer()
         {
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
@@ -78,7 +79,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is(subbedPeer));
         }
 
-        [Fact]
+        [Test]
         public void Receiving_IPeerReputationChange_Can_Increase_Rep()
         {
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
@@ -106,7 +107,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is<Peer>(r => r.Reputation == 200));
         }
 
-        [Fact]
+        [Test]
         public void Receiving_IPeerReputationChange_Can_Decrease_Rep()
         {
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
@@ -135,7 +136,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is<Peer>(r => r.Reputation == 0));
         }
 
-        [Fact]
+        [Test]
         public void Can_Merge_Streams_And_Read_Items_Pushed_On_Separate_Streams()
         {
             var pid1 = PeerIdHelper.GetPeerId("peer1");

@@ -25,7 +25,7 @@ using System;
 using System.Threading;
 using Catalyst.Core.Lib.Util;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
@@ -39,8 +39,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         }
 
         [Theory]
-        [InlineData(500)]
-        [InlineData(1000)]
+        [TestCase(500)]
+        [TestCase(1000)]
         public void Can_Hit_Callback_When_Expired(int timeInMs)
         {
             var changeProvider = new TtlChangeTokenProvider(timeInMs);

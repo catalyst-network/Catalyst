@@ -49,7 +49,7 @@ using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using MultiFormats;
 using Nethermind.Core.Crypto;
-using Nethermind.Store;
+using Nethermind.State;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -115,7 +115,6 @@ namespace Catalyst.Core.Modules.Ledger
                 PublicEntry = publicEntry
             };
 
-            publicEntry.Timestamp = Timestamp.FromDateTime(DateTime.UtcNow);
             _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId));
 
             byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();

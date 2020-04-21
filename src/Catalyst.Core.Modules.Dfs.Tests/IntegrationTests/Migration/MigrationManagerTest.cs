@@ -26,8 +26,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
 {
@@ -35,20 +34,20 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
     {
         private readonly IDfsService _dfs;
 
-        public MigrationManagerTest(ITestOutputHelper output)
+        public MigrationManagerTest()
         {
-            _dfs = TestDfs.GetTestDfs(output);      
+            _dfs = TestDfs.GetTestDfs();      
         }
         
-        [Fact]
+        [Test]
         public void HasMigrations()
         {
             var migrator = new MigrationManager(_dfs.Options.Repository);
             var migrations = migrator.Migrations;
-            Assert.NotEqual(0, migrations.Count);
+            Assert.AreNotEqual(0, migrations.Count);
         }
 
-        [Fact]
+        [Test]
         public void MirgrateToUnknownVersion()
         {
             var migrator = new MigrationManager(_dfs.Options.Repository);
@@ -58,15 +57,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
             });
         }
 
-        [Fact]
+        [Test]
         public async Task MigrateToLowestThenHighest()
         {
             var migrator = new MigrationManager(_dfs.Options.Repository);
             await migrator.MirgrateToVersionAsync(0);
-            Assert.Equal(0, migrator.CurrentVersion);
+            Assert.AreEqual(0, migrator.CurrentVersion);
 
             await migrator.MirgrateToVersionAsync(migrator.LatestVersion);
-            Assert.Equal(migrator.LatestVersion, migrator.CurrentVersion);
+            Assert.AreEqual(migrator.LatestVersion, migrator.CurrentVersion);
         }
     }
 }

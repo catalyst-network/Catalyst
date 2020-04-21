@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public DeltaHeightWatcher(IPeerClient peerClient,
             IPeerRepository peerRepository,
             IPeerService peerService,
-            double threshold = 0.7d,
+            double threshold = 0.5d,
             int minimumPeers = 2)
         {
             _peerClient = peerClient;
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
                 return 1;
             }
 
-            var pages = (int)Math.Ceiling(peerCount / (decimal)_peersPerCycle);
+            var pages = (int) Math.Ceiling(peerCount / (decimal) _peersPerCycle);
             return pages;
         }
 
@@ -144,8 +144,11 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             var latestDeltaHash = protocolMessage.FromProtocolMessage<LatestDeltaHashResponse>();
 
             var peer = _peerRepository.Get(peerId);
-            peer.Touch();
-            _peerRepository.Update(peer);
+            if (peer != null)
+            {
+                peer.Touch();
+                _peerRepository.Update(peer);
+            }
 
             DeltaHeightRanker.Add(peerId, latestDeltaHash);
         }

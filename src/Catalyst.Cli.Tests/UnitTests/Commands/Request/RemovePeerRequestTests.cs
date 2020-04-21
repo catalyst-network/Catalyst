@@ -27,13 +27,13 @@ using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
 {
     public sealed class RemovePeerRequestTests
     {
-        [Fact]
+        [Test]
         public void RemovePeerRequest_Can_Be_Sent()
         {
             //Arrange

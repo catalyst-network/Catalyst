@@ -23,7 +23,6 @@
 
 using System;
 using Catalyst.Abstractions.Consensus;
-using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;

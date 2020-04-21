@@ -32,23 +32,23 @@ using MultiFormats.Registry;
 using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {
     public sealed class PoaDiscoveryTests : FileSystemBasedTest
     {
-        private readonly IHashProvider _hashProvider;
+        private IHashProvider _hashProvider;
 
-        public PoaDiscoveryTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("keccak-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            this.Setup(TestContext.CurrentContext);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Populate_Peers_Correctly()
         {
             var peerRepository = Substitute.For<IPeerRepository>();

@@ -39,21 +39,22 @@ using Microsoft.Extensions.Caching.Memory;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
 namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
     public class PoaDeltaProducersProviderTests
     {
-        private readonly Peer _selfAsPeer;
-        private readonly List<Peer> _peers;
-        private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
-        private readonly Cid _previousDeltaHash;
-        private readonly IMemoryCache _producersByPreviousDelta;
-        private readonly IHashProvider _hashProvider;
+        private Peer _selfAsPeer;
+        private List<Peer> _peers;
+        private PoaDeltaProducersProvider _poaDeltaProducerProvider;
+        private Cid _previousDeltaHash;
+        private IMemoryCache _producersByPreviousDelta;
+        private IHashProvider _hashProvider;
 
-        public PoaDeltaProducersProviderTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
@@ -85,7 +86,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
                 logger);
         }
 
-        [Fact]
+        [Test]
         public void GetDeltaProducersFromPreviousDelta_when_not_cached_should_store_and_return_an_ordered_list()
         {
             _producersByPreviousDelta.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(false);
@@ -123,7 +124,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetDeltaProducersFromPreviousDelta_when_cached_should_not_recompute()
         {
             _producersByPreviousDelta.TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)),

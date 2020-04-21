@@ -23,13 +23,13 @@
 
 using System;
 using System.Threading.Tasks;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     public class RandomWalkTest
     {
-        [Fact]
+        [Test]
         public async Task CanStartAndStop()
         {
             var walk = new RandomWalk();
@@ -40,7 +40,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             await walk.StopAsync();
         }
 
-        [Fact]
+        [Test]
         public void CannotStartTwice()
         {
             var walk = new RandomWalk();
@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             ExceptionAssert.Throws<Exception>(() => { walk.StartAsync().Wait(); });
         }
 
-        [Fact]
+        [Test]
         public async Task CanStopMultipletimes()
         {
             var walk = new RandomWalk();

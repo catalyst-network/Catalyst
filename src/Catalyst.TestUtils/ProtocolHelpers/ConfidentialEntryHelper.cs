@@ -39,7 +39,7 @@ namespace Catalyst.TestUtils.ProtocolHelpers
 
         public static ConfidentialEntry GetConfidentialEntry()
         {
-            var fees = new Random().Next(78588446).ToByteArray(new Bytes.Endianness());
+            var fees = new Random().Next(78588446).ToByteArray();
             return new ConfidentialEntry
             {
                 PedersenCommitment = ByteUtil.GenerateRandomByteArray(32).ToByteString(),

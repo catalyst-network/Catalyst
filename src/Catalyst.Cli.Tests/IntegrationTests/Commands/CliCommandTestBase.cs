@@ -37,7 +37,7 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
@@ -53,12 +53,19 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
         protected ILifetimeScope Scope;
         protected ICatalystCli Shell;
 
-        protected CliCommandTestsBase(ITestOutputHelper output) : base(output, new[]
+        protected CliCommandTestsBase() : base(new[]
         {
             Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile),
             Path.Combine(Constants.ConfigSubFolder, CliConstants.ShellConfigFile),
         })
         {
+
+        }
+
+        public override void Setup(TestContext output)
+        {
+            base.Setup(output);
+
             ConfigureModules();
 
             ConfigureNodeClient();

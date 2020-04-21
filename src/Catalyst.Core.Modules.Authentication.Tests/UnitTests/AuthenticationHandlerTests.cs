@@ -32,18 +32,19 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
 {
     public sealed class AuthenticationHandlerTests
     {
-        private readonly IAuthenticationStrategy _authenticationStrategy;
-        private readonly EmbeddedChannel _serverChannel;
-        private readonly IObservableServiceHandler _testObservableServiceHandler;
-        private readonly ProtocolMessage _signedMessage;
+        private IAuthenticationStrategy _authenticationStrategy;
+        private EmbeddedChannel _serverChannel;
+        private IObservableServiceHandler _testObservableServiceHandler;
+        private ProtocolMessage _signedMessage;
 
-        public AuthenticationHandlerTests()
+        [SetUp]
+        public void Init()
         {
             _testObservableServiceHandler = Substitute.For<IObservableServiceHandler>();
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
@@ -55,7 +56,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
                .ToSignedProtocolMessage(senderId, new byte[new FfiWrapper().SignatureLength]);
         }
 
-        [Fact]
+        [Test]
         public void Can_Block_Pipeline_Non_Authorized_Node_Operator()
         {
             _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(false);
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
             _testObservableServiceHandler.DidNotReceiveWithAnyArgs().ChannelRead(null, null);
         }
 
-        [Fact]
+        [Test]
         public void Can_Continue_Pipeline_On_Authorized_Node_Operator()
         {
             _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);
