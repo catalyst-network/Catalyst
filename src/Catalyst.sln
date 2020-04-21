@@ -182,6 +182,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Sync"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Sync.Tests", "Catalyst.Core.Modules.Sync.Tests\Catalyst.Core.Modules.Sync.Tests.csproj", "{D7D302E4-EF47-4212-BD50-13BEE85A6FB6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Db.Rocks", "..\submodules\nethermind\src\Nethermind\Nethermind.Db.Rocks\Nethermind.Db.Rocks.csproj", "{E21D4DFA-26F0-486D-B345-700EF96C8ED0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocksDbNative", "..\submodules\nethermind\src\rocksdb-sharp\RocksDbNative\RocksDbNative.csproj", "{8C464EDF-B72C-4A9B-84BB-1B51EC3A26A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -476,6 +480,14 @@ Global
 		{D7D302E4-EF47-4212-BD50-13BEE85A6FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7D302E4-EF47-4212-BD50-13BEE85A6FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7D302E4-EF47-4212-BD50-13BEE85A6FB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E21D4DFA-26F0-486D-B345-700EF96C8ED0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E21D4DFA-26F0-486D-B345-700EF96C8ED0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E21D4DFA-26F0-486D-B345-700EF96C8ED0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E21D4DFA-26F0-486D-B345-700EF96C8ED0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C464EDF-B72C-4A9B-84BB-1B51EC3A26A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C464EDF-B72C-4A9B-84BB-1B51EC3A26A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C464EDF-B72C-4A9B-84BB-1B51EC3A26A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C464EDF-B72C-4A9B-84BB-1B51EC3A26A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -496,6 +508,8 @@ Global
 		{65C36E26-6674-4457-A8FB-0F33EDA76759} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{DE28EED6-7281-4827-92C9-16B511BC617D} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{36528129-62DF-4A4E-9337-85D51DA94EA4} = {6074E807-FBBC-41D0-9205-C7B79513D683}
+		{E21D4DFA-26F0-486D-B345-700EF96C8ED0} = {6074E807-FBBC-41D0-9205-C7B79513D683}
+		{8C464EDF-B72C-4A9B-84BB-1B51EC3A26A5} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}
