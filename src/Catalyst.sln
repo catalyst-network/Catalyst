@@ -176,6 +176,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Config", "..\sub
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.UPnP", "Catalyst.Modules.UPnP\Catalyst.Modules.UPnP.csproj", "{000064D5-2112-4DF0-8B93-BC7A8978C386}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.UPnP.Tests", "Catalyst.Modules.UPnP.Tests\Catalyst.Modules.UPnP.Tests.csproj", "{D353139D-671E-4456-9362-92162D15F97E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -458,6 +460,10 @@ Global
 		{000064D5-2112-4DF0-8B93-BC7A8978C386}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{000064D5-2112-4DF0-8B93-BC7A8978C386}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{000064D5-2112-4DF0-8B93-BC7A8978C386}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D353139D-671E-4456-9362-92162D15F97E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D353139D-671E-4456-9362-92162D15F97E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D353139D-671E-4456-9362-92162D15F97E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D353139D-671E-4456-9362-92162D15F97E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
