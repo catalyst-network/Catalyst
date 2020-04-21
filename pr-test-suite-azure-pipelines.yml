@@ -50,9 +50,9 @@ steps:
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
     
   - script: |
-      sudo install -y libc6-dev
+      sudo apt-get -y install libc6-dev
     displayName: Install libc6-dev
-    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+    condition: eq( variables['Agent.OS'], 'Linux' )
 
   - script: |
       rustup install nightly
