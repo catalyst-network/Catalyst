@@ -41,6 +41,7 @@ using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cryptography.Proto;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Dawn;
 using MultiFormats;
@@ -114,17 +115,7 @@ namespace Catalyst.Node.POA.CE
             _logger.Information("Starting the Catalyst Node");
             var publicKey = await _keyApi.GetPublicKeyAsync("self").ConfigureAwait(false);
             var peerId = publicKey.Id;
-            var digest = peerId.Digest;
-            PublicKey pk = null;
-            using (var ms = new MemoryStream(digest))
-            {
-                pk = Serializer.Deserialize<PublicKey>(ms);
-            }
-
-            Asn1InputStream aIn = new Asn1InputStream(pk.Data);
-            SubjectPublicKeyInfo info = SubjectPublicKeyInfo.GetInstance(aIn.ReadObject());
-
-            var pk2 = info.PublicKeyData.GetBytes().ToBase58();
+            var pk = peerId.Digest.GetPublicKeyBytesFromPeerId();
 
             _logger.Information($"***** using PeerId: {peerId} *****");
             _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase58()} *****");

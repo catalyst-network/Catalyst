@@ -21,11 +21,17 @@
 
 #endregion
 
+using System.IO;
 using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Core.Lib.Cryptography.Proto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
+using MultiFormats;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.X509;
+using ProtoBuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Handlers
@@ -70,7 +76,8 @@ namespace Catalyst.Core.Lib.IO.Handlers
             }
 
             var sig = signedMessage.Signature.RawBytes.ToByteArray();
-            var pub = signedMessage.PeerId.PublicKey.ToByteArray();
+            var pub = signedMessage.PeerId.PublicKey.ToByteArray().GetPublicKeyBytesFromPeerId();
+
             var signature = _keySigner.CryptoContext.GetSignatureFromBytes(sig, pub);
             var messageWithoutSig = signedMessage.Clone();
             messageWithoutSig.Signature = null;

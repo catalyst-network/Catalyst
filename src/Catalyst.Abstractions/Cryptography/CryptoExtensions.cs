@@ -23,7 +23,12 @@
 
 using System;
 using System.Buffers;
+using System.IO;
 using Google.Protobuf;
+using MultiFormats;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.X509;
+using ProtoBuf;
 
 namespace Catalyst.Abstractions.Cryptography
 {
